@@ -11,9 +11,7 @@ in VS_OUT {
 uniform float time;
 
 
-vec3 GetNormal() {
-	return gs_in[0].Normal;
-}
+vec3 GetNormal() { return gs_in[0].Normal; }
 
 vec4 explode(vec4 position, vec3 normal) {
 	float magnitude = 2.0f;
