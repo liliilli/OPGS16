@@ -88,7 +88,7 @@ void Font::BindVertexAttributes() {
 void Font::RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color) {
     shader.Use();
     shader.SetVec3f("textColor", color);
-    shader.SetVecMatirix4f("projection", projection);
+    shader.SetVecMatrix4f("projection", projection);
 
     glBindVertexArray(vao);
 

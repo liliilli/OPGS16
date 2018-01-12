@@ -13,7 +13,13 @@
  */
 
 class WoodBox : public Object {
+public:
     WoodBox();
+
+    /**
+     * @brief The method updates components of object.
+     */
+    [[noreturn]] virtual void Update() override {};
 
     /**
      * @brief The method calls scene to one objects.

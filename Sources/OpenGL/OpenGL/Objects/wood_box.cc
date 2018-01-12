@@ -6,12 +6,16 @@ WoodBox::WoodBox() :
 {}
 
 void WoodBox::Draw(helper::ShaderNew& shader) {
-    shader.SetVecMatrix4f("model", model);
+    /** Refresh Model matrix */
+    GetModelMatrix(); 
+    shader.SetVecMatrix4f("uModel", model);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.GetId());
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture_specular.GetId());
 
+    glBindVertexArray(object_info.vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
 }

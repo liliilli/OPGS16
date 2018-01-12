@@ -15,6 +15,7 @@
 
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
+#include <glm\glm.hpp>
 #include "camera.h"
 #include "shader.h"
 
@@ -53,19 +54,19 @@ public:
      * @brief The method gets position as glm::vec3 type. Not overridable.
      * @return Object's position (x, y, z)
      */
-    glm::vec3 GetPosition() { return position; }
+    glm::vec3 GetPosition();
 
     /**
      * @brief The method sets position. Not overridable.
      * @param[in] position Position to set on.
      */
-    [[noreturn]] void SetPosition(glm::vec3 position) { this->position = position; }
+    [[noreturn]] void SetPosition(glm::vec3 position);
 
     /**
      * @brief The method gets rotation values
      * @return Object's rotation angle value.
      */
-    float GetRotationAngle() { return rotation_angle; }
+    float GetRotationAngle();
 
     /**
      * @brief The method sets rotation angle values.
@@ -75,50 +76,43 @@ public:
      *
      * @param[in] angle_value Angle value to set on.
      */
-    [[noreturn]] void SetAngle(const float angle_value) { this->rotation_angle = angle_value; }
+    [[noreturn]] void SetAngle(const float angle_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
      * @return Object's rotation vector which has (x, y, z) rotation axis factor.
      */
-    glm::vec3 GetRotationFactor() { return rotation_factor; }
+    glm::vec3 GetRotationFactor();
 
     /**
      * @brief The method sets rotation factor have values which ranges [-1, 1].
      * @param[in] factor 
      */
-    [[noreturn]] void SetRotationFactor(glm::vec3 factor) { rotation_factor = factor; }
+    [[noreturn]] void SetRotationFactor(glm::vec3 factor);
 
     /**
      * @brief The method gets scaling values
      * @return Object's scaling value.
      */
-    float GetScaleValue() { return scale_value; }
+    float GetScaleValue();
 
     /**
      * @brief The method sets scaling angle values.
-     *
      * @param[in] scale_value Scaling value to set on.
      */
-    [[noreturn]] void SetScaleValue(const float scale_value) { 
-        this->scale_value = scale_value; 
-    }
+    [[noreturn]] void SetScaleValue(const float scale_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
      * @return Object's scaling vector which has (x, y, z) axis factors.
      */
-    glm::vec3 GetScaleFactor() { 
-        return scale_factor; 
-    }
+    glm::vec3 GetScaleFactor();
 
     /**
      * @brief The method sets scaling vector have (x, y, z) scaling factors.
      * @param[in] factor Scaling factor
      */
-    [[noreturn]] void SetScaleFactor(glm::vec3 factor) { 
-        scale_factor = factor; 
-    }
+    [[noreturn]] void SetScaleFactor(glm::vec3 factor);
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -128,17 +122,7 @@ public:
      *
      * @return Model matrix (M = TRS)
      */
-    glm::mat4 GetModelMatrix() { 
-        if (is_changed) {
-            model = glm::mat4{};
-            model = glm::matrixCompMult(model, translate);
-            model = glm::matrixCompMult(model, rotate);
-            model = glm::matrixCompMult(model, scale);
-            is_changed = false;
-        }
-
-        return model;
-    }
+    glm::mat4 GetModelMatrix();
 
 protected:
     /** Caution :: Dangling reference! */
@@ -167,31 +151,22 @@ protected:
     glm::mat4   scale;
 
     bool is_changed{ true };
-};
-
-/**
- * @interface IControllable
- * @brief Interface for controllable object using key input
- */
-class IControllable {
-public:
-    [[noreturn]] virtual void HandleInput(GLFWwindow* const window) = 0;
 
 private:
     /**
-     * @brief Helper method of scene that checks if keycode was pressed.
-     *
-     * @param[in] window Window handle pointer.
-     * @param[in] keycode Code of key to be checked.
-     *
-     * @return If keycode is pressed, return true. otherwise false.
+     * @brief Refresh Translation matrix
      */
-    bool DoesKeyPressed(GLFWwindow* const window, const int keycode) {
-        if (glfwGetKey(window, keycode) == GLFW_PRESS)
-            return true;
-        else
-            return false;
-    }
+    [[noreturn]] void RefreshTranslateMatrix();
+
+    /**
+     * @brief Refresh Rotation matrix
+     */
+    [[noreturn]] void RefreshRotateMatrix();
+
+    /**
+     * @brief Refresh Scaling matrix
+     */
+    [[noreturn]] void RefreshScaleMatrix();
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

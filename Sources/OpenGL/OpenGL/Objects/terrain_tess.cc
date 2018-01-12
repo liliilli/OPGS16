@@ -19,7 +19,7 @@ void TerrainTess::Update() {
 void TerrainTess::Draw(helper::ShaderNew & shader) {
     glPatchParameteri(GL_PATCH_VERTICES, 4);
 
-    shader.SetVecMatirix4f("mvp", mvp);
+    shader.SetVecMatrix4f("mvp", mvp);
     shader.SetFloat("dmap_depth", 10.0f);
     glBindVertexArray(vao);
 

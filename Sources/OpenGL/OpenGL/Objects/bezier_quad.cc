@@ -52,8 +52,8 @@ void BezierQuad::Draw(helper::ShaderNew& shader) {
     model = glm::scale(model, glm::vec3(2.f));
 
     auto mv = camera::GetCamera().GetViewMatrix() * model;
-    shader.SetVecMatirix4f("mv", mv);
-    shader.SetVecMatirix4f("projection", camera::GetCamera().GetProjection());
+    shader.SetVecMatrix4f("mv", mv);
+    shader.SetVecMatrix4f("projection", camera::GetCamera().GetProjection());
 
     glDrawArrays(GL_PATCHES, 0, 16);
     glPatchParameteri(GL_PATCH_VERTICES, 3);

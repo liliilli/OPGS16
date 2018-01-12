@@ -3,6 +3,7 @@
 #include "..\object.h"
 #include "..\shader.h"
 #include "..\scene.h"
+#include "..\Objects\Interface\i_radiant.h"
 
 class BloomScene : public Scene {
 public:
@@ -32,7 +33,8 @@ private:
     Font font;
     helper::ShaderNew shader{};
 
-    std::unordered_map<int, std::unique_ptr<Object>> objects;
+    std::unordered_map<int, std::unique_ptr<Object>>    objects;
+    std::unordered_map<int, std::unique_ptr<Object>>    radiant_objects;
 };
 
 #endif /** OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H */

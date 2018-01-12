@@ -1,20 +1,22 @@
-#ifndef OPENGL_TUTORIAL_OBJECTS_QUAD_FLOOR_H
-#define OPENGL_TUTORIAL_OBJECTS_QUAD_FLOOR_H
-#include "..\helper.h"
-#include "..\object.h"
-#include "..\texture.h"
+#ifndef OPENGL_TUTORIAL_OBJECTS_LIGHT_BOX_H
+#define OPENGL_TUTORIAL_OBJECTS_LIGHT_BOX_H
 
 /**
- * @file quad_floor.h
- * @brief Just a floor as you see
+ * @file light_box.h
+ * @brief The box emits pointlight.
  *
  * @author Jongmin Yun
  * @version 0.0.1
  */
 
-class QuadFloor : public Object {
+#include "..\helper.h"
+#include "..\object.h"
+#include "..\texture.h"
+#include "Interface\i_radiant.h"
+
+class LightBox : public Object, public IRadiant {
 public:
-    QuadFloor();
+    LightBox();
 
     /**
     * @brief The method updates components of object.
@@ -29,7 +31,7 @@ public:
 
 private:
     helper::BindingObject object_info;
-    texture::Texture2D texture{ "Resources/hardwood.jpg", GL_RGB };
+
 };
 
-#endif
+#endif /** OPENGL_TUTORIAL_OBJECTS_LIGHT_BOX_H */
