@@ -34,6 +34,7 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
 
     /** Light boxes */
     radiant_objects[0] = std::make_unique<LightBox>();
+    radiant_objects[0]->SetPosition({ 0, 1, -3 });
 }
 
 void BloomScene::HandleInput(GLFWwindow * const window) {
