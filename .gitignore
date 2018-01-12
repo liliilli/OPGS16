@@ -3,8 +3,9 @@ glad.c
 Sources/OpenGL/Debug
 Sources/OpenGL/obj
 Sources/OpenGL/bin
+Sources/OpenGL/.vs
 Sources/OpenGL/OpenGL/Resources
-*.sin
+*.sln
 *.props
 *.vcxproj
 *.vcxproj.filters
