@@ -33,8 +33,6 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
     objects[4]->SetScaleValue(4.0f);
 
     /** Light boxes */
-    radiant_objects[0] = std::make_unique<LightBox>();
-    radiant_objects[0]->SetPosition({ 0, 1, -3 });
 }
 
 void BloomScene::HandleInput(GLFWwindow * const window) {
@@ -53,7 +51,12 @@ void BloomScene::Draw() {
     shader.SetVecMatrix4f("uProjection", camera.GetProjection());
     shader.SetVec3f("uCameraPos", camera.GetPosition());
 
-    for  
+    /** Set light to shader */ {
+        int i = 0;
+        for (auto& light : radiant_objects) {
+
+        }
+    }
 
     objects[0]->Draw(shader);
     objects[1]->Draw(shader);
