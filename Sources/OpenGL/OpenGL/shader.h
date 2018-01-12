@@ -110,7 +110,34 @@ public:
      * @param[in] vector $ \mathbf{M}_{4_4} $ matrix reference l-value to input.
      */
     [[noreturn]] void SetVecMatrix4f(const std::string& name, glm::mat4& matrix);
-    
+
+    /**
+     * @brief The method sets light::DirectionalLight information to shader uniform variable.
+     *
+     * @param[in] name The name of uniform variable to be specified.
+     * @param[in] container DirectionalLight container instance.
+     */
+    [[noreturn]] void SetStructDirLight(const std::string& name, 
+                                        const light::DirectionalLight& container);
+
+    /**
+     * @brief The method sets light::PointLight information to shader uniform variable.
+     *
+     * @param[in] name The name of uniform variable to be specified.
+     * @param[in] container PointLight container instance.
+     */
+    [[noreturn]] void SetStructPointLight(const std::string& name, 
+                                          const light::PointLight& container);
+
+    /**
+     * @brief The method sets light::Spotlight information to shader uniform variable.
+     *
+     * @param[in] name THe name of uniform variable to be specified.
+     * @param[in] container Spotlight container instance.
+     */
+    [[noreturn]] void SetStructSpotlight(const std::string& name, 
+                                         const light::Spotlight& container);
+
 private:
     /** Shader's unique id */
     mutable GLuint k_id{};

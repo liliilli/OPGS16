@@ -132,6 +132,45 @@ void ShaderNew::SetVecMatrix4f(const std::string& name, glm::mat4& matrix) {
                        1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void ShaderNew::SetStructDirLight(const std::string & name, 
+                                  const light::DirectionalLight & container) {
+    SetVec3f(name + ".direction", container.GetDirection());
+
+    SetVec3f(name + ".ambient", container.GetAmbient());
+    SetVec3f(name + ".diffuse", container.GetDiffuse());
+    SetVec3f(name + ".specular", container.GetSpecular());
+}
+
+void ShaderNew::SetStructPointLight(const std::string & name, 
+                                    const light::PointLight & container) {
+    SetVec3f(name + ".position", container.GetPosition());
+
+    SetVec3f(name + ".ambient", container.GetAmbient());
+    SetVec3f(name + ".diffuse", container.GetDiffuse());
+    SetVec3f(name + ".specular", container.GetSpecular());
+
+    SetFloat(name + ".constant", container.GetConstant());
+    SetFloat(name + ".linear", container.GetLinear());
+    SetFloat(name + ".quadratic", container.GetQuadratic());
+}
+
+void ShaderNew::SetStructSpotlight(const std::string & name, 
+                                   const light::Spotlight & container) {
+        SetVec3f(name + ".direction", container.direction);
+    SetVec3f(name + ".position", container.position);
+
+    SetVec3f(name + ".ambient", container.ambient);
+    SetVec3f(name + ".diffuse", container.diffuse);
+    SetVec3f(name + ".specular", container.specular);
+
+    SetFloat(name + ".inCutoff", container.inCutOff);
+    SetFloat(name + ".outCutoff", container.outCutOff);
+
+    SetFloat(name + ".constant", container.constant);
+    SetFloat(name + ".linear", container.linear);
+    SetFloat(name + ".quadratic", container.quadratic);
+}
+
 /**
  * @brief Old Shader wrapper class
  *
