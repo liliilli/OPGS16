@@ -54,13 +54,13 @@ public:
      * @brief The method gets position as glm::vec3 type. Not overridable.
      * @return Object's position (x, y, z)
      */
-    glm::vec3 GetPosition();
+    virtual glm::vec3 GetPosition();
 
     /**
      * @brief The method sets position. Not overridable.
      * @param[in] position Position to set on.
      */
-    [[noreturn]] void SetPosition(glm::vec3 position);
+    [[noreturn]] virtual void SetPosition(glm::vec3 position);
 
     /**
      * @brief The method gets rotation values

@@ -10,6 +10,7 @@
  */
 
 #include "..\helper.h"
+#include "..\light.h"
 #include "..\object.h"
 #include "..\texture.h"
 #include "Interface\i_radiant.h"
@@ -19,19 +20,30 @@ public:
     LightBox();
 
     /**
-    * @brief The method updates components of object.
-    */
-    [[noreturn]] virtual void Update() override {};
+     * @brief The method updates components of object.
+     */
+    [[noreturn]] void Update() override {};
 
     /**
-    * @brief The method calls scene to one objects.
-    * @param[in] shader Shader to use.
-    */
-    [[noreturn]] virtual void Draw(helper::ShaderNew& shader) override;
+     * @brief The method calls scene to one objects.
+     * @param[in] shader Shader to use.
+     */
+    [[noreturn]] void Draw(helper::ShaderNew& shader) override;
+
+    /**
+     * @brief 
+     */
+    [[noreturn]] void SetUpLight(helper::ShaderNew& shader) override;
+
+    /** ----------------------------------------------------------------------+
+     * @commend Boiler-plate codes
+     */
+
+    [[noreturn]] void SetPosition(glm::vec3 position) override;
 
 private:
-    helper::BindingObject object_info;
-
+    helper::BindingObject   object_info;
+    light::PointLight       pointlight;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECTS_LIGHT_BOX_H */
