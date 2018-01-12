@@ -5,8 +5,9 @@ Sources/OpenGL/obj
 Sources/OpenGL/bin
 Sources/OpenGL/.vs
 Sources/OpenGL/OpenGL/Resources
+stb_image.h
 *.sln
 *.props
 *.vcxproj
 *.vcxproj.filters
-*.vcxproj.users
+*.vcxproj.user
