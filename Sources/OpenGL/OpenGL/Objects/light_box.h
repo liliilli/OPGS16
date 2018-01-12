@@ -33,7 +33,7 @@ public:
     /**
      * @brief 
      */
-    [[noreturn]] void SetUpLight(helper::ShaderNew& shader) override;
+    [[noreturn]] void SetUpLight(const int index, helper::ShaderNew& shader) override;
 
     /** ----------------------------------------------------------------------+
      * @commend Boiler-plate codes

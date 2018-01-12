@@ -13,8 +13,9 @@ void LightBox::Draw(helper::ShaderNew & shader) {
     glBindVertexArray(0);
 }
 
-void LightBox::SetUpLight(helper::ShaderNew& shader) {
-
+void LightBox::SetUpLight(const int index, helper::ShaderNew& shader) {
+    shader.SetStructPointLight("uPointLight[" + std::to_string(index) + "]",
+                               pointlight);
 }
 
 void LightBox::SetPosition(glm::vec3 position) {

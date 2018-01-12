@@ -23,7 +23,7 @@ public:
      * @brief The method sets up light information to shader.
      * @param[in] shader Shader to set up light information
      */
-    [[noreturn]] virtual void SetUpLight(helper::ShaderNew& shader) = 0;
+    [[noreturn]] virtual void SetUpLight(const int index, helper::ShaderNew& shader) = 0;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECTS_INTERFACE_I_RADIANT_H */
