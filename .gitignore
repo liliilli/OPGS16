@@ -1,3 +1,11 @@
 *.dll
 glad.c
-
+Sources/OpenGL/Debug
+Sources/OpenGL/obj
+Sources/OpenGL/bin
+Sources/OpenGL/OpenGL/Resources
+*.sin
+*.props
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.users
