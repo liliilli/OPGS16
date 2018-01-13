@@ -65,7 +65,7 @@ public:
     */
     PointLight(const glm::vec3 position, 
                const glm::vec3 ambient, const glm::vec3 diffuse, const glm::vec3 specular,
-               const float linear = 0.045f, const float quadratic = 0.0075f);
+               const float linear = 0.9f, const float quadratic = 2.0f);
     PointLight(const glm::vec3 position,
                const float ambient, const float diffuse, const float specular);
 
@@ -87,6 +87,12 @@ public:
 
     const auto GetMatrix() const { return matrix_T; }
     const auto GetFarPlane() const { return far; }
+
+    /**
+     * @brief The method sets up diffuse color, and specular color light.
+     * @param[in] color Color to set up.
+     */
+    [[noreturn]] void SetColor(const glm::vec3 color);
 
 private:
     const float far = 25.0f;

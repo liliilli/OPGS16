@@ -27,7 +27,8 @@ layout (binding = 0) uniform sampler2D uDiffuse;
 layout (binding = 1) uniform sampler2D uSpecular;
 layout (binding = 2) uniform sampler2D uEmission;
 
-out vec4 finalColor;
+layout (location = 0) out vec4 finalColor;
+layout (location = 1) out vec4 brightColor;
 
 vec3 CalculatePointLight(sPointLight light, vec3 i_normal);
 void main() {
@@ -37,6 +38,12 @@ void main() {
 	}
 
 	finalColor = vec4(result, 1.0);
+
+	float brightness = dot(finalColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	if (brightness > 0.25)
+		brightColor = vec4(finalColor.rgb, 1);
+	else
+		brightColor = vec4(0.0, 0.0, 0.0, 1);
 }
 
 vec3 CalculatePointLight(sPointLight light, vec3 i_normal) {

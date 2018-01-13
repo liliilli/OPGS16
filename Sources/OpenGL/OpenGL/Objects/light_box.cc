@@ -11,8 +11,7 @@ void LightBox::Draw(helper::ShaderNew & shader) {
     /** Refresh Model matrix */
     GetModelMatrix();
     shader.SetVecMatrix4f("uModel", model);
-    glm::vec3 ff{ 1.0f };
-    shader.SetVec3f("uColor", ff);
+    shader.SetVec3f("uColor", pointlight.GetDiffuse());
 
     glBindVertexArray(object_info.vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -26,4 +25,8 @@ void LightBox::SetUpLight(const int index, helper::ShaderNew& shader) {
 void LightBox::SetPosition(glm::vec3 position) {
     Object::SetPosition(position);
     pointlight.SetPosition(this->position);
+}
+
+void LightBox::SetColor(glm::vec3 color) {
+    pointlight.SetColor(color);
 }

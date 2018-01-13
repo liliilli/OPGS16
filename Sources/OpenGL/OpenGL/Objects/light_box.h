@@ -41,6 +41,12 @@ public:
 
     [[noreturn]] void SetPosition(glm::vec3 position) override;
 
+    /**
+     * @brief The method sets up diffuse color, and specular color light.
+     * @param[in] color Color to set up.
+     */
+    [[noreturn]] void SetColor(glm::vec3 color);
+
 private:
     helper::BindingObject   object_info;
     light::PointLight       pointlight;

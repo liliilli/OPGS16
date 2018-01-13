@@ -5,6 +5,19 @@
 
 BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } { 
     /** Set shader up */
+    InitShaders();
+
+    /** Create Instance to use */
+    InitObjects();
+    InitLightBoxes();
+
+    /** Bind Framebuffer */
+    InitFrameBuffer();
+    glGenVertexArrays(1, &empty_vao);
+    glEnable(GL_DEPTH_TEST);
+}
+
+void BloomScene::InitShaders() {
     using Type = helper::ShaderNew::Type;
     shader.SetShader(Type::VS, "Shaders/Bloom/normal.vert")
         .SetShader(Type::FS, "Shaders/Bloom/normal.frag")
@@ -14,8 +27,16 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
         .SetShader(Type::FS, "Shaders/Bloom/lightbox.frag")
         .Link();
 
-    /** Create Instance to use */
+    shader_fbo_bloom.SetShader(Type::VS, "Shaders/Bloom/normal.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/bloom.frag")
+        .Link();
 
+    shader_fullscreen.SetShader(Type::VS, "Shaders/Bloom/full.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/full.frag")
+        .Link();
+}
+
+void BloomScene::InitObjects() {
     /** Boxes */
     objects[0] = std::make_unique<WoodBox>();
     objects[0]->SetPosition(glm::vec3{ 0, 0, 0 }
@@ -36,17 +57,46 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
     objects[4]->SetAngle(-90.0f);
     objects[4]->SetRotationFactor({ 1, 0, 0 });
     objects[4]->SetScaleValue(4.0f);
+}
 
+void BloomScene::InitLightBoxes() {
     /** Light boxes */
     auto light = std::make_unique<LightBox>();
     light->SetPosition({ -1, 1.5, -3 });
     light->SetScaleValue(.5f);
+    light->SetColor({ 1, 1, 1 });
     radiant_objects[0] = std::move(light);
 
     auto light_2 = std::make_unique<LightBox>();
     light_2->SetPosition({ 0, 1, 2 });
     light_2->SetScaleValue(.5f);
+    light_2->SetColor({ 1, 0, 0 });
     radiant_objects[1] = std::move(light_2);
+
+    auto light_3 = std::make_unique<LightBox>();
+    light_3->SetPosition({ -4, 0, -1 });
+    light_3->SetScaleValue(.5f);
+    light_3->SetColor({ 0, 0, 1 });
+    radiant_objects[2] = std::move(light_3);
+}
+
+void BloomScene::InitFrameBuffer() {
+    glGenFramebuffers(1, &hdr_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, hdr_fbo);
+    glGenTextures(2, &color_buffer[0]);
+
+    for (size_t i = 0; i < color_buffer.size(); ++i) {
+        glBindTexture(GL_TEXTURE_2D, color_buffer[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 720, 480, 0, GL_RGB, GL_FLOAT, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        /** Attach texture to framebuffer */
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
+                               GL_TEXTURE_2D, color_buffer[i], 0);
+    }
 }
 
 void BloomScene::HandleInput(GLFWwindow * const window) {
@@ -54,17 +104,39 @@ void BloomScene::HandleInput(GLFWwindow * const window) {
 }
 
 void BloomScene::Draw() {
-    glEnable(GL_DEPTH_TEST);
     glClearColor(.1f, .1f, .1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Rendering
-    shader.Use();
-    auto view = camera.GetViewMatrix();
-    shader.SetVecMatrix4f("uView", view);
-    shader.SetVecMatrix4f("uProjection", camera.GetProjection());
-    shader.SetVec3f("uCameraPos", camera.GetPosition());
+    DrawBloomBuffer();
 
+    shader_fullscreen.Use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(empty_vao);
+    glBindTexture(GL_TEXTURE_2D, color_buffer[1]);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+
+    DrawText();
+}
+
+void BloomScene::DrawBloomBuffer() {
+    glBindFramebuffer(GL_FRAMEBUFFER, hdr_fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    shader_fbo_bloom.Use();
+    auto view = camera.GetViewMatrix();
+    shader_fbo_bloom.SetVecMatrix4f("uView", view);
+    shader_fbo_bloom.SetVecMatrix4f("uProjection", camera.GetProjection());
+    shader_fbo_bloom.SetVec3f("uCameraPos", camera.GetPosition());
+
+    DrawObjects(shader_fbo_bloom);
+    /** Lights */
+    DrawLightObjects();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void BloomScene::DrawObjects(helper::ShaderNew& shader) {
     /** Set light to shader */ {
         int i = 0;
         for (auto& light : radiant_objects) {
@@ -72,15 +144,18 @@ void BloomScene::Draw() {
             ++i;
         }
     }
-
+    /** Boxes */
     objects[0]->Draw(shader);
     objects[1]->Draw(shader);
     objects[2]->Draw(shader);
     objects[3]->Draw(shader);
-
+    /** Quad */
     objects[4]->Draw(shader);
+}
 
+void BloomScene::DrawLightObjects() {
     shader_light.Use();
+    auto view = camera.GetViewMatrix();
     shader_light.SetVecMatrix4f("uView", view);
     shader_light.SetVecMatrix4f("uProjection", camera.GetProjection());
 
@@ -89,11 +164,12 @@ void BloomScene::Draw() {
         if (item != nullptr)
             item->Draw(shader_light);
     }
+}
 
-    // Draw Text (UI)
+void BloomScene::DrawText() {
     glDisable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     font.RenderText("BloomScene", { 25.f, 25.f }, .5f, { 1.f, 1.f, 1.f });
+    glEnable(GL_DEPTH_TEST);
 }
 
 void BloomScene::Update() {
