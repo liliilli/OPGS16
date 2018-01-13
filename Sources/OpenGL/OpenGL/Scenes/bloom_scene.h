@@ -32,9 +32,10 @@ public:
 private:
     Font font;
     helper::ShaderNew shader{};
+    helper::ShaderNew shader_light{};
 
     std::unordered_map<int, std::unique_ptr<Object>>    objects;
-    std::unordered_map<int, std::unique_ptr<Object>>    radiant_objects;
+    std::unordered_map<int, std::unique_ptr<IRadiant>>    radiant_objects;
 };
 
 #endif /** OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H */

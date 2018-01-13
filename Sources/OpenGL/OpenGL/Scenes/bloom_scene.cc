@@ -10,11 +10,16 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
         .SetShader(Type::FS, "Shaders/Bloom/normal.frag")
         .Link();
 
+    shader_light.SetShader(Type::VS, "Shaders/Bloom/normal.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/lightbox.frag")
+        .Link();
+
     /** Create Instance to use */
 
     /** Boxes */
     objects[0] = std::make_unique<WoodBox>();
-    objects[0]->SetPosition(glm::vec3{ 0, 0, 0 });
+    objects[0]->SetPosition(glm::vec3{ 0, 0, 0 }
+    );
 
     objects[1] = std::make_unique<WoodBox>();
     objects[1]->SetPosition(glm::vec3{ 2, 0, -2 });
@@ -33,6 +38,15 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
     objects[4]->SetScaleValue(4.0f);
 
     /** Light boxes */
+    auto light = std::make_unique<LightBox>();
+    light->SetPosition({ -1, 1.5, -3 });
+    light->SetScaleValue(.5f);
+    radiant_objects[0] = std::move(light);
+
+    auto light_2 = std::make_unique<LightBox>();
+    light_2->SetPosition({ 0, 1, 2 });
+    light_2->SetScaleValue(.5f);
+    radiant_objects[1] = std::move(light_2);
 }
 
 void BloomScene::HandleInput(GLFWwindow * const window) {
@@ -54,7 +68,8 @@ void BloomScene::Draw() {
     /** Set light to shader */ {
         int i = 0;
         for (auto& light : radiant_objects) {
-
+            light.second->SetUpLight(i, shader);
+            ++i;
         }
     }
 
@@ -64,6 +79,16 @@ void BloomScene::Draw() {
     objects[3]->Draw(shader);
 
     objects[4]->Draw(shader);
+
+    shader_light.Use();
+    shader_light.SetVecMatrix4f("uView", view);
+    shader_light.SetVecMatrix4f("uProjection", camera.GetProjection());
+
+    for (auto& light : radiant_objects) {
+        auto item = dynamic_cast<Object*>(light.second.get());
+        if (item != nullptr)
+            item->Draw(shader_light);
+    }
 
     // Draw Text (UI)
     glDisable(GL_DEPTH_TEST);

@@ -19,6 +19,8 @@
  */
 class IRadiant {
 public:
+    virtual ~IRadiant() = default;
+
     /**
      * @brief The method sets up light information to shader.
      * @param[in] shader Shader to set up light information
