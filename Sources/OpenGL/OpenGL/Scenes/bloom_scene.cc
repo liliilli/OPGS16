@@ -12,7 +12,9 @@ BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
     InitLightBoxes();
 
     /** Bind Framebuffer */
-    InitFrameBuffer();
+    InitHdrFrameBuffer();
+    InitBloomFrameBuffer();
+
     glGenVertexArrays(1, &empty_vao);
     glEnable(GL_DEPTH_TEST);
 }
@@ -27,20 +29,27 @@ void BloomScene::InitShaders() {
         .SetShader(Type::FS, "Shaders/Bloom/lightbox.frag")
         .Link();
 
-    shader_fbo_bloom.SetShader(Type::VS, "Shaders/Bloom/normal.vert")
-        .SetShader(Type::FS, "Shaders/Bloom/bloom.frag")
+    shader_fbo_hdr.SetShader(Type::VS, "Shaders/Bloom/normal.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/hdr.frag")
         .Link();
 
     shader_fullscreen.SetShader(Type::VS, "Shaders/Bloom/full.vert")
         .SetShader(Type::FS, "Shaders/Bloom/full.frag")
+        .Link();
+    /** bloom (fast gaussian blur) shader */
+    shader_fbo_bloom.SetShader(Type::VS, "Shaders/Bloom/full.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/bloom.frag")
+        .Link();
+    /** combining shader */
+    shader_final.SetShader(Type::VS, "Shaders/Bloom/full.vert")
+        .SetShader(Type::FS, "Shaders/Bloom/combine.frag")
         .Link();
 }
 
 void BloomScene::InitObjects() {
     /** Boxes */
     objects[0] = std::make_unique<WoodBox>();
-    objects[0]->SetPosition(glm::vec3{ 0, 0, 0 }
-    );
+    objects[0]->SetPosition(glm::vec3{ 0, 0, 0 });
 
     objects[1] = std::make_unique<WoodBox>();
     objects[1]->SetPosition(glm::vec3{ 2, 0, -2 });
@@ -80,7 +89,7 @@ void BloomScene::InitLightBoxes() {
     radiant_objects[2] = std::move(light_3);
 }
 
-void BloomScene::InitFrameBuffer() {
+void BloomScene::InitHdrFrameBuffer() {
     glGenFramebuffers(1, &hdr_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, hdr_fbo);
     glGenTextures(2, &color_buffer[0]);
@@ -94,8 +103,40 @@ void BloomScene::InitFrameBuffer() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         /** Attach texture to framebuffer */
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (int)i, 
                                GL_TEXTURE_2D, color_buffer[i], 0);
+    }
+
+    /** Make depth buffer for bloom frame buffer */
+    GLuint depth_buffer;
+    glGenRenderbuffers(1, &depth_buffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 720, 480);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
+
+    /** Tell OpenGL which color attachments to use for off-screen rendering */
+    std::array<GLuint, 2> attachments{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, &attachments[0]);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void BloomScene::InitBloomFrameBuffer() {
+    glGenFramebuffers(2, &bloom_fbo[0]);
+    glGenTextures(2, &bloom_color_buffer[0]);
+    
+    for (size_t i = 0; i < 2; ++i) {
+        glBindFramebuffer(GL_FRAMEBUFFER, bloom_fbo[i]);
+        glBindTexture(GL_TEXTURE_2D, bloom_color_buffer[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 720, 480, 0, GL_RGB, GL_FLOAT, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        /** Attach texture to framebuffer */
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D, bloom_color_buffer[i], 0);
     }
 }
 
@@ -104,32 +145,29 @@ void BloomScene::HandleInput(GLFWwindow * const window) {
 }
 
 void BloomScene::Draw() {
-    glClearColor(.1f, .1f, .1f, 1.f);
+    glClearColor(.0f, .0f, .0f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    DrawHdrBuffer();
     DrawBloomBuffer();
-
-    shader_fullscreen.Use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindVertexArray(empty_vao);
-    glBindTexture(GL_TEXTURE_2D, color_buffer[1]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    DrawBloomFinalRender();
 
     DrawText();
 }
 
-void BloomScene::DrawBloomBuffer() {
+void BloomScene::DrawHdrBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, hdr_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader_fbo_bloom.Use();
+    shader_fbo_hdr.Use();
     auto view = camera.GetViewMatrix();
-    shader_fbo_bloom.SetVecMatrix4f("uView", view);
-    shader_fbo_bloom.SetVecMatrix4f("uProjection", camera.GetProjection());
-    shader_fbo_bloom.SetVec3f("uCameraPos", camera.GetPosition());
+    shader_fbo_hdr.SetVecMatrix4f("uView", view);
+    shader_fbo_hdr.SetVecMatrix4f("uProjection", camera.GetProjection());
+    shader_fbo_hdr.SetVec3f("uCameraPos", camera.GetPosition());
 
-    DrawObjects(shader_fbo_bloom);
+    DrawObjects(shader_fbo_hdr);
     /** Lights */
     DrawLightObjects();
 
@@ -164,6 +202,52 @@ void BloomScene::DrawLightObjects() {
         if (item != nullptr)
             item->Draw(shader_light);
     }
+}
+
+void BloomScene::DrawBloomBuffer() {
+    bool first_iteration = true;
+
+    shader_fbo_bloom.Use();
+    glBindVertexArray(empty_vao);
+
+    for (int i = 0; i < 10; ++i) {
+        glBindFramebuffer(GL_FRAMEBUFFER, bloom_fbo[i % 2]);
+        shader_fbo_bloom.SetBool("horizontal", (((i % 2) == 0) ? true : false));
+
+        glActiveTexture(GL_TEXTURE0);
+        if (first_iteration) {
+            glBindTexture(GL_TEXTURE_2D, color_buffer[1]);
+            first_iteration = false;
+        }
+        else {
+            if (i % 2 == 1)
+                glBindTexture(GL_TEXTURE_2D, bloom_color_buffer[0]);
+            else
+                glBindTexture(GL_TEXTURE_2D, bloom_color_buffer[1]);
+        }
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void BloomScene::DrawBloomFinalRender() {
+    shader_final.Use();
+    shader_final.SetFloat("uExposure", 1.0f);
+    glBindVertexArray(empty_vao);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, color_buffer[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, bloom_color_buffer[0]);
+    /** Render */
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
 }
 
 void BloomScene::DrawText() {

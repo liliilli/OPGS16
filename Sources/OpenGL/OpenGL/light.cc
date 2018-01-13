@@ -61,8 +61,8 @@ void PointLight::SetPosition(const glm::vec3 position) {
 }
 
 void PointLight::SetColor(const glm::vec3 color) {
-    this->ambient = color * 0.2f;
-    this->diffuse = color;
+    this->ambient = color * 0.1f;
+    this->diffuse = color * 0.5f;
     this->specular = color;
 };
 
