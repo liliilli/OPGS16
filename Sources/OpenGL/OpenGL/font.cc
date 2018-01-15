@@ -1,5 +1,6 @@
 #include "font.h"
 #include <iostream>
+#include <sstream>
 #include <glm\gtc\matrix_transform.hpp>
 
 Font::Font(std::string&& font_path) 
@@ -85,52 +86,76 @@ void Font::BindVertexAttributes() {
     glBindVertexArray(0);
 }
 
-void Font::RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color) {
+void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
     shader.Use();
     shader.SetVec3f("textColor", color);
     shader.SetVecMatrix4f("projection", projection);
 
     glBindVertexArray(vao);
 
-    // Iterate through all characters
-    for (const auto& chr : text) {
-        Character ch_info   = characters.at(chr);
+    /** Separate text to multi lines string */
+    auto texts  = SeparateTextToList(input);
+    auto pos    = input_pos;
 
-        auto x_offset = ch_info.bearing.x * scale;
-        auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
-        glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
+    /** Render texts */
+    for (const auto& text : texts) {
+        // Iterate through all characters
+        for (const auto& chr : text) {
+            Character ch_info   = characters.at(chr);
 
-        auto w = ch_info.size.x * scale;
-        auto h = ch_info.size.y * scale;
+            auto x_offset = ch_info.bearing.x * scale;
+            auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
+            glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
 
-        // Update VBO for each character
-        GLfloat vertices[6][4] = {
-            { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-            { ch_pos.x,     ch_pos.y,       0.0, 1.0 },
-            { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+            auto w = ch_info.size.x * scale;
+            auto h = ch_info.size.y * scale;
 
-            { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-            { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
-            { ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
-        };
-        
-        // Render texture glyph
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
+            // Update VBO for each character
+            GLfloat vertices[6][4] = {
+                { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+                { ch_pos.x,     ch_pos.y,       0.0, 1.0 },
+                { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
 
-        // Update content of VBO
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+                { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+                { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+                { ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
+            };
+            
+            // Render texture glyph
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
 
-        // Render
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        pos.x += (ch_info.advance >> 6) * scale;
+            // Update content of VBO
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            // Render
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            pos.x += (ch_info.advance >> 6) * scale;
+        }
+
+        /** Relocate display position */
+        pos.x   = input_pos.x;
+        pos.y  -= characters.at(0).size.y;
     }
 
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+/**
+ * @brief The method separate input to multi-lines strings detecting line-feed return carriage.
+ * @param[in] text String text to separate
+ * @return string list.
+ */
+std::vector<std::string> Font::SeparateTextToList(const std::string text) {
+    std::vector<std::string> result;
 
+    std::stringstream stream{text};
+    for (std::string line; std::getline(stream, line);) {
+        result.push_back(line);
+    }
 
+    return result;
+}

@@ -79,6 +79,13 @@ private:
      */
     [[noreturn]] void BindVertexAttributes();
 
+    /**
+     * @brief The method separate input to multi-lines strings detecting line-feed return carriage.
+     * @param[in] text String text to separate
+     * @return string list.
+     */
+    std::vector<std::string> SeparateTextToList(const std::string text);
+
     /** Freetype pointer */
     FT_Library freetype;
     FT_Face face;
