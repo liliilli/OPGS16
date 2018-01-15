@@ -31,12 +31,26 @@ private:
     Font font;
 
     std::unordered_map<int, std::unique_ptr<Object>>    objects;
+
+    /** ----------------------------------------------------------------------+
+     * @comment Initiate methods
+     */
+
     /**
-    * @brief Render string.
-    *
-    * In this method, at first depth test is disabled and render string to display.
-    * At the end depth test is enabled again.
-    */
+     * @brief Initiate shaders to use in this scene.
+     */
+    [[noreturn]] void InitShaders();
+
+    /** ----------------------------------------------------------------------+
+     * @comment sub-draw methods using in Draw() method.
+     */
+
+    /**
+     * @brief Render string.
+     *
+     * In this method, at first depth test is disabled and render string to display.
+     * At the end depth test is enabled again.
+     */
     [[noreturn]] void DrawText();
 };
 

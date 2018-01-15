@@ -34,6 +34,7 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     // Set MSAAx4
     glfwWindowHint(GLFW_SAMPLES, 4);
 
@@ -47,6 +48,7 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
 
     glfwMakeContextCurrent(window);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_FALSE);
     glfwSetFramebufferSizeCallback(window, &Application::FramebufferSizeCallback);
     glfwSetCursorPosCallback(window, camera::MouseControl);
 

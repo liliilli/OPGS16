@@ -42,6 +42,15 @@ public:
      */
     [[noreturn]] void Run();
 
+    /**
+     * @brief The method replace scene with old scene.
+     */
+    template <class _Ty, 
+              typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
+    [[noreturn]] void ReplaceScene(_Ty*) {
+        PushScene((_Ty*)nullptr);
+    }
+
 private:
     explicit Application(std::string&& app_name = "Application");
 
@@ -144,7 +153,7 @@ private:
             pressed_key_map[keycode] = true;
             return true;
         }
-        else {
+        else if (glfwGetKey(window, keycode) == GLFW_RELEASE) {
             pressed_key_map[keycode] = false;
             return false;
         }
