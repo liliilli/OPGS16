@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include "Scenes\bloom_scene.h"
+#include "Scenes\start.h"
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) } {
@@ -11,7 +11,7 @@ Application::Application(std::string&& app_name)
     camera::SetCursor(360.f, 240.f);
     SetFps(60.0f);
 
-    BloomScene* _{};
+    Start* _{};
     PushScene(_);
 }
 
