@@ -44,7 +44,7 @@ void PrimProc::InitBezierScene() {
             .SetShader(Type::FS, "Shaders/Ch8/3_bezier.frag")
             .Link();
     }
-    
+
     objects[0] = std::make_unique<BezierQuad>();
     objects[1] = std::make_unique<TerrainTess>();
 }
@@ -52,7 +52,7 @@ void PrimProc::InitBezierScene() {
 void PrimProc::HandleInput(GLFWwindow* const window) {
     if (DoesKeyPressed(window, GLFW_KEY_0))
         m_is_line = !m_is_line;
-    
+
     Scene::HandleInput(window);
 }
 

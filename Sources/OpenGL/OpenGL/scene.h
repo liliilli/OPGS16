@@ -5,7 +5,7 @@
 * @file scene.h
 * @brief The file consist of basic scene API.
 *
-* All derived class based on Scene class can be used parameter of Application::PushScene(). 
+* All derived class based on Scene class can be used parameter of Application::PushScene().
 *
 * @author Jongmin Yun
 * @version 0.0.1
@@ -33,17 +33,17 @@ public:
      *
      * @param[in] window Window handle pointer.
      */
-    [[noreturn]] virtual void HandleInput(GLFWwindow* const window);
+	[[noreturn]] virtual void HandleInput(GLFWwindow* const window);
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
      */
-    [[noreturn]] virtual void Update();
-    
+	[[noreturn]] virtual void Update() = 0;
+
     /**
      * @brief The method calls scene to draw all objects.
      */
-    [[noreturn]] virtual void Draw();
+	[[noreturn]] virtual void Draw() = 0;
 
 protected:
     camera::Camera& camera;

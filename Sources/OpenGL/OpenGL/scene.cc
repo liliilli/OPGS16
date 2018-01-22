@@ -20,7 +20,3 @@ void Scene::HandleInput(GLFWwindow* const window) {
     else if (DoesKeyPressed(window, GLFW_KEY_Q))
         camera.Zoom(camera::ZoomMode::OUT);
 }
-
-void Scene::Update() { }
-
-void Scene::Draw() { }

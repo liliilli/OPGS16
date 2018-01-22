@@ -2,6 +2,7 @@
 #include "..\application.h"
 #include "bloom_scene.h"
 #include "primitive_proc.h"
+#include "path_finding2d.h"
 
 Start::Start() :
     font{"Resources/LSANS.TTF"} {
@@ -22,6 +23,9 @@ void Start::HandleInput(GLFWwindow* const window) {
     else if (DoesKeyPressed(window, GLFW_KEY_C)) {
         Application::getInstance().ReplaceScene((BloomScene*)nullptr);
     }
+	else if (DoesKeyPressed(window, GLFW_KEY_D)) {
+		Application::getInstance().ReplaceScene((PathFinding2D*)nullptr);
+	}
 
     Scene::HandleInput(window);
 }
@@ -39,9 +43,10 @@ void Start::DrawText() {
     /** String rendering */
     font.RenderText("OpenGL Tutorial Samples", { 25, 480 - 48 }, 1.f, { 1, 1, 1 });
 
-    std::string text = "A : Terrain Tesslation\n" 
-        "B : Flapping Carpet\n" 
-        "C : Bloom";
+    std::string text = "A : Terrain Tesslation\n"
+        "B : Flapping Carpet\n"
+        "C : Bloom\n"
+		"D : PathFinding2D";
     font.RenderText(text, { 25, 240 }, .5f, { 1, 1, 1 });
 
     std::string copyright = "Copyright (c) 2018, Jongmin Yun All rights reserved.";
@@ -51,5 +56,4 @@ void Start::DrawText() {
 }
 
 void Start::Update() {
-    
 }
