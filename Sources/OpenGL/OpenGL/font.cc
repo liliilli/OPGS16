@@ -1,12 +1,13 @@
 #include "font.h"
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <glm\gtc\matrix_transform.hpp>
 
-Font::Font(std::string&& font_path) 
-    : freetype(nullptr), face(nullptr), 
+Font::Font(std::string&& font_path)
+    : freetype(nullptr), face(nullptr),
     projection{ glm::ortho(0.f, 720.f, 0.f, 480.f) } {
-    
+
     /** Initiate Shader */ {
         using Type = helper::ShaderNew::Type;
         shader.SetShader(Type::VS, "Shaders/Global/font.vert");
@@ -75,10 +76,10 @@ void Font::BindVertexAttributes() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-    
+
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(0);
 
@@ -86,6 +87,14 @@ void Font::BindVertexAttributes() {
     glBindVertexArray(0);
 }
 
+/**
+ * @brief The method renders given text on given position with given color.
+ *
+ * @param[in] text String text
+ * @param[in] pos Position text has to be shown on. x, y.
+ * @param[in] scale Scale factor
+ * @param[in] color Color to be colored.
+ */
 void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
     shader.Use();
     shader.SetVec3f("textColor", color);
@@ -120,7 +129,7 @@ void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm
                 { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
                 { ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
             };
-            
+
             // Render texture glyph
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
@@ -140,8 +149,146 @@ void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm
         pos.y  -= characters.at(0).size.y;
     }
 
-    glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+	EndShader();
+}
+
+/**
+ * @brief The method renders given text on given position with given color.
+ *
+ * This get text rendered with relative position from origin with color by aligning.
+ * If text is multilined, text will be tokenized with '\n' return-carriage character.
+ *
+ * @param[in] text String text to be rendered.
+ * @param[in] origin Origin position from which text strings rendered.
+ * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
+ * In contrast UP_RIGHT will be (width, height) in Screen space.
+ *
+ * @param[in] relatve_position Relatve position from origin position string will be rendered.
+ * Final position string rendered is (x, y) = (origin + relative_position + alignment_offset)
+ *
+ * @param[in] color The color to be rendered. R, G, B support.
+ * @param[in] alignment String alignment parameter.
+ *
+ * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+ */
+void Font::RenderTextNew
+(const std::string& text, FontOrigin origin, glm::vec2 relative_position, glm::vec3 color,
+	FontAlignment alignment) {
+	// Body
+	StartShader(color);
+	auto text_container = SeparateTextToList(text);
+	auto position = CalculateCenterPosition(origin, relative_position);
+
+	switch (alignment) {
+	case FontAlignment::LEFT:
+		RenderLeftSide(text_container, position, 1.0f);
+		break;
+	case FontAlignment::CENTER:
+		RenderCenterSide(text_container, position, 1.0f);
+		break;
+	case FontAlignment::RIGHT:
+		RenderRightSide(text_container, position, 1.0f);
+		break;
+	}
+
+	EndShader();
+}
+
+/**
+ * @brief This method starts shader with color to render.
+ * @param[in] color The color to be attached to shader.
+ */
+void Font::StartShader(const glm::vec3& color) {
+	shader.Use();
+	shader.SetVec3f("textColor", color);
+	shader.SetVecMatrix4f("projection", projection);
+	glBindVertexArray(vao);
+}
+
+/**
+ * @brief This method calculate and return barycenter position to render.
+ *
+ * @param[in] origin Origin position from which text strings rendered.
+ * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
+ * In contrast UP_RIGHT will be (width, height) in Screen space.
+ *
+ * @param[in] position Relatve position from origin position string will be rendered.
+ * Returned position string rendered is (x, y) = (origin + relative_position)
+ *
+ * @return The position
+ */
+glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position) {
+	/** x origin, y origin, width, height */
+	std::array<GLint, 4> viewport{};
+	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
+
+	auto origin_type = static_cast<int>(origin) - 1;
+	auto y_value = origin_type / 3;
+	auto x_value = origin_type % 3;
+
+	GLint x_pos = viewport[2] * x_value;
+	GLint y_pos = viewport[3] * y_value / 2;
+
+	return glm::vec2(x_pos + position.x, y_pos + position.y);
+}
+
+void Font::RenderLeftSide(const std::vector<std::string>& container,
+	const glm::vec2& position, const float scale) {
+	/** Body */
+	auto pos	= position;
+
+	for (const auto& t_text : container) {
+		for (const auto& chr : t_text) {
+			Character ch_info = characters.at(chr);
+
+			auto x_offset = ch_info.bearing.x * scale;
+			auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
+			glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
+
+			auto w = ch_info.size.x * scale;
+			auto h = ch_info.size.y * scale;
+
+			// Update VBO for each character
+			GLfloat vertices[6][4] = {
+				{ ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+				{ ch_pos.x,     ch_pos.y,       0.0, 1.0 },
+				{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+
+				{ ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+				{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+				{ ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
+			};
+
+			// Render texture glyph
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
+
+			// Update content of VBO
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			// Render
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			pos.x += (ch_info.advance >> 6) * scale;
+		}
+
+		/** Relocate display position */
+		pos.x = position.x;
+		pos.y -= characters.at(0).size.y;
+	}
+}
+
+void Font::RenderCenterSide(const std::vector<std::string>& container,
+	const glm::vec2& position, const float scale) {
+	/** Body */
+	throw std::runtime_error("Not implemented");
+}
+
+void Font::RenderRightSide(const std::vector<std::string>& container,
+	const glm::vec2& position, const float scale) {
+	/** Body */
+	throw std::runtime_error("Not implemented");
 }
 
 /**

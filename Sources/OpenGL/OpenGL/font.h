@@ -2,13 +2,13 @@
 #define OPENGL_TUTORIAL_FONT_H
 
 /**
- * @file font.h
- * @brief 
+ * @file System/font.h
+ * @brief Fundamental font renderer to render string.
  *
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 #include <string>
@@ -21,12 +21,13 @@
 #include FT_FREETYPE_H
 
 #include "shader.h"
+#define PRIVATE__ private:
 
 /**
  * @class Font
  * @brief The class manages reading fonts, rendering fonts.
  *
- * This class manages reading fonts, rendering fonts. 
+ * This class manages reading fonts, rendering fonts.
  * default shader is initiated as creating font instance.
  *
  * @todo Shader must be static instance to reduce memory usage.
@@ -54,23 +55,123 @@ private:
 public:
     Font(std::string&& font_path);
 
+	enum class FontOrigin : int {
+		DOWN_LEFT = 1,		DOWN_CENTER = 2,	DOWN_RIGHT = 3,
+		CENTER_LEFT = 4,	CENTER_CENTER = 5,	CENTER_RIGHT = 6,
+		UP_LEFT = 7,		UP_CENTER = 8,		UP_RIGHT = 9
+	};
+
+	enum class FontAlignment { LEFT, CENTER, RIGHT };
+
     /**
      * @brief The method renders given text on given position with given color.
+	 *
+	 * This method is deprecated. (version 0.0.2~)
      *
      * @param[in] text String text
      * @param[in] pos Position text has to be shown on. x, y.
      * @param[in] scale Scale factor
      * @param[in] color Color to be colored.
+	 *
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
      */
-    [[noreturn]] void RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color);
+    [[noreturn]]
+	[[deprecated("Use RenderTextNew instead. this method does not support alignment features.")]]
+	void RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color);
+
+	/**
+	 * @brief The method renders given text on given position with given color.
+	 *
+	 * This get text rendered with relative position from origin with color by aligning.
+	 * If text is multilined, text will be tokenized with '\n' return-carriage character.
+	 *
+	 * @param[in] text String text to be rendered.
+	 * @param[in] origin Origin position from which text strings rendered.
+	 * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
+	 * In contrast UP_RIGHT will be (width, height) in Screen space.
+	 *
+	 * @param[in] relatve_position Relatve position from origin position string will be rendered.
+	 * Final position string rendered is (x, y) = (origin + relative_position + alignment_offset)
+	 *
+	 * @param[in] color The color to be rendered. R, G, B support.
+	 * @param[in] alignment String alignment parameter.
+	 *
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	[[noreturn]] void RenderTextNew(const std::string& text, FontOrigin origin,
+		glm::vec2 relative_position, glm::vec3 color, FontAlignment alignment = FontAlignment::LEFT);
 
 private:
+	/**
+	 * @brief This method starts shader with color to render.
+	 * @param[in] color The color to be attached to shader.
+	 */
+	[[noreturn]] void StartShader(const glm::vec3& color);
+
     /**
      * @brief The method sets character textures from glyphs and store them to container.
      *
      * This methods called when initiate instance.
      */
     [[noreturn]] void GetCharTextures();
+
+	/**
+	 * @brief This method calculate and return barycenter position to render.
+	 *
+	 * @param[in] origin Origin position from which text strings rendered.
+	 * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
+	 * In contrast UP_RIGHT will be (width, height) in Screen space.
+	 *
+	 * @param[in] position Relatve position from origin position string will be rendered.
+	 * Returned position string rendered is (x, y) = (origin + relative_position)
+	 *
+	 * @return The position
+	 */
+	glm::vec2 CalculateCenterPosition(FontOrigin& origin, glm::vec2& position);
+
+	/**
+	 * @brief This methods ends shader's operation.
+	 */
+	[[noreturn]] inline void EndShader() {
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	/**
+	 * @brief Final render method actually renders strings from left side.
+	 *
+	 * @param[in] container Container stores multi-lined (separated) strings.
+	 * @param[in] position Position on which to render.
+	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+	 *
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	[[noreturn]] void RenderLeftSide(const std::vector<std::string>& container,
+		const glm::vec2& position, const float scale);
+
+	/**
+	 * @brief Final render method actually renders strings from center side.
+	 *
+	 * @param[in] container Container stores multi-lined (separated) strings.
+	 * @param[in] position Position on which to render.
+	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+	 *
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	[[noreturn]] void RenderCenterSide(const std::vector<std::string>& container,
+		const glm::vec2& position, const float scale);
+
+	/**
+	 * @brief Final render method actually renders strings from right side.
+	 *
+	 * @param[in] container Container stores multi-lined (separated) strings.
+	 * @param[in] position Position on which to render.
+	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+	 *
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	[[noreturn]] void RenderRightSide(const std::vector<std::string>& container,
+		const glm::vec2& position, const float scale);
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.
