@@ -181,13 +181,13 @@ void Font::RenderTextNew
 
 	switch (alignment) {
 	case FontAlignment::LEFT:
-		RenderLeftSide(text_container, position, 1.0f);
+		RenderLeftSide(text_container, position, 0.5f);
 		break;
 	case FontAlignment::CENTER:
-		RenderCenterSide(text_container, position, 1.0f);
+		RenderCenterSide(text_container, position, 0.5f);
 		break;
 	case FontAlignment::RIGHT:
-		RenderRightSide(text_container, position, 1.0f);
+		RenderRightSide(text_container, position, 0.5f);
 		break;
 	}
 
@@ -226,50 +226,23 @@ glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position)
 	auto y_value = origin_type / 3;
 	auto x_value = origin_type % 3;
 
-	GLint x_pos = viewport[2] * x_value;
+	GLint x_pos = viewport[2] * x_value / 2;
 	GLint y_pos = viewport[3] * y_value / 2;
 
 	return glm::vec2(x_pos + position.x, y_pos + position.y);
 }
 
-void Font::RenderLeftSide(const std::vector<std::string>& container,
-	const glm::vec2& position, const float scale) {
+void Font::RenderLeftSide
+(const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
-	auto pos	= position;
+	auto pos = position;
 
 	for (const auto& t_text : container) {
 		for (const auto& chr : t_text) {
-			Character ch_info = characters.at(chr);
+			Character ch_info	= characters.at(chr);
+			auto vertices		= GetCharacterVertices(ch_info, pos, scale);
 
-			auto x_offset = ch_info.bearing.x * scale;
-			auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
-			glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
-
-			auto w = ch_info.size.x * scale;
-			auto h = ch_info.size.y * scale;
-
-			// Update VBO for each character
-			GLfloat vertices[6][4] = {
-				{ ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-				{ ch_pos.x,     ch_pos.y,       0.0, 1.0 },
-				{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
-
-				{ ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-				{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
-				{ ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
-			};
-
-			// Render texture glyph
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
-
-			// Update content of VBO
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			// Render
-			glDrawArrays(GL_TRIANGLES, 0, 6);
+			Render(ch_info, vertices);
 			pos.x += (ch_info.advance >> 6) * scale;
 		}
 
@@ -279,16 +252,101 @@ void Font::RenderLeftSide(const std::vector<std::string>& container,
 	}
 }
 
-void Font::RenderCenterSide(const std::vector<std::string>& container,
-	const glm::vec2& position, const float scale) {
+void Font::RenderCenterSide
+(const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
-	throw std::runtime_error("Not implemented");
+	auto pos = position;
+
+	for (const auto& t_text : container) {
+		pos.x -= GetStringRenderWidth(t_text, scale) / 2;
+
+		for (const auto& chr : t_text) {
+			Character ch_info = characters.at(chr);
+			auto vertices = GetCharacterVertices(ch_info, pos, scale);
+
+			Render(ch_info, vertices);
+			pos.x += (ch_info.advance >> 6) * scale;
+		}
+
+		pos.x = position.x;
+		pos.y -= characters.at(0).size.y;
+	}
 }
 
-void Font::RenderRightSide(const std::vector<std::string>& container,
-	const glm::vec2& position, const float scale) {
+void Font::RenderRightSide
+(const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
-	throw std::runtime_error("Not implemented");
+	auto pos = position;
+
+	for (const auto& t_text : container) {
+		pos.x -= GetStringRenderWidth(t_text, scale);
+
+		for (const auto& chr : t_text) {
+			Character ch_info = characters.at(chr);
+			auto vertices = GetCharacterVertices(ch_info, pos, scale);
+
+			Render(ch_info, vertices);
+			pos.x += (ch_info.advance >> 6) * scale;
+		}
+
+		pos.x = position.x;
+		pos.y -= characters.at(0).size.y;
+	}
+}
+
+/**
+ * @brief The method gets character quad vertices to be needed for rendering.
+ *
+ * @param[in] info
+ * @param[in] position
+ * @param[in] scale
+ *
+ * @return Vertices
+ * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+ */
+std::array<glm::vec4, 6> Font::GetCharacterVertices
+(const Character& ch_info, const glm::vec2& pos, const float scale) {
+	/** Body */
+	auto x_offset = ch_info.bearing.x * scale;
+	auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
+	glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
+
+	auto w = ch_info.size.x * scale;
+	auto h = ch_info.size.y * scale;
+
+	return std::array<glm::vec4, 6>{
+		glm::vec4{ ch_pos.x,	 ch_pos.y + h,	 0.0, 0.0 },
+		glm::vec4{ ch_pos.x,     ch_pos.y,       0.0, 1.0 },
+		glm::vec4{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+
+		glm::vec4{ ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+		glm::vec4{ ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+		glm::vec4{ ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
+	};
+}
+
+unsigned Font::GetStringRenderWidth(const std::string& text, const float scale) {
+	unsigned width{};
+	for (const auto& chr : text) {
+		Character ch_info = characters.at(chr);
+		width += (ch_info.advance >> 6) * scale;
+	}
+
+	return width;
+}
+
+void Font::Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices) {
+	// Render texture glyph
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
+
+	// Update content of VBO
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Render
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 /**

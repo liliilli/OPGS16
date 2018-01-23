@@ -168,10 +168,35 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 *
-	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	[[noreturn]] void RenderRightSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
+
+	/**
+	 * @brief The method gets character quad vertices to be needed for rendering.
+	 *
+	 * @param[in] info
+	 * @param[in] position
+	 * @param[in] scale
+	 *
+	 * @return Vertices
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	std::array<glm::vec4, 6> GetCharacterVertices
+	(const Character& info, const glm::vec2& position, const float scale);
+
+	/**
+	 * @brief The method gets text and returns total rendering width size.
+	 *
+	 * @param[in] text
+	 * @param[in] scale
+	 *
+	 * @return size
+	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+	 */
+	unsigned GetStringRenderWidth(const std::string& text, const float scale);
+
+	[[noreturn]] void Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices);
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.
