@@ -10,7 +10,7 @@
 
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
-#include "..\..\shader.h"
+#include "..\..\System\Shader\shader.h"
 
 /**
  * @interface IRadiant

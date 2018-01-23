@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
-#include "light.h"
+#include "..\..\light.h"
 
 namespace helper {
 
@@ -29,20 +29,20 @@ public:
      * @brief
      */
     enum class Type : int {
-        VS  = GL_VERTEX_SHADER, 
-        TCS = GL_TESS_CONTROL_SHADER, 
-        TES = GL_TESS_EVALUATION_SHADER, 
-        GS  = GL_GEOMETRY_SHADER, 
+        VS  = GL_VERTEX_SHADER,
+        TCS = GL_TESS_CONTROL_SHADER,
+        TES = GL_TESS_EVALUATION_SHADER,
+        GS  = GL_GEOMETRY_SHADER,
         FS  = GL_FRAGMENT_SHADER
     };
 
     /**
      * @brief
      *
-     * @param[in] shader_type 
+     * @param[in] shader_type
      * @param[in] path
      *
-     * @bug When binds const char* code ptr into shader, 
+     * @bug When binds const char* code ptr into shader,
      * success flag is not on and go to the error calls but maybe shader program works probablly.
      */
     ShaderNew& SetShader(Type shader_type, const GLchar* path);
@@ -79,7 +79,7 @@ public:
      * @brief The method sets float value to arbitary uniform variable.
      *
      * The method sets float (single-precision real) value to arbitary uniform variable.
-     * 
+     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
@@ -117,7 +117,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] container DirectionalLight container instance.
      */
-    [[noreturn]] void SetStructDirLight(const std::string& name, 
+    [[noreturn]] void SetStructDirLight(const std::string& name,
                                         const light::DirectionalLight& container);
 
     /**
@@ -126,7 +126,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] container PointLight container instance.
      */
-    [[noreturn]] void SetStructPointLight(const std::string& name, 
+    [[noreturn]] void SetStructPointLight(const std::string& name,
                                           const light::PointLight& container);
 
     /**
@@ -135,7 +135,7 @@ public:
      * @param[in] name THe name of uniform variable to be specified.
      * @param[in] container Spotlight container instance.
      */
-    [[noreturn]] void SetStructSpotlight(const std::string& name, 
+    [[noreturn]] void SetStructSpotlight(const std::string& name,
                                          const light::Spotlight& container);
 
 private:
@@ -144,14 +144,14 @@ private:
 
     /** Boolean Flag. This value must be true when call Shader.Use() */
     bool m_linked{ false };
-    
+
     /** Compiled Shader list */
     std::unordered_map<Type, GLuint> m_shaders;
 
     /**
      * @brief
      *
-     * @param[in] type 
+     * @param[in] type
      */
     bool IsCompiled(Type type) {
         return (m_shaders.find(type) != m_shaders.end());

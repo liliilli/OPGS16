@@ -1,7 +1,7 @@
 #ifndef OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H
 #define OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H
 #include "..\object.h"
-#include "..\shader.h"
+#include "..\System\Shader\shader.h"
 #include "..\scene.h"
 #include "..\Objects\Interface\i_radiant.h"
 

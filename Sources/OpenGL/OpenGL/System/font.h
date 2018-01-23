@@ -20,7 +20,7 @@
 #include <glm\glm.hpp>
 #include FT_FREETYPE_H
 
-#include "shader.h"
+#include "Shader\shader.h"
 #define PRIVATE__ private:
 
 /**

@@ -1,7 +1,7 @@
 #ifndef OPENGL_TUTORIAL_SCENES_STARFIELD_POINT_H
 #define OPENGL_TUTORIAL_SCENES_STARFIELD_POINT_H
 #include "..\object.h"
-#include "..\shader.h"
+#include "..\System\Shader\shader.h"
 #include "..\scene.h"
 
 class StarField : public Scene {
@@ -30,7 +30,7 @@ public:
 
 private:
     Font font;
-    
+
     /** ----------------------------------------------------------------------+
      * @comment Initiate methods
      */

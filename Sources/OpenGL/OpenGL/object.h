@@ -17,7 +17,7 @@
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 #include "camera.h"
-#include "shader.h"
+#include "System\Shader\shader.h"
 
 /**
  * @class Object
@@ -47,7 +47,7 @@ public:
 
 
     /*-----------------------------------------------------------------------*
-     * @comments Bolier-plate codes! 
+     * @comments Bolier-plate codes!
      */
 
     /**
@@ -86,7 +86,7 @@ public:
 
     /**
      * @brief The method sets rotation factor have values which ranges [-1, 1].
-     * @param[in] factor 
+     * @param[in] factor
      */
     [[noreturn]] void SetRotationFactor(glm::vec3 factor);
 
@@ -116,7 +116,7 @@ public:
 
     /**
      * @brief The method returns Model matrix, M = TRS
-     * 
+     *
      * If any value which related to Translate, Rotation, Scaling has been changed,
      * model matrix would be calculated newly and returned.
      *
@@ -130,7 +130,7 @@ protected:
 
     /**
      * @text values related to movement, rotation, scaling.
-     */ 
+     */
 
     /** (x, y, z) world position */
     glm::vec3   position{};

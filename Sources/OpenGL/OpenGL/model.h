@@ -7,7 +7,7 @@
 #include <assimp\scene.h>
 #include <glm\glm.hpp>
 #include "helper.h"
-#include "shader.h"
+#include "System\Shader\shader.h"
 
 namespace model {
 
@@ -18,8 +18,8 @@ struct Vertex {
 };
 
 enum class TextureType {
-    DIFFUSE, 
-    SPECULAR, 
+    DIFFUSE,
+    SPECULAR,
     EMISSION,
     NORMAL,
     HEIGHT,
@@ -34,7 +34,7 @@ struct Texture {
 
 /**
  * \brief   a storage for each mesh information of one model.
- * \details 
+ * \details
  * \author  Jongmin Yun (Neu), jmyundev@gmail.com
  * \date    2017-12-26
  * \version 0.0.1
@@ -47,17 +47,17 @@ public:
     std::vector<Texture>    textures;
 
     // Functions
-    Mesh(const std::vector<Vertex>& vetices, 
-         const std::vector<unsigned>& indices, 
+    Mesh(const std::vector<Vertex>& vetices,
+         const std::vector<unsigned>& indices,
          const std::vector<Texture>& textures);
-    Mesh(std::vector<Vertex>&& vetices, 
-         std::vector<unsigned>&& indices, 
+    Mesh(std::vector<Vertex>&& vetices,
+         std::vector<unsigned>&& indices,
          std::vector<Texture>&& textures);
 
     /**
-     * \brief   
-     * \details 
-     * \param   
+     * \brief
+     * \details
+     * \param
      * \return  void
      */
     void SetTranslationMatrix();
@@ -116,7 +116,7 @@ private:
     /**
      * \brief
      * \details
-     * \param   
+     * \param
      * \return  void
      *
      * \see     https://learnopengl.com/#!Model-Loading/Model
