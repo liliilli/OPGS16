@@ -48,11 +48,14 @@ private:
         GLuint      advance;
     };
 
-    /** Shader program */
-    //helper::Shader shader{ "Shaders/font.vert", "Shaders/font.frag" };
     helper::ShaderNew shader{};
 
 public:
+	/**
+	 * @brief Initialize Font renderer instance with font path.
+	 *
+	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
+	 */
     Font(std::string&& font_path);
 
 	enum class FontOrigin : int {
@@ -94,12 +97,14 @@ public:
 	 * Final position string rendered is (x, y) = (origin + relative_position + alignment_offset)
 	 *
 	 * @param[in] color The color to be rendered. R, G, B support.
-	 * @param[in] alignment String alignment parameter.
+	 * @param[in] alignment String alignment parameter. default value is LEFT. (left-side)
+	 * @param[in] scale Scale factor value to apply it. Default value is 1.0f. (not-change)
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	[[noreturn]] void RenderTextNew(const std::string& text, FontOrigin origin,
-		glm::vec2 relative_position, glm::vec3 color, FontAlignment alignment = FontAlignment::LEFT);
+		glm::vec2 relative_position, glm::vec3 color,
+		FontAlignment alignment = FontAlignment::LEFT, const float scale = 1.0f);
 
 private:
 	/**
@@ -125,7 +130,7 @@ private:
 	 * @param[in] position Relatve position from origin position string will be rendered.
 	 * Returned position string rendered is (x, y) = (origin + relative_position)
 	 *
-	 * @return The position
+	 * @return The position has (x, y) value.
 	 */
 	glm::vec2 CalculateCenterPosition(FontOrigin& origin, glm::vec2& position);
 
@@ -143,8 +148,6 @@ private:
 	 * @param[in] container Container stores multi-lined (separated) strings.
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
-	 *
-	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	[[noreturn]] void RenderLeftSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
@@ -155,8 +158,6 @@ private:
 	 * @param[in] container Container stores multi-lined (separated) strings.
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
-	 *
-	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	[[noreturn]] void RenderCenterSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
@@ -167,7 +168,6 @@ private:
 	 * @param[in] container Container stores multi-lined (separated) strings.
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
-	 *
 	 */
 	[[noreturn]] void RenderRightSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
@@ -175,11 +175,11 @@ private:
 	/**
 	 * @brief The method gets character quad vertices to be needed for rendering.
 	 *
-	 * @param[in] info
-	 * @param[in] position
-	 * @param[in] scale
+	 * @param[in] info Specific character glyph information.
+	 * @param[in] position The position that character which will be rendered.
+	 * @param[in] scale Scale value to magnify or minify character render size.
 	 *
-	 * @return Vertices
+	 * @return Character glyph render vertices information.
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	std::array<glm::vec4, 6> GetCharacterVertices
@@ -188,14 +188,20 @@ private:
 	/**
 	 * @brief The method gets text and returns total rendering width size.
 	 *
-	 * @param[in] text
-	 * @param[in] scale
+	 * @param[in] text One line string to measure.
+	 * @param[in] scale Scale value to magnify or minify character render size.
 	 *
-	 * @return size
+	 * @return The size
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	unsigned GetStringRenderWidth(const std::string& text, const float scale);
 
+	/**
+	 * @brief Actual render method. This method must be called in Render__Side() method.
+	 *
+	 * @param[in] ch_info
+	 * @param[in] vertices
+	 */
 	[[noreturn]] void Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices);
 
     /**

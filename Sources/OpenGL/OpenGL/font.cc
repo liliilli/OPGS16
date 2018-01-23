@@ -167,13 +167,14 @@ void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm
  * Final position string rendered is (x, y) = (origin + relative_position + alignment_offset)
  *
  * @param[in] color The color to be rendered. R, G, B support.
- * @param[in] alignment String alignment parameter.
+ * @param[in] alignment String alignment parameter. default value is LEFT. (left-side)
+ * @param[in] scale Scale factor value to apply it. Default value is 1.0f. (not-change)
  *
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void Font::RenderTextNew
 (const std::string& text, FontOrigin origin, glm::vec2 relative_position, glm::vec3 color,
-	FontAlignment alignment) {
+	FontAlignment alignment, const float scale) {
 	// Body
 	StartShader(color);
 	auto text_container = SeparateTextToList(text);
@@ -181,13 +182,13 @@ void Font::RenderTextNew
 
 	switch (alignment) {
 	case FontAlignment::LEFT:
-		RenderLeftSide(text_container, position, 0.5f);
+		RenderLeftSide(text_container, position, scale);
 		break;
 	case FontAlignment::CENTER:
-		RenderCenterSide(text_container, position, 0.5f);
+		RenderCenterSide(text_container, position, scale);
 		break;
 	case FontAlignment::RIGHT:
-		RenderRightSide(text_container, position, 0.5f);
+		RenderRightSide(text_container, position, scale);
 		break;
 	}
 
@@ -215,7 +216,7 @@ void Font::StartShader(const glm::vec3& color) {
  * @param[in] position Relatve position from origin position string will be rendered.
  * Returned position string rendered is (x, y) = (origin + relative_position)
  *
- * @return The position
+ * @return The position has (x, y) value.
  */
 glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position) {
 	/** x origin, y origin, width, height */
@@ -232,6 +233,13 @@ glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position)
 	return glm::vec2(x_pos + position.x, y_pos + position.y);
 }
 
+/**
+ * @brief Final render method actually renders strings from left side.
+ *
+ * @param[in] container Container stores multi-lined (separated) strings.
+ * @param[in] position Position on which to render.
+ * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+ */
 void Font::RenderLeftSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
@@ -252,6 +260,13 @@ void Font::RenderLeftSide
 	}
 }
 
+/**
+ * @brief Final render method actually renders strings from center side.
+ *
+ * @param[in] container Container stores multi-lined (separated) strings.
+ * @param[in] position Position on which to render.
+ * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+ */
 void Font::RenderCenterSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
@@ -273,6 +288,13 @@ void Font::RenderCenterSide
 	}
 }
 
+/**
+ * @brief Final render method actually renders strings from right side.
+ *
+ * @param[in] container Container stores multi-lined (separated) strings.
+ * @param[in] position Position on which to render.
+ * @param[in] scale Scale factor, it magnify or minify rendered string textures.
+ */
 void Font::RenderRightSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
@@ -297,11 +319,11 @@ void Font::RenderRightSide
 /**
  * @brief The method gets character quad vertices to be needed for rendering.
  *
- * @param[in] info
- * @param[in] position
- * @param[in] scale
+ * @param[in] info Specific character glyph information.
+ * @param[in] position The position that character which will be rendered.
+ * @param[in] scale Scale value to magnify or minify character render size.
  *
- * @return Vertices
+ * @return Character glyph render vertices information.
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 std::array<glm::vec4, 6> Font::GetCharacterVertices
@@ -325,6 +347,15 @@ std::array<glm::vec4, 6> Font::GetCharacterVertices
 	};
 }
 
+/**
+ * @brief The method gets text and returns total rendering width size.
+ *
+ * @param[in] text One line string to measure.
+ * @param[in] scale Scale value to magnify or minify character render size.
+ *
+ * @return The size
+ * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+ */
 unsigned Font::GetStringRenderWidth(const std::string& text, const float scale) {
 	unsigned width{};
 	for (const auto& chr : text) {
