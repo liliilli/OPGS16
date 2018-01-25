@@ -1,8 +1,6 @@
 #ifndef OPENGL_TUTORIAL_SCENES_STARFIELD_POINT_H
 #define OPENGL_TUTORIAL_SCENES_STARFIELD_POINT_H
-#include "..\object.h"
-#include "..\System\Shader\shader.h"
-#include "..\scene.h"
+#include "..\Headers\scene_common.h"
 
 class StarField : public Scene {
 public:

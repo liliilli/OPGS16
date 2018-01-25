@@ -1,8 +1,6 @@
 #ifndef OPENGL_TUTORIAL_TERRAIN_TESS_H
 #define OPENGL_TUTORIAL_TERRAIN_TESS_H
-#include "..\helper.h"
-#include "..\object.h"
-#include "..\texture.h"
+#include "..\Headers\common.h"
 
 class TerrainTess : public Object {
 public:

@@ -1,10 +1,10 @@
 #include "light_box.h"
-#include "..\constant.h"
-#include "..\helper.h"
+#include "..\System\Frame\constant.h"
+#include "..\System\Frame\helper.h"
 
 LightBox::LightBox() :
-    pointlight{ position, glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) }, 
-    object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) } 
+    pointlight{ position, glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) },
+    object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) }
 {}
 
 void LightBox::Draw(helper::ShaderNew & shader) {

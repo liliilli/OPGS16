@@ -1,7 +1,7 @@
 #ifndef OPENGL_TUTORIAL_SCENES_HELLO_WORLD_H
 #define OPENGL_TUTORIAL_SCENES_HELLO_WORLD_H
 
-#include "..\scene.h"
+#include "..\Headers\scene_common.h"
 
 class HelloWorld : public Scene {
 public:

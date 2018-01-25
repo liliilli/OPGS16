@@ -1,7 +1,7 @@
 #include "terrain_tess.h"
-#include "..\camera.h"
+#include "..\GlobalObjects\camera.h"
 
-TerrainTess::TerrainTess() : 
+TerrainTess::TerrainTess() :
     m_tex_height{ texture::Texture2D{ "Resources/heightmap.jpg", GL_RGB } },
     m_tex_color{ texture::Texture2D{ "Resources/color.jpg", GL_RGB } } {
 

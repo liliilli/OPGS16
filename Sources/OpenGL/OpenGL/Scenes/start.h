@@ -1,7 +1,7 @@
 #ifndef OPENGL_TUTORIAL_SCENES_START_H
 #define OPENGL_TUTORIAL_SCENES_START_H
-#include "..\scene.h"
-#include "..\object.h"
+#include "..\System\Frame\scene.h"
+#include "..\System\Frame\object.h"
 
 class Start : public Scene {
 public:

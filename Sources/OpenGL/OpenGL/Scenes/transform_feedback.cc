@@ -1,8 +1,8 @@
 #include "transform_feedback.h"
 
 #include <random>
-#include "../helper.h"
-#include "../constant.h"
+#include "..\System\Frame\helper.h"
+#include "..\System\Frame\constant.h"
 
 TfFeedback::TfFeedback() :
     font{ "Resources/LSANS.TTF" },
@@ -32,7 +32,7 @@ void TfFeedback::SetInitialNodes() {
     std::array<glm::vec4, k_x * k_y> m_initial_positions{};
     std::array<glm::vec3, k_x * k_y> m_initial_velocity{};
     std::array<glm::ivec4, k_x * k_y> m_connection_index{};
-    
+
     for (int j = 0; j < k_y; ++j) {
         float fj = (float)j / (float)k_y;
 
@@ -68,7 +68,7 @@ void TfFeedback::SetInitialNodes() {
 
     for (auto i = 0; i < 2; ++i) {
         glBindVertexArray(m_vao[i]);
-        
+
         // Bind Position data
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo[i]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(m_initial_positions),
@@ -103,7 +103,7 @@ void TfFeedback::HandleInput(GLFWwindow* const window) {
     Scene::HandleInput(window);
 }
 
-void TfFeedback::Update() { 
+void TfFeedback::Update() {
     //m_shad_update.Use();
     //glEnable(GL_RASTERIZER_DISCARD);
 
@@ -119,7 +119,7 @@ void TfFeedback::Update() {
     //buffer_index ^= 1;
     //glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, m_vbo[buffer_index & 1]);
     //glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, m_vbo[2 + (buffer_index & 1)]);
-    // 
+    //
     //glBeginTransformFeedback(GL_POINTS);
     //glDrawArrays(GL_POINTS, 0, (int)(k_x * k_y));
     //glEndTransformFeedback();

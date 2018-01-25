@@ -1,7 +1,6 @@
 #ifndef OPENGL_TUTORIAL_SCENES_HELLO_WORLD_H
 #define OPENGL_TUTORIAL_SCENES_HELLO_WORLD_H
-
-#include "..\scene.h"
+#include "..\System\Frame\scene.h"
 
 class TfFeedback : public Scene {
 public:

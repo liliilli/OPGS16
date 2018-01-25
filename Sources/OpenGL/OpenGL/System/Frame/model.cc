@@ -1,18 +1,18 @@
 #include "Model.h"
 
 #include <stdexcept>
-#include "stb_image.h"
+#include "..\..\stb_image.h"
 
 namespace model {
 #define SIZE_OF(size, type) (void*)(size * sizeof(type))
 #define SIZE_NULL (void*)0
 
 Mesh::Mesh(const std::vector<Vertex>& _vertices,
-           const std::vector<unsigned>& indices, 
-           const std::vector<Texture>& textures) : 
-    vertices{ _vertices }, 
-    indices { indices }, 
-    textures{ textures }, 
+           const std::vector<unsigned>& indices,
+           const std::vector<Texture>& textures) :
+    vertices{ _vertices },
+    indices { indices },
+    textures{ textures },
     VBO_SIZE{ _vertices.size() * sizeof(Vertex) },
     EBO_SIZE{ indices.size() * sizeof(unsigned) } {
 
@@ -21,10 +21,10 @@ Mesh::Mesh(const std::vector<Vertex>& _vertices,
 }
 
 Mesh::Mesh(std::vector<Vertex>&& _vertices,
-           std::vector<unsigned>&& indices, 
+           std::vector<unsigned>&& indices,
            std::vector<Texture>&& textures) :
-    vertices{ _vertices }, 
-    indices { indices }, 
+    vertices{ _vertices },
+    indices { indices },
     textures{ textures },
     VBO_SIZE{ this->vertices.size() * sizeof(Vertex) },
     EBO_SIZE{ this->indices.size() * sizeof(unsigned) } {
@@ -64,7 +64,7 @@ void Mesh::SetupMesh() {
     glBindVertexArray(VAO);
 
     // Set up Vertex Buffer Object, Vetex Array Object, and etc.
-    // Bind vertex data to be used into Vertex Buffer Object 
+    // Bind vertex data to be used into Vertex Buffer Object
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, &vertices[0], GL_STATIC_DRAW);
 
@@ -94,9 +94,9 @@ void Mesh::SetupMesh() {
 void Mesh::Draw(helper::Shader& shader, const unsigned amount) const {
     auto diffuse_num    = 0u;
     auto specular_num   = 0u;
-    auto emission_num   = 0u; 
+    auto emission_num   = 0u;
     auto reflection_num = 0u;
-    
+
     using namespace std::string_literals;
     const auto diffuse_str  = "texture_diffuse"s;
     const auto specular_str = "texture_specular"s;
@@ -155,7 +155,7 @@ void Model::Draw(helper::Shader& shader, const unsigned amount) const {
 /**
  * \brief
  * \details
- * \param   
+ * \param
  * \return  void
  *
  * \see     https://learnopengl.com/#!Model-Loading/Model
@@ -168,7 +168,7 @@ void Model::LoadModel(const std::string& path) {
      *
      * aiProcess_GenNormals : actually creates normals for each vertex if the mo
      * del didn't contain normal vectors.
-     * aiProcess_SplitLargeMeshes : splits large meshes into smaller sub-meshes 
+     * aiProcess_SplitLargeMeshes : splits large meshes into smaller sub-meshes
      * which is useful if your rendering has a maximum number of vertices allowe
      * d and can only process smaller meshes.
      * aiProcess_OptimizeMeshes : actually does the reverse by trying to join se
@@ -258,8 +258,8 @@ Mesh Model::ProcessMesh(aiMesh* const mesh, const aiScene* const scene) {
 }
 
 unsigned TextureFromFile(const char* path, const std::string& directory);
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* const mat, 
-                                                 aiTextureType type, 
+std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* const mat,
+                                                 aiTextureType type,
                                                  TextureType tex_type) {
     std::vector<Texture> textures;
 
@@ -276,17 +276,17 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* const mat,
                 break;
             }
         }
-        
+
         if (!skip) {
-            auto texture = Texture{ TextureFromFile(str.C_Str(), directory), 
-                tex_type, 
+            auto texture = Texture{ TextureFromFile(str.C_Str(), directory),
+                tex_type,
                 std::string(str.C_Str()) };
 
             textures.push_back(texture);
             loaded_textures.push_back(texture);
         }
     }
-    
+
     return textures;
 }
 

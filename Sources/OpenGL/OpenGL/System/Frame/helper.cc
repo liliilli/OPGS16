@@ -4,7 +4,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\gtc\type_ptr.hpp>
-#include "stb_image.h"
+#include "..\..\stb_image.h"
 
 namespace helper {
 
@@ -80,7 +80,7 @@ GLint CustomFrameBuffer::GenTextureCubemapBuffer() {
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubemap);
 
     for (size_t i = 0; i < 6; ++i) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, 
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
                      kWIDTH, kHEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     }
 

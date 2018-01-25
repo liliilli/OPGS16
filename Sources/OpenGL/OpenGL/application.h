@@ -18,7 +18,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "System\font.h"
-#include "scene.h"
+#include "System\Frame\scene.h"
 
 /**
  * @class Application

@@ -1,8 +1,6 @@
 #ifndef OPENGL_TUTORIAL_OBJECTS_WOOD_BOX_H
 #define OPENGL_TUTORIAL_OBJECTS_WOOD_BOX_H
-#include "..\helper.h"
-#include "..\object.h"
-#include "..\texture.h"
+#include "..\Headers\common.h"
 
 /**
  * @file wood_box.h

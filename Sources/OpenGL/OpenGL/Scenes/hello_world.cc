@@ -1,8 +1,8 @@
 #include "hello_world.h"
 
 #include <random>
-#include "../helper.h"
-#include "../constant.h"
+#include "..\System\Frame\helper.h"
+#include "..\System\Frame\constant.h"
 
 HelloWorld::HelloWorld() :
     font{ "Resources/LSANS.TTF" },
@@ -33,7 +33,7 @@ HelloWorld::HelloWorld() :
     }
 
     glBindVertexArray(quad.vao);
-    
+
     GLuint model_buffer;
     glGenBuffers(1, &model_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, model_buffer);
@@ -58,11 +58,11 @@ HelloWorld::HelloWorld() :
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
     glBufferData(GL_DRAW_INDIRECT_BUFFER, quad_count * sizeof(elc_cont), nullptr, GL_DYNAMIC_DRAW);
-    
+
     auto* cmd = (GLuint*)
-        glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0, quad_count * sizeof(elc_cont), 
+        glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0, quad_count * sizeof(elc_cont),
                          GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-    for (auto i = 0; i < quad_count; ++i) {
+    for (size_t i = 0; i < quad_count; ++i) {
         elc_cont[4] = i; // gl_InstanceID
         memcpy(cmd, elc_cont, sizeof(elc_cont));
 

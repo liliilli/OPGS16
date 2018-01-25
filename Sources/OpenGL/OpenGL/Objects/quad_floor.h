@@ -1,8 +1,6 @@
 #ifndef OPENGL_TUTORIAL_OBJECTS_QUAD_FLOOR_H
 #define OPENGL_TUTORIAL_OBJECTS_QUAD_FLOOR_H
-#include "..\helper.h"
-#include "..\object.h"
-#include "..\texture.h"
+#include "..\Headers\common.h"
 
 /**
  * @file quad_floor.h

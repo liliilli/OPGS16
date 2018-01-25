@@ -1,5 +1,5 @@
 #include "quad_floor.h"
-#include "..\constant.h"
+#include "..\System\Frame\constant.h"
 
 QuadFloor::QuadFloor() :
     object_info{ helper::CreateBindingObjectEBO(quad_info, 8,

@@ -9,9 +9,10 @@
  * @version 0.0.1
  */
 
-#include "shader.h"
-#include "..\..\object.h"
 #include <memory>
+#include <unordered_map>
+#include "shader.h"
+#include "..\Frame\object.h"
 
 /**
  * @class ShaderManager
@@ -27,11 +28,9 @@
 class ShaderManager {
 private:
 	template<typename _Ty>
-	using hash_container = std::unordered_map<std::string, _Ty >> ;
+	using hash_container = std::unordered_map<std::string, _Ty>;
 
-	enum class FailType {
-		NONE
-	};
+	enum class FailType { NONE };
 
 public:
 	/**
@@ -55,8 +54,7 @@ public:
 
 	[[noreturn]] void CleanAll();
 
-	[[noreturn]]
-	[[maybe_unused]] void CleanWithTag();
+	[[noreturn]] void CleanWithTag();
 
 private:
 	ShaderManager();
@@ -65,7 +63,7 @@ private:
 
 	FailType m_fail_type{ FailType::NONE };
 
-	hash_container<helper::ShaderNew&> m_shaders{};
+	hash_container<helper::ShaderNew*> m_shaders{};
 
 public:
 	ShaderManager(const ShaderManager&) = delete;

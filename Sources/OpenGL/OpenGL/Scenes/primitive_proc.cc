@@ -1,7 +1,7 @@
 #include "primitive_proc.h"
 
-#include "../helper.h"
-#include "../constant.h"
+#include "..\System\Frame\helper.h"
+#include "..\System\Frame\constant.h"
 
 #include "..\Objects\bezier_quad.h"
 #include "..\Objects\terrain_tess.h"

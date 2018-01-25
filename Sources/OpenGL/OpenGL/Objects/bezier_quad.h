@@ -1,9 +1,7 @@
 #ifndef OPENGL_TUTORIAL_BEZIER_QUAD_H
 #define OPENGL_TUTORIAL_BEZIER_QUAD_H
 #include <array>
-#include "../helper.h"
-#include "../object.h"
-#include "../texture.h"
+#include "..\Headers\common.h"
 
 class BezierQuad : public Object {
 public:

@@ -16,8 +16,8 @@
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
-#include "camera.h"
-#include "System\Shader\shader.h"
+#include "..\..\GlobalObjects\camera.h"
+#include "..\Shader\shader.h"
 
 /**
  * @class Object

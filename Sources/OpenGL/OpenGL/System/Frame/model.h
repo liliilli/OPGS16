@@ -7,7 +7,7 @@
 #include <assimp\scene.h>
 #include <glm\glm.hpp>
 #include "helper.h"
-#include "System\Shader\shader.h"
+#include "..\Shader\shader.h"
 
 namespace model {
 

@@ -11,9 +11,7 @@
 * @version 0.0.1
 */
 
-#include "..\scene.h"
-#include "..\texture.h"
-#include "..\object.h"
+#include "..\Headers\scene_common.h"
 
 class PrimProc : public Scene {
 public:

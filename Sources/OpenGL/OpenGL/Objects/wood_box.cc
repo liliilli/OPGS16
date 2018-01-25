@@ -1,13 +1,13 @@
 #include "wood_box.h"
-#include "..\constant.h"
+#include "..\System\Frame\constant.h"
 
-WoodBox::WoodBox() : 
-    object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) } 
+WoodBox::WoodBox() :
+    object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) }
 {}
 
 void WoodBox::Draw(helper::ShaderNew& shader) {
     /** Refresh Model matrix */
-    GetModelMatrix(); 
+    GetModelMatrix();
     shader.SetVecMatrix4f("uModel", model);
 
     glActiveTexture(GL_TEXTURE0);
@@ -17,7 +17,7 @@ void WoodBox::Draw(helper::ShaderNew& shader) {
 
     glBindVertexArray(object_info.vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0); 
+    glBindVertexArray(0);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

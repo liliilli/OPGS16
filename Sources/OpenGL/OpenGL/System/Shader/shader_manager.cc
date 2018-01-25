@@ -1,7 +1,7 @@
 #include "shader_manager.h"
 
-helper::ShaderNew& ShaderManager::GetShaderWithName(std::string && name) {
-	// TODO: 여기에 반환 구문을 삽입합니다.
+helper::ShaderNew& ShaderManager::GetShaderWithName(std::string&& name) {
+	return *m_shaders[name];
 }
 
 void ShaderManager::DrawWithShader(std::string && name) {

@@ -9,10 +9,8 @@
  * @version 0.0.1
  */
 
-#include "..\helper.h"
-#include "..\light.h"
-#include "..\object.h"
-#include "..\texture.h"
+#include "..\Headers\common.h"
+#include "..\GlobalObjects\light.h"
 #include "Interface\i_radiant.h"
 
 class LightBox : public Object, public IRadiant {
@@ -31,7 +29,7 @@ public:
     [[noreturn]] void Draw(helper::ShaderNew& shader) override;
 
     /**
-     * @brief 
+     * @brief
      */
     [[noreturn]] void SetUpLight(const int index, helper::ShaderNew& shader) override;
 

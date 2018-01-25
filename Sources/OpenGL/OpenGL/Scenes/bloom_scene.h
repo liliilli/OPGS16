@@ -1,8 +1,6 @@
 #ifndef OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H
 #define OPENGL_TUTORIAL_SCENES_BLOOM_SCENE_H
-#include "..\object.h"
-#include "..\System\Shader\shader.h"
-#include "..\scene.h"
+#include "..\Headers\scene_common.h"
 #include "..\Objects\Interface\i_radiant.h"
 
 class BloomScene : public Scene {
@@ -38,7 +36,7 @@ private:
     helper::ShaderNew shader_fbo_bloom{};
     helper::ShaderNew shader_final{};
 
-    /** 
+    /**
      * @comment Variables for high dynamic range frame buffer.
      * Depth buffer is declared as render buffer in body of InitHdrFrameBuffer function.
      */
@@ -122,7 +120,7 @@ private:
 
     /**
      * @brief Render string.
-     * 
+     *
      * In this method, at first depth test is disabled and render string to display.
      * At the end depth test is enabled again.
      */

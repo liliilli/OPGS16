@@ -12,7 +12,7 @@
 * @version 0.0.1
 */
 
-#include "..\scene.h"
+#include "..\Headers\scene_common.h"
 
 class PathFinding2D : public Scene {
 public:

@@ -13,8 +13,8 @@
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include "camera.h"
-#include "System\font.h"
+#include "..\..\GlobalObjects\camera.h"
+#include "..\font.h"
 #include "helper.h"
 
 /**

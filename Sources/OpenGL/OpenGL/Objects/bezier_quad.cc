@@ -1,8 +1,8 @@
 #include "bezier_quad.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "../camera.h"
-#include "../constant.h"
+#include "..\GlobalObjects\camera.h"
+#include "..\System\Frame\constant.h"
 
 BezierQuad::BezierQuad() {
     quad = helper::CreateBindingObjectEBO(quad_info, 8,

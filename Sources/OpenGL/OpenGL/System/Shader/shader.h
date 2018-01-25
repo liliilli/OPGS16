@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
-#include "..\..\light.h"
+#include "..\..\GlobalObjects\light.h"
 
 namespace helper {
 
