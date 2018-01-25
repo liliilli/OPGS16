@@ -44,7 +44,22 @@ public:
 	/**
 	 * @brief The method returns arbitary shader.
 	 */
-	helper::ShaderNew& GetShaderWithName(std::string&& name);
+	inline std::shared_ptr<helper::ShaderNew> GetShaderWithName(const std::string&& name) const {
+		if (m_shaders.find(name) == m_shaders.end()) return nullptr;
+		return m_shaders.at(name);
+	}
+
+	/**
+	 * @brief This create new shader return created shader or already existed shader.
+	 *
+	 * @param[in] tag
+	 * @param[in] initializer_list
+	 *
+	 * @return Shader smart-pointer.
+	 */
+	using Type = helper::ShaderNew::Type;
+	std::shared_ptr<helper::ShaderNew> CreateShader(const std::string&& tag,
+		std::initializer_list<std::pair<Type, const std::string&&>> initializer_list);
 
 	[[noreturn]] void DrawWithShader(std::string&& name);
 
@@ -57,13 +72,13 @@ public:
 	[[noreturn]] void CleanWithTag();
 
 private:
-	ShaderManager();
+	ShaderManager() = default;
 
 	bool m_failed{ false };
 
 	FailType m_fail_type{ FailType::NONE };
 
-	hash_container<helper::ShaderNew*> m_shaders{};
+	hash_container<std::shared_ptr<helper::ShaderNew>> m_shaders{};
 
 public:
 	ShaderManager(const ShaderManager&) = delete;

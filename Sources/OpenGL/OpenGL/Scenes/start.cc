@@ -1,5 +1,6 @@
 #include "start.h"
 #include "..\application.h"
+#include "..\GlobalObjects\Canvas\image.h"
 #include "bloom_scene.h"
 #include "primitive_proc.h"
 #include "path_finding2d.h"
@@ -7,6 +8,8 @@
 Start::Start() :
     font{"Resources/LSANS.TTF"} {
     glEnable(GL_DEPTH_TEST);
+
+	objects[0] = std::make_unique<Canvas::Image>("Resources/checker.jpg");
 }
 
 void Start::InitShaders() {
@@ -33,6 +36,8 @@ void Start::HandleInput(GLFWwindow* const window) {
 void Start::Draw() {
     glClearColor(.0f, .0f, .0f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	objects[0]->Draw();
 
     DrawText();
 }

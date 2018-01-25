@@ -45,6 +45,10 @@ public:
      */
     [[noreturn]] virtual void Draw(helper::ShaderNew& shader) = 0;
 
+	/**
+	 * @brief This calls callee to draw or render something it has. [Optional]
+	 */
+	[[noreturn]] virtual void Draw() {};
 
     /*-----------------------------------------------------------------------*
      * @comments Bolier-plate codes!
