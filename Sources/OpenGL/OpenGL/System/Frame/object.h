@@ -13,6 +13,7 @@
  * @version 0.0.1
  */
 
+#include <memory>
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
@@ -148,10 +149,10 @@ protected:
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool InitiateChild(const std::string&& tag, _Types&&... _args) {
-		if (children.find(tag) != children.end()) return FAILED;
+		if (children.find(tag) != children.end()) return 0;
 
 		children[tag] = std::make_shared<_Ty>(args...);
-		return SUCCESS;
+		return 1;
 	}
 
 	/**
@@ -205,6 +206,8 @@ private:
     glm::mat4   scale;
 
     bool is_changed{ true };
+
+	std::unordered_map<std::string, std::shared_ptr<Object>> children;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

@@ -120,10 +120,10 @@ glm::mat4 Object::GetModelMatrix() {
  bool Object::DestroyChild(std::string & tag) {
 	 decltype(children.end()) iterator = children.find(tag);
 	 if (iterator == children.end())
-		 return FAILED;
+		 return 0;
 
 	 children.erase(tag);
-	 return SUCCESS;
+	 return 1;
  }
 
  const std::vector<std::string> Object::GetChildrenTags() const {

@@ -8,7 +8,7 @@ WoodBox::WoodBox() :
 void WoodBox::Draw(helper::ShaderNew& shader) {
     /** Refresh Model matrix */
     GetModelMatrix();
-    shader.SetVecMatrix4f("uModel", model);
+    shader.SetVecMatrix4f("uModel", GetModelMatrix());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.GetId());

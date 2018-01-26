@@ -44,4 +44,8 @@ private:
 	Origin origin{ Origin::CENTER_CENTER };
 };
 
+inline IOriginable::Origin IOriginable::GetOrigin() const {
+	return origin;
+}
+
 #endif /** OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H */

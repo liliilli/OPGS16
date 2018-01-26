@@ -47,7 +47,7 @@ namespace Canvas {
 
 		auto PVM = GetPvmMatrix();
 		shader->SetVecMatrix4f("projection", PVM);
-		shader->SetFloat("alpha", 0.5f);
+		shader->SetFloat("alpha", alpha);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.GetId());
@@ -77,7 +77,7 @@ namespace Canvas {
 		M = glm::scale(M, glm::vec3(width, height, 0));
 
 		auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-		auto P = glm::ortho(-360.f, 360.f, -240.f, 240.f);
+		auto P = glm::ortho(0.f, 720.f, 0.f, 480.f);
 
 		return P * V * M;
 	}

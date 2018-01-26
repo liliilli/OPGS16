@@ -3,14 +3,14 @@
 #include "..\System\Frame\helper.h"
 
 LightBox::LightBox() :
-    pointlight{ position, glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) },
+    pointlight{ GetPosition(), glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) },
     object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) }
 {}
 
 void LightBox::Draw(helper::ShaderNew & shader) {
     /** Refresh Model matrix */
     GetModelMatrix();
-    shader.SetVecMatrix4f("uModel", model);
+    shader.SetVecMatrix4f("uModel", GetModelMatrix());
     shader.SetVec3f("uColor", pointlight.GetDiffuse());
 
     glBindVertexArray(object_info.vao);
@@ -24,7 +24,7 @@ void LightBox::SetUpLight(const int index, helper::ShaderNew& shader) {
 
 void LightBox::SetPosition(glm::vec3 position) {
     Object::SetPosition(position);
-    pointlight.SetPosition(this->position);
+    pointlight.SetPosition(GetPosition());
 }
 
 void LightBox::SetColor(glm::vec3 color) {

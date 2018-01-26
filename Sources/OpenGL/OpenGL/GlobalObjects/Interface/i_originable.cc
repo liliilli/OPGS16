@@ -8,10 +8,6 @@ inline void IOriginable::SetOrigin(Origin value) {
 	origin = value;
 }
 
-inline IOriginable::Origin IOriginable::GetOrigin() const {
-	return origin;
-}
-
 glm::vec2 IOriginable::CalculateCenterPosition(const Origin & origin, const glm::vec2 & position) const {
 	std::array<GLint, 4> viewport{};
 	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
