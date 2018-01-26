@@ -32,8 +32,6 @@ public:
 
 	[[noreturn]] virtual void Draw() override final;
 
-
-
 private:
 	const glm::mat4&& GetOrthoProjectionMatrix(const std::array<GLint, 4>& input) const;
 

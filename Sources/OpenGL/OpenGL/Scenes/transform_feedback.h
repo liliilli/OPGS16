@@ -11,7 +11,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
+    FontManager font;
 
     helper::Shader m_shad_update;
     helper::Shader m_shad_render;

@@ -14,7 +14,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "..\..\GlobalObjects\camera.h"
-#include "..\font.h"
+#include "..\font_manager.h"
 #include "helper.h"
 
 /**

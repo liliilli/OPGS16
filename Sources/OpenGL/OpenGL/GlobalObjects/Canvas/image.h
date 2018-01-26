@@ -9,8 +9,6 @@
  * @version 0.0.1
  */
 
-#include <memory>
-#include <type_traits>
 #include "..\Interface\i_originable.h"
 #include "..\..\Headers\common.h"
 

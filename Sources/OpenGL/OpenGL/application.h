@@ -17,8 +17,8 @@
 #include <type_traits>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include "System\font.h"
 #include "System\Frame\scene.h"
+#include "GlobalObjects\Canvas\canvas.h"
 
 /**
  * @class Application
@@ -45,8 +45,7 @@ public:
     /**
      * @brief The method replace scene with old scene.
      */
-    template <class _Ty,
-              typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
+    template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
     [[noreturn]] void ReplaceScene(_Ty*) {
         PushScene((_Ty*)nullptr);
     }
@@ -118,8 +117,11 @@ private:
 
     /** Window handle pointer */
     GLFWwindow* window{ nullptr };
+
     std::stack<std::shared_ptr<Scene>> scenes;
     std::shared_ptr<Scene> top_scene;
+
+	std::unique_ptr<Object> m_canvas;
 
     bool aa_toggled{ false };
     bool fps_toggled{ false };
@@ -133,7 +135,6 @@ private:
     float display_time{};
 
     /** Font instance for global text displaying */
-    Font font{ "Resources/LSANS.TTF" };
     std::unordered_map<int, bool> pressed_key_map;
 
 private:

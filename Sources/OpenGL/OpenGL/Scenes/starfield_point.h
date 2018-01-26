@@ -27,7 +27,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
+    FontManager font;
 
     /** ----------------------------------------------------------------------+
      * @comment Initiate methods

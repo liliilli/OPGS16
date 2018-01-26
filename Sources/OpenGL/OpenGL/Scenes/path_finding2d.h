@@ -48,7 +48,7 @@ private:
 	SceneStatus m_status{ SceneStatus::INITIATE };
 	std::string m_scene_name{ "PathFinding2D" };
 
-	Font font{ "Resources/LSANS.TTF" };
+	FontManager font{ "Resources/LSANS.TTF" };
 
 	/** Deprecated as soon */
 

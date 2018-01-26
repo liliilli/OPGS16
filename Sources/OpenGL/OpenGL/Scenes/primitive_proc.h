@@ -22,7 +22,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
+    FontManager font;
 
     helper::ShaderNew shad_triangle{};
     helper::ShaderNew shad_contour{};

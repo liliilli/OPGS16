@@ -2,14 +2,31 @@
 
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <string>
+
+#include <glm\glm.hpp>
+
+#include "GlobalObjects\Canvas\text.h"
 #include "Scenes\start.h"
+#include "System\font_manager.h"
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) } {
+
+	/** First we need initiate default font. */
+	auto& font = FontManager::GetInstance();
+	font.InitiateFont( "Resources/LSANS.TTF" );
+
     // Set Camera Cursor and Fps
     camera::SetCursor(360.f, 240.f);
     SetFps(60.0f);
+
+	auto canvas = std::make_unique<Canvas::Canvas>();
+	Canvas::Text&& fps{ "", glm::vec3{0, 456, 0} };
+	fps.SetScaleValue(0.5f);
+	canvas->InitiateChild("Fps", std::move(fps));
+	m_canvas = std::move(canvas);
 
     Start* _{};
     PushScene(_);
@@ -92,7 +109,11 @@ void Application::Draw() {
     if (fps_toggled) { // If fps display toggled, draw fps.
         std::ostringstream str;
         str << std::setprecision(4) << display_time;
-        font.RenderText("FPS : " + str.str(), { 0, 480 - 24 }, 0.25f, { 1, 1, 1 });
+
+		auto text = std::static_pointer_cast<Canvas::Text>(m_canvas->GetChild("Fps"));
+		text->SetText("Fps : " + str.str());
+
+		m_canvas->Draw();
     }
 
     glfwSwapBuffers(window);

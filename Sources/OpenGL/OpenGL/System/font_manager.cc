@@ -1,40 +1,17 @@
-#include "font.h"
+#include "font_manager.h"
 #include <functional>
 #include <iostream>
 #include <sstream>
 #include <glm\gtc\matrix_transform.hpp>
 
-Font::Font(std::string&& font_path)
-    : freetype(nullptr), face(nullptr),
-    projection{ glm::ortho(0.f, 720.f, 0.f, 480.f) } {
+#include "..\..\System\Shader\shader_manager.h"
 
-    /** Initiate Shader */ {
-        using Type = helper::ShaderNew::Type;
-        shader.SetShader(Type::VS, "Shaders/Global/font.vert");
-        shader.SetShader(Type::FS, "Shaders/Global/font.frag");
-        shader.Link();
-    }
-
-    // Check Freetype is well.
-    if (FT_Init_FreeType(&freetype)) {
-        std::cerr << "ERROR::FREETYPE: Could not init Freetype Library" << std::endl;
-    }
-
-    if (FT_New_Face(freetype, font_path.c_str(), 0, &face)) {
-        std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
-    }
-
-    FT_Set_Pixel_Sizes(face, 0, 48);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    GetCharTextures();
-    FT_Done_Face(face);
-    FT_Done_FreeType(freetype);
-
-    BindVertexAttributes();
+FontManager::FontManager() {
+	InitiateShader();
+	BindVertexAttributes();
 }
 
-void Font::GetCharTextures() {
+void FontManager::GetCharTextures() {
     for (GLubyte c = 0; c < 128; ++c) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cerr << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
@@ -72,7 +49,7 @@ void Font::GetCharTextures() {
     }
 }
 
-void Font::BindVertexAttributes() {
+void FontManager::BindVertexAttributes() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
@@ -87,6 +64,28 @@ void Font::BindVertexAttributes() {
     glBindVertexArray(0);
 }
 
+bool FontManager::InitiateFont(const std::string&& font_path) {
+	// Check Freetype is well.
+	if (FT_Init_FreeType(&freetype)) {
+		std::cerr << "ERROR::FREETYPE: Could not init Freetype Library" << std::endl;
+		return false;
+	}
+
+	if (FT_New_Face(freetype, font_path.c_str(), 0, &face)) {
+		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return false;
+	}
+
+	FT_Set_Pixel_Sizes(face, 0, 48);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	GetCharTextures();
+	FT_Done_Face(face);
+	FT_Done_FreeType(freetype);
+
+	return true;
+}
+
 /**
  * @brief The method renders given text on given position with given color.
  *
@@ -95,10 +94,10 @@ void Font::BindVertexAttributes() {
  * @param[in] scale Scale factor
  * @param[in] color Color to be colored.
  */
-void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
-    shader.Use();
-    shader.SetVec3f("textColor", color);
-    shader.SetVecMatrix4f("projection", projection);
+void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
+    shader->Use();
+    shader->SetVec3f("textColor", color);
+    shader->SetVecMatrix4f("projection", projection);
 
     glBindVertexArray(vao);
 
@@ -172,7 +171,7 @@ void Font::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm
  *
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
-void Font::RenderTextNew
+void FontManager::RenderTextNew
 (const std::string& text, FontOrigin origin, glm::vec2 relative_position, glm::vec3 color,
 	FontAlignment alignment, const float scale) {
 	// Body
@@ -195,14 +194,28 @@ void Font::RenderTextNew
 	EndShader();
 }
 
+void FontManager::InitiateShader() {
+	auto& manager = ShaderManager::GetInstance();
+	shader = manager.GetShaderWithName("gCommonFont");
+	if (!shader) {
+		using Type = helper::ShaderNew::Type;
+		using namespace std::string_literals;
+
+		shader = manager.CreateShader("gCommonFont", {
+			{Type::VS, "Shaders/Global/font.vert"s},
+			{Type::FS, "Shaders/Global/font.frag"s}
+			});
+	}
+}
+
 /**
  * @brief This method starts shader with color to render.
  * @param[in] color The color to be attached to shader.
  */
-void Font::StartShader(const glm::vec3& color) {
-	shader.Use();
-	shader.SetVec3f("textColor", color);
-	shader.SetVecMatrix4f("projection", projection);
+void FontManager::StartShader(const glm::vec3& color) {
+	shader->Use();
+	shader->SetVec3f("textColor", color);
+	shader->SetVecMatrix4f("projection", projection);
 	glBindVertexArray(vao);
 }
 
@@ -218,7 +231,7 @@ void Font::StartShader(const glm::vec3& color) {
  *
  * @return The position has (x, y) value.
  */
-glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position) {
+glm::vec2 FontManager::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position) {
 	/** x origin, y origin, width, height */
 	std::array<GLint, 4> viewport{};
 	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
@@ -240,7 +253,7 @@ glm::vec2 Font::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position)
  * @param[in] position Position on which to render.
  * @param[in] scale Scale factor, it magnify or minify rendered string textures.
  */
-void Font::RenderLeftSide
+void FontManager::RenderLeftSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
 	auto pos = position;
@@ -267,7 +280,7 @@ void Font::RenderLeftSide
  * @param[in] position Position on which to render.
  * @param[in] scale Scale factor, it magnify or minify rendered string textures.
  */
-void Font::RenderCenterSide
+void FontManager::RenderCenterSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
 	auto pos = position;
@@ -295,7 +308,7 @@ void Font::RenderCenterSide
  * @param[in] position Position on which to render.
  * @param[in] scale Scale factor, it magnify or minify rendered string textures.
  */
-void Font::RenderRightSide
+void FontManager::RenderRightSide
 (const std::vector<std::string>& container, const glm::vec2& position, const float scale) {
 	/** Body */
 	auto pos = position;
@@ -326,7 +339,7 @@ void Font::RenderRightSide
  * @return Character glyph render vertices information.
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
-std::array<glm::vec4, 6> Font::GetCharacterVertices
+std::array<glm::vec4, 6> FontManager::GetCharacterVertices
 (const Character& ch_info, const glm::vec2& pos, const float scale) {
 	/** Body */
 	auto x_offset = ch_info.bearing.x * scale;
@@ -356,7 +369,7 @@ std::array<glm::vec4, 6> Font::GetCharacterVertices
  * @return The size
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
-unsigned Font::GetStringRenderWidth(const std::string& text, const float scale) {
+unsigned FontManager::GetStringRenderWidth(const std::string& text, const float scale) {
 	unsigned width{};
 	for (const auto& chr : text) {
 		Character ch_info = characters.at(chr);
@@ -366,7 +379,7 @@ unsigned Font::GetStringRenderWidth(const std::string& text, const float scale) 
 	return width;
 }
 
-void Font::Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices) {
+void FontManager::Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices) {
 	// Render texture glyph
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ch_info.textureID);
@@ -385,7 +398,7 @@ void Font::Render(const Character& ch_info, const std::array<glm::vec4, 6>& vert
  * @param[in] text String text to separate
  * @return string list.
  */
-std::vector<std::string> Font::SeparateTextToList(const std::string text) {
+std::vector<std::string> FontManager::SeparateTextToList(const std::string text) {
     std::vector<std::string> result;
 
     std::stringstream stream{text};
@@ -395,3 +408,4 @@ std::vector<std::string> Font::SeparateTextToList(const std::string text) {
 
     return result;
 }
+

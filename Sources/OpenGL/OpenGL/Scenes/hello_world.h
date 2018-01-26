@@ -12,7 +12,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
+    FontManager font;
 
     helper::Shader shad_quad;
     helper::BindingObject quad;

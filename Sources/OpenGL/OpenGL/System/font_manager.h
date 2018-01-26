@@ -1,14 +1,14 @@
-#ifndef OPENGL_TUTORIAL_FONT_H
-#define OPENGL_TUTORIAL_FONT_H
+#ifndef OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H
+#define OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H
 
 /**
- * @file System/font.h
- * @brief Fundamental font renderer to render string.
+ * @file System/font_manager.h
+ * @brief Fundamental font renderer to render string, and manages font glyphs.
  *
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @version 0.0.2
+ * @version 0.0.3
  */
 
 #include <string>
@@ -18,13 +18,15 @@
 #include <ft2build.h>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
 #include FT_FREETYPE_H
 
 #include "Shader\shader.h"
+#define PUBLIC__ public:
 #define PRIVATE__ private:
 
 /**
- * @class Font
+ * @class FontManager
  * @brief The class manages reading fonts, rendering fonts.
  *
  * This class manages reading fonts, rendering fonts.
@@ -33,8 +35,7 @@
  * @todo Shader must be static instance to reduce memory usage.
  * @bug It seems that rendering does not work properly.
  */
-class Font {
-private:
+class FontManager {
     /**
      * @struct Chracter
      * @brief Container manages each texture of font glyphes.
@@ -48,15 +49,11 @@ private:
         GLuint      advance;
     };
 
-    helper::ShaderNew shader{};
-
-public:
-	/**
-	 * @brief Initialize Font renderer instance with font path.
-	 *
-	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
-	 */
-    Font(std::string&& font_path);
+PUBLIC__
+	static FontManager& GetInstance() {
+		static FontManager instance{};
+		return instance;
+	}
 
 	enum class FontOrigin : int {
 		DOWN_LEFT = 1,		DOWN_CENTER = 2,	DOWN_RIGHT = 3,
@@ -65,6 +62,8 @@ public:
 	};
 
 	enum class FontAlignment { LEFT, CENTER, RIGHT };
+
+	bool InitiateFont(const std::string&& font_path);
 
     /**
      * @brief The method renders given text on given position with given color.
@@ -106,7 +105,12 @@ public:
 		glm::vec2 relative_position, glm::vec3 color,
 		FontAlignment alignment = FontAlignment::LEFT, const float scale = 1.0f);
 
-private:
+PRIVATE__
+	/**
+	 * @brief Initiate common font shader.
+	 */
+	[[noreturn]] void InitiateShader();
+
 	/**
 	 * @brief This method starts shader with color to render.
 	 * @param[in] color The color to be attached to shader.
@@ -218,16 +222,31 @@ private:
      */
     std::vector<std::string> SeparateTextToList(const std::string text);
 
+PRIVATE__
     /** Freetype pointer */
-    FT_Library freetype;
-    FT_Face face;
+	FT_Library freetype = nullptr;
+    FT_Face face = nullptr;
 
     // Restrict first 128 characters for now.
     std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
-    glm::mat4 projection;
+	glm::mat4 projection = glm::ortho(0.f, 720.f, 0.f, 480.f);
 
     GLuint vao, vbo;
+
+    std::shared_ptr<helper::ShaderNew> shader;
+
+PRIVATE__
+	/**
+	 * @brief Initialize Font renderer instance with font path.
+	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
+	 */
+	FontManager();
+
+	FontManager(const FontManager&) = delete;
+	FontManager& operator=(const FontManager&) = delete;
+	FontManager(const FontManager&&) = delete;
+	FontManager&& operator=(const FontManager&&) = delete;
 };
 
-#endif // OPENGL_TUTORIAL_FONT_H
+#endif // OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H

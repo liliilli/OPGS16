@@ -28,7 +28,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
+    FontManager font;
     helper::ShaderNew shader{};
     helper::ShaderNew shader_light{};
     helper::ShaderNew shader_fbo_hdr{};

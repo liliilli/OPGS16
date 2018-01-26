@@ -148,10 +148,18 @@ public:
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool InitiateChild(const std::string&& tag, _Types&&... _args) {
-		if (children.find(tag) != children.end()) return 0;
+		if (children.find(tag) != children.end()) return false;
 
-		children[tag] = std::make_shared<_Ty>(_args...);
-		return 1;
+		children[tag] = std::make_shared<_Ty>(std::forward<_Types>(_args)...);
+		return true;
+	}
+
+	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
+	bool InitiateChild(const std::string&& tag, const _Ty&& instance) {
+		if (children.find(tag) != children.end()) return false;
+
+		children[tag] = std::make_shared<_Ty>(std::move(instance));
+		return true;
 	}
 
 	/**

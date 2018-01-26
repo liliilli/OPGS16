@@ -28,9 +28,7 @@ public:
     [[noreturn]] virtual void Draw() override;
 
 private:
-    Font font;
-
-    std::unordered_map<int, std::unique_ptr<Object>>    objects;
+    std::unordered_map<int, std::unique_ptr<Object>> objects;
 
     /** ----------------------------------------------------------------------+
      * @comment Initiate methods
