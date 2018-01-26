@@ -8,8 +8,9 @@ constexpr bool SUCCESS{ true };
 
 namespace Canvas {
 	Image::Image(std::string&& image_path) :
-		texture{ image_path , GL_RGB },
-		quad{ helper::CreateBindingObject(quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) } {
+		texture{ image_path , GL_RGBA },
+		quad{ helper::CreateBindingObjectEBO(
+			quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices)} {
 
 		InitiateShader();
 	}
@@ -22,8 +23,8 @@ namespace Canvas {
 			using namespace std::string_literals;
 
 			shader = manager.CreateShader("gQuad", {
-				{Type::VS, "Shaders/Bloom/normal.vert"s},
-				{Type::FS, "Shaders/Bloom/normal.frag"s}
+				{Type::VS, "Shaders/Global/image.vert"s},
+				{Type::FS, "Shaders/Global/image.frag"s}
 				});
 		}
 	}
@@ -34,6 +35,7 @@ namespace Canvas {
 
 	void Image::Draw() {
 		auto is_already_enabled{ false };
+
 		if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
 		else {
 			glEnable(GL_BLEND);
@@ -41,14 +43,17 @@ namespace Canvas {
 		}
 
 		/** Render this */
-		GetModelMatrix();
-		shader->SetVecMatrix4f("uModel", model);
+		shader->Use();
+
+		auto PVM = GetPvmMatrix();
+		shader->SetVecMatrix4f("projection", PVM);
+		shader->SetFloat("alpha", 0.5f);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.GetId());
 
 		glBindVertexArray(quad.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -58,24 +63,19 @@ namespace Canvas {
 
 		/** Render Children */
 		for (const auto& child : children) {
-
+			child.second->Draw();
 		}
 	}
 
-	bool Image::DestroyChild(std::string& tag) {
-		decltype(children.end()) iterator = children.find(tag);
-		if (iterator == children.end())
-			return FAILED;
+	glm::mat4 Image::GetPvmMatrix() {
+		auto M = glm::mat4();
+		SetPosition({ -1.f, -1.f, 0.f });
+		M = glm::translate(M, GetPosition());
+		M = glm::scale(M, glm::vec3(width, height, 0));
 
-		children.erase(tag);
-		return SUCCESS;
-	}
+		auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+		auto P = glm::ortho(-360.f, 360.f, -240.f, 240.f);
 
-	const std::vector<std::string> Image::GetChildrenTags() const {
-		std::vector<std::string> list(children.size());
-		for (const auto& object_pair : children) {
-			list.push_back(object_pair.first);
-		}
-		return list;
+		return P * V * M;
 	}
 }

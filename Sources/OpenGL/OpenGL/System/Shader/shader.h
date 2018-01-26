@@ -109,7 +109,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] vector $ \mathbf{M}_{4_4} $ matrix reference l-value to input.
      */
-    [[noreturn]] void SetVecMatrix4f(const std::string& name, glm::mat4& matrix);
+    [[noreturn]] void SetVecMatrix4f(const std::string& name, const glm::mat4& matrix);
 
     /**
      * @brief The method sets light::DirectionalLight information to shader uniform variable.

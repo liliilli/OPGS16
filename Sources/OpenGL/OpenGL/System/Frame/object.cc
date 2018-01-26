@@ -10,7 +10,7 @@ glm::vec3 Object::GetPosition() {
 
 void Object::SetPosition(glm::vec3 position) {
     this->position = position;
-    
+
     /** Renew translate matrix */
     RefreshTranslateMatrix();
     is_changed = true;
@@ -64,8 +64,8 @@ void Object::SetRotationFactor(glm::vec3 factor) {
  * @brief The method gets scaling values
  * @return Object's scaling value.
  */
-float Object::GetScaleValue() { 
-    return scale_value; 
+float Object::GetScaleValue() {
+    return scale_value;
 }
 
 /**
@@ -116,6 +116,23 @@ glm::mat4 Object::GetModelMatrix() {
 
     return model;
 }
+
+ bool Object::DestroyChild(std::string & tag) {
+	 decltype(children.end()) iterator = children.find(tag);
+	 if (iterator == children.end())
+		 return FAILED;
+
+	 children.erase(tag);
+	 return SUCCESS;
+ }
+
+ const std::vector<std::string> Object::GetChildrenTags() const {
+	 std::vector<std::string> list(children.size());
+	 for (const auto& object_pair : children) {
+		 list.push_back(object_pair.first);
+	 }
+	 return list;
+ }
 
 /**
  * @brief Refresh Translation matrix

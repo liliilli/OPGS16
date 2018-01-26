@@ -10,6 +10,7 @@ Texture2D::Texture2D(const std::string& texture_path, const GLint bind_mode) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+	stbi_set_flip_vertically_on_load(true);
     // Set the texture wrapping and filtering options
     // Load image file to use as texture image.
     auto width = 0;

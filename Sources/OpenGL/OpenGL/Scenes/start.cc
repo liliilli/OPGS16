@@ -9,7 +9,7 @@ Start::Start() :
     font{"Resources/LSANS.TTF"} {
     glEnable(GL_DEPTH_TEST);
 
-	objects[0] = std::make_unique<Canvas::Image>("Resources/checker.jpg");
+	objects[0] = std::make_unique<Canvas::Image>("Resources/window.png");
 }
 
 void Start::InitShaders() {

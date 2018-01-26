@@ -30,7 +30,7 @@ ShaderNew& ShaderNew::SetShader(Type shader_type, const GLchar* path) {
 
     char info_log[LOG_SIZE]{};
     if (!success) ShaderErrorPrint(m_shaders[shader_type], info_log);
-    
+
     /* Return l-value reference of this, to use it as cascade. */
     return *this;
 }
@@ -39,14 +39,14 @@ void ShaderNew::Link() {
     k_id = glCreateProgram();
 
     // Attach shader fragments (already compiled)
-    for (auto& shader : m_shaders) { 
-        glAttachShader(k_id, shader.second); 
+    for (auto& shader : m_shaders) {
+        glAttachShader(k_id, shader.second);
     }
-    
+
     glLinkProgram(k_id);
-    
-    for (auto& shader : m_shaders) { 
-        glDeleteShader(shader.second); 
+
+    for (auto& shader : m_shaders) {
+        glDeleteShader(shader.second);
     }
 
     int success = 0;
@@ -118,7 +118,7 @@ void ShaderNew::SetFloat(const std::string & name, float value) const {
     glUniform1f(glGetUniformLocation(k_id, name.c_str()), value);
 }
 
-void ShaderNew::SetVec3f(const std::string & name, 
+void ShaderNew::SetVec3f(const std::string & name,
                          const float _1, const float _2, const float _3) {
     glUniform3f(glGetUniformLocation(k_id, name.c_str()), _1, _2, _3);
 }
@@ -127,12 +127,12 @@ void ShaderNew::SetVec3f(const std::string& name, const glm::vec3& vector) {
     glUniform3fv(glGetUniformLocation(k_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
-void ShaderNew::SetVecMatrix4f(const std::string& name, glm::mat4& matrix) {
+void ShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix) {
     glUniformMatrix4fv(glGetUniformLocation(k_id, name.c_str()),
                        1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void ShaderNew::SetStructDirLight(const std::string & name, 
+void ShaderNew::SetStructDirLight(const std::string & name,
                                   const light::DirectionalLight & container) {
     SetVec3f(name + ".direction", container.GetDirection());
 
@@ -141,7 +141,7 @@ void ShaderNew::SetStructDirLight(const std::string & name,
     SetVec3f(name + ".specular", container.GetSpecular());
 }
 
-void ShaderNew::SetStructPointLight(const std::string & name, 
+void ShaderNew::SetStructPointLight(const std::string & name,
                                     const light::PointLight & container) {
     SetVec3f(name + ".position", container.GetPosition());
 
@@ -154,7 +154,7 @@ void ShaderNew::SetStructPointLight(const std::string & name,
     SetFloat(name + ".quadratic", container.GetQuadratic());
 }
 
-void ShaderNew::SetStructSpotlight(const std::string & name, 
+void ShaderNew::SetStructSpotlight(const std::string & name,
                                    const light::Spotlight & container) {
         SetVec3f(name + ".direction", container.direction);
     SetVec3f(name + ".position", container.position);
