@@ -1,6 +1,7 @@
 #include "start.h"
 #include "..\application.h"
-#include "..\GlobalObjects\Canvas\image.h"
+#include "..\GlobalObjects\Canvas\Canvas.h"
+#include "..\GlobalObjects\Canvas\Image.h"
 #include "bloom_scene.h"
 #include "primitive_proc.h"
 #include "path_finding2d.h"
@@ -9,11 +10,12 @@ Start::Start() :
     font{"Resources/LSANS.TTF"} {
     glEnable(GL_DEPTH_TEST);
 
-	objects[0] = std::make_unique<Canvas::Image>("Resources/window.png");
-}
+	auto canvas = std::make_unique<Canvas::Canvas>();
+	canvas->InitiateChild<Canvas::Image>("Image", "Resources/window.png");
+	auto image = canvas->GetChild("Image");
+	//image->InitiateChild<>();
 
-void Start::InitShaders() {
-
+	objects[0] = std::move(canvas);
 }
 
 void Start::HandleInput(GLFWwindow* const window) {

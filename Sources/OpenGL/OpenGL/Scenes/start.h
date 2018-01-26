@@ -36,11 +36,6 @@ private:
      * @comment Initiate methods
      */
 
-    /**
-     * @brief Initiate shaders to use in this scene.
-     */
-    [[noreturn]] void InitShaders();
-
     /** ----------------------------------------------------------------------+
      * @comment sub-draw methods using in Draw() method.
      */

@@ -129,7 +129,6 @@ public:
      */
     glm::mat4 GetModelMatrix();
 
-protected:
 	/**
 	 * @brief This initiate object as a child of base object.
 	 *
@@ -151,7 +150,7 @@ protected:
 	bool InitiateChild(const std::string&& tag, _Types&&... _args) {
 		if (children.find(tag) != children.end()) return 0;
 
-		children[tag] = std::make_shared<_Ty>(args...);
+		children[tag] = std::make_shared<_Ty>(_args...);
 		return 1;
 	}
 
@@ -160,16 +159,29 @@ protected:
 	 * @param[in] tag Object tag.
 	 * @return Success/Failed tag. If arbitary objects has been destroied, return ture.
 	 */
-	bool DestroyChild(std::string& tag);
+	bool DestroyChild(const std::string& tag);
 
 	/**
 	 * @brief Get children tag list.
 	 */
 	const std::vector<std::string> GetChildrenTags() const;
 
+	/**
+	 * @brief Get children reference.
+	 * @return Children objects component list.
+	 */
+	std::unordered_map<std::string, std::shared_ptr<Object>>& GetChildren();
+
+	/**
+	 * @brief Get arbitary child object.
+	 * @param[in] tag The tag of object to find.
+	 * @return Object's smart-pointer instance.
+	 */
+	std::shared_ptr<Object> GetChild(const std::string& tag);
+
+protected:
     /** Caution :: Dangling reference! */
     camera::Camera& camera;
-
 private:
     /**
      * @brief Refresh Translation matrix

@@ -46,8 +46,6 @@ private:
 	texture::Texture2D texture;
 	std::shared_ptr<helper::ShaderNew> shader;
 
-	std::unordered_map<std::string, std::shared_ptr<Object>> children;
-
 	const float alpha{ 1.0f };
 	const float width{ 128.f }, height{ 128.f };
 };

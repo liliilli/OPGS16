@@ -1,8 +1,25 @@
 #ifndef OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
 #define OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
 
+/**
+ * @file GlobalObjects/Interface/i_originable.h
+ * @brief IOriginable not-pure interface file.
+ *
+ * @author Jongmin Yun
+ * @version 0.0.1
+ */
+
 #include <glm/glm.hpp>
 
+/**
+ * @class IOriginable
+ * @brief This interface (not-pure, but work as a UI component checking type in RTTI and so on)
+ * works as checking components type, get objects to align with Origin which is used for calcula
+ * ting weight-center position of each object.
+ *
+ * The object inherit IOriginable can use CalculateCenterPosition to get display position on
+ * Screen space.
+ */
 class IOriginable {
 public:
 	/**

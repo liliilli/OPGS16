@@ -117,7 +117,7 @@ glm::mat4 Object::GetModelMatrix() {
     return model;
 }
 
- bool Object::DestroyChild(std::string & tag) {
+ bool Object::DestroyChild(const std::string & tag) {
 	 decltype(children.end()) iterator = children.find(tag);
 	 if (iterator == children.end())
 		 return 0;
@@ -132,6 +132,15 @@ glm::mat4 Object::GetModelMatrix() {
 		 list.push_back(object_pair.first);
 	 }
 	 return list;
+ }
+
+ std::unordered_map<std::string, std::shared_ptr<Object>>& Object::GetChildren() {
+	 return children;
+ }
+
+ std::shared_ptr<Object> Object::GetChild(const std::string& tag) {
+	 if (children.find(tag) == children.end()) return nullptr;
+	 return children.at(tag);
  }
 
 /**
