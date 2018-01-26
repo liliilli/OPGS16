@@ -11,10 +11,11 @@
 
 #include <memory>
 #include <type_traits>
+#include "..\Interface\i_originable.h"
 #include "..\..\Headers\common.h"
 
 namespace Canvas {
-class Image : public Object {
+class Image : public Object, public IOriginable {
 public:
 	explicit Image(std::string&& image_path);
 	virtual ~Image() = default;

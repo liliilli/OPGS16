@@ -69,8 +69,11 @@ namespace Canvas {
 
 	glm::mat4 Image::GetPvmMatrix() {
 		auto M = glm::mat4();
-		SetPosition({ -1.f, -1.f, 0.f });
-		M = glm::translate(M, GetPosition());
+
+		SetPosition({ -32.f, -32.f, 0.f });
+		auto position = CalculateCenterPosition(GetOrigin(), glm::vec2{ GetPosition() });
+
+		M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
 		M = glm::scale(M, glm::vec3(width, height, 0));
 
 		auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
