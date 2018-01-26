@@ -11,7 +11,7 @@ Canvas::Text::Text(const std::string&& initial_text,
 void Canvas::Text::Update() {}
 
 void Canvas::Text::Draw() {
-	m_f_manager->RenderText(m_text, glm::vec2{ GetPosition() }, GetScaleValue(), m_color);
+	m_f_manager->RenderTextNew(m_text, GetOrigin(), glm::vec2{ GetPosition() }, m_color);
 }
 
 void Canvas::Text::SetText(const std::string && new_text) {

@@ -4,7 +4,7 @@
 #include <GL\glew.h>
 #include <glm\gtc\matrix_transform.hpp>
 
-inline void IOriginable::SetOrigin(Origin value) {
+void IOriginable::SetOrigin(Origin value) {
 	origin = value;
 }
 

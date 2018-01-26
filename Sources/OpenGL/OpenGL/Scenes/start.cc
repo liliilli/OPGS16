@@ -16,14 +16,10 @@ Start::Start() {
 
 	using namespace std::string_literals;
 
-	Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)",
-		glm::vec3{ 25, 480 - 48, 0 } };
+	Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
+	txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);
 	txt_1.SetScaleValue(0.5f);
 	canvas->InitiateChild("Txt1", std::move(txt_1));
-
-  //  canvas->InitiateChild<Canvas::Text>("Txt1",
-		//"OpenGL Tutorial Samples\n" "And dirty engine :)",
-		//glm::vec3{ 25, 480 - 48, 0 });
 
 	objects[0] = std::move(canvas);
 }

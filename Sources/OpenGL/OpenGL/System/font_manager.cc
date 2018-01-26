@@ -172,7 +172,7 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderTextNew
-(const std::string& text, FontOrigin origin, glm::vec2 relative_position, glm::vec3 color,
+(const std::string& text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
 	FontAlignment alignment, const float scale) {
 	// Body
 	StartShader(color);
@@ -231,7 +231,7 @@ void FontManager::StartShader(const glm::vec3& color) {
  *
  * @return The position has (x, y) value.
  */
-glm::vec2 FontManager::CalculateCenterPosition(FontOrigin& origin, glm::vec2& position) {
+glm::vec2 FontManager::CalculateCenterPosition(IOriginable::Origin& origin, glm::vec2& position) {
 	/** x origin, y origin, width, height */
 	std::array<GLint, 4> viewport{};
 	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
@@ -373,7 +373,7 @@ unsigned FontManager::GetStringRenderWidth(const std::string& text, const float 
 	unsigned width{};
 	for (const auto& chr : text) {
 		Character ch_info = characters.at(chr);
-		width += (ch_info.advance >> 6) * scale;
+		width += static_cast<decltype(width)>((ch_info.advance >> 6) * scale);
 	}
 
 	return width;

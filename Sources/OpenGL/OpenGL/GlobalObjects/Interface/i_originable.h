@@ -35,7 +35,7 @@ public:
 	 * @brief
 	 * @param[in] value
 	 */
-	[[noreturn]] inline void SetOrigin(Origin value);
+	[[noreturn]] void SetOrigin(Origin value);
 
 	/**
 	 * @brief

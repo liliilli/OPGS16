@@ -22,6 +22,7 @@
 #include FT_FREETYPE_H
 
 #include "Shader\shader.h"
+#include "..\GlobalObjects\Interface\i_originable.h"
 #define PUBLIC__ public:
 #define PRIVATE__ private:
 
@@ -54,12 +55,6 @@ PUBLIC__
 		static FontManager instance{};
 		return instance;
 	}
-
-	enum class FontOrigin : int {
-		DOWN_LEFT = 1,		DOWN_CENTER = 2,	DOWN_RIGHT = 3,
-		CENTER_LEFT = 4,	CENTER_CENTER = 5,	CENTER_RIGHT = 6,
-		UP_LEFT = 7,		UP_CENTER = 8,		UP_RIGHT = 9
-	};
 
 	enum class FontAlignment { LEFT, CENTER, RIGHT };
 
@@ -101,7 +96,7 @@ PUBLIC__
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
-	[[noreturn]] void RenderTextNew(const std::string& text, FontOrigin origin,
+	[[noreturn]] void RenderTextNew(const std::string& text, IOriginable::Origin origin,
 		glm::vec2 relative_position, glm::vec3 color,
 		FontAlignment alignment = FontAlignment::LEFT, const float scale = 1.0f);
 
@@ -136,7 +131,7 @@ PRIVATE__
 	 *
 	 * @return The position has (x, y) value.
 	 */
-	glm::vec2 CalculateCenterPosition(FontOrigin& origin, glm::vec2& position);
+	glm::vec2 CalculateCenterPosition(IOriginable::Origin& origin, glm::vec2& position);
 
 	/**
 	 * @brief This methods ends shader's operation.

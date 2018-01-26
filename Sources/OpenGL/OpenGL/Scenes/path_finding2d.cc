@@ -1,4 +1,5 @@
 #include "path_finding2d.h"
+#include "..\GlobalObjects\Interface\i_originable.h"
 
 void PathFinding2D::HandleInput(GLFWwindow * const window) {
 }
@@ -21,7 +22,7 @@ void PathFinding2D::DrawUi() {
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	using Origin = FontManager::FontOrigin;
+	using Origin = IOriginable::Origin;
 	using Align = FontManager::FontAlignment;
 
 	for (int i = 1; i <= 9; ++i) {
@@ -29,6 +30,4 @@ void PathFinding2D::DrawUi() {
 			static_cast<Origin>(i),
 			{0, 0}, { 1, 1, 1 }, Align::CENTER);
 	}
-	//font.RenderTextNew(m_scene_name, Origin::CENTER_CENTER, {0, 0}, { 1, 1, 1 },);
-	//font.RenderText(m_scene_name, { 25.f, 25.f }, 1.0f, { 1.f, 1.f, 1.f });
 }

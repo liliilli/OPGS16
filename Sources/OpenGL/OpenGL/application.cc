@@ -23,9 +23,10 @@ Application::Application(std::string&& app_name)
     SetFps(60.0f);
 
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	Canvas::Text&& fps{ "", glm::vec3{0, 456, 0} };
-	fps.SetScaleValue(0.5f);
-	canvas->InitiateChild("Fps", std::move(fps));
+	Canvas::Text&& fps{ "", glm::vec3{0, 456, 0} }; {
+		fps.SetScaleValue(0.5f);
+		canvas->InitiateChild("Fps", std::move(fps));
+	}
 	m_canvas = std::move(canvas);
 
     Start* _{};
