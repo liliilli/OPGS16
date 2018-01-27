@@ -143,7 +143,7 @@ void ShaderNew::SetStructDirLight(const std::string & name,
 
 void ShaderNew::SetStructPointLight(const std::string & name,
                                     const light::PointLight & container) {
-    SetVec3f(name + ".position", container.GetPosition());
+    SetVec3f(name + ".position", container.GetLocalPosition());
 
     SetVec3f(name + ".ambient", container.GetAmbient());
     SetVec3f(name + ".diffuse", container.GetDiffuse());
@@ -398,7 +398,7 @@ void Shader::SetStructDirLight(const std::string& name, const light::Directional
 }
 
 void Shader::SetStructPointLight(const std::string& name, const light::PointLight& container) {
-    SetVec3f(name + ".position", container.GetPosition());
+    SetVec3f(name + ".position", container.GetLocalPosition());
 
     SetVec3f(name + ".ambient", container.GetAmbient());
     SetVec3f(name + ".diffuse", container.GetDiffuse());

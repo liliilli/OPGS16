@@ -18,11 +18,14 @@ namespace Canvas {
  * @class Text
  * @brief This class display text on position aligned with FontManager.
  */
-class Text : public Object, public IOriginable {
+class Text : public Object, public IOriginable, public IAlignable {
 public:
 	Text(const std::string&& initial_text,
 		const glm::vec3&& position = { 0, 0, 0 },
 		const glm::vec3&& color = { 1, 1, 1 });
+	Text(const std::string& initial_txt,
+		const glm::vec3& position = { 0, 0, 0 },
+		const glm::vec3& color = { 1, 1, 1 });
 	Text() = delete;
 
 	virtual ~Text() = default;

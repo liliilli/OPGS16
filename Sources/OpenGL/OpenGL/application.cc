@@ -22,6 +22,7 @@ Application::Application(std::string&& app_name)
     camera::SetCursor(360.f, 240.f);
     SetFps(60.0f);
 
+	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
 	Canvas::Text&& fps{ "", glm::vec3{0, 456, 0} }; {
 		fps.SetScaleValue(0.5f);
@@ -29,12 +30,13 @@ Application::Application(std::string&& app_name)
 	}
 	m_canvas = std::move(canvas);
 
-    Start* _{};
-    PushScene(_);
+	/** Insert first scene */
+    PushScene<Start>();
 }
 
 void Application::Run() {
     new_time = old_time = (float)glfwGetTime();
+	glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window)) {
         if (IfFrameTurned()) {
@@ -107,6 +109,12 @@ void Application::Update() {
 void Application::Draw() {
     top_scene->Draw();
 
+	DrawDebugInformation();
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+void Application::DrawDebugInformation() {
     if (fps_toggled) { // If fps display toggled, draw fps.
         std::ostringstream str;
         str << std::setprecision(4) << display_time;
@@ -116,9 +124,6 @@ void Application::Draw() {
 
 		m_canvas->Draw();
     }
-
-    glfwSwapBuffers(window);
-    glfwPollEvents();
 }
 
 void Application::ToggleAntialiasing() {

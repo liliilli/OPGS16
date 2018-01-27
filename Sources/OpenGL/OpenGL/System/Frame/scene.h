@@ -11,11 +11,13 @@
 * @version 0.0.1
 */
 
+#include <memory>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include "..\..\GlobalObjects\camera.h"
-#include "..\font_manager.h"
 #include "helper.h"
+#include "object.h"
+#include "..\font_manager.h"
+#include "..\..\GlobalObjects\camera.h"
 
 /**
  * @class Scene
@@ -37,13 +39,33 @@ public:
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
+	 * This method is able to overriding,
+	 * but actual default behavior is just call ->Update() of objects.
      */
-	[[noreturn]] virtual void Update() = 0;
+	[[noreturn]] virtual void Update();
 
     /**
      * @brief The method calls scene to draw all objects.
+	 * This method is able to overriding,
+	 * but actual default behavior is just call ->Draw() of objects.
      */
-	[[noreturn]] virtual void Draw() = 0;
+	[[noreturn]] virtual void Draw();
+
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
+	bool InsertObject(const std::string&& tag, std::unique_ptr<_Ty>&& obj) {
+		if (objects.find(tag) != objects.end()) return false;
+		objects[tag] = std::move(obj);
+	}
+
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
+	bool InsertObject(const std::string&& tag, std::unique_ptr<_Ty>& obj) {
+		if (objects.find(tag) != objects.end()) return false;
+		objects[tag] = std::move(obj);
+	}
+
+	auto GetObjects()->std::unordered_map<std::string, std::unique_ptr<Object>>&;
+
+	std::unique_ptr<Object>& GetObject(const std::string&& tag);
 
 protected:
     camera::Camera& camera;
@@ -62,6 +84,9 @@ protected:
         else
             return false;
     }
+
+private:
+    std::unordered_map<std::string, std::unique_ptr<Object>> objects;
 };
 
 #endif // OPENGL_TUTORIAL_SCENE_H

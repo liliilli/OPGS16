@@ -28,8 +28,8 @@ public:
     * @brief Set position with new coordinate (x, y, z)
     * @param position Position (x, y, z)
     */
-    [[noreturn]] void SetPosition(const glm::vec3 position);
-    const auto GetPosition() const { return standard_position; }
+    [[noreturn]] void SetLocalPosition(const glm::vec3 position);
+    const auto GetLocalPosition() const { return standard_position; }
 
     /**
      * @brief Refresh matrix T used for shadow mapping.
@@ -73,8 +73,8 @@ public:
     * @brief Set position with new coordinate (x, y, z)
     * @param position Position (x, y, z)
     */
-    [[noreturn]] void SetPosition(const glm::vec3 position);
-    const auto GetPosition() const { return position; }
+    [[noreturn]] void SetLocalPosition(const glm::vec3 position);
+    const auto GetLocalPosition() const { return position; }
     const auto GetStandPos() const { return pos_standard; }
 
     const auto GetAmbient() const { return ambient; }

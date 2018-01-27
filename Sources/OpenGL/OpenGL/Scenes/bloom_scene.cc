@@ -49,20 +49,20 @@ void BloomScene::InitShaders() {
 void BloomScene::InitObjects() {
     /** Boxes */
     objects[0] = std::make_unique<WoodBox>();
-    objects[0]->SetPosition(glm::vec3{ 0, 0, 0 });
+    objects[0]->SetLocalPosition(glm::vec3{ 0, 0, 0 });
 
     objects[1] = std::make_unique<WoodBox>();
-    objects[1]->SetPosition(glm::vec3{ 2, 0, -2 });
+    objects[1]->SetLocalPosition(glm::vec3{ 2, 0, -2 });
 
     objects[2] = std::make_unique<WoodBox>();
-    objects[2]->SetPosition(glm::vec3{ -1, 2, -1 });
+    objects[2]->SetLocalPosition(glm::vec3{ -1, 2, -1 });
 
     objects[3] = std::make_unique<WoodBox>();
-    objects[3]->SetPosition(glm::vec3{ -3, 0, -2 });
+    objects[3]->SetLocalPosition(glm::vec3{ -3, 0, -2 });
 
     /** Floor */
     objects[4] = std::make_unique<QuadFloor>();
-    objects[4]->SetPosition({ 0, -.5f, 0 });
+    objects[4]->SetLocalPosition({ 0, -.5f, 0 });
     objects[4]->SetAngle(-90.0f);
     objects[4]->SetRotationFactor({ 1, 0, 0 });
     objects[4]->SetScaleValue(4.0f);
@@ -71,19 +71,19 @@ void BloomScene::InitObjects() {
 void BloomScene::InitLightBoxes() {
     /** Light boxes */
     auto light = std::make_unique<LightBox>();
-    light->SetPosition({ -1, 1.5, -3 });
+    light->SetLocalPosition({ -1, 1.5, -3 });
     light->SetScaleValue(.5f);
     light->SetColor({ 1, 1, 1 });
     radiant_objects[0] = std::move(light);
 
     auto light_2 = std::make_unique<LightBox>();
-    light_2->SetPosition({ 0, 1, 2 });
+    light_2->SetLocalPosition({ 0, 1, 2 });
     light_2->SetScaleValue(.5f);
     light_2->SetColor({ 1, 0, 0 });
     radiant_objects[1] = std::move(light_2);
 
     auto light_3 = std::make_unique<LightBox>();
-    light_3->SetPosition({ -4, 0, -1 });
+    light_3->SetLocalPosition({ -4, 0, -1 });
     light_3->SetScaleValue(.5f);
     light_3->SetColor({ 0, 0, 1 });
     radiant_objects[2] = std::move(light_3);
@@ -165,7 +165,7 @@ void BloomScene::DrawHdrBuffer() {
     auto view = camera.GetViewMatrix();
     shader_fbo_hdr.SetVecMatrix4f("uView", view);
     shader_fbo_hdr.SetVecMatrix4f("uProjection", camera.GetProjection());
-    shader_fbo_hdr.SetVec3f("uCameraPos", camera.GetPosition());
+    shader_fbo_hdr.SetVec3f("uCameraPos", camera.GetLocalPosition());
 
     DrawObjects(shader_fbo_hdr);
     /** Lights */

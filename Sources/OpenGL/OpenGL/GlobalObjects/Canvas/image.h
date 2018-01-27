@@ -15,13 +15,13 @@
 namespace Canvas {
 class Image : public Object, public IOriginable {
 public:
-	explicit Image(std::string&& image_path);
+	Image(std::string&& image_path);
 	virtual ~Image() = default;
 
 	/**
 	 * @brief The method updates components of object.
 	 */
-	[[noreturn]] virtual void Update() override final {};
+	[[noreturn]] virtual void Update() override final;
 
 	/**
 	 * @brief The method calls scene to one objects.

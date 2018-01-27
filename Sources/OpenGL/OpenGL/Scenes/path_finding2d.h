@@ -16,6 +16,7 @@
 
 class PathFinding2D : public Scene {
 public:
+	PathFinding2D();
     virtual ~PathFinding2D() = default;
 
 	/**
@@ -48,21 +49,9 @@ private:
 	SceneStatus m_status{ SceneStatus::INITIATE };
 	std::string m_scene_name{ "PathFinding2D" };
 
-	FontManager font{ "Resources/LSANS.TTF" };
-
-	/** Deprecated as soon */
-
-	/** UI shader */
-	helper::ShaderNew shad_quad;
-
-	/** Displaying components shader */
-	helper::ShaderNew shad_display;
-
 	[[noreturn]] void InitUserInterface();
 
 	[[noreturn]] void InitShowingComponents();
-
-	/** Draw */
 
 	/**
 	 * @brief The method draws Ui components;

@@ -9,12 +9,18 @@ void Canvas::Update() {
 		m_projection = GetOrthoProjectionMatrix(m_viewport_size);
 		m_is_size_changed = false;
 	}
+
+	for (auto& child : GetChildren()) {
+		child.second->RefreshFinalPosition(GetFinalPosition());
+	}
 }
 
 void Canvas::Draw() {
+    glDisable(GL_DEPTH_TEST);
 	for (auto& child : GetChildren()) {
 		child.second->Draw();
 	}
+    glEnable(GL_DEPTH_TEST);
 }
 
 const glm::mat4&& Canvas::GetOrthoProjectionMatrix(const std::array<GLint, 4>& input) const {

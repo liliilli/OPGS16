@@ -15,6 +15,12 @@ Image::Image(std::string&& image_path) :
 	InitiateShader();
 }
 
+void Image::Update() {
+	for (auto& child : GetChildren()) {
+		child.second->RefreshFinalPosition(GetFinalPosition());
+	}
+}
+
 void Image::InitiateShader() {
 	auto& manager = ShaderManager::GetInstance();
 	shader = manager.GetShaderWithName("gQuad");
@@ -34,8 +40,8 @@ void Image::Draw(helper::ShaderNew& shader) {
 }
 
 void Image::Draw() {
-	auto is_already_enabled{ false };
 
+	auto is_already_enabled{ false };
 	if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
 	else {
 		glEnable(GL_BLEND);
@@ -70,8 +76,7 @@ void Image::Draw() {
 glm::mat4 Image::GetPvmMatrix() {
 	auto M = glm::mat4();
 
-	SetPosition({ -32.f, -32.f, 0.f });
-	auto position = CalculateCenterPosition(GetOrigin(), glm::vec2{ GetPosition() });
+	auto position = CalculateCenterPosition(GetOrigin(), glm::vec2{ GetLocalPosition() });
 
 	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
 	M = glm::scale(M, glm::vec3(width, height, 0));

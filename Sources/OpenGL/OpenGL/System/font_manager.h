@@ -23,6 +23,7 @@
 
 #include "Shader\shader.h"
 #include "..\GlobalObjects\Interface\i_originable.h"
+#include "..\GlobalObjects\Interface\i_alignable.h"
 #define PUBLIC__ public:
 #define PRIVATE__ private:
 
@@ -55,8 +56,6 @@ PUBLIC__
 		static FontManager instance{};
 		return instance;
 	}
-
-	enum class FontAlignment { LEFT, CENTER, RIGHT };
 
 	bool InitiateFont(const std::string&& font_path);
 
@@ -98,7 +97,7 @@ PUBLIC__
 	 */
 	[[noreturn]] void RenderTextNew(const std::string& text, IOriginable::Origin origin,
 		glm::vec2 relative_position, glm::vec3 color,
-		FontAlignment alignment = FontAlignment::LEFT, const float scale = 1.0f);
+		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
 
 PRIVATE__
 	/**

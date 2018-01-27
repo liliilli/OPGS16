@@ -37,7 +37,7 @@ public:
      * @commend Boiler-plate codes
      */
 
-    [[noreturn]] void SetPosition(glm::vec3 position) override;
+    [[noreturn]] void SetLocalPosition(glm::vec3 position) override;
 
     /**
      * @brief The method sets up diffuse color, and specular color light.

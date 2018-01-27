@@ -3,7 +3,7 @@
 #include "..\System\Frame\helper.h"
 
 LightBox::LightBox() :
-    pointlight{ GetPosition(), glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) },
+    pointlight{ GetLocalPosition(), glm::vec3(1) * .2f, glm::vec3(1), glm::vec3(1) },
     object_info{ helper::CreateBindingObject(complete_box, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}) }
 {}
 
@@ -22,9 +22,9 @@ void LightBox::SetUpLight(const int index, helper::ShaderNew& shader) {
     shader.SetStructPointLight("uPointLight[" + std::to_string(index) + "]", pointlight);
 }
 
-void LightBox::SetPosition(glm::vec3 position) {
-    Object::SetPosition(position);
-    pointlight.SetPosition(GetPosition());
+void LightBox::SetLocalPosition(glm::vec3 position) {
+    Object::SetLocalPosition(position);
+    pointlight.SetLocalPosition(GetLocalPosition());
 }
 
 void LightBox::SetColor(glm::vec3 color) {

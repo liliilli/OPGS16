@@ -46,8 +46,8 @@ public:
      * @brief The method replace scene with old scene.
      */
     template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-    [[noreturn]] void ReplaceScene(_Ty*) {
-        PushScene((_Ty*)nullptr);
+    [[noreturn]] void ReplaceScene(){
+        PushScene<_Ty>();
     }
 
 private:
@@ -91,7 +91,7 @@ private:
      * Double initiation of scene.
      */
     template <class _Ty>
-    [[noreturn]] void PushScene(_Ty*) {
+    [[noreturn]] void PushScene() {
         scenes.push(std::make_shared<_Ty>());
         top_scene = scenes.top();
     }
@@ -111,6 +111,9 @@ private:
      */
     [[noreturn]] void Draw();
 
+	[[noreturn]] void DrawDebugInformation();
+
+private:
     /** screen width, height */
     unsigned SCREEN_WIDTH   = 720u;
     unsigned SCREEN_HEIGHT  = 480u;

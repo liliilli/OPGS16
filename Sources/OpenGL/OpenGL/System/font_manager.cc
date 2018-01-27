@@ -89,10 +89,14 @@ bool FontManager::InitiateFont(const std::string&& font_path) {
 /**
  * @brief The method renders given text on given position with given color.
  *
+ * This method is deprecated. (version 0.0.2~)
+ *
  * @param[in] text String text
  * @param[in] pos Position text has to be shown on. x, y.
  * @param[in] scale Scale factor
  * @param[in] color Color to be colored.
+ *
+ * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
     shader->Use();
@@ -171,30 +175,31 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
  *
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
-void FontManager::RenderTextNew
-(const std::string& text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
-	FontAlignment alignment, const float scale) {
-	// Body
+ void FontManager::RenderTextNew
+ (const std::string&text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
+	 IAlignable::Alignment alignment, const float scale) {
+ 	// Body
 	StartShader(color);
 	auto text_container = SeparateTextToList(text);
 	auto position = CalculateCenterPosition(origin, relative_position);
 
+	using Align = IAlignable::Alignment;
 	switch (alignment) {
-	case FontAlignment::LEFT:
+	case Align::LEFT:
 		RenderLeftSide(text_container, position, scale);
 		break;
-	case FontAlignment::CENTER:
+	case Align::CENTER:
 		RenderCenterSide(text_container, position, scale);
 		break;
-	case FontAlignment::RIGHT:
+	case Align::RIGHT:
 		RenderRightSide(text_container, position, scale);
 		break;
 	}
 
 	EndShader();
-}
+ }
 
-void FontManager::InitiateShader() {
+ void FontManager::InitiateShader() {
 	auto& manager = ShaderManager::GetInstance();
 	shader = manager.GetShaderWithName("gCommonFont");
 	if (!shader) {

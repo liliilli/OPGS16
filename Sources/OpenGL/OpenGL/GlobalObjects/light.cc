@@ -15,7 +15,7 @@ void DirectionalLight::SetDirection(const glm::vec3 direction) {
     this->direction = glm::normalize(direction);
 }
 
-void DirectionalLight::SetPosition(const glm::vec3 position) {
+void DirectionalLight::SetLocalPosition(const glm::vec3 position) {
     standard_position = position;
 }
 
@@ -56,7 +56,7 @@ PointLight::PointLight(const glm::vec3 position,
                        const float ambient, const float diffuse, const float specular) 
     : PointLight{ position, glm::vec3(ambient), glm::vec3(diffuse), glm::vec3(specular) } {}
 
-void PointLight::SetPosition(const glm::vec3 position) {
+void PointLight::SetLocalPosition(const glm::vec3 position) {
     this->position = position;
 }
 

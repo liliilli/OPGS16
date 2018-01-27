@@ -35,7 +35,7 @@ public:
     void SetPerspective(const float sight_degree, const float screen_ratio,
                         const float near, const float far);
 
-    auto GetPosition() const -> const glm::vec3{ return m_position; };
+    auto GetLocalPosition() const -> const glm::vec3{ return m_position; };
     auto GetProjection() -> glm::mat4& { return m_proj; }
 
 private:

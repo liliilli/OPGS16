@@ -59,13 +59,25 @@ public:
      * @brief The method gets position as glm::vec3 type. Not overridable.
      * @return Object's position (x, y, z)
      */
-    virtual glm::vec3 GetPosition();
+    glm::vec3 GetLocalPosition();
 
     /**
      * @brief The method sets position. Not overridable.
      * @param[in] position Position to set on.
      */
-    [[noreturn]] virtual void SetPosition(glm::vec3 position);
+    [[noreturn]] virtual void SetLocalPosition(glm::vec3 position);
+
+	/**
+	 * @brief Return final position. used for hierarchy structure.
+	 * @return Object's final position in hierarchy.
+	 */
+	glm::vec3 GetFinalPosition();
+
+	/**
+	 * @brief The method refresh final position. Nor overriadble.
+	 * @param[in] parent_position Position to apply for.
+	 */
+	[[noreturn]] void RefreshFinalPosition(const glm::vec3& parent_position);
 
     /**
      * @brief The method gets rotation values
@@ -207,8 +219,10 @@ private:
     [[noreturn]] void RefreshScaleMatrix();
 
 private:
-    /** (x, y, z) world position */
+    /** (x, y, z) local position */
     glm::vec3   position{};
+	/** (x, y, z) final position in hierarchy */
+	glm::vec3	final_position{};
 
     /** Rotation angle : Positive value is CW, Negative value is CCW */
     float       rotation_angle{};

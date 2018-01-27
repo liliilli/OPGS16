@@ -4,16 +4,24 @@ Object::Object() : camera{ camera::GetCamera() } {}
 
 Object::~Object() {}
 
-glm::vec3 Object::GetPosition() {
+glm::vec3 Object::GetLocalPosition() {
     return position;
 }
 
-void Object::SetPosition(glm::vec3 position) {
+void Object::SetLocalPosition(glm::vec3 position) {
     this->position = position;
 
     /** Renew translate matrix */
     RefreshTranslateMatrix();
     is_changed = true;
+}
+
+glm::vec3 Object::GetFinalPosition() {
+	return final_position;
+}
+
+void Object::RefreshFinalPosition(const glm::vec3 & parent_position) {
+	final_position = position + parent_position;
 }
 
 /**
@@ -147,7 +155,7 @@ glm::mat4 Object::GetModelMatrix() {
  * @brief Refresh Translation matrix
  */
 void Object::RefreshTranslateMatrix() {
-    translate = glm::translate(glm::mat4{}, position);
+    translate = glm::translate(glm::mat4{}, position + final_position);
 }
 
 /**
