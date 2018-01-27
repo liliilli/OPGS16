@@ -16,7 +16,9 @@ Application::Application(std::string&& app_name)
 
 	/** First we need initiate default font. */
 	auto& font = FontManager::GetInstance();
-	font.InitiateFont( "Resources/LSANS.TTF" );
+	font.InitiateFont( "Sans", "Resources/LSANS.TTF" , true);
+	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
+	font.LoadDefaultFont();
 
     // Set Camera Cursor and Fps
     camera::SetCursor(360.f, 240.f);
@@ -24,8 +26,9 @@ Application::Application(std::string&& app_name)
 
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	Canvas::Text&& fps{ "", glm::vec3{0, 456, 0} }; {
-		fps.SetScaleValue(0.5f);
+	Canvas::Text&& fps{ "", glm::vec3{32, -32, 0}, glm::vec3{0, 1, 0} }; {
+		fps.SetFontSize(16);
+		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
 		canvas->InitiateChild("Fps", std::move(fps));
 	}
 	m_canvas = std::move(canvas);
@@ -104,6 +107,14 @@ void Application::PopScene() {
 
 void Application::Update() {
     top_scene->Update();
+
+	UpdateDebugInformation();
+}
+
+void Application::UpdateDebugInformation() {
+	if (fps_toggled) {
+		m_canvas->Update();
+	}
 }
 
 void Application::Draw() {
@@ -119,10 +130,15 @@ void Application::DrawDebugInformation() {
         std::ostringstream str;
         str << std::setprecision(4) << display_time;
 
+		auto& font_manager = FontManager::GetInstance();
+		font_manager.LoadFont("Solomon");
+
 		auto text = std::static_pointer_cast<Canvas::Text>(m_canvas->GetChild("Fps"));
 		text->SetText("Fps : " + str.str());
 
 		m_canvas->Draw();
+
+		font_manager.LoadDefaultFont();
     }
 }
 

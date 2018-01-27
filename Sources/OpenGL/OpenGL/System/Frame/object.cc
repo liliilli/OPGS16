@@ -20,7 +20,7 @@ glm::vec3 Object::GetFinalPosition() {
 	return final_position;
 }
 
-void Object::RefreshFinalPosition(const glm::vec3 & parent_position) {
+void Object::RefreshFinalPosition(const glm::vec3& parent_position) {
 	final_position = position + parent_position;
 }
 

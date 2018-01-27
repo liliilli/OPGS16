@@ -38,6 +38,12 @@ public:
 
 	[[noreturn]] void SetText(const std::string&& new_text);
 
+	/**
+	 * @brief Set font size of string.
+	 * @param[in] size;
+	 */
+	[[noreturn]] void SetFontSize(const unsigned size);
+
 private:
 	std::string m_text{};
 	FontManager* m_f_manager = &FontManager::GetInstance();

@@ -26,3 +26,8 @@ void Canvas::Text::Draw() {
 void Canvas::Text::SetText(const std::string && new_text) {
 	m_text = new_text;
 }
+
+void Canvas::Text::SetFontSize(const unsigned size) {
+	auto def = m_f_manager->GetDefaultFontSize();
+	SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
+}

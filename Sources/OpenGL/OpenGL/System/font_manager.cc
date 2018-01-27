@@ -11,7 +11,110 @@ FontManager::FontManager() {
 	BindVertexAttributes();
 }
 
-void FontManager::GetCharTextures() {
+void FontManager::InitiateShader() {
+	auto& manager = ShaderManager::GetInstance();
+	shader = manager.GetShaderWithName("gCommonFont");
+	if (!shader) {
+		using Type = helper::ShaderNew::Type;
+		using namespace std::string_literals;
+
+		shader = manager.CreateShader("gCommonFont", {
+			{Type::VS, "Shaders/Global/font.vert"s},
+			{Type::FS, "Shaders/Global/font.frag"s}
+			});
+	}
+}
+
+void FontManager::BindVertexAttributes() {
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+/**
+ * @brief Initiate font glyph includes ASCII characters to use in program.
+ *
+ * @param[in] tag The tag refer to stored font glyphs later.
+ * @param[in] font_path Font path to load.
+ * @param[in] is_default The flag to set up this font to default in use.
+ * default value is false (not default).
+ *
+ * @return The suceess flag.
+ */
+bool FontManager::InitiateFont(const std::string&& tag, const std::string&& font_path,
+	bool is_default) {
+	if (fonts.find(tag) != fonts.end()) {
+		std::cerr << "ERROR::FREETYPE: There is already another font in tag." << std::endl;
+		return false;
+	}
+
+	if (CheckFreeType(std::move(font_path))) {
+		FT_Set_Pixel_Sizes(face, 0, default_font_size);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		fonts.insert(std::make_pair(tag, GetCharTextures()));
+		if (is_default)
+			default_font = &fonts[tag];
+
+		FT_Done_Face(face);
+		FT_Done_FreeType(freetype);
+		return true;
+	}
+	else return false;
+}
+
+bool FontManager::LoadDefaultFont() {
+	if (default_font == nullptr) return false;
+
+	font_in_use = default_font;
+	return true;
+}
+
+bool FontManager::LoadFont(const std::string&& tag) {
+	if (fonts.find(tag) == fonts.end()) return false;
+
+	font_in_use = &fonts.at(tag);
+	return true;
+}
+
+bool FontManager::DeleteFont(const std::string&& tag) {
+	if (fonts.find(tag) == fonts.end()) return false;
+
+	/** Remove pointer reference */
+	auto* font = &fonts.at(tag);
+	if (font_in_use == font) font_in_use = nullptr;
+	if (default_font == font) default_font = nullptr;
+
+	return true;
+}
+
+bool FontManager::CheckFreeType(const std::string&& font_path) {
+	// Check Freetype is well.
+	if (FT_Init_FreeType(&freetype)) {
+		std::cerr << "ERROR::FREETYPE: Could not init Freetype Library" << std::endl;
+		return false;
+	}
+
+	if (FT_New_Face(freetype, font_path.c_str(), 0, &face)) {
+		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+std::unordered_map<GLchar, FontManager::Character> FontManager::GetCharTextures() {
+	std::unordered_map<GLchar, Character> glyphs{};
+
     for (GLubyte c = 0; c < 128; ++c) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cerr << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
@@ -45,45 +148,10 @@ void FontManager::GetCharTextures() {
             static_cast<GLuint>(face->glyph->advance.x)
         };
 
-        characters.insert(std::make_pair(c, character));
+        glyphs.insert(std::make_pair(c, character));
     }
-}
 
-void FontManager::BindVertexAttributes() {
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-}
-
-bool FontManager::InitiateFont(const std::string&& font_path) {
-	// Check Freetype is well.
-	if (FT_Init_FreeType(&freetype)) {
-		std::cerr << "ERROR::FREETYPE: Could not init Freetype Library" << std::endl;
-		return false;
-	}
-
-	if (FT_New_Face(freetype, font_path.c_str(), 0, &face)) {
-		std::cerr << "ERROR::FREETYPE: Failed to load font" << std::endl;
-		return false;
-	}
-
-	FT_Set_Pixel_Sizes(face, 0, 48);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	GetCharTextures();
-	FT_Done_Face(face);
-	FT_Done_FreeType(freetype);
-
-	return true;
+	return glyphs;
 }
 
 /**
@@ -99,7 +167,9 @@ bool FontManager::InitiateFont(const std::string&& font_path) {
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
-    shader->Use();
+	if (!font_in_use) return;
+
+	shader->Use();
     shader->SetVec3f("textColor", color);
     shader->SetVecMatrix4f("projection", projection);
 
@@ -113,7 +183,7 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
     for (const auto& text : texts) {
         // Iterate through all characters
         for (const auto& chr : text) {
-            Character ch_info   = characters.at(chr);
+            Character ch_info   = font_in_use->at(chr);
 
             auto x_offset = ch_info.bearing.x * scale;
             auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
@@ -149,7 +219,7 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
 
         /** Relocate display position */
         pos.x   = input_pos.x;
-        pos.y  -= characters.at(0).size.y;
+        pos.y  -= font_in_use->at(0).size.y;
     }
 
 	EndShader();
@@ -175,10 +245,12 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
  *
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
- void FontManager::RenderTextNew
- (const std::string&text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
-	 IAlignable::Alignment alignment, const float scale) {
- 	// Body
+void FontManager::RenderTextNew
+(const std::string&text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
+ IAlignable::Alignment alignment, const float scale) {
+	if (font_in_use == nullptr) return;
+
+	// Body
 	StartShader(color);
 	auto text_container = SeparateTextToList(text);
 	auto position = CalculateCenterPosition(origin, relative_position);
@@ -197,20 +269,6 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
 	}
 
 	EndShader();
- }
-
- void FontManager::InitiateShader() {
-	auto& manager = ShaderManager::GetInstance();
-	shader = manager.GetShaderWithName("gCommonFont");
-	if (!shader) {
-		using Type = helper::ShaderNew::Type;
-		using namespace std::string_literals;
-
-		shader = manager.CreateShader("gCommonFont", {
-			{Type::VS, "Shaders/Global/font.vert"s},
-			{Type::FS, "Shaders/Global/font.frag"s}
-			});
-	}
 }
 
 /**
@@ -265,7 +323,7 @@ void FontManager::RenderLeftSide
 
 	for (const auto& t_text : container) {
 		for (const auto& chr : t_text) {
-			Character ch_info	= characters.at(chr);
+			Character ch_info	= font_in_use->at(chr);
 			auto vertices		= GetCharacterVertices(ch_info, pos, scale);
 
 			Render(ch_info, vertices);
@@ -274,7 +332,7 @@ void FontManager::RenderLeftSide
 
 		/** Relocate display position */
 		pos.x = position.x;
-		pos.y -= characters.at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y;
 	}
 }
 
@@ -294,7 +352,7 @@ void FontManager::RenderCenterSide
 		pos.x -= GetStringRenderWidth(t_text, scale) / 2;
 
 		for (const auto& chr : t_text) {
-			Character ch_info = characters.at(chr);
+			Character ch_info = font_in_use->at(chr);
 			auto vertices = GetCharacterVertices(ch_info, pos, scale);
 
 			Render(ch_info, vertices);
@@ -302,7 +360,7 @@ void FontManager::RenderCenterSide
 		}
 
 		pos.x = position.x;
-		pos.y -= characters.at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y;
 	}
 }
 
@@ -322,7 +380,7 @@ void FontManager::RenderRightSide
 		pos.x -= GetStringRenderWidth(t_text, scale);
 
 		for (const auto& chr : t_text) {
-			Character ch_info = characters.at(chr);
+			Character ch_info = font_in_use->at(chr);
 			auto vertices = GetCharacterVertices(ch_info, pos, scale);
 
 			Render(ch_info, vertices);
@@ -330,7 +388,7 @@ void FontManager::RenderRightSide
 		}
 
 		pos.x = position.x;
-		pos.y -= characters.at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y;
 	}
 }
 
@@ -377,7 +435,7 @@ std::array<glm::vec4, 6> FontManager::GetCharacterVertices
 unsigned FontManager::GetStringRenderWidth(const std::string& text, const float scale) {
 	unsigned width{};
 	for (const auto& chr : text) {
-		Character ch_info = characters.at(chr);
+		Character ch_info = font_in_use->at(chr);
 		width += static_cast<decltype(width)>((ch_info.advance >> 6) * scale);
 	}
 

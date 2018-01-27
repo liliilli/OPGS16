@@ -57,7 +57,38 @@ PUBLIC__
 		return instance;
 	}
 
-	bool InitiateFont(const std::string&& font_path);
+	/**
+	 * @brief Initiate font glyph includes ASCII characters to use in program.
+	 *
+	 * @param[in] tag The tag refer to stored font glyphs later.
+	 * @param[in] font_path Font path to load.
+	 * @param[in] is_default The flag to set up this font to default in use.
+	 * default value is false (not default).
+	 *
+	 * @return The suceess flag.
+	 */
+	bool InitiateFont(const std::string&& tag, const std::string&& font_path,
+		bool is_default = false);
+
+	/**
+	 * @brief Loads default font. If default is not specified, return false flag.
+	 * @return The success flag.
+	 */
+	bool LoadDefaultFont();
+
+	/**
+	 * @brief Loads font that is specified by tag name. if not found, return false flag.
+	 * @param[in] tag The tag refers to key load font glyphs.
+	 * @return The success flag.
+	 */
+	bool LoadFont(const std::string&& tag);
+
+	/**
+	 * @brief Delete font that is specified by tag name. if not found, return false flag.
+	 * @param[in] tag The tag destroy stored font glyphs.
+	 * @reutrn The success flag.
+	 */
+	bool DeleteFont(const std::string&& tag);
 
     /**
      * @brief The method renders given text on given position with given color.
@@ -99,6 +130,28 @@ PUBLIC__
 		glm::vec2 relative_position, glm::vec3 color,
 		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
 
+	inline const unsigned GetDefaultFontSize() const;
+
+PRIVATE__
+    /** Freetype pointer */
+	FT_Library freetype = nullptr;
+    FT_Face face = nullptr;
+
+    // Restrict first 128 characters for now.
+	std::unordered_map<std::string, std::unordered_map<GLchar, Character>> fonts{};
+
+	std::unordered_map<GLchar, Character>* font_in_use = nullptr;
+	std::unordered_map<GLchar, Character>* default_font = nullptr;
+
+    //std::unordered_map<GLchar, Character> characters;
+    std::array<GLuint, 4> viewport_size;
+	glm::mat4 projection = glm::ortho(0.f, 720.f, 0.f, 480.f);
+
+    GLuint vao, vbo;
+
+    std::shared_ptr<helper::ShaderNew> shader;
+	const unsigned default_font_size = 32u;
+
 PRIVATE__
 	/**
 	 * @brief Initiate common font shader.
@@ -111,12 +164,19 @@ PRIVATE__
 	 */
 	[[noreturn]] void StartShader(const glm::vec3& color);
 
+	/**
+	 * @brief Checks freetype pointer with FontPath.
+	 * @param[in] font_path Font's path to refer.
+	 * @return If checking is successful, return true. otherwise return false.
+	 */
+	bool CheckFreeType(const std::string&& font_path);
+
     /**
      * @brief The method sets character textures from glyphs and store them to container.
      *
      * This methods called when initiate instance.
      */
-    [[noreturn]] void GetCharTextures();
+    std::unordered_map<GLchar, Character> GetCharTextures();
 
 	/**
 	 * @brief This method calculate and return barycenter position to render.
@@ -217,20 +277,6 @@ PRIVATE__
     std::vector<std::string> SeparateTextToList(const std::string text);
 
 PRIVATE__
-    /** Freetype pointer */
-	FT_Library freetype = nullptr;
-    FT_Face face = nullptr;
-
-    // Restrict first 128 characters for now.
-    std::unordered_map<GLchar, Character> characters;
-    std::array<GLuint, 4> viewport_size;
-	glm::mat4 projection = glm::ortho(0.f, 720.f, 0.f, 480.f);
-
-    GLuint vao, vbo;
-
-    std::shared_ptr<helper::ShaderNew> shader;
-
-PRIVATE__
 	/**
 	 * @brief Initialize Font renderer instance with font path.
 	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
@@ -242,5 +288,9 @@ PRIVATE__
 	FontManager(const FontManager&&) = delete;
 	FontManager&& operator=(const FontManager&&) = delete;
 };
+
+inline const unsigned FontManager::GetDefaultFontSize() const {
+	return default_font_size;
+}
 
 #endif // OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H

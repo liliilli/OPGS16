@@ -106,6 +106,8 @@ private:
      */
     [[noreturn]] void Update();
 
+	void UpdateDebugInformation();
+
     /**
      * @brief The method calls scene to draw all objects.
      */
