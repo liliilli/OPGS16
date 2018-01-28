@@ -55,7 +55,6 @@ public:
 	 *
 	 * @return The position has (x, y) value.
 	 */
-	glm::vec2 CalculateCenterPosition(const Origin& origin, const glm::vec2& position) const;
 
 private:
 	Origin origin{ Origin::CENTER_CENTER };

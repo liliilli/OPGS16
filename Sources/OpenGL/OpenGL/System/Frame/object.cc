@@ -4,6 +4,13 @@ Object::Object() : camera{ camera::GetCamera() } {}
 
 Object::~Object() {}
 
+void Object::Update() {
+	for (auto& child : children) {
+		child.second->UpdateFinalPosition(GetFinalPosition());
+		child.second->Update();
+	}
+}
+
 glm::vec3 Object::GetLocalPosition() {
     return position;
 }
@@ -20,8 +27,15 @@ glm::vec3 Object::GetFinalPosition() {
 	return final_position;
 }
 
-void Object::RefreshFinalPosition(const glm::vec3& parent_position) {
+void Object::SetFinalPosition(const glm::vec3 final_position) {
+	this->final_position = final_position;
+}
+
+void Object::UpdateFinalPosition(const glm::vec3& parent_position) {
 	final_position = position + parent_position;
+	for (auto& child : children) {
+		child.second->UpdateFinalPosition(final_position);
+	}
 }
 
 /**

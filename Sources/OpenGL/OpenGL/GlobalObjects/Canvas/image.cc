@@ -16,9 +16,22 @@ Image::Image(std::string&& image_path) :
 }
 
 void Image::Update() {
-	for (auto& child : GetChildren()) {
-		child.second->RefreshFinalPosition(GetFinalPosition());
-	}
+	/** Update my xywh */
+	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
+	const auto xy = GetFinalPosition() - (wh / 2.0f);
+
+	std::array<GLint, 4>&& xywh = {
+		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
+		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
+	UpdateScreenXYWH(xywh);
+
+	/** Update children */
+	UiObject::Update();
+}
+
+void Image::SetImageSize(const float width, const float height) {
+	SetScaleValue(1.0f);
+	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
 }
 
 void Image::InitiateShader() {
@@ -35,12 +48,11 @@ void Image::InitiateShader() {
 	}
 }
 
-void Image::Draw(helper::ShaderNew& shader) {
+void Image::Draw(helper::ShaderNew&) {
 	Draw();
 }
 
 void Image::Draw() {
-
 	auto is_already_enabled{ false };
 	if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
 	else {
@@ -68,18 +80,16 @@ void Image::Draw() {
 	if (!is_already_enabled) glDisable(GL_BLEND);
 
 	/** Render Children */
-	for (const auto& child : GetChildren()) {
-		child.second->Draw();
-	}
+	UiObject::Draw();
 }
 
 glm::mat4 Image::GetPvmMatrix() {
 	auto M = glm::mat4();
 
-	auto position = CalculateCenterPosition(GetOrigin(), glm::vec2{ GetLocalPosition() });
+	auto position = GetFinalPosition();
 
 	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
-	M = glm::scale(M, glm::vec3(width, height, 0));
+	M = glm::scale(M, GetScaleFactor() * GetScaleValue());
 
 	auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
 	auto P = glm::ortho(0.f, 720.f, 0.f, 480.f);

@@ -9,30 +9,52 @@
  * @version 0.0.1
  */
 
-#include "..\Interface\i_originable.h"
 #include "..\..\Headers\common.h"
 
 namespace Canvas {
-class Image : public Object, public IOriginable {
+
+/**
+ * @class Image
+ * @brief UI Image to display one patched image.
+ *
+ * This class are able to have children, but only UiObject. unless, Run-time error will be invoked.
+ * Actual display position of children(UiImage) will be constrained by Image's center position and
+ * size.
+ *
+ * Scale binding and Rotation binding has not been implemented yet.
+ */
+class Image : public UiObject {
 public:
 	Image(std::string&& image_path);
 	virtual ~Image() = default;
 
 	/**
-	 * @brief The method updates components of object.
+	 * @brief Image instance updates x, y, w, h for each frame, referencing with Scale values.
+	 * And, updates children calling Parent's Update method.
+	 *
+	 * This virtual methods can not override any more.
 	 */
 	[[noreturn]] virtual void Update() override final;
 
 	/**
 	 * @brief The method calls scene to one objects.
-	 * @param[in] shader Shader to use.
+	 * @param[in] null NOT USE.
+	 * This virtual methods can not override any more.
 	 */
-	[[noreturn]] virtual void Draw(helper::ShaderNew& shader) override final;
+	[[noreturn]] virtual void Draw(helper::ShaderNew&) override final;
 
 	/**
 	 * @brief This calls callee to draw or render something it has.
+	 * Afterward, it draws children calling Parent's Draw (no parameter) method.
+	 *
+	 * This virtual methods can not override any more.
 	 */
 	[[noreturn]] virtual void Draw() override final;
+
+	/**
+	 * @brief Set size.
+	 */
+	[[noreturn]] void SetImageSize(const float width, const float height);
 
 private:
 	void InitiateShader();
@@ -45,7 +67,6 @@ private:
 	std::shared_ptr<helper::ShaderNew> shader;
 
 	const float alpha{ 1.0f };
-	const float width{ 128.f }, height{ 128.f };
 };
 }
 

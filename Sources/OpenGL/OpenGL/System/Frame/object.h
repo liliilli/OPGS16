@@ -38,13 +38,15 @@ public:
     /**
      * @brief The method updates components of object.
      */
-    [[noreturn]] virtual void Update() = 0;
+    [[noreturn]] virtual void Update();
 
     /**
      * @brief The method calls scene to one objects.
      * @param[in] shader Shader to use.
      */
-    [[noreturn]] virtual void Draw(helper::ShaderNew& shader) = 0;
+    [[noreturn]]
+	[[deprecated("Use plain-Draw method which do not have shader argument.")]]
+	virtual void Draw(helper::ShaderNew& shader) {};
 
 	/**
 	 * @brief This calls callee to draw or render something it has. [Optional]
@@ -74,10 +76,16 @@ public:
 	glm::vec3 GetFinalPosition();
 
 	/**
+	 * @brief Set final position.
+	 * @param[in] final_position Final position in Screen space.
+	 */
+	[[noreturn]] void SetFinalPosition(const glm::vec3 final_position);
+
+	/**
 	 * @brief The method refresh final position. Nor overriadble.
 	 * @param[in] parent_position Position to apply for.
 	 */
-	[[noreturn]] void RefreshFinalPosition(const glm::vec3& parent_position);
+	[[noreturn]] void UpdateFinalPosition(const glm::vec3& parent_position);
 
     /**
      * @brief The method gets rotation values

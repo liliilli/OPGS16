@@ -9,12 +9,11 @@ Start::Start() {
 	auto canvas = std::make_unique<Canvas::Canvas>();
 	canvas->InitiateChild<Canvas::Image>("Image", "Resources/window.png");
 	auto image = canvas->GetChild("Image");
+	image->SetScaleValue(128.f);
 	image->InitiateChild<Canvas::Text>("Txt1", "In Messsage Hello world");
-	using namespace std::string_literals;
 
 	Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
 	txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);
-	txt_1.SetScaleValue(0.5f);
 	canvas->InitiateChild("Txt1", std::move(txt_1));
 
     std::string&& text = "A : Terrain Tesslation\n"
@@ -23,15 +22,25 @@ Start::Start() {
 		"D : PathFinding2D";
 	Canvas::Text&& txt_2{ std::move(text), glm::vec3{ 25, 0, 0 } }; {
 		txt_2.SetOrigin(IOriginable::Origin::CENTER_LEFT);
-		txt_2.SetScaleValue(.5f);
+		txt_2.SetFontSize(16);
 	}
 	canvas->InitiateChild("Txt2", std::move(txt_2));
 
 	Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.", {16, 16, 0} }; {
 		txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
-		txt_3.SetScaleValue(.25f);
+		txt_3.SetFontSize(12);
 	}
 	canvas->InitiateChild("Txt3", std::move(txt_3));
+
+	//for (int i = 1; i <= 9; ++i) {
+	//	Canvas::Text&& txt{ m_scene_name };
+	//	txt.SetOrigin(static_cast<IOriginable::Origin>(i));
+	//	txt.SetScaleValue(0.5f);
+	//	txt.SetAlignment(IAlignable::Alignment::CENTER);
+
+	//	std::string&& tag{ "txt" + std::to_string(i) };
+	//	canvas->InitiateChild(std::move(tag), std::move(txt));
+	//}
 
 	InsertObject("Canvas", canvas);
 }

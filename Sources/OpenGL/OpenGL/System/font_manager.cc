@@ -253,7 +253,8 @@ void FontManager::RenderTextNew
 	// Body
 	StartShader(color);
 	auto text_container = SeparateTextToList(text);
-	auto position = CalculateCenterPosition(origin, relative_position);
+	//auto position = CalculateCenterPosition(origin, relative_position);
+	auto position = relative_position;
 
 	using Align = IAlignable::Alignment;
 	switch (alignment) {

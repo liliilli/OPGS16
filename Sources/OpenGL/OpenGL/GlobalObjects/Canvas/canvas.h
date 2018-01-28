@@ -24,8 +24,10 @@ namespace Canvas {
  * 3. UI components can access Canvas object (parent), get orthographic projection.
  * 4. when Canvas object is destroyed, children UI components are automatically disorganized.
  */
-class Canvas : public Object {
+class Canvas : public UiObject {
 public:
+	virtual ~Canvas() = default;
+
 	[[noreturn]] virtual void Update() override final;
 
 	[[noreturn]] virtual void Draw(helper::ShaderNew& shader) override final {};
@@ -37,7 +39,6 @@ private:
 
 private:
 	bool m_is_size_changed{ true };
-	std::array<GLint, 4> m_viewport_size{};
 	glm::mat4 m_projection{};
 };
 

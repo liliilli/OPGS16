@@ -44,8 +44,8 @@ void Application::Run() {
     while (!glfwWindowShouldClose(window)) {
         if (IfFrameTurned()) {
             ProcessInput(window);
-            Draw();
             Update();
+            Draw();
         }
     }
 }
