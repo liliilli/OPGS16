@@ -63,7 +63,7 @@ bool FontManager::InitiateFont(const std::string&& tag, const std::string&& font
 
 		fonts.insert(std::make_pair(tag, GetCharTextures()));
 		if (is_default)
-			default_font = &fonts[tag];
+			default_font = fonts[tag];
 
 		FT_Done_Face(face);
 		FT_Done_FreeType(freetype);
@@ -82,17 +82,21 @@ bool FontManager::LoadDefaultFont() {
 bool FontManager::LoadFont(const std::string&& tag) {
 	if (fonts.find(tag) == fonts.end()) return false;
 
-	font_in_use = &fonts.at(tag);
+	font_in_use = fonts.at(tag);
 	return true;
 }
 
 bool FontManager::DeleteFont(const std::string&& tag) {
 	if (fonts.find(tag) == fonts.end()) return false;
 
+	/** Check if font is used on another object */
+	auto font = fonts.at(tag);
+	if (font.use_count() > 1) return false;
+
 	/** Remove pointer reference */
-	auto* font = &fonts.at(tag);
 	if (font_in_use == font) font_in_use = nullptr;
 	if (default_font == font) default_font = nullptr;
+	fonts.erase(tag);
 
 	return true;
 }
@@ -112,8 +116,9 @@ bool FontManager::CheckFreeType(const std::string&& font_path) {
 	return true;
 }
 
-std::unordered_map<GLchar, FontManager::Character> FontManager::GetCharTextures() {
-	std::unordered_map<GLchar, Character> glyphs{};
+FontManager::fontMap FontManager::GetCharTextures() {
+	fontMap glyphs = std::make_shared<fontMap::element_type>();
+	//std::unordered_map<GLchar, Character> glyphs{};
 
     for (GLubyte c = 0; c < 128; ++c) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
@@ -148,7 +153,7 @@ std::unordered_map<GLchar, FontManager::Character> FontManager::GetCharTextures(
             static_cast<GLuint>(face->glyph->advance.x)
         };
 
-        glyphs.insert(std::make_pair(c, character));
+        glyphs->insert(std::make_pair(c, character));
     }
 
 	return glyphs;

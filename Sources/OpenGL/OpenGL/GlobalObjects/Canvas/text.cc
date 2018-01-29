@@ -19,15 +19,36 @@ Canvas::Text::Text(const std::string & initial_txt,
 void Canvas::Text::Update() {}
 
 void Canvas::Text::Draw() {
-	m_f_manager->RenderTextNew(m_text, GetOrigin(),
-		glm::vec2{ GetFinalPosition() }, m_color, GetAlignment(), GetScaleValue());
+	if (m_f_manager) {
+		/** Set font */
+		if (m_font_tag.empty())
+			m_f_manager->LoadDefaultFont();
+		else
+			m_f_manager->LoadFont(std::string(m_font_tag));
+		/** Render */
+		m_f_manager->RenderTextNew(m_text, GetOrigin(),
+			glm::vec2{ GetFinalPosition() }, m_color, GetAlignment(), GetScaleValue());
+	}
+	else { std::cerr << "ERROR::FONT_MANAGER CAN NOT FIND::CRITICAL" << std::endl; }
 }
 
-void Canvas::Text::SetText(const std::string && new_text) {
+void Canvas::Text::SetText(const std::string&& new_text) {
 	m_text = new_text;
 }
 
 void Canvas::Text::SetFontSize(const unsigned size) {
 	auto def = m_f_manager->GetDefaultFontSize();
 	SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
+}
+
+bool Canvas::Text::SetFont(const std::string&& font_tag) {
+	if (m_f_manager && m_f_manager->IsFontExist(font_tag)) {
+		m_font_tag = std::move(font_tag);
+		return true;
+	}
+	else {
+		std::cerr << "ERROR::FONT::NOT::FOUND" << std::move(font_tag) << std::endl;
+		m_font_tag = "";
+		return false;
+	}
 }

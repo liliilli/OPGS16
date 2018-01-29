@@ -38,6 +38,7 @@
  * @bug It seems that rendering does not work properly.
  */
 class FontManager {
+PUBLIC__
     /**
      * @struct Chracter
      * @brief Container manages each texture of font glyphes.
@@ -50,6 +51,8 @@ class FontManager {
         glm::ivec2  bearing;
         GLuint      advance;
     };
+
+	using fontMap = std::shared_ptr<std::unordered_map<GLchar, Character>>;
 
 PUBLIC__
 	static FontManager& GetInstance() {
@@ -89,6 +92,12 @@ PUBLIC__
 	 * @reutrn The success flag.
 	 */
 	bool DeleteFont(const std::string&& tag);
+
+	/**
+	 * @brief Check font is exist.
+	 * @return The success flag. If font is exist, return true.
+	 */
+	inline bool IsFontExist(const std::string tag);
 
     /**
      * @brief The method renders given text on given position with given color.
@@ -138,10 +147,10 @@ PRIVATE__
     FT_Face face = nullptr;
 
     // Restrict first 128 characters for now.
-	std::unordered_map<std::string, std::unordered_map<GLchar, Character>> fonts{};
+	std::unordered_map<std::string, fontMap> fonts{};
 
-	std::unordered_map<GLchar, Character>* font_in_use = nullptr;
-	std::unordered_map<GLchar, Character>* default_font = nullptr;
+	fontMap font_in_use = nullptr;
+	fontMap default_font = nullptr;
 
     //std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
@@ -176,7 +185,7 @@ PRIVATE__
      *
      * This methods called when initiate instance.
      */
-    std::unordered_map<GLchar, Character> GetCharTextures();
+    FontManager::fontMap GetCharTextures();
 
 	/**
 	 * @brief This method calculate and return barycenter position to render.
@@ -291,6 +300,11 @@ PRIVATE__
 
 inline const unsigned FontManager::GetDefaultFontSize() const {
 	return default_font_size;
+}
+
+inline bool FontManager::IsFontExist(const std::string tag) {
+	if (fonts.find(tag) == fonts.end()) return false;
+	else return true;
 }
 
 #endif // OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H

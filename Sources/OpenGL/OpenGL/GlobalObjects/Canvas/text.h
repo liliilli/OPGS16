@@ -44,9 +44,21 @@ public:
 	 */
 	[[noreturn]] void SetFontSize(const unsigned size);
 
+	/**
+	 * @brief Set this object font to render with.
+	 * If FontManager doesn't find font, return false to inform method was failed.
+	 *
+	 * @param[in] font_tag Font name tag.
+	 * @return Success flag.
+	 */
+	bool SetFont(const std::string&& font_tag);
+
 private:
 	std::string m_text{};
 	FontManager* m_f_manager = &FontManager::GetInstance();
+
+	using fontMap = FontManager::fontMap;
+	std::string m_font_tag{};
 
 	glm::vec3 m_color{};
 };
