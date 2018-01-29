@@ -44,6 +44,13 @@ void PathFinding2D::InitUserInterface() {
 	}
 
 	canvas->InitiateChild("Menu", std::move(image));
+
+	// Scene name
+	Canvas::Text&& name{ "Scene : PathFinding2D", {32, 32, 0} }; {
+		name.SetOrigin(IOriginable::Origin::DOWN_LEFT);
+		name.SetFontSize(16);
+	}
+	canvas->InitiateChild("Title", std::move(name));
 }
 
 void PathFinding2D::InitShowingComponents() {

@@ -7,10 +7,13 @@
 
 Start::Start() {
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	canvas->InitiateChild<Canvas::Image>("Image", "Resources/window.png");
+	canvas->InitiateChild<Canvas::Image>("Image", "Resources/test.png");
 	auto image = canvas->GetChild("Image");
-	image->SetScaleValue(128.f);
-	image->InitiateChild<Canvas::Text>("Txt1", "In Messsage Hello world");
+	auto image_temp = std::static_pointer_cast<Canvas::Image>(image);
+	image_temp->SetImageSize(720, 480);
+	image->InitiateChild<Canvas::Text>("Txt1", "In Messsage Hello world", glm::vec3{ -48, 0, 0 });
+	image->InitiateChild<Canvas::Text>("Txt2", "In Messsage Hello world", glm::vec3{ -48, 192, 0 });
+	image->InitiateChild<Canvas::Text>("Txt3", "In Messsage Hello world", glm::vec3{ -48, -192, 0 });
 
 	Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
 	txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);

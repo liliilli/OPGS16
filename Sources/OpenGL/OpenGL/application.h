@@ -18,6 +18,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "System\Frame\scene.h"
+#include "System\Shader\shader.h"
 #include "GlobalObjects\Canvas\canvas.h"
 
 /**
@@ -130,6 +131,7 @@ private:
 
     bool aa_toggled{ false };
     bool fps_toggled{ false };
+	bool post_processing_convex_toggled{ true };
 
     float old_time{};
     float new_time{};
@@ -141,6 +143,13 @@ private:
 
     /** Font instance for global text displaying */
     std::unordered_map<int, bool> pressed_key_map;
+
+	/** Temporary */
+	GLuint framebuffer;
+	GLuint colorbuffer;
+
+	std::shared_ptr<helper::ShaderNew> shader;
+	GLuint empty_vao;
 
 private:
     /**
