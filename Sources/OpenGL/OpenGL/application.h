@@ -115,8 +115,6 @@ private:
 	 */
 	[[noreturn]] void InitiateSoundSetting();
 
-	bool CheckSoundError();
-
     /**
      * @brief Static callback method for size checking and resizing.
      *
