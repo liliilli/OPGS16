@@ -35,49 +35,11 @@ Application::Application(std::string&& app_name)
 	}
 	m_canvas = std::move(canvas);
 
+	m_pp_manager->InsertEffect("Convex");
+	m_pp_manager->GetEffect("Convex")->Initiate();
+
 	/** Insert first scene */
     PushScene<Start>();
-
-	/** Temporary */
-	glGenFramebuffers(1, &framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-	glGenTextures(1, &colorbuffer);
-	glBindTexture(GL_TEXTURE_2D, colorbuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 720, 480, 0, GL_RGB, GL_FLOAT, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	std::array<GLfloat, 4> border_color{ .0f, .0f, .0f, 1.f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
-
-	GLuint depth_buffer;
-	glGenRenderbuffers(1, &depth_buffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 720, 480);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	/** Make empty vao for default_screen rendering */
-	glGenVertexArrays(1, &empty_vao);
-
-	/** Make shader for temporary frame buffer */
-	auto& manager = ShaderManager::GetInstance();
-	shader = manager.GetShaderWithName("gConvex");
-	if (!shader) {
-		using Type = helper::ShaderNew::Type;
-		using namespace std::string_literals;
-
-		shader = manager.CreateShader("gConvex", {
-			{ Type::VS, "Shaders/Global/quad.vert"s },
-			{ Type::FS, "Shaders/Global/convex.frag"s }
-			});
-	}
 }
 
 GLFWwindow* Application::InitApplication(std::string&& app_name) {
@@ -171,27 +133,14 @@ void Application::UpdateDebugInformation() {
 
 void Application::Draw() {
 	if (post_processing_convex_toggled) {
-		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_pp_manager->GetEffect("Convex")->Bind();
 	}
 
 	top_scene->Draw();
 	DrawDebugInformation();
 
 	if (post_processing_convex_toggled) {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		shader->Use();
-		shader->SetFloat("uIntensity", 0.05f);
-		glBindVertexArray(empty_vao);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, colorbuffer);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindVertexArray(0);
+		m_pp_manager->GetEffect("Convex")->RenderEffect();
 	}
 
     glfwSwapBuffers(window);

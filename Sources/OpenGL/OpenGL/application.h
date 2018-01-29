@@ -19,6 +19,7 @@
 #include <GLFW\glfw3.h>
 #include "System\Frame\scene.h"
 #include "System\Shader\shader.h"
+#include "System\Shader\pp_manager.h"
 #include "GlobalObjects\Canvas\canvas.h"
 
 /**
@@ -144,12 +145,7 @@ private:
     /** Font instance for global text displaying */
     std::unordered_map<int, bool> pressed_key_map;
 
-	/** Temporary */
-	GLuint framebuffer;
-	GLuint colorbuffer;
-
-	std::shared_ptr<helper::ShaderNew> shader;
-	GLuint empty_vao;
+	shading::PostProcessingManager* m_pp_manager = &shading::PostProcessingManager::GetInstance();
 
 private:
     /**
