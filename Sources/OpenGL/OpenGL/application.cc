@@ -5,6 +5,10 @@
 #include <memory>
 #include <string>
 
+#include <al.h>
+#include <alc.h>
+#include <AL\alut.h>
+
 #include <glm\glm.hpp>
 
 #include "GlobalObjects\Canvas\text.h"
@@ -14,29 +18,14 @@
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) } {
-
-	/** First we need initiate default font. */
-	auto& font = FontManager::GetInstance();
-	font.InitiateFont( "Sans", "Resources/LSANS.TTF" , true);
-	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
-	font.LoadDefaultFont();
-
     // Set Camera Cursor and Fps
-    camera::SetCursor(360.f, 240.f);
+    camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
     SetFps(60.0f);
 
-	/** Set up canvas for global information */
-	auto canvas = std::make_unique<Canvas::Canvas>();
-	Canvas::Text&& fps{ "", glm::vec3{32, -32, 0}, glm::vec3{0, 1, 0} }; {
-		fps.SetFontSize(16);
-		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
-		fps.SetFont("Solomon");
-		canvas->InitiateChild("Fps", std::move(fps));
-	}
-	m_canvas = std::move(canvas);
-
-	m_pp_manager->InsertEffect("Convex");
-	m_pp_manager->GetEffect("Convex")->Initiate();
+	InitiateFonts();
+	InitiateDebugUi();
+	InitiatePostProcessingEffects();
+	InitiateSoundSetting();
 
 	/** Insert first scene */
     PushScene<Start>();
@@ -69,6 +58,82 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
 
     glewInit();
     return window;
+}
+
+void Application::InitiateFonts() {
+	/** First we need initiate default font. */
+	auto& font = FontManager::GetInstance();
+	font.InitiateFont( "Sans", "Resources/LSANS.TTF" , true);
+	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
+	font.LoadDefaultFont();
+}
+
+void Application::InitiateDebugUi() {
+	/** Set up canvas for global information */
+	auto canvas = std::make_unique<Canvas::Canvas>();
+	Canvas::Text&& fps{ "", glm::vec3{32, -32, 0}, glm::vec3{0, 1, 0} }; {
+		fps.SetFontSize(16);
+		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
+		fps.SetFont("Solomon");
+		canvas->InitiateChild("Fps", std::move(fps));
+	}
+	m_canvas = std::move(canvas);
+}
+
+void Application::InitiatePostProcessingEffects() {
+	m_pp_manager->InsertEffect("Convex");
+	m_pp_manager->GetEffect("Convex")->Initiate();
+}
+
+void Application::InitiateSoundSetting() {
+	/** Find device automatically */
+	ALCdevice* device{ nullptr };
+	device = alcOpenDevice(nullptr);
+	if (!device) {
+		std::cerr << "ERROR::NOT::FOUND::SOUND::DEVICE" << std::endl;
+	}
+	/** In order to render audio scene, create and initialize a context */
+	ALCcontext* sound_context{ nullptr };
+	sound_context = alcCreateContext(device, nullptr);
+	if (!alcMakeContextCurrent(sound_context) && !CheckSoundError()) {
+		std::cerr << "ERROR::FAILED::TO::CREATE::SOUND::CONTEXT" << std::endl;
+	}
+	/** Must create the source which is actually the origin of sound. */
+	ALuint source;
+	alGenSources(1, &source);
+	//if (!CheckSoundError());
+	alSourcef(source, AL_PITCH, 1);
+	//if (!CheckSoundError());
+	//alSourcei(source, AL_LOOPING, AL_TRUE);
+	//if (!CheckSoundError());
+
+	/** Must create the buffer which stores stream of sound from source */
+	ALuint buffer;
+	alGenBuffers(1, &buffer);
+	//if (!CheckSoundError());
+
+	/** And load sound stream to buffer */
+	ALsizei size, freq;
+	ALenum format;
+	ALvoid *data;
+	ALboolean loop = AL_FALSE;
+
+	alutLoadWAVFile((ALbyte*)"Resources/sample.wav", &format, &data, &size, &freq, &loop);
+	CheckSoundError();
+	alBufferData(buffer, format, data, size, freq);
+
+	/** Bind source to buffer, in order to actually output sound. */
+	alSourcei(source, AL_BUFFER, buffer);
+	alSourcePlay(source);
+}
+
+bool Application::CheckSoundError() {
+	ALCenum sound_error = alGetError();
+	if (sound_error != AL_NO_ERROR) {
+		std::cerr << "ERROR::SOUND::AL::SOMETHING::HAPPENDED" << std::endl;
+		return false;
+	}
+	return true;
 }
 
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {

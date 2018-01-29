@@ -53,6 +53,36 @@ public:
     }
 
 private:
+    /** screen width, height */
+    unsigned SCREEN_WIDTH   = 720u;
+    unsigned SCREEN_HEIGHT  = 480u;
+
+    /** Window handle pointer */
+    GLFWwindow* window{ nullptr };
+
+    std::stack<std::shared_ptr<Scene>> scenes;
+    std::shared_ptr<Scene> top_scene;
+
+	std::unique_ptr<Object> m_canvas;
+
+    bool aa_toggled{ false };
+    bool fps_toggled{ false };
+	bool post_processing_convex_toggled{ true };
+
+    float old_time{};
+    float new_time{};
+    float elapsed_time{};
+    float interval_time{};
+
+    /** Time value for displaying text when fps_toggled is true. */
+    float display_time{};
+
+    /** Font instance for global text displaying */
+    std::unordered_map<int, bool> pressed_key_map;
+
+	shading::PostProcessingManager* m_pp_manager = &shading::PostProcessingManager::GetInstance();
+
+private:
     explicit Application(std::string&& app_name = "Application");
 
     /**
@@ -64,6 +94,28 @@ private:
      * @return Window handle pointer.
      */
     GLFWwindow* InitApplication(std::string&& app_name);
+
+	/**
+	 * @brief Initiate and Make font informations.
+	 */
+	[[noreturn]] void InitiateFonts();
+
+	/**
+	 * @brief Initiate and Compose Debug Interface components.
+	 */
+	[[noreturn]] void InitiateDebugUi();
+
+	/**
+	 * @brief Initiate post-processing effects in advance.
+	 */
+	[[noreturn]] void InitiatePostProcessingEffects();
+
+	/**
+	 * @brief Set sound.
+	 */
+	[[noreturn]] void InitiateSoundSetting();
+
+	bool CheckSoundError();
 
     /**
      * @brief Static callback method for size checking and resizing.
@@ -118,36 +170,6 @@ private:
 	[[noreturn]] void DrawDebugInformation();
 
 private:
-    /** screen width, height */
-    unsigned SCREEN_WIDTH   = 720u;
-    unsigned SCREEN_HEIGHT  = 480u;
-
-    /** Window handle pointer */
-    GLFWwindow* window{ nullptr };
-
-    std::stack<std::shared_ptr<Scene>> scenes;
-    std::shared_ptr<Scene> top_scene;
-
-	std::unique_ptr<Object> m_canvas;
-
-    bool aa_toggled{ false };
-    bool fps_toggled{ false };
-	bool post_processing_convex_toggled{ true };
-
-    float old_time{};
-    float new_time{};
-    float elapsed_time{};
-    float interval_time{};
-
-    /** Time value for displaying text when fps_toggled is true. */
-    float display_time{};
-
-    /** Font instance for global text displaying */
-    std::unordered_map<int, bool> pressed_key_map;
-
-	shading::PostProcessingManager* m_pp_manager = &shading::PostProcessingManager::GetInstance();
-
-private:
     /**
      * @brief Helper method that checks if keycode was pressed.
      *
@@ -168,6 +190,9 @@ private:
             pressed_key_map[keycode] = false;
             return false;
         }
+		else {
+			return false;
+		};
     }
 
     /**
