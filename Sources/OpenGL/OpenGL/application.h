@@ -29,7 +29,7 @@
  * This class is singleton, and must be initialized by calling getInstance method
  * to operate program.
  */
-class Application {
+class Application final {
 public:
     /**
      * @brief Static method gets unique instance of Application class.

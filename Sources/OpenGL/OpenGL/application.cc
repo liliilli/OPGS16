@@ -104,9 +104,6 @@ void Application::InitiatePostProcessingEffects() {
 		/** Color buffer and texture */
 		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
 		auto& texture_0 = pp->GetTexture(0);
-		texture_0->SetTextureParameterI({
-			{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
-			{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
 		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 		/** The rest */
 		pp->InitiateDefaultDepthBuffer();
