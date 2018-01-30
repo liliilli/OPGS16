@@ -20,6 +20,7 @@
 
 /**
  * @namespace shading
+ * @brief shading namespace is for objects related to shading and shader management.
  */
 namespace shading {
 
@@ -32,6 +33,8 @@ namespace shading {
  * And PostProcessingFrame has also shaders to render post-processing effects.
  *
  * Each frame is managed by PostProcessingManager, you can call and bind it through Manager.
+ * But you should not try to bind this itself, not Calling PostProcessingManager's BindSequence().
+ * This will crash application or at least it incurs undefined behavior.
  */
 class PostProcessingFrame {
 private:
@@ -41,27 +44,43 @@ private:
 
 public:
 	/**
-	 * @brief
+	 * @brief This functions must be called in initiating PostProcessingFrame instance.
+	 * This makes it operable to use in rendering time. Otherwise, this does not render anything.
+	 * If you didn't call this method in creating, Undefined rendering behavior will occur.
+	 *
+	 * This function can be overriden by Derived class.
+	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
 	 */
-	[[noreturn]] void Initiate();
+	[[noreturn]] virtual void Initiate();
 
 	/**
-	 * @brief
-	 */
-	[[noreturn]] void Bind();
-
-	/**
-	 * @brief
-	 */
-	[[noreturn]] void RenderEffect();
-
-	/**
-	 * @brief Insert new frame buffer.
+	 * @brief Insert new frame buffer with id value.
+	 * If there is already generated frame buffer in id index of m_frame_buffer,
+	 * Set flag(ERR_DUPLICATED_FB) up on error variable. Error message can see through calling
+	 * CheckError() method.
+	 *
+	 * @param[in] id The index to create it on container.
 	 */
 	[[noreturn]] void InsertFrameBuffer(const unsigned id);
 
 	/**
-	 * @brief Insert new color buffer.
+	 * @brief Insert new color buffer, with arguments need to be passed to making color buffer.
+	 * @param[in] internal_format Color buffer's internal format how to specify a way of storing
+	 * values in each pixels. Use OpenGL's format. (from table 1, 2, 3 below)
+	 *
+	 * @param[in] format Specifies the format of the pixel data.
+	 * The following symbolic values are accepted.
+	 * GL_RED, GL_RG, GL_RGB, GL_BGR, GL_RGBA, GL_BGRA, GL_RED_INTEGER, GL_RG_INTEGER,
+	 * GL_RGB_INTEGER, GL_BGR_INTEGER, GL_RGBA_INTEGER, GL_BGRA_INTEGER, GL_STENCIL_INDEX,
+	 * GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL.
+	 *
+	 * @param[in] type Specifies the data type of the pixel data.
+	 * Use OpenGL's enum type written in below @see header. (type section)
+	 *
+	 * @param[in] width Buffer width. if this is blank, automatically binds it to resolution width.
+	 * @param[in] height Buffer height. if this is blank, bind it to resolution height.
+	 *
+	 * @see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
 	 */
 	[[noreturn]] void InsertColorBuffer(const unsigned id,
 		GLint internal_format,
@@ -84,8 +103,14 @@ public:
 
 	/**
 	 * @brief Bind texture to specific frame buffer with attributes.
-	 * @param[in]
-	 * @param[in]
+	 * If both texture and frame buffer id are not exist, this method does nothing.
+	 *
+	 * @param[in] texture_id Texture id to bind to frame buffer.
+	 * @param[in] framebuffer_id Frame buffer id to bind.
+	 * @param[in] attachment Texture's attachment attribute for binding to frame buffer.
+	 * @param[in] target Target
+	 *
+	 * @see https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glFramebufferTexture2D.xml
 	 */
 	[[noreturn]] void BindTextureToFrameBuffer(const size_t texture_id,
 		const size_t framebuffer_id,
@@ -93,14 +118,32 @@ public:
 		const GLenum target);
 
 	/**
-	 * @brief
+	 * @brief Create and Initiate shader to be used only in this post-processing frame.
+	 * If there is already existed shader, this methods does nothing.
+	 *
+	 * @param[in] name The name of shader to create.
+	 * @param[in] pixel_shader The path of pixel shader.
 	 */
 	[[noreturn]] void InitiateShader(const std::string& name, const std::string& pixel_shader);
 
 	/**
+	 * @brief Bind frame buffer. This must be called to render objects to frame buffer.
+	 * This methods could be overriden by derived class.
+	 */
+	[[noreturn]] virtual void Bind();
+
+	/**
+	 * @brief Render texture and components.
+	 * This must be called after arbitary frame buffer bound.
+	 * This methods could be overriden by derived class.
+	 */
+	[[noreturn]] virtual void RenderEffect();
+
+	/**
 	 * @brief Insert uniform variable value to be used by shader.
-	 * @param[in] _Ty
-	 * @param[in] value
+	 * @param[in] tag The tag to insert value.
+	 * @param[in] _Ty Type parameter to compare with supported uniform container's type.
+	 * @param[in] value The value insert.
 	 */
 	template <typename _Ty>
 	[[noreturn]] void InsertUniformValue(const std::string tag, const _Ty value) {
@@ -109,6 +152,12 @@ public:
 		}
 	}
 
+	/**
+	 * @brief Replace uniform variable's value with new value.
+	 * @param[in] tag The tag to insert value.
+	 * @param[in] _Ty Type parameter to compare with supported uniform container's type.
+	 * @param[in] value The value insert.
+	 */
 	template <typename _Ty>
 	[[noreturn]] void ReplaceUniformValue(const std::string tag, const _Ty value) {
 		if (IsValueAlreadyExist(tag, value))
@@ -116,15 +165,15 @@ public:
 	}
 
 private:
-	std::array<GLuint, 4> m_frame_buffers{};		/** */
-	std::array<texture_ptr, 4> m_color_buffers{};	/** */
-	std::array<GLuint, 8> m_common_buffers{};		/** */
+	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
+	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
+	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
 	std::vector<std::shared_ptr<helper::ShaderNew>> m_shaders;
 	ShaderParameters m_parameters{};	/** Uniform arguments container to use shader */
 
 	GLuint empty_vao;
-	bool m_is_useable{ false };
+	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
 
 private:
 	/**
@@ -156,9 +205,10 @@ private:
 	}
 
 	/**
-	 * @brief This
-	 * @param
-	 * @return
+	 * @brief Searchs and Gets parameter container pointer.
+	 * @param[in] tag
+	 * @param[in] _Ty
+	 * @return Paramter container pointer.(iterator)
 	 */
 	template <typename _Ty>
 	auto GetIteratorOfSpecifiedPoint(const std::string& tag, const _Ty) {
@@ -169,7 +219,7 @@ private:
 	}
 
 	/**
-	 * @brief
+	 * @brief Check parameter value is already exist.
 	 * @param[in] tag The tag to find and check if it's exist.
 	 * @param[in] _Ty Type paramter to check container type in m_paramaters of this.
 	 * @return The flag accounts for success or failure of finding one.

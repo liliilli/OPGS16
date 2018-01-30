@@ -16,20 +16,26 @@
 #include <unordered_map>
 #include "pp_frame.h"
 
+/**
+ * @namespace shading
+ * @brief shading namespace is for objects related to shading and shader management.
+ */
 namespace shading {
 
 /**
  * @class PostProcessingManager
- * @brief
+ * @brief This class manages post-processing frame (instances) to be used in Application.
+ * Each post-processing instance stored in container could be attached, released, destroyed in
+ * any time but Strongly recommends it in Initiate time and Update time.
  */
-class PostProcessingManager {
+class PostProcessingManager final {
 public:
 	using pp_effect = std::shared_ptr<shading::PostProcessingFrame>; /** Abbreviation */
 
 public:
 	/**
 	 * @brief Static method gets unique instance of PostProcessingManager class.
-	 * @return
+	 * @return Lvalue reference of singleton instance.
 	 */
 	static PostProcessingManager& GetInstance() {
 		static PostProcessingManager instance{};
@@ -37,9 +43,9 @@ public:
 	}
 
 	/**
-	 * @brief
+	 * @brief Get lvalue reference of effect which is named with tag.
 	 * @param[in] tag
-	 * @return
+	 * @return Lvalue reference of effect.
 	 */
 	pp_effect& GetEffect(const std::string&& tag);
 

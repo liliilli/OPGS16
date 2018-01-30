@@ -28,7 +28,6 @@ void PostProcessingFrame::Initiate() {
 }
 
 void PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
-	//if (!IsAlreadyGenerated(id, m_frame_buffers)) {
 	if (!IsAlreadyGenerated(id, m_frame_buffers)) {
 		glGenFramebuffers(1, &m_frame_buffers.at(id));
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(id));
@@ -53,7 +52,7 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
 void PostProcessingFrame::InitiateShader(const std::string& name, const std::string& pixel_shader) {
 	/** Make shader for temporary frame buffer */
 	auto& manager = ShaderManager::GetInstance();
-
+	/** Check If pp+Name is exist */
 	auto shader = manager.GetShaderWithName("pp" + name);
 	if (!shader) {
 		using Type = helper::ShaderNew::Type;
@@ -64,7 +63,7 @@ void PostProcessingFrame::InitiateShader(const std::string& name, const std::str
 			{ Type::FS, std::string{pixel_shader} }
 			});
 	}
-
+	/** Push created shader */
 	m_shaders.push_back(shader);
 }
 
