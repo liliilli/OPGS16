@@ -105,19 +105,20 @@ void Application::InitiatePostProcessingEffects() {
 		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
 		auto& texture_0 = pp->GetTexture(0);
 		texture_0->SetTextureParameterI({
-			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
-			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER} });
-		texture_0->SetBorderColor({ 1, 0, 1, 1 });
+			{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
+			{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
 		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 		/** The rest */
 		pp->InitiateDefaultDepthBuffer();
-		pp->InsertUniformValue("uIntensity", 0.05f);
-		pp->InitiateShader("Convex2", "Shaders/Global/convex.frag");
+		pp->InsertUniformValue("uIntensity", 50.f);
+		pp->InsertUniformValue("uInterval", 1.f);
+		pp->InsertUniformValue("uMove", static_cast<float>(glfwGetTime()));
+		pp->InitiateShader("SineWave", "Shaders/Global/sinewave.frag");
 		pp->Initiate();
 	}
 
 	/** Set sample sequence */
-	auto const result = m_pp_manager->SetSequence(0, { "Convex", "SineWave", "Convex", "SineWave" });
+	auto const result = m_pp_manager->SetSequence(0, { "SineWave", "Convex" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -184,6 +185,13 @@ void Application::ToggleFpsDisplay() {
 void Application::Update() {
     top_scene->Update();
 	UpdateDebugInformation();
+
+	/** Temporary */ {
+		if (post_processing_convex_toggled) {
+			auto& pp = m_pp_manager->GetEffect("SineWave");
+			pp->ReplaceUniformValue("uMove", static_cast<float>(glfwGetTime()));
+		}
+	}
 }
 
 void Application::UpdateDebugInformation() {
@@ -199,9 +207,10 @@ void Application::Draw() {
 	if (post_processing_convex_toggled) { m_pp_manager->BindSequence(0); }
 	/** Actual rendering */
 	top_scene->Draw();
-	DrawDebugInformation();
 	/** Post-processing */
 	if (post_processing_convex_toggled) { m_pp_manager->RenderSequence(); }
+	/** Debug Display */
+	DrawDebugInformation();
 
 	/** End */
     glfwSwapBuffers(window);
