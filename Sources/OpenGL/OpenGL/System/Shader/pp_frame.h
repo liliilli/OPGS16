@@ -11,9 +11,12 @@
  * @version 0.0.1
  */
 
-#include <memory>
-#include <vector>
-#include "shader.h"
+#include <array>	/** std::array */
+#include <memory>	/** std::shared_ptr */
+#include <vector>	/** std::vector<std::shared_ptr> */
+#include "shader.h"	/** helper::ShaderNew */
+#include "..\Frame\helper.h"
+#include "..\Frame\texture.h"
 
 /**
  * @namespace shading
@@ -32,25 +35,69 @@ namespace shading {
  */
 class PostProcessingFrame {
 public:
+	/**
+	 * @brief
+	 */
 	[[noreturn]] void Initiate();
 
+	/**
+	 * @brief
+	 */
 	[[noreturn]] void Bind();
 
+	/**
+	 * @brief
+	 */
 	[[noreturn]] void RenderEffect();
 
+	/**
+	 * @brief Insert new frame buffer.
+	 */
+	[[noreturn]] void InsertFrameBuffer(const unsigned id);
+
+	/**
+	 * @brief Insert new color buffer.
+	 */
+	[[noreturn]] void InsertColorBuffer(const unsigned id,
+		GLint internal_format, GLenum format, GLenum type, GLint width = 0, GLint height = 0);
+
 private:
-	std::vector<GLuint> m_frame_buffers;
-	std::vector<GLuint> m_color_buffers;
-	std::vector<GLuint> m_common_buffers;
+	std::array<GLuint, 4> m_frame_buffers{};
+	using texture_ptr = std::unique_ptr<texture::Texture2D>;
+	std::array<texture_ptr, 4> m_color_buffers{};
+	std::array<GLuint, 8> m_common_buffers{};
 
 	std::vector<std::shared_ptr<helper::ShaderNew>> m_shaders;
 
 	GLuint empty_vao;
-
 	bool m_is_useable{ false };
-
 private:
+	/**
+	 * @brief
+	 */
 	[[noreturn]] void InitiateShader();
+
+	/**
+	 * @brief
+	 */
+	[[noreturn]] void InitiateDefaultDepthBuffer();
+
+	/**
+	 * @brief This method checks wherther it already has a value on spot you want.
+	 */
+	template <size_t _Amnt>
+	bool IsAlreadyGenerated(const size_t i, const std::array<GLuint, _Amnt>& buffer) const {
+		if (i < _Amnt && buffer[i] == 0) return false; else return true;
+	}
+
+	bool IsAlreadyGenerated(const size_t i, const decltype(m_color_buffers)& buffer) const {
+		if (i < buffer.size() && buffer[i] == nullptr) return false; else return true;
+	}
+
+	/**
+	 * @brief This method gets quad vertex attribute object.
+	 */
+	helper::BindingObject& GetCommonQuadVao();
 };
 
 }

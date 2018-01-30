@@ -30,6 +30,25 @@ Texture2D::Texture2D(const std::string& texture_path, const GLint bind_mode) {
     stbi_image_free(data);
 }
 
+Texture2D::Texture2D(const GLint internal_format, GLenum format, GLenum type,
+	GLsizei width, GLsizei height) {
+	/** If width or height is 0, get resolution size apply to it. */
+	auto size = GetSize();
+	if (width <= 0)		size.width = width;
+	if (height <= 0)	size.height = height;
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, size.width, size.height, 0, format, type, 0);
+}
+
+const Texture2D::Size Texture2D::GetSize() {
+	std::array<GLint, 4> viewport_size{};
+	glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
+
+	return Size{ viewport_size[2], viewport_size[3] };
+}
+
 void Texture2D::SetTextureParameterI(const GLint option, const GLint mode) {
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, option, mode);
@@ -45,6 +64,19 @@ void Texture2D::SetTextureParameterI
     }
 }
 
+void Texture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
+}
+
+/**
+ * @brief   Generate cubemap texture.
+ * @details
+ * @param   texture_path texture path to load as cubemap texture.<br>
+ * texture path should be "{path}/file_name[_dir].type", example "resources/sky.jpg".
+ * @return  GLuint cubemap texture id
+ *
+ * @see     https://learnopengl.com/#!Model-Loading/Model
+ */
 GLuint LoadCubemap(std::string texture_path) {
     const std::array<std::string, 6> cubemap_paths = { "_rf", "_lf", "_tp", "_bt", "_bk", "_ft" };
 

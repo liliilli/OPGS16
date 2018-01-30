@@ -5,8 +5,8 @@
 #include <GL/glew.h>
 
 /**
- * \namespace   texture 
- * \brief       
+ * \namespace   texture
+ * \brief
  */
 namespace texture {
 
@@ -23,6 +23,10 @@ private:
         GLint mode;
     };
 
+	struct Size {
+		GLint width{}, height{};
+	};
+
 public:
     /**
      * @brief   Constructor get path and texture mode as arguments, build and set them.
@@ -32,26 +36,51 @@ public:
      */
     Texture2D(const std::string& texture_path, const GLint bind_mode);
 
-    /**
-     * \brief  
-     * \param
-     * \param
-     */
-    void SetTextureParameterI(const GLint option, const GLint mode);
-    
-    /**
-     * \brief  
-     * \param
-     */
-    void SetTextureParameterI(std::initializer_list<TextureParameter> lists);
+	/**
+	 * @brief Create texture with no texture path, but for later use.
+	 * @param[in] internal_format
+	 * @param[in] format
+	 * @param[in] type
+	 * @param[in] width
+	 * @param[in] height
+	 */
+	Texture2D(const GLint internal_format, GLenum format, GLenum type,
+		GLsizei width = 0, GLsizei height = 0);
 
     /**
-     * \brief  
+     * \brief
+     * \param[in]
+     * \param[in]
+     */
+    [[noreturn]] void SetTextureParameterI(const GLint option, const GLint mode);
+
+    /**
+     * \brief
+     * \param[in]
+     */
+    [[noreturn]] void SetTextureParameterI(std::initializer_list<TextureParameter> lists);
+
+	/**
+	 * @brief Set border color of texture.
+	 * @param[in]
+	 */
+	[[noreturn]] void SetBorderColor(const std::array<GLfloat, 4>& border_color);
+
+    /**
+     * @brief Get texture id.
+	 * @return Texture's Id.
      */
     const GLuint GetId() const { return texture; }
 
 private:
     mutable GLuint texture;
+
+private:
+	/**
+	 * @brief Get screen width, height size.
+	 * @return Size of screen, width and height.
+	 */
+	const Size GetSize();
 };
 
 /**
