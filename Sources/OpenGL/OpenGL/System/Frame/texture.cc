@@ -21,6 +21,10 @@ Texture2D::Texture2D(const std::string& texture_path, const GLint bind_mode) {
         glTexImage2D(GL_TEXTURE_2D, 0, bind_mode, width, height, 0,
                      bind_mode, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
+
+		SetTextureParameterI({
+			{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
+			{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
     }
     else {
         std::cerr << "FAILED::LOAD::TEXTURE" + texture_path << std::endl;
@@ -40,6 +44,10 @@ Texture2D::Texture2D(const GLint internal_format, GLenum format, GLenum type,
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, size.width, size.height, 0, format, type, 0);
+
+	SetTextureParameterI({
+		{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
+		{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
 }
 
 const Texture2D::Size Texture2D::GetSize() {
