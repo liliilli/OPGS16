@@ -93,6 +93,11 @@ public:
 		const GLenum target);
 
 	/**
+	 * @brief
+	 */
+	[[noreturn]] void InitiateShader(const std::string& name, const std::string& pixel_shader);
+
+	/**
 	 * @brief Insert uniform variable value to be used by shader.
 	 * @param[in] _Ty
 	 * @param[in] value
@@ -122,11 +127,6 @@ private:
 	bool m_is_useable{ false };
 
 private:
-	/**
-	 * @brief
-	 */
-	[[noreturn]] void InitiateShader();
-
 	/**
 	 * @brief Set uniform variables of shader with new values.
 	 */

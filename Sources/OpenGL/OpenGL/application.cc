@@ -80,32 +80,47 @@ void Application::InitiateDebugUi() {
 void Application::InitiatePostProcessingEffects() {
 	/** Convex PostPrescessing */ {
 		m_pp_manager->InsertEffect("Convex");
-		auto& convex = m_pp_manager->GetEffect("Convex");
-		convex->InsertFrameBuffer(0);
+		auto& pp = m_pp_manager->GetEffect("Convex");
+		pp->InsertFrameBuffer(0);
 		/** Color Buffer and texture */
-		convex->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
-		auto& texture_0 = convex->GetTexture(0);
+		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
+		auto& texture_0 = pp->GetTexture(0);
 		texture_0->SetTextureParameterI({
 			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
 			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER} });
 		texture_0->SetBorderColor({ 0, 0, 0, 1 });
-		convex->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
+		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 		/** The rest */
-		convex->InitiateDefaultDepthBuffer();
-		convex->InsertUniformValue("uIntensity", 0.05f);
-		convex->Initiate();
+		pp->InitiateDefaultDepthBuffer();
+		pp->InsertUniformValue("uIntensity", 0.05f);
+		pp->InitiateShader("Convex", "Shaders/Global/convex.frag");
+		pp->Initiate();
 	}
 
-	///** SineWave PostProcessing */ {
-	//	m_pp_manager->InsertEffect("SineWave");
-	//	auto& pp = m_pp_manager->GetEffect("SineWave");
-	//	pp->InsertFrameBuffer(0);
-	//	/** Color buffer and texture */
-	//	pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
-	//	pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-	//	/** The rest */
-	//	pp->InitiateDefaultDepthBuffer();
-	//}
+	/** SineWave PostProcessing */ {
+		m_pp_manager->InsertEffect("SineWave");
+		auto& pp = m_pp_manager->GetEffect("SineWave");
+		pp->InsertFrameBuffer(0);
+		/** Color buffer and texture */
+		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
+		auto& texture_0 = pp->GetTexture(0);
+		texture_0->SetTextureParameterI({
+			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
+			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER} });
+		texture_0->SetBorderColor({ 1, 0, 1, 1 });
+		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
+		/** The rest */
+		pp->InitiateDefaultDepthBuffer();
+		pp->InsertUniformValue("uIntensity", 0.05f);
+		pp->InitiateShader("Convex2", "Shaders/Global/convex.frag");
+		pp->Initiate();
+	}
+
+	/** Set sample sequence */
+	auto const result = m_pp_manager->SetSequence(0, { "Convex", "SineWave", "Convex", "SineWave" });
+	if (result == nullptr) {
+		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
+	}
 }
 
 void Application::InitiateSoundSetting() {
@@ -177,18 +192,18 @@ void Application::UpdateDebugInformation() {
 	}
 }
 
+/**
+ * @brief The method calls scene to draw all objects.
+ */
 void Application::Draw() {
-	if (post_processing_convex_toggled) {
-		m_pp_manager->GetEffect("Convex")->Bind();
-	}
-
+	if (post_processing_convex_toggled) { m_pp_manager->BindSequence(0); }
+	/** Actual rendering */
 	top_scene->Draw();
 	DrawDebugInformation();
+	/** Post-processing */
+	if (post_processing_convex_toggled) { m_pp_manager->RenderSequence(); }
 
-	if (post_processing_convex_toggled) {
-		m_pp_manager->GetEffect("Convex")->RenderEffect();
-	}
-
+	/** End */
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

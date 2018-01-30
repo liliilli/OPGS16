@@ -1,4 +1,6 @@
 #include "pp_frame.h"
+
+#include <chrono>
 #include "shader_manager.h"
 
 namespace shading {
@@ -20,8 +22,6 @@ constexpr std::array<unsigned, 6> quad_indices = {
 /** Methods body */
 
 void PostProcessingFrame::Initiate() {
-	InitiateShader();
-
 	/** Make empty vao for default_screen rendering */
 	glGenVertexArrays(1, &empty_vao);
 	m_is_useable = true;
@@ -50,18 +50,18 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
 	}
 }
 
-void PostProcessingFrame::InitiateShader() {
+void PostProcessingFrame::InitiateShader(const std::string& name, const std::string& pixel_shader) {
 	/** Make shader for temporary frame buffer */
 	auto& manager = ShaderManager::GetInstance();
 
-	auto shader = manager.GetShaderWithName("gConvex");
+	auto shader = manager.GetShaderWithName("pp" + name);
 	if (!shader) {
 		using Type = helper::ShaderNew::Type;
 		using namespace std::string_literals;
 
-		shader = manager.CreateShader("gConvex", {
+		shader = manager.CreateShader(std::move("pp" + name), {
 			{ Type::VS, "Shaders/Global/quad.vert"s },
-			{ Type::FS, "Shaders/Global/convex.frag"s }
+			{ Type::FS, std::string{pixel_shader} }
 			});
 	}
 
@@ -110,9 +110,6 @@ void PostProcessingFrame::Bind() {
 
 void PostProcessingFrame::RenderEffect() {
 	if (m_is_useable) {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		m_shaders.at(0)->Use();
 		RefreshUniformValues(m_shaders.at(0));
 		glBindVertexArray(empty_vao);
