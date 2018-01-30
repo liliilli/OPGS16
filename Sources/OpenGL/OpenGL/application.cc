@@ -78,8 +78,34 @@ void Application::InitiateDebugUi() {
 }
 
 void Application::InitiatePostProcessingEffects() {
-	m_pp_manager->InsertEffect("Convex");
-	m_pp_manager->GetEffect("Convex")->Initiate();
+	/** Convex PostPrescessing */ {
+		m_pp_manager->InsertEffect("Convex");
+		auto& convex = m_pp_manager->GetEffect("Convex");
+		convex->InsertFrameBuffer(0);
+		/** Color Buffer and texture */
+		convex->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
+		auto& texture_0 = convex->GetTexture(0);
+		texture_0->SetTextureParameterI({
+			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
+			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER} });
+		texture_0->SetBorderColor({ 0, 0, 0, 1 });
+		convex->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
+		/** The rest */
+		convex->InitiateDefaultDepthBuffer();
+		convex->InsertUniformValue("uIntensity", 0.05f);
+		convex->Initiate();
+	}
+
+	///** SineWave PostProcessing */ {
+	//	m_pp_manager->InsertEffect("SineWave");
+	//	auto& pp = m_pp_manager->GetEffect("SineWave");
+	//	pp->InsertFrameBuffer(0);
+	//	/** Color buffer and texture */
+	//	pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+	//	pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
+	//	/** The rest */
+	//	pp->InitiateDefaultDepthBuffer();
+	//}
 }
 
 void Application::InitiateSoundSetting() {

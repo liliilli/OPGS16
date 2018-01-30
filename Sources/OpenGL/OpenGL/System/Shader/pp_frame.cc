@@ -1,6 +1,8 @@
 #include "pp_frame.h"
 #include "shader_manager.h"
 
+namespace shading {
+
 constexpr std::array<float, 32> quad_info = {
 	// Vertex       //Normal        // TexCoord
 	1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 1.f,
@@ -15,21 +17,17 @@ constexpr std::array<unsigned, 6> quad_indices = {
 	2, 3, 0
 };
 
-void shading::PostProcessingFrame::Initiate() {
-	InsertFrameBuffer(0);
-	InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
-	InitiateDefaultDepthBuffer();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+/** Methods body */
 
+void PostProcessingFrame::Initiate() {
 	InitiateShader();
 
 	/** Make empty vao for default_screen rendering */
 	glGenVertexArrays(1, &empty_vao);
-
 	m_is_useable = true;
 }
 
-void shading::PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
+void PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
 	//if (!IsAlreadyGenerated(id, m_frame_buffers)) {
 	if (!IsAlreadyGenerated(id, m_frame_buffers)) {
 		glGenFramebuffers(1, &m_frame_buffers.at(id));
@@ -40,20 +38,11 @@ void shading::PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
 	}
 }
 
-void shading::PostProcessingFrame::InsertColorBuffer(const unsigned id,
+void PostProcessingFrame::InsertColorBuffer(const unsigned id,
 	GLint internal_format, GLenum format, GLenum type, GLint width, GLint height) {
 	/** Body */
 	if (!IsAlreadyGenerated(id, m_color_buffers)) {
-		auto temp =
-			std::make_unique<texture::Texture2D>(internal_format, format, type, width, height);
-		temp->SetTextureParameterI({
-			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
-			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER}});
-		temp->SetBorderColor({ 0, 0, 0, 1 });
-
-		auto GL_FB = GL_FRAMEBUFFER;
-		glFramebufferTexture2D(GL_FB, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, temp->GetId(), 0);
-
+		auto temp = std::make_unique<texture::Texture2D>(internal_format, format, type, width, height);
 		m_color_buffers[id] = std::move(temp);
 	}
 	else { /** Set up error flag */
@@ -61,7 +50,7 @@ void shading::PostProcessingFrame::InsertColorBuffer(const unsigned id,
 	}
 }
 
-void shading::PostProcessingFrame::InitiateShader() {
+void PostProcessingFrame::InitiateShader() {
 	/** Make shader for temporary frame buffer */
 	auto& manager = ShaderManager::GetInstance();
 
@@ -79,7 +68,7 @@ void shading::PostProcessingFrame::InitiateShader() {
 	m_shaders.push_back(shader);
 }
 
-void shading::PostProcessingFrame::InitiateDefaultDepthBuffer() {
+void PostProcessingFrame::InitiateDefaultDepthBuffer() {
 	GLuint& depth_buffer = m_common_buffers[0];
 
 	glGenRenderbuffers(1, &depth_buffer);
@@ -88,27 +77,44 @@ void shading::PostProcessingFrame::InitiateDefaultDepthBuffer() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 }
 
-helper::BindingObject& shading::PostProcessingFrame::GetCommonQuadVao() {
+void PostProcessingFrame::BindTextureToFrameBuffer(
+	const size_t texture_id,
+	const size_t framebuffer_id,
+	const GLenum attachment,
+	const GLenum target) {
+	/** Body, Check if both texture and framebuffer are exist. */
+	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) &&
+		IsAlreadyGenerated(texture_id, m_color_buffers)) {
+
+		/** Bind */
+		auto GL_FB = GL_FRAMEBUFFER;
+		glBindFramebuffer(GL_FB, m_frame_buffers[framebuffer_id]);
+		glFramebufferTexture2D(GL_FB, attachment, target, m_color_buffers[texture_id]->GetId(), 0);
+		glBindFramebuffer(GL_FB, 0);
+	}
+}
+
+helper::BindingObject& PostProcessingFrame::GetCommonQuadVao() {
 	static helper::BindingObject quad_vao =
 		helper::CreateBindingObjectEBO(quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} },
 			quad_indices);
 	return quad_vao;
 }
 
-void shading::PostProcessingFrame::Bind() {
+void PostProcessingFrame::Bind() {
 	if (m_is_useable) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(0));
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 
-void shading::PostProcessingFrame::RenderEffect() {
+void PostProcessingFrame::RenderEffect() {
 	if (m_is_useable) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_shaders.at(0)->Use();
-		m_shaders.at(0)->SetFloat("uIntensity", 0.05f);
+		RefreshUniformValues(m_shaders.at(0));
 		glBindVertexArray(empty_vao);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -120,5 +126,11 @@ void shading::PostProcessingFrame::RenderEffect() {
 	}
 }
 
+void PostProcessingFrame::RefreshUniformValues(std::shared_ptr<helper::ShaderNew>& shader) {
+	for (const auto& item : m_parameters.m_floats) {
+		shader->SetFloat(item.first, item.second);
+	}
+}
 
 
+}
