@@ -11,3 +11,4 @@ stb_image.h
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+Sources/OpenGL/.vscode
