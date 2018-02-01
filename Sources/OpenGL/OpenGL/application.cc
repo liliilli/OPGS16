@@ -17,6 +17,7 @@
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) } {
+	PushStatus(GameStatus::INIT);
     // Set Camera Cursor and Fps
     camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
     SetFps(60.0f);
@@ -28,6 +29,7 @@ Application::Application(std::string&& app_name)
 
 	/** Insert first scene */
     PushScene<Start>();
+	ReplacePresentStatus(GameStatus::PLAYING);
 }
 
 GLFWwindow* Application::InitApplication(std::string&& app_name) {
@@ -76,7 +78,7 @@ void Application::InitiateDebugUi() {
 		fps.SetFont("Solomon");
 		canvas->InitiateChild("Fps", std::move(fps));
 	}
-	m_canvas = std::move(canvas);
+	m_debug_ui_canvas = std::move(canvas);
 }
 
 void Application::InitiatePostProcessingEffects() {
@@ -109,24 +111,88 @@ void Application::Run() {
 
     while (!glfwWindowShouldClose(window)) {
         if (IfFrameTurned()) {
-            ProcessInput(window);
+            Input(window);
             Update();
             Draw();
         }
     }
 }
 
-void Application::ProcessInput(GLFWwindow* const window) {
-    if (DoesKeyPressed(window, GLFW_KEY_ESCAPE))
-        glfwSetWindowShouldClose(window, true);
+void Application::Input(GLFWwindow* const window) {
+	if (DoesKeyPressed(window, GLFW_KEY_ESCAPE))
+		PopStatus();
     else if (DoesKeyPressed(window, GLFW_KEY_1)) // MSAAx4
         ToggleAntialiasing();
     else if (DoesKeyPressed(window, GLFW_KEY_2)) // FPS display on/off
         ToggleFpsDisplay();
     else {
-        // Handle window has keycode into highest priority scene.
-        top_scene->HandleInput(window);
+		if (GetPresentStatus() == GameStatus::PLAYING) { /** Playing */
+			// Handle window has keycode into highest priority scene.
+			top_scene->HandleInput(window);
+		}
     }
+}
+
+
+void Application::ToggleFpsDisplay() {
+    debug_toggled = (debug_toggled ? false : true);
+}
+
+void Application::Update() {
+    if (!m_scenes.empty()) top_scene->Update();
+	if (debug_toggled) UpdateDebugInformation();
+
+	/** Temporary */ {
+		if (post_processing_convex_toggled) {
+			auto& pp = m_pp_manager->GetEffect("SineWave");
+			pp->ReplaceUniformValue("uMove", static_cast<float>(glfwGetTime()));
+		}
+	}
+}
+
+void Application::UpdateDebugInformation() {
+	/** Refresh Fps */ {
+		std::ostringstream str;
+		str << std::setprecision(4) << fps_tick;
+
+		auto text = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Fps"));
+		text->SetText("Fps : " + str.str());
+	}
+
+	/** Refresh Date */ {
+
+	}
+
+	m_debug_ui_canvas->Update();
+}
+
+/**
+ * @brief The method calls scene to draw all objects.
+ */
+void Application::Draw() {
+	if (!m_scenes.empty()) {
+		if (post_processing_convex_toggled) { m_pp_manager->BindSequence(0); }
+		/** Actual rendering */
+		top_scene->Draw();
+		/** Post-processing */
+		if (post_processing_convex_toggled) { m_pp_manager->RenderSequence(); }
+	}
+
+	/** Debug Display */
+	if (debug_toggled) DrawDebugInformation();
+	/** End */
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+void Application::DrawDebugInformation() {
+	m_debug_ui_canvas->Draw();
+}
+
+void Application::PopScene() {
+    top_scene = nullptr;
+    m_scenes.pop();
+	if (!m_scenes.empty()) top_scene = m_scenes.top(); else Exit();
 }
 
 void Application::ToggleAntialiasing() {
@@ -144,66 +210,6 @@ void Application::ToggleAntialiasing() {
 #endif
 }
 
-void Application::ToggleFpsDisplay() {
-    fps_toggled = (fps_toggled ? false : true);
-}
-
-void Application::Update() {
-    top_scene->Update();
-	UpdateDebugInformation();
-
-	/** Temporary */ {
-		if (post_processing_convex_toggled) {
-			auto& pp = m_pp_manager->GetEffect("SineWave");
-			pp->ReplaceUniformValue("uMove", static_cast<float>(glfwGetTime()));
-		}
-	}
-}
-
-void Application::UpdateDebugInformation() {
-	if (fps_toggled) {
-		m_canvas->Update();
-	}
-}
-
-/**
- * @brief The method calls scene to draw all objects.
- */
-void Application::Draw() {
-	if (post_processing_convex_toggled) { m_pp_manager->BindSequence(0); }
-	/** Actual rendering */
-	top_scene->Draw();
-	/** Post-processing */
-	if (post_processing_convex_toggled) { m_pp_manager->RenderSequence(); }
-	/** Debug Display */
-	DrawDebugInformation();
-
-	/** End */
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-}
-
-void Application::DrawDebugInformation() {
-    if (fps_toggled) { // If fps display toggled, draw fps.
-        std::ostringstream str;
-        str << std::setprecision(4) << display_time;
-
-		auto text = std::static_pointer_cast<Canvas::Text>(m_canvas->GetChild("Fps"));
-		text->SetText("Fps : " + str.str());
-
-		m_canvas->Draw();
-    }
-}
-
-void Application::PopScene() {
-    top_scene = nullptr;
-    scenes.pop();
-
-    if (scenes.empty()) {
-        glfwSetWindowShouldClose(window, true);
-    }
-}
-
 bool Application::IfFrameTurned() {
     new_time = (float)glfwGetTime();
     elapsed_time += new_time - old_time;
@@ -211,7 +217,7 @@ bool Application::IfFrameTurned() {
 
     bool flag = false;
     if (elapsed_time >= interval_time) {
-        display_time = 1 / elapsed_time;
+        fps_tick = 1 / elapsed_time;
         elapsed_time -= interval_time;
         flag = true;
     }

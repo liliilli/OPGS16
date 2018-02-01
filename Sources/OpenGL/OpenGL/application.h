@@ -39,9 +39,7 @@ public:
         return instance;
     }
 
-    /**
-     * @brief Let application run and loop.
-     */
+    /** Let application run and loop.  */
     [[noreturn]] void Run();
 
     /**
@@ -49,7 +47,7 @@ public:
      */
     template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
     [[noreturn]] void ReplaceScene(){
-        PushScene<_Ty>();
+		pReplaceScene<_Ty>();
     }
 
 private:
@@ -57,25 +55,44 @@ private:
     unsigned SCREEN_WIDTH   = 512u;
     unsigned SCREEN_HEIGHT  = 448u;
 
+	/**
+	 * @brief Global game status in this game application.
+	 */
+	enum class GameStatus {
+		INIT,	/** First, and Initial status in game application. */
+		PAUSED, /** Paused in this game application */
+		MENU,	/** Global Menu */
+		PLAYING,/** Actual play mode, not paused, not menu. */
+		EXIT	/** Exit process from game application returning to game selection menu. */
+	};
+	std::stack<GameStatus> m_global_game_status{};
+
     /** Window handle pointer */
     GLFWwindow* window{ nullptr };
 
-    std::stack<std::shared_ptr<Scene>> scenes;
+    std::stack<std::shared_ptr<Scene>> m_scenes;
     std::shared_ptr<Scene> top_scene;
 
-	std::unique_ptr<Object> m_canvas;
+	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
+	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
 
     bool aa_toggled{ false };
-    bool fps_toggled{ false };
+    bool debug_toggled{ false };
 	bool post_processing_convex_toggled{ true };
 
+	struct TimeData {
+		float old_time;
+		float new_time;
+		float elapsed_time;
+		float interval;
+	} ;
     float old_time{};
     float new_time{};
     float elapsed_time{};
     float interval_time{};
 
     /** Time value for displaying text when fps_toggled is true. */
-    float display_time{};
+    float fps_tick{};
 
     /** Font instance for global text displaying */
     std::unordered_map<int, bool> pressed_key_map;
@@ -95,24 +112,16 @@ private:
      */
     GLFWwindow* InitApplication(std::string&& app_name);
 
-	/**
-	 * @brief Initiate and Make font informations.
-	 */
+	/** Initiate and Make font informations. */
 	[[noreturn]] void InitiateFonts();
 
-	/**
-	 * @brief Initiate and Compose Debug Interface components.
-	 */
+	/** * @brief Initiate and Compose Debug Interface components.  */
 	[[noreturn]] void InitiateDebugUi();
 
-	/**
-	 * @brief Initiate post-processing effects in advance.
-	 */
+	/** * @brief Initiate post-processing effects in advance.  */
 	[[noreturn]] void InitiatePostProcessingEffects();
 
-	/**
-	 * @brief Set sound.
-	 */
+	/** * @brief Set sounds.  */
 	[[noreturn]] void InitiateSoundSetting();
 
     /**
@@ -126,46 +135,101 @@ private:
 
     /**
      * @brief The method polls any key inputs.
-     *
      * This methods polls and detects any key inputs, and process global key events.
      * If no input events match, keycode is brought to scene displaying on screen.
      *
      * @param[in] window Window handle pointer.
      */
-    [[noreturn]] void ProcessInput(GLFWwindow* const window);
+    [[noreturn]] void Input(GLFWwindow* const window);
+
+    /** The method update components movement, UI refresh, and so on. */
+    [[noreturn]] void Update();
+
+	/** Update debug information. */
+	[[noreturn]] void UpdateDebugInformation();
+
+    /** The method calls scene to draw all objects. */
+    [[noreturn]] void Draw();
+
+	/** Render debug information */
+	[[noreturn]] void DrawDebugInformation();
 
     /**
      * @brief The method that adds scene to scene stack.
-     *
      * Add scene to scene stack stores scenes is paused, and move to top scene.
      *
      * @param[in] _Ty* Type parameter is based on Scene, value must be nullptr to prevent
-     * Double initiation of scene.
+     * double initiation of scene.
      */
-    template <class _Ty>
+    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Scene, _Ty>>>
     [[noreturn]] void PushScene() {
-        scenes.push(std::make_shared<_Ty>());
-        top_scene = scenes.top();
+        m_scenes.push(std::make_shared<_Ty>());
+        top_scene = m_scenes.top();
     }
 
+	/**
+	* @brief The method replace scene with old scene.
+	*/
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
+	[[noreturn]] void pReplaceScene() {
+		/** Pop present scene */
+		top_scene = nullptr;
+		m_scenes.pop();
+		/** Push present scene */
+		PushScene<_Ty>();
+	}
+
     /**
-     * @brief The method remove scene.
+     * @brief The method removes top (present) scene.
+	 * If there is no scene, exit application automatically.
+	 * Otherwise all Update() and Rendering procedures delegates to previous scene.
      */
     [[noreturn]] void PopScene();
 
-    /**
-     * @brief The method update components movement, UI refresh, and so on.
-     */
-    [[noreturn]] void Update();
+	/**
+	 * @brief Return present status.
+	 * @return GameStatus value on top of stack, m_global_game_status saves game status.
+	 */
+	GameStatus GetPresentStatus() { return m_global_game_status.top(); }
 
-	void UpdateDebugInformation();
+	/**
+	 * @brief Replace present status to the other status.
+	 * @param[in] status New status value to replace present status with.
+	 */
+	[[noreturn]] void ReplacePresentStatus(GameStatus status) {
+		m_global_game_status.pop();
+		m_global_game_status.push(status);
+	}
 
-    /**
-     * @brief The method calls scene to draw all objects.
-     */
-    [[noreturn]] void Draw();
+	/**
+	 * @brief Pile new status up game status stack.
+	 * Every routines refers to game status stack will look up new status.
+	 *
+	 * @param[in] status New status value to pile up onto status stack.
+	 */
+	[[noreturn]] void PushStatus(GameStatus status) {
+		m_global_game_status.push(status);
+	}
 
-	[[noreturn]] void DrawDebugInformation();
+	/**
+	 * @brief Pop(Halt) present status and return to previous status.
+	 * If there is no more status in stack, exit application automatically.
+	 *
+	 * Do not use this method when replace one value with the other status value,
+	 * This will crash game on playing.
+	 */
+	[[noreturn]] void PopStatus() {
+		m_global_game_status.pop();
+		if (m_global_game_status.empty()) {
+			while (!m_scenes.empty()) PopScene();
+			Exit();
+		}
+	}
+
+	/** Exit game */
+	[[noreturn]] void Exit() {
+		glfwSetWindowShouldClose(window, true);
+	};
 
 private:
     /**
@@ -193,18 +257,14 @@ private:
 		};
     }
 
-    /**
-     * @brief The method toggles OpenGL antialiasing (MSAA)
-     */
+    /** The method toggles OpenGL antialiasing (MSAA) */
     [[noreturn]] void ToggleAntialiasing();
 
-    /**
-     * @brief The method toggles FPS display.
-     */
+    /** * @brief The method toggles FPS display.  */
     [[noreturn]] void ToggleFpsDisplay();
 
     /**
-     * @brief Helper method that checks if next frame is set when V-sync is on.
+     * @brief Helper method that checks if next frame set when V-sync is on.
      * @return If next frame is set, return true. else false.
      */
     bool IfFrameTurned();
