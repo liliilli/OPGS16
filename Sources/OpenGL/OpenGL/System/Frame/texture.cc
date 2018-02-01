@@ -38,8 +38,8 @@ Texture2D::Texture2D(const GLint internal_format, GLenum format, GLenum type,
 	GLsizei width, GLsizei height) {
 	/** If width or height is 0, get resolution size apply to it. */
 	auto size = GetSize();
-	if (width <= 0)		size.width = width;
-	if (height <= 0)	size.height = height;
+	if (width > 0) size.width = width;
+	if (height > 0)	size.height = height;
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);

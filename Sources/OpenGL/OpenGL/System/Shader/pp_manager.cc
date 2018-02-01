@@ -7,10 +7,8 @@ PPManager::pp_effect& PostProcessingManager::GetEffect(const std::string&& tag) 
 	if (IsEffectExist(tag)) return m_effects.at(tag);
 }
 
-bool PostProcessingManager::InsertEffect(const std::string && tag) {
-	if (IsEffectExist(tag)) { return false; }
-
-	m_effects[tag] = std::make_shared<shading::PostProcessingFrame>();
+bool PostProcessingManager::InsertEffect(const std::string& tag) {
+	return InsertEffect<shading::PostProcessingFrame>(tag);
 }
 
 using pp_effect = std::shared_ptr<shading::PostProcessingFrame>;
@@ -65,7 +63,7 @@ void PostProcessingManager::RenderSequence() {
 
 void PostProcessingManager::ReleaseSequence(const size_t id) {
 	if (m_effect_sequences.find(id) != m_effect_sequences.end()) {
-		if (m_binded_number == id) m_binded_number == m_reset;
+		if (m_binded_number == id) m_binded_number = m_reset;
 		m_effect_sequences.erase(id);
 	}
 	else {

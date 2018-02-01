@@ -11,6 +11,8 @@
 #include "Scenes\start.h"
 #include "System\font_manager.h"
 #include "System\Shader\shader_manager.h"
+#include "System\Shader\PostProcessing\pp_convex.h"
+#include "System\Shader\PostProcessing\pp_sinewave.h"
 #include "System\sound_manager.h"
 
 Application::Application(std::string&& app_name)
@@ -78,41 +80,8 @@ void Application::InitiateDebugUi() {
 }
 
 void Application::InitiatePostProcessingEffects() {
-	/** Convex PostPrescessing */ {
-		m_pp_manager->InsertEffect("Convex");
-		auto& pp = m_pp_manager->GetEffect("Convex");
-		pp->InsertFrameBuffer(0);
-		/** Color Buffer and texture */
-		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
-		auto& texture_0 = pp->GetTexture(0);
-		texture_0->SetTextureParameterI({
-			{GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
-			{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER} });
-		texture_0->SetBorderColor({ 0, 0, 0, 1 });
-		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-		/** The rest */
-		pp->InitiateDefaultDepthBuffer();
-		pp->InsertUniformValue("uIntensity", 0.05f);
-		pp->InitiateShader("Convex", "Shaders/Global/convex.frag");
-		pp->Initiate();
-	}
-
-	/** SineWave PostProcessing */ {
-		m_pp_manager->InsertEffect("SineWave");
-		auto& pp = m_pp_manager->GetEffect("SineWave");
-		pp->InsertFrameBuffer(0);
-		/** Color buffer and texture */
-		pp->InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, 720, 480);
-		auto& texture_0 = pp->GetTexture(0);
-		pp->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-		/** The rest */
-		pp->InitiateDefaultDepthBuffer();
-		pp->InsertUniformValue("uIntensity", 50.f);
-		pp->InsertUniformValue("uInterval", 1.f);
-		pp->InsertUniformValue("uMove", static_cast<float>(glfwGetTime()));
-		pp->InitiateShader("SineWave", "Shaders/Global/sinewave.frag");
-		pp->Initiate();
-	}
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */
 	auto const result = m_pp_manager->SetSequence(0, { "SineWave", "Convex" });

@@ -82,7 +82,7 @@ public:
 	 *
 	 * @see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
 	 */
-	[[noreturn]] void InsertColorBuffer(const unsigned id,
+	void InsertColorBuffer(const unsigned id,
 		GLint internal_format,
 		GLenum format,
 		GLenum type,
@@ -97,9 +97,7 @@ public:
 	 * @return The reference of std::unique_ptr<helper::Texture2D>.
 	 */
 	using texture_ptr = std::unique_ptr<texture::Texture2D>;
-	texture_ptr& GetTexture(const size_t id) {
-		return m_color_buffers.at(id);
-	}
+	texture_ptr& GetTexture(const size_t id) { return m_color_buffers.at(id); }
 
 	/**
 	 * @brief Bind texture to specific frame buffer with attributes.
@@ -164,6 +162,12 @@ public:
 			GetIteratorOfSpecifiedPoint(tag, value)->second = value;
 	}
 
+	/**
+	 * @brief Check if there is error.
+	 * If there is an error, output message in std::cerr.
+	 */
+	[[noreturn]] void CheckError();
+
 private:
 	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
@@ -174,6 +178,16 @@ private:
 
 	GLuint empty_vao;
 	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
+
+	enum class ErrorFlag {
+		OK,
+		/** Errors */
+		SIZE_ARGUMENT_IS_NEGATIVE,
+		COLOR_BUFFER_ALREADY_GENERATED,
+		FRAME_BUFFER_ALREADY_GENERATED,
+		NOT_FOUND_APPROPRIATE_FB_CB_ID,
+		NOT_INITIATED_YET,
+	} m_flag = ErrorFlag::OK;
 
 private:
 	/**

@@ -50,11 +50,42 @@ public:
 	pp_effect& GetEffect(const std::string&& tag);
 
 	/**
-	 * @brief
-	 * @param[in] tag
-	 * @return
+	 * @brief Insert effect (vacant) instance into effect container.
+	 * Type paramter must be written in <> and which must derive PostProcessingFrame base class.
+	 *
+	 * @param[in] tag tag The tag to use.
+	 * @param[in] _Ty Post-processing Effect type parameter to use.
+	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	bool InsertEffect(const std::string&& tag);
+	template <class _Ty,
+		typename = std::enable_if_t<std::is_base_of_v<shading::PostProcessingFrame, _Ty>>>
+	bool InsertEffect(const std::string& tag) {
+		if (IsEffectExist(tag)) { return false; }
+
+		m_effects[tag] = std::make_shared<_Ty>();
+		return true;
+	}
+
+	/** Overloading version of InsertEffect<_Ty, ...>(tag) */
+	bool InsertEffect(const std::string& tag);
+
+	/**
+	 * @brief Insert effect and initiate automatically.
+	 * Type paramter must be written in <> and which must derive PostProcessingFrame base class.
+	 *
+	 * @param[in] tag tag The tag to use.
+	 * @param[in] _Ty Post-processing Effect type parameter to use.
+	 * @return If this method success to create and insert _Ty effect, return True.
+	 */
+	template <class _Ty,
+		typename = std::enable_if_t<std::is_base_of_v<shading::PostProcessingFrame, _Ty>>>
+	bool InsertEffectInitiate(const std::string& tag) {
+		if (InsertEffect<_Ty>(tag)) {
+			m_effects[tag]->Initiate();
+			return true;
+		}
+		else return false;
+	}
 
 	/**
 	 * @brief
@@ -106,7 +137,6 @@ private:
 };
 
 /** Inline Methods */
-
 inline bool PostProcessingManager::IsEffectExist(const std::string tag) {
 	if (m_effects.find(tag) == m_effects.end()) return false;
 	return true;

@@ -54,8 +54,8 @@ public:
 
 private:
     /** screen width, height */
-    unsigned SCREEN_WIDTH   = 720u;
-    unsigned SCREEN_HEIGHT  = 480u;
+    unsigned SCREEN_WIDTH   = 512u;
+    unsigned SCREEN_HEIGHT  = 448u;
 
     /** Window handle pointer */
     GLFWwindow* window{ nullptr };
