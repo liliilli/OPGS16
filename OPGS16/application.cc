@@ -12,24 +12,18 @@
 #include "System\font_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
+#include "System\Shader\PostProcessing\pp_scaling.h"
 #include "System\Shader\PostProcessing\pp_sinewave.h"
 #include "System\sound_manager.h"
 
 Application::Application(std::string&& app_name)
-    : window{ InitApplication(std::move(app_name)) } {
+    : window{ InitApplication(std::move(app_name)) },
+	m_aa_toggled{ false },
+	m_debug_toggled{ false },
+	m_post_processing_toggled{ true },
+	m_is_size_scalable{ true },
+	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
-    // Set Camera Cursor and Fps
-    camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
-    SetFps(60.0f);
-
-	InitiateFonts();
-	InitiateDebugUi();
-	InitiatePostProcessingEffects();
-	InitiateSoundSetting();
-
-	/** Insert first scene */
-    PushScene<Start>();
-	ReplacePresentStatus(GameStatus::PLAYING);
 }
 
 GLFWwindow* Application::InitApplication(std::string&& app_name) {
@@ -61,10 +55,27 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
     return window;
 }
 
+void Application::Initiate() {
+	if (GetPresentStatus() == GameStatus::INIT) {
+		// Set Camera Cursor and Fps
+		//camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
+		SetFps(60.0f);
+
+		InitiateFonts();
+		InitiateDebugUi();
+		InitiatePostProcessingEffects();
+		InitiateSoundSetting();
+
+		/** Insert first scene */
+		PushScene<Start>();
+		ReplacePresentStatus(GameStatus::PLAYING);
+	}
+}
+
 void Application::InitiateFonts() {
 	/** First we need initiate default font. */
 	auto& font = FontManager::GetInstance();
-	font.InitiateFont( "Sans", "Resources/LSANS.TTF" , true);
+	font.InitiateFont( "Sans", "Resources/arial.ttf" , true);
 	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
 	font.LoadDefaultFont();
 }
@@ -82,11 +93,16 @@ void Application::InitiateDebugUi() {
 }
 
 void Application::InitiatePostProcessingEffects() {
+	m_pp_manager = &shading::PostProcessingManager::GetInstance();
+
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */
-	auto const result = m_pp_manager->SetSequence(0, { "Convex" });
+	auto id = 0u;
+	auto const result = m_pp_manager->SetSequence(id, { "Convex" });
+	m_pp_manager->JustBind(id);
+
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -105,6 +121,7 @@ void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int hei
     glViewport(0, 0, width, height);
 }
 
+
 void Application::Run() {
     new_time = old_time = (float)glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
@@ -118,13 +135,25 @@ void Application::Run() {
     }
 }
 
+std::array<unsigned, 2> Application::GetDefaultScreenSize() {
+	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
+}
+
 void Application::Input(GLFWwindow* const window) {
 	if (DoesKeyPressed(window, GLFW_KEY_ESCAPE))
 		PopStatus();
-    else if (DoesKeyPressed(window, GLFW_KEY_1)) // MSAAx4
-        ToggleAntialiasing();
-    else if (DoesKeyPressed(window, GLFW_KEY_2)) // FPS display on/off
-        ToggleFpsDisplay();
+	else if (DoesKeyPressed(window, GLFW_KEY_1) && m_is_size_scalable) // MSAAx4
+		ChangeScalingOption(OptionScale::X1_DEFAULT);
+	else if (DoesKeyPressed(window, GLFW_KEY_2) && m_is_size_scalable) // FPS display on/off
+		ChangeScalingOption(OptionScale::X2_DOUBLE);
+	else if (DoesKeyPressed(window, GLFW_KEY_3) && m_is_size_scalable)
+		ChangeScalingOption(OptionScale::X3_TRIPLE);
+	else if (DoesKeyPressed(window, GLFW_KEY_0)) {
+		//ToggleAntialiasing();
+		ToggleFpsDisplay();
+	}
+	else if (DoesKeyPressed(window, GLFW_KEY_9))
+		TogglePostProcessingEffect();
     else {
 		if (GetPresentStatus() == GameStatus::PLAYING) { /** Playing */
 			// Handle window has keycode into highest priority scene.
@@ -133,21 +162,56 @@ void Application::Input(GLFWwindow* const window) {
     }
 }
 
-
-void Application::ToggleFpsDisplay() {
-    debug_toggled = (debug_toggled ? false : true);
-}
-
 void Application::Update() {
     if (!m_scenes.empty()) top_scene->Update();
-	if (debug_toggled) UpdateDebugInformation();
+	if (m_debug_toggled) UpdateDebugInformation();
 
 	/** Temporary */ {
-		if (post_processing_convex_toggled) {
+		if (m_post_processing_toggled) {
 			auto& pp = m_pp_manager->GetEffect("SineWave");
 			pp->ReplaceUniformValue("uMove", static_cast<float>(glfwGetTime()));
 		}
 	}
+}
+
+/**
+ * @brief The method calls scene to draw all objects.
+ */
+void Application::Draw() {
+	if (!m_scenes.empty()) {
+		if (m_post_processing_toggled) {
+			glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			m_pp_manager->BindSequence(0);
+		}
+
+		/** Actual rendering */
+		top_scene->Draw();
+
+		/** Post-processing */
+		if (m_post_processing_toggled) {
+			m_pp_manager->RenderSequence();
+			glViewport(0, 0,
+					   SCREEN_WIDTH * static_cast<int>(m_scale),
+					   SCREEN_HEIGHT * static_cast<int>(m_scale));
+			m_pp_manager->Render();
+		}
+	}
+
+	/** Debug Display */
+	if (m_debug_toggled) DrawDebugInformation();
+	/** End */
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+void Application::ToggleFpsDisplay() {
+    m_debug_toggled = (m_debug_toggled ? false : true);
+	std::cerr << m_debug_toggled << std::endl;
+}
+
+void Application::TogglePostProcessingEffect() {
+	m_post_processing_toggled = (m_post_processing_toggled ? false : true);
+	std::cerr << "NOTIFY::POST::PROCESSING::SWITCH::" << m_post_processing_toggled << std::endl;
 }
 
 void Application::UpdateDebugInformation() {
@@ -166,25 +230,6 @@ void Application::UpdateDebugInformation() {
 	m_debug_ui_canvas->Update();
 }
 
-/**
- * @brief The method calls scene to draw all objects.
- */
-void Application::Draw() {
-	if (!m_scenes.empty()) {
-		if (post_processing_convex_toggled) { m_pp_manager->BindSequence(0); }
-		/** Actual rendering */
-		top_scene->Draw();
-		/** Post-processing */
-		if (post_processing_convex_toggled) { m_pp_manager->RenderSequence(); }
-	}
-
-	/** Debug Display */
-	if (debug_toggled) DrawDebugInformation();
-	/** End */
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-}
-
 void Application::DrawDebugInformation() {
 	m_debug_ui_canvas->Draw();
 }
@@ -195,18 +240,38 @@ void Application::PopScene() {
 	if (!m_scenes.empty()) top_scene = m_scenes.top(); else Exit();
 }
 
+void Application::ChangeScalingOption(OptionScale value) {
+	if (m_scale != value) {
+		switch (value) {
+		case OptionScale::X1_DEFAULT:
+			glfwSetWindowSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
+			break;
+		case OptionScale::X2_DOUBLE:
+			glfwSetWindowSize(window, SCREEN_WIDTH << 1, SCREEN_HEIGHT << 1);
+			break;
+		case OptionScale::X3_TRIPLE:
+			glfwSetWindowSize(window, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3);
+			break;
+		}
+		m_scale = value;
+	}
+	else {
+		std::cerr << "NOTIFY::M_SCALE::VALUE::ARE::SAME" << std::endl;
+	}
+}
+
 void Application::ToggleAntialiasing() {
-    if (aa_toggled) {
+    if (m_aa_toggled) {
         glDisable(GL_MULTISAMPLE);
-        aa_toggled = false;
+        m_aa_toggled = false;
     }
     else {
         glEnable(GL_MULTISAMPLE);
-        aa_toggled = true;
+        m_aa_toggled = true;
     }
 
 #ifdef _DEBUG
-    std::cout << "MSAA : " << (aa_toggled ? "ON" : "OFF") << std::endl;
+    std::cout << "MSAA : " << (m_aa_toggled ? "ON" : "OFF") << std::endl;
 #endif
 }
 

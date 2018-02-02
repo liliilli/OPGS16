@@ -1,8 +1,14 @@
 #include "pp_manager.h"
+#include "PostProcessing\pp_scaling.h"
+#include "..\..\application.h"
 
 namespace shading {
 
 using PPManager = PostProcessingManager;
+PostProcessingManager::PostProcessingManager() {
+	InsertEffectInitiate<shading::PpEffectScaling>("__df__");
+}
+
 PPManager::pp_effect& PostProcessingManager::GetEffect(const std::string&& tag) {
 	if (IsEffectExist(tag)) return m_effects.at(tag);
 }
@@ -30,6 +36,12 @@ PostProcessingManager::SetSequence(
 	else return nullptr;
 }
 
+void PostProcessingManager::JustBind(const size_t id) {
+	if (IsEffectSequenceAlreadyExist(id)) {
+		m_binded_number = id;
+	}
+}
+
 void PostProcessingManager::BindSequence(const size_t id) {
 	if (IsEffectSequenceAlreadyExist(id)) {
 		m_binded_number = id;
@@ -50,8 +62,7 @@ void PostProcessingManager::RenderSequence() {
 				(*std::next(it_effect))->Bind();
 			}
 			else { /** Bind to default frame buffer */
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				m_effects.at("__df__")->Bind();
 			}
 
 			/** Render! */
@@ -69,6 +80,12 @@ void PostProcessingManager::ReleaseSequence(const size_t id) {
 	else {
 		// Do something.
 	}
+}
+
+void PostProcessingManager::Render() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	m_effects.at("__df__")->RenderEffect();
 }
 
 };

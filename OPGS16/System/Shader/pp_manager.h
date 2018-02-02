@@ -33,6 +33,9 @@ public:
 	using pp_effect = std::shared_ptr<shading::PostProcessingFrame>; /** Abbreviation */
 
 public:
+	/** Constructor */
+	PostProcessingManager();
+
 	/**
 	 * @brief Static method gets unique instance of PostProcessingManager class.
 	 * @return Lvalue reference of singleton instance.
@@ -106,6 +109,12 @@ public:
 		SetSequence(const size_t id, const std::initializer_list<std::string>& list);
 
 	/**
+	 * @brief Just bind a number to bind effect sequence later.
+	 * @param[in] id Bind number index.
+	 */
+	[[noreturn]] void JustBind(const size_t id);
+
+	/**
 	 * @brief
 	 * @param[in] id
 	 */
@@ -121,6 +130,11 @@ public:
 	 * #param[in] list
 	 */
 	[[noreturn]] void ReleaseSequence(const size_t id);
+
+	/**
+	 * @brief
+	 */
+	[[noreturn]] void Render();
 
 private:
 	/** Container sotres post-processing separated effects. */

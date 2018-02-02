@@ -7,8 +7,8 @@
 
 Start::Start() {
 	auto canvas = std::make_shared<Canvas::Canvas>(); {
-		Canvas::Image&& image{ "Resources/test.png", canvas };
-		image.SetImageSize(512, 448);
+		Canvas::Image&& image{ "Resources/test_2.png", canvas };
+		image.SetImageSize(256, 224);
 		canvas->InitiateChild("Image", std::move(image));
 	}
 
@@ -35,7 +35,7 @@ Start::Start() {
 	Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.",
 						  glm::vec3{16, 16, 0} }; {
 		txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
-		txt_3.SetFontSize(12);
+		txt_3.SetFontSize(8);
 	}
 	canvas->InitiateChild("Txt3", std::move(txt_3));
 

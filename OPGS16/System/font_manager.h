@@ -154,12 +154,12 @@ PRIVATE__
 
     //std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
-	glm::mat4 projection = glm::ortho(0.f, 512.f, 0.f, 448.f);
+	glm::mat4 projection = glm::ortho(0.f, 256.f, 0.f, 224.f);
 
     GLuint vao, vbo;
 
     std::shared_ptr<helper::ShaderNew> shader;
-	const unsigned default_font_size = 32u;
+	const unsigned default_font_size = 16u;
 
 PRIVATE__
 	/**

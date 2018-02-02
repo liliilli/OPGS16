@@ -39,6 +39,9 @@ public:
         return instance;
     }
 
+	/** Let application initiate game settings */
+	[[noreturn]] void Initiate();
+
     /** Let application run and loop.  */
     [[noreturn]] void Run();
 
@@ -50,10 +53,24 @@ public:
 		pReplaceScene<_Ty>();
     }
 
+	/**
+	 * @brief Get default screen size (no scaling screen size)
+	 * @return Width, height size array.
+	 */
+	std::array<unsigned, 2> GetDefaultScreenSize();
+
+	/**
+	 * @brief Get scale value
+	 * @return Scale value, 1, 2, 3.
+	 */
+	const int GetScaleValue() const {
+		return static_cast<int>(m_scale);
+	}
+
 private:
     /** screen width, height */
-    unsigned SCREEN_WIDTH   = 512u;
-    unsigned SCREEN_HEIGHT  = 448u;
+    unsigned SCREEN_WIDTH   = 256u;
+    unsigned SCREEN_HEIGHT  = 224u;
 
 	/**
 	 * @brief Global game status in this game application.
@@ -76,9 +93,16 @@ private:
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
 
-    bool aa_toggled{ false };
-    bool debug_toggled{ false };
-	bool post_processing_convex_toggled{ true };
+    bool m_aa_toggled;
+    bool m_debug_toggled;
+	bool m_post_processing_toggled;
+	bool m_is_size_scalable;
+
+	enum class OptionScale : int{
+		X1_DEFAULT = 1,	/** Screen will be showed with 256x224 size */
+		X2_DOUBLE = 2,	/** Screen will be showed with 512x448 size (personally perfect) */
+		X3_TRIPLE = 3,	/** Screen will be showed with 768x672 size */
+	} m_scale;
 
 	struct TimeData {
 		float old_time;
@@ -97,7 +121,7 @@ private:
     /** Font instance for global text displaying */
     std::unordered_map<int, bool> pressed_key_map;
 
-	shading::PostProcessingManager* m_pp_manager = &shading::PostProcessingManager::GetInstance();
+	shading::PostProcessingManager* m_pp_manager{ nullptr };
 
 private:
     explicit Application(std::string&& app_name = "Application");
@@ -231,6 +255,9 @@ private:
 		glfwSetWindowShouldClose(window, true);
 	};
 
+	/** Change window size. */
+	[[noreturn]] void ChangeScalingOption(OptionScale value);
+
 private:
     /**
      * @brief Helper method that checks if keycode was pressed.
@@ -262,6 +289,9 @@ private:
 
     /** * @brief The method toggles FPS display.  */
     [[noreturn]] void ToggleFpsDisplay();
+
+	/** Toggle post-processing effects */
+	[[noreturn]] void TogglePostProcessingEffect();
 
     /**
      * @brief Helper method that checks if next frame set when V-sync is on.
