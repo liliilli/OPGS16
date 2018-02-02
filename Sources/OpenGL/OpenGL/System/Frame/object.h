@@ -32,8 +32,7 @@
  */
 class Object {
 public:
-    Object();
-    virtual ~Object();
+    virtual ~Object() = default;
 
     /**
      * @brief The method updates components of object.
@@ -207,9 +206,6 @@ public:
 	 */
 	std::shared_ptr<Object> GetChild(const std::string& tag);
 
-protected:
-    /** Caution :: Dangling reference! */
-    camera::Camera& camera;
 private:
     /**
      * @brief Refresh Translation matrix

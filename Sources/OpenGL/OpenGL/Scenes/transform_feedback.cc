@@ -127,7 +127,7 @@ void TfFeedback::Update() {
     //glDisable(GL_RASTERIZER_DISCARD);
     //glFlush();
 
-    camera.Refresh();
+    //camera.Refresh();
 }
 
 void TfFeedback::Draw() {

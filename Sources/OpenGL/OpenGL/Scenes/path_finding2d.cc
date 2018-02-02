@@ -21,14 +21,14 @@ void PathFinding2D::Draw() {
 }
 
 void PathFinding2D::InitUserInterface() {
-	InsertObject("Canvas", std::make_unique<Canvas::Canvas>());
-	std::unique_ptr<Object>& canvas = GetObject("Canvas");
+	InsertObject("Canvas", std::make_shared<Canvas::Canvas>());
+	auto canvas = std::static_pointer_cast<Canvas::Canvas>(GetObject("Canvas"));
 
 	// Menu
-	Canvas::Image&& image{ "Resources/window.png" }; {
+	Canvas::Image&& image{ "Resources/window.png", canvas }; {
 		image.SetOrigin(IOriginable::Origin::DOWN_RIGHT);
 		image.SetImageSize(192, 240);
-		image.SetLocalPosition({ -96-32, 120+32, 0 });
+		image.SetLocalPosition(glm::vec3{ -96-32, 152, 0 });
 
 		std::string description =
 			"Description\n"

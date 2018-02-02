@@ -86,7 +86,7 @@ void Application::InitiatePostProcessingEffects() {
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */
-	auto const result = m_pp_manager->SetSequence(0, { "SineWave", "Convex" });
+	auto const result = m_pp_manager->SetSequence(0, { "Convex" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}

@@ -7,10 +7,12 @@ constexpr bool FAILED{ false };
 constexpr bool SUCCESS{ true };
 
 namespace Canvas {
-Image::Image(std::string&& image_path) :
+Image::Image(const std::string&& image_path, const std::shared_ptr<Canvas>& ref_canvas) :
 	texture{ image_path , GL_RGBA },
-	quad{ helper::CreateBindingObjectEBO(
-		quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices)} {
+	quad{ helper::CreateBindingObjectEBO(quad_info, 8,
+										 {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}},
+										 quad_indices)},
+	m_ref_canvas{ ref_canvas } {
 
 	InitiateShader();
 }
@@ -85,14 +87,12 @@ void Image::Draw() {
 
 glm::mat4 Image::GetPvmMatrix() {
 	auto M = glm::mat4();
-
 	auto position = GetFinalPosition();
-
 	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
 	M = glm::scale(M, GetScaleFactor() * GetScaleValue());
 
 	auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-	auto P = glm::ortho(0.f, 720.f, 0.f, 480.f);
+	auto P = m_ref_canvas.lock()->GetUiCameraProjMatrix();
 
 	return P * V * M;
 }

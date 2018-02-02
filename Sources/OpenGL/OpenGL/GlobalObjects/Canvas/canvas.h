@@ -10,6 +10,7 @@
  */
 
 #include <array>
+#include "..\..\GlobalObjects\camera_object.h"
 #include "..\..\Headers\common.h"
 
 namespace Canvas {
@@ -26,6 +27,7 @@ namespace Canvas {
  */
 class Canvas : public UiObject {
 public:
+	Canvas();
 	virtual ~Canvas() = default;
 
 	[[noreturn]] virtual void Update() override final;
@@ -34,12 +36,12 @@ public:
 
 	[[noreturn]] virtual void Draw() override final;
 
-private:
-	const glm::mat4&& GetOrthoProjectionMatrix(const std::array<GLint, 4>& input) const;
+	/** Get Ui camera's orthographic projection matrix. */
+	glm::mat4 GetUiCameraProjMatrix();
 
 private:
+	camera::CameraObject m_camera;	/** Camera object uses just one orthographic type. */
 	bool m_is_size_changed{ true };
-	glm::mat4 m_projection{};
 };
 
 }

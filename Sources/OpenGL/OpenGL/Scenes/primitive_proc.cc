@@ -60,7 +60,7 @@ void PrimProc::Update() {
     for (auto& object : objects)
         object.second->Update();
 
-    camera.Refresh();
+    //camera.Refresh();
 }
 
 void PrimProc::Draw() {

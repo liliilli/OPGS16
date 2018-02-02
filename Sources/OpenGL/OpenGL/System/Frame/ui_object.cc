@@ -37,8 +37,8 @@ void UiObject::Draw() {
 }
 
 void UiObject::UpdateScreenXYWH(const std::array<GLint, 4> xywh) {
-	screen_x		= xywh[0];
-	screen_y		= xywh[1];
-	screen_width	= xywh[2];
-	screen_height	= xywh[3];
+	screen_x		= static_cast<float>(xywh[0]);
+	screen_y		= static_cast<float>(xywh[1]);
+	screen_width	= static_cast<float>(xywh[2]);
+	screen_height	= static_cast<float>(xywh[3]);
 }

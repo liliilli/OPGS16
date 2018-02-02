@@ -6,11 +6,14 @@
 #include "path_finding2d.h"
 
 Start::Start() {
-	auto canvas = std::make_unique<Canvas::Canvas>();
-	canvas->InitiateChild<Canvas::Image>("Image", "Resources/test.png");
+	auto canvas = std::make_shared<Canvas::Canvas>(); {
+		Canvas::Image&& image{ "Resources/test.png", canvas };
+		image.SetImageSize(512, 448);
+		canvas->InitiateChild("Image", std::move(image));
+	}
+
 	auto image = canvas->GetChild("Image");
 	auto image_temp = std::static_pointer_cast<Canvas::Image>(image);
-	image_temp->SetImageSize(720, 480);
 	image->InitiateChild<Canvas::Text>("Txt1", "In Messsage Hello world", glm::vec3{ -48, 0, 0 });
 	image->InitiateChild<Canvas::Text>("Txt2", "In Messsage Hello world", glm::vec3{ -48, 192, 0 });
 	image->InitiateChild<Canvas::Text>("Txt3", "In Messsage Hello world", glm::vec3{ -48, -192, 0 });
@@ -29,21 +32,12 @@ Start::Start() {
 	}
 	canvas->InitiateChild("Txt2", std::move(txt_2));
 
-	Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.", {16, 16, 0} }; {
+	Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.",
+						  glm::vec3{16, 16, 0} }; {
 		txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
 		txt_3.SetFontSize(12);
 	}
 	canvas->InitiateChild("Txt3", std::move(txt_3));
-
-	//for (int i = 1; i <= 9; ++i) {
-	//	Canvas::Text&& txt{ m_scene_name };
-	//	txt.SetOrigin(static_cast<IOriginable::Origin>(i));
-	//	txt.SetScaleValue(0.5f);
-	//	txt.SetAlignment(IAlignable::Alignment::CENTER);
-
-	//	std::string&& tag{ "txt" + std::to_string(i) };
-	//	canvas->InitiateChild(std::move(tag), std::move(txt));
-	//}
 
 	InsertObject("Canvas", canvas);
 }
@@ -53,10 +47,10 @@ void Start::HandleInput(GLFWwindow* const window) {
 
     }
     else if (DoesKeyPressed(window, GLFW_KEY_B)) {
-        Application::getInstance().ReplaceScene<PrimProc>();
+        //Application::getInstance().ReplaceScene<PrimProc>();
     }
     else if (DoesKeyPressed(window, GLFW_KEY_C)) {
-        Application::getInstance().ReplaceScene<BloomScene>();
+        //Application::getInstance().ReplaceScene<BloomScene>();
     }
 	else if (DoesKeyPressed(window, GLFW_KEY_D)) {
 		Application::getInstance().ReplaceScene<PathFinding2D>();

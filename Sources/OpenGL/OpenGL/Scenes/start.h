@@ -10,7 +10,6 @@ public:
 
     /**
     * @brief The method handles key codes from window.
-    *
     * This methods is called by Application::ProcessInput method.
     *
     * @param[in] window Window handle pointer.

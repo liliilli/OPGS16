@@ -1,9 +1,5 @@
 #include "object.h"
 
-Object::Object() : camera{ camera::GetCamera() } {}
-
-Object::~Object() {}
-
 void Object::Update() {
 	for (auto& child : children) {
 		child.second->UpdateFinalPosition(GetFinalPosition());

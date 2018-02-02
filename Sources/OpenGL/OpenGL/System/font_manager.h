@@ -154,7 +154,7 @@ PRIVATE__
 
     //std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
-	glm::mat4 projection = glm::ortho(0.f, 720.f, 0.f, 480.f);
+	glm::mat4 projection = glm::ortho(0.f, 512.f, 0.f, 448.f);
 
     GLuint vao, vbo;
 

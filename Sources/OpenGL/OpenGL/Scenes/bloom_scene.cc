@@ -3,7 +3,7 @@
 #include "..\Objects\quad_floor.h"
 #include "..\Objects\light_box.h"
 
-BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } { 
+BloomScene::BloomScene() : font{ "Resources/LSANS.TTF" } {
     /** Set shader up */
     InitShaders();
 
@@ -103,7 +103,7 @@ void BloomScene::InitHdrFrameBuffer() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         /** Attach texture to framebuffer */
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (int)i, 
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (int)i,
                                GL_TEXTURE_2D, color_buffer[i], 0);
     }
 
@@ -124,7 +124,7 @@ void BloomScene::InitHdrFrameBuffer() {
 void BloomScene::InitBloomFrameBuffer() {
     glGenFramebuffers(2, &bloom_fbo[0]);
     glGenTextures(2, &bloom_color_buffer[0]);
-    
+
     for (size_t i = 0; i < 2; ++i) {
         glBindFramebuffer(GL_FRAMEBUFFER, bloom_fbo[i]);
         glBindTexture(GL_TEXTURE_2D, bloom_color_buffer[i]);
@@ -150,7 +150,7 @@ void BloomScene::Draw() {
 
     DrawHdrBuffer();
     DrawBloomBuffer();
-    
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     DrawBloomFinalRender();
 
@@ -162,10 +162,11 @@ void BloomScene::DrawHdrBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader_fbo_hdr.Use();
-    auto view = camera.GetViewMatrix();
-    shader_fbo_hdr.SetVecMatrix4f("uView", view);
-    shader_fbo_hdr.SetVecMatrix4f("uProjection", camera.GetProjection());
-    shader_fbo_hdr.SetVec3f("uCameraPos", camera.GetLocalPosition());
+
+    //auto view = camera.GetViewMatrix();
+    //shader_fbo_hdr.SetVecMatrix4f("uView", view);
+    //shader_fbo_hdr.SetVecMatrix4f("uProjection", camera.GetProjection());
+    //shader_fbo_hdr.SetVec3f("uCameraPos", camera.GetLocalPosition());
 
     DrawObjects(shader_fbo_hdr);
     /** Lights */
@@ -193,9 +194,10 @@ void BloomScene::DrawObjects(helper::ShaderNew& shader) {
 
 void BloomScene::DrawLightObjects() {
     shader_light.Use();
-    auto view = camera.GetViewMatrix();
-    shader_light.SetVecMatrix4f("uView", view);
-    shader_light.SetVecMatrix4f("uProjection", camera.GetProjection());
+
+    //auto view = camera.GetViewMatrix();
+    //shader_light.SetVecMatrix4f("uView", view);
+    //shader_light.SetVecMatrix4f("uProjection", camera.GetProjection());
 
     for (auto& light : radiant_objects) {
         auto item = dynamic_cast<Object*>(light.second.get());
@@ -260,8 +262,5 @@ void BloomScene::Update() {
     for (auto& object : objects) {
         object.second->Update();
     }
-
-    // Camera Update
-    camera.Refresh();
 }
 

@@ -78,15 +78,16 @@ void HelloWorld::HandleInput(GLFWwindow* const window) {
 }
 
 void HelloWorld::Update() {
-    ubo_data[0] = camera.GetViewMatrix();
-    ubo_data[1] = camera.GetProjection();
+
+    //ubo_data[0] = camera.GetViewMatrix();
+    //ubo_data[1] = camera.GetProjection();
 
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     auto* p = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
     memcpy(p, &ubo_data[0], sizeof(ubo_data));
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 
-    camera.Refresh();
+    //camera.Refresh();
 }
 
 void HelloWorld::Draw() {

@@ -21,10 +21,8 @@ void Canvas::Text::Update() {}
 void Canvas::Text::Draw() {
 	if (m_f_manager) {
 		/** Set font */
-		if (m_font_tag.empty())
-			m_f_manager->LoadDefaultFont();
-		else
-			m_f_manager->LoadFont(std::string(m_font_tag));
+		if (m_font_tag.empty()) m_f_manager->LoadDefaultFont();
+		else m_f_manager->LoadFont(std::string(m_font_tag));
 		/** Render */
 		m_f_manager->RenderTextNew(m_text, GetOrigin(),
 			glm::vec2{ GetFinalPosition() }, m_color, GetAlignment(), GetScaleValue());
