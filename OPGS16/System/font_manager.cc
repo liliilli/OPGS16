@@ -266,7 +266,6 @@ void FontManager::RenderTextNew
 	// Body
 	StartShader(color);
 	auto text_container = SeparateTextToList(text);
-	//auto position = CalculateCenterPosition(origin, relative_position);
 	auto position = relative_position;
 
 	using Align = IAlignable::Alignment;
@@ -346,7 +345,7 @@ void FontManager::RenderLeftSide
 
 		/** Relocate display position */
 		pos.x = position.x;
-		pos.y -= font_in_use->at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y * 1.5f;
 	}
 }
 
@@ -374,7 +373,7 @@ void FontManager::RenderCenterSide
 		}
 
 		pos.x = position.x;
-		pos.y -= font_in_use->at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y * 1.5f;
 	}
 }
 
@@ -402,7 +401,7 @@ void FontManager::RenderRightSide
 		}
 
 		pos.x = position.x;
-		pos.y -= font_in_use->at(0).size.y;
+		pos.y -= font_in_use->at(0).size.y * 1.5f;
 	}
 }
 
