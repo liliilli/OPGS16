@@ -3,10 +3,18 @@
 #include <iostream>
 #include <sstream>
 #include <glm\gtc\matrix_transform.hpp>
+#include "..\application.h"
 
 #include "..\..\System\Shader\shader_manager.h"
 
 FontManager::FontManager() {
+	{	/** Set Font rendering orthographic projection matrix. */
+		auto& app = Application::getInstance();
+		auto size = app.GetDefaultScreenSize();
+		projection = glm::ortho(0.f, static_cast<float>(size[0]),
+								0.f, static_cast<float>(size[1]));
+	}
+
 	InitiateShader();
 	BindVertexAttributes();
 }
@@ -72,6 +80,49 @@ bool FontManager::InitiateFont(const std::string&& tag, const std::string&& font
 	else return false;
 }
 
+FontManager::fontMap FontManager::GetCharTextures() {
+	fontMap glyphs = std::make_shared<fontMap::element_type>();
+	//std::unordered_map<GLchar, Character> glyphs{};
+
+    for (GLubyte c = 0; c < 128; ++c) {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+            std::cerr << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
+            continue;
+        }
+
+        // Generate Texture
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        auto width  = face->glyph->bitmap.width;
+        auto height = face->glyph->bitmap.rows;
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+                     width, height,
+                     0, GL_RED, GL_UNSIGNED_BYTE,
+                     face->glyph->bitmap.buffer);
+
+        // Set Texture Options
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Store character for later use
+        Character character {
+            texture,
+            glm::ivec2(width, height),
+            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            static_cast<GLuint>(face->glyph->advance.x)
+        };
+
+        glyphs->insert(std::make_pair(c, character));
+    }
+
+	return glyphs;
+}
+
 bool FontManager::LoadDefaultFont() {
 	if (default_font == nullptr) return false;
 
@@ -114,49 +165,6 @@ bool FontManager::CheckFreeType(const std::string&& font_path) {
 	}
 
 	return true;
-}
-
-FontManager::fontMap FontManager::GetCharTextures() {
-	fontMap glyphs = std::make_shared<fontMap::element_type>();
-	//std::unordered_map<GLchar, Character> glyphs{};
-
-    for (GLubyte c = 0; c < 128; ++c) {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cerr << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
-            continue;
-        }
-
-        // Generate Texture
-        GLuint texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        auto width  = face->glyph->bitmap.width;
-        auto height = face->glyph->bitmap.rows;
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
-                     width, height,
-                     0, GL_RED, GL_UNSIGNED_BYTE,
-                     face->glyph->bitmap.buffer);
-
-        // Set Texture Options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        // Store character for later use
-        Character character {
-            texture,
-            glm::ivec2(width, height),
-            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            static_cast<GLuint>(face->glyph->advance.x)
-        };
-
-        glyphs->insert(std::make_pair(c, character));
-    }
-
-	return glyphs;
 }
 
 /**

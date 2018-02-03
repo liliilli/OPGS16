@@ -30,7 +30,9 @@ namespace shading {
  */
 class PostProcessingManager final {
 public:
-	using pp_effect = std::shared_ptr<shading::PostProcessingFrame>; /** Abbreviation */
+	using pp_effect = std::unique_ptr<shading::PostProcessingFrame>; // Abbreviation.
+	using ppf_ptr	= shading::PostProcessingFrame*;
+	using sequence_type = std::list<ppf_ptr>;
 
 public:
 	/** Constructor */
@@ -65,7 +67,7 @@ public:
 	bool InsertEffect(const std::string& tag) {
 		if (IsEffectExist(tag)) { return false; }
 
-		m_effects[tag] = std::make_shared<_Ty>();
+		m_effects[tag] = std::make_unique<_Ty>();
 		return true;
 	}
 
@@ -91,9 +93,9 @@ public:
 	}
 
 	/**
-	 * @brief
-	 * @param[in] tag
-	 * @return
+	 * @brief Find whether or not effect named tag is exist.
+	 * @param[in] tag The tag to find effect.
+	 * @return If searching effect is successful, return true. else return false.
 	 */
 	inline bool IsEffectExist(const std::string tag);
 
@@ -101,22 +103,22 @@ public:
 	 * @brief Set continous post-processing sequence to render screen.
 	 * If sequence list on id is already set up, This method does nothing.
 	 *
-	 * @param[in] id
-	 * @param[in] list
-	 * @return Pointer
+	 * @param[in] id Id which is position to be set effect sequences.
+	 * @param[in] list Effect tags list
+	 * @return Pointer of initialized effect sequence.
+	 * If this fails to create sequence, return nullptr.
 	 */
-	const std::list<pp_effect>* const
+	const sequence_type* const
 		SetSequence(const size_t id, const std::initializer_list<std::string>& list);
 
 	/**
-	 * @brief Just bind a number to bind effect sequence later.
-	 * @param[in] id Bind number index.
+	 * @brief Updates each effects of each sequences. (each effects of sequence is active)
 	 */
-	[[noreturn]] void JustBind(const size_t id);
+	[[noreturn]] void UpdateSequences();
 
 	/**
-	 * @brief
-	 * @param[in] id
+	 * @brief Bind effect sequence with id number.
+	 * @param[in] id Index position of effect sequences container to bind seqeunce.
 	 */
 	[[noreturn]] void BindSequence(const size_t id);
 
@@ -140,17 +142,18 @@ private:
 	/** Container sotres post-processing separated effects. */
 	std::unordered_map<std::string, pp_effect> m_effects;
 	/** Container stores post-processing sequences combined with effects. */
-	std::unordered_map<size_t, std::list<pp_effect>> m_effect_sequences{};
+	std::unordered_map<size_t, sequence_type> m_effect_sequences;
 
-	const size_t m_reset = 0xffff;				/** Just used for reset of m_binded_number */
-	mutable size_t m_binded_number{m_reset};	/** if not reset, call effect sequence via this */
+	const size_t m_reset = 0xffff;				// Just used for reset of m_binded_number
+	mutable size_t m_binded_number{m_reset};	// if not reset, call effect sequence via this
 
 private:
 	/** Return id'th position of effect_sequences is already exist. */
 	inline bool IsEffectSequenceAlreadyExist(const size_t id);
 };
 
-/** Inline Methods */
+// Inline Methods
+
 inline bool PostProcessingManager::IsEffectExist(const std::string tag) {
 	if (m_effects.find(tag) == m_effects.end()) return false;
 	return true;

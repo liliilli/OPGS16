@@ -1,17 +1,4 @@
-#include <iostream>
-#include <memory>
-#include <functional>
-#include "stb_image.h"
-
 #include "application.h"
-//#include "camera.h"
-//#include "constant.h"
-//#include "helper.h"
-//#include "main.h"
-//#include "model.h"
-//#include "shader.h"
-//#include "texture.h"
-//
 
 int main() {
     auto& app = Application::getInstance("Hello World");

@@ -131,6 +131,13 @@ public:
 	[[noreturn]] virtual void Bind();
 
 	/**
+	 * @brief Update frame buffer.
+	 * This must be called to active post-processing effects.
+	 * This methods could be overriden by derived class.
+	 */
+	[[noreturn]] virtual void Update() {};
+
+	/**
 	 * @brief Render texture and components.
 	 * This must be called after arbitary frame buffer bound.
 	 * This methods could be overriden by derived class.
@@ -168,6 +175,15 @@ public:
 	 */
 	[[noreturn]] void CheckError();
 
+	/** Check this effect is on effect-sequences. */
+	const bool IsActive() const { return (m_active_count != 0); }
+
+	/** Set this effect will be actived. */
+	[[noreturn]] void Active();
+
+	/** Set this effect disabled. */
+	[[noreturn]] void Disable();
+
 private:
 	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
@@ -178,6 +194,7 @@ private:
 
 	GLuint empty_vao;
 	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
+	unsigned m_active_count{ 0 };
 
 	enum class ErrorFlag {
 		OK,

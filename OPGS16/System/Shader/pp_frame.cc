@@ -167,4 +167,12 @@ void PostProcessingFrame::CheckError() {
 	}
 }
 
+void PostProcessingFrame::Active() {
+	m_active_count += 1;
+}
+
+void PostProcessingFrame::Disable() {
+	if (IsActive()) m_active_count -= 1;
+}
+
 }

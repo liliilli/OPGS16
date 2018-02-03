@@ -19,7 +19,7 @@
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
 	m_aa_toggled{ false },
-	m_debug_toggled{ false },
+	m_debug_toggled{ true },
 	m_post_processing_toggled{ true },
 	m_is_size_scalable{ true },
 	m_scale{ OptionScale::X1_DEFAULT } {
@@ -83,8 +83,8 @@ void Application::InitiateFonts() {
 void Application::InitiateDebugUi() {
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	Canvas::Text&& fps{ "", glm::vec3{32, -32, 0}, glm::vec3{0, 1, 0} }; {
-		fps.SetFontSize(16);
+	Canvas::Text&& fps{ "", glm::vec3{16, -16, 0}, glm::vec3{0, 1, 0} }; {
+		fps.SetFontSize(8);
 		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
 		fps.SetFont("Solomon");
 		canvas->InitiateChild("Fps", std::move(fps));
@@ -100,9 +100,7 @@ void Application::InitiatePostProcessingEffects() {
 
 	/** Set sample sequence */
 	auto id = 0u;
-	auto const result = m_pp_manager->SetSequence(id, { "Convex" });
-	m_pp_manager->JustBind(id);
-
+	auto const result = m_pp_manager->SetSequence(id, { "Gray", "Convex" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -165,13 +163,7 @@ void Application::Input(GLFWwindow* const window) {
 void Application::Update() {
     if (!m_scenes.empty()) top_scene->Update();
 	if (m_debug_toggled) UpdateDebugInformation();
-
-	/** Temporary */ {
-		if (m_post_processing_toggled) {
-			auto& pp = m_pp_manager->GetEffect("SineWave");
-			pp->ReplaceUniformValue("uMove", static_cast<float>(glfwGetTime()));
-		}
-	}
+	m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
 /**
@@ -197,9 +189,7 @@ void Application::Draw() {
 		}
 	}
 
-	/** Debug Display */
-	if (m_debug_toggled) DrawDebugInformation();
-	/** End */
+	if (m_debug_toggled) DrawDebugInformation(); // Debug Display
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

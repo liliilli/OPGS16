@@ -143,18 +143,18 @@ PUBLIC__
 
 PRIVATE__
     /** Freetype pointer */
-	FT_Library freetype = nullptr;
-    FT_Face face = nullptr;
+	FT_Library freetype = nullptr;	/** Freetype library pointer */
+    FT_Face face = nullptr;			/** Freetype face pointer used when initiating fonts. */
 
     // Restrict first 128 characters for now.
-	std::unordered_map<std::string, fontMap> fonts{};
+	std::unordered_map<std::string, fontMap> fonts{};	/** Container stores fonts */
 
 	fontMap font_in_use = nullptr;
 	fontMap default_font = nullptr;
 
     //std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
-	glm::mat4 projection = glm::ortho(0.f, 256.f, 0.f, 224.f);
+	glm::mat4 projection;
 
     GLuint vao, vbo;
 

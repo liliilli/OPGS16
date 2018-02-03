@@ -84,10 +84,9 @@ private:
 	};
 	std::stack<GameStatus> m_global_game_status{};
 
-    /** Window handle pointer */
-    GLFWwindow* window{ nullptr };
+    GLFWwindow* window{ nullptr };					/** Window handle pointer */
 
-    std::stack<std::shared_ptr<Scene>> m_scenes;
+    std::stack<std::shared_ptr<Scene>> m_scenes;	/** Scene stack */
     std::shared_ptr<Scene> top_scene;
 
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
@@ -109,7 +108,7 @@ private:
 		float new_time;
 		float elapsed_time;
 		float interval;
-	} ;
+	} m_timeinfo;
     float old_time{};
     float new_time{};
     float elapsed_time{};

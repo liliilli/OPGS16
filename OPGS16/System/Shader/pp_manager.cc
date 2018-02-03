@@ -17,28 +17,32 @@ bool PostProcessingManager::InsertEffect(const std::string& tag) {
 	return InsertEffect<shading::PostProcessingFrame>(tag);
 }
 
-using pp_effect = std::shared_ptr<shading::PostProcessingFrame>;
-const std::list<pp_effect>* const
-PostProcessingManager::SetSequence(
-	const size_t id, const std::initializer_list<std::string>& list) {
+using sequence_type = PostProcessingManager::sequence_type;
+const sequence_type* const
+PostProcessingManager::SetSequence(const size_t id,
+								   const std::initializer_list<std::string>& list) {
 	/** Body */
 	if (!IsEffectSequenceAlreadyExist(id)) {
-		std::list<pp_effect>&& effect_list{};
+		std::list<ppf_ptr>&& effect_list{};
 		for (const auto& tag : list) {
 			if (IsEffectExist(tag)) {
-				effect_list.push_back(GetEffect(std::string{ tag }));
+				// Push and get count up.
+				effect_list.push_back(GetEffect(std::string{ tag }).get());
+				(*effect_list.rbegin())->Active();
 			}
 			else return nullptr;
 		}
+		// Insert
 		m_effect_sequences[id] = std::move(effect_list);
 		return &m_effect_sequences[id];
 	}
 	else return nullptr;
 }
 
-void PostProcessingManager::JustBind(const size_t id) {
-	if (IsEffectSequenceAlreadyExist(id)) {
-		m_binded_number = id;
+void PostProcessingManager::UpdateSequences() {
+	for (auto& effect : m_effects) {
+		auto& item = effect.second;
+		if (item->IsActive()) item->Update();
 	}
 }
 
@@ -55,13 +59,13 @@ void PostProcessingManager::RenderSequence() {
 		auto& list = m_effect_sequences.at(m_binded_number);
 		/** Iterate effect list, and rendering */
 		auto it_effect = list.begin();
-		auto it_rend = (--list.end());
+		auto it_rbegin = (--list.end());
 
 		std::for_each(list.begin(), list.end(), [&](decltype(*it_effect)& effect) {
-			if (it_effect != it_rend) /** If this is not end of sequence, bind next. */ {
+			if (it_effect != it_rbegin) /** If this is not end of sequence, bind next. */ {
 				(*std::next(it_effect))->Bind();
 			}
-			else { /** Bind to default frame buffer */
+			else { /** Bind to scaling frame buffer */
 				m_effects.at("__df__")->Bind();
 			}
 
@@ -75,6 +79,10 @@ void PostProcessingManager::RenderSequence() {
 void PostProcessingManager::ReleaseSequence(const size_t id) {
 	if (m_effect_sequences.find(id) != m_effect_sequences.end()) {
 		if (m_binded_number == id) m_binded_number = m_reset;
+		// Get count down and erase sequences.
+		for (auto& item : m_effect_sequences.at(id)) {
+			item->Disable();
+		}
 		m_effect_sequences.erase(id);
 	}
 	else {
