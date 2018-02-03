@@ -12,8 +12,8 @@
 #include "System\font_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
-#include "System\Shader\PostProcessing\pp_scaling.h"
 #include "System\Shader\PostProcessing\pp_sinewave.h"
+#include "System\Shader\PostProcessing\pp_gray.h"
 #include "System\sound_manager.h"
 
 Application::Application(std::string&& app_name)
@@ -96,6 +96,7 @@ void Application::InitiatePostProcessingEffects() {
 	m_pp_manager = &shading::PostProcessingManager::GetInstance();
 
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectGray>("Gray");
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */

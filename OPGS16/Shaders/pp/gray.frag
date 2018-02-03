@@ -7,7 +7,7 @@ in VS_OUT {
 } fs_in;
 
 layout (binding = 0) uniform sampler2D uTexture0;
-layout float uIntensity; // [0, 1]
+uniform float uIntensity; // [0, 1]
 
 float linear(float color, float gray) {
 	return color * (1 - uIntensity) + gray * uIntensity;
