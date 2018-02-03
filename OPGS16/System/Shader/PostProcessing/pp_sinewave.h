@@ -31,6 +31,8 @@ class PpEffectSinewave : public PostProcessingFrame {
 	 */
 	[[noreturn]] virtual void Initiate() override final;
 
+	[[noreturn]] virtual void Update() override final;
+
 	/**
 	* @brief Render texture and components.
 	* This must be called after arbitary frame buffer bound.
