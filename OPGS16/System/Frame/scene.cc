@@ -18,7 +18,10 @@ void Scene::HandleInput(GLFWwindow* const window) {
 }
 
 void Scene::Update() {
-	for (auto& object : objects) { object.second->Update(); }
+	for (auto& object : objects) {
+		if (object.second->GetActiveValue())
+			object.second->Update();
+	}
 }
 
 void Scene::Draw() {

@@ -216,6 +216,16 @@ public:
 		}
 	}
 
+	/**
+	 * @brief Set active option of object.
+	 * If m_active is false, this object cannot update until m_active return to true.
+	 * @param[in] value Active option value.
+	 */
+	[[noreturn]] void SetActive(const bool value) { m_active = value; }
+
+	/** Get active value. */
+	bool GetActiveValue() { return m_active; }
+
 private:
     /**
      * @brief Refresh Translation matrix
@@ -254,6 +264,7 @@ private:
     glm::mat4   scale;
 
     bool is_changed{ true };
+	bool m_active{ true };
 
 	std::unordered_map<std::string, std::shared_ptr<Object>> children;
 };
