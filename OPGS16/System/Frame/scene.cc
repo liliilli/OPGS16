@@ -25,6 +25,14 @@ void Scene::Draw() {
 	for (auto& object : objects) { object.second->Draw(); }
 }
 
+void Scene::GetObjectTree(ObjectTree* const tree) {
+	for (const auto& object : objects) {
+		ObjectTree child; child.name = object.first;
+		tree->children.push_back(std::move(child));
+		object.second->GetObjectTree(&*tree->children.rbegin());
+	}
+}
+
 auto Scene::GetObjects() -> std::unordered_map<std::string, std::shared_ptr<Object>>& {
 	return objects;
 }

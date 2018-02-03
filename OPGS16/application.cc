@@ -1,9 +1,11 @@
 #include "application.h"
 
-#include <iomanip>
-#include <iostream>
-#include <memory>
-#include <string>
+#include <chrono>	// std::chrono::system_clock
+#include <ctime>	// std::time_t, std::localtime, std::put_time
+#include <iomanip>	// std::setprecision, set::setw, std::put_time
+#include <iostream>	// std::cerr, std::endl
+#include <memory>	// std::static_pointer_cast
+#include <string>	// std::stringstream, std::string
 
 #include <glm\glm.hpp>
 
@@ -77,18 +79,33 @@ void Application::InitiateFonts() {
 	auto& font = FontManager::GetInstance();
 	font.InitiateFont( "Sans", "Resources/arial.ttf" , true);
 	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
+	font.InitiateFont( "Menus", "Resources/Fonts/Menus.ttf" , false);	/** Recommend 9pt */
 	font.LoadDefaultFont();
 }
 
 void Application::InitiateDebugUi() {
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	Canvas::Text&& fps{ "", glm::vec3{16, -16, 0}, glm::vec3{0, 1, 0} }; {
+	glm::vec3 colors = glm::vec3{ 1, 0, 1 };
+	Canvas::Text&& fps{ "", glm::vec3{16, -16, 0}, colors }; {
 		fps.SetFontSize(8);
 		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
 		fps.SetFont("Solomon");
 		canvas->InitiateChild("Fps", std::move(fps));
 	}
+	Canvas::Text&& date{ "", glm::vec3{16, -24, 0}, colors }; {
+		date.SetFontSize(8);
+		date.SetOrigin(IOriginable::Origin::UP_LEFT);
+		date.SetFont("Solomon");
+		canvas->InitiateChild("Date", std::move(date));
+	}
+	Canvas::Text&& hier{ "", glm::vec3{16, -32, 0}, colors }; {
+		hier.SetFontSize(8);
+		hier.SetOrigin(IOriginable::Origin::UP_LEFT);
+		hier.SetFont("Solomon");
+		canvas->InitiateChild("Hier", std::move(hier));
+	}
+
 	m_debug_ui_canvas = std::move(canvas);
 }
 
@@ -101,7 +118,7 @@ void Application::InitiatePostProcessingEffects() {
 
 	/** Set sample sequence */
 	auto id = 0u;
-	auto const result = m_pp_manager->SetSequence(id, { "Gray", "Convex" });
+	auto const result = m_pp_manager->SetSequence(id, { "Gray", "SineWave", "Convex" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -215,10 +232,42 @@ void Application::UpdateDebugInformation() {
 	}
 
 	/** Refresh Date */ {
+		auto timepoint = std::chrono::system_clock::now();
+		std::time_t time_struct = std::chrono::system_clock::to_time_t(timepoint);
+		std::ostringstream stream;
+		stream << std::put_time(std::localtime(&time_struct), "%F %T");
 
+		auto date = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Date"));
+		date->SetText(stream.str());
+	}
+
+	/** Display Hierarchy Objects */ {
+		ObjectTree tree{};
+		if (!m_scenes.empty()) {
+			top_scene->GetObjectTree(&tree);
+			std::string text{};
+			SetHierarchyText(&tree, 0, &text);
+
+			auto tree = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Hier"));
+			tree->SetText(std::move(text));
+		}
 	}
 
 	m_debug_ui_canvas->Update();
+}
+
+void Application::SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text) {
+	if (count == 0)
+		text->append("Scene\n");
+	else {
+		std::string space_text{};
+		for (auto i = 1; i <= count; ++i) { space_text.push_back(' '); }
+		text->append(space_text + item->name + '\n');
+	}
+
+	for (const auto& child : item->children) {
+		SetHierarchyText(&child, count + 1, text);
+	}
 }
 
 void Application::DrawDebugInformation() {

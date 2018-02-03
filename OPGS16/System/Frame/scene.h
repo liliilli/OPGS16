@@ -18,6 +18,7 @@
 #include "helper.h"
 #include "object.h"
 #include "..\font_manager.h"
+#include "..\Debugs\hierarchy_tree.h"
 #include "..\..\GlobalObjects\camera.h"
 
 /**
@@ -49,6 +50,12 @@ public:
 	 * but actual default behavior is just call ->Draw() of objects.
      */
 	[[noreturn]] virtual void Draw();
+
+	/**
+	 * @brief This only must be called by Application methods body,
+	 * retuns traversal recursive object tree, to be checked in DEBUG MODE.
+	 */
+	[[noreturn]] virtual void GetObjectTree(ObjectTree* const tree);
 
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool InsertObject(const std::string&& tag, std::shared_ptr<_Ty>&& obj) {

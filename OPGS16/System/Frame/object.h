@@ -17,8 +17,9 @@
 #include <gl\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
-#include "..\..\GlobalObjects\camera.h"
+#include "..\Debugs\hierarchy_tree.h"
 #include "..\Shader\shader.h"
+#include "..\..\GlobalObjects\camera.h"
 
 /**
  * @class Object
@@ -51,10 +52,6 @@ public:
 	 * @brief This calls callee to draw or render something it has. [Optional]
 	 */
 	[[noreturn]] virtual void Draw() {};
-
-    /*-----------------------------------------------------------------------*
-     * @comments Bolier-plate codes!
-     */
 
     /**
      * @brief The method gets position as glm::vec3 type. Not overridable.
@@ -205,6 +202,19 @@ public:
 	 * @return Object's smart-pointer instance.
 	 */
 	std::shared_ptr<Object> GetChild(const std::string& tag);
+
+
+	/**
+	 * @brief This only must be called by Application methods body,
+	 * retuns traversal recursive object tree, to be checked in DEBUG MODE.
+	 */
+	[[noreturn]] void GetObjectTree(ObjectTree* const tree) {
+		for (const auto& object : children) {
+			ObjectTree child; child.name = object.first;
+			tree->children.push_back(std::move(child));
+			object.second->GetObjectTree(&*tree->children.rbegin());
+		}
+	}
 
 private:
     /**

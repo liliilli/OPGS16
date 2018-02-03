@@ -257,7 +257,6 @@ private:
 	/** Change window size. */
 	[[noreturn]] void ChangeScalingOption(OptionScale value);
 
-private:
     /**
      * @brief Helper method that checks if keycode was pressed.
      *
@@ -307,6 +306,11 @@ private:
      * @param[in] hz Herz
      */
     [[noreturn]] void SetFps(float hz);
+
+	/**
+	 * @brief Set
+	 */
+	[[noreturn]] void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
 };
 
 #endif // OPENGL_TUTORIAL_APPLICATION_H
