@@ -18,6 +18,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "System\Frame\scene.h"
+#include "System\Manager\input_manager.h"
 #include "System\Shader\shader.h"
 #include "System\Shader\pp_manager.h"
 #include "GlobalObjects\Canvas\canvas.h"
@@ -57,32 +58,23 @@ public:
 	 * @brief Get default screen size (no scaling screen size)
 	 * @return Width, height size array.
 	 */
-	std::array<unsigned, 2> GetDefaultScreenSize();
+	const std::array<unsigned, 2> GetDefaultScreenSize() const;
 
 	/**
 	 * @brief Get scale value
 	 * @return Scale value, 1, 2, 3.
 	 */
-	const int GetScaleValue() const {
-		return static_cast<int>(m_scale);
-	}
+	const int GetScaleValue() const { return static_cast<int>(m_scale); }
+
+	/**
+	 * @brief
+	 */
+	const float GetDeltaTime() const { return m_timeinfo.interval; }
 
 private:
     /** screen width, height */
     unsigned SCREEN_WIDTH   = 256u;
     unsigned SCREEN_HEIGHT  = 224u;
-
-	/**
-	 * @brief Global game status in this game application.
-	 */
-	enum class GameStatus {
-		INIT,	/** First, and Initial status in game application. */
-		PAUSED, /** Paused in this game application */
-		MENU,	/** Global Menu */
-		PLAYING,/** Actual play mode, not paused, not menu. */
-		EXIT	/** Exit process from game application returning to game selection menu. */
-	};
-	std::stack<GameStatus> m_global_game_status{};
 
     GLFWwindow* window{ nullptr };					/** Window handle pointer */
 
@@ -92,10 +84,22 @@ private:
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
 
-    bool m_aa_toggled;
-    bool m_debug_toggled;
-	bool m_post_processing_toggled;
-	bool m_is_size_scalable;
+	/**
+	 * @brief Global game status in this game application.
+	 */
+	enum class GameStatus {
+		INIT,	/** First, and Initial status in game application. */
+		MENU,	/** Global Menu */
+		PLAYING,/** Actual play mode, not paused, not menu. */
+		EXIT	/** Exit process from game application returning to game selection menu. */
+	}; std::stack<GameStatus> m_game_status{};
+
+	struct GlobalOption {
+		bool anti_aliasing;
+		bool debug_mode;
+		bool post_processing;
+		bool size_scalable;
+	} m_option;
 
 	enum class OptionScale : int{
 		X1_DEFAULT = 1,	/** Screen will be showed with 256x224 size */
@@ -104,23 +108,20 @@ private:
 	} m_scale;
 
 	struct TimeData {
-		float old_time;
-		float new_time;
-		float elapsed_time;
-		float interval;
+		float old_time;		/** Old time point of previous frame. */
+		float new_time;		/** New time point of present frame. */
+		float elapsed_time;	/** Total time from previous to new, used for checking frame tick. */
+		float delta_time;	/** Delta time calculated from new_time - old_time. */
+		float interval;		/** frame tick interval time, used only v-sync is on. */
+		float fps_second;	/** Time value for displaying text when fps_toggled is true. */
 	} m_timeinfo;
-    float old_time{};
-    float new_time{};
-    float elapsed_time{};
-    float interval_time{};
-
-    /** Time value for displaying text when fps_toggled is true. */
-    float fps_tick{};
 
     /** Font instance for global text displaying */
-    std::unordered_map<int, bool> pressed_key_map;
+    //std::unordered_map<int, bool> pressed_key_map;
 
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
+
+	InputManager* m_inputs{ nullptr };
 
 private:
     explicit Application(std::string&& app_name = "Application");
@@ -164,6 +165,9 @@ private:
      * @param[in] window Window handle pointer.
      */
     [[noreturn]] void Input(GLFWwindow* const window);
+
+	/** Global input checking method */
+	[[noreturn]] void InputGlobal();
 
     /** The method update components movement, UI refresh, and so on. */
     [[noreturn]] void Update();
@@ -213,15 +217,15 @@ private:
 	 * @brief Return present status.
 	 * @return GameStatus value on top of stack, m_global_game_status saves game status.
 	 */
-	GameStatus GetPresentStatus() { return m_global_game_status.top(); }
+	GameStatus GetPresentStatus() { return m_game_status.top(); }
 
 	/**
 	 * @brief Replace present status to the other status.
 	 * @param[in] status New status value to replace present status with.
 	 */
 	[[noreturn]] void ReplacePresentStatus(GameStatus status) {
-		m_global_game_status.pop();
-		m_global_game_status.push(status);
+		m_game_status.pop();
+		m_game_status.push(status);
 	}
 
 	/**
@@ -231,7 +235,7 @@ private:
 	 * @param[in] status New status value to pile up onto status stack.
 	 */
 	[[noreturn]] void PushStatus(GameStatus status) {
-		m_global_game_status.push(status);
+		m_game_status.push(status);
 	}
 
 	/**
@@ -242,8 +246,8 @@ private:
 	 * This will crash game on playing.
 	 */
 	[[noreturn]] void PopStatus() {
-		m_global_game_status.pop();
-		if (m_global_game_status.empty()) {
+		m_game_status.pop();
+		if (m_game_status.empty()) {
 			while (!m_scenes.empty()) PopScene();
 			Exit();
 		}
@@ -257,30 +261,30 @@ private:
 	/** Change window size. */
 	[[noreturn]] void ChangeScalingOption(OptionScale value);
 
-    /**
-     * @brief Helper method that checks if keycode was pressed.
-     *
-     * @param[in] window Window handle pointer.
-     * @param[in] keycode Code of key to be checked.
-     *
-     * @return If keycode is pressed, return true. otherwise false.
-     */
-    bool DoesKeyPressed(GLFWwindow* const window, const int keycode) {
-        if (glfwGetKey(window, keycode) == GLFW_PRESS &&
-            (pressed_key_map.find(keycode) != pressed_key_map.end() &&
-             pressed_key_map.at(keycode) == false)) {
+  //  /**
+  //   * @brief Helper method that checks if keycode was pressed.
+  //   *
+  //   * @param[in] window Window handle pointer.
+  //   * @param[in] keycode Code of key to be checked.
+  //   *
+  //   * @return If keycode is pressed, return true. otherwise false.
+  //   */
+  //  bool DoesKeyPressed(GLFWwindow* const window, const int keycode) {
+  //      if (glfwGetKey(window, keycode) == GLFW_PRESS &&
+  //          (pressed_key_map.find(keycode) != pressed_key_map.end() &&
+  //           pressed_key_map.at(keycode) == false)) {
 
-            pressed_key_map[keycode] = true;
-            return true;
-        }
-        else if (glfwGetKey(window, keycode) == GLFW_RELEASE) {
-            pressed_key_map[keycode] = false;
-            return false;
-        }
-		else {
-			return false;
-		};
-    }
+  //          pressed_key_map[keycode] = true;
+  //          return true;
+  //      }
+  //      else if (glfwGetKey(window, keycode) == GLFW_RELEASE) {
+  //          pressed_key_map[keycode] = false;
+  //          return false;
+  //      }
+		//else {
+		//	return false;
+		//};
+  //  }
 
     /** The method toggles OpenGL antialiasing (MSAA) */
     [[noreturn]] void ToggleAntialiasing();

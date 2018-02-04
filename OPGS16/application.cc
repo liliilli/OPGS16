@@ -20,10 +20,7 @@
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
-	m_aa_toggled{ false },
-	m_debug_toggled{ true },
-	m_post_processing_toggled{ true },
-	m_is_size_scalable{ true },
+	m_option{ false, true, true, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
 }
@@ -57,6 +54,10 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
     return window;
 }
 
+void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
 		// Set Camera Cursor and Fps
@@ -67,6 +68,7 @@ void Application::Initiate() {
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
 		InitiateSoundSetting();
+		m_inputs = &InputManager::GetInstance(window);
 
 		/** Insert first scene */
 		PushScene<Start>();
@@ -133,13 +135,8 @@ void Application::InitiateSoundSetting() {
 	manager.PlaySound("Music1");
 }
 
-void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-
 void Application::Run() {
-    new_time = old_time = (float)glfwGetTime();
+    m_timeinfo.new_time = m_timeinfo.old_time = (float)glfwGetTime();
 	glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window)) {
@@ -151,36 +148,46 @@ void Application::Run() {
     }
 }
 
-std::array<unsigned, 2> Application::GetDefaultScreenSize() {
+const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
 	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
 }
 
 void Application::Input(GLFWwindow* const window) {
-	if (DoesKeyPressed(window, GLFW_KEY_ESCAPE))
-		PopStatus();
-	else if (DoesKeyPressed(window, GLFW_KEY_1) && m_is_size_scalable) // MSAAx4
-		ChangeScalingOption(OptionScale::X1_DEFAULT);
-	else if (DoesKeyPressed(window, GLFW_KEY_2) && m_is_size_scalable) // FPS display on/off
-		ChangeScalingOption(OptionScale::X2_DOUBLE);
-	else if (DoesKeyPressed(window, GLFW_KEY_3) && m_is_size_scalable)
-		ChangeScalingOption(OptionScale::X3_TRIPLE);
-	else if (DoesKeyPressed(window, GLFW_KEY_0)) {
-		//ToggleAntialiasing();
-		ToggleFpsDisplay();
+	m_inputs->Update();
+
+	switch (GetPresentStatus()) {
+	case GameStatus::PLAYING:
+		InputGlobal();
+		break;
+	case GameStatus::MENU:
+		break;
 	}
-	else if (DoesKeyPressed(window, GLFW_KEY_9))
-		TogglePostProcessingEffect();
-    else {
-		if (GetPresentStatus() == GameStatus::PLAYING) { /** Playing */
-			// Handle window has keycode into highest priority scene.
-			top_scene->HandleInput(window);
-		}
-    }
+
+	//if (GetPresentStatus() == GameStatus::PLAYING) { /** Playing */
+	//	top_scene->HandleInput(window);
+	//}
+}
+
+void Application::InputGlobal() {
+	if (m_inputs->IsKeyPressed("GlobalCancel"))
+		PopStatus();
+	if (m_option.size_scalable) {
+		if (m_inputs->IsKeyPressed("GlobalF1"))
+			ChangeScalingOption(OptionScale::X1_DEFAULT);
+		else if (m_inputs->IsKeyPressed("GlobalF2"))
+			ChangeScalingOption(OptionScale::X2_DOUBLE);
+		else if (m_inputs->IsKeyPressed("GlobalF3"))
+			ChangeScalingOption(OptionScale::X3_TRIPLE);
+		else if (m_inputs->IsKeyPressed("GlobalF9"))
+			ToggleFpsDisplay();
+		else if (m_inputs->IsKeyPressed("GlobalF10"))
+			TogglePostProcessingEffect();
+	}
 }
 
 void Application::Update() {
     if (!m_scenes.empty()) top_scene->Update();
-	if (m_debug_toggled) UpdateDebugInformation();
+	if (m_option.debug_mode) UpdateDebugInformation();
 	m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
@@ -189,7 +196,7 @@ void Application::Update() {
  */
 void Application::Draw() {
 	if (!m_scenes.empty()) {
-		if (m_post_processing_toggled) {
+		if (m_option.post_processing) {
 			glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			m_pp_manager->BindSequence(0);
 		}
@@ -198,7 +205,7 @@ void Application::Draw() {
 		top_scene->Draw();
 
 		/** Post-processing */
-		if (m_post_processing_toggled) {
+		if (m_option.post_processing) {
 			m_pp_manager->RenderSequence();
 			glViewport(0, 0,
 					   SCREEN_WIDTH * static_cast<int>(m_scale),
@@ -207,25 +214,25 @@ void Application::Draw() {
 		}
 	}
 
-	if (m_debug_toggled) DrawDebugInformation(); // Debug Display
+	if (m_option.debug_mode) DrawDebugInformation(); // Debug Display
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
 
 void Application::ToggleFpsDisplay() {
-    m_debug_toggled = (m_debug_toggled ? false : true);
-	std::cerr << m_debug_toggled << std::endl;
+    m_option.debug_mode = (m_option.debug_mode ? false : true);
+	std::cerr << m_option.debug_mode << std::endl;
 }
 
 void Application::TogglePostProcessingEffect() {
-	m_post_processing_toggled = (m_post_processing_toggled ? false : true);
-	std::cerr << "NOTIFY::POST::PROCESSING::SWITCH::" << m_post_processing_toggled << std::endl;
+	m_option.post_processing = (m_option.post_processing ? false : true);
+	std::cerr << "NOTIFY::POST::PROCESSING::SWITCH::" << m_option.post_processing << std::endl;
 }
 
 void Application::UpdateDebugInformation() {
 	/** Refresh Fps */ {
 		std::ostringstream str;
-		str << std::setprecision(4) << fps_tick;
+		str << std::setprecision(4) << m_timeinfo.fps_second;
 
 		auto text = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Fps"));
 		text->SetText("Fps : " + str.str());
@@ -261,7 +268,7 @@ void Application::SetHierarchyText(const ObjectTree* item, size_t count, std::st
 		text->append("Scene\n");
 	else {
 		std::string space_text{};
-		for (auto i = 1; i <= count; ++i) { space_text.push_back(' '); }
+		for (size_t i = 1; i <= count; ++i) { space_text.push_back(' '); }
 		text->append(space_text + item->name + '\n');
 	}
 
@@ -301,34 +308,35 @@ void Application::ChangeScalingOption(OptionScale value) {
 }
 
 void Application::ToggleAntialiasing() {
-    if (m_aa_toggled) {
+    if (m_option.anti_aliasing) {
         glDisable(GL_MULTISAMPLE);
-        m_aa_toggled = false;
+        m_option.anti_aliasing = false;
     }
     else {
         glEnable(GL_MULTISAMPLE);
-        m_aa_toggled = true;
+        m_option.anti_aliasing = true;
     }
 
 #ifdef _DEBUG
-    std::cout << "MSAA : " << (m_aa_toggled ? "ON" : "OFF") << std::endl;
+    std::cout << "MSAA : " << (m_option.anti_aliasing ? "ON" : "OFF") << std::endl;
 #endif
 }
 
 bool Application::IfFrameTurned() {
-    new_time = (float)glfwGetTime();
-    elapsed_time += new_time - old_time;
-    old_time = new_time;
+    m_timeinfo.new_time = (float)glfwGetTime();
+	m_timeinfo.delta_time = m_timeinfo.new_time - m_timeinfo.old_time;
+    m_timeinfo.elapsed_time += m_timeinfo.delta_time;
+    m_timeinfo.old_time = m_timeinfo.new_time;
 
     bool flag = false;
-    if (elapsed_time >= interval_time) {
-        fps_tick = 1 / elapsed_time;
-        elapsed_time -= interval_time;
+    if (m_timeinfo.elapsed_time >= m_timeinfo.interval) {
+        m_timeinfo.fps_second = 1 / m_timeinfo.elapsed_time;
+        m_timeinfo.elapsed_time -= m_timeinfo.interval;
         flag = true;
     }
     return flag;
 }
 
 void Application::SetFps(float hz) {
-    interval_time = 1 / hz;
+    m_timeinfo.interval = 1 / hz;
 }
