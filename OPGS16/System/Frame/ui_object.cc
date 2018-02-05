@@ -3,7 +3,7 @@
 void UiObject::Update() {
 	/** Update children */
 	for (auto& child : GetChildren()) {
-		auto child_temp = std::static_pointer_cast<UiObject>(child.second);
+		auto child_temp = static_cast<UiObject*>(child.second.get());
 		child_temp->UpdateFinalPosition(screen_x, screen_y, screen_width, screen_height);
 		child_temp->Update();
 	}
@@ -25,7 +25,7 @@ void UiObject::UpdateFinalPosition(
 	SetFinalPosition({ GetLocalPosition() + glm::vec3{source_x, source_y, 0} });
 	for (auto& child : GetChildren()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
-		auto child_temp = std::static_pointer_cast<UiObject>(child.second);
+		auto child_temp = static_cast<UiObject*>(child.second.get());
 		child_temp->UpdateFinalPosition(screen_x, screen_y, screen_width, screen_height);
 	}
 }

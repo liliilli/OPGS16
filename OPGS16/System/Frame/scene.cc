@@ -36,11 +36,11 @@ void Scene::GetObjectTree(ObjectTree* const tree) {
 	}
 }
 
-auto Scene::GetObjects() -> std::unordered_map<std::string, std::shared_ptr<Object>>& {
+Object::object_map& Scene::GetObjects() {
 	return objects;
 }
 
-std::shared_ptr<Object>& Scene::GetObject(const std::string && tag) {
+Object::object_ptr& Scene::GetObject(const std::string && tag) {
 	auto it = objects.find(tag);
 	if (it != objects.end()) {
 		return (*it).second;

@@ -6,38 +6,38 @@
 #include "path_finding2d.h"
 
 Start::Start() {
-	auto canvas = std::make_shared<Canvas::Canvas>(); {
-		Canvas::Image&& image{ "Resources/test_2.png", canvas };
-		image.SetImageSize(256, 224);
-		canvas->InitiateChild("Image", std::move(image));
+	auto canvas = std::make_unique<Canvas::Canvas>(); {
+		auto image = std::make_unique<Canvas::Image>("Resources/test_2.png", canvas);
+		image->SetImageSize(256, 224);
+		canvas->InitiateChild("Image", image);
 	}
 
 	auto image = canvas->GetChild("Image");
-	auto image_temp = std::static_pointer_cast<Canvas::Image>(image);
+	auto image_temp = static_cast<Canvas::Image*>(image);
 	image->InitiateChild<Canvas::Text>("Txt1", "In Messsage Hello world", glm::vec3{ -48, 0, 0 });
 	image->InitiateChild<Canvas::Text>("Txt2", "In Messsage Hello world", glm::vec3{ -48, 192, 0 });
 	image->InitiateChild<Canvas::Text>("Txt3", "In Messsage Hello world", glm::vec3{ -48, -192, 0 });
 
-	Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
-	txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);
-	canvas->InitiateChild("Txt1", std::move(txt_1));
+	//Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
+	//txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);
+	//canvas->InitiateChild("Txt1", std::move(txt_1));
 
-    std::string&& text = "A : Terrain Tesslation\n"
+    std::string text = "A : Terrain Tesslation\n"
         "B : Flapping Carpet\n"
         "C : Bloom\n"
 		"D : PathFinding2D";
-	Canvas::Text&& txt_2{ std::move(text), glm::vec3{ 25, 0, 0 } }; {
-		txt_2.SetOrigin(IOriginable::Origin::CENTER_LEFT);
-		txt_2.SetFontSize(16);
+	auto txt_2 = std::make_unique<Canvas::Text>(text, glm::vec3{ 25, 0, 0 }); {
+		txt_2->SetOrigin(IOriginable::Origin::CENTER_LEFT);
+		txt_2->SetFontSize(16);
 	}
-	canvas->InitiateChild("Txt2", std::move(txt_2));
+	canvas->InitiateChild("Txt2", txt_2);
 
-	Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.",
-						  glm::vec3{16, 16, 0} }; {
-		txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
-		txt_3.SetFontSize(8);
-	}
-	canvas->InitiateChild("Txt3", std::move(txt_3));
+	//Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.",
+	//					  glm::vec3{16, 16, 0} }; {
+	//	txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
+	//	txt_3.SetFontSize(8);
+	//}
+	//canvas->InitiateChild("Txt3", std::move(txt_3));
 
 	InsertObject("Canvas", canvas);
 }

@@ -15,14 +15,10 @@ ShaderManager::shader_raw ShaderManager::CreateShader(const std::string&& tag,
 	return m_shaders.at(tag).get();
 }
 
-void ShaderManager::DrawWithShader(std::string && name) {
-}
-
 void ShaderManager::BindObjectToShader(std::string && name, const Object & object) {
 }
 
-bool ShaderManager::Fail() {
-	return false;
+void ShaderManager::CheckError() {
 }
 
 void ShaderManager::CleanAll() {

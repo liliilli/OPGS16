@@ -89,24 +89,26 @@ void Application::InitiateDebugUi() {
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
 	glm::vec3 colors = glm::vec3{ 1, 0, 1 };
-	Canvas::Text&& fps{ "", glm::vec3{16, -16, 0}, colors }; {
-		fps.SetFontSize(8);
-		fps.SetOrigin(IOriginable::Origin::UP_LEFT);
-		fps.SetFont("Solomon");
-		canvas->InitiateChild("Fps", std::move(fps));
+	using Text = Canvas::Text;
+	auto fps = std::make_unique<Text>( "", glm::vec3{16, -16, 0}, colors ); {
+		fps->SetFontSize(8);
+		fps->SetOrigin(IOriginable::Origin::UP_LEFT);
+		fps->SetFont("Solomon");
+		canvas->InitiateChild("Fps", fps);
 	}
-	Canvas::Text&& date{ "", glm::vec3{16, -24, 0}, colors }; {
-		date.SetFontSize(8);
-		date.SetOrigin(IOriginable::Origin::UP_LEFT);
-		date.SetFont("Solomon");
-		canvas->InitiateChild("Date", std::move(date));
+	auto date = std::make_unique<Text>( "", glm::vec3{16, -24, 0}, colors ); {
+		date->SetFontSize(8);
+		date->SetOrigin(IOriginable::Origin::UP_LEFT);
+		date->SetFont("Solomon");
+		canvas->InitiateChild("Date", date);
 	}
-	Canvas::Text&& hier{ "", glm::vec3{16, -32, 0}, colors }; {
-		hier.SetFontSize(8);
-		hier.SetOrigin(IOriginable::Origin::UP_LEFT);
-		hier.SetFont("Solomon");
-		canvas->InitiateChild("Hier", std::move(hier));
-	}
+
+	//Canvas::Text&& hier{ "", glm::vec3{16, -32, 0}, colors }; {
+	//	hier.SetFontSize(8);
+	//	hier.SetOrigin(IOriginable::Origin::UP_LEFT);
+	//	hier.SetFont("Solomon");
+	//	canvas->InitiateChild("Hier", std::move(hier));
+	//}
 
 	m_debug_ui_canvas = std::move(canvas);
 }
@@ -234,7 +236,7 @@ void Application::UpdateDebugInformation() {
 		std::ostringstream str;
 		str << std::setprecision(4) << m_timeinfo.fps_second;
 
-		auto text = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Fps"));
+		auto text = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Fps"));
 		text->SetText("Fps : " + str.str());
 	}
 
@@ -244,21 +246,21 @@ void Application::UpdateDebugInformation() {
 		std::ostringstream stream;
 		stream << std::put_time(std::localtime(&time_struct), "%F %T");
 
-		auto date = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Date"));
+		auto date = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Date"));
 		date->SetText(stream.str());
 	}
 
-	/** Display Hierarchy Objects */ {
-		ObjectTree tree{};
-		if (!m_scenes.empty()) {
-			top_scene->GetObjectTree(&tree);
-			std::string text{};
-			SetHierarchyText(&tree, 0, &text);
+	///** Display Hierarchy Objects */ {
+	//	ObjectTree tree{};
+	//	if (!m_scenes.empty()) {
+	//		top_scene->GetObjectTree(&tree);
+	//		std::string text{};
+	//		SetHierarchyText(&tree, 0, &text);
 
-			auto tree = std::static_pointer_cast<Canvas::Text>(m_debug_ui_canvas->GetChild("Hier"));
-			tree->SetText(std::move(text));
-		}
-	}
+	//		auto tree = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Hier"));
+	//		tree->SetText(std::move(text));
+	//	}
+	//}
 
 	m_debug_ui_canvas->Update();
 }

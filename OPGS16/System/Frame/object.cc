@@ -152,13 +152,13 @@ glm::mat4 Object::GetModelMatrix() {
 	 return list;
  }
 
- std::unordered_map<std::string, std::shared_ptr<Object>>& Object::GetChildren() {
+ Object::object_map& Object::GetChildren() {
 	 return children;
  }
 
- std::shared_ptr<Object> Object::GetChild(const std::string& tag) {
+ Object::object_raw Object::GetChild(const std::string& tag) {
 	 if (children.find(tag) == children.end()) return nullptr;
-	 return children.at(tag);
+	 return children.at(tag).get();
  }
 
 /**

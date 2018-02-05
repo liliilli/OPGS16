@@ -261,31 +261,6 @@ private:
 	/** Change window size. */
 	[[noreturn]] void ChangeScalingOption(OptionScale value);
 
-  //  /**
-  //   * @brief Helper method that checks if keycode was pressed.
-  //   *
-  //   * @param[in] window Window handle pointer.
-  //   * @param[in] keycode Code of key to be checked.
-  //   *
-  //   * @return If keycode is pressed, return true. otherwise false.
-  //   */
-  //  bool DoesKeyPressed(GLFWwindow* const window, const int keycode) {
-  //      if (glfwGetKey(window, keycode) == GLFW_PRESS &&
-  //          (pressed_key_map.find(keycode) != pressed_key_map.end() &&
-  //           pressed_key_map.at(keycode) == false)) {
-
-  //          pressed_key_map[keycode] = true;
-  //          return true;
-  //      }
-  //      else if (glfwGetKey(window, keycode) == GLFW_RELEASE) {
-  //          pressed_key_map[keycode] = false;
-  //          return false;
-  //      }
-		//else {
-		//	return false;
-		//};
-  //  }
-
     /** The method toggles OpenGL antialiasing (MSAA) */
     [[noreturn]] void ToggleAntialiasing();
 

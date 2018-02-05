@@ -1,12 +1,12 @@
-#ifndef OPENGL_TUTORIAL_SYSTEM_SHADER_SHADER_MANAGER_H
-#define OPENGL_TUTORIAL_SYSTEM_SHADER_SHADER_MANAGER_H
+#ifndef OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H
+#define OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H
 
 /**
  * @file System/Shader/shader_manager.h
  * @brief Shader management class.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-05
  */
 
 #include <memory>
@@ -63,11 +63,9 @@ public:
 	shader_raw CreateShader(const std::string&& tag,
 		std::initializer_list<std::pair<Type, const std::string&&>> initializer_list);
 
-	[[noreturn]] void DrawWithShader(std::string&& name);
-
 	[[noreturn]] void BindObjectToShader(std::string&& name, const Object& object);
 
-	bool Fail();
+	[[noreturn]] void CheckError();
 
 	[[noreturn]] void CleanAll();
 
@@ -88,4 +86,4 @@ public:
 	ShaderManager& operator=(const ShaderManager&&) = delete;
 };
 
-#endif /** OPENGL_TUTORIAL_SYSTEM_SHADER_SHADER_MANAGER_H */
+#endif /** OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H */

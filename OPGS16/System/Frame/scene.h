@@ -27,6 +27,7 @@
  */
 class Scene {
 public:
+	/** Must need virtual dtor */
     virtual ~Scene() = default;
 
     /**
@@ -57,23 +58,34 @@ public:
 	 */
 	[[noreturn]] virtual void GetObjectTree(ObjectTree* const tree);
 
+	/**
+	 *
+	 */
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InsertObject(const std::string&& tag, std::shared_ptr<_Ty>&& obj) {
+	bool InsertObject(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
 		return true;
 	}
 
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InsertObject(const std::string&& tag, std::shared_ptr<_Ty>& obj) {
+	bool InsertObject(const std::string& tag, std::unique_ptr<_Ty>& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
 		return true;
 	}
 
-	auto GetObjects()->std::unordered_map<std::string, std::shared_ptr<Object>>&;
+	/**
+	 * @brief
+	 *
+	 * @return
+	 */
+	Object::object_map& GetObjects();
 
-	std::shared_ptr<Object>& GetObject(const std::string&& tag);
+	/**
+	 *
+	 */
+	Object::object_ptr& GetObject(const std::string&& tag);
 
 protected:
     /**
@@ -92,7 +104,7 @@ protected:
     }
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<Object>> objects;
+    Object::object_map objects;
 };
 
 #endif // OPENGL_TUTORIAL_SCENE_H

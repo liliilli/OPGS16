@@ -33,6 +33,10 @@
  */
 class Object {
 public:
+	using object_raw = Object*;
+	using object_ptr = std::unique_ptr<Object>;
+	using object_map = std::unordered_map<std::string, object_ptr>;
+
     virtual ~Object() = default;
 
     /**
@@ -163,18 +167,18 @@ public:
 	 * @return Success/Failed flag. If the methods success to make child object, return true.
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string&& tag, _Types&&... _args) {
+	bool InitiateChild(const std::string& tag, _Types&&... _args) {
 		if (children.find(tag) != children.end()) return false;
 
-		children[tag] = std::make_shared<_Ty>(std::forward<_Types>(_args)...);
+		children[tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
 		return true;
 	}
 
 	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string&& tag, const _Ty&& instance) {
+	bool InitiateChild(const std::string& tag, std::unique_ptr<_Ty>& instance) {
 		if (children.find(tag) != children.end()) return false;
 
-		children[tag] = std::make_shared<_Ty>(std::move(instance));
+		children[tag] = std::move(instance);
 		return true;
 	}
 
@@ -194,14 +198,14 @@ public:
 	 * @brief Get children reference.
 	 * @return Children objects component list.
 	 */
-	std::unordered_map<std::string, std::shared_ptr<Object>>& GetChildren();
+	object_map& GetChildren();
 
 	/**
 	 * @brief Get arbitary child object.
 	 * @param[in] tag The tag of object to find.
 	 * @return Object's smart-pointer instance.
 	 */
-	std::shared_ptr<Object> GetChild(const std::string& tag);
+	object_raw GetChild(const std::string& tag);
 
 
 	/**
@@ -266,7 +270,7 @@ private:
     bool is_changed{ true };
 	bool m_active{ true };
 
-	std::unordered_map<std::string, std::shared_ptr<Object>> children;
+	object_map children;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

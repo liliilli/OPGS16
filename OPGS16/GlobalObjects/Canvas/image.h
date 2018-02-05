@@ -26,7 +26,9 @@ namespace Canvas {
  */
 class Image : public UiObject {
 public:
-	Image(const std::string&& image_path, const std::shared_ptr<Canvas>& ref_canvas);
+	Image(const std::string& image_path, const Canvas* const ref_canvas);
+	Image(const std::string& image_path, const std::unique_ptr<Canvas>& ref_canvas);
+
 	virtual ~Image() = default;
 
 	/**
@@ -58,16 +60,16 @@ public:
 	[[noreturn]] void SetImageSize(const float width, const float height);
 
 private:
-	helper::BindingObject quad;
-	texture::Texture2D texture;
-	helper::ShaderNew* shader;
+	helper::BindingObject	m_quad;
+	texture::Texture2D*		m_texture;
+	helper::ShaderNew*		m_shader;
 
-	const float alpha{ 1.0f };
-	std::weak_ptr<Canvas> m_ref_canvas;	/** Weak ref of canvas, to get projection matrix. */
+	Canvas* const m_ref_canvas; /** l_value reference of canvas to get projection matrix. */
 
 private:
+	/** Initiate shader */
 	void InitiateShader();
-
+	/** Get PVM Matrix */
 	glm::mat4 GetPvmMatrix();
 };
 }

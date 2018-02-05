@@ -3,19 +3,24 @@
 #include "..\..\System\Frame\constant.h"
 #include "..\..\System\Shader\shader_manager.h"
 
+#include "..\..\System\Manager\texture_manager.h"
+
 constexpr bool FAILED{ false };
 constexpr bool SUCCESS{ true };
 
 namespace Canvas {
-Image::Image(const std::string&& image_path, const std::shared_ptr<Canvas>& ref_canvas) :
-	texture{ image_path , GL_RGBA },
-	quad{ helper::CreateBindingObjectEBO(quad_info, 8,
+Image::Image(const std::string& image_path, const Canvas* const ref_canvas) :
+	m_texture{ TextureManager::GetInstance().TempCreateImage("Temp", image_path, GL_RGBA) },
+	m_quad{ helper::CreateBindingObjectEBO(quad_info, 8,
 										 {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}},
 										 quad_indices)},
-	m_ref_canvas{ ref_canvas } {
+	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
 
 	InitiateShader();
 }
+
+Image::Image(const std::string& image_path, const std::unique_ptr<Canvas>& ref_canvas) :
+	Image{ image_path, ref_canvas.get() } { }
 
 void Image::Update() {
 	/** Update my xywh */
@@ -38,12 +43,12 @@ void Image::SetImageSize(const float width, const float height) {
 
 void Image::InitiateShader() {
 	auto& manager = ShaderManager::GetInstance();
-	shader = manager.GetShaderWithName("gQuad");
-	if (!shader) {
+	m_shader = manager.GetShaderWithName("gQuad");
+	if (!m_shader) {
 		using Type = helper::ShaderNew::Type;
 		using namespace std::string_literals;
 
-		shader = manager.CreateShader("gQuad", {
+		m_shader = manager.CreateShader("gQuad", {
 			{Type::VS, "Shaders/Global/image.vert"s},
 			{Type::FS, "Shaders/Global/image.frag"s}
 			});
@@ -63,16 +68,16 @@ void Image::Draw() {
 	}
 
 	/** Render this */
-	shader->Use();
+	m_shader->Use();
 
 	auto PVM = GetPvmMatrix();
-	shader->SetVecMatrix4f("projection", PVM);
-	shader->SetFloat("alpha", alpha);
+	m_shader->SetVecMatrix4f("projection", PVM);
+	m_shader->SetFloat("alpha", 1.0f);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture.GetId());
+	glBindTexture(GL_TEXTURE_2D, m_texture->GetId());
 
-	glBindVertexArray(quad.vao);
+	glBindVertexArray(m_quad.vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
@@ -92,7 +97,7 @@ glm::mat4 Image::GetPvmMatrix() {
 	M = glm::scale(M, GetScaleFactor() * GetScaleValue());
 
 	auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-	auto P = m_ref_canvas.lock()->GetUiCameraProjMatrix();
+	auto P = m_ref_canvas->GetUiCameraProjMatrix();
 
 	return P * V * M;
 }
