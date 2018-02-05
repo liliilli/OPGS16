@@ -60,7 +60,7 @@ public:
 private:
 	helper::BindingObject quad;
 	texture::Texture2D texture;
-	std::shared_ptr<helper::ShaderNew> shader;
+	helper::ShaderNew* shader;
 
 	const float alpha{ 1.0f };
 	std::weak_ptr<Canvas> m_ref_canvas;	/** Weak ref of canvas, to get projection matrix. */

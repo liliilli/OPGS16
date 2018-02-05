@@ -189,7 +189,7 @@ private:
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
-	std::vector<std::shared_ptr<helper::ShaderNew>> m_shaders;
+	std::vector<helper::ShaderNew*> m_shaders;
 	ShaderParameters m_parameters{};	/** Uniform arguments container to use shader */
 
 	GLuint empty_vao;
@@ -210,7 +210,7 @@ private:
 	/**
 	 * @brief Set uniform variables of shader with new values.
 	 */
-	[[noreturn]] void RefreshUniformValues(std::shared_ptr<helper::ShaderNew>& shader);
+	[[noreturn]] void RefreshUniformValues(helper::ShaderNew* const shader);
 
 	/**
 	 * @brief This method gets quad vertex attribute object.

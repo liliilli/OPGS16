@@ -141,7 +141,7 @@ void PostProcessingFrame::RenderEffect() {
 	else { m_flag = ErrorFlag::NOT_INITIATED_YET; }
 }
 
-void PostProcessingFrame::RefreshUniformValues(std::shared_ptr<helper::ShaderNew>& shader) {
+void PostProcessingFrame::RefreshUniformValues(helper::ShaderNew* const shader) {
 	for (const auto& item : m_parameters.m_floats) {
 		shader->SetFloat(item.first, item.second);
 	}

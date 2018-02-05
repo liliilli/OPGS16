@@ -38,7 +38,7 @@
  * @bug It seems that rendering does not work properly.
  */
 class FontManager {
-PUBLIC__
+public:
     /**
      * @struct Chracter
      * @brief Container manages each texture of font glyphes.
@@ -52,9 +52,11 @@ PUBLIC__
         GLuint      advance;
     };
 
-	using fontMap = std::shared_ptr<std::unordered_map<GLchar, Character>>;
+	using font_type = std::unordered_map<GLchar, Character>;
+	using font_ptr	= font_type*;
+	using fontMap	= std::unique_ptr<font_type>;
 
-PUBLIC__
+public:
 	static FontManager& GetInstance() {
 		static FontManager instance{};
 		return instance;
@@ -139,29 +141,28 @@ PUBLIC__
 		glm::vec2 relative_position, glm::vec3 color,
 		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
 
+	/** Return default font size. */
 	inline const unsigned GetDefaultFontSize() const;
 
-PRIVATE__
+private:
     /** Freetype pointer */
 	FT_Library freetype = nullptr;	/** Freetype library pointer */
     FT_Face face = nullptr;			/** Freetype face pointer used when initiating fonts. */
 
     // Restrict first 128 characters for now.
 	std::unordered_map<std::string, fontMap> fonts{};	/** Container stores fonts */
+	font_ptr	font_in_use{ nullptr };
+	font_ptr	default_font{ nullptr };
 
-	fontMap font_in_use = nullptr;
-	fontMap default_font = nullptr;
-
-    //std::unordered_map<GLchar, Character> characters;
     std::array<GLuint, 4> viewport_size;
 	glm::mat4 projection;
 
     GLuint vao, vbo;
 
-    std::shared_ptr<helper::ShaderNew> shader;
+	helper::ShaderNew* shader{};
 	const unsigned default_font_size = 16u;
 
-PRIVATE__
+private:
 	/**
 	 * @brief Initiate common font shader.
 	 */

@@ -68,10 +68,10 @@ bool FontManager::InitiateFont(const std::string&& tag, const std::string&& font
 	if (CheckFreeType(std::move(font_path))) {
 		FT_Set_Pixel_Sizes(face, 0, default_font_size);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+		// Create font and move it.
 		fonts.insert(std::make_pair(tag, GetCharTextures()));
-		if (is_default)
-			default_font = fonts[tag];
+		// If caller ordere this font must be a default, insert raw pointer.
+		if (is_default) default_font = fonts[tag].get();
 
 		FT_Done_Face(face);
 		FT_Done_FreeType(freetype);
@@ -81,7 +81,7 @@ bool FontManager::InitiateFont(const std::string&& tag, const std::string&& font
 }
 
 FontManager::fontMap FontManager::GetCharTextures() {
-	fontMap glyphs = std::make_shared<fontMap::element_type>();
+	fontMap glyphs = std::make_unique<fontMap::element_type>();
 	//std::unordered_map<GLchar, Character> glyphs{};
 
     for (GLubyte c = 0; c < 128; ++c) {
@@ -133,22 +133,19 @@ bool FontManager::LoadDefaultFont() {
 bool FontManager::LoadFont(const std::string&& tag) {
 	if (fonts.find(tag) == fonts.end()) return false;
 
-	font_in_use = fonts.at(tag);
+	font_in_use = fonts.at(tag).get();
 	return true;
 }
 
 bool FontManager::DeleteFont(const std::string&& tag) {
 	if (fonts.find(tag) == fonts.end()) return false;
 
-	/** Check if font is used on another object */
-	auto font = fonts.at(tag);
-	if (font.use_count() > 1) return false;
-
 	/** Remove pointer reference */
+	auto font = fonts.at(tag).get();
 	if (font_in_use == font) font_in_use = nullptr;
 	if (default_font == font) default_font = nullptr;
-	fonts.erase(tag);
 
+	fonts.erase(tag);
 	return true;
 }
 
