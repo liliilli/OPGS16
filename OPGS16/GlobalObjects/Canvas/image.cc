@@ -9,18 +9,13 @@ constexpr bool FAILED{ false };
 constexpr bool SUCCESS{ true };
 
 namespace Canvas {
-Image::Image(const std::string& image_path, const Canvas* const ref_canvas) :
-	m_texture{ TextureManager::GetInstance().TempCreateImage("Temp", image_path, GL_RGBA) },
-	m_quad{ helper::CreateBindingObjectEBO(quad_info, 8,
-										 {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}},
-										 quad_indices)},
+Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
+	m_sprite_renderer{ sprite_tag, "gQuad" },
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
-
-	InitiateShader();
 }
 
-Image::Image(const std::string& image_path, const std::unique_ptr<Canvas>& ref_canvas) :
-	Image{ image_path, ref_canvas.get() } { }
+Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
+	Image{ sprite_tag, ref_canvas.get() } { }
 
 void Image::Update() {
 	/** Update my xywh */
@@ -32,6 +27,10 @@ void Image::Update() {
 		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
 	UpdateScreenXYWH(xywh);
 
+	auto& shader = m_sprite_renderer.GetWrapper();
+	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
+	shader.InsertUniformValue<float>("alpha", 0.0f);
+
 	/** Update children */
 	UiObject::Update();
 }
@@ -39,20 +38,6 @@ void Image::Update() {
 void Image::SetImageSize(const float width, const float height) {
 	SetScaleValue(1.0f);
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
-}
-
-void Image::InitiateShader() {
-	auto& manager = ShaderManager::GetInstance();
-	m_shader = manager.GetShaderWithName("gQuad");
-	if (!m_shader) {
-		using Type = helper::ShaderNew::Type;
-		using namespace std::string_literals;
-
-		m_shader = manager.CreateShader("gQuad", {
-			{Type::VS, "Shaders/Global/image.vert"s},
-			{Type::FS, "Shaders/Global/image.frag"s}
-			});
-	}
 }
 
 void Image::Draw(helper::ShaderNew&) {
@@ -68,21 +53,12 @@ void Image::Draw() {
 	}
 
 	/** Render this */
-	m_shader->Use();
-
 	auto PVM = GetPvmMatrix();
-	m_shader->SetVecMatrix4f("projection", PVM);
-	m_shader->SetFloat("alpha", 1.0f);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture->GetId());
-
-	glBindVertexArray(m_quad.vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	auto& shader = m_sprite_renderer.GetWrapper();
+	shader.ReplaceUniformValue<glm::mat4>("projection", PVM);
+	shader.ReplaceUniformValue("alpha", 1.0f);
+	m_sprite_renderer.RenderSprite();
 
 	if (!is_already_enabled) glDisable(GL_BLEND);
 

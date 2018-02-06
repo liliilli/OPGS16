@@ -22,15 +22,6 @@ FontManager::FontManager() {
 void FontManager::InitiateShader() {
 	auto& manager = ShaderManager::GetInstance();
 	shader = manager.GetShaderWithName("gCommonFont");
-	if (!shader) {
-		using Type = helper::ShaderNew::Type;
-		using namespace std::string_literals;
-
-		shader = manager.CreateShader("gCommonFont", {
-			{Type::VS, "Shaders/Global/font.vert"s},
-			{Type::FS, "Shaders/Global/font.frag"s}
-			});
-	}
 }
 
 void FontManager::BindVertexAttributes() {

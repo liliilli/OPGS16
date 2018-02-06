@@ -122,7 +122,7 @@ void Application::InitiatePostProcessingEffects() {
 
 	/** Set sample sequence */
 	auto id = 0u;
-	auto const result = m_pp_manager->SetSequence(id, { "Gray", "SineWave", "Convex" });
+	auto const result = m_pp_manager->SetSequence(id, { "SineWave" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}

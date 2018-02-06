@@ -9,8 +9,9 @@
  * @version 0.0.1
  */
 
-#include "..\..\Headers\common.h"
 #include "canvas.h"
+#include "..\..\Headers\common.h"
+#include "..\..\System\Object\sprite_renderer.h"
 
 namespace Canvas {
 
@@ -26,8 +27,8 @@ namespace Canvas {
  */
 class Image : public UiObject {
 public:
-	Image(const std::string& image_path, const Canvas* const ref_canvas);
-	Image(const std::string& image_path, const std::unique_ptr<Canvas>& ref_canvas);
+	Image(const std::string& sprite_tag, const Canvas* const ref_canvas);
+	Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas);
 
 	virtual ~Image() = default;
 
@@ -60,15 +61,10 @@ public:
 	[[noreturn]] void SetImageSize(const float width, const float height);
 
 private:
-	helper::BindingObject	m_quad;
-	texture::Texture2D*		m_texture;
-	helper::ShaderNew*		m_shader;
-
-	Canvas* const m_ref_canvas; /** l_value reference of canvas to get projection matrix. */
+	SpriteRenderer m_sprite_renderer;	/** Sprite Renderer */
+	Canvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 
 private:
-	/** Initiate shader */
-	void InitiateShader();
 	/** Get PVM Matrix */
 	glm::mat4 GetPvmMatrix();
 };

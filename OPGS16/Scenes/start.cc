@@ -7,7 +7,7 @@
 
 Start::Start() {
 	auto canvas = std::make_unique<Canvas::Canvas>(); {
-		auto image = std::make_unique<Canvas::Image>("Resources/test_2.png", canvas);
+		auto image = std::make_unique<Canvas::Image>("Test", canvas);
 		image->SetImageSize(256, 224);
 		canvas->InitiateChild("Image", image);
 	}

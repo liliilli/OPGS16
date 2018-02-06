@@ -88,7 +88,7 @@ std::string ShaderNew::ReadShaderCodeFrom(const std::string path) {
     }
     catch (std::ifstream::failure err) {
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY::READ" << std::endl;
-        throw std::runtime_error("shader read error");
+        throw std::runtime_error("shader read error" + path);
     }
 
     return code;

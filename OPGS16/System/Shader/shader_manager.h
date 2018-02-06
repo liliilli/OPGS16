@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include "shader.h"
 #include "..\Frame\object.h"
+#include "..\Manager\resource_manager.h"
 
 /**
  * @class ShaderManager
@@ -43,13 +44,13 @@ public:
 	}
 
 	/**
-	 * @brief The method returns arbitary shader.
-	 * @param[in] name
+	 * @brief The method returns arbitary shader which has tag name.
+	 * If the method fails to search shader has tag name, create shader and return.
+	 *
+	 * @param[in] name The tag to find.
+	 * @return Founded shader pointer, if fails create shader and return late.
 	 */
-	inline shader_raw GetShaderWithName(const std::string&& name) const {
-		if (m_shaders.find(name) == m_shaders.end()) return nullptr;
-		return m_shaders.at(name).get();
-	}
+	inline shader_raw GetShaderWithName(const std::string&& name);
 
 	/**
 	 * @brief This create new shader return created shader or already existed shader.
@@ -60,8 +61,11 @@ public:
 	 * @return Shader smart-pointer.
 	 */
 	using Type = helper::ShaderNew::Type;
-	shader_raw CreateShader(const std::string&& tag,
-		std::initializer_list<std::pair<Type, const std::string&&>> initializer_list);
+	using shader_list = std::initializer_list<std::pair<Type, const std::string&&>>;
+	shader_raw CreateShader(const std::string&& tag, shader_list initializer_list);
+
+	using container = ResourceManager::shader_container;
+	shader_raw CreateShader(const std::string& tag, const container& list);
 
 	[[noreturn]] void BindObjectToShader(std::string&& name, const Object& object);
 
@@ -85,5 +89,21 @@ public:
 	ShaderManager(const ShaderManager&&) = delete;
 	ShaderManager& operator=(const ShaderManager&&) = delete;
 };
+
+/**
+ * @brief The method returns arbitary shader which has tag name.
+ * If the method fails to search shader has tag name, create shader and return.
+ *
+ * @param[in] name The tag to find.
+ * @return Founded shader pointer, if fails create shader and return late.
+ */
+inline ShaderManager::shader_raw ShaderManager::GetShaderWithName(const std::string&& name) {
+	if (m_shaders.find(name) == m_shaders.end()) {
+		// late Initialize
+		auto& list = ResourceManager::GetInstance().GetShader(name);
+		CreateShader(std::move(name), list);
+	}
+	return m_shaders.at(name).get();
+}
 
 #endif /** OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H */
