@@ -1,10 +1,32 @@
 #ifndef OPGS16_MANAGER_RESOURCE_MANAGER_H
 #define OPGS16_MANAGER_RESOURCE_MANAGER_H
 
-#include <string>
-#include <unordered_map>
+/**
+ * @file System\Manager\resource_manager.h
+ * @brief
+ *
+ * @author Jongmin Yun
+ * @date 2018 - 02 - 06
+ */
+
+#include <queue>				/** std::queue */
+#include <string>				/** std::string */
+#include <utility>				/** std::pair */
+#include <unordered_map>		/** std::unordered_map */
 #include "..\Shader\shader.h"
 
+/**
+ * @class ResourceManager
+ * @brief This class is singleton and not derivable as derived class.
+ * ResourceManager has a rule of managing resource files path, each shader path,
+ * , error statement path and so on.
+ *
+ * ResrouceManager has to be called (invoked) when game application is setting up, before
+ * actual game update has been begun.
+ *
+ * @date 2018 - 02 - 06
+ * @todo CheckError method must have a procedure to bring error message display call to logger.
+ */
 class ResourceManager final {
 public:
 	/**
@@ -16,24 +38,25 @@ public:
 		return instance;
 	}
 
+	/** Internal type aliasings. */
 	using shader_type = helper::ShaderNew::Type;
 	using shader_pair = std::pair<shader_type, const std::string>;
 	using shader_list = std::initializer_list<shader_pair>;
 	using shader_container = std::vector<shader_pair>;
 
 	/**
-	 * @brief In initiation time of game application, push shader information to container.
-	 * This method must be called at initiation time. otherwise method refuse processing.
-	 * If name_key is duplicated, initiation halts and exit game with message.
+	 * @brief In initialization time of game application, push shader information to container.
+	 * This method must be called at this time. otherwise method refuse processing.
+	 * If name_key is duplicated, initialization halts and exit game with message.
 	 *
-	 * param[in] name_key
-	 * param[in] list
+	 * param[in] name_key shader program's aliasing name.
+	 * param[in] list Initialize list has a pair of pipeline type and shader code path.
 	 */
 	[[noreturn]] void PushShader(const std::string& name_key, const shader_list& list);
 
 	/**
 	 * @brief Get specific shader list.
-	 * @param[in] name_key
+	 * @param[in] name_key shader program aliasing name.
 	 * @return Specific shader container.
 	 */
 	shader_container& GetShader(const std::string& name_key);
@@ -56,11 +79,24 @@ public:
 	 */
 	const std::string& GetTexture2D(const std::string& name_key);
 
+	/**
+	 * @brief Check error caused by processing in this class instance.
+	 *
+	 */
+	[[noreturn]] void CheckError();
+
 private:
 	/** Texture string container */
 	std::unordered_map<std::string, std::string> m_textures;
 	/** Shader arguments container */
 	std::unordered_map<std::string, shader_container> m_shaders;
+
+	/** Used for checking error invoked when this methods process something. */
+	enum class ErrorType {
+		OK,							/** Default type, everything is ok. */
+		FAILED_INITIALIZE_SHADER,	/** Invoked when failed to input shader information. */
+		FAILED_INITIALIZE_TEXTURE2D,/** Invoked when failed to input texture information. */
+	} m_error{ ErrorType::OK };
 
 private:
 	/**

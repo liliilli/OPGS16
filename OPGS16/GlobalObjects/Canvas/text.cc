@@ -22,7 +22,7 @@ void Canvas::Text::Draw() {
 	if (m_f_manager) {
 		/** Set font */
 		if (m_font_tag.empty()) m_f_manager->LoadDefaultFont();
-		else m_f_manager->LoadFont(std::string(m_font_tag));
+		else m_f_manager->LoadFont(m_font_tag);
 		/** Render */
 		m_f_manager->RenderTextNew(m_text, GetOrigin(),
 			glm::vec2{ GetFinalPosition() }, m_color, GetAlignment(), GetScaleValue());
@@ -30,7 +30,7 @@ void Canvas::Text::Draw() {
 	else { std::cerr << "ERROR::FONT_MANAGER CAN NOT FIND::CRITICAL" << std::endl; }
 }
 
-void Canvas::Text::SetText(const std::string&& new_text) {
+void Canvas::Text::SetText(const std::string& new_text) {
 	m_text = new_text;
 }
 
@@ -39,9 +39,9 @@ void Canvas::Text::SetFontSize(const unsigned size) {
 	SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
 }
 
-bool Canvas::Text::SetFont(const std::string&& font_tag) {
-	if (m_f_manager && m_f_manager->IsFontExist(font_tag)) {
-		m_font_tag = std::move(font_tag);
+bool Canvas::Text::SetFont(const std::string& font_tag) {
+	if (m_f_manager && m_f_manager->DoesFontExist(font_tag)) {
+		m_font_tag = font_tag;
 		return true;
 	}
 	else {

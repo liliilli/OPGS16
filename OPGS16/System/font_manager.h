@@ -8,7 +8,7 @@
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @version 0.0.3
+ * @date 2018 - 02 - 06
  */
 
 #include <string>
@@ -24,8 +24,6 @@
 #include "Shader\shader.h"
 #include "..\GlobalObjects\Interface\i_originable.h"
 #include "..\GlobalObjects\Interface\i_alignable.h"
-#define PUBLIC__ public:
-#define PRIVATE__ private:
 
 /**
  * @class FontManager
@@ -35,28 +33,32 @@
  * default shader is initiated as creating font instance.
  *
  * @todo Shader must be static instance to reduce memory usage.
- * @bug It seems that rendering does not work properly.
  */
-class FontManager {
+class FontManager final {
 public:
     /**
      * @struct Chracter
      * @brief Container manages each texture of font glyphes.
      */
     struct Character {
-        GLuint      textureID;
+        GLuint      texture_id;	/** texture id of each character. */
 
         /** glyph information */
-        glm::ivec2  size;
-        glm::ivec2  bearing;
-        GLuint      advance;
+        glm::ivec2  size;		/** glyph size */
+        glm::ivec2  bearing;	/** glyph bearing position */
+        GLuint      advance;	/** glyph advance width */
     };
 
-	using font_type = std::unordered_map<GLchar, Character>;
-	using font_ptr	= font_type*;
-	using fontMap	= std::unique_ptr<font_type>;
+	/** Internal type aliasing */
+	using font_type		= std::unordered_map<GLchar, Character>;
+	using font_raw		= font_type*;
+	using font_map_ptr	= std::unique_ptr<font_type>;
 
 public:
+	/**
+	 * @brief Return single static instance. This must be called in initiation time once.
+	 * @return The reference of FontManager instance.
+	 */
 	static FontManager& GetInstance() {
 		static FontManager instance{};
 		return instance;
@@ -72,7 +74,7 @@ public:
 	 *
 	 * @return The suceess flag.
 	 */
-	bool InitiateFont(const std::string&& tag, const std::string&& font_path,
+	bool InitiateFont(const std::string& tag, const std::string& font_path,
 		bool is_default = false);
 
 	/**
@@ -86,20 +88,21 @@ public:
 	 * @param[in] tag The tag refers to key load font glyphs.
 	 * @return The success flag.
 	 */
-	bool LoadFont(const std::string&& tag);
+	bool LoadFont(const std::string& tag);
 
 	/**
 	 * @brief Delete font that is specified by tag name. if not found, return false flag.
 	 * @param[in] tag The tag destroy stored font glyphs.
 	 * @reutrn The success flag.
 	 */
-	bool DeleteFont(const std::string&& tag);
+	bool DeleteFont(const std::string& tag);
 
 	/**
-	 * @brief Check font is exist.
+	 * @brief Check font exists.
+	 * @param[in] font_name Font name to find in font container.
 	 * @return The success flag. If font is exist, return true.
 	 */
-	inline bool IsFontExist(const std::string tag);
+	inline bool DoesFontExist(const std::string& font_name);
 
     /**
      * @brief The method renders given text on given position with given color.
@@ -146,28 +149,23 @@ public:
 
 private:
     /** Freetype pointer */
-	FT_Library freetype = nullptr;	/** Freetype library pointer */
-    FT_Face face = nullptr;			/** Freetype face pointer used when initiating fonts. */
+	FT_Library	m_freetype{ nullptr };	/** Freetype library pointer */
+	FT_Face		m_ft_face{ nullptr };	/** Freetype face pointer used when initiating fonts. */
 
     // Restrict first 128 characters for now.
-	std::unordered_map<std::string, fontMap> fonts{};	/** Container stores fonts */
-	font_ptr	font_in_use{ nullptr };
-	font_ptr	default_font{ nullptr };
+	std::unordered_map<std::string, font_map_ptr> m_fonts{};	/** Container stores fonts */
+	font_raw	m_font_in_use{ nullptr };
+	font_raw	m_default_font{ nullptr };
 
-    std::array<GLuint, 4> viewport_size;
-	glm::mat4 projection;
+    std::array<GLuint, 4> m_viewport_size;
+	glm::mat4 m_projection;
 
-    GLuint vao, vbo;
+    GLuint m_vao, m_vbo;
 
-	helper::ShaderNew* shader{};
-	const unsigned default_font_size = 16u;
+	helper::ShaderNew* m_shader{};
+	const unsigned m_default_font_size = 16u;
 
 private:
-	/**
-	 * @brief Initiate common font shader.
-	 */
-	[[noreturn]] void InitiateShader();
-
 	/**
 	 * @brief This method starts shader with color to render.
 	 * @param[in] color The color to be attached to shader.
@@ -179,14 +177,14 @@ private:
 	 * @param[in] font_path Font's path to refer.
 	 * @return If checking is successful, return true. otherwise return false.
 	 */
-	bool CheckFreeType(const std::string&& font_path);
+	bool CheckFreeType(const std::string& font_path);
 
     /**
      * @brief The method sets character textures from glyphs and store them to container.
-     *
      * This methods called when initiate instance.
+	 * @return Created font glyph container unique_ptr (moved)
      */
-    FontManager::fontMap GetCharTextures();
+    FontManager::font_map_ptr GetCharTextures();
 
 	/**
 	 * @brief This method calculate and return barycenter position to render.
@@ -286,13 +284,12 @@ private:
      */
     std::vector<std::string> SeparateTextToList(const std::string text);
 
-PRIVATE__
+private:
 	/**
 	 * @brief Initialize Font renderer instance with font path.
 	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
 	 */
 	FontManager();
-
 	FontManager(const FontManager&) = delete;
 	FontManager& operator=(const FontManager&) = delete;
 	FontManager(const FontManager&&) = delete;
@@ -300,11 +297,11 @@ PRIVATE__
 };
 
 inline const unsigned FontManager::GetDefaultFontSize() const {
-	return default_font_size;
+	return m_default_font_size;
 }
 
-inline bool FontManager::IsFontExist(const std::string tag) {
-	if (fonts.find(tag) == fonts.end()) return false;
+inline bool FontManager::DoesFontExist(const std::string& tag) {
+	if (m_fonts.find(tag) == m_fonts.end()) return false;
 	else return true;
 }
 

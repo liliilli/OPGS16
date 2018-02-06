@@ -1,9 +1,9 @@
 #include "shader_manager.h"
 
 ShaderManager::shader_raw ShaderManager::CreateShader
-(const std::string&& tag, shader_list initializer_list) {
+(const std::string& tag, const shader_list& initializer_list) {
 	/** Body */
-	if (m_shaders.find(tag) != m_shaders.end()) return GetShaderWithName(std::move(tag));
+	if (DoesShaderExist(tag)) return GetShaderWithName(tag);
 
 	auto shader = std::make_unique<helper::ShaderNew>();
 	for (const auto& pair : initializer_list)
@@ -16,9 +16,9 @@ ShaderManager::shader_raw ShaderManager::CreateShader
 }
 
 ShaderManager::shader_raw ShaderManager::CreateShader
-(const std::string& tag, const container& list) {
+(const std::string& tag, const shader_vec& list) {
 	/** Body */
-	if (m_shaders.find(tag) != m_shaders.end()) return GetShaderWithName(std::move(tag));
+	if (DoesShaderExist(tag)) return GetShaderWithName(tag);
 
 	auto shader = std::make_unique<helper::ShaderNew>();
 	for (const auto& pair : list) {
@@ -31,14 +31,11 @@ ShaderManager::shader_raw ShaderManager::CreateShader
 	return m_shaders.at(tag).get();
 }
 
-void ShaderManager::BindObjectToShader(std::string && name, const Object & object) {
-}
-
 void ShaderManager::CheckError() {
 }
 
-void ShaderManager::CleanAll() {
+void ShaderManager::ReleaseAll() {
 }
 
-void ShaderManager::CleanWithTag() {
+void ShaderManager::ReleaseShader(const std::string& shader_name) {
 }

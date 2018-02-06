@@ -7,7 +7,7 @@
 SpriteRenderer::SpriteRenderer(const std::string& sprite_tag,
 							   const std::string& shader_tag,
 							   const unsigned layer) :
-	m_sprite{ TextureManager::GetInstance().Create(sprite_tag) },
+	m_sprite{ TextureManager::GetInstance().GetTexture(sprite_tag) },
 	m_quad{ helper::CreateBindingObjectEBO(quad_info, 8,
 										  {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}},
 										  quad_indices) } {

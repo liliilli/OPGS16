@@ -1,6 +1,7 @@
 #include "resource_manager.h"
-#include <stdexcept>
-#include <vector>
+#include <iostream>		/** std::cerr, std::endl */
+#include <stdexcept>	/** std::runtime_error */
+#include <vector>		/** std::vector */
 
 ResourceManager::ResourceManager() {
 	using namespace std::string_literals;
@@ -51,7 +52,7 @@ ResourceManager::shader_container& ResourceManager::GetShader(const std::string&
 		return m_shaders.at(name_key);
 	}
 	else { // Error.
-
+		m_error = ErrorType::FAILED_INITIALIZE_SHADER;
 	}
 }
 
@@ -67,6 +68,17 @@ const std::string& ResourceManager::GetTexture2D(const std::string& name_key) {
 		return m_textures.at(name_key);
 	}
 	else { /** Error */
+		m_error = ErrorType::FAILED_INITIALIZE_TEXTURE2D;
+	}
+}
 
+void ResourceManager::CheckError() {
+	switch (m_error) {
+	case ErrorType::FAILED_INITIALIZE_SHADER:
+		std::cerr << "ERROR::FAILED::INITIALIZE::SHADER" << std::endl;
+		break;
+	case ErrorType::FAILED_INITIALIZE_TEXTURE2D:
+		std::cerr << "ERROR::FAILED::INITIALIZE::TEXTURE2D" << std::endl;
+		break;
 	}
 }

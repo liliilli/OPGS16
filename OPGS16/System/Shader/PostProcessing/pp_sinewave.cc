@@ -11,8 +11,8 @@ void PpEffectSinewave::Initiate() {
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 	/** The rest */
 	InitiateDefaultDepthBuffer();
-	InsertUniformValue("uIntensity", 32.f);
-	InsertUniformValue("uInterval", 1.f);
+	InsertUniformValue("uIntensity", 2.f);
+	InsertUniformValue("uInterval", 0.05f);
 	InsertUniformValue("uMove", 0.f);
 	InitiateShader("SineWave", "Shaders/Global/sinewave.frag");
 

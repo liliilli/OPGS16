@@ -29,7 +29,7 @@
  * @bug Although sound mute status is on, sound on playing actually does not stop.
  * @todo Loading wave file mechanism is deprecated now, should chagne it to recommended code.
  */
-class SoundManager {
+class SoundManager final {
 public:
 	/**
 	 * @brief SoundType is type of each sounds to have been storing.

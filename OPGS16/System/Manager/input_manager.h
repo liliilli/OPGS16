@@ -1,6 +1,14 @@
 #ifndef OPGS16_SYSTEM_MANAGER_INPUT_MANAGER_H
 #define OPGS16_SYSTEM_MANAGER_INPUT_MANAGER_H
 
+/**
+ * @file System\Manager\input_manager.h
+ * @brief
+ *
+ * @author Jongmin Yun
+ * @date 2018 - 02 - 06
+ */
+
 #include <string>			/** std::string */
 #include <unordered_map>	/** std::unordered_map */
 #include <GL\glew.h>
@@ -8,17 +16,23 @@
 
 /**
  * @class InputManager
- * @brief
- * Last Updated 2018 - 02 - 04
+ * @brief This class is singleton and can not be a base of any derived class instance.
+ * InputManager has a rule of managing input signal such as keyboard key pressing, releasing and
+ * mouse signal or joystick inputs. (Only keyboard input signal checking is implemented. 20180206)
+ *
+ * Any objects want to catch signal of input devices, and performs specific mechanism can use
+ * this manager by calling InputManager::GetInstance().
+ *
+ * @date 2018 - 02 - 06
  */
 class InputManager final {
 public:
-    /**
-     * @brief Static method gets unique instance of Application class.
+	/**
+	 * @brief Static method gets unique instance of Application class.
 	 * @return InputManager static instance.
-     */
+	 */
 	static InputManager& GetInstance(GLFWwindow* window) {
-		static InputManager instance{window};
+		static InputManager instance{ window };
 		return instance;
 	}
 
@@ -80,9 +94,9 @@ private:
 		 */
 		enum class KeyInputStatus : int {
 			POS_PRESSED = 1,	// If positive key is pressed, key_status will sustain PRESSED.
-			NEG_PRESSED	= 2,	// If negative key is pressed, key_status will sustain PRESSED.
-			RELEASED	= 3,	// Changes to RELEASED when released. constraints of Update.
-			NEUTRAL		= 4,	// If released, and within range of dead_zone, NEURTAL.
+			NEG_PRESSED = 2,	// If negative key is pressed, key_status will sustain PRESSED.
+			RELEASED = 3,	// Changes to RELEASED when released. constraints of Update.
+			NEUTRAL = 4,	// If released, and within range of dead_zone, NEURTAL.
 		} key_status{ KeyInputStatus::NEUTRAL };
 
 		bool			stick_key{ true };			// If true, pressed key sends signal only once.
@@ -103,16 +117,20 @@ private:
 	 * @brief Error flag.
 	 */
 	enum class ErrorFlag {
-		OK,
-		/** Errors */
-		NOT_FOUND_KEY,	// This flag will be set up when GetKeyValue() failed.
-	} m_error_flag = ErrorFlag::OK;
+		OK,				/** Everything is ok. */
+		NOT_FOUND_KEY,	/** This flag will be set up when GetKeyValue() failed. */
+	} m_error_flag{ ErrorFlag::OK };
 
     GLFWwindow* const window; /** Window handle pointer */
 
 private:
 	/**
-	 * @brief
+	 * @brief Let each key value where key status is KeyInputStatus::RELEASED falling down into
+	 * dead_zone and change status into KeyInputStatus::NEUTRAL along with neutral_gravity.
+	 * This methods gets delta time from Application time data, multiply it with gravity and
+	 * fall it down to 0 (neutral value).
+	 *
+	 * @param[in] key_info Key information to apply.
 	 */
 	[[noreturn]] void ProceedGravity(BindingKeyInfo& key_info);
 

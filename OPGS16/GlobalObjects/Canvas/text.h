@@ -36,7 +36,7 @@ public:
 
 	virtual void Draw() override final;
 
-	[[noreturn]] void SetText(const std::string&& new_text);
+	[[noreturn]] void SetText(const std::string& new_text);
 
 	/**
 	 * @brief Set font size of string.
@@ -51,13 +51,13 @@ public:
 	 * @param[in] font_tag Font name tag.
 	 * @return Success flag.
 	 */
-	bool SetFont(const std::string&& font_tag);
+	bool SetFont(const std::string& font_tag);
 
 private:
 	std::string m_text{};
 	FontManager* m_f_manager = &FontManager::GetInstance();
 
-	using fontMap = FontManager::fontMap;
+	using fontMap = FontManager::font_map_ptr;
 	std::string m_font_tag{};
 
 	glm::vec3 m_color{};
