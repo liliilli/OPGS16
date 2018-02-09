@@ -1,6 +1,5 @@
 #include "pp_manager.h"
 #include "PostProcessing\pp_scaling.h"
-#include "..\..\application.h"
 
 namespace shading {
 

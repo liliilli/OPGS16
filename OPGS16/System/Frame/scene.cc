@@ -1,21 +1,5 @@
 #include "scene.h"
-
-void Scene::HandleInput(GLFWwindow* const window) {
-    float camera_speed = 0.025f;
-
-    //if (DoesKeyPressed(window, GLFW_KEY_W))
-    //    camera.MovePosition(camera::Movement::UP, camera_speed);
-    //else if (DoesKeyPressed(window, GLFW_KEY_S))
-    //    camera.MovePosition(camera::Movement::DOWN, camera_speed);
-    //else if (DoesKeyPressed(window, GLFW_KEY_A))
-    //    camera.MovePosition(camera::Movement::LEFT, camera_speed);
-    //else if (DoesKeyPressed(window, GLFW_KEY_D))
-    //    camera.MovePosition(camera::Movement::RIGHT, camera_speed);
-    //else if (DoesKeyPressed(window, GLFW_KEY_E)) // Zoom in
-    //    camera.Zoom(camera::ZoomMode::IN);
-    //else if (DoesKeyPressed(window, GLFW_KEY_Q))
-    //    camera.Zoom(camera::ZoomMode::OUT);
-}
+#include "..\Debugs\hierarchy_tree.h"
 
 void Scene::Update() {
 	for (auto& object : objects) {
@@ -40,7 +24,7 @@ Object::object_map& Scene::GetObjects() {
 	return objects;
 }
 
-Object::object_ptr& Scene::GetObject(const std::string && tag) {
+Object::object_ptr& Scene::GetObject(const std::string& tag) {
 	auto it = objects.find(tag);
 	if (it != objects.end()) {
 		return (*it).second;

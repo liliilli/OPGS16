@@ -15,13 +15,15 @@
 #include <stack>
 #include <string>
 #include <type_traits>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include "System\Frame\scene.h"
-#include "System\Manager\input_manager.h"
-#include "System\Shader\shader.h"
-#include "System\Shader\pp_manager.h"
-#include "GlobalObjects\Canvas\canvas.h"
+//#include "System\Frame\scene.h"
+#include "Headers\Fwd\objectfwd.h"  /*! GLFWwindow
+                                      * InputManager
+                                      * Object
+                                      * ObjectTree
+                                      * PostProcessingManager
+                                      * TimeManager
+                                      */
+#include "System\Object\object.h"   /*! Object for complete deleter of unique_ptr<Object> */
 
 /**
  * @class Application
@@ -66,11 +68,6 @@ public:
 	 */
 	const int GetScaleValue() const { return static_cast<int>(m_scale); }
 
-	/**
-	 * @brief
-	 */
-	const float GetDeltaTime() const { return m_timeinfo.interval; }
-
 private:
     /** screen width, height */
     unsigned SCREEN_WIDTH   = 256u;
@@ -107,21 +104,10 @@ private:
 		X3_TRIPLE = 3,	/** Screen will be showed with 768x672 size */
 	} m_scale;
 
-	struct TimeData {
-		float old_time;		/** Old time point of previous frame. */
-		float new_time;		/** New time point of present frame. */
-		float elapsed_time;	/** Total time from previous to new, used for checking frame tick. */
-		float delta_time;	/** Delta time calculated from new_time - old_time. */
-		float interval;		/** frame tick interval time, used only v-sync is on. */
-		float fps_second;	/** Time value for displaying text when fps_toggled is true. */
-	} m_timeinfo;
-
-    /** Font instance for global text displaying */
-    //std::unordered_map<int, bool> pressed_key_map;
-
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
 
-	InputManager* m_inputs{ nullptr };
+	InputManager* m_m_input{ nullptr };
+    TimeManager* m_m_time{ nullptr };
 
 private:
     explicit Application(std::string&& app_name = "Application");
@@ -164,7 +150,7 @@ private:
      *
      * @param[in] window Window handle pointer.
      */
-    [[noreturn]] void Input(GLFWwindow* const window);
+    [[noreturn]] void Input();
 
 	/** Global input checking method */
 	[[noreturn]] void InputGlobal();
@@ -254,11 +240,9 @@ private:
 	}
 
 	/** Exit game */
-	[[noreturn]] void Exit() {
-		glfwSetWindowShouldClose(window, true);
-	};
+    [[noreturn]] void Exit();
 
-	/** Change window size. */
+        /** Change window size. */
 	[[noreturn]] void ChangeScalingOption(OptionScale value);
 
     /** The method toggles OpenGL antialiasing (MSAA) */
@@ -270,26 +254,12 @@ private:
 	/** Toggle post-processing effects */
 	[[noreturn]] void TogglePostProcessingEffect();
 
-    /**
-     * @brief Helper method that checks if next frame set when V-sync is on.
-     * @return If next frame is set, return true. else false.
-     */
-    bool IfFrameTurned();
-
-    /**
-     * @brief The methods set fps (frame per seconds);
-     *
-     * This methods can be called anytime use wants.
-     * But when v-sync is off, this methods would be useless.
-     *
-     * @param[in] hz Herz
-     */
-    [[noreturn]] void SetFps(float hz);
-
 	/**
 	 * @brief Set
 	 */
-	[[noreturn]] void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
+	[[noreturn]] void SetHierarchyText(const ObjectTree* item,
+                                       size_t count,
+                                       std::string* const text);
 };
 
 #endif // OPENGL_TUTORIAL_APPLICATION_H

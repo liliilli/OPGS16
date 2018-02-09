@@ -1,10 +1,13 @@
 #include "pp_frame.h"
 
-#include <chrono>
+#include <iostream> /*! std::cerr
+                      * std::endl */
+#include "..\Frame\vertex_array_object.h"   /*! VertexArrayObject */
 #include "shader_manager.h"
 
 namespace shading {
 
+constexpr std::array<unsigned, 6> quad_indices = { 0, 1, 2, 2, 3, 0 };
 constexpr std::array<float, 32> quad_info = {
 	// Vertex       //Normal        // TexCoord
 	1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 1.f,
@@ -12,14 +15,6 @@ constexpr std::array<float, 32> quad_info = {
 	-1.f,-1.f, 0.f,  0.f, 0.f, 1.f,  0.f, 0.f,
 	-1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  0.f, 1.f
 };
-
-constexpr std::array<unsigned, 6> quad_indices = {
-	// Primitive is triangle
-	0, 1, 2,
-	2, 3, 0
-};
-
-/** Methods body */
 
 void PostProcessingFrame::Initiate() {
 	/** Make empty vao for default_screen rendering */
@@ -38,8 +33,10 @@ void PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
 }
 
 void PostProcessingFrame::InsertColorBuffer(const unsigned id,
-	GLint internal_format, GLenum format, GLenum type, GLint width, GLint height) {
-	/** Error checking */
+                                            GLint internal_format, GLenum format,
+                                            GLenum type, GLint width,
+                                            GLint height) {
+	/*! Error checking */
 	if (width < 0 || height < 0) { /** Set up error flag */
 		m_flag = ErrorFlag::SIZE_ARGUMENT_IS_NEGATIVE; return;
 	}
@@ -48,34 +45,27 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
 		m_flag = ErrorFlag::COLOR_BUFFER_ALREADY_GENERATED; return;
 	}
 
-	/** Body */
-	std::unique_ptr<texture::Texture2D> temp{ nullptr };
+	/*! Body */
+    auto t_width = width;
+    auto t_height = height;
 
-	if (height == 0) {
-		if (width == 0) temp = std::make_unique<texture::Texture2D>(internal_format, format, type);
-		else temp = std::make_unique<texture::Texture2D>(internal_format, format, type, width);
-	}
-	else temp = std::make_unique<texture::Texture2D>(internal_format, format, type, width, height);
+    /*! Resize size components have zero value. */
+    std::array<GLint, 4> screen_coord;
+    if (t_width == 0 || t_height == 0) {
+        glGetIntegerv(GL_VIEWPORT, &screen_coord[0]);
+        if (t_width == 0)   t_width = screen_coord[2];
+        if (t_height == 0)  t_height = screen_coord[3];
+    }
 
-	m_color_buffers[id] = std::move(temp);
+    /*! Insert. */
+	m_color_buffers[id] = std::make_unique<texture::Texture2D>(internal_format,
+                                                               format, type,
+                                                               width, height);
 }
 
-void PostProcessingFrame::InitiateShader(const std::string& name, const std::string& pixel_shader) {
-	/** Make shader for temporary frame buffer */
-	auto& manager = ShaderManager::GetInstance();
-	/** Check If pp+Name is exist */
-	auto shader = manager.GetShaderWithName("pp" + name);
-	if (!shader) {
-		using Type = helper::ShaderNew::Type;
-		using namespace std::string_literals;
-
-		shader = manager.CreateShader(std::move("pp" + name), {
-			{ Type::VS, "Shaders/Global/quad.vert"s },
-			{ Type::FS, std::string{pixel_shader} }
-			});
-	}
-	/** Push created shader */
-	m_shaders.push_back(shader);
+void PostProcessingFrame::InitiateShader(const std::string& name) {
+	/** Check If pp+Name is exist, push created shader */
+    m_shader_wrapper.SetShader(ShaderManager::GetInstance().GetShaderWithName("pp" + name));
 }
 
 void PostProcessingFrame::InitiateDefaultDepthBuffer() {
@@ -110,10 +100,8 @@ void PostProcessingFrame::BindTextureToFrameBuffer(
 	}
 }
 
-helper::BindingObject& PostProcessingFrame::GetCommonQuadVao() {
-	static helper::BindingObject quad_vao =
-		helper::CreateBindingObjectEBO(quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} },
-			quad_indices);
+VertexArrayObject& PostProcessingFrame::GetCommonQuadVao() {
+    static VertexArrayObject quad_vao{ quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
 	return quad_vao;
 }
 
@@ -127,8 +115,7 @@ void PostProcessingFrame::Bind() {
 
 void PostProcessingFrame::RenderEffect() {
 	if (m_is_useable) {
-		m_shaders.at(0)->Use();
-		RefreshUniformValues(m_shaders.at(0));
+		m_shader_wrapper.UseShader();
 		glBindVertexArray(empty_vao);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -139,12 +126,6 @@ void PostProcessingFrame::RenderEffect() {
 		glBindVertexArray(0);
 	}
 	else { m_flag = ErrorFlag::NOT_INITIATED_YET; }
-}
-
-void PostProcessingFrame::RefreshUniformValues(helper::ShaderNew* const shader) {
-	for (const auto& item : m_parameters.m_floats) {
-		shader->SetFloat(item.first, item.second);
-	}
 }
 
 /**

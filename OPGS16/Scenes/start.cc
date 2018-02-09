@@ -1,8 +1,6 @@
 #include "start.h"
 #include "..\application.h"
 #include "..\Headers\canvas_components.h"
-#include "bloom_scene.h"
-#include "primitive_proc.h"
 #include "path_finding2d.h"
 
 Start::Start() {
@@ -18,10 +16,6 @@ Start::Start() {
 	image->InitiateChild<Canvas::Text>("Txt2", "In Messsage Hello world", glm::vec3{ -48, 192, 0 });
 	image->InitiateChild<Canvas::Text>("Txt3", "In Messsage Hello world", glm::vec3{ -48, -192, 0 });
 
-	//Canvas::Text&& txt_1{"OpenGL Tutorial Samples\n" "And dirty engine :)", glm::vec3{ 25, -25, 0 } };
-	//txt_1.SetOrigin(IOriginable::Origin::UP_LEFT);
-	//canvas->InitiateChild("Txt1", std::move(txt_1));
-
     std::string text = "A : Terrain Tesslation\n"
         "B : Flapping Carpet\n"
         "C : Bloom\n"
@@ -32,31 +26,14 @@ Start::Start() {
 	}
 	canvas->InitiateChild("Txt2", txt_2);
 
-	//Canvas::Text&& txt_3{ "Copyright (c) 2018, Jongmin Yun All rights reserved.",
-	//					  glm::vec3{16, 16, 0} }; {
-	//	txt_3.SetOrigin(IOriginable::Origin::DOWN_LEFT);
-	//	txt_3.SetFontSize(8);
-	//}
-	//canvas->InitiateChild("Txt3", std::move(txt_3));
+    std::string copy = "Copyright (c) 2018, Jongmin Yun All rights reserved";
+	auto txt_3 = std::make_unique<Canvas::Text>(copy, glm::vec3{16, 16, 0}); {
+		txt_3->SetOrigin(IOriginable::Origin::DOWN_LEFT);
+		txt_3->SetFontSize(8);
+	}
+	canvas->InitiateChild("Txt3", txt_3);
 
 	InsertObject("Canvas", canvas);
-}
-
-void Start::HandleInput(GLFWwindow* const window) {
-    if (DoesKeyPressed(window, GLFW_KEY_A)) {
-
-    }
-    else if (DoesKeyPressed(window, GLFW_KEY_B)) {
-        //Application::getInstance().ReplaceScene<PrimProc>();
-    }
-    else if (DoesKeyPressed(window, GLFW_KEY_C)) {
-        //Application::getInstance().ReplaceScene<BloomScene>();
-    }
-	else if (DoesKeyPressed(window, GLFW_KEY_D)) {
-		Application::getInstance().ReplaceScene<PathFinding2D>();
-	}
-
-    Scene::HandleInput(window);
 }
 
 void Start::Draw() {
@@ -66,5 +43,18 @@ void Start::Draw() {
 }
 
 void Start::Update() {
+ //   if (DoesKeyPressed(window, GLFW_KEY_A)) {
+
+ //   }
+ //   else if (DoesKeyPressed(window, GLFW_KEY_B)) {
+ //       //Application::getInstance().ReplaceScene<PrimProc>();
+ //   }
+ //   else if (DoesKeyPressed(window, GLFW_KEY_C)) {
+ //       //Application::getInstance().ReplaceScene<BloomScene>();
+ //   }
+	//else if (DoesKeyPressed(window, GLFW_KEY_D)) {
+	//	Application::getInstance().ReplaceScene<PathFinding2D>();
+	//}
+
 	Scene::Update();
 }

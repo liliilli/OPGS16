@@ -7,10 +7,7 @@
  * @author Jongmin Yun
  * @version 0.0.1
  */
-
-#include <gl\glew.h>
-#include <GLFW\glfw3.h>
-#include "..\..\System\Shader\shader.h"
+class helper::ShaderNew;
 
 /**
  * @interface IRadiant

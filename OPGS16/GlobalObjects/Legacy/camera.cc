@@ -26,8 +26,8 @@ void MouseControl(GLFWwindow* window, double x_pos, double y_pos) {
         c_IS_FIRST = false;
     }
 
-    float x_offset = x_pos - m_last_cursor_x;
-    float y_offset = y_pos - m_last_cursor_y;
+    float x_offset = static_cast<float>(x_pos - m_last_cursor_x);
+    float y_offset = static_cast<float>(y_pos - m_last_cursor_y);
 
     GetCamera().SetValues(x_offset, y_offset);
 
@@ -51,7 +51,7 @@ void Camera::Refresh() {
 
 void Camera::SetValues(const float x_offset, const float y_offset) {
     m_yaw   += (x_offset * k_SENSITIVITY);
-    m_pitch += (y_offset * k_SENSITIVITY); 
+    m_pitch += (y_offset * k_SENSITIVITY);
 
     if (m_pitch > 89.f)     m_pitch = 89.f;
     if (m_pitch < -89.f)    m_pitch = -89.f;
@@ -89,7 +89,7 @@ void Camera::Zoom(ZoomMode mode) {
     SetPerspective(m_projection_angle, m_ratio, m_near, m_far);
 }
 
-void Camera::SetPerspective(const float sight_degree, const float screen_ratio, 
+void Camera::SetPerspective(const float sight_degree, const float screen_ratio,
                             const float near, const float far) {
     m_proj = glm::perspective(glm::radians(sight_degree), screen_ratio, near, far);
     m_projection_angle = sight_degree;

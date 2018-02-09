@@ -1,29 +1,33 @@
-#ifndef OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
-#define OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
+#ifndef OPGS16_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
+#define OPGS16_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H
 
 /**
  * @file GlobalObjects/Interface/i_originable.h
- * @brief IOriginable not-pure interface file.
+ * @brief IOriginable, not-pure interface file.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-08
  */
-
-#include <glm/glm.hpp>
 
 /**
  * @class IOriginable
  * @brief This interface (not-pure, but work as a UI component checking type in RTTI and so on)
  * works as checking components type, get objects to align with Origin which is used for calcula
  * ting weight-center position of each object.
- *
- * The object inherit IOriginable can use CalculateCenterPosition to get display position on
- * Screen space.
  */
 class IOriginable {
 public:
 	/**
-	 * @brief
+	 * @brief This enum is need for calculating originable instance's final rendering position.
+     * IOriginable instance has a feature of calculating final poisiton mechanism with UiObject,
+     * or FontManager.
+     *
+	 * \(7)|(8)/(9) At first, method gets Origin value of child which is left and calculate
+	 * -(4).(5)-(6) with parent_x, y, width, height to be aligned Parent's region without
+	 * /(1)|(2)\(3) applying child's local position.
+     *
+	 * Afterward, this method sets final rendering position of child and apply changed value to
+	 * children of child calling UpdateFinalPosition() of children of child.
 	 */
 	enum class Origin : int {
 		UP_LEFT = 7,		UP_CENTER = 8,		UP_RIGHT = 9,
@@ -32,36 +36,23 @@ public:
 	};
 
 	/**
-	 * @brief
-	 * @param[in] value
+	 * @brief Set origin type value newly. Calling this does change rendering position of this.
+	 * @param[in] value New origin value.
 	 */
-	[[noreturn]] void SetOrigin(Origin value);
+	[[noreturn]] inline void SetOrigin(Origin value) {
+		m_origin = value;
+	}
 
 	/**
-	 * @brief
+	 * @brief Get origin type value.
 	 * @return Origin type value.
 	 */
-	inline Origin GetOrigin() const;
-
-	/**
-	 * @brief This method calculate and return barycenter position to render.
-	 *
-	 * @param[in] origin Origin position from which text strings rendered.
-	 * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
-	 * In contrast UP_RIGHT will be (width, height) in Screen space.
-	 *
-	 * @param[in] position Relatve position from origin position string will be rendered.
-	 * Returned position string rendered is (x, y) = (origin + relative_position)
-	 *
-	 * @return The position has (x, y) value.
-	 */
+    inline Origin GetOrigin() const {
+        return m_origin;
+    }
 
 private:
-	Origin origin{ Origin::CENTER_CENTER };
+	Origin m_origin{ Origin::CENTER_CENTER };   /** Private origin value */
 };
 
-inline IOriginable::Origin IOriginable::GetOrigin() const {
-	return origin;
-}
-
-#endif /** OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H */
+#endif /** OPGS16_GLOBAL_OBJECTS_INTERFACE_I_ORIGINABLE_H */

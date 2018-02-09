@@ -1,4 +1,5 @@
 #include "resource_manager.h"
+#include <initializer_list>
 #include <iostream>		/** std::cerr, std::endl */
 #include <stdexcept>	/** std::runtime_error */
 #include <vector>		/** std::vector */
@@ -11,15 +12,15 @@ ResourceManager::ResourceManager() {
 		}
 	);
 
-	PushShader("ppConvex", {
-		{ shader_type::VS, "Shaders/Global/quad.vert"s },
-		{ shader_type::FS, "Shaders/Global/convex.frag"s }
-		}
-	);
-
 	PushShader("gCommonFont", {
 		{shader_type::VS, "Shaders/Global/font.vert"s},
 		{shader_type::FS, "Shaders/Global/font.frag"s}
+		}
+	);
+
+	PushShader("ppConvex", {
+		{ shader_type::VS, "Shaders/Global/quad.vert"s },
+		{ shader_type::FS, "Shaders/Global/convex.frag"s }
 		}
 	);
 

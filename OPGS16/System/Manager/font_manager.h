@@ -21,9 +21,9 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include FT_FREETYPE_H
 
-#include "Shader\shader.h"
-#include "..\GlobalObjects\Interface\i_originable.h"
-#include "..\GlobalObjects\Interface\i_alignable.h"
+#include "..\Shader\shader.h"
+#include "..\..\GlobalObjects\Interface\i_originable.h"
+#include "..\..\GlobalObjects\Interface\i_alignable.h"
 
 /**
  * @class FontManager
@@ -105,6 +105,14 @@ public:
 	inline bool DoesFontExist(const std::string& font_name);
 
     /**
+     * @brief Get defult font size value, set at initialization time of FontManager.
+     * @return Default font size.
+     */
+    inline unsigned GetDefaultFontSize() const {
+        return m_default_font_size;
+    }
+
+    /**
      * @brief The method renders given text on given position with given color.
 	 *
 	 * This method is deprecated. (version 0.0.2~)
@@ -143,9 +151,6 @@ public:
 	[[noreturn]] void RenderTextNew(const std::string& text, IOriginable::Origin origin,
 		glm::vec2 relative_position, glm::vec3 color,
 		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
-
-	/** Return default font size. */
-	inline const unsigned GetDefaultFontSize() const;
 
 private:
     /** Freetype pointer */
@@ -295,10 +300,6 @@ private:
 	FontManager(const FontManager&&) = delete;
 	FontManager&& operator=(const FontManager&&) = delete;
 };
-
-inline const unsigned FontManager::GetDefaultFontSize() const {
-	return m_default_font_size;
-}
 
 inline bool FontManager::DoesFontExist(const std::string& tag) {
 	if (m_fonts.find(tag) == m_fonts.end()) return false;

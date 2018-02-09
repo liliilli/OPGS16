@@ -1,4 +1,6 @@
 #include "camera_object.h"
+#include <array>
+#include <GL\glew.h>
 #include <glm\gtc\matrix_transform.hpp>
 
 namespace camera {

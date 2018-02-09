@@ -3,7 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <glm\gtc\type_ptr.hpp>
+#include "..\..\GlobalObjects\light.h"
 
 namespace helper {
 constexpr unsigned LOG_SIZE = 0x200;

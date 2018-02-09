@@ -9,6 +9,5 @@ int main() {
 	app.Initiate();
     app.Run();
 
-    glfwTerminate();
     return 0;
 }

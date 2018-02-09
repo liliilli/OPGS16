@@ -12,7 +12,7 @@
 #include <memory>
 #include <unordered_map>
 #include "shader.h"
-#include "..\Frame\object.h"
+#include "..\Object\object.h"
 #include "..\Manager\resource_manager.h"
 
 /**

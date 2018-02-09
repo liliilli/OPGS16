@@ -9,7 +9,6 @@
  * @date 2018 - 02 - 06
  */
 
-#include <queue>				/** std::queue */
 #include <string>				/** std::string */
 #include <utility>				/** std::pair */
 #include <unordered_map>		/** std::unordered_map */
@@ -41,8 +40,9 @@ public:
 	/** Internal type aliasings. */
 	using shader_type = helper::ShaderNew::Type;
 	using shader_pair = std::pair<shader_type, const std::string>;
-	using shader_list = std::initializer_list<shader_pair>;
 	using shader_container = std::vector<shader_pair>;
+	/** Alisasings applied for forward declaration */
+	using shader_list = std::initializer_list<shader_pair>;
 
 	/**
 	 * @brief In initialization time of game application, push shader information to container.

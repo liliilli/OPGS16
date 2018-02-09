@@ -1,17 +1,17 @@
-#ifndef OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_IMAGE_H
-#define OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_IMAGE_H
+#ifndef OPGS16_GLOBAL_OBJECTS_CANVAS_IMAGE_H
+#define OPGS16_GLOBAL_OBJECTS_CANVAS_IMAGE_H
 
 /**
  * @file GlobalObjects\Canvas\image.h
  * @brief Image object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-08
  */
 
-#include "canvas.h"
-#include "..\..\Headers\common.h"
-#include "..\..\System\Object\sprite_renderer.h"
+#include "..\..\System\Object\ui_object.h"          /** UiObject */
+#include "..\..\System\Object\sprite_renderer.h"    /** SpriteRenderer */
+#include "..\..\Headers\Fwd\objectfwd.h"            /** Canvas::Canvas */
 
 namespace Canvas {
 
@@ -66,8 +66,8 @@ private:
 
 private:
 	/** Get PVM Matrix */
-	glm::mat4 GetPvmMatrix();
+	const glm::mat4 GetPvmMatrix() const;
 };
 }
 
-#endif /** OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_IMAGE_H */
+#endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_IMAGE_H */

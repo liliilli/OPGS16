@@ -1,52 +1,79 @@
-#include "text.h"
+#include "text.h"                       /** Header file */
+#include <iostream>                     /** std::cerr
+                                          * std::endl */
+#include "Impl\text_impl.h"             /** Canvas::TextImpl */
+#include "..\..\System\Manager\font_manager.h"  /** FontManager
+                                          * aliasing font_map_ptr
+                                          * FontManager& GetInstance()
+                                          * bool LoadDefaultFont()
+                                          * void RenderTextNew(params)
+                                          * bool DoesFontExist(std::string) */
 
-Canvas::Text::Text(const std::string&& initial_text,
-	const glm::vec3&& position,
-	const glm::vec3&& color) :
+namespace Canvas {
+using fontMap = FontManager::font_map_ptr;
+void TextImplDeleter::operator()(TextImpl* p) { delete p; }
+
+Text::Text(const std::string & initial_txt, const glm::vec3& position, const glm::vec3& color) :
+	m_font_manager{ &FontManager::GetInstance() } {
 	/** Body */
-	m_text{ initial_text }, m_color{ color } {
+    std::unique_ptr<TextImpl, TextImplDeleter> impl{ new TextImpl(*this) };
+    m_text_impl = std::move(impl);
+    m_text_impl->SetText(initial_txt);
+    m_text_impl->SetColor(color);
+
 	SetLocalPosition(position);
 }
 
-Canvas::Text::Text(const std::string & initial_txt,
-	const glm::vec3 & position,
-	const glm::vec3 & color) :
-	/** Body */
-	m_text{ initial_txt }, m_color{ color } {
-	SetLocalPosition(position);
-}
-
-void Canvas::Text::Update() {}
-
-void Canvas::Text::Draw() {
-	if (m_f_manager) {
+void Text::Draw() {
+	if (m_font_manager) {
 		/** Set font */
-		if (m_font_tag.empty()) m_f_manager->LoadDefaultFont();
-		else m_f_manager->LoadFont(m_font_tag);
+        auto font_name = m_text_impl->GetFontName();
+		if (font_name.empty())
+            m_font_manager->LoadDefaultFont();
+		else
+            m_font_manager->LoadFont(font_name);
+
 		/** Render */
-		m_f_manager->RenderTextNew(m_text, GetOrigin(),
-			glm::vec2{ GetFinalPosition() }, m_color, GetAlignment(), GetScaleValue());
+		m_font_manager->RenderTextNew(m_text_impl->GetText(),
+                                      GetOrigin(),
+                                      glm::vec2{ GetFinalPosition() },
+                                      m_text_impl->GetColor(),
+                                      GetAlignment(),
+                                      GetScaleValue());
 	}
 	else { std::cerr << "ERROR::FONT_MANAGER CAN NOT FIND::CRITICAL" << std::endl; }
 }
 
-void Canvas::Text::SetText(const std::string& new_text) {
-	m_text = new_text;
+void Text::SetText(const std::string& new_text) {
+    m_text_impl->SetText(new_text);
 }
 
-void Canvas::Text::SetFontSize(const unsigned size) {
-	auto def = m_f_manager->GetDefaultFontSize();
-	SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
+const std::string Text::GetText() const {
+    return m_text_impl->GetText();
 }
 
-bool Canvas::Text::SetFont(const std::string& font_tag) {
-	if (m_f_manager && m_f_manager->DoesFontExist(font_tag)) {
-		m_font_tag = font_tag;
+void Text::SetFontSize(const unsigned size) {
+    m_text_impl->SetFontSize(size);
+}
+
+const unsigned Text::GetFontSize() const {
+    return m_text_impl->GetFontSize();
+}
+
+bool Text::SetFontName(const std::string& font_tag) {
+	if (m_font_manager && m_font_manager->DoesFontExist(font_tag)) {
+		m_text_impl->SetFontName(font_tag);
 		return true;
 	}
 	else {
-		std::cerr << "ERROR::FONT::NOT::FOUND" << std::move(font_tag) << std::endl;
-		m_font_tag = "";
+		std::cerr << "ERROR::FONT::NOT::FOUND" << font_tag << std::endl;
+		m_text_impl->SetFontName("");
 		return false;
 	}
+}
+
+void Text::SetColor(const glm::vec3 & color) {
+    m_text_impl->SetColor(color);
+}
+
 }

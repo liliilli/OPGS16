@@ -1,9 +1,8 @@
 #include "texture_manager.h"
+#include "..\Frame\texture.h"
 #include "..\Manager\resource_manager.h"
 
-namespace {
-using texture_raw = TextureManager::texture_raw;
-}
+namespace { using texture_raw = TextureManager::texture_raw; }
 
 texture_raw TextureManager::GetTexture(const std::string& name) {
 	if (m_container.find(name) == m_container.end()) {
@@ -27,4 +26,8 @@ void TextureManager::Release(const std::string& tag) {
 
 void TextureManager::CheckError() {
 
+}
+
+bool TextureManager::IsAlreadyExist(const std::string & tag) {
+	return m_container.find(tag) != m_container.end();
 }

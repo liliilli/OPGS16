@@ -10,16 +10,12 @@
  * polymorphism.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-08
  */
 
-#include <memory>
-#include <gl\glew.h>
-#include <GLFW\glfw3.h>
-#include <glm\glm.hpp>
-#include "..\Debugs\hierarchy_tree.h"
-#include "..\Shader\shader.h"
-#include "..\..\GlobalObjects\camera.h"
+#include <memory>			/** std::unique_ptr */
+#include <unordered_map>	/** std::unordered_map */
+#include "..\..\Headers\Fwd\objectfwd.h"    /**  */
 
 /**
  * @class Object
@@ -33,11 +29,12 @@
  */
 class Object {
 public:
+	Object();
+	virtual ~Object() = default;
+
 	using object_raw = Object*;
 	using object_ptr = std::unique_ptr<Object>;
 	using object_map = std::unordered_map<std::string, object_ptr>;
-
-    virtual ~Object() = default;
 
     /**
      * @brief The method updates components of object.
@@ -61,7 +58,7 @@ public:
      * @brief The method gets position as glm::vec3 type. Not overridable.
      * @return Object's position (x, y, z)
      */
-    glm::vec3 GetLocalPosition();
+    const glm::vec3 GetLocalPosition() const;
 
     /**
      * @brief The method sets position. Not overridable.
@@ -73,13 +70,13 @@ public:
 	 * @brief Return final position. used for hierarchy structure.
 	 * @return Object's final position in hierarchy.
 	 */
-	glm::vec3 GetFinalPosition();
+	const glm::vec3 GetFinalPosition() const;
 
 	/**
 	 * @brief Set final position.
 	 * @param[in] final_position Final position in Screen space.
 	 */
-	[[noreturn]] void SetFinalPosition(const glm::vec3 final_position);
+	[[noreturn]] void SetFinalPosition(const glm::vec3& final_position);
 
 	/**
 	 * @brief The method refresh final position. Nor overriadble.
@@ -91,7 +88,7 @@ public:
      * @brief The method gets rotation values
      * @return Object's rotation angle value.
      */
-    float GetRotationAngle();
+    const float GetRotationAngle() const;
 
     /**
      * @brief The method sets rotation angle values.
@@ -107,19 +104,19 @@ public:
      * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
      * @return Object's rotation vector which has (x, y, z) rotation axis factor.
      */
-    glm::vec3 GetRotationFactor();
+    const glm::vec3 GetRotationFactor() const ;
 
     /**
      * @brief The method sets rotation factor have values which ranges [-1, 1].
      * @param[in] factor
      */
-    [[noreturn]] void SetRotationFactor(glm::vec3 factor);
+    [[noreturn]] void SetRotationFactor(const glm::vec3& factor);
 
     /**
      * @brief The method gets scaling values
      * @return Object's scaling value.
      */
-    float GetScaleValue();
+    const float GetScaleValue() const;
 
     /**
      * @brief The method sets scaling angle values.
@@ -131,13 +128,13 @@ public:
      * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
      * @return Object's scaling vector which has (x, y, z) axis factors.
      */
-    glm::vec3 GetScaleFactor();
+    const glm::vec3 GetScaleFactor() const;
 
     /**
      * @brief The method sets scaling vector have (x, y, z) scaling factors.
      * @param[in] factor Scaling factor
      */
-    [[noreturn]] void SetScaleFactor(glm::vec3 factor);
+    [[noreturn]] void SetScaleFactor(const glm::vec3& factor);
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -147,7 +144,17 @@ public:
      *
      * @return Model matrix (M = TRS)
      */
-    glm::mat4 GetModelMatrix();
+    const glm::mat4 GetModelMatrix() const;
+
+	/**
+	 * @brief Set active option of object.
+	 * If m_active is false, this object cannot update until m_active return to true.
+	 * @param[in] value Active option value.
+	 */
+	[[noreturn]] void SetActive(const bool value);
+
+	/** Get active value. */
+	bool GetActiveValue();
 
 	/**
 	 * @brief This initiate object as a child of base object.
@@ -168,17 +175,17 @@ public:
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool InitiateChild(const std::string& tag, _Types&&... _args) {
-		if (children.find(tag) != children.end()) return false;
+		if (m_children.find(tag) != m_children.end()) return false;
 
-		children[tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
+		m_children[tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
 		return true;
 	}
 
 	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool InitiateChild(const std::string& tag, std::unique_ptr<_Ty>& instance) {
-		if (children.find(tag) != children.end()) return false;
+		if (m_children.find(tag) != m_children.end()) return false;
 
-		children[tag] = std::move(instance);
+		m_children[tag] = std::move(instance);
 		return true;
 	}
 
@@ -191,6 +198,7 @@ public:
 
 	/**
 	 * @brief Get children tag list.
+	 * @return Children's tags container of object.
 	 */
 	const std::vector<std::string> GetChildrenTags() const;
 
@@ -207,70 +215,15 @@ public:
 	 */
 	object_raw GetChild(const std::string& tag);
 
-
 	/**
 	 * @brief This only must be called by Application methods body,
-	 * retuns traversal recursive object tree, to be checked in DEBUG MODE.
+	 * @returns traversal recursive object tree, to be checked in DEBUG MODE.
 	 */
-	[[noreturn]] void GetObjectTree(ObjectTree* const tree) {
-		for (const auto& object : children) {
-			ObjectTree child; child.name = object.first;
-			tree->children.push_back(std::move(child));
-			object.second->GetObjectTree(&*tree->children.rbegin());
-		}
-	}
-
-	/**
-	 * @brief Set active option of object.
-	 * If m_active is false, this object cannot update until m_active return to true.
-	 * @param[in] value Active option value.
-	 */
-	[[noreturn]] void SetActive(const bool value) { m_active = value; }
-
-	/** Get active value. */
-	bool GetActiveValue() { return m_active; }
+	[[noreturn]] void GetObjectTree(ObjectTree* const tree);
 
 private:
-    /**
-     * @brief Refresh Translation matrix
-     */
-    [[noreturn]] void RefreshTranslateMatrix();
-
-    /**
-     * @brief Refresh Rotation matrix
-     */
-    [[noreturn]] void RefreshRotateMatrix();
-
-    /**
-     * @brief Refresh Scaling matrix
-     */
-    [[noreturn]] void RefreshScaleMatrix();
-
-private:
-    /** (x, y, z) local position */
-    glm::vec3   position{};
-	/** (x, y, z) final position in hierarchy */
-	glm::vec3	final_position{};
-
-    /** Rotation angle : Positive value is CW, Negative value is CCW */
-    float       rotation_angle{};
-    /** Rotation factor is (x, y, z) factor did not exceed [-1, 1] range. */
-    glm::vec3   rotation_factor{ 0.0f };
-
-    /** Scale value's default value is 1.0f */
-    float       scale_value{ 1.0f };
-    /** Scale factor is (x, y, z) factor default is (1.0f, 1.0f, 1.0f) */
-    glm::vec3   scale_factor{ 1.0f };
-
-    glm::mat4   model;
-    glm::mat4   translate;
-    glm::mat4   rotate;
-    glm::mat4   scale;
-
-    bool is_changed{ true };
-	bool m_active{ true };
-
-	object_map children;
+	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
+	object_map m_children;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

@@ -31,7 +31,7 @@ class PpEffectGray : public PostProcessingFrame {
 		BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 		InitiateDefaultDepthBuffer();
 		InsertUniformValue("uIntensity", 1.0f);
-		InitiateShader("Gray", "Shaders/pp/gray.frag");
+		InitiateShader("Gray");
 
 		PostProcessingFrame::Initiate();
 	}

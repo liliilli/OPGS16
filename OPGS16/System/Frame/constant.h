@@ -1,12 +1,10 @@
-#ifndef OPENGL_TUTORIAL_CONSTANT_H
-#define OPENGL_TUTORIAL_CONSTANT_H
+#ifndef OPGS16_SYSTEM_LEGACY_CONSTANT_H
+#define OPGS16_SYSTEM_LEGACY_CONSTANT_H
 
 #include <array>
-#include <glm\glm.hpp>
-#include <gl\glew.h>
 
 constexpr std::array<float, 108> skyboxVertices = {
-    // positions          
+    // positions
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
     1.0f, -1.0f, -1.0f,

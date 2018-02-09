@@ -7,9 +7,6 @@ PathFinding2D::PathFinding2D() {
 	InitUserInterface();
 }
 
-void PathFinding2D::HandleInput(GLFWwindow * const window) {
-}
-
 void PathFinding2D::Update() {
 	Scene::Update();
 }

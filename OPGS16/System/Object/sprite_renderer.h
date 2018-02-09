@@ -11,8 +11,11 @@
  * @author Jongmin Yun
  */
 
-#include "..\Shader\shader_wrapper.h"
-#include "..\..\Headers\common.h"
+#include <string>
+#include <memory>
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! SpriteRendererImpl
+                                              * SpriteRendererImplDeleter
+                                              * ShaderWraper */
 
 /**
  * @class SpriteRender
@@ -31,7 +34,7 @@ public:
 	/**
 	 * @brief Make SpriteRenderer instance. (Constructor)
 	 */
-	SpriteRenderer(const std::string& image_path,
+	SpriteRenderer(const std::string& sprite_tag,
 				   const std::string& shader_tag,
 				   const unsigned layer = 0);
 
@@ -48,7 +51,7 @@ public:
 	const unsigned GetLayer() const;
 
 	/** * @brief Get Shaderwrapper instance.  */
-	inline ShaderWrapper& GetWrapper();
+	ShaderWrapper& GetWrapper() const;
 
 	/**
 	 * @brief Render sprite on screen. Procedure is below.
@@ -59,14 +62,8 @@ public:
 	[[noreturn]] void RenderSprite();
 
 private:
-	texture::Texture2D* m_sprite;	/** Sprite 2d texture stores image information. */
-	helper::BindingObject m_quad;	/** Quad VAO to render sprite on screen. */
-	ShaderWrapper m_wrapper;		/** Shader is in ShaderManager, render sprite. */
-	unsigned m_layer;				/** Layer ordering number. The bigger, The later. */
+    using pimpl_type = std::unique_ptr<SpriteRendererImpl, SpriteRendererImplDeleter>;
+    pimpl_type m_impl{ nullptr };
 };
-
-inline ShaderWrapper& SpriteRenderer::GetWrapper() {
-	return m_wrapper;
-}
 
 #endif /** OPGS16_SYSTEM_OBJECT_SPRITE_RENDERER_H */

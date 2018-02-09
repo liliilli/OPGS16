@@ -4,9 +4,6 @@
 #include <GL\glew.h>
 #include <glm\glm.hpp>
 #include <array>
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <sstream>
 #include <unordered_map>
 
@@ -18,10 +15,9 @@
  *              xture2D easily.
  */
 namespace helper {
-constexpr unsigned LOG_SIZE = 0x200;
 
 /**
- * \brief       
+ * \brief
  */
 struct BindingObject {
     GLuint vao;
@@ -30,7 +26,7 @@ struct BindingObject {
 };
 
 /**
- * \brief       
+ * \brief
  */
 struct BindingParameter {
     size_t location;
@@ -39,7 +35,7 @@ struct BindingParameter {
 };
 
 /**
- * \brief       
+ * \brief
  */
 template <typename _Ty>
 constexpr void* GetOffset(const int i) {
@@ -47,7 +43,7 @@ constexpr void* GetOffset(const int i) {
 }
 
 /**
- * \brief       
+ * \brief
  */
 template <typename _Ty, size_t _Nm>
 BindingObject CreateBindingObject(const std::array<_Ty, _Nm>& data, const size_t stride,
@@ -72,7 +68,7 @@ BindingObject CreateBindingObject(const std::array<_Ty, _Nm>& data, const size_t
 }
 
 /**
- * \brief       
+ * \brief
  */
 template <typename _Ty, size_t _Nm, typename _Ty2, size_t _Nm2>
 BindingObject CreateBindingObjectEBO(const std::array<_Ty, _Nm>& data, const size_t stride,
@@ -93,63 +89,63 @@ enum class BufferMode {
     TEXTURE_2D,
     TEXTURE_CUBE_MAP
 };
-
-/**
- * \brief       
- */
-class CustomFrameBuffer {
-public:
-    /**
-     * @brief 
-     */
-    CustomFrameBuffer();
-
-    /**
-     * @brief    Create user-custom buffer.
-     * @details
-     * @param mode
-     * @param tag
-     * @return  void
-     */
-    [[noreturn]] void GenBuffer(BufferMode mode, const std::string& tag);
-
-    /**
-     * @brief    bind custom framebuffer.
-     * @details
-     * @param
-     * @return  void
-     */
-    [[noreturn]] void Bind();
-
-    /**
-     * @brief    unbind custom framebuffer and bind default framebuffer automatically.
-     * @details
-     * @param
-     * @return  void
-     */
-    [[noreturn]] void Unbind();
-
-    /**
-     * @brief    
-     * @details
-     * @param
-     * @return  void
-     */
-    GLuint GetBuffer(const std::string tag) { return buffers.at(tag); }
-
-private:
-    std::unordered_map<std::string, GLuint> buffers;
-    GLuint frame_buffer_id;
-
-    static const unsigned kWIDTH   = 1024;
-    static const unsigned kHEIGHT  = 1024;
-
-    std::array<GLint, 4> mScreenSize;
-
-    GLint GenTexture2DBuffer();
-    GLint GenTextureCubemapBuffer();
-};
-
+//
+///**
+// * \brief
+// */
+//class CustomFrameBuffer {
+//public:
+//    /**
+//     * @brief
+//     */
+//    CustomFrameBuffer();
+//
+//    /**
+//     * @brief    Create user-custom buffer.
+//     * @details
+//     * @param mode
+//     * @param tag
+//     * @return  void
+//     */
+//    [[noreturn]] void GenBuffer(BufferMode mode, const std::string& tag);
+//
+//    /**
+//     * @brief    bind custom framebuffer.
+//     * @details
+//     * @param
+//     * @return  void
+//     */
+//    [[noreturn]] void Bind();
+//
+//    /**
+//     * @brief    unbind custom framebuffer and bind default framebuffer automatically.
+//     * @details
+//     * @param
+//     * @return  void
+//     */
+//    [[noreturn]] void Unbind();
+//
+//    /**
+//     * @brief
+//     * @details
+//     * @param
+//     * @return  void
+//     */
+//    GLuint GetBuffer(const std::string tag) { return buffers.at(tag); }
+//
+//private:
+//    std::unordered_map<std::string, GLuint> buffers;
+//    GLuint frame_buffer_id;
+//
+//    static const unsigned kWIDTH   = 1024;
+//    static const unsigned kHEIGHT  = 1024;
+//
+//    std::array<GLint, 4> mScreenSize;
+//
+//    GLint GenTexture2DBuffer();
+//    GLint GenTextureCubemapBuffer();
+//};
+//
 }
 
 #endif

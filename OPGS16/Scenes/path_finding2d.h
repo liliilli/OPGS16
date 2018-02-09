@@ -20,15 +20,6 @@ public:
     virtual ~PathFinding2D() = default;
 
 	/**
-	* @brief The method handles key codes from window.
-	*
-	* This methods is called by Application::ProcessInput method.
-	*
-	* @param[in] window Window handle pointer.
-	*/
-	[[noreturn]] virtual void HandleInput(GLFWwindow* const window) override final;
-
-	/**
 	* @brief The method update components movement, UI refresh, and so on.
 	*/
 	[[noreturn]] virtual void Update() override final;

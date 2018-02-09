@@ -13,7 +13,7 @@ void shading::PpEffectConvex::Initiate() {
 	/** The rest */
 	InitiateDefaultDepthBuffer();
 	InsertUniformValue("uIntensity", 0.05f);
-	InitiateShader("Convex", "Shaders/Global/convex.frag");
+	InitiateShader("Convex");
 
 	/** Last */
 	PostProcessingFrame::Initiate();

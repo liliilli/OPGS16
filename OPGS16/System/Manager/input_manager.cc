@@ -1,5 +1,7 @@
 #include "input_manager.h"
-#include "..\..\application.h"
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
+#include "time_manager.h"
 
 InputManager::InputManager(GLFWwindow* window) : window{ window } {
 
@@ -139,7 +141,7 @@ void InputManager::Update() {
 }
 
 void InputManager::ProceedGravity(BindingKeyInfo & key_info) {
-	const auto dt = Application::getInstance().GetDeltaTime();
+	const auto dt = TimeManager::GetInstance().GetDeltaTime();
 	auto value = key_info.value;
 	key_info.send_signal = false;
 

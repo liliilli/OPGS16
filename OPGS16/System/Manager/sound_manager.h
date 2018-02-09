@@ -187,13 +187,9 @@ inline const bool SoundManager::IsSoundExist(const std::string tag) const {
 	return m_sounds.find(tag) != m_sounds.end();
 }
 
-inline const bool SoundManager::IsSoundMuted() const {
-	return m_is_muted;
-}
+inline const bool SoundManager::IsSoundMuted() const { return m_is_muted; }
 
-inline void SoundManager::SetMute(const bool value) {
-	m_is_muted = value;
-}
+inline void SoundManager::SetMute(const bool value) { m_is_muted = value; }
 
 inline const bool SoundManager::CheckSoundError() const {
 	ALCenum sound_error = alGetError();

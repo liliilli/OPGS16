@@ -11,10 +11,9 @@
 
 #include <string>			/** std::string */
 #include <unordered_map>	/** std::unordered_map */
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>		/** GLFW_KEY_xxx */
+#include "..\..\Headers\Fwd\objectfwd.h" /*! GFLWwindow */
 
-/**
+/*!
  * @class InputManager
  * @brief This class is singleton and can not be a base of any derived class instance.
  * InputManager has a rule of managing input signal such as keyboard key pressing, releasing and
@@ -103,8 +102,8 @@ private:
 		bool			send_signal{ false };
 
 		std::string		name{};	// container key name must be same as structure's name. (Camel)
-		negative_button neg{ GLFW_KEY_UNKNOWN };	// Negative button key information.
-		negative_button pos{ GLFW_KEY_UNKNOWN };	// Positive button key information.
+		negative_button neg{ -1 };	// Negative button key information.
+		negative_button pos{ -1 };	// Positive button key information.
 		float			neutral_gravity{ 1000.f };	// Gravity to drag value down to neutral zone.
 		float			dead_zone{ 0.001f };		// The range of neutral zone.
 		float			value{ 0.f };				// Value moves along with neg/pos/gravity.

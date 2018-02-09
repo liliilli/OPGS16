@@ -3,10 +3,10 @@
 
 /**
  * @file GlobalObjects/Interface/i_alignable.h
- * @brief IAlignable not-pure interface file.
+ * @brief IAlignable, not-pure interface file.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-08
  */
 
 /**
@@ -20,30 +20,30 @@
  */
 class IAlignable {
 public:
-	enum class Alignment : int { LEFT, CENTER, RIGHT };
+	enum class Alignment : int {
+        LEFT,   /** Alignable instance would be displayed to the point started from position. */
+        CENTER, /** Alignable instance would be displayed to the position is center of instance. */
+        RIGHT   /** Alignable instance would be displayed to the point ended to position. */
+    };
 
 	/**
-	 * @brief
-	 * @param[in] value
+	 * @brief Set Alignment value. This method will change display position of IAlignable instance.
+	 * @param[in] value New alignment value.
 	 */
-	[[noreturn]] inline void SetAlignment(Alignment value);
+    [[noreturn]] inline void SetAlignment(Alignment value) {
+        alignment = value;
+    }
 
 	/**
-	 * @brief
+	 * @brief Get Alignment value.
 	 * @return Alignment type value.
 	 */
-	inline Alignment GetAlignment() const;
+    inline Alignment GetAlignment() const {
+        return alignment;
+    }
 
 private:
-	Alignment alignment{ Alignment::LEFT };
+	Alignment alignment{ Alignment::LEFT }; /** Private alignment data */
 };
-
-inline void IAlignable::SetAlignment(IAlignable::Alignment value) {
-	alignment = value;
-}
-
-inline IAlignable::Alignment IAlignable::GetAlignment() const {
-	return alignment;
-}
 
 #endif /** OPENGL_TUTORIALS_GLOBAL_OBJECTS_INTERFACE_I_ALIGNABLE_H */

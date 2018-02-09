@@ -6,21 +6,29 @@
 #include <iostream>	// std::cerr, std::endl
 #include <memory>	// std::static_pointer_cast
 #include <string>	// std::stringstream, std::string
+#include <sstream>  /*! std::ostringstream */
 
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 
+#include "GlobalObjects\Canvas\canvas.h"
 #include "GlobalObjects\Canvas\text.h"
 #include "Scenes\start.h"
-#include "System\font_manager.h"
+#include "System\Debugs\hierarchy_tree.h"
+#include "System\Shader\pp_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
 #include "System\Shader\PostProcessing\pp_sinewave.h"
 #include "System\Shader\PostProcessing\pp_gray.h"
-#include "System\sound_manager.h"
+#include "System\Manager\font_manager.h"
+#include "System\Manager\input_manager.h"
+#include "System\Manager\sound_manager.h"
+#include "System\Manager\time_manager.h"
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
-	m_option{ false, true, true, true },
+	m_option{ false, true, false, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
 }
@@ -48,10 +56,14 @@ GLFWwindow* Application::InitApplication(std::string&& app_name) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_FALSE);
     glfwSetFramebufferSizeCallback(window, &Application::FramebufferSizeCallback);
-    glfwSetCursorPosCallback(window, camera::MouseControl);
+    //glfwSetCursorPosCallback(window, camera::MouseControl);
 
     glewInit();
     return window;
+}
+
+const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
+	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
 }
 
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -62,17 +74,20 @@ void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
 		// Set Camera Cursor and Fps
 		//camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
-		SetFps(60.0f);
+        m_m_time = &TimeManager::GetInstance();
+        m_m_time->SetFps(60.f);
 
 		InitiateFonts();
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
 		InitiateSoundSetting();
-		m_inputs = &InputManager::GetInstance(window);
+		m_m_input = &InputManager::GetInstance(window);
 
 		/** Insert first scene */
 		PushScene<Start>();
 		ReplacePresentStatus(GameStatus::PLAYING);
+
+        glEnable(GL_DEPTH_TEST);
 	}
 }
 
@@ -93,22 +108,22 @@ void Application::InitiateDebugUi() {
 	auto fps = std::make_unique<Text>( "", glm::vec3{16, -16, 0}, colors ); {
 		fps->SetFontSize(8);
 		fps->SetOrigin(IOriginable::Origin::UP_LEFT);
-		fps->SetFont("Solomon");
+		fps->SetFontName("Solomon");
 		canvas->InitiateChild("Fps", fps);
 	}
 	auto date = std::make_unique<Text>( "", glm::vec3{16, -24, 0}, colors ); {
 		date->SetFontSize(8);
 		date->SetOrigin(IOriginable::Origin::UP_LEFT);
-		date->SetFont("Solomon");
+		date->SetFontName("Solomon");
 		canvas->InitiateChild("Date", date);
 	}
 
-	//Canvas::Text&& hier{ "", glm::vec3{16, -32, 0}, colors }; {
-	//	hier.SetFontSize(8);
-	//	hier.SetOrigin(IOriginable::Origin::UP_LEFT);
-	//	hier.SetFont("Solomon");
-	//	canvas->InitiateChild("Hier", std::move(hier));
-	//}
+    auto hier = std::make_unique<Text>( "", glm::vec3{16, -32, 0}, colors ); {
+		hier->SetFontSize(8);
+		hier->SetOrigin(IOriginable::Origin::UP_LEFT);
+		hier->SetFontName("Solomon");
+		canvas->InitiateChild("Hier", hier);
+	}
 
 	m_debug_ui_canvas = std::move(canvas);
 }
@@ -122,7 +137,7 @@ void Application::InitiatePostProcessingEffects() {
 
 	/** Set sample sequence */
 	auto id = 0u;
-	auto const result = m_pp_manager->SetSequence(id, { "SineWave" });
+	auto const result = m_pp_manager->SetSequence(id, { "SineWave", "SineWave" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -138,59 +153,49 @@ void Application::InitiateSoundSetting() {
 }
 
 void Application::Run() {
-    m_timeinfo.new_time = m_timeinfo.old_time = (float)glfwGetTime();
-	glEnable(GL_DEPTH_TEST);
-
     while (!glfwWindowShouldClose(window)) {
-        if (IfFrameTurned()) {
-            Input(window);
+        m_m_time->Update();
+        if (m_m_time->Ticked()) {
             Update();
             Draw();
         }
     }
-}
 
-const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
-	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
-}
-
-void Application::Input(GLFWwindow* const window) {
-	m_inputs->Update();
-
-	switch (GetPresentStatus()) {
-	case GameStatus::PLAYING:
-		InputGlobal();
-		break;
-	case GameStatus::MENU:
-		break;
-	}
-
-	//if (GetPresentStatus() == GameStatus::PLAYING) { /** Playing */
-	//	top_scene->HandleInput(window);
-	//}
-}
-
-void Application::InputGlobal() {
-	if (m_inputs->IsKeyPressed("GlobalCancel"))
-		PopStatus();
-	if (m_option.size_scalable) {
-		if (m_inputs->IsKeyPressed("GlobalF1"))
-			ChangeScalingOption(OptionScale::X1_DEFAULT);
-		else if (m_inputs->IsKeyPressed("GlobalF2"))
-			ChangeScalingOption(OptionScale::X2_DOUBLE);
-		else if (m_inputs->IsKeyPressed("GlobalF3"))
-			ChangeScalingOption(OptionScale::X3_TRIPLE);
-		else if (m_inputs->IsKeyPressed("GlobalF9"))
-			ToggleFpsDisplay();
-		else if (m_inputs->IsKeyPressed("GlobalF10"))
-			TogglePostProcessingEffect();
-	}
+    glfwTerminate();
 }
 
 void Application::Update() {
+    /*! Input */
+    Input();
+    /*! Update */
     if (!m_scenes.empty()) top_scene->Update();
 	if (m_option.debug_mode) UpdateDebugInformation();
 	m_pp_manager->UpdateSequences(); // Update active effects.
+}
+
+void Application::Input() {
+	m_m_input->Update();
+	switch (GetPresentStatus()) {
+	case GameStatus::PLAYING: InputGlobal(); break;
+	case GameStatus::MENU: break;
+	}
+}
+
+void Application::InputGlobal() {
+	if (m_m_input->IsKeyPressed("GlobalCancel"))
+		PopStatus();
+	if (m_option.size_scalable) {
+		if (m_m_input->IsKeyPressed("GlobalF1"))
+			ChangeScalingOption(OptionScale::X1_DEFAULT);
+		else if (m_m_input->IsKeyPressed("GlobalF2"))
+			ChangeScalingOption(OptionScale::X2_DOUBLE);
+		else if (m_m_input->IsKeyPressed("GlobalF3"))
+			ChangeScalingOption(OptionScale::X3_TRIPLE);
+		else if (m_m_input->IsKeyPressed("GlobalF9"))
+			ToggleFpsDisplay();
+		else if (m_m_input->IsKeyPressed("GlobalF10"))
+			TogglePostProcessingEffect();
+	}
 }
 
 /**
@@ -234,7 +239,7 @@ void Application::TogglePostProcessingEffect() {
 void Application::UpdateDebugInformation() {
 	/** Refresh Fps */ {
 		std::ostringstream str;
-		str << std::setprecision(4) << m_timeinfo.fps_second;
+		str << std::setprecision(4) << m_m_time->GetFpsSeconds();
 
 		auto text = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Fps"));
 		text->SetText("Fps : " + str.str());
@@ -250,17 +255,17 @@ void Application::UpdateDebugInformation() {
 		date->SetText(stream.str());
 	}
 
-	///** Display Hierarchy Objects */ {
-	//	ObjectTree tree{};
-	//	if (!m_scenes.empty()) {
-	//		top_scene->GetObjectTree(&tree);
-	//		std::string text{};
-	//		SetHierarchyText(&tree, 0, &text);
+	/** Display Hierarchy Objects */ {
+		ObjectTree tree{};
+		if (!m_scenes.empty()) {
+			top_scene->GetObjectTree(&tree);
+			std::string text{};
+			SetHierarchyText(&tree, 0, &text);
 
-	//		auto tree = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Hier"));
-	//		tree->SetText(std::move(text));
-	//	}
-	//}
+			auto tree = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Hier"));
+			tree->SetText(std::move(text));
+		}
+	}
 
 	m_debug_ui_canvas->Update();
 }
@@ -279,14 +284,12 @@ void Application::SetHierarchyText(const ObjectTree* item, size_t count, std::st
 	}
 }
 
-void Application::DrawDebugInformation() {
-	m_debug_ui_canvas->Draw();
-}
+void Application::DrawDebugInformation() { m_debug_ui_canvas->Draw(); }
 
 void Application::PopScene() {
     top_scene = nullptr;
     m_scenes.pop();
-	if (!m_scenes.empty()) top_scene = m_scenes.top(); else Exit();
+    if (!m_scenes.empty()) top_scene = m_scenes.top(); else Exit();
 }
 
 void Application::ChangeScalingOption(OptionScale value) {
@@ -324,21 +327,7 @@ void Application::ToggleAntialiasing() {
 #endif
 }
 
-bool Application::IfFrameTurned() {
-    m_timeinfo.new_time = (float)glfwGetTime();
-	m_timeinfo.delta_time = m_timeinfo.new_time - m_timeinfo.old_time;
-    m_timeinfo.elapsed_time += m_timeinfo.delta_time;
-    m_timeinfo.old_time = m_timeinfo.new_time;
 
-    bool flag = false;
-    if (m_timeinfo.elapsed_time >= m_timeinfo.interval) {
-        m_timeinfo.fps_second = 1 / m_timeinfo.elapsed_time;
-        m_timeinfo.elapsed_time -= m_timeinfo.interval;
-        flag = true;
-    }
-    return flag;
-}
-
-void Application::SetFps(float hz) {
-    m_timeinfo.interval = 1 / hz;
+void Application::Exit() {
+    glfwSetWindowShouldClose(window, true);
 }

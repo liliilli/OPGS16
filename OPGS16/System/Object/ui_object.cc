@@ -1,4 +1,6 @@
 #include "ui_object.h"
+#include <array>
+#include <glm\glm.hpp>
 
 void UiObject::Update() {
 	/** Update children */

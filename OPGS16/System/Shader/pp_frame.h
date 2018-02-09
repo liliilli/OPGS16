@@ -15,8 +15,9 @@
 #include <memory>	/** std::shared_ptr */
 #include <vector>	/** std::vector<std::shared_ptr> */
 #include "shader.h"	/** helper::ShaderNew */
-#include "..\Frame\helper.h"
-#include "..\Frame\texture.h"
+#include "..\Frame\texture.h"   /*! texture::Texture2D */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! VertexArrayObject */
+#include "shader_wrapper.h" /*! ShaderWrapper */
 
 /**
  * @namespace shading
@@ -37,11 +38,6 @@ namespace shading {
  * This will crash application or at least it incurs undefined behavior.
  */
 class PostProcessingFrame {
-private:
-	struct ShaderParameters {
-		std::unordered_map<std::string, GLfloat> m_floats{};
-	};
-
 public:
 	/**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
@@ -111,9 +107,9 @@ public:
 	 * @see https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glFramebufferTexture2D.xml
 	 */
 	[[noreturn]] void BindTextureToFrameBuffer(const size_t texture_id,
-		const size_t framebuffer_id,
-		const GLenum attachment,
-		const GLenum target);
+                                               const size_t framebuffer_id,
+                                               const GLenum attachment,
+                                               const GLenum target);
 
 	/**
 	 * @brief Create and Initiate shader to be used only in this post-processing frame.
@@ -122,7 +118,7 @@ public:
 	 * @param[in] name The name of shader to create.
 	 * @param[in] pixel_shader The path of pixel shader.
 	 */
-	[[noreturn]] void InitiateShader(const std::string& name, const std::string& pixel_shader);
+	[[noreturn]] void InitiateShader(const std::string& name);
 
 	/**
 	 * @brief Bind frame buffer. This must be called to render objects to frame buffer.
@@ -141,6 +137,9 @@ public:
 	 * @brief Render texture and components.
 	 * This must be called after arbitary frame buffer bound.
 	 * This methods could be overriden by derived class.
+     *
+     * Caller calls this method, Shader would be used and refresh uniform parameters automatically.
+     * and texture binds, render.
 	 */
 	[[noreturn]] virtual void RenderEffect();
 
@@ -152,9 +151,7 @@ public:
 	 */
 	template <typename _Ty>
 	[[noreturn]] void InsertUniformValue(const std::string tag, const _Ty value) {
-		if (!IsValueAlreadyExist(tag, value)) {
-			if (std::is_same_v<float, _Ty>) m_parameters.m_floats[tag] = value;
-		}
+		if (!IsValueAlreadyExist(tag, value)) m_shader_wrapper.InsertUniformValue(tag, value);
 	}
 
 	/**
@@ -165,8 +162,7 @@ public:
 	 */
 	template <typename _Ty>
 	[[noreturn]] void ReplaceUniformValue(const std::string tag, const _Ty value) {
-		if (IsValueAlreadyExist(tag, value))
-			GetIteratorOfSpecifiedPoint(tag, value)->second = value;
+        if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.ReplaceUniformValue(tag, value);
 	}
 
 	/**
@@ -189,8 +185,7 @@ private:
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
-	std::vector<helper::ShaderNew*> m_shaders;
-	ShaderParameters m_parameters{};	/** Uniform arguments container to use shader */
+    ShaderWrapper m_shader_wrapper;
 
 	GLuint empty_vao;
 	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
@@ -208,15 +203,10 @@ private:
 
 private:
 	/**
-	 * @brief Set uniform variables of shader with new values.
-	 */
-	[[noreturn]] void RefreshUniformValues(helper::ShaderNew* const shader);
-
-	/**
 	 * @brief This method gets quad vertex attribute object.
 	 * @return Lvalue reference of quad BindingObject shared with all pp frame instance.
 	 */
-	helper::BindingObject& GetCommonQuadVao();
+	VertexArrayObject& GetCommonQuadVao();
 
 	/**
 	 * @brief This method checks wherther it already has a value on spot you want.
@@ -236,20 +226,6 @@ private:
 	}
 
 	/**
-	 * @brief Searchs and Gets parameter container pointer.
-	 * @param[in] tag
-	 * @param[in] _Ty
-	 * @return Paramter container pointer.(iterator)
-	 */
-	template <typename _Ty>
-	auto GetIteratorOfSpecifiedPoint(const std::string& tag, const _Ty) {
-		//-> decltype(std::unordered_map<std::string, _Ty>::iterator) {
-		/** Body */
-		if (std::is_same_v<float, _Ty>)
-			return m_parameters.m_floats.find(tag);
-	}
-
-	/**
 	 * @brief Check parameter value is already exist.
 	 * @param[in] tag The tag to find and check if it's exist.
 	 * @param[in] _Ty Type paramter to check container type in m_paramaters of this.
@@ -257,10 +233,8 @@ private:
 	 */
 	template <typename _Ty>
 	bool IsValueAlreadyExist(const std::string& tag, const _Ty) {
-		if (std::is_same_v<float, _Ty>)
-			return m_parameters.m_floats.find(tag) != m_parameters.m_floats.end();
+		if (std::is_same_v<float, _Ty>) return m_shader_wrapper.IsValueAlreadyExist<float>(tag);
 	}
-
 };
 
 }

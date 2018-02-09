@@ -1,17 +1,21 @@
-#ifndef OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_CANVAS_H
-#define OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_CANVAS_H
+#ifndef OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H
+#define OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H
 
 /**
  * @file GlobalObjects\Canvas\image.h
  * @brief Canvas frame object to display UI components.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-08
  */
 
-#include <array>
-#include "..\..\GlobalObjects\camera_object.h"
-#include "..\..\Headers\common.h"
+/** UiObject */
+#include "..\..\System\Object\ui_object.h"
+/**
+ * glm::mat4
+ * helper::ShaderNew;
+ * camera::CameraObject; */
+#include "..\..\Headers\Fwd\objectfwd.h"
 
 namespace Canvas {
 
@@ -27,6 +31,10 @@ namespace Canvas {
  */
 class Canvas : public UiObject {
 public:
+	/**
+	 * @brief Canvas constructor.
+	 * Canvas has orthographic camera fixed to screen size, this camera will be initialized.
+	 */
 	Canvas();
 	virtual ~Canvas() = default;
 
@@ -37,13 +45,15 @@ public:
 	[[noreturn]] virtual void Draw() override final;
 
 	/** Get Ui camera's orthographic projection matrix. */
-	glm::mat4 GetUiCameraProjMatrix();
+	const glm::mat4 GetUiCameraProjMatrix() const;
 
 private:
-	camera::CameraObject m_camera;	/** Camera object uses just one orthographic type. */
-	bool m_is_size_changed{ true };
+	/** Camera object uses just one orthographic type. */
+	std::unique_ptr<camera::CameraObject> m_camera;
+
+	bool m_is_size_changed;
 };
 
 }
 
-#endif /** OPENGL_TUTORIALS_GLOBAL_OBJECTS_CANVAS_CANVAS_H */
+#endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H */

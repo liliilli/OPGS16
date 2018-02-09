@@ -8,6 +8,7 @@
  * @author Jongmin Yun
  */
 
+#include <GL\glew.h>
 #include "object.h"
 #include "..\..\GlobalObjects\Interface\i_originable.h"
 

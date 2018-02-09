@@ -10,11 +10,10 @@
 * @version 0.0.2
 */
 
-#include <string>
 #include <unordered_map>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
-#include "..\..\GlobalObjects\light.h"
+#include "..\..\Headers\Fwd\lightfwd.h"
 
 namespace helper {
 
@@ -146,7 +145,7 @@ private:
     bool m_linked{ false };
 
     /** Compiled Shader list */
-    std::unordered_map<Type, GLuint> m_shaders;
+    std::unordered_map<Type, unsigned> m_shaders;
 
     /**
      * @brief
@@ -213,10 +212,10 @@ public:
 
 private:
     // The program ID
-    mutable GLuint kId;
-    GLuint vertex_shader;
-    GLuint geometry_shader;
-    GLuint fragment_shader;
+    mutable unsigned kId;
+    unsigned vertex_shader;
+    unsigned geometry_shader;
+    unsigned fragment_shader;
 
     void ShaderErrorPrint(GLuint shader, char* info_log);
 };

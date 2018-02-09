@@ -1,12 +1,10 @@
 #include "image.h"
 
-#include "..\..\System\Frame\constant.h"
-#include "..\..\System\Shader\shader_manager.h"
-
+#include <array>            /*! std::array */
+#include "canvas.h"
+#include "..\..\System\Shader\shader_wrapper.h"        /*! ShaderWrapper */
 #include "..\..\System\Manager\texture_manager.h"
-
-constexpr bool FAILED{ false };
-constexpr bool SUCCESS{ true };
+#include <glm\gtc\matrix_transform.hpp>
 
 namespace Canvas {
 Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
@@ -40,9 +38,7 @@ void Image::SetImageSize(const float width, const float height) {
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
 }
 
-void Image::Draw(helper::ShaderNew&) {
-	Draw();
-}
+void Image::Draw(helper::ShaderNew&) { Draw(); }
 
 void Image::Draw() {
 	auto is_already_enabled{ false };
@@ -66,7 +62,7 @@ void Image::Draw() {
 	UiObject::Draw();
 }
 
-glm::mat4 Image::GetPvmMatrix() {
+const glm::mat4 Image::GetPvmMatrix() const {
 	auto M = glm::mat4();
 	auto position = GetFinalPosition();
 	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });

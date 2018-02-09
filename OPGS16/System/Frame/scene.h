@@ -15,11 +15,7 @@
 #include <memory>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include "helper.h"
-#include "object.h"
-#include "..\font_manager.h"
-#include "..\Debugs\hierarchy_tree.h"
-#include "..\..\GlobalObjects\camera.h"
+#include "..\Object\object.h"
 
 /**
  * @class Scene
@@ -29,14 +25,6 @@ class Scene {
 public:
 	/** Must need virtual dtor */
     virtual ~Scene() = default;
-
-    /**
-     * @brief The method handles key codes from window.
-     * This methods is called by Application::ProcessInput method.
-     *
-     * @param[in] window Window handle pointer.
-     */
-	[[noreturn]] virtual void HandleInput(GLFWwindow* const window);
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
@@ -85,23 +73,7 @@ public:
 	/**
 	 *
 	 */
-	Object::object_ptr& GetObject(const std::string&& tag);
-
-protected:
-    /**
-     * @brief Helper method of scene that checks if keycode was pressed.
-     *
-     * @param[in] window Window handle pointer.
-     * @param[in] keycode Code of key to be checked.
-     *
-     * @return If keycode is pressed, return true. otherwise false.
-     */
-    bool DoesKeyPressed(GLFWwindow* const window, const int keycode) {
-        if (glfwGetKey(window, keycode) == GLFW_PRESS)
-            return true;
-        else
-            return false;
-    }
+	Object::object_ptr& GetObject(const std::string& tag);
 
 private:
     Object::object_map objects;

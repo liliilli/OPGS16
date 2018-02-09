@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include "..\Frame\texture.h"
 
+//namespace texture { class Texture2D; }
+
 /**
  * @class TextureManager
  * @brief TextureManager is singleton and can not be a base class of any derived class.
@@ -70,7 +72,7 @@ private:
 
 private:
 	/** Check there is already Texture content with name. */
-	inline bool IsAlreadyExist(const std::string& tag);
+	bool IsAlreadyExist(const std::string& tag);
 
 private:
 	TextureManager() = default;
@@ -79,9 +81,5 @@ private:
 	TextureManager operator=(const TextureManager&) = delete;
 	TextureManager operator=(const TextureManager&&) = delete;
 };
-
-inline bool TextureManager::IsAlreadyExist(const std::string& tag) {
-	return m_container.find(tag) != m_container.end();
-}
 
 #endif /** OPGS16_SYSTEM_MANAGER_TEXTURE_MANAGER_H */

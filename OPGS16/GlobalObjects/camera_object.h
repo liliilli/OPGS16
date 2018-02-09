@@ -9,7 +9,8 @@
  * @author Jongmin Yun
  * @version 0.0.1
  */
-#include "..\System\Frame\object.h"
+#include "..\System\Object\object.h"
+#include <glm\glm.hpp>
 
 namespace camera {
 

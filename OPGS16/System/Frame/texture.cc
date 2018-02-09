@@ -22,9 +22,12 @@ Texture2D::Texture2D(const std::string& texture_path, const GLint bind_mode) {
                      bind_mode, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-		SetTextureParameterI({
-			{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
-			{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
+		std::vector<TextureParameter> a;
+		a.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
+		a.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
+		a.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
+		a.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
+		SetTextureParameterI(a);
     }
     else {
         std::cerr << "FAILED::LOAD::TEXTURE" + texture_path << std::endl;
@@ -45,9 +48,12 @@ Texture2D::Texture2D(const GLint internal_format, GLenum format, GLenum type,
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, size.width, size.height, 0, format, type, 0);
 
-	SetTextureParameterI({
-		{GL_TEXTURE_MIN_FILTER, GL_NEAREST}, {GL_TEXTURE_MAG_FILTER, GL_NEAREST},
-		{GL_TEXTURE_WRAP_S, GL_REPEAT}, {GL_TEXTURE_WRAP_T, GL_REPEAT} });
+	std::vector<TextureParameter> a;
+	a.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
+	a.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
+	a.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
+	a.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
+	SetTextureParameterI(a);
 }
 
 const Texture2D::Size Texture2D::GetSize() {
@@ -63,8 +69,7 @@ void Texture2D::SetTextureParameterI(const GLint option, const GLint mode) {
 }
 
 
-void Texture2D::SetTextureParameterI
-(std::initializer_list<TextureParameter> lists) {
+void Texture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists) {
 
     glBindTexture(GL_TEXTURE_2D, texture);
     for (const auto& option_item : lists) {
