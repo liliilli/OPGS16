@@ -81,7 +81,8 @@ void Application::Initiate() {
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
 		InitiateSoundSetting();
-		m_m_input = &InputManager::GetInstance(window);
+		m_m_input = &InputManager::GetInstance();
+        m_m_input->Initialize(window);
 
 		/** Insert first scene */
 		PushScene<Start>();

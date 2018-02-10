@@ -43,18 +43,5 @@ void Start::Draw() {
 }
 
 void Start::Update() {
- //   if (DoesKeyPressed(window, GLFW_KEY_A)) {
-
- //   }
- //   else if (DoesKeyPressed(window, GLFW_KEY_B)) {
- //       //Application::getInstance().ReplaceScene<PrimProc>();
- //   }
- //   else if (DoesKeyPressed(window, GLFW_KEY_C)) {
- //       //Application::getInstance().ReplaceScene<BloomScene>();
- //   }
-	//else if (DoesKeyPressed(window, GLFW_KEY_D)) {
-	//	Application::getInstance().ReplaceScene<PathFinding2D>();
-	//}
-
 	Scene::Update();
 }

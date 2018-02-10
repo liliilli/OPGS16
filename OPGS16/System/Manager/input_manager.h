@@ -30,10 +30,12 @@ public:
 	 * @brief Static method gets unique instance of Application class.
 	 * @return InputManager static instance.
 	 */
-	static InputManager& GetInstance(GLFWwindow* window) {
-		static InputManager instance{ window };
+	static InputManager& GetInstance() {
+		static InputManager instance{};
 		return instance;
 	}
+
+    [[noreturn]] void Initialize(GLFWwindow* window);
 
 	/**
 	 * @brief Get Key value which is bound to key container.
@@ -120,7 +122,7 @@ private:
 		NOT_FOUND_KEY,	/** This flag will be set up when GetKeyValue() failed. */
 	} m_error_flag{ ErrorFlag::OK };
 
-    GLFWwindow* const window; /** Window handle pointer */
+    GLFWwindow* window; /** Window handle pointer */
 
 private:
 	/**
@@ -134,7 +136,7 @@ private:
 	[[noreturn]] void ProceedGravity(BindingKeyInfo& key_info);
 
 private:
-	InputManager(GLFWwindow* window);
+	InputManager() = default;
 	InputManager(const InputManager&) = delete;
 	InputManager(const InputManager&&) = delete;
 	InputManager& operator=(const InputManager&) = delete;

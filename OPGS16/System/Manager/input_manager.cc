@@ -3,7 +3,8 @@
 #include <GLFW\glfw3.h>
 #include "time_manager.h"
 
-InputManager::InputManager(GLFWwindow* window) : window{ window } {
+void InputManager::Initialize(GLFWwindow * window) {
+    this->window = window;
 
 	BindingKeyInfo&& g_GlobalCancel{}; {
 		g_GlobalCancel.name = "GlobalCancel";
@@ -41,6 +42,14 @@ InputManager::InputManager(GLFWwindow* window) : window{ window } {
 		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF10.name },
 										   std::move(g_GlobalF10)));
 	}
+
+    /*! Start D button */
+    BindingKeyInfo&& g_StartD{}; {
+        g_StartD.name = "StartD";
+        g_StartD.pos = GLFW_KEY_D;
+        m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF10.name },
+                                           std::move(g_GlobalF10)));
+    }
 }
 
 float InputManager::GetKeyValue(const std::string & key) {
