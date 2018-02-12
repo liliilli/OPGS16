@@ -113,9 +113,9 @@ void Application::InitiateFonts() {
 void Application::InitiateDebugUi() {
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
-    canvas->InitiateChild<ObjectFps>("Fps");
-    canvas->InitiateChild<ObjectDate>("Date");
-    canvas->InitiateChild<ObjectObjectTree>("Hier");
+    canvas->Instantiate<ObjectFps>("Fps");
+    canvas->Instantiate<ObjectDate>("Date");
+    canvas->Instantiate<ObjectObjectTree>("Hier");
 	m_debug_ui_canvas = std::move(canvas);
 }
 

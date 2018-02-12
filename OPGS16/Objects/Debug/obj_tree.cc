@@ -7,12 +7,12 @@
 void ObjectObjectTree::Update() {
     ObjectTree tree{};
 
-    auto* top_scene = Application::getInstance().GetTopScene();
+    auto* const top_scene = Application::getInstance().GetTopScene();
     if (top_scene != nullptr) {
         top_scene->GetObjectTree(&tree);
         std::string text{};
         SetHierarchyText(&tree, 0, &text);
-        SetText(std::move(text));
+        SetText(text);
     }
 }
 

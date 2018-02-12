@@ -18,7 +18,7 @@ void PathFinding2D::Draw() {
 }
 
 void PathFinding2D::InitUserInterface() {
-	InsertObject("Canvas", std::make_unique<Canvas::Canvas>());
+	Instantiate("Canvas", std::make_unique<Canvas::Canvas>());
 	auto canvas = static_cast<Canvas::Canvas*>(GetObject("Canvas").get());
 
 	//// Menu

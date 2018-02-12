@@ -178,21 +178,21 @@ public:
 	 * @return Success/Failed flag. If the methods success to make child object, return true.
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string tag, _Types&&... _args) {
+	bool Instantiate(const std::string tag, _Types&&... _args) {
         const auto item_tag = CreateChildTag(tag);
 		m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
 		return true;
 	}
 
 	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string tag, std::unique_ptr<_Ty>& instance) {
+	bool Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
         const auto item_tag = CreateChildTag(tag);
 		m_children[item_tag] = std::move(instance);
 		return true;
 	}
 
     template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-    bool InitiateChild(const std::string tag) {
+    bool Instantiate(const std::string tag) {
         const auto item_tag = CreateChildTag(tag);
 		m_children[item_tag] = std::make_unique<_Ty>();
 		return true;

@@ -50,14 +50,14 @@ public:
 	 *
 	 */
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InsertObject(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
+	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
 		return true;
 	}
 
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InsertObject(const std::string& tag, std::unique_ptr<_Ty>& obj) {
+	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
 		return true;
