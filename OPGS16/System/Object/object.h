@@ -15,7 +15,11 @@
 
 #include <memory>			/** std::unique_ptr */
 #include <unordered_map>	/** std::unordered_map */
-#include "..\..\Headers\Fwd\objectfwd.h"    /**  */
+#include <string>           /*! std::to_string */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::ShaderNew
+                                              * glm::vec3
+                                              * ObjectTree
+                                              * ObjectImplDeleter */
 
 /**
  * @class Object
@@ -174,20 +178,43 @@ public:
 	 * @return Success/Failed flag. If the methods success to make child object, return true.
 	 */
 	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string& tag, _Types&&... _args) {
-		if (m_children.find(tag) != m_children.end()) return false;
-
-		m_children[tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
+	bool InitiateChild(const std::string tag, _Types&&... _args) {
+        const auto item_tag = CreateChildTag(tag);
+		m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
 		return true;
 	}
 
 	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool InitiateChild(const std::string& tag, std::unique_ptr<_Ty>& instance) {
-		if (m_children.find(tag) != m_children.end()) return false;
-
-		m_children[tag] = std::move(instance);
+	bool InitiateChild(const std::string tag, std::unique_ptr<_Ty>& instance) {
+        const auto item_tag = CreateChildTag(tag);
+		m_children[item_tag] = std::move(instance);
 		return true;
 	}
+
+    template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
+    bool InitiateChild(const std::string tag) {
+        const auto item_tag = CreateChildTag(tag);
+		m_children[item_tag] = std::make_unique<_Ty>();
+		return true;
+    }
+
+    /*!
+     * @brief
+     * @param[in]
+     * @return
+     */
+    inline const std::string CreateChildTag(const std::string& tag) noexcept {
+        std::string item_tag{ tag };
+
+        if (m_tag_counter.find(tag) != m_tag_counter.end()) {
+            auto& count = m_tag_counter[tag];
+            count += 1;
+            item_tag.append('_' + std::to_string(count));
+        }
+        else { m_tag_counter[tag] = 0; }
+
+        return item_tag;
+    }
 
 	/**
 	 * @brief Destroy child object has unique tag key.
@@ -224,6 +251,9 @@ public:
 private:
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
 	object_map m_children;
+
+    using tag_counter_map = std::unordered_map<std::string, size_t>;
+    tag_counter_map m_tag_counter;
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

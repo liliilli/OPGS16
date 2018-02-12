@@ -41,4 +41,9 @@ class   FontManager;
 class   InputManager;
 class   TimeManager;
 
+/*! Custom Initiated Objects */
+class   TestImage;      /*! TestImage : public Canvas::Image */
+class   TestStartTxt;   /*! TestImage : public Canvas::Text */
+class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
+
 #endif /** OPGS16_HEADERS_FWD_OBJECT_FWD_H */
