@@ -37,8 +37,6 @@ public:
 
 	virtual ~Text() = default;
 
-    virtual void Update() override final {};
-
 	virtual void Draw(helper::ShaderNew & shader) override final {};
 
 	virtual void Draw() override final;

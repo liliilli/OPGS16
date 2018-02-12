@@ -68,6 +68,12 @@ public:
 	 */
 	const int GetScaleValue() const { return static_cast<int>(m_scale); }
 
+    /*!
+     * @brief Get top scene's pointer.
+     * @return The pointer of top scene, if application has no scene return nullptr
+     */
+    Scene* const GetTopScene() const noexcept;
+
 private:
     /** screen width, height */
     unsigned SCREEN_WIDTH   = 256u;
@@ -253,13 +259,6 @@ private:
 
 	/** Toggle post-processing effects */
 	[[noreturn]] void TogglePostProcessingEffect();
-
-	/**
-	 * @brief Set
-	 */
-	[[noreturn]] void SetHierarchyText(const ObjectTree* item,
-                                       size_t count,
-                                       std::string* const text);
 };
 
 #endif // OPENGL_TUTORIAL_APPLICATION_H

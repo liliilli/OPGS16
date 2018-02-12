@@ -13,7 +13,9 @@
 #include <glm\glm.hpp>
 
 #include "GlobalObjects\Canvas\canvas.h"
-#include "GlobalObjects\Canvas\text.h"
+#include "Objects\Debug\obj_fps.h"          /*! ObjectFps */
+#include "Objects\Debug\obj_date.h"         /*! ObjectDate */
+#include "Objects\Debug\obj_tree.h"         /*! ObjectObjectTree */
 #include "Scenes\start.h"
 #include "System\Debugs\hierarchy_tree.h"
 #include "System\Shader\pp_manager.h"
@@ -66,6 +68,13 @@ const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
 	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
 }
 
+Scene* const Application::GetTopScene() const noexcept {
+    if (!m_scenes.empty())
+        return m_scenes.top().get();
+    else
+        return nullptr;
+}
+
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -104,28 +113,9 @@ void Application::InitiateFonts() {
 void Application::InitiateDebugUi() {
 	/** Set up canvas for global information */
 	auto canvas = std::make_unique<Canvas::Canvas>();
-	glm::vec3 colors = glm::vec3{ 1, 0, 1 };
-	using Text = Canvas::Text;
-	auto fps = std::make_unique<Text>( "", glm::vec3{16, -16, 0}, colors ); {
-		fps->SetFontSize(8);
-		fps->SetOrigin(IOriginable::Origin::UP_LEFT);
-		fps->SetFontName("Solomon");
-		canvas->InitiateChild("Fps", fps);
-	}
-	auto date = std::make_unique<Text>( "", glm::vec3{16, -24, 0}, colors ); {
-		date->SetFontSize(8);
-		date->SetOrigin(IOriginable::Origin::UP_LEFT);
-		date->SetFontName("Solomon");
-		canvas->InitiateChild("Date", date);
-	}
-
-    auto hier = std::make_unique<Text>( "", glm::vec3{16, -32, 0}, colors ); {
-		hier->SetFontSize(8);
-		hier->SetOrigin(IOriginable::Origin::UP_LEFT);
-		hier->SetFontName("Solomon");
-		canvas->InitiateChild("Hier", hier);
-	}
-
+    canvas->InitiateChild<ObjectFps>("Fps");
+    canvas->InitiateChild<ObjectDate>("Date");
+    canvas->InitiateChild<ObjectObjectTree>("Hier");
 	m_debug_ui_canvas = std::move(canvas);
 }
 
@@ -238,51 +228,7 @@ void Application::TogglePostProcessingEffect() {
 }
 
 void Application::UpdateDebugInformation() {
-	/** Refresh Fps */ {
-		std::ostringstream str;
-		str << std::setprecision(4) << m_m_time->GetFpsSeconds();
-
-		auto text = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Fps"));
-		text->SetText("Fps : " + str.str());
-	}
-
-	/** Refresh Date */ {
-		auto timepoint = std::chrono::system_clock::now();
-		std::time_t time_struct = std::chrono::system_clock::to_time_t(timepoint);
-		std::ostringstream stream;
-		stream << std::put_time(std::localtime(&time_struct), "%F %T");
-
-		auto date = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Date"));
-		date->SetText(stream.str());
-	}
-
-	/** Display Hierarchy Objects */ {
-		ObjectTree tree{};
-		if (!m_scenes.empty()) {
-			top_scene->GetObjectTree(&tree);
-			std::string text{};
-			SetHierarchyText(&tree, 0, &text);
-
-			auto tree = static_cast<Canvas::Text*>(m_debug_ui_canvas->GetChild("Hier"));
-			tree->SetText(std::move(text));
-		}
-	}
-
 	m_debug_ui_canvas->Update();
-}
-
-void Application::SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text) {
-	if (count == 0)
-		text->append("Scene\n");
-	else {
-		std::string space_text{};
-		for (size_t i = 1; i <= count; ++i) { space_text.push_back(' '); }
-		text->append(space_text + item->name + '\n');
-	}
-
-	for (const auto& child : item->children) {
-		SetHierarchyText(&child, count + 1, text);
-	}
 }
 
 void Application::DrawDebugInformation() { m_debug_ui_canvas->Draw(); }
