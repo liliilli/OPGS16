@@ -6,7 +6,8 @@
 #include <assimp\postprocess.h>
 #include <assimp\scene.h>
 #include <glm\glm.hpp>
-#include "helper.h"
+#include <iostream>
+//#include "helper.h"
 #include "..\Shader\shader.h"
 
 namespace model {
