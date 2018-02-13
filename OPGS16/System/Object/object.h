@@ -13,13 +13,16 @@
  * @date 2018-02-08
  */
 
+#include <algorithm>        /*! std::find_if */
 #include <memory>			/** std::unique_ptr */
 #include <unordered_map>	/** std::unordered_map */
 #include <string>           /*! std::to_string */
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::ShaderNew
                                               * glm::vec3
+                                              * component::Component
                                               * ObjectTree
                                               * ObjectImplDeleter */
+#include "..\..\System\Components\script_frame.h"   /*! component::ScriptFrame */
 
 /**
  * @class Object
@@ -248,12 +251,60 @@ public:
 	 */
 	[[noreturn]] void GetObjectTree(ObjectTree* const tree);
 
+    /*!
+     * @brief
+     *
+     * @param[in] _Ty
+     * @param[in] _Params&& Universal reference.
+     */
+    template<class _Ty,
+        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>,
+        typename... _Params>
+    [[noreturn]] void AddComponent(_Params&&... params) {
+        m_scripts.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
+    }
+
+    /*!
+     * @brief
+     * @param[in] _Ty
+     * @return
+     */
+    template<class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
+    _Ty* const GetComponent() {
+        for (auto& item : m_scripts) {
+            if (item->DoesTypeMatch(_Ty::type)) return static_cast<_Ty*>(item.get());
+        }
+        return nullptr;
+    }
+
+    /*!
+     * @brief
+     * @param[in] _Ty
+     * @return
+     */
+    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
+    bool RemoveComponent() {
+        auto it = std::find_if(m_scripts.cbegin(), m_scripts.cend(),
+                               [](const std::unique_ptr<component::ScriptFrame>& item) {
+            return item->DoesTypeMatch(_Ty::type);
+        });
+        if (it != m_scripts.cend()) {
+            m_scripts.erase(it);    /*! Too much execution time */
+            return true;
+        }
+        else return false;
+    }
+
 private:
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
 	object_map m_children;
 
     using tag_counter_map = std::unordered_map<std::string, size_t>;
     tag_counter_map m_tag_counter;
+
+protected:
+    using script_ptr = std::unique_ptr<component::ScriptFrame>;
+    std::vector<script_ptr> m_scripts{};
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

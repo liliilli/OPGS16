@@ -46,4 +46,9 @@ class   TestImage;      /*! TestImage : public Canvas::Image */
 class   TestStartTxt;   /*! TestImage : public Canvas::Text */
 class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
 
+namespace component {
+class Component;
+class ScriptFrame;
+}
+
 #endif /** OPGS16_HEADERS_FWD_OBJECT_FWD_H */

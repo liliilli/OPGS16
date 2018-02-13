@@ -12,11 +12,6 @@ public:
         SetFontName("Solomon");
         SetFontSize(8u);
     }
-
-    [[noreturn]] virtual void Update() override final;
-
-private:
-    void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
 };
 
 #endif // !OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_OBJECT_TREE_h

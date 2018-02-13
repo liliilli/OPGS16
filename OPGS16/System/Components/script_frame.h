@@ -8,15 +8,21 @@
  * @date 2018-02-10
  */
 
-#include <string>
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! Object */
+#include <string>                           /*! std::string as member */
+#include "_macro.h"                         /*! SET_UP_HASH_MEMBER_DERIVED() */
+#include "component.h"                      /*! Component as base class */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! Object as reference */
+
+namespace component {
 
 /*!
  * @class ScriptFrame
  * @brief
  */
-class ScriptFrame {
+class ScriptFrame : public component::Component {
 public:
+    ScriptFrame(Object& bound_obj) : m_bound_object{ bound_obj } {}
+
     /*!
      * @brief This method will be called only one time, when ScriptFrame is attached to object,
      * and actived first time in game applicaiton.
@@ -47,6 +53,10 @@ private:
     const std::string m_script_name;    /*! Name must be same as ScriptFrame derived. */
     Object& m_bound_object;             /*! Bound object which script instance refers to */
 
+SET_UP_HASH_MEMBERS_DERIVED()           /*! Create members related to type hash value. */
+OVERRIDE_TYPEMATCH(component::Component, ScriptFrame)   /*! Override DoesTypeMatch(value) */
 };
+
+}
 
 #endif // !OPGS16_SYSTEM_COMPONENTS_SCRIPT_FRAME_H

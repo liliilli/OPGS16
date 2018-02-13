@@ -11,8 +11,6 @@ public:
         SetFontName("Solomon");
         SetFontSize(8u);
     }
-
-    [[noreturn]] virtual void Update() override final;
 };
 
 #endif // !OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_DATE_h

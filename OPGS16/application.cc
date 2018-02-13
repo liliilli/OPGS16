@@ -1,23 +1,16 @@
 #include "application.h"
 
-#include <chrono>	// std::chrono::system_clock
-#include <ctime>	// std::time_t, std::localtime, std::put_time
 #include <iomanip>	// std::setprecision, set::setw, std::put_time
 #include <iostream>	// std::cerr, std::endl
 #include <memory>	// std::static_pointer_cast
-#include <string>	// std::stringstream, std::string
-#include <sstream>  /*! std::ostringstream */
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 
 #include "GlobalObjects\Canvas\canvas.h"
-#include "Objects\Debug\obj_fps.h"          /*! ObjectFps */
-#include "Objects\Debug\obj_date.h"         /*! ObjectDate */
-#include "Objects\Debug\obj_tree.h"         /*! ObjectObjectTree */
+#include "Objects\Debug\debug_canvas.h"     /*! CanvasDebug */
 #include "Scenes\start.h"
-#include "System\Debugs\hierarchy_tree.h"
 #include "System\Shader\pp_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
@@ -111,12 +104,7 @@ void Application::InitiateFonts() {
 }
 
 void Application::InitiateDebugUi() {
-	/** Set up canvas for global information */
-	auto canvas = std::make_unique<Canvas::Canvas>();
-    canvas->Instantiate<ObjectFps>("Fps");
-    canvas->Instantiate<ObjectDate>("Date");
-    canvas->Instantiate<ObjectObjectTree>("Hier");
-	m_debug_ui_canvas = std::move(canvas);
+	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
 }
 
 void Application::InitiatePostProcessingEffects() {
@@ -160,7 +148,8 @@ void Application::Update() {
     Input();
     /*! Update */
     if (!m_scenes.empty()) top_scene->Update();
-	if (m_option.debug_mode) UpdateDebugInformation();
+	if (m_option.debug_mode)
+        m_debug_ui_canvas->Update();
 	m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
@@ -212,7 +201,8 @@ void Application::Draw() {
 		}
 	}
 
-	if (m_option.debug_mode) DrawDebugInformation(); // Debug Display
+	if (m_option.debug_mode)
+        m_debug_ui_canvas->Draw();
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
@@ -226,12 +216,6 @@ void Application::TogglePostProcessingEffect() {
 	m_option.post_processing = (m_option.post_processing ? false : true);
 	std::cerr << "NOTIFY::POST::PROCESSING::SWITCH::" << m_option.post_processing << std::endl;
 }
-
-void Application::UpdateDebugInformation() {
-	m_debug_ui_canvas->Update();
-}
-
-void Application::DrawDebugInformation() { m_debug_ui_canvas->Draw(); }
 
 void Application::PopScene() {
     top_scene = nullptr;
