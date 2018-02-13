@@ -5,7 +5,7 @@
  * @file System\Components\script_frame.h
  * @brief Base script frame file.
  * @author Jongmin Yun
- * @date 2018-02-10
+ * @date 2018-02-13
  */
 
 #include <string>                           /*! std::string as member */
@@ -13,11 +13,20 @@
 #include "component.h"                      /*! Component as base class */
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! Object as reference */
 
+/*!
+ * @namespace component
+ * @brief The namespace stores informations of basic OPGS16 components to be used in each object.
+ * Derived user-defined component class should not exist or insert in component namespace.
+ */
 namespace component {
 
 /*!
  * @class ScriptFrame
- * @brief
+ * @brief The most base script class, which is derived by all user-defined script class.
+ * ScriptFrame inherits component::Component class the most base class of all components.
+ *
+ * All derived class must be a final, and define Start() and Update() member function.
+ * Initiate() and Start() must be called only once in initialization time.
  */
 class ScriptFrame : public component::Component {
 public:
@@ -53,8 +62,8 @@ private:
     const std::string m_script_name;    /*! Name must be same as ScriptFrame derived. */
     Object& m_bound_object;             /*! Bound object which script instance refers to */
 
-SET_UP_HASH_MEMBERS_DERIVED()           /*! Create members related to type hash value. */
-OVERRIDE_TYPEMATCH(component::Component, ScriptFrame)   /*! Override DoesTypeMatch(value) */
+    /*! Create members related to type hash value. */
+SET_UP_TYPE_MEMBER(component::Component, ScriptFrame)
 };
 
 }

@@ -1,0 +1,3 @@
+#include "component.h"                              /*! component::Header file */
+#include "script_frame.h"                           /*! component::ScriptFrame */
+#include "..\..\Objects\Debug\Script\ui_manager.h"  /*! UiManager */

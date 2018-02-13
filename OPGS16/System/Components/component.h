@@ -1,32 +1,27 @@
-#ifndef SYSTEM_COMPONENTS_COMPONENT_H
-#define SYSTEM_COMPONENTS_COMPONENT_H
+#ifndef OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
+#define OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
 
 /*!
  * @file System\Components\component.h
- * @brief
+ * @author Jongmin Yun
+ * @date 2018-02-13
  */
 
 /*!
  * @namespace component
- * @brief
+ * @brief The namespace stores informations of basic OPGS16 components to be used in each object.
+ * Derived user-defined component class should not exist or insert in component namespace.
  */
 namespace component {
 
 /*!
  * @class Component
- * @brief
+ * @brief The most base class of derived component classes.
  */
 class Component {
 public:
     Component() = default;
     virtual ~Component() = default;
-
-    /*!
-     * @brief Return type hash value.
-     * This method used to match component type's hashed value and Class value.
-     * @return Type hashed value of this class instance.
-     */
-    inline virtual const size_t Type() noexcept { return type; }
 
     /*!
      * @brief Return true/false flag whether or not your finding class is this.
@@ -37,10 +32,10 @@ public:
         return type == type_value;
     }
 
-private:
+public:
     static const size_t type;
 };
 
 }
 
-#endif // !SYSTEM_COMPONENTS_COMPONENT_H
+#endif // !OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
