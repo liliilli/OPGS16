@@ -49,6 +49,12 @@ class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
 namespace component {
 class Component;
 class ScriptFrame;
+class RigidBody2D;
+}
+
+namespace collision {
+class Collider2D;
+class RectangleCollider2D;
 }
 
 #endif /** OPGS16_HEADERS_FWD_OBJECT_FWD_H */
