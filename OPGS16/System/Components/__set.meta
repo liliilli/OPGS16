@@ -1,6 +1,7 @@
 namespace component {
 SET_UP_HASH_VALUE_OF(Component)
 SET_UP_HASH_VALUE_OF(ScriptFrame)
+SET_UP_HASH_VALUE_OF(Camera)
 }
 SET_UP_HASH_VALUE_OF(DebugUiManager)
 SET_UP_HASH_VALUE_OF(TestScript)
