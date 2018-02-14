@@ -6,6 +6,7 @@
 #include "obj_tree.h"           /*! ObjectObjectTree */
 #include "Script\ui_manager.h"  /*! component::ScriptFrame
                                   * DebugUiManager script */
+#include "Script\test_script.h"
 #include "..\..\GlobalObjects\camera_object.h"  /*! For base class's constructor. */
 
 CanvasDebug::CanvasDebug() {
@@ -20,12 +21,14 @@ CanvasDebug::CanvasDebug() {
         static_cast<::Canvas::Text*>(GetChild("Date")),
         static_cast<::Canvas::Text*>(GetChild("Hier")));
 
-    //auto ptr = GetComponent<DebugUiManager>();
-    //if (ptr) {
-    //    std::cout << typeid(ptr).name() << '\n';
-    //}
+    AddComponent<TestScript>(*this);
 
-    //RemoveComponent<DebugUiManager>();
+    auto ptr = GetComponent<TestScript>();
+    if (ptr) {
+        std::cout << typeid(ptr).name() << '\n';
+    }
+
+    RemoveComponent<TestScript>();
 }
 
 void CanvasDebug::Update() {
