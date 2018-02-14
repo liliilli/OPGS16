@@ -6,13 +6,15 @@
  * camera::CameraObject,
  * camera::CameraObject::ViewType
  */
-#include "..\..\GlobalObjects\camera_object.h"
+#include "..\..\System\Components\camera.h" /*! component::Camera */
 
 namespace Canvas {
-Canvas::Canvas() :
-	m_camera{ std::make_unique<camera::CameraObject>(camera::CameraObject::ViewType::ORTHO,
-													 camera::CameraObject::CameraType::SUB )},
-	m_is_size_changed{ true } {
+
+Canvas::Canvas() : m_is_size_changed{ true } {
+    /*! Body */
+    using Camera = component::Camera;
+    AddComponent<component::Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
+    m_camera = GetComponent<component::Camera>();
 }
 
 void Canvas::Update() {
@@ -32,8 +34,8 @@ void Canvas::Draw() {
     glEnable(GL_DEPTH_TEST);
 }
 
-const glm::mat4 Canvas::GetUiCameraProjMatrix() const {
-	return m_camera->GetProjectionMatrix();
+const glm::mat4 Canvas::GetUiCameraPVMatrix() const {
+	return m_camera->GetPV();
 }
 
 }

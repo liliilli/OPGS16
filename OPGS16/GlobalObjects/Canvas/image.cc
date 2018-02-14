@@ -68,9 +68,8 @@ const glm::mat4 Image::GetPvmMatrix() const {
 	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
 	M = glm::scale(M, GetScaleFactor() * GetScaleValue());
 
-	auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-	auto P = m_ref_canvas->GetUiCameraProjMatrix();
+	auto PV = m_ref_canvas->GetUiCameraPVMatrix();
 
-	return P * V * M;
+	return PV * M;
 }
 }

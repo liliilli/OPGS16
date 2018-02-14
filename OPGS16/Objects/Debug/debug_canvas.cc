@@ -32,7 +32,7 @@ CanvasDebug::CanvasDebug() {
 }
 
 void CanvasDebug::Update() {
-    for (auto& script : m_scripts) {
+    for (auto& script : m_components) {
         script->Update();
     }
     Canvas::Update();

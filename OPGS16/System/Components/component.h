@@ -23,6 +23,8 @@ public:
     Component() = default;
     virtual ~Component() = default;
 
+    [[noreturn]] virtual void Update() = 0;
+
     /*!
      * @brief Return true/false flag whether or not your finding class is this.
      * @param[in] type_value Hashed type value of type which you want to find.

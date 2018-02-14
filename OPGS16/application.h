@@ -12,10 +12,9 @@
  */
 
 #include <memory>
-#include <stack>
+#include <stack>                    /*! std::stack */
 #include <string>
 #include <type_traits>
-//#include "System\Frame\scene.h"
 #include "Headers\Fwd\objectfwd.h"  /*! GLFWwindow
                                       * InputManager
                                       * Object
@@ -48,14 +47,6 @@ public:
     /** Let application run and loop.  */
     [[noreturn]] void Run();
 
-    /**
-     * @brief The method replace scene with old scene.
-     */
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-    [[noreturn]] void ReplaceScene(){
-		pReplaceScene<_Ty>();
-    }
-
 	/**
 	 * @brief Get default screen size (no scaling screen size)
 	 * @return Width, height size array.
@@ -68,21 +59,16 @@ public:
 	 */
 	const int GetScaleValue() const { return static_cast<int>(m_scale); }
 
-    /*!
-     * @brief Get top scene's pointer.
-     * @return The pointer of top scene, if application has no scene return nullptr
-     */
-    Scene* const GetTopScene() const noexcept;
-
 private:
     /** screen width, height */
     unsigned SCREEN_WIDTH   = 256u;
     unsigned SCREEN_HEIGHT  = 224u;
 
     GLFWwindow* window{ nullptr };					/** Window handle pointer */
-
-    std::stack<std::shared_ptr<Scene>> m_scenes;	/** Scene stack */
-    std::shared_ptr<Scene> top_scene;
+    SceneManager&   m_scene_instance;               /*! SceneManager instance */
+	shading::PostProcessingManager* m_pp_manager{ nullptr };
+	InputManager*   m_m_input{ nullptr };
+    TimeManager*    m_m_time{ nullptr };
 
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
@@ -90,11 +76,12 @@ private:
 	/**
 	 * @brief Global game status in this game application.
 	 */
-	enum class GameStatus {
+	enum class GameStatus : size_t {
 		INIT,	/** First, and Initial status in game application. */
 		MENU,	/** Global Menu */
 		PLAYING,/** Actual play mode, not paused, not menu. */
-		EXIT	/** Exit process from game application returning to game selection menu. */
+		EXIT,	/** Exit process from game application returning to game selection menu. */
+        TERMINATE
 	}; std::stack<GameStatus> m_game_status{};
 
 	struct GlobalOption {
@@ -109,11 +96,6 @@ private:
 		X2_DOUBLE = 2,	/** Screen will be showed with 512x448 size (personally perfect) */
 		X3_TRIPLE = 3,	/** Screen will be showed with 768x672 size */
 	} m_scale;
-
-	shading::PostProcessingManager* m_pp_manager{ nullptr };
-
-	InputManager* m_m_input{ nullptr };
-    TimeManager* m_m_time{ nullptr };
 
 private:
     explicit Application(std::string&& app_name = "Application");
@@ -164,46 +146,8 @@ private:
     /** The method update components movement, UI refresh, and so on. */
     [[noreturn]] void Update();
 
-	/** Update debug information. */
-	[[noreturn]] void UpdateDebugInformation();
-
     /** The method calls scene to draw all objects. */
     [[noreturn]] void Draw();
-
-	/** Render debug information */
-	[[noreturn]] void DrawDebugInformation();
-
-    /**
-     * @brief The method that adds scene to scene stack.
-     * Add scene to scene stack stores scenes is paused, and move to top scene.
-     *
-     * @param[in] _Ty* Type parameter is based on Scene, value must be nullptr to prevent
-     * double initiation of scene.
-     */
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Scene, _Ty>>>
-    [[noreturn]] void PushScene() {
-        m_scenes.push(std::make_shared<_Ty>());
-        top_scene = m_scenes.top();
-    }
-
-	/**
-	* @brief The method replace scene with old scene.
-	*/
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-	[[noreturn]] void pReplaceScene() {
-		/** Pop present scene */
-		top_scene = nullptr;
-		m_scenes.pop();
-		/** Push present scene */
-		PushScene<_Ty>();
-	}
-
-    /**
-     * @brief The method removes top (present) scene.
-	 * If there is no scene, exit application automatically.
-	 * Otherwise all Update() and Rendering procedures delegates to previous scene.
-     */
-    [[noreturn]] void PopScene();
 
 	/**
 	 * @brief Return present status.
@@ -238,11 +182,10 @@ private:
 	 * This will crash game on playing.
 	 */
 	[[noreturn]] void PopStatus() {
-		m_game_status.pop();
-		if (m_game_status.empty()) {
-			while (!m_scenes.empty()) PopScene();
-			Exit();
-		}
+        if (!m_game_status.empty()) {
+            m_game_status.pop();
+            if (m_game_status.empty()) Exit();
+        }
 	}
 
 	/** Exit game */

@@ -22,7 +22,7 @@
                                               * component::Component
                                               * ObjectTree
                                               * ObjectImplDeleter */
-#include "..\..\System\Components\script_frame.h"   /*! component::ScriptFrame */
+#include "..\..\System\Components\component.h"   /*! component::Component */
 
 /**
  * @class Object
@@ -261,7 +261,7 @@ public:
         typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>,
         typename... _Params>
     [[noreturn]] void AddComponent(_Params&&... params) {
-        m_scripts.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
+        m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
     }
 
     /*!
@@ -271,7 +271,7 @@ public:
      */
     template<class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
     _Ty* const GetComponent() {
-        for (auto& item : m_scripts) {
+        for (auto& item : m_components) {
             if (item->DoesTypeMatch(_Ty::type)) return static_cast<_Ty*>(item.get());
         }
         return nullptr;
@@ -284,12 +284,12 @@ public:
      */
     template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
     bool RemoveComponent() {
-        auto it = std::find_if(m_scripts.cbegin(), m_scripts.cend(),
-                               [](const std::unique_ptr<component::ScriptFrame>& item) {
+        auto it = std::find_if(m_components.cbegin(), m_components.cend(),
+                               [](const std::unique_ptr<component::Component>& item) {
             return item->DoesTypeMatch(_Ty::type);
         });
-        if (it != m_scripts.cend()) {
-            m_scripts.erase(it);    /*! Too much execution time */
+        if (it != m_components.cend()) {
+            m_components.erase(it);    /*! Too much execution time */
             return true;
         }
         else return false;
@@ -303,8 +303,8 @@ private:
     tag_counter_map m_tag_counter;
 
 protected:
-    using script_ptr = std::unique_ptr<component::ScriptFrame>;
-    std::vector<script_ptr> m_scripts{};
+    using component_ptr = std::unique_ptr<component::Component>;
+    std::vector<component_ptr> m_components{};
 };
 
 #endif /** OPENGL_TUTORIAL_OBJECT_H */

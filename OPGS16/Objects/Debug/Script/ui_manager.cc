@@ -8,9 +8,9 @@
 #include "..\..\..\System\Manager\time_manager.h"   /*! TimeManager::GetInstance() */
 
 /*! Tree */
-#include "..\..\..\application.h"                   /*! Application */
 #include "..\..\..\System\Debugs\hierarchy_tree.h"  /*! ObjectTree */
 #include "..\..\..\System\Frame\scene.h"            /*! GetObjectTree() */
+#include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
 
 DebugUiManager::DebugUiManager(Object& obj,
                                Canvas::Text* const _m_fps,
@@ -44,7 +44,7 @@ void DebugUiManager::Update() {
     if (m_tree) {
         ObjectTree tree{};
 
-        auto* const top_scene = Application::getInstance().GetTopScene();
+        auto const top_scene = SceneManager::GetInstance().GetPresentScene();
         if (top_scene != nullptr) {
             top_scene->GetObjectTree(&tree);
             std::string text{};
@@ -55,8 +55,8 @@ void DebugUiManager::Update() {
 }
 
 void DebugUiManager::SetHierarchyText(const ObjectTree* item,
-                                        size_t count,
-                                        std::string* const text) {
+                                      size_t count,
+                                      std::string* const text) {
     if (count == 0) text->append("Scene\n");
     else {
         std::string space_text{};

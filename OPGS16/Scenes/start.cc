@@ -8,7 +8,8 @@
 
 Start::Start() {
 	auto canvas = std::make_unique<Canvas::Canvas>();
-    /*! To call template function with specific type argument, must know complete information. */
+
+    ///*! To call template function with specific type argument, must know complete information. */
     //canvas->Instantiate<TestImage>("Image", canvas); {
     //    auto image = canvas->GetChild("Image");
     //    image->Instantiate<TestStartTxt>("Txt"); {

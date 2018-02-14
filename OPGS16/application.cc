@@ -20,9 +20,11 @@
 #include "System\Manager\input_manager.h"
 #include "System\Manager\sound_manager.h"
 #include "System\Manager\time_manager.h"
+#include "System\Manager\scene_manager.h"   /*! SceneManager */
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
+    m_scene_instance{ SceneManager::GetInstance() },
 	m_option{ false, true, false, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
@@ -61,21 +63,12 @@ const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
 	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
 }
 
-Scene* const Application::GetTopScene() const noexcept {
-    if (!m_scenes.empty())
-        return m_scenes.top().get();
-    else
-        return nullptr;
-}
-
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
-		// Set Camera Cursor and Fps
-		//camera::SetCursor(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
         m_m_time = &TimeManager::GetInstance();
         m_m_time->SetFps(60.f);
 
@@ -87,10 +80,10 @@ void Application::Initiate() {
         m_m_input->Initialize(window);
 
 		/** Insert first scene */
-		PushScene<Start>();
-		ReplacePresentStatus(GameStatus::PLAYING);
+        m_scene_instance.PushScene<Start>();
 
         glEnable(GL_DEPTH_TEST);
+		ReplacePresentStatus(GameStatus::PLAYING);
 	}
 }
 
@@ -147,10 +140,16 @@ void Application::Update() {
     /*! Input */
     Input();
     /*! Update */
-    if (!m_scenes.empty()) top_scene->Update();
-	if (m_option.debug_mode)
-        m_debug_ui_canvas->Update();
-	m_pp_manager->UpdateSequences(); // Update active effects.
+    switch (m_game_status.top()) {
+    case GameStatus::PLAYING: //[[fallthrough]] require /std:c++17
+    case GameStatus::MENU:
+        if (!m_scene_instance.SceneEmpty())
+            m_scene_instance.GetPresentScene()->Update();
+        break;
+    }
+
+    if (m_option.debug_mode)        m_debug_ui_canvas->Update();
+	if (m_option.post_processing)   m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
 void Application::Input() {
@@ -182,14 +181,14 @@ void Application::InputGlobal() {
  * @brief The method calls scene to draw all objects.
  */
 void Application::Draw() {
-	if (!m_scenes.empty()) {
+	if (!m_scene_instance.SceneEmpty()) {
 		if (m_option.post_processing) {
 			glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			m_pp_manager->BindSequence(0);
 		}
 
 		/** Actual rendering */
-		top_scene->Draw();
+        m_scene_instance.GetPresentScene()->Draw();
 
 		/** Post-processing */
 		if (m_option.post_processing) {
@@ -201,8 +200,8 @@ void Application::Draw() {
 		}
 	}
 
-	if (m_option.debug_mode)
-        m_debug_ui_canvas->Draw();
+	if (m_option.debug_mode) m_debug_ui_canvas->Draw();
+
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
@@ -215,12 +214,6 @@ void Application::ToggleFpsDisplay() {
 void Application::TogglePostProcessingEffect() {
 	m_option.post_processing = (m_option.post_processing ? false : true);
 	std::cerr << "NOTIFY::POST::PROCESSING::SWITCH::" << m_option.post_processing << std::endl;
-}
-
-void Application::PopScene() {
-    top_scene = nullptr;
-    m_scenes.pop();
-    if (!m_scenes.empty()) top_scene = m_scenes.top(); else Exit();
 }
 
 void Application::ChangeScalingOption(OptionScale value) {
@@ -260,5 +253,7 @@ void Application::ToggleAntialiasing() {
 
 
 void Application::Exit() {
+    PushStatus(GameStatus::EXIT);
     glfwSetWindowShouldClose(window, true);
+    ReplacePresentStatus(GameStatus::TERMINATE);
 }

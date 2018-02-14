@@ -43,6 +43,8 @@ public:
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
+    [[noreturn]] virtual void Update() override;     /*! Inherited via component::Component */
+
 public:
 	Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto = true);
 	virtual ~Camera();
@@ -74,6 +76,7 @@ private:
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::Component, Camera)
+
 };
 
 }

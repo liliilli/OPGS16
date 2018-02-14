@@ -45,11 +45,11 @@ public:
 	[[noreturn]] virtual void Draw() override;
 
 	/** Get Ui camera's orthographic projection matrix. */
-	const glm::mat4 GetUiCameraProjMatrix() const;
+	const glm::mat4 GetUiCameraPVMatrix() const;
 
 private:
 	/** Camera object uses just one orthographic type. */
-	std::unique_ptr<camera::CameraObject> m_camera;
+    component::Camera* m_camera{ nullptr };
 
 	bool m_is_size_changed;
 };

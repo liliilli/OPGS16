@@ -40,6 +40,7 @@ class   ShaderWrapper;
 class   FontManager;
 class   InputManager;
 class   TimeManager;
+class   SceneManager;
 
 /*! Custom Initiated Objects */
 class   TestImage;      /*! TestImage : public Canvas::Image */
@@ -50,6 +51,7 @@ namespace component {
 class Component;
 class ScriptFrame;
 class RigidBody2D;
+class Camera;
 }
 
 namespace collision {

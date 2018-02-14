@@ -71,4 +71,7 @@ void Camera::InitiatePerspectiveProjection() {
     m_PV = m_projection * m_view;
 }
 
+void Camera::Update() {
+}
+
 }

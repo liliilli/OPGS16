@@ -49,7 +49,7 @@ public:
      * @brief This method updates information of script instance bound to specific object.
      * Must be overriden and implemented by derived script class.
      */
-    [[noreturn]] virtual void Update() = 0;
+    //[[noreturn]] virtual void Update() = 0;
 
     /*!
      * @brief This method will be called only one time, when the object are destroyed.
