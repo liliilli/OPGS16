@@ -14,13 +14,17 @@ void Object::Update() {
 	}
 }
 
-const glm::vec3 Object::GetLocalPosition() const { return m_data->GetLocalPosition(); }
+const glm::vec3 Object::GetLocalPosition() const {
+    return m_data->GetLocalPosition();
+}
 
 void Object::SetLocalPosition(glm::vec3 position) {
 	m_data->SetLocalPosition(position);
 }
 
-const glm::vec3 Object::GetFinalPosition() const { return m_data->GetFinalPosition(); }
+const glm::vec3 Object::GetFinalPosition() const {
+    return m_data->GetFinalPosition();
+}
 
 void Object::SetFinalPosition(const glm::vec3& final_position) {
 	m_data->SetFinalPosition(final_position);

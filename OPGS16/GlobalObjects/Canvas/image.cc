@@ -63,11 +63,7 @@ void Image::Draw() {
 }
 
 const glm::mat4 Image::GetPvmMatrix() const {
-	auto M = glm::mat4();
-	auto position = GetFinalPosition();
-	M = glm::translate(M, glm::vec3{ position.x, position.y , 0 });
-	M = glm::scale(M, GetScaleFactor() * GetScaleValue());
-
+	auto M = GetModelMatrix();
 	auto PV = m_ref_canvas->GetUiCameraPVMatrix();
 
 	return PV * M;
