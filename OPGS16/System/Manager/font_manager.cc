@@ -163,62 +163,62 @@ bool FontManager::CheckFreeType(const std::string& font_path) {
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat scale, glm::vec3 color) {
-	if (!m_font_in_use) return;
+    if (m_font_in_use) {
+        m_shader->Use();
+        m_shader->SetVec3f("textColor", color);
+        m_shader->SetVecMatrix4f("projection", m_projection);
 
-	m_shader->Use();
-    m_shader->SetVec3f("textColor", color);
-    m_shader->SetVecMatrix4f("projection", m_projection);
+        glBindVertexArray(m_vao);
 
-    glBindVertexArray(m_vao);
+        /** Separate text to multi lines string */
+        auto texts  = SeparateTextToList(input);
+        auto pos    = input_pos;
 
-    /** Separate text to multi lines string */
-    auto texts  = SeparateTextToList(input);
-    auto pos    = input_pos;
+        /** Render texts */
+        for (const auto& text : texts) {
+            // Iterate through all characters
+            for (const auto& chr : text) {
+                Character ch_info   = m_font_in_use->at(chr);
 
-    /** Render texts */
-    for (const auto& text : texts) {
-        // Iterate through all characters
-        for (const auto& chr : text) {
-            Character ch_info   = m_font_in_use->at(chr);
+                auto x_offset = ch_info.bearing.x * scale;
+                auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
+                glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
 
-            auto x_offset = ch_info.bearing.x * scale;
-            auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
-            glm::vec2 ch_pos = pos + glm::vec2{ x_offset, -y_offset };
+                auto w = ch_info.size.x * scale;
+                auto h = ch_info.size.y * scale;
 
-            auto w = ch_info.size.x * scale;
-            auto h = ch_info.size.y * scale;
+                // Update VBO for each character
+                GLfloat vertices[6][4] = {
+                    { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+                    { ch_pos.x,     ch_pos.y,       0.0, 1.0 },
+                    { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
 
-            // Update VBO for each character
-            GLfloat vertices[6][4] = {
-                { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-                { ch_pos.x,     ch_pos.y,       0.0, 1.0 },
-                { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+                    { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
+                    { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
+                    { ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
+                };
 
-                { ch_pos.x,     ch_pos.y + h,   0.0, 0.0 },
-                { ch_pos.x + w, ch_pos.y,       1.0, 1.0 },
-                { ch_pos.x + w, ch_pos.y + h,   1.0, 0.0 }
-            };
+                // Render texture glyph
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, ch_info.texture_id);
 
-            // Render texture glyph
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, ch_info.texture_id);
+                // Update content of VBO
+                glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-            // Update content of VBO
-            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+                // Render
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+                pos.x += (ch_info.advance >> 6) * scale;
+            }
 
-            // Render
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            pos.x += (ch_info.advance >> 6) * scale;
+            /** Relocate display position */
+            pos.x   = input_pos.x;
+            pos.y  -= m_font_in_use->at(0).size.y;
         }
 
-        /** Relocate display position */
-        pos.x   = input_pos.x;
-        pos.y  -= m_font_in_use->at(0).size.y;
+        EndShader();
     }
-
-	EndShader();
 }
 
 /**
@@ -244,27 +244,26 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
 void FontManager::RenderTextNew
 (const std::string&text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
  IAlignable::Alignment alignment, const float scale) {
-	if (m_font_in_use == nullptr) return;
+    if (m_font_in_use) {
+        StartShader(color);
+        auto text_container = SeparateTextToList(text);
+        auto position = relative_position;
 
-	// Body
-	StartShader(color);
-	auto text_container = SeparateTextToList(text);
-	auto position = relative_position;
+        using Align = IAlignable::Alignment;
+        switch (alignment) {
+        case Align::LEFT:
+            RenderLeftSide(text_container, position, scale);
+            break;
+        case Align::CENTER:
+            RenderCenterSide(text_container, position, scale);
+            break;
+        case Align::RIGHT:
+            RenderRightSide(text_container, position, scale);
+            break;
+        }
 
-	using Align = IAlignable::Alignment;
-	switch (alignment) {
-	case Align::LEFT:
-		RenderLeftSide(text_container, position, scale);
-		break;
-	case Align::CENTER:
-		RenderCenterSide(text_container, position, scale);
-		break;
-	case Align::RIGHT:
-		RenderRightSide(text_container, position, scale);
-		break;
-	}
-
-	EndShader();
+        EndShader();
+    }
 }
 
 /**
