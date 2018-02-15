@@ -18,9 +18,10 @@
 #include "System\Shader\PostProcessing\pp_gray.h"
 #include "System\Manager\font_manager.h"
 #include "System\Manager\input_manager.h"
+#include "System\Manager\physics_manager.h" /*! PhysicsManager*/
+#include "System\Manager\scene_manager.h"   /*! SceneManager */
 #include "System\Manager\sound_manager.h"
 #include "System\Manager\time_manager.h"
-#include "System\Manager\scene_manager.h"   /*! SceneManager */
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
@@ -78,6 +79,8 @@ void Application::Initiate() {
 		InitiateSoundSetting();
 		m_m_input = &InputManager::GetInstance();
         m_m_input->Initialize(window);
+
+        m_physics_manager = &PhysicsManager::GetInstance();
 
 		/** Insert first scene */
         m_scene_instance.PushScene<Start>();
@@ -143,8 +146,10 @@ void Application::Update() {
     switch (m_game_status.top()) {
     case GameStatus::PLAYING: //[[fallthrough]] require /std:c++17
     case GameStatus::MENU:
-        if (!m_scene_instance.SceneEmpty())
+        if (!m_scene_instance.SceneEmpty()) {
             m_scene_instance.GetPresentScene()->Update();
+            m_physics_manager->Update();
+        }
         break;
     }
 

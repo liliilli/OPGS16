@@ -13,8 +13,7 @@ texture_raw TextureManager::GetTexture(const std::string& name) {
 		return m_container.at(name).get();
 	}
 	else {
-		m_error = ErrorType::ALREADY_HAS_INSTANCE;
-		return nullptr;
+		return m_container.at(name).get();
 	}
 }
 

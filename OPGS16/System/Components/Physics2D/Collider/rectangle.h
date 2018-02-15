@@ -27,11 +27,6 @@ namespace collision {
 class RectangleCollider2D : public Collider2D {
 public:
 	/**
-	 * @brief Constructor with width, height value. these values are separated by half.
-	 */
-	RectangleCollider2D(const float width, const float height);
-
-	/**
 	 * @brief Constructor with left, up, right, down. (default)
 	 */
 	RectangleCollider2D(const float left, const float up, const float right, const float down);
@@ -43,10 +38,24 @@ public:
 	 * @param[in] right Right border position value from source position.
 	 * @param[in] down Down border position value from source position.
 	 */
-	[[noreturn]] void SetRegion(const float left,
-		const float up,
-		const float right,
-		const float down);
+	[[noreturn]] void SetRegion(const float left, const float up,
+                                const float right, const float down);
+
+    /*!
+     * @brief
+     */
+    [[noreturn]] void ReflectPosition(const glm::vec3& position);
+
+    enum class PositionType {
+        LEFT_DOWN,  /*! Left down position */
+        RIGHT_UP,   /*! Right up position */
+    };
+
+    /*!
+     * @brief
+     * @return
+     */
+    glm::vec2 GetTipPosition(PositionType type);
 
 private:
 	/**
@@ -60,10 +69,14 @@ private:
 	 */
 	glm::vec2 lu{}, ru{}, ld{}, rd{};
 
+    glm::vec2 final_lu{}, final_ru{}, final_ld{}, final_rd{};
+    glm::vec3 m_position_of_bound_object{};
+
 	/** This values are automatically refreshed by calling method which sets lu ru ld rd.*/
 	float m_left{}, m_up{}, m_right{}, m_down{};
 	float m_width{}, m_height{};
 
+    mutable bool m_position_changed{ true };
 private:
 	/**
 	 * @brief Update all corners coordinate values internally.
@@ -72,10 +85,10 @@ private:
 	 * @param[in] right Right border position value from source position.
 	 * @param[in] down Down border position value from source position.
 	 */
-	[[noreturn]] void UpdateAllCorner(const float left,
-		const float up,
-		const float right,
-		const float down);
+	[[noreturn]] void UpdateAllCorner(const float left, const float up,
+                                      const float right, const float down);
+
+    [[noreturn]] void UpdateFinalCorner();
 };
 
 }

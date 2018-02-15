@@ -39,8 +39,9 @@ class   ShaderWrapper;
 /** Managers */
 class   FontManager;
 class   InputManager;
-class   TimeManager;
+class   PhysicsManager;
 class   SceneManager;
+class   TimeManager;
 
 /*! Custom Initiated Objects */
 class   TestImage;      /*! TestImage : public Canvas::Image */
@@ -50,7 +51,7 @@ class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
 namespace component {
 class Component;
 class ScriptFrame;
-class RigidBody2D;
+class Rigidbody2D;
 class Camera;
 }
 

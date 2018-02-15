@@ -21,6 +21,7 @@
                                       * ObjectTree
                                       * PostProcessingManager
                                       * TimeManager
+                                      * PhysicsManager
                                       */
 #include "System\Object\object.h"   /*! Object for complete deleter of unique_ptr<Object> */
 
@@ -69,6 +70,7 @@ private:
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
 	InputManager*   m_m_input{ nullptr };
     TimeManager*    m_m_time{ nullptr };
+    PhysicsManager* m_physics_manager{ nullptr };
 
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */

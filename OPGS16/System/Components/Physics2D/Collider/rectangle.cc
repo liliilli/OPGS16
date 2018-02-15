@@ -1,30 +1,47 @@
-#include "rectangle.h"
+#include "rectangle.h"          /*! Header file */
+#include "..\rigidbody_2d.h"
+#include "..\..\..\..\System\Manager\scene_manager.h"   /*! Scene manager */
 
 namespace collision {
 
-RectangleCollider2D::RectangleCollider2D(const float width, const float height) :
-	m_width{ width }, m_height{ height } {
-	RectangleCollider2D(-m_width / 2.f, m_height / 2.f, m_width / 2.f, -m_height / 2.f);
-}
-
-RectangleCollider2D::RectangleCollider2D(const float left,
-	const float up, const float right, const float down) {
-	/** Body */
+RectangleCollider2D::RectangleCollider2D(const float left, const float up,
+                                         const float right, const float down) {
 	SetRegion(left, up, right, down);
 }
 
-void RectangleCollider2D::SetRegion(const float left,
-	const float up, const float right, const float down) {
+void RectangleCollider2D::SetRegion(const float left, const float up,
+                                    const float right, const float down) {
 	/** Body */
-	m_left = left;	if (m_left < 0) m_left = 0;
-	m_up = up;		if (m_up < 0) m_up = 0;
-	m_right = right;if (m_right < 0) m_right = 0;
-	m_down = down;	if (m_down < 0) m_down = 0;
+	m_left = left;
+	m_up = up;
+	m_right = right;
+	m_down = down;
+
 	/** Fix width, height again */
 	m_width = m_right - m_left;
 	m_height = m_up - m_down;
-	/** Set lu ld ru rd */
+
+    /** Set lu ld ru rd */
 	UpdateAllCorner(m_left, m_up, m_right, m_down);
+}
+
+void RectangleCollider2D::ReflectPosition(const glm::vec3& position) {
+    m_position_of_bound_object = position;
+
+    m_position_changed = true;
+    UpdateFinalCorner();
+}
+
+glm::vec2 RectangleCollider2D::GetTipPosition(PositionType type) {
+    if (m_position_changed)
+        UpdateFinalCorner();
+
+    switch (type) {
+    case PositionType::LEFT_DOWN:
+        return final_ld;
+    case PositionType::RIGHT_UP:
+        return final_ru;
+    }
 }
 
 void RectangleCollider2D::UpdateAllCorner(const float m_left,
@@ -34,6 +51,21 @@ void RectangleCollider2D::UpdateAllCorner(const float m_left,
 	ld = glm::vec2{ m_left, m_down };
 	ru = glm::vec2{ m_right, m_up };
 	rd = glm::vec2{ m_right, m_down };
+
+    m_position_changed = true;
+    UpdateFinalCorner();
+}
+
+void RectangleCollider2D::UpdateFinalCorner() {
+    if (m_position_changed) {
+        glm::vec2 pos = m_position_of_bound_object;
+        final_lu = lu + pos;
+        final_ld = ld + pos;
+        final_ru = ru + pos;
+        final_rd = rd + pos;
+
+        m_position_changed = false;
+    }
 }
 
 }

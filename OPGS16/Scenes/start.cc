@@ -7,6 +7,7 @@
 #include "..\Objects\TempDebug\test_start_txt.h"/*! TestStartTxt for feature_instantiate */
 #include "..\Objects\TempDebug\test_start_t_copy.h" /*! TestStartTCopy for same branch. */
 #include "..\Objects\Temporary\object_collision.h"  /*! ObjecCOllision */
+#include "..\Objects\Temporary\random_moving.h"     /*! RandomMoving */
 
 void Start::Draw() {
     glClearColor(.2f, .0f, .0f, 1.f);
@@ -24,6 +25,25 @@ void Start::Initiate() {
 
     auto test_obj = std::make_unique<ObjectCollidable>("Test");
     Instantiate("Object_1", test_obj);
+    GetObject("Object_1")->SetFinalPosition(glm::vec3{ 128, 112, 0 });
+
+    {
+        auto subject = std::make_unique<RandomMoveObject>("Test");
+        Instantiate("Rd1", subject);
+        GetObject("Rd1")->SetFinalPosition(glm::vec3{ 224, 192, 0 });
+    }
+
+    {
+        auto subject = std::make_unique<RandomMoveObject>("Test");
+        Instantiate("Rd2", subject);
+        GetObject("Rd2")->SetFinalPosition(glm::vec3{ 73, 171, 0 });
+    }
+
+    {
+        auto subject = std::make_unique<RandomMoveObject>("Test");
+        Instantiate("Rd3", subject);
+        GetObject("Rd3")->SetFinalPosition(glm::vec3{ 96, 64, 0 });
+    }
 
     ///*! To call template function with specific type argument, must know complete information. */
     //canvas->Instantiate<TestImage>("Image", canvas); {

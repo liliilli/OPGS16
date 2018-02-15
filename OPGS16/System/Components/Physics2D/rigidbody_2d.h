@@ -8,10 +8,12 @@
  */
 
 #include <list>
+#include <utility>
+#include <memory>
 #include "..\_macro.h"
 #include "..\component.h"
 #include "..\..\..\Headers\Fwd\objectfwd.h" /*! Object as reference */
-#include "collider_2d.h"    /*! Collider2D */
+#include "Collider\rectangle.h" /*! collision::RectangleCollider2D */
 
 /*!
  * @namespace component
@@ -24,7 +26,7 @@ namespace component {
  * @class Rigidbody2D
  * @brief There is only one Rigidbody class in each object. or undefined behavior occurs.
  */
-class Rigidbody2D final : component::Component {
+class Rigidbody2D final : public component::Component {
 public:
     enum class BodyType {
         NORMAL,     /*! Move it with physics simulation */
@@ -39,6 +41,33 @@ public:
      */
     [[noreturn]] void Update();
 
+    /*!
+     * @brief Add (insert) 2D collider object. This method could be used as just plain object
+     * creation statement, except for noting collider type what you want to bind.
+     * @param[in] _Ty 2D collider object, not just abstract Collider2D class.
+     * @param[in] _Params varidic arguments, used to have been forwarding as constructor args.
+     */
+    template <
+        class _Ty,
+        typename = std::enable_if_t<
+            std::is_base_of_v<collision::RectangleCollider2D, _Ty>
+        >,
+        class... _Params
+    >
+    [[noreturn]] void AddCollider2D(_Params&&... args) {
+        m_colliders.emplace_back(std::make_unique<_Ty>( std::forward<_Params>(args)... ));
+    }
+
+    template <
+        class _Ty,
+        typename = std::enable_if_t<
+            std::is_base_of_v<collision::RectangleCollider2D, _Ty>
+        >
+    >
+        [[noreturn]] void AddCollider2D(std::unique_ptr<_Ty>&& collider) {
+        m_colliders.emplace_back(std::move(collider));
+    }
+
 private:
     Object& m_bound_object;             /*! Bound object which script instance refers to */
 
@@ -48,10 +77,16 @@ private:
     float m_gravity_scale{ 1.0f };      /*! The degree to which the object affected by gravity */
 
     BodyType m_type{ BodyType::NORMAL };
-    std::list<collision::Collider2D> m_colliders{};
+    std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::Component, Rigidbody2D)
+
+private:
+    /*!
+     * @brief
+     */
+    [[noreturn]] void ReflectPositionToLastCollider();
 };
 
 }

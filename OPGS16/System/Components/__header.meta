@@ -1,5 +1,6 @@
 #include "component.h"                              /*! component::Header file */
 #include "script_frame.h"                           /*! component::ScriptFrame */
 #include "camera.h"									/*! component::Camera */
+#include "Physics2D\rigidbody_2d.h"					/*! component::Camera */
 #include "..\..\Objects\Debug\Script\ui_manager.h"  /*! UiManager */
 #include "..\..\Objects\Debug\Script\test_script.h"	/*! TestScript */

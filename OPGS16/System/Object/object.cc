@@ -8,6 +8,10 @@ Object::Object() {
 }
 
 void Object::Update() {
+    for (auto& component : m_components) {
+        component->Update();
+    }
+
 	for (auto& child : m_children) {
 		child.second->UpdateFinalPosition(GetFinalPosition());
 		child.second->Update();

@@ -17,8 +17,8 @@ public:
 	 * @brief
 	 */
 	enum class CollisionType {
-		TRIGGER,	/** TRIGGER type is not affected by action and reaction. */
-		COLLISION,	/** COLLISION type is affected by action and reaction. */
+		TRIGGER,	/*! TRIGGER type is not affected by action and reaction. */
+		COLLISION,	/*! COLLISION type is affected by action and reaction. */
 	};
 
 	/**
