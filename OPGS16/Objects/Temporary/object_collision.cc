@@ -1,25 +1,32 @@
 #include "object_collision.h"
-#include "..\..\System\Shader\shader_wrapper.h"        /*! ShaderWrapper */
-#include <glm\gtc\matrix_transform.hpp>
+#include "..\..\System\Components\camera.h"         /*! component::Camera */
+#include "..\..\System\Manager\input_manager.h"     /*! InputManager */
+#include "..\..\System\Manager\scene_manager.h"     /*! SceneManager */
+#include "..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
 
 ObjectCollidable::ObjectCollidable(const std::string& sprite_tag) :
-    m_sprite_renderer{ sprite_tag, "gQuad" } {}
+    m_sprite_renderer{ sprite_tag, "gQuad" } {
+    SetScaleValue(16.f);
+
+	auto& shader = m_sprite_renderer.GetWrapper();
+	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
+	shader.InsertUniformValue<float>("alpha", 0.0f);
+}
 
 void ObjectCollidable::Update() {
+    auto& input = InputManager::GetInstance();
+    if (input.)
+    input.GetKeyValue();
 }
 
 void ObjectCollidable::Draw() {
+    auto M = GetModelMatrix();
+    auto PV = SceneManager::GetInstance().GetPresentScene()->GetMainCamera()->GetPV();
+    auto PVM = PV * M;
+
     auto& shader = m_sprite_renderer.GetWrapper();
-
-    auto M = glm::mat4();
-    auto position = GetFinalPosition();
-    M = glm::translate(M, glm::vec3{ position.x, position.y, 0 });
-    M = glm::rotate(M, glm::radians(GetRotationAngle()), GetRotationFactor());
-    M = glm::scale(M, GetScaleFactor() * GetScaleValue());
-
-    auto V = glm::lookAt(glm::vec3(0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-    //auto P =
-
-    //shader.ReplaceUniformValue<glm::mat4>()
+    shader.ReplaceUniformValue<glm::mat4>("projection", PVM);
+    shader.ReplaceUniformValue("alpha", 1.0f);
+    m_sprite_renderer.RenderSprite();
 }
 

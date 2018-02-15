@@ -88,6 +88,7 @@ private:
 template <class _Ty, typename>
 void SceneManager::PushScene() {
     m_scenes.push(std::make_unique<_Ty>());
+    m_scenes.top()->Initiate();
 }
 
 inline Scene* const SceneManager::GetPresentScene() {

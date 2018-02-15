@@ -7,7 +7,7 @@
 class ObjectObjectTree : public Canvas::Text {
 public:
     ObjectObjectTree() : Canvas::Text{ "", glm::vec3{16, -32, 0} } {
-        SetColor({ 0, 0, 0 });
+        SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");
         SetFontSize(8u);

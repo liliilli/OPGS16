@@ -10,6 +10,10 @@ namespace Canvas {
 Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 	m_sprite_renderer{ sprite_tag, "gQuad" },
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
+
+	auto& shader = m_sprite_renderer.GetWrapper();
+	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
+	shader.InsertUniformValue<float>("alpha", 0.0f);
 }
 
 Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
@@ -24,10 +28,6 @@ void Image::Update() {
 		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
 		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
 	UpdateScreenXYWH(xywh);
-
-	auto& shader = m_sprite_renderer.GetWrapper();
-	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
-	shader.InsertUniformValue<float>("alpha", 0.0f);
 
 	/** Update children */
 	UiObject::Update();

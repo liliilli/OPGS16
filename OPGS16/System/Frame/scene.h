@@ -16,6 +16,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include "..\Object\object.h"
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! component::Camera */
 
 /**
  * @class Scene
@@ -25,6 +26,8 @@ class Scene {
 public:
 	/** Must need virtual dtor */
     virtual ~Scene() = default;
+
+    [[noreturn]] virtual void Initiate() = 0;
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
@@ -63,21 +66,41 @@ public:
 		return true;
 	}
 
-	/**
-	 * @brief
-	 *
-	 * @return
+	/*!
+	 * @brief Get object list loaded in scene.
+	 * @return The reference of object list with hash_map.
 	 */
 	Object::object_map& GetObjects();
 
-	/**
-	 *
+	/*!
+	 * @brief Get specific object with tag.
 	 */
 	Object::object_ptr& GetObject(const std::string& tag);
 
+    /*!
+     * @brief Set main camera of this scene, to display game scene.
+     * All object except for Canvas objects (UI object) uses to main_camera to display.
+     * If main_camera value is nullptr, this means main_camera is detached.
+     */
+    inline void SetMainCamera(component::Camera* const main_camera);
+
+    /*!
+     * @brief Get bound main camera. if main camera is not bound, return nullptr.
+     */
+    inline const component::Camera* const GetMainCamera();
+
 private:
     Object::object_map objects;
+    component::Camera* m_main_camera{ nullptr };
 };
+
+inline void Scene::SetMainCamera(component::Camera* const main_camera) {
+    m_main_camera = main_camera;
+}
+
+inline const component::Camera* const Scene::GetMainCamera() {
+    return m_main_camera;
+}
 
 #endif // OPENGL_TUTORIAL_SCENE_H
 

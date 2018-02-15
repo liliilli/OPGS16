@@ -2,12 +2,28 @@
 #include "..\application.h"
 #include "..\Headers\canvas_components.h"
 
+#include "..\GlobalObjects\camera_object.h"     /*! MainCameraObject */
 #include "..\Objects\TempDebug\test_image.h"    /*! TestImage for branch feature_instantiate */
 #include "..\Objects\TempDebug\test_start_txt.h"/*! TestStartTxt for feature_instantiate */
 #include "..\Objects\TempDebug\test_start_t_copy.h" /*! TestStartTCopy for same branch. */
+#include "..\Objects\Temporary\object_collision.h"  /*! ObjecCOllision */
 
-Start::Start() {
-	auto canvas = std::make_unique<Canvas::Canvas>();
+void Start::Draw() {
+    glClearColor(.2f, .0f, .0f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	Scene::Draw();
+}
+
+void Start::Initiate() {
+    auto main_camera = std::make_unique<MainCameraObject>();
+    Instantiate("MainCamera", main_camera);
+
+    auto canvas = std::make_unique<Canvas::Canvas>();
+    canvas->Instantiate<TestStartTCopy>("Copyright");
+	Instantiate("Canvas", canvas);
+
+    auto test_obj = std::make_unique<ObjectCollidable>("Test");
+    Instantiate("Object_1", test_obj);
 
     ///*! To call template function with specific type argument, must know complete information. */
     //canvas->Instantiate<TestImage>("Image", canvas); {
@@ -26,15 +42,6 @@ Start::Start() {
     //        image->GetChild("Txt_2")->SetLocalPosition({ -48, -72, 0 });
     //    }
     //}
-
-    canvas->Instantiate<TestStartTCopy>("Copyright");
-	Instantiate("Canvas", canvas);
-}
-
-void Start::Draw() {
-    glClearColor(.0f, .0f, .0f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	Scene::Draw();
 }
 
 void Start::Update() {
