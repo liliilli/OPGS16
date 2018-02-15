@@ -50,6 +50,24 @@ void InputManager::Initialize(GLFWwindow * window) {
         m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF10.name },
                                            std::move(g_GlobalF10)));
     }
+
+    BindingKeyInfo&& k_Right{}; {
+        k_Right.name = "Hori";
+        k_Right.pos = GLFW_KEY_RIGHT;
+        k_Right.neg = GLFW_KEY_LEFT;
+        k_Right.neutral_gravity = 10;
+        m_key_inputs.insert(std::make_pair(std::string{ k_Right.name },
+                                           std::move(k_Right)));
+    }
+
+    BindingKeyInfo&& k_Up{}; {
+        k_Up.name = "Vert";
+        k_Up.pos = GLFW_KEY_UP;
+        k_Up.neg = GLFW_KEY_DOWN;
+        k_Up.neutral_gravity = 10;
+        m_key_inputs.insert(std::make_pair(std::string{ k_Up.name },
+                                           std::move(k_Up)));
+    }
 }
 
 float InputManager::GetKeyValue(const std::string & key) {

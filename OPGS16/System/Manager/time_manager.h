@@ -57,7 +57,7 @@ public:
      * @return
      */
     inline const float GetDeltaTime() {
-        return delta_time;
+        return interval;
     }
 
     /*!
