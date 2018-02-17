@@ -19,6 +19,7 @@
                                       * InputManager
                                       * Object
                                       * ObjectTree
+                                      * ObjectManager
                                       * PostProcessingManager
                                       * TimeManager
                                       * PhysicsManager
@@ -71,6 +72,7 @@ private:
 	InputManager*   m_m_input{ nullptr };
     TimeManager*    m_m_time{ nullptr };
     PhysicsManager* m_physics_manager{ nullptr };
+    ObjectManager*  m_object_manager{ nullptr };
 
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */

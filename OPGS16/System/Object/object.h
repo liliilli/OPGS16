@@ -14,6 +14,7 @@
  */
 
 #include <algorithm>        /*! std::find_if */
+#include <functional>       /*! std::hash */
 #include <memory>			/** std::unique_ptr */
 #include <unordered_map>	/** std::unordered_map */
 #include <string>           /*! std::to_string */
@@ -45,6 +46,8 @@ public:
 	using object_raw = Object*;
 	using object_ptr = std::unique_ptr<Object>;
 	using object_map = std::unordered_map<std::string, object_ptr>;
+    using name_counter_map = std::unordered_map<std::string, size_t>;
+    using component_ptr = std::unique_ptr<component::Component>;
 
     /**
      * @brief The method updates components of object.
@@ -290,15 +293,19 @@ public:
      */
     std::string GetTagNameOf() const;
 
+    /*!
+     * @brief Get Hash value()
+     */
+    size_t GetHash() const { return m_hash_value; }
+
+    size_t m_hash_value;
 private:
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
 	object_map m_children;
 
-    using name_counter_map = std::unordered_map<std::string, size_t>;
     name_counter_map m_name_counter;
 
 protected:
-    using component_ptr = std::unique_ptr<component::Component>;
     std::vector<component_ptr> m_components{};
 
 private:
@@ -314,6 +321,7 @@ template <class _Ty, class... _Types, typename>
 bool Object::Instantiate(const std::string tag, _Types&&... _args) {
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
+    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
     return true;
 }
 
@@ -321,6 +329,7 @@ template <class _Ty, typename>
 bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::move(instance);
+    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
     return true;
 }
 
@@ -328,6 +337,7 @@ template <class _Ty, typename>
 bool Object::Instantiate(const std::string tag) {
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::make_unique<_Ty>();
+    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
     return true;
 }
 

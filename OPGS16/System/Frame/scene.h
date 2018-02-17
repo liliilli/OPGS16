@@ -56,6 +56,7 @@ public:
 	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
+        objects[tag]->m_hash_value = std::hash<std::string>{}(tag);
 		return true;
 	}
 
@@ -63,6 +64,7 @@ public:
 	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>& obj) {
 		if (objects.find(tag) != objects.end()) return false;
 		objects[tag] = std::move(obj);
+        objects[tag]->m_hash_value = std::hash<std::string>{}(tag);
 		return true;
 	}
 

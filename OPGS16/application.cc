@@ -18,6 +18,7 @@
 #include "System\Shader\PostProcessing\pp_gray.h"
 #include "System\Manager\font_manager.h"
 #include "System\Manager\input_manager.h"
+#include "System\Manager\object_manager.h"  /*! ObjectManager */
 #include "System\Manager\physics_manager.h" /*! PhysicsManager*/
 #include "System\Manager\resource_manager.h"/*! ResourceManager */
 #include "System\Manager\scene_manager.h"   /*! SceneManager */
@@ -89,6 +90,7 @@ void Application::Initiate() {
         m_m_input->Initialize(window);
 
         m_physics_manager = &PhysicsManager::GetInstance();
+        m_object_manager = &ObjectManager::GetInstance();
 
 		/** Insert first scene */
         m_scene_instance.PushScene<Start>();
@@ -156,7 +158,7 @@ void Application::Update() {
     case GameStatus::MENU:
         if (!m_scene_instance.SceneEmpty()) {
             /*! pre-work such as Delete object, Replace object etc. */
-
+            m_object_manager->Update();
 
             /*! Update */
             m_scene_instance.GetPresentScene()->Update();

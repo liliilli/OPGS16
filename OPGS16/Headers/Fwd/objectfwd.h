@@ -39,6 +39,7 @@ class   ShaderWrapper;
 /** Managers */
 class   FontManager;
 class   InputManager;
+class   ObjectManager;
 class   PhysicsManager;
 class   SceneManager;
 class   TimeManager;

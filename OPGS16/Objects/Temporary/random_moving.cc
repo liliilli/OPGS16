@@ -5,6 +5,8 @@
 #include "..\..\System\Manager\scene_manager.h"     /*! SceneManager */
 #include "..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
 
+#include "..\..\System\Manager\object_manager.h"    /*! ObjectManager */
+
 #include <iostream>
 
 RandomMoveObject::RandomMoveObject(const std::string & sprite_tag) :
@@ -35,5 +37,7 @@ void RandomMoveObject::Draw() {
 }
 
 void RandomMoveObject::OnCollisionEnter(component::Rigidbody2D & collider) {
-    std::cout << "Somebody push me Help\n";
+    if (collider.IsTag("Player")) {
+        ObjectManager::GetInstance().Destroy(*this);
+    }
 }
