@@ -1,8 +1,8 @@
-#ifndef OPENGL_TUTORIAL_OBJECT_H
-#define OPENGL_TUTORIAL_OBJECT_H
+#ifndef OPGS16_SYSTEM_OBJECT_OBJECT_H
+#define OPGS16_SYSTEM_OBJECT_OBJECT_H
 
 /**
- * @file object.h
+ * @file System\Object\object.h
  * @brief The file consist of basic scene API.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
@@ -10,7 +10,7 @@
  * polymorphism.
  *
  * @author Jongmin Yun
- * @date 2018-02-08
+ * @date 2018-02-17
  */
 
 #include <algorithm>        /*! std::find_if */
@@ -20,9 +20,12 @@
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::ShaderNew
                                               * glm::vec3
                                               * component::Component
+                                              * component::Rigidbody2D
                                               * ObjectTree
-                                              * ObjectImplDeleter */
+                                              * ObjectImplDeleter
+                                              */
 #include "..\..\System\Components\component.h"   /*! component::Component */
+//#include "..\Components\Physics2D\rigidbody_2d.h"   /*! Rigid*/
 
 /**
  * @class Object
@@ -49,17 +52,21 @@ public:
     [[noreturn]] virtual void Update();
 
     /**
-     * @brief The method calls scene to one objects.
+     * @brief [DEPRECATED] The method calls scene to one objects.
      * @param[in] shader Shader to use.
      */
     [[noreturn]]
 	[[deprecated("Use plain-Draw method which do not have shader argument.")]]
 	virtual void Draw(helper::ShaderNew& shader) {};
 
-	/**
-	 * @brief This calls callee to draw or render something it has. [Optional]
-	 */
+	/** * @brief This calls callee to draw or render something it has.  */
 	[[noreturn]] virtual void Draw() {};
+
+    /*!  * @brief This method will be called when Collision.  */
+    [[noreturn]] virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
+
+    /*!  * @brief This method will be called when Trigger entered.  */
+    [[noreturn]] virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
 
     /**
      * @brief The method gets position as glm::vec3 type. Not overridable.
@@ -180,57 +187,34 @@ public:
 	 * @param[in] _args variadic args to be used c-tor initialize parameters inputs.
 	 * @return Success/Failed flag. If the methods success to make child object, return true.
 	 */
-	template <class _Ty, class... _Types, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool Instantiate(const std::string tag, _Types&&... _args) {
-        const auto item_tag = CreateChildTag(tag);
-		m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
-		return true;
-	}
+    template <
+        class _Ty,
+        class... _Types,
+        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
+    >   bool Instantiate(const std::string tag, _Types&&... _args);
 
-	template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
-        const auto item_tag = CreateChildTag(tag);
-		m_children[item_tag] = std::move(instance);
-		return true;
-	}
+    template <
+        class _Ty,
+        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
+    >   bool Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance);
 
-    template <class _Ty, class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-    bool Instantiate(const std::string tag) {
-        const auto item_tag = CreateChildTag(tag);
-		m_children[item_tag] = std::make_unique<_Ty>();
-		return true;
-    }
-
-    /*!
-     * @brief
-     * @param[in]
-     * @return
-     */
-    inline const std::string CreateChildTag(const std::string& tag) noexcept {
-        std::string item_tag{ tag };
-
-        if (m_tag_counter.find(tag) != m_tag_counter.end()) {
-            auto& count = m_tag_counter[tag];
-            count += 1;
-            item_tag.append('_' + std::to_string(count));
-        }
-        else { m_tag_counter[tag] = 0; }
-
-        return item_tag;
-    }
+    template <
+        class _Ty,
+        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
+    >   bool Instantiate(const std::string tag);
 
 	/**
 	 * @brief Destroy child object has unique tag key.
-	 * @param[in] tag Object tag.
+	 * @param[in] name Object name.
 	 * @return Success/Failed tag. If arbitary objects has been destroied, return ture.
 	 */
-	bool DestroyChild(const std::string& tag);
+	bool DestroyChild(const std::string& name);
 
 	/**
 	 * @brief Get children tag list.
 	 * @return Children's tags container of object.
 	 */
-	const std::vector<std::string> GetChildrenTags() const;
+	const std::vector<std::string> GetChildrenNameList() const;
 
 	/**
 	 * @brief Get children reference.
@@ -240,10 +224,10 @@ public:
 
 	/**
 	 * @brief Get arbitary child object.
-	 * @param[in] tag The tag of object to find.
+	 * @param[in] name The name of object to find.
 	 * @return Object's smart-pointer instance.
 	 */
-	object_raw GetChild(const std::string& tag);
+	object_raw GetChild(const std::string& name);
 
 	/**
 	 * @brief This only must be called by Application methods body,
@@ -257,54 +241,133 @@ public:
      * @param[in] _Ty
      * @param[in] _Params&& Universal reference.
      */
-    template<class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>,
-        typename... _Params>
-    [[noreturn]] void AddComponent(_Params&&... params) {
-        m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
-    }
+    template<
+        class _Ty,
+        typename... _Params,
+        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+    >   [[noreturn]] void AddComponent(_Params&&... params);
 
     /*!
      * @brief
      * @param[in] _Ty
      * @return
      */
-    template<class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
-    _Ty* const GetComponent() {
-        for (auto& item : m_components) {
-            if (item->DoesTypeMatch(_Ty::type)) return static_cast<_Ty*>(item.get());
-        }
-        return nullptr;
-    }
+    template<
+        class _Ty,
+        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+    >   _Ty* const GetComponent();
 
     /*!
      * @brief
      * @param[in] _Ty
      * @return
      */
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>>
-    bool RemoveComponent() {
-        auto it = std::find_if(m_components.cbegin(), m_components.cend(),
-                               [](const std::unique_ptr<component::Component>& item) {
-            return item->DoesTypeMatch(_Ty::type);
-        });
-        if (it != m_components.cend()) {
-            m_components.erase(it);    /*! Too much execution time */
-            return true;
-        }
-        else return false;
-    }
+    template <
+        class _Ty,
+        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+    >   bool RemoveComponent();
+
+    /*!
+     * @brief Set tag with tag name. This method will check whether or not exist matched tag name
+     * in SettingManager. If not exist, do nothing and chagne error flag.
+     * @param[in] tag_name Tag name
+     */
+    [[noreturn]] void SetTag(const std::string tag_name);
+
+    /*! Overloading version of SetTag(tag_name) */
+    [[noreturn]] void SetTag(const size_t tag_index);
+
+    /*!
+     * @brief Get tag index of this object.
+     * @return Tag index value.
+     */
+    size_t GetTagIndexOf() const;
+
+    /*!
+     * @brief Get Tag Name of this object. (different with name of object)
+     * This methods return tag name by referencing SettingManager in body.
+     * @return Tag name string.
+     */
+    std::string GetTagNameOf() const;
 
 private:
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
 	object_map m_children;
 
-    using tag_counter_map = std::unordered_map<std::string, size_t>;
-    tag_counter_map m_tag_counter;
+    using name_counter_map = std::unordered_map<std::string, size_t>;
+    name_counter_map m_name_counter;
 
 protected:
     using component_ptr = std::unique_ptr<component::Component>;
     std::vector<component_ptr> m_components{};
+
+private:
+    /*!
+     * @brief
+     * @param[in]
+     * @return
+     */
+    inline const std::string CreateChildTag(const std::string& tag) noexcept;
 };
 
-#endif /** OPENGL_TUTORIAL_OBJECT_H */
+template <class _Ty, class... _Types, typename>
+bool Object::Instantiate(const std::string tag, _Types&&... _args) {
+    const auto item_tag = CreateChildTag(tag);
+    m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
+    return true;
+}
+
+template <class _Ty, typename>
+bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
+    const auto item_tag = CreateChildTag(tag);
+    m_children[item_tag] = std::move(instance);
+    return true;
+}
+
+template <class _Ty, typename>
+bool Object::Instantiate(const std::string tag) {
+    const auto item_tag = CreateChildTag(tag);
+    m_children[item_tag] = std::make_unique<_Ty>();
+    return true;
+}
+
+template<class _Ty, typename... _Params, typename>
+void Object::AddComponent(_Params&&... params) {
+    m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
+}
+
+template<class _Ty, typename>
+_Ty* const Object::GetComponent() {
+    for (auto& item : m_components) {
+        if (item->DoesTypeMatch(_Ty::type)) return static_cast<_Ty*>(item.get());
+    }
+    return nullptr;
+}
+
+template <class _Ty, typename>
+bool Object::RemoveComponent() {
+    auto it = std::find_if(m_components.cbegin(), m_components.cend(),
+                           [](const std::unique_ptr<component::Component>& item) {
+        return item->DoesTypeMatch(_Ty::type);
+    });
+    if (it != m_components.cend()) {
+        m_components.erase(it);    /*! Too much execution time */
+        return true;
+    }
+    else return false;
+}
+
+inline const std::string Object::CreateChildTag(const std::string& tag) noexcept {
+    std::string item_tag{ tag };
+
+    if (m_name_counter.find(tag) != m_name_counter.end()) {
+        auto& count = m_name_counter[tag];
+        count += 1;
+        item_tag.append('_' + std::to_string(count));
+    }
+    else { m_name_counter[tag] = 0; }
+
+    return item_tag;
+}
+
+#endif /** OPGS16_SYSTEM_OBJECT_OBJECT_H */

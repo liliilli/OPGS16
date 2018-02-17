@@ -20,6 +20,9 @@ public:
 
 private:
     SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */
+
+    /*! Override */
+    [[noreturn]] virtual void OnCollisionEnter(component::Rigidbody2D& collider) override final;
 };
 
 #endif // !OBJECTS_TEMPORARY_OBJECT_COLLISION_H

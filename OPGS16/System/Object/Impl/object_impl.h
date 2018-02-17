@@ -85,31 +85,46 @@ public:
 	 */
 	[[noreturn]] void SetActive(const bool value) { m_active = value; }
 
-	/** Get active value. */
-	inline bool GetActiveValue() const { return m_active; }
+	inline bool GetActiveValue() const { return m_active; } /** Get active value. */
+
+    /*!
+     * @brief Set tag with tag name. This method will check whether or not exist matched tag name
+     * in SettingManager. If not exist, do nothing and chagne error flag.
+     * @param[in] tag_name Tag name
+     */
+    [[noreturn]] void SetTag(const std::string tag_name);
+
+    /*! Overloading version of SetTag(tag_name) */
+    [[noreturn]] void SetTag(const size_t tag_index);
+
+    /*!
+     * @brief Get tag index of this object.
+     * @return Tag index value.
+     */
+    inline size_t GetTagIndexOf() const;
+
+    /*!
+     * @brief Get Tag Name of this object. (different with name of object)
+     * This methods return tag name by referencing SettingManager in body.
+     * @return Tag name string.
+     */
+    std::string GetTagNameOf() const;
 
 private:
-    /** (x, y, z) local position */
-    glm::vec3   m_local_position{};
-	/** (x, y, z) final position in hierarchy */
-	glm::vec3	m_final_position{};
+    glm::vec3   m_local_position{};     /*! (x, y, z) local position */
+	glm::vec3	m_final_position{};     /*! (x, y, z) final position in hierarchy */
 
-    /** Rotation angle : Positive value is CW, Negative value is CCW */
-    float       m_rotation_angle{};
-    /** Rotation factor is (x, y, z) factor did not exceed [-1, 1] range. */
-    glm::vec3   m_rotation_factor{ 1.0f };
+    float       m_rotation_angle{};         /*! Rotation angle. Positive is CW, Negative is CCW */
+    glm::vec3   m_rotation_factor{ 1.0f };  /*! Rotation factor is (x, y, z) factor */
 
-    /** Scale value's default value is 1.0f */
-    float       m_scale_value{ 1.0f };
-    /** Scale factor is (x, y, z) factor default is (1.0f, 1.0f, 1.0f) */
-    glm::vec3   m_scale_factor{ 1.0f };
+    float       m_scale_value{ 1.0f };  /*! Scale value's default value is 1.0f */
+    glm::vec3   m_scale_factor{ 1.0f }; /*!  * Scale factor is (x, y, z) default is (1, 1, 1) */
 
     glm::mat4   m_model;
     glm::mat4   m_translate;
     glm::mat4   m_rotate;
     glm::mat4   m_scale;
 
-    //bool m_is_changed{ true };
 	bool m_active{ true };
 
     mutable bool m_model_matrix_deprecated{ true };
@@ -117,10 +132,17 @@ private:
     mutable bool m_rotation_deprecated{ true };
     mutable bool m_scale_deprecated{ true };
 
+    size_t m_tag_index{ 0 };
+
 private:
 	void RefreshTranslateMatrix();	/** Refresh Translation matrix */
 	void RefreshRotateMatrix();		/** Refresh Rotation matrix */
 	void RefreshScaleMatrix();		/** Refresh Scaling matrix */
 };
+
+
+inline size_t ObjectImpl::GetTagIndexOf() const {
+    return m_tag_index;
+}
 
 #endif /** OPGS16_SYSTEM_OBJECT_OBJECT_PRIVATE_IMPLEMENTATION_H */

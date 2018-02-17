@@ -6,6 +6,7 @@
 #include "..\..\System\Manager\scene_manager.h"     /*! SceneManager */
 #include "..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
 
+#include <iostream>
 
 ObjectCollidable::ObjectCollidable(const std::string& sprite_tag) :
     m_sprite_renderer{ sprite_tag, "gQuad" } {
@@ -41,5 +42,10 @@ void ObjectCollidable::Draw() {
     shader.ReplaceUniformValue<glm::mat4>("projection", PVM);
     shader.ReplaceUniformValue("alpha", 1.0f);
     m_sprite_renderer.RenderSprite();
+}
+
+void ObjectCollidable::OnCollisionEnter(component::Rigidbody2D& collider) {
+    if (collider.IsTag("Enemy"))
+        std::cout << "Hello there\n";
 }
 

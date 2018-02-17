@@ -1,0 +1,43 @@
+# KB, MS, ETC.
+
+KB GlobalCancel
++ GLFW_KEY_ESCAPE
+- NONE
+g 1000
+
+KB GlobalF1
++ GLFW_KEY_F1
+- NONE
+g 1000
+
+KB GlobalF2
++ GLFW_KEY_F2
+- NONE
+g 1000
+
+KB GlobalF3
++ GLFW_KEY_F3
+- NONE
+g 1000
+
+KB GlobalF9
++ GLFW_KEY_F9
+- NONE
+g 1000
+
+KB GlobalF10
++ GLFW_KEY_F10
+- NONE
+g 1000
+
+KB Horizontal
++ GLFW_KEY_RIGHT
+- GLFW_KEY_LEFT
+g 10
+
+KB Vertical
++ GLFW_KEY_UP
+- GLFW_KEY_DOWN
+g 10
+
+

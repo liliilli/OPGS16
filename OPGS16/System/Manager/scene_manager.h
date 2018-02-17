@@ -83,6 +83,13 @@ private:
 		/** Push present scene */
 		PushScene<_Ty>();
 	}
+
+private:
+    SceneManager() = default;
+    SceneManager(const SceneManager&) = delete;
+    SceneManager(SceneManager&&) = delete;
+    SceneManager& operator=(const SceneManager&) = delete;
+    SceneManager& operator=(SceneManager&&) = delete;
 };
 
 template <class _Ty, typename>

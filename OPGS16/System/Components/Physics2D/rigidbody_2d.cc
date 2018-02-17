@@ -12,4 +12,20 @@ void Rigidbody2D::Update() {
     }
 }
 
+void Rigidbody2D::OnCollisionEnter(Rigidbody2D& collider) {
+    m_bound_object.OnCollisionEnter(collider);
+}
+
+void Rigidbody2D::OnTriggerEnter(Rigidbody2D& collider) {
+    m_bound_object.OnTriggerEnter(collider);
+}
+
+bool Rigidbody2D::IsTag(const std::string&& tag) const {
+    return tag == m_bound_object.GetTagNameOf();
+}
+
+bool Rigidbody2D::IsTag(const size_t index) const {
+    return index == m_bound_object.GetTagIndexOf();
+}
+
 }

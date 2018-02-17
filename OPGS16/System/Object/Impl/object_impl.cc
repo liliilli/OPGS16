@@ -1,5 +1,6 @@
-#include "object_impl.h"
-#include <glm\gtc\matrix_transform.hpp>
+#include "object_impl.h"                    /*! Header file */
+#include <glm\gtc\matrix_transform.hpp>     /*! glm::translate, glm::rotate, glm::scale */
+#include "..\..\Manager\setting_manager.h"  /*! SettingManager */
 
 /**
 * @brief Refresh Translation matrix
@@ -38,3 +39,29 @@ const glm::mat4 ObjectImpl::GetModelMatrix() {
 	return m_model;
 }
 
+std::string ObjectImpl::GetTagNameOf() const {
+    return SettingManager::GetInstance().GetTagName(m_tag_index);
+}
+
+void ObjectImpl::SetTag(const std::string tag_name) {
+    auto& tag_list = SettingManager::GetInstance().GetTagNameList();
+
+    decltype(tag_list.size()) i = 0;
+    for (; i < tag_list.size(); ++i) {
+        if (tag_name == tag_list[i]) {
+            m_tag_index = i;
+            break;
+        }
+    }
+
+    if (i == tag_list.size()) m_tag_index = 0;
+}
+
+void ObjectImpl::SetTag(const size_t tag_index) {
+    auto list_size = SettingManager::GetInstance().GetTagNameList().size();
+
+    if (tag_index >= list_size)
+        m_tag_index = 0;
+    else
+        m_tag_index = tag_index;
+}

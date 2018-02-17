@@ -119,7 +119,7 @@ const glm::mat4 Object::GetModelMatrix() const { return m_data->GetModelMatrix()
 	 return 1;
  }
 
- const std::vector<std::string> Object::GetChildrenTags() const {
+ const std::vector<std::string> Object::GetChildrenNameList() const {
 	 std::vector<std::string> list(m_children.size());
 	 for (const auto& object_pair : m_children) {
 		 list.push_back(object_pair.first);
@@ -150,6 +150,23 @@ void Object::GetObjectTree(ObjectTree* const tree) {
 		object.second->GetObjectTree(&*tree->children.rbegin());
 	}
 }
+
+void Object::SetTag(const std::string tag_name) {
+    m_data->SetTag(tag_name);
+}
+
+void Object::SetTag(const size_t tag_index) {
+    m_data->SetTag(tag_index);
+}
+
+size_t Object::GetTagIndexOf() const {
+    return m_data->GetTagIndexOf();
+}
+
+std::string Object::GetTagNameOf() const {
+    return m_data->GetTagNameOf();
+}
+
 
 void ObjectImplDeleter::operator()(ObjectImpl* p) {
 	delete p;

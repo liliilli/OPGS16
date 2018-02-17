@@ -19,7 +19,9 @@
 #include "System\Manager\font_manager.h"
 #include "System\Manager\input_manager.h"
 #include "System\Manager\physics_manager.h" /*! PhysicsManager*/
+#include "System\Manager\resource_manager.h"/*! ResourceManager */
 #include "System\Manager\scene_manager.h"   /*! SceneManager */
+#include "System\Manager\setting_manager.h" /*! SettingManager */
 #include "System\Manager\sound_manager.h"
 #include "System\Manager\time_manager.h"
 
@@ -70,6 +72,12 @@ void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int hei
 
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        ResourceManager::GetInstance();	// Initialize resource list.
+        SettingManager::GetInstance();  // Initialize
+
         m_m_time = &TimeManager::GetInstance();
         m_m_time->SetFps(60.f);
 
@@ -147,6 +155,10 @@ void Application::Update() {
     case GameStatus::PLAYING: //[[fallthrough]] require /std:c++17
     case GameStatus::MENU:
         if (!m_scene_instance.SceneEmpty()) {
+            /*! pre-work such as Delete object, Replace object etc. */
+
+
+            /*! Update */
             m_scene_instance.GetPresentScene()->Update();
             m_physics_manager->Update();
         }

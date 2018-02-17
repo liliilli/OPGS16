@@ -2,6 +2,7 @@
 #include <algorithm>                /*! std::sort */
 #include <utility>                  /*! std::pair */
 #include "..\Components\Physics2D\Collider\rectangle.h"/*! collision::RectangleCollider2D */
+#include "..\Components\Physics2D\rigidbody_2d.h"   /*! component::Rigidbody2D */
 
 #include <iostream>
 
@@ -63,7 +64,19 @@ void PhysicsManager::ProceedCollisionCheck(PhysicsManager::item_ptr& item) {
 
         /*! If collide with each other, call specific procedure. */
         if (collision_flag) {
-            std::cout << "Something collided\n";
+            auto s_type = active_item->m_collider->GetCollisionType();
+            auto d_type = item->m_collider->GetCollisionType();
+
+            /*! Call */
+            if (s_type == collision::Collider2D::CollisionType::COLLISION)
+                active_item->m_rigidbody->OnCollisionEnter(*item->m_rigidbody);
+            else
+                active_item->m_rigidbody->OnTriggerEnter(*item->m_rigidbody);
+
+            if (d_type == collision::Collider2D::CollisionType::COLLISION)
+                item->m_rigidbody->OnCollisionEnter(*active_item->m_rigidbody);
+            else
+                item->m_rigidbody->OnTriggerEnter(*active_item->m_rigidbody);
         }
     }
 }
