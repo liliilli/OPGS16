@@ -8,14 +8,13 @@
  * @date 2018-02-14
  */
 
-#include "..\..\System\Object\object.h"             /*! Object */
-#include "..\..\System\Object\sprite_renderer.h"    /*! SpriteRenderer */
+#include "..\..\..\System\Object\object.h"             /*! Object */
+#include "..\..\..\System\Object\sprite_renderer.h"    /*! SpriteRenderer */
 
 class ObjectCollidable : public Object {
 public:
     ObjectCollidable(const std::string& sprite_tag);
 
-    [[noreturn]] virtual void Update() override final;
     [[noreturn]] virtual void Draw() override final;
 
 private:

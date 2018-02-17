@@ -63,7 +63,11 @@ public:
 	virtual void Draw(helper::ShaderNew& shader) {};
 
 	/** * @brief This calls callee to draw or render something it has.  */
-	[[noreturn]] virtual void Draw() {};
+    [[noreturn]] virtual void Draw() {
+        for (auto& object : m_children) {
+            if (object.second) object.second->Draw();
+        }
+    };
 
     /*!  * @brief This method will be called when Collision.  */
     [[noreturn]] virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};

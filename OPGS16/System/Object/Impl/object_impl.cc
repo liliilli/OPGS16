@@ -6,7 +6,7 @@
 * @brief Refresh Translation matrix
 */
 void ObjectImpl::RefreshTranslateMatrix() {
-	m_translate = glm::translate(glm::mat4{}, m_final_position);
+	m_translate = glm::translate(glm::mat4{}, m_local_position + m_final_position);
     m_translate_deprecated = false;
 }
 

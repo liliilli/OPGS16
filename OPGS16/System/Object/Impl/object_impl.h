@@ -9,7 +9,7 @@ public:
 	inline const glm::vec3 GetLocalPosition() const { return m_local_position; }
 
 	[[noreturn]] inline void SetLocalPosition(const glm::vec3& position) {
-        m_final_position += (position - m_local_position);
+        //m_final_position += (position - m_local_position);
         m_local_position = position;
 
         m_model_matrix_deprecated = true;
@@ -27,6 +27,7 @@ public:
 	}
 
 	inline void UpdateFinalPosition(const glm::vec3& parent_position) {
+        m_parent_position = parent_position;
 		m_final_position = m_local_position + parent_position;
         m_model_matrix_deprecated = true;
         m_translate_deprecated = true;
@@ -111,8 +112,11 @@ public:
     std::string GetTagNameOf() const;
 
 private:
-    glm::vec3   m_local_position{};     /*! (x, y, z) local position */
-	glm::vec3	m_final_position{};     /*! (x, y, z) final position in hierarchy */
+    glm::vec3   m_local_position{};     /*! (x, y, z) local position. */
+    glm::vec3   m_world_position{};     /*! (x, y, z) world position. */
+    glm::vec3   m_parent_position{};    /*! (x, y, z) final position of parent. */
+
+	glm::vec3	m_final_position{};     /*! (x, y, z) final position in hierarchy. */
 
     float       m_rotation_angle{};         /*! Rotation angle. Positive is CW, Negative is CCW */
     glm::vec3   m_rotation_factor{ 1.0f };  /*! Rotation factor is (x, y, z) factor */

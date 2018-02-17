@@ -8,14 +8,16 @@ Object::Object() {
 }
 
 void Object::Update() {
-    for (auto& component : m_components) {
-        component->Update();
-    }
+    if (m_data->GetActiveValue()) {
+        for (auto& component : m_components) {
+            component->Update();
+        }
 
-	for (auto& child : m_children) {
-		child.second->UpdateFinalPosition(GetFinalPosition());
-		child.second->Update();
-	}
+        for (auto& child : m_children) {
+            child.second->UpdateFinalPosition(GetFinalPosition());
+            child.second->Update();
+        }
+    }
 }
 
 const glm::vec3 Object::GetLocalPosition() const {
@@ -145,9 +147,11 @@ void Object::SetActive(const bool value) {
 
 void Object::GetObjectTree(ObjectTree* const tree) {
 	for (const auto& object : m_children) {
-		ObjectTree child; child.name = object.first;
-		tree->children.push_back(std::move(child));
-		object.second->GetObjectTree(&*tree->children.rbegin());
+        if (object.second) {
+            ObjectTree child; child.name = object.first;
+            tree->children.push_back(std::move(child));
+            object.second->GetObjectTree(&*tree->children.rbegin());
+        }
 	}
 }
 

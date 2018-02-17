@@ -4,3 +4,7 @@
 #include "Physics2D\rigidbody_2d.h"					/*! component::Camera */
 #include "..\..\Objects\Debug\Script\ui_manager.h"  /*! UiManager */
 #include "..\..\Objects\Debug\Script\test_script.h"	/*! TestScript */
+
+#include "..\..\_Project\CollisionTest\Scripts\player.h"	/*! Player */
+#include "..\..\_Project\Raindrops\Scripts\drops.h"	/*! Drops */
+#include "..\..\_Project\Raindrops\Scripts\rain_script.h"	/*! Drops */

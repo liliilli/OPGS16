@@ -24,6 +24,10 @@ KB GlobalF10
 + GLFW_KEY_F10
 g 1000
 
+KB PlusKey
++ GLFW_KEY_F4
+g 1000
+
 KB Horizontal
 + GLFW_KEY_RIGHT
 - GLFW_KEY_LEFT
@@ -33,5 +37,4 @@ KB Vertical
 + GLFW_KEY_UP
 - GLFW_KEY_DOWN
 g 10
-
 

@@ -15,7 +15,6 @@ class RandomMoveObject : public Object {
 public:
     RandomMoveObject(const std::string& sprite_tag);
 
-    [[noreturn]] virtual void Update() override final;
     [[noreturn]] virtual void Draw() override final;
 
 private:

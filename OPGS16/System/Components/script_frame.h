@@ -58,6 +58,9 @@ public:
      */
     [[noreturn]] virtual void Destroy() {};
 
+    /*!  * @brief Get Object reference.  */
+    Object& GetObject() { return m_bound_object; }
+
 private:
     const std::string m_script_name;    /*! Name must be same as ScriptFrame derived. */
     Object& m_bound_object;             /*! Bound object which script instance refers to */
