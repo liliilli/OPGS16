@@ -74,6 +74,8 @@ public:
 	[[noreturn]] void Update();
 
 private:
+    static constexpr char s_input_file[] = R"(_Setting/input.meta)";
+
 	/**
 	 * @struct BindingKeyInfo
 	 * @brief Stores key info to use in this game, and overall application.
@@ -134,6 +136,10 @@ private:
 	 * @param[in] key_info Key information to apply.
 	 */
 	[[noreturn]] void ProceedGravity(BindingKeyInfo& key_info);
+
+    /*! Initialize subroutine */
+    bool ProceedKeyInit(std::stringstream& stream, BindingKeyInfo* const info);
+    bool ProceedKeyInput(std::stringstream& stream, BindingKeyInfo* const info);
 
 private:
 	InputManager() = default;

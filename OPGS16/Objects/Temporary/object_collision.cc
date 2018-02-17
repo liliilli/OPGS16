@@ -26,8 +26,8 @@ void ObjectCollidable::Update() {
     auto& input = InputManager::GetInstance();
 
     auto position = GetLocalPosition();
-    position.x += 2 * input.GetKeyValue("Hori");
-    position.y += 2 * input.GetKeyValue("Vert");
+    position.x += 2 * input.GetKeyValue("Horizontal");
+    position.y += 2 * input.GetKeyValue("Vertical");
     SetLocalPosition(position);
 
     Object::Update();

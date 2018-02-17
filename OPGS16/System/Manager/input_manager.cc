@@ -1,74 +1,127 @@
-#include "input_manager.h"
+#include "input_manager.h"  /*! Header file */
+
+#include <algorithm>
+#include <fstream>  /*! std::ifstream */
+#include <iostream> /*! std::cout */
+#include <sstream>  /*! std::stringstream */
+
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+
 #include "time_manager.h"
+#define TO_STRING(__ENUM__) #__ENUM__
 
 void InputManager::Initialize(GLFWwindow * window) {
     this->window = window;
 
-	BindingKeyInfo&& g_GlobalCancel{}; {
-		g_GlobalCancel.name = "GlobalCancel";
-		g_GlobalCancel.pos	= GLFW_KEY_ESCAPE;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalCancel.name },
-										   std::move(g_GlobalCancel)));
-	}
-	BindingKeyInfo&& g_GlobalF1{}; {
-		g_GlobalF1.name = "GlobalF1";
-		g_GlobalF1.pos = GLFW_KEY_F1;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF1.name },
-										   std::move(g_GlobalF1)));
-	}
-	BindingKeyInfo&& g_GlobalF2{}; {
-		g_GlobalF2.name = "GlobalF2";
-		g_GlobalF2.pos = GLFW_KEY_F2;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF2.name },
-										   std::move(g_GlobalF2)));
-	}
-	BindingKeyInfo&& g_GlobalF3{}; {
-		g_GlobalF3.name = "GlobalF3";
-		g_GlobalF3.pos = GLFW_KEY_F3;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF3.name },
-										   std::move(g_GlobalF3)));
-	}
-	BindingKeyInfo&& g_GlobalF9{}; {
-		g_GlobalF9.name = "GlobalF9";
-		g_GlobalF9.pos = GLFW_KEY_F9;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF9.name },
-										   std::move(g_GlobalF9)));
-	}
-	BindingKeyInfo&& g_GlobalF10{}; {
-		g_GlobalF10.name = "GlobalF10";
-		g_GlobalF10.pos = GLFW_KEY_F10;
-		m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF10.name },
-										   std::move(g_GlobalF10)));
-	}
+    const auto KEY_INIT     = 0u;
+    const auto KEY_INPUT    = 1u;
+    auto mode{ KEY_INIT };
+    auto error{ false };
 
-    /*! Start D button */
-    BindingKeyInfo&& g_StartD{}; {
-        g_StartD.name = "StartD";
-        g_StartD.pos = GLFW_KEY_D;
-        m_key_inputs.insert(std::make_pair(std::string{ g_GlobalF10.name },
-                                           std::move(g_GlobalF10)));
-    }
+    std::ifstream in_file_stream(s_input_file, std::ios_base::in);
+    //in_file_stream.imbue(std::locale(""));
 
-    BindingKeyInfo&& k_Right{}; {
-        k_Right.name = "Hori";
-        k_Right.pos = GLFW_KEY_RIGHT;
-        k_Right.neg = GLFW_KEY_LEFT;
-        k_Right.neutral_gravity = 10;
-        m_key_inputs.insert(std::make_pair(std::string{ k_Right.name },
-                                           std::move(k_Right)));
-    }
+    if (in_file_stream.good()) {
+        std::string line;
+        BindingKeyInfo key{};
 
-    BindingKeyInfo&& k_Up{}; {
-        k_Up.name = "Vert";
-        k_Up.pos = GLFW_KEY_UP;
-        k_Up.neg = GLFW_KEY_DOWN;
-        k_Up.neutral_gravity = 10;
-        m_key_inputs.insert(std::make_pair(std::string{ k_Up.name },
-                                           std::move(k_Up)));
+        std::string error_string{};
+        while (std::getline(in_file_stream, line) && (!error)) {
+            /*! Neglect comment and line feed */
+            if (line.empty()) {
+                if (mode == KEY_INPUT) {
+                    m_key_inputs.insert(std::make_pair(std::string{ key.name }, std::move(key)));
+                    mode = KEY_INIT;
+                    key = BindingKeyInfo();
+                }
+                continue;
+            }
+            if (line.at(0) == '#') continue;
+
+            std::stringstream stream{ line };
+            switch (mode) {
+            case KEY_INIT: {
+                if (ProceedKeyInit(stream, &key))
+                    mode = KEY_INPUT;
+                else {
+                    error = true;
+                    stream.seekg(0);
+                    stream >> std::noskipws >> error_string;
+                }
+            } break;
+            case KEY_INPUT: {
+                if (!ProceedKeyInput(stream, &key)) {
+                    error = true;
+                    stream.seekg(0);
+                    stream >> std::noskipws >> error_string;
+                }
+            } break;
+            }
+        }
+
+        if (error) {    /*! If an error occured , display */
+            std::cerr << "ERROR::OCCURED::" << error_string << "\n";
+        }
     }
 }
+
+bool InputManager::ProceedKeyInit(std::stringstream& stream,
+                                  InputManager::BindingKeyInfo* const info) {
+    std::string token; stream >> token;
+    if (!(token == "KB" || token == "MS" || token == "JS"))
+        /*! Break and display error message */
+        assert(false);
+
+    stream >> token;
+    /*! Check token name already exist in m_key_inputs */
+    if (std::any_of(m_key_inputs.cbegin(), m_key_inputs.cend(),
+                    [new_name = token](auto& key) { return key.second.name == new_name; }
+    )) { return false; }
+
+    info->name = token;
+    return true;
+}
+
+bool InputManager::ProceedKeyInput(std::stringstream& stream, BindingKeyInfo* const info) {
+    std::string token; stream >> token;
+    if (token == "+" || token == "-") {
+        int* bind_pos{ nullptr };
+        if (token == "+") bind_pos = &info->pos;
+        else bind_pos = &info->neg;
+
+        std::string key_string; stream >> key_string;
+
+        if (key_string == TO_STRING(GLFW_KEY_ESCAPE))
+            *bind_pos = GLFW_KEY_ESCAPE;
+        else if (key_string == TO_STRING(GLFW_KEY_F1))
+            *bind_pos = GLFW_KEY_F1;
+        else if (key_string == TO_STRING(GLFW_KEY_F2))
+            *bind_pos = GLFW_KEY_F2;
+        else if (key_string == TO_STRING(GLFW_KEY_F3))
+            *bind_pos = GLFW_KEY_F3;
+        else if (key_string == TO_STRING(GLFW_KEY_F9))
+            *bind_pos = GLFW_KEY_F9;
+        else if (key_string == TO_STRING(GLFW_KEY_F10))
+            *bind_pos = GLFW_KEY_F10;
+        else if (key_string == TO_STRING(GLFW_KEY_RIGHT))
+            *bind_pos = GLFW_KEY_RIGHT;
+        else if (key_string == TO_STRING(GLFW_KEY_LEFT))
+            *bind_pos = GLFW_KEY_LEFT;
+        else if (key_string == TO_STRING(GLFW_KEY_UP))
+            *bind_pos = GLFW_KEY_UP;
+        else if (key_string == TO_STRING(GLFW_KEY_DOWN))
+            *bind_pos = GLFW_KEY_DOWN;
+    }
+    else if (token == "g") {
+        stream >> token;
+        info->neutral_gravity = static_cast<float>(std::stoi(token));
+    }
+    else return false;
+
+    return true;
+}
+
 
 float InputManager::GetKeyValue(const std::string & key) {
 	if (m_key_inputs.find(key) != m_key_inputs.end()) {
@@ -189,4 +242,3 @@ void InputManager::ProceedGravity(BindingKeyInfo & key_info) {
 
 	key_info.value = value;
 }
-
