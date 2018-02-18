@@ -1,12 +1,9 @@
 #include "application.h"
 
-#include <iomanip>	// std::setprecision, set::setw, std::put_time
 #include <iostream>	// std::cerr, std::endl
-#include <memory>	// std::static_pointer_cast
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include <glm\glm.hpp>
 
 #include "GlobalObjects\Canvas\canvas.h"
 #include "Objects\Debug\debug_canvas.h"     /*! CanvasDebug */
@@ -29,7 +26,7 @@
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
     m_scene_instance{ SceneManager::GetInstance() },
-	m_option{ false, true, false, true },
+	m_option{ false, true, true, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
 }
@@ -121,8 +118,7 @@ void Application::InitiatePostProcessingEffects() {
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */
-	auto id = 0u;
-	auto const result = m_pp_manager->SetSequence(id, { "SineWave", "SineWave" });
+	auto const result = m_pp_manager->SetSequence(1u, { "Convex" });
 	if (result == nullptr) {
 		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
 	}
@@ -167,8 +163,10 @@ void Application::Update() {
         break;
     }
 
-    if (m_option.debug_mode)        m_debug_ui_canvas->Update();
-	if (m_option.post_processing)   m_pp_manager->UpdateSequences(); // Update active effects.
+    if (m_option.debug_mode)
+        m_debug_ui_canvas->Update();
+	if (m_option.post_processing)
+        m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
 void Application::Input() {
@@ -200,23 +198,19 @@ void Application::InputGlobal() {
  * @brief The method calls scene to draw all objects.
  */
 void Application::Draw() {
+    /*! If there is no scene, do not rendering anything. */
 	if (!m_scene_instance.SceneEmpty()) {
-		if (m_option.post_processing) {
-			glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			m_pp_manager->BindSequence(0);
-		}
+        glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		/** Actual rendering */
+		if (m_option.post_processing)
+			m_pp_manager->BindSequence(1);
+        else
+            m_pp_manager->BindSequence(0);
+
+		/** Actual Rendering */
         m_scene_instance.GetPresentScene()->Draw();
-
 		/** Post-processing */
-		if (m_option.post_processing) {
-			m_pp_manager->RenderSequence();
-			glViewport(0, 0,
-					   SCREEN_WIDTH * static_cast<int>(m_scale),
-					   SCREEN_HEIGHT * static_cast<int>(m_scale));
-			m_pp_manager->Render();
-		}
+        m_pp_manager->Render();
 	}
 
 	if (m_option.debug_mode) m_debug_ui_canvas->Draw();

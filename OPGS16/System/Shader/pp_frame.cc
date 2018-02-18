@@ -50,9 +50,9 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
     auto t_height = height;
 
     /*! Resize size components have zero value. */
-    std::array<GLint, 4> screen_coord;
+    std::array<GLint, 4> screen_coord{ 0, 0, 256, 224 };
     if (t_width == 0 || t_height == 0) {
-        glGetIntegerv(GL_VIEWPORT, &screen_coord[0]);
+        //glGetIntegerv(GL_VIEWPORT, &screen_coord[0]);
         if (t_width == 0)   t_width = screen_coord[2];
         if (t_height == 0)  t_height = screen_coord[3];
     }

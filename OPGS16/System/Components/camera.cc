@@ -48,8 +48,8 @@ const glm::mat4 Camera::GetPV() const noexcept {
 }
 
 void Camera::InitiateOrthographicProjection() {
-    std::array<GLint, 4> viewport_size{};
-	glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
+    std::array<GLint, 4> viewport_size{0, 0, 256, 224};
+	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
 
     // 이동은 구현하지 않았음.
     m_view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
@@ -61,8 +61,8 @@ void Camera::InitiateOrthographicProjection() {
 }
 
 void Camera::InitiatePerspectiveProjection() {
-    std::array<GLint, 4> viewport_size{};
-	glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
+    std::array<GLint, 4> viewport_size{0, 0, 256, 224};
+	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
 
     m_view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
 

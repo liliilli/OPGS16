@@ -291,8 +291,8 @@ void FontManager::StartShader(const glm::vec3& color) {
  */
 glm::vec2 FontManager::CalculateCenterPosition(IOriginable::Origin& origin, glm::vec2& position) {
 	/** x origin, y origin, width, height */
-	std::array<GLint, 4> viewport{};
-	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
+	std::array<GLint, 4> viewport{0, 0, 256, 224};
+	//glGetIntegerv(GL_VIEWPORT, &viewport[0]);
 
 	auto origin_type = static_cast<int>(origin) - 1;
 	auto y_value = origin_type / 3;

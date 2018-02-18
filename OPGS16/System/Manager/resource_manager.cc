@@ -18,6 +18,12 @@ ResourceManager::ResourceManager() {
 		}
 	);
 
+	PushShader("ppQuad", {
+		{ shader_type::VS, "Shaders/Global/quad.vert"s },
+		{ shader_type::FS, "Shaders/Global/quad.frag"s }
+		}
+	);
+
 	PushShader("ppConvex", {
 		{ shader_type::VS, "Shaders/Global/quad.vert"s },
 		{ shader_type::FS, "Shaders/Global/convex.frag"s }

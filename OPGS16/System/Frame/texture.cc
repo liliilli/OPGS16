@@ -57,8 +57,8 @@ Texture2D::Texture2D(const GLint internal_format, GLenum format, GLenum type,
 }
 
 const Texture2D::Size Texture2D::GetSize() {
-	std::array<GLint, 4> viewport_size{};
-	glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
+	std::array<GLint, 4> viewport_size{0, 0, 256, 224};
+	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
 
 	return Size{ viewport_size[2], viewport_size[3] };
 }

@@ -23,7 +23,7 @@ namespace shading {
  * @brief Screen texture scaling post-processing effect.
  * This effect must be actived by default, or application can not use scaling option.
  */
-class PpEffectScaling : public PostProcessingFrame {
+class PpEffectScaling final : public PostProcessingFrame {
 public:
 	/**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
@@ -33,16 +33,14 @@ public:
 	 * This function can be overriden by Derived class.
 	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
 	 */
-	 virtual void Initiate() override final;
+	virtual void Initiate() override final;
 
 	/**
 	 * @brief Render texture and components.
 	 * This must be called after arbitary frame buffer bound.
 	 * This methods could be overriden by derived class.
 	 */
-	 virtual void RenderEffect() override final {
-		PostProcessingFrame::RenderEffect();
-	}
+    virtual void RenderEffect() override final;
 };
 
 }

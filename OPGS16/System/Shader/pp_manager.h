@@ -8,7 +8,7 @@
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @version 0.0.2
+ * @date 2018-02-18
  */
 
 #include <memory>
@@ -35,8 +35,6 @@ public:
 	using sequence_type = std::list<ppf_ptr>;
 
 public:
-	/** Constructor */
-	PostProcessingManager();
 
 	/**
 	 * @brief Static method gets unique instance of PostProcessingManager class.
@@ -125,18 +123,13 @@ public:
 	/**
 	 * @brief
 	 */
-	 void RenderSequence();
+	 void Render();
 
 	/**
 	 * @brief
 	 * #param[in] list
 	 */
 	 void ReleaseSequence(const size_t id);
-
-	/**
-	 * @brief
-	 */
-	 void Render();
 
 private:
 	/** Container sotres post-processing separated effects. */
@@ -149,7 +142,14 @@ private:
 
 private:
 	/** Return id'th position of effect_sequences is already exist. */
-	inline bool IsEffectSequenceAlreadyExist(const size_t id);
+	inline bool DoesEffectSequenceExist(const size_t id);
+
+private:
+	PostProcessingManager();
+    PostProcessingManager(const PostProcessingManager&) = delete;
+    PostProcessingManager(const PostProcessingManager&&) = delete;
+    PostProcessingManager& operator=(const PostProcessingManager&) = delete;
+    PostProcessingManager& operator=(const PostProcessingManager&&) = delete;
 };
 
 // Inline Methods
@@ -159,7 +159,7 @@ inline bool PostProcessingManager::IsEffectExist(const std::string tag) {
 	return true;
 }
 
-inline bool PostProcessingManager::IsEffectSequenceAlreadyExist(const size_t id) {
+inline bool PostProcessingManager::DoesEffectSequenceExist(const size_t id) {
 	return m_effect_sequences.find(id) != m_effect_sequences.end();
 }
 

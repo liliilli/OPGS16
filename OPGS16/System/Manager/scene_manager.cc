@@ -5,3 +5,4 @@ void SceneManager::PopScene() {
         m_scenes.pop();
 }
 
+SceneManager::~SceneManager() = default;

@@ -86,6 +86,7 @@ private:
 
 private:
     SceneManager() = default;
+    ~SceneManager();
     SceneManager(const SceneManager&) = delete;
     SceneManager(SceneManager&&) = delete;
     SceneManager& operator=(const SceneManager&) = delete;
