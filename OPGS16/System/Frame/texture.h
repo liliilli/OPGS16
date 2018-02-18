@@ -53,19 +53,19 @@ public:
 	 * \param[in]
 	 * \param[in]
 	 */
-	[[noreturn]] void SetTextureParameterI(const GLint option, const GLint mode);
+	 void SetTextureParameterI(const GLint option, const GLint mode);
 
 	/**
 	 * \brief
 	 * \param[in]
 	 */
-	[[noreturn]] void SetTextureParameterI(const std::vector<TextureParameter>& lists);
+	 void SetTextureParameterI(const std::vector<TextureParameter>& lists);
 
 	/**
 	 * @brief Set border color of texture.
 	 * @param[in]
 	 */
-	[[noreturn]] void SetBorderColor(const std::array<GLfloat, 4>& border_color);
+	 void SetBorderColor(const std::array<GLfloat, 4>& border_color);
 
 	/**
 	 * @brief Get texture id.

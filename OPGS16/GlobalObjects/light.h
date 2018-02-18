@@ -21,14 +21,14 @@ public:
     * @brief Set direction with new vector (x, y, z). input vector is normalized.
     * @param direction Direction vector (x, y, z)
     */
-    [[noreturn]] void SetDirection(const glm::vec3 direction);
+     void SetDirection(const glm::vec3 direction);
     const auto GetDirection() const { return direction; }
 
     /**
     * @brief Set position with new coordinate (x, y, z)
     * @param position Position (x, y, z)
     */
-    [[noreturn]] void SetLocalPosition(const glm::vec3 position);
+     void SetLocalPosition(const glm::vec3 position);
     const auto GetLocalPosition() const { return standard_position; }
 
     /**
@@ -73,7 +73,7 @@ public:
     * @brief Set position with new coordinate (x, y, z)
     * @param position Position (x, y, z)
     */
-    [[noreturn]] void SetLocalPosition(const glm::vec3 position);
+     void SetLocalPosition(const glm::vec3 position);
     const auto GetLocalPosition() const { return position; }
     const auto GetStandPos() const { return pos_standard; }
 
@@ -92,7 +92,7 @@ public:
      * @brief The method sets up diffuse color, and specular color light.
      * @param[in] color Color to set up.
      */
-    [[noreturn]] void SetColor(const glm::vec3 color);
+     void SetColor(const glm::vec3 color);
 
 private:
     const float far = 25.0f;

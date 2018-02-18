@@ -39,7 +39,7 @@ public:
 	 * @brief Set origin type value newly. Calling this does change rendering position of this.
 	 * @param[in] value New origin value.
 	 */
-	[[noreturn]] inline void SetOrigin(Origin value) {
+	 inline void SetOrigin(Origin value) {
 		m_origin = value;
 	}
 

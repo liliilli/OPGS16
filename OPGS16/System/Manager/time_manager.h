@@ -26,7 +26,7 @@ public:
     /*!
      * @brief
      */
-    [[noreturn]] inline void Update() {
+     inline void Update() {
         if (is_first) {
             is_first = !is_first;
             old_time = new_time = (float)glfwGetTime();
@@ -75,7 +75,7 @@ public:
      *
      * @param[in] value Fps tick count per second.
      */
-    [[noreturn]] void SetFps(float value) {
+     void SetFps(float value) {
         interval = 1 / value;
     }
 

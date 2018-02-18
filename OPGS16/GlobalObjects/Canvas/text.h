@@ -45,7 +45,7 @@ public:
      * @brief Set text string to display.
      * @param[in] new_text New text string.
      */
-	[[noreturn]] void SetText(const std::string& new_text);
+	 void SetText(const std::string& new_text);
 
     /**
      * @brief Get text string to display.
@@ -58,7 +58,7 @@ public:
      * This method has side-effect for accessing FontManager.
 	 * @param[in] size;
 	 */
-	[[noreturn]] void SetFontSize(const unsigned size);
+	 void SetFontSize(const unsigned size);
 
     /**
      * @brief Get font size which this instance has.
@@ -79,7 +79,7 @@ public:
      * @param[in] color New color value with consists of {r, g, b} glm::vec3 vector.
      * each value must be in range of [0, 1], otherwise clamped to 0 or 1.
      */
-    [[noreturn]] void SetColor(const glm::vec3& color);
+     void SetColor(const glm::vec3& color);
 
     /**
      * @brief Get reference of FontManager which this class grasps.

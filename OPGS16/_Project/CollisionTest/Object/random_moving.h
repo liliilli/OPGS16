@@ -15,13 +15,13 @@ class RandomMoveObject : public Object {
 public:
     RandomMoveObject(const std::string& sprite_tag);
 
-    [[noreturn]] virtual void Draw() override final;
+    virtual void Draw() override final;
 
 private:
     SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */
 
     /*! Override */
-    [[noreturn]] virtual void OnCollisionEnter(component::Rigidbody2D& collider) override final;
+    virtual void OnCollisionEnter(component::Rigidbody2D& collider) override final;
 };
 
 #endif // !OBJECTS_TEMPORARY_RANDOM_MOVING_OBJECT_H

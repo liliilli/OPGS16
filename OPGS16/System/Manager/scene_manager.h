@@ -34,13 +34,13 @@ public:
      * double initiation of scene.
      */
     template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Scene, _Ty>>>
-    [[noreturn]] void PushScene();
+     void PushScene();
 
     /**
      * @brief The method replace scene with top scene.
      */
     template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-    [[noreturn]] void ReplaceScene(){
+     void ReplaceScene(){
 		pReplaceScene<_Ty>();
     }
 
@@ -49,7 +49,7 @@ public:
 	 * If there is no scene, exit application automatically.
 	 * Otherwise all Update() and Rendering procedures delegates to previous scene.
      */
-    [[noreturn]] void PopScene();
+     void PopScene();
 
     /*!
      * @brief
@@ -77,7 +77,7 @@ private:
 	* @brief The method replace scene with old scene.
 	*/
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-	[[noreturn]] void pReplaceScene() {
+	 void pReplaceScene() {
 		/** Pop present scene */
 		m_scenes.pop();
 		/** Push present scene */

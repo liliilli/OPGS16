@@ -38,11 +38,11 @@ public:
 	Canvas();
 	virtual ~Canvas() = default;
 
-	[[noreturn]] virtual void Update() override;
+	 virtual void Update() override;
 
-	[[noreturn]] virtual void Draw(helper::ShaderNew& shader) override final {};
+	 virtual void Draw(helper::ShaderNew& shader) override final {};
 
-	[[noreturn]] virtual void Draw() override;
+	 virtual void Draw() override;
 
 	/** Get Ui camera's orthographic projection matrix. */
 	const glm::mat4 GetUiCameraPVMatrix() const;

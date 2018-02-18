@@ -33,11 +33,11 @@ public:
      * @brief
      * @param[in]
      */
-    [[noreturn]] void AddCollider(collision::RectangleCollider2D* const collider,
+     void AddCollider(collision::RectangleCollider2D* const collider,
                                   component::Rigidbody2D* const rigidbody);
 
     /*! Update and proceed collision routine */
-    [[noreturn]] void Update();
+     void Update();
 
 private:
     struct Item {
@@ -68,13 +68,13 @@ private:
      * @brief
      * @param[in]
      */
-    [[noreturn]] void ProceedCollisionCheck(item_ptr& item);
+     void ProceedCollisionCheck(item_ptr& item);
 
     /*!
      * @brief
      * @param[in]
      */
-    [[noreturn]] void EraseItem(item_ptr& item);
+     void EraseItem(item_ptr& item);
 };
 
 #endif // !OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H

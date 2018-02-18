@@ -52,7 +52,7 @@ public:
 	 * param[in] name_key shader program's aliasing name.
 	 * param[in] list Initialize list has a pair of pipeline type and shader code path.
 	 */
-	[[noreturn]] void PushShader(const std::string& name_key, const shader_list& list);
+	void PushShader(const std::string& name_key, const shader_list& list);
 
 	/**
 	 * @brief Get specific shader list.
@@ -70,7 +70,7 @@ public:
 	 * param[in] name_key sprite path's wrapping name.
 	 * param[in] path String path to read file when called.
 	 */
-	[[noreturn]] void PushTexture2D(const std::string& name_key, const std::string& path);
+	void PushTexture2D(const std::string& name_key, const std::string& path);
 
 	/**
 	 * @brief Get specific texture path.
@@ -83,7 +83,7 @@ public:
 	 * @brief Check error caused by processing in this class instance.
 	 *
 	 */
-	[[noreturn]] void CheckError();
+	void CheckError();
 
 private:
 	/** Texture string container */

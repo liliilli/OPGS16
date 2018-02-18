@@ -114,29 +114,29 @@ public:
 	/**
 	 * @brief Updates each effects of each sequences. (each effects of sequence is active)
 	 */
-	[[noreturn]] void UpdateSequences();
+	 void UpdateSequences();
 
 	/**
 	 * @brief Bind effect sequence with id number.
 	 * @param[in] id Index position of effect sequences container to bind seqeunce.
 	 */
-	[[noreturn]] void BindSequence(const size_t id);
+	 void BindSequence(const size_t id);
 
 	/**
 	 * @brief
 	 */
-	[[noreturn]] void RenderSequence();
+	 void RenderSequence();
 
 	/**
 	 * @brief
 	 * #param[in] list
 	 */
-	[[noreturn]] void ReleaseSequence(const size_t id);
+	 void ReleaseSequence(const size_t id);
 
 	/**
 	 * @brief
 	 */
-	[[noreturn]] void Render();
+	 void Render();
 
 private:
 	/** Container sotres post-processing separated effects. */

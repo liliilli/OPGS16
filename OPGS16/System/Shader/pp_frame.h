@@ -47,7 +47,7 @@ public:
 	 * This function can be overriden by Derived class.
 	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
 	 */
-	[[noreturn]] virtual void Initiate();
+	 virtual void Initiate();
 
 	/**
 	 * @brief Insert new frame buffer with id value.
@@ -57,7 +57,7 @@ public:
 	 *
 	 * @param[in] id The index to create it on container.
 	 */
-	[[noreturn]] void InsertFrameBuffer(const unsigned id);
+	 void InsertFrameBuffer(const unsigned id);
 
 	/**
 	 * @brief Insert new color buffer, with arguments need to be passed to making color buffer.
@@ -85,7 +85,7 @@ public:
 		GLint width = 0, GLint height = 0);
 
 	/** Initiate default depth buffer to [0] position of m_common_buffers. */
-	[[noreturn]] void InitiateDefaultDepthBuffer();
+	 void InitiateDefaultDepthBuffer();
 
 	/**
 	 * @brief Get reference of binded texture.
@@ -106,7 +106,7 @@ public:
 	 *
 	 * @see https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glFramebufferTexture2D.xml
 	 */
-	[[noreturn]] void BindTextureToFrameBuffer(const size_t texture_id,
+	 void BindTextureToFrameBuffer(const size_t texture_id,
                                                const size_t framebuffer_id,
                                                const GLenum attachment,
                                                const GLenum target);
@@ -118,20 +118,20 @@ public:
 	 * @param[in] name The name of shader to create.
 	 * @param[in] pixel_shader The path of pixel shader.
 	 */
-	[[noreturn]] void InitiateShader(const std::string& name);
+	 void InitiateShader(const std::string& name);
 
 	/**
 	 * @brief Bind frame buffer. This must be called to render objects to frame buffer.
 	 * This methods could be overriden by derived class.
 	 */
-	[[noreturn]] virtual void Bind();
+	 virtual void Bind();
 
 	/**
 	 * @brief Update frame buffer.
 	 * This must be called to active post-processing effects.
 	 * This methods could be overriden by derived class.
 	 */
-	[[noreturn]] virtual void Update() {};
+	 virtual void Update() {};
 
 	/**
 	 * @brief Render texture and components.
@@ -141,7 +141,7 @@ public:
      * Caller calls this method, Shader would be used and refresh uniform parameters automatically.
      * and texture binds, render.
 	 */
-	[[noreturn]] virtual void RenderEffect();
+	 virtual void RenderEffect();
 
 	/**
 	 * @brief Insert uniform variable value to be used by shader.
@@ -150,7 +150,7 @@ public:
 	 * @param[in] value The value insert.
 	 */
 	template <typename _Ty>
-	[[noreturn]] void InsertUniformValue(const std::string tag, const _Ty value) {
+	 void InsertUniformValue(const std::string tag, const _Ty value) {
 		if (!IsValueAlreadyExist(tag, value)) m_shader_wrapper.InsertUniformValue(tag, value);
 	}
 
@@ -161,7 +161,7 @@ public:
 	 * @param[in] value The value insert.
 	 */
 	template <typename _Ty>
-	[[noreturn]] void ReplaceUniformValue(const std::string tag, const _Ty value) {
+	 void ReplaceUniformValue(const std::string tag, const _Ty value) {
         if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.ReplaceUniformValue(tag, value);
 	}
 
@@ -169,16 +169,16 @@ public:
 	 * @brief Check if there is error.
 	 * If there is an error, output message in std::cerr.
 	 */
-	[[noreturn]] void CheckError();
+	 void CheckError();
 
 	/** Check this effect is on effect-sequences. */
 	const bool IsActive() const { return (m_active_count != 0); }
 
 	/** Set this effect will be actived. */
-	[[noreturn]] void Active();
+	 void Active();
 
 	/** Set this effect disabled. */
-	[[noreturn]] void Disable();
+	 void Disable();
 
 private:
 	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */

@@ -90,18 +90,18 @@ public:
 	 *
 	 * @param[in] tag The tag to find sound object.
 	 */
-	[[noreturn]] void PlaySound(const std::string&& tag);
+	 void PlaySound(const std::string&& tag);
 
 	/**
 	 * @brief Stop specified sound with tag.
 	 * @param[in] tag The tag to stop sound object has that tag name.
 	 */
-	[[noreturn]] void StopSound(const std::string&& tag);
+	 void StopSound(const std::string&& tag);
 
 	/**
 	 * @brief Stop all of sounds which are playing.
 	 */
-	[[noreturn]] void StopAllSounds();
+	 void StopAllSounds();
 
 	/**
 	 * @brief Check if any sound stream with 'tag' name is exist.
@@ -119,7 +119,7 @@ public:
 	 * @brief Set mute with true or false.
 	 * @param[in] value Mute switch.
 	 */
-	[[noreturn]] inline void SetMute(const bool value);
+	 inline void SetMute(const bool value);
 
 private:
 	ALCdevice* m_device{};		/** Sound device to output. */
@@ -142,7 +142,7 @@ private:
 	 * This must be called StopSound method and StopAllSounds method.
 	 * @param[in] sound The sound container to stop.
 	 */
-	[[noreturn]] void ProcessStopSound(const SoundInfo& sound);
+	 void ProcessStopSound(const SoundInfo& sound);
 
 	/**
 	 * @brief Initiate "Wav" sound file.

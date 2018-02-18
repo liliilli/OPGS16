@@ -12,7 +12,7 @@ RainScript::RainScript(Object& obj) :
 }
 
 void RainScript::Start() {
-    for (auto i = 0; i < 256; ++i) {
+    for (auto i = 0; i < 512; ++i) {
         auto x = m_rng() % 256;
         auto y = m_rng() % 228 + 228;
 

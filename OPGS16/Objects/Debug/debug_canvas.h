@@ -26,9 +26,9 @@ public:
 	CanvasDebug();
 	virtual ~CanvasDebug() = default;
 
-	[[noreturn]] virtual void Update() override final;
+	 virtual void Update() override final;
 
-	[[noreturn]] virtual void Draw() override final;
+	 virtual void Draw() override final;
 
 };
 

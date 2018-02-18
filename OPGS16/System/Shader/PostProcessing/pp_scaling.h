@@ -33,14 +33,14 @@ public:
 	 * This function can be overriden by Derived class.
 	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
 	 */
-	[[noreturn]] virtual void Initiate() override final;
+	 virtual void Initiate() override final;
 
 	/**
 	 * @brief Render texture and components.
 	 * This must be called after arbitary frame buffer bound.
 	 * This methods could be overriden by derived class.
 	 */
-	[[noreturn]] virtual void RenderEffect() override final {
+	 virtual void RenderEffect() override final {
 		PostProcessingFrame::RenderEffect();
 	}
 };

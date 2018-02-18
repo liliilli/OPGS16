@@ -43,7 +43,7 @@ public:
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
-    [[noreturn]] virtual void Update() override;     /*! Inherited via component::Component */
+     virtual void Update() override;     /*! Inherited via component::Component */
 
 public:
 	Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto = true);
@@ -69,10 +69,10 @@ private:
 
 private:
 	/** Initiate orthographic projection. automatically set it to screen size. */
-	[[noreturn]] void InitiateOrthographicProjection();
+	 void InitiateOrthographicProjection();
 
 	/** Initiate perspective projection matrix. automatically set it to screen size ratio. */
-	[[noreturn]] void InitiatePerspectiveProjection();
+	 void InitiatePerspectiveProjection();
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::Component, Camera)

@@ -27,27 +27,27 @@ public:
 	/** Must need virtual dtor */
     virtual ~Scene() = default;
 
-    [[noreturn]] virtual void Initiate() = 0;
+     virtual void Initiate() = 0;
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
 	 * This method is able to overriding,
 	 * but actual default behavior is just call ->Update() of objects.
      */
-	[[noreturn]] virtual void Update();
+	 virtual void Update();
 
     /**
      * @brief The method calls scene to draw all objects.
 	 * This method is able to overriding,
 	 * but actual default behavior is just call ->Draw() of objects.
      */
-	[[noreturn]] virtual void Draw();
+	 virtual void Draw();
 
 	/**
 	 * @brief This only must be called by Application methods body,
 	 * retuns traversal recursive object tree, to be checked in DEBUG MODE.
 	 */
-	[[noreturn]] virtual void GetObjectTree(ObjectTree* const tree);
+	 virtual void GetObjectTree(ObjectTree* const tree);
 
 	/**
 	 *

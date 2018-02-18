@@ -35,7 +35,7 @@ public:
 		return instance;
 	}
 
-    [[noreturn]] void Initialize(GLFWwindow* window);
+     void Initialize(GLFWwindow* window);
 
 	/**
 	 * @brief Get Key value which is bound to key container.
@@ -71,7 +71,7 @@ public:
 	/**
 	 * @brief Check something has pressed, released. and updates key values going down neutral.
 	 */
-	[[noreturn]] void Update();
+	 void Update();
 
 private:
     static constexpr char s_input_file[] = R"(_Setting/input.meta)";
@@ -135,7 +135,7 @@ private:
 	 *
 	 * @param[in] key_info Key information to apply.
 	 */
-	[[noreturn]] void ProceedGravity(BindingKeyInfo& key_info);
+	 void ProceedGravity(BindingKeyInfo& key_info);
 
     /*! Initialize subroutine */
     bool ProceedKeyInit(std::stringstream& stream, BindingKeyInfo* const info);

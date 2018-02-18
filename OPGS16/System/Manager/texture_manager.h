@@ -55,12 +55,12 @@ public:
 	 *
 	 * @param[in] tag The tag name of bound texture.
 	 */
-	[[noreturn]] void Release(const std::string& tag);
+	 void Release(const std::string& tag);
 
 	/**
 	 * @brief
 	 */
-	[[noreturn]] void CheckError();
+	 void CheckError();
 
 private:
 	texture_map m_container;	// Texture container used in game.

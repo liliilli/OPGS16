@@ -46,13 +46,13 @@ private:
      * @brief Initialize tag list using file stream.
      * This sequence proceed loading synchronously.
      */
-    [[noreturn]] void InitializeTagList();
+    void InitializeTagList();
 
     /*!
      * @brief Initailize layer list using file stream.
      * NOT IMPLEMENTED YET.
      */
-    [[noreturn]] void InitializeLayerList();
+    void InitializeLayerList();
 
 private:
     SettingManager();

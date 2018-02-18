@@ -38,13 +38,13 @@ public:
 	 * @param[in] right Right border position value from source position.
 	 * @param[in] down Down border position value from source position.
 	 */
-	[[noreturn]] void SetRegion(const float left, const float up,
+	 void SetRegion(const float left, const float up,
                                 const float right, const float down);
 
     /*!
      * @brief
      */
-    [[noreturn]] void ReflectPosition(const glm::vec3& position);
+     void ReflectPosition(const glm::vec3& position);
 
     enum class PositionType {
         LEFT_DOWN,  /*! Left down position */
@@ -85,10 +85,10 @@ private:
 	 * @param[in] right Right border position value from source position.
 	 * @param[in] down Down border position value from source position.
 	 */
-	[[noreturn]] void UpdateAllCorner(const float left, const float up,
+	 void UpdateAllCorner(const float left, const float up,
                                       const float right, const float down);
 
-    [[noreturn]] void UpdateFinalCorner();
+     void UpdateFinalCorner();
 };
 
 }

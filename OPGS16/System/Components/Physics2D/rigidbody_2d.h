@@ -37,7 +37,7 @@ public:
     Rigidbody2D(Object& bound_obj) : m_bound_object{ bound_obj } {}
 
     /*!  * Update physics/collision process.  */
-    [[noreturn]] void Update();
+     void Update();
 
     /*!
      * @brief Add (insert) 2D collider object. This method could be used as just plain object
@@ -49,16 +49,16 @@ public:
         class _Ty,
         class... _Params,
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
-    >   [[noreturn]] void AddCollider2D(_Params&&... args);
+    >    void AddCollider2D(_Params&&... args);
 
     template <
         class _Ty,
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
-    >   [[noreturn]] void AddCollider2D(std::unique_ptr<_Ty>&& collider);
+    >    void AddCollider2D(std::unique_ptr<_Ty>&& collider);
 
-    [[noreturn]] void OnCollisionEnter(Rigidbody2D& collier);
+     void OnCollisionEnter(Rigidbody2D& collier);
 
-    [[noreturn]] void OnTriggerEnter(Rigidbody2D& collider);
+     void OnTriggerEnter(Rigidbody2D& collider);
 
     bool IsTag(const std::string&& tag) const;
 
@@ -82,16 +82,16 @@ private:
     /*!
      * @brief
      */
-    [[noreturn]] void ReflectPositionToLastCollider();
+     void ReflectPositionToLastCollider();
 };
 
 template <class _Ty, class... _Params, typename>
-[[noreturn]] void Rigidbody2D::AddCollider2D(_Params&&... args) {
+ void Rigidbody2D::AddCollider2D(_Params&&... args) {
     m_colliders.emplace_back(std::make_unique<_Ty>( std::forward<_Params>(args)... ));
 }
 
 template <class _Ty, typename>
-[[noreturn]] void Rigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
+ void Rigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
     m_colliders.emplace_back(std::move(collider));
 }
 

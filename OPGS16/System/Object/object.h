@@ -52,28 +52,28 @@ public:
     /**
      * @brief The method updates components of object.
      */
-    [[noreturn]] virtual void Update();
+     virtual void Update();
 
     /**
      * @brief [DEPRECATED] The method calls scene to one objects.
      * @param[in] shader Shader to use.
      */
-    [[noreturn]]
+
 	[[deprecated("Use plain-Draw method which do not have shader argument.")]]
 	virtual void Draw(helper::ShaderNew& shader) {};
 
 	/** * @brief This calls callee to draw or render something it has.  */
-    [[noreturn]] virtual void Draw() {
+     virtual void Draw() {
         for (auto& object : m_children) {
             if (object.second) object.second->Draw();
         }
     };
 
     /*!  * @brief This method will be called when Collision.  */
-    [[noreturn]] virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
+     virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
 
     /*!  * @brief This method will be called when Trigger entered.  */
-    [[noreturn]] virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
+     virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
 
     /**
      * @brief The method gets position as glm::vec3 type. Not overridable.
@@ -85,7 +85,7 @@ public:
      * @brief The method sets position. Not overridable.
      * @param[in] position Position to set on.
      */
-    [[noreturn]] virtual void SetLocalPosition(glm::vec3 position);
+     virtual void SetLocalPosition(glm::vec3 position);
 
 	/**
 	 * @brief Return final position. used for hierarchy structure.
@@ -97,13 +97,13 @@ public:
 	 * @brief Set final position.
 	 * @param[in] final_position Final position in Screen space.
 	 */
-	[[noreturn]] void SetWorldPosition(const glm::vec3& final_position);
+	 void SetWorldPosition(const glm::vec3& final_position);
 
 	/**
 	 * @brief The method refresh final position. Nor overriadble.
 	 * @param[in] parent_position Position to apply for.
 	 */
-	[[noreturn]] void SetParentPosition(const glm::vec3& parent_position);
+	 void SetParentPosition(const glm::vec3& parent_position);
 
     /*! Get Object's final position. */
     const glm::vec3 GetFinalPosition() const;
@@ -122,7 +122,7 @@ public:
      *
      * @param[in] angle_value Angle value to set on.
      */
-    [[noreturn]] void SetAngle(const float angle_value);
+     void SetAngle(const float angle_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
@@ -134,7 +134,7 @@ public:
      * @brief The method sets rotation factor have values which ranges [-1, 1].
      * @param[in] factor
      */
-    [[noreturn]] void SetRotationFactor(const glm::vec3& factor);
+     void SetRotationFactor(const glm::vec3& factor);
 
     /**
      * @brief The method gets scaling values
@@ -146,7 +146,7 @@ public:
      * @brief The method sets scaling angle values.
      * @param[in] scale_value Scaling value to set on.
      */
-    [[noreturn]] void SetScaleValue(const float scale_value);
+     void SetScaleValue(const float scale_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
@@ -158,7 +158,7 @@ public:
      * @brief The method sets scaling vector have (x, y, z) scaling factors.
      * @param[in] factor Scaling factor
      */
-    [[noreturn]] void SetScaleFactor(const glm::vec3& factor);
+     void SetScaleFactor(const glm::vec3& factor);
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -175,7 +175,7 @@ public:
 	 * If m_active is false, this object cannot update until m_active return to true.
 	 * @param[in] value Active option value.
 	 */
-	[[noreturn]] void SetActive(const bool value);
+	 void SetActive(const bool value);
 
 	/** Get active value. */
 	bool GetActive();
@@ -243,7 +243,7 @@ public:
 	 * @brief This only must be called by Application methods body,
 	 * @returns traversal recursive object tree, to be checked in DEBUG MODE.
 	 */
-	[[noreturn]] void GetObjectTree(ObjectTree* const tree);
+	 void GetObjectTree(ObjectTree* const tree);
 
     /*!
      * @brief
@@ -255,7 +255,7 @@ public:
         class _Ty,
         typename... _Params,
         typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
-    >   [[noreturn]] void AddComponent(_Params&&... params);
+    >    void AddComponent(_Params&&... params);
 
     /*!
      * @brief
@@ -282,10 +282,10 @@ public:
      * in SettingManager. If not exist, do nothing and chagne error flag.
      * @param[in] tag_name Tag name
      */
-    [[noreturn]] void SetTag(const std::string tag_name);
+     void SetTag(const std::string tag_name);
 
     /*! Overloading version of SetTag(tag_name) */
-    [[noreturn]] void SetTag(const size_t tag_index);
+     void SetTag(const size_t tag_index);
 
     /*!
      * @brief Get tag index of this object.

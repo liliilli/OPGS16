@@ -38,14 +38,14 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	[[noreturn]] virtual void Update() override final;
+	 virtual void Update() override final;
 
 	/**
 	 * @brief The method calls scene to one objects.
 	 * @param[in] null NOT USE.
 	 * This virtual methods can not override any more.
 	 */
-	[[noreturn]] virtual void Draw(helper::ShaderNew&) override final;
+	 virtual void Draw(helper::ShaderNew&) override final;
 
 	/**
 	 * @brief This calls callee to draw or render something it has.
@@ -53,12 +53,12 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	[[noreturn]] virtual void Draw() override final;
+	 virtual void Draw() override final;
 
 	/**
 	 * @brief Set size.
 	 */
-	[[noreturn]] void SetImageSize(const float width, const float height);
+	 void SetImageSize(const float width, const float height);
 
 private:
 	SpriteRenderer m_sprite_renderer;	/** Sprite Renderer */

@@ -124,7 +124,7 @@ public:
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
      */
-    [[noreturn]]
+    
 	[[deprecated("Use RenderTextNew instead. this method does not support alignment features.")]]
 	void RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color);
 
@@ -148,7 +148,7 @@ public:
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
-	[[noreturn]] void RenderTextNew(const std::string& text, IOriginable::Origin origin,
+	 void RenderTextNew(const std::string& text, IOriginable::Origin origin,
 		glm::vec2 relative_position, glm::vec3 color,
 		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
 
@@ -175,7 +175,7 @@ private:
 	 * @brief This method starts shader with color to render.
 	 * @param[in] color The color to be attached to shader.
 	 */
-	[[noreturn]] void StartShader(const glm::vec3& color);
+	 void StartShader(const glm::vec3& color);
 
 	/**
 	 * @brief Checks freetype pointer with FontPath.
@@ -208,7 +208,7 @@ private:
 	/**
 	 * @brief This methods ends shader's operation.
 	 */
-	[[noreturn]] inline void EndShader() {
+	 inline void EndShader() {
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -220,7 +220,7 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	[[noreturn]] void RenderLeftSide(const std::vector<std::string>& container,
+	 void RenderLeftSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
 
 	/**
@@ -230,7 +230,7 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	[[noreturn]] void RenderCenterSide(const std::vector<std::string>& container,
+	 void RenderCenterSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
 
 	/**
@@ -240,7 +240,7 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	[[noreturn]] void RenderRightSide(const std::vector<std::string>& container,
+	 void RenderRightSide(const std::vector<std::string>& container,
 		const glm::vec2& position, const float scale);
 
 	/**
@@ -273,14 +273,14 @@ private:
 	 * @param[in] ch_info
 	 * @param[in] vertices
 	 */
-	[[noreturn]] void Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices);
+	 void Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices);
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.
      *
      * This methods called when initiate instance.
      */
-    [[noreturn]] void BindVertexAttributes();
+     void BindVertexAttributes();
 
     /**
      * @brief The method separate input to multi-lines strings detecting line-feed return carriage.

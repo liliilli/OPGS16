@@ -11,27 +11,27 @@ class TextImpl final {
 public:
     explicit TextImpl(Text&);
 
-    [[noreturn]] inline void SetText(const std::string& new_text) {
+    inline void SetText(const std::string& new_text) {
         m_text = new_text;
     }
     inline const std::string& GetText() const {
         return m_text;
     }
 
-    [[noreturn]] void SetFontName(const std::string& font_name) {
+    void SetFontName(const std::string& font_name) {
         m_font_name = font_name;
     }
     inline const std::string& GetFontName() const {
         return m_font_name;
     }
 
-    [[noreturn]] void SetFontSize(const unsigned size);
+    void SetFontSize(const unsigned size);
     inline const unsigned GetFontSize() {
         return m_font_size;
     }
 
-    [[noreturn]] void SetColor(const glm::vec3& color);
-    [[noreturn]] void SetColor(const float r, const float g, const float b);
+    void SetColor(const glm::vec3& color);
+    void SetColor(const float r, const float g, const float b);
     inline const glm::vec3 GetColor() const {
         return m_color;
     }

@@ -35,18 +35,18 @@ public:
      * @brief Set shader.
      * @param[in] shader
      */
-    [[noreturn]] void SetShader(helper::ShaderNew* const shader);
+     void SetShader(helper::ShaderNew* const shader);
 
     /**
      * @brief Use shader.
      * If shader graps nothing, do nothing any more.
      */
-    [[noreturn]] void UseShader();
+     void UseShader();
 
     /**
      * @brief
      */
-    [[noreturn]] void CheckError() {};
+     void CheckError() {};
 
     /**
      * @brief Insert uniform variable value to be used by shader.
@@ -55,7 +55,7 @@ public:
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-    [[noreturn]] void InsertUniformValue(const std::string& tag, const _Ty value) {};
+     void InsertUniformValue(const std::string& tag, const _Ty value) {};
 
     template <>
     void InsertUniformValue<float>(const std::string& tag, const float value) {
@@ -74,7 +74,7 @@ public:
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-    [[noreturn]] void ReplaceUniformValue(const std::string& tag, const _Ty& value);
+     void ReplaceUniformValue(const std::string& tag, const _Ty& value);
 
     template <>
     void ReplaceUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
@@ -137,7 +137,7 @@ private:
     /**
      * @brief Set uniform variables of shader with new values.
      */
-    [[noreturn]] void RefreshUniformValues();
+     void RefreshUniformValues();
 };
 
 #endif /** OPGS16_SYSTEM_SHADER_SHADER_WRAPPER_H */

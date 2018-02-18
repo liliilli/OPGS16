@@ -42,7 +42,7 @@ public:
 	 * @brief Change layer number of this instance.
 	 * @param[in] layer Layer number.
 	 */
-	[[noreturn]] void SetLayer(const unsigned layer);
+	 void SetLayer(const unsigned layer);
 
 	/**
 	 * @brief Get layer number of bound instance.
@@ -59,7 +59,7 @@ public:
 	 * 2. update shader uniform parameter.
 	 * 3. bind texture, render it with final position(PVM) of bound object.
 	 */
-	[[noreturn]] void RenderSprite();
+	 void RenderSprite();
 
 private:
     using pimpl_type = std::unique_ptr<SpriteRendererImpl, SpriteRendererImplDeleter>;

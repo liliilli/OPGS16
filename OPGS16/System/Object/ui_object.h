@@ -37,7 +37,7 @@ public:
 	 *
 	 * This update methods will be overriden by derived class.
 	 */
-	[[noreturn]] virtual void Update() override;
+	 virtual void Update() override;
 
 	/**
 	 * @brief Base UiObject class just call children's Draw() method.
@@ -46,7 +46,7 @@ public:
 	 *
 	 * This update methods will be overriden by derived class.
 	 */
-	[[noreturn]] virtual void Draw() override;
+	 virtual void Draw() override;
 
 protected:
 	/**
@@ -55,7 +55,7 @@ protected:
 	 *
 	 * @param[in] parent_xywh Caller's screen_x,y,width,height position array.
 	 */
-	[[noreturn]] void UpdateScreenXYWH(const std::array<GLint, 4> parent_xywh);
+	 void UpdateScreenXYWH(const std::array<GLint, 4> parent_xywh);
 
 private:
 	float screen_x{}, screen_y{};
@@ -74,7 +74,7 @@ private:
 	 * Afterward, this method sets final rendering position of child and apply changed value to
 	 * children of child calling SetUiParentPosition() of children of child.
 	 */
-	[[noreturn]] void SetUiParentPosition(
+	 void SetUiParentPosition(
 		const float parent_x,
 		const float parent_y,
 		const float parent_width,

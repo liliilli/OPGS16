@@ -13,12 +13,12 @@ public:
     /**
     * @brief The method update components movement, UI refresh, and so on.
     */
-    [[noreturn]] virtual void Update() override;
+     virtual void Update() override;
 
     /**
     * @brief The method calls scene to draw all objects.
     */
-    [[noreturn]] virtual void Draw() override;
+     virtual void Draw() override;
 
 };
 

@@ -25,7 +25,7 @@ public:
 	 * @brief Set collision type, either TRIGGER or COLLISION.
 	 * @param[in] type Collision type.
 	 */
-	[[noreturn]] void SetCollisionType(CollisionType type);
+	 void SetCollisionType(CollisionType type);
 
 	/**
 	 * @brief Get collision type, either TRIGGER or COLLISION.

@@ -78,18 +78,18 @@ public:
 	/**
 	 * @brief Release all shaders in shader container.
 	 */
-	[[noreturn]] void ReleaseAll();
+	 void ReleaseAll();
 
 	/**
 	 * @brief
 	 * @param[in] shader_name The name tag to release.
 	 */
-	[[noreturn]] void ReleaseShader(const std::string& shader_name);
+	 void ReleaseShader(const std::string& shader_name);
 
 	/**
 	 * @brief
 	 */
-	[[noreturn]] void CheckError();
+	 void CheckError();
 
 private:
 	/** ShaderManager error type */

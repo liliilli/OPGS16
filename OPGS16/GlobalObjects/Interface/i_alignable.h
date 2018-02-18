@@ -30,7 +30,7 @@ public:
 	 * @brief Set Alignment value. This method will change display position of IAlignable instance.
 	 * @param[in] value New alignment value.
 	 */
-    [[noreturn]] inline void SetAlignment(Alignment value) {
+     inline void SetAlignment(Alignment value) {
         alignment = value;
     }
 

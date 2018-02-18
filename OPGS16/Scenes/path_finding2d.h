@@ -22,12 +22,12 @@ public:
 	/**
 	* @brief The method update components movement, UI refresh, and so on.
 	*/
-	[[noreturn]] virtual void Update() override final;
+	 virtual void Update() override final;
 
 	/**
 	* @brief The method calls scene to draw all objects.
 	*/
-	[[noreturn]] virtual void Draw() override final;
+	 virtual void Draw() override final;
 
 private:
 	enum class SceneStatus {
@@ -40,14 +40,14 @@ private:
 	SceneStatus m_status{ SceneStatus::INITIATE };
 	std::string m_scene_name{ "PathFinding2D" };
 
-	[[noreturn]] void InitUserInterface();
+	 void InitUserInterface();
 
-	[[noreturn]] void InitShowingComponents();
+	 void InitShowingComponents();
 
 	/**
 	 * @brief The method draws Ui components;
 	 */
-	[[noreturn]] void DrawUi();
+	 void DrawUi();
 };
 
 #endif /** OPENGL_TUTORIAL_SCENES_PATH_FINDING_2D_H */

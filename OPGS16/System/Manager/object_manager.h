@@ -23,9 +23,9 @@ public:
         return instance;
     }
 
-    [[noreturn]] void Destroy(const Object& object);
+     void Destroy(const Object& object);
 
-    [[noreturn]] void Update() {
+     void Update() {
         if (!m_destroy_candidates.empty()) {
             DestroyObjects();
         }
@@ -35,11 +35,11 @@ private:
     std::list<object_ptr> m_destroy_candidates;
 
 private:
-    [[noreturn]] void AddDestroyObject(object_ptr&& ptr) {
+     void AddDestroyObject(object_ptr&& ptr) {
         m_destroy_candidates.emplace_back(std::move(ptr));
     }
 
-    [[noreturn]] void DestroyObjects();
+     void DestroyObjects();
 
 private:
     ObjectManager() = default;

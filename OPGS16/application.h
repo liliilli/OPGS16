@@ -44,10 +44,10 @@ public:
     }
 
 	/** Let application initiate game settings */
-	[[noreturn]] void Initiate();
+	 void Initiate();
 
     /** Let application run and loop.  */
-    [[noreturn]] void Run();
+     void Run();
 
 	/**
 	 * @brief Get default screen size (no scaling screen size)
@@ -115,16 +115,16 @@ private:
     GLFWwindow* InitApplication(std::string&& app_name);
 
 	/** Initiate and Make font informations. */
-	[[noreturn]] void InitiateFonts();
+	 void InitiateFonts();
 
 	/** * @brief Initiate and Compose Debug Interface components.  */
-	[[noreturn]] void InitiateDebugUi();
+	 void InitiateDebugUi();
 
 	/** * @brief Initiate post-processing effects in advance.  */
-	[[noreturn]] void InitiatePostProcessingEffects();
+	 void InitiatePostProcessingEffects();
 
 	/** * @brief Set sounds.  */
-	[[noreturn]] void InitiateSoundSetting();
+	 void InitiateSoundSetting();
 
     /**
      * @brief Static callback method for size checking and resizing.
@@ -142,16 +142,16 @@ private:
      *
      * @param[in] window Window handle pointer.
      */
-    [[noreturn]] void Input();
+     void Input();
 
 	/** Global input checking method */
-	[[noreturn]] void InputGlobal();
+	 void InputGlobal();
 
     /** The method update components movement, UI refresh, and so on. */
-    [[noreturn]] void Update();
+     void Update();
 
     /** The method calls scene to draw all objects. */
-    [[noreturn]] void Draw();
+     void Draw();
 
 	/**
 	 * @brief Return present status.
@@ -163,7 +163,7 @@ private:
 	 * @brief Replace present status to the other status.
 	 * @param[in] status New status value to replace present status with.
 	 */
-	[[noreturn]] void ReplacePresentStatus(GameStatus status) {
+	 void ReplacePresentStatus(GameStatus status) {
 		m_game_status.pop();
 		m_game_status.push(status);
 	}
@@ -185,7 +185,7 @@ private:
 	 * Do not use this method when replace one value with the other status value,
 	 * This will crash game on playing.
 	 */
-	[[noreturn]] void PopStatus() {
+	 void PopStatus() {
         if (!m_game_status.empty()) {
             m_game_status.pop();
             if (m_game_status.empty()) Exit();
@@ -193,19 +193,19 @@ private:
 	}
 
 	/** Exit game */
-    [[noreturn]] void Exit();
+     void Exit();
 
         /** Change window size. */
-	[[noreturn]] void ChangeScalingOption(OptionScale value);
+	 void ChangeScalingOption(OptionScale value);
 
     /** The method toggles OpenGL antialiasing (MSAA) */
-    [[noreturn]] void ToggleAntialiasing();
+     void ToggleAntialiasing();
 
     /** * @brief The method toggles FPS display.  */
-    [[noreturn]] void ToggleFpsDisplay();
+     void ToggleFpsDisplay();
 
 	/** Toggle post-processing effects */
-	[[noreturn]] void TogglePostProcessingEffect();
+	 void TogglePostProcessingEffect();
 };
 
 #endif // OPENGL_TUTORIAL_APPLICATION_H

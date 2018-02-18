@@ -12,7 +12,7 @@ public:
         return m_local_position;
     }
 
-	[[noreturn]] inline void SetLocalPosition(const glm::vec3& position) {
+	 inline void SetLocalPosition(const glm::vec3& position) {
         m_local_position = position;
         m_model_matrix_deprecated = true;
         m_translate_deprecated = true;
@@ -23,9 +23,9 @@ public:
         return m_world_position;
     }
 
-    [[noreturn]] inline void SetWorldPosition(const glm::vec3& position);
+     inline void SetWorldPosition(const glm::vec3& position);
 
-	[[noreturn]] inline void SetParentPosition(const glm::vec3& parent_position) {
+	 inline void SetParentPosition(const glm::vec3& parent_position) {
         m_parent_position = parent_position;
         m_model_matrix_deprecated = true;
         m_translate_deprecated = true;
@@ -47,7 +47,7 @@ public:
         return m_rotation_angle;
     }
 
-	[[noreturn]] inline void SetAngle(const float angle_value) {
+	 inline void SetAngle(const float angle_value) {
 		m_rotation_angle = angle_value;
 
         m_model_matrix_deprecated = true;
@@ -58,7 +58,7 @@ public:
         return m_rotation_factor;
     }
 
-	[[noreturn]] inline void SetRotationFactor(const glm::vec3& factor) {
+	 inline void SetRotationFactor(const glm::vec3& factor) {
 		m_rotation_factor = factor;
 
         m_model_matrix_deprecated = true;
@@ -71,7 +71,7 @@ public:
         return m_scale_value;
     }
 
-	[[noreturn]] inline void SetScaleValue(const float scale_value) {
+	 inline void SetScaleValue(const float scale_value) {
 		m_scale_value = scale_value;
 
         m_model_matrix_deprecated = true;
@@ -82,7 +82,7 @@ public:
         return m_scale_factor;
     }
 
-	[[noreturn]] void SetScaleFactor(const glm::vec3& scale_factor) {
+	 void SetScaleFactor(const glm::vec3& scale_factor) {
 		m_scale_factor = scale_factor;
 
         m_model_matrix_deprecated = true;
@@ -98,7 +98,7 @@ public:
 	 * If m_active is false, this object cannot update until m_active return to true.
 	 * @param[in] value Active option value.
 	 */
-	[[noreturn]] void SetActive(const bool value) { m_active = value; }
+	 void SetActive(const bool value) { m_active = value; }
 
 	inline bool GetActive() const { return m_active; } /** Get active value. */
 
@@ -107,10 +107,10 @@ public:
      * in SettingManager. If not exist, do nothing and chagne error flag.
      * @param[in] tag_name Tag name
      */
-    [[noreturn]] void SetTag(const std::string tag_name);
+     void SetTag(const std::string tag_name);
 
     /*! Overloading version of SetTag(tag_name) */
-    [[noreturn]] void SetTag(const size_t tag_index);
+     void SetTag(const size_t tag_index);
 
     /*!
      * @brief Get tag index of this object.

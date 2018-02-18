@@ -24,7 +24,7 @@ public:
                        const std::string& shader_tag,
                        const unsigned layer = 0);
 
-    [[noreturn]] inline void SetLayer(const unsigned layer) {
+     inline void SetLayer(const unsigned layer) {
 
     }
 
@@ -36,7 +36,7 @@ public:
         return m_wrapper;
     }
 
-    [[noreturn]] void RenderSprite();
+     void RenderSprite();
 
 private:
 	texture::Texture2D* m_sprite;	/** Sprite 2d texture stores image information. */
