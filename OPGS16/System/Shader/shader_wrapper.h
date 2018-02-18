@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <map>
 #include <glm\glm.hpp>
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! ShaderNew */
 
@@ -25,8 +26,8 @@
 class ShaderWrapper final {
 private:
     struct Paramters {
-        std::unordered_map<std::string, float>		m_floats{};
-        std::unordered_map<std::string, glm::mat4>	m_mat4s{};
+        std::map<std::string, float>		m_floats{};
+        std::map<std::string, glm::mat4>	m_mat4s{};
     } m_parameters;
 
 public:
@@ -73,11 +74,18 @@ public:
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-    [[noreturn]] void ReplaceUniformValue(const std::string& tag, const _Ty value) {
-        if (IsValueAlreadyExist(tag, value)) {
-            _Ty* i = GetIteratorOfSpecifiedPoint<_Ty>(tag);
-            *i = value;
-        }
+    [[noreturn]] void ReplaceUniformValue(const std::string& tag, const _Ty& value);
+
+    template <>
+    void ReplaceUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
+        //if (m_parameters.m_mat4s.find(tag) != m_parameters.m_mat4s.end())
+            m_parameters.m_mat4s.at(tag) = value;
+    }
+
+    template <>
+    void ReplaceUniformValue<float>(const std::string& tag, const float& value) {
+        //if (m_parameters.m_floats.find(tag) != m_parameters.m_floats.end())
+            m_parameters.m_floats.at(tag) = value;
     }
 
 private:

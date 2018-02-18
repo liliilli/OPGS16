@@ -72,9 +72,9 @@ private:
 	 * -(4).(5)-(6) with parent_x, y, width, height to be aligned Parent's region without
 	 * /(1)|(2)\(3) applying child's local position.
 	 * Afterward, this method sets final rendering position of child and apply changed value to
-	 * children of child calling UpdateFinalPosition() of children of child.
+	 * children of child calling SetUiParentPosition() of children of child.
 	 */
-	[[noreturn]] void UpdateFinalPosition(
+	[[noreturn]] void SetUiParentPosition(
 		const float parent_x,
 		const float parent_y,
 		const float parent_width,

@@ -123,7 +123,7 @@ bool InputManager::ProceedKeyInput(std::stringstream& stream, BindingKeyInfo* co
 }
 
 
-float InputManager::GetKeyValue(const std::string & key) {
+float InputManager::GetKeyValue(const std::string & key) const {
 	if (m_key_inputs.find(key) != m_key_inputs.end()) {
 		return m_key_inputs.at(key).value;
 	}

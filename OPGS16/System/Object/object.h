@@ -91,25 +91,28 @@ public:
 	 * @brief Return final position. used for hierarchy structure.
 	 * @return Object's final position in hierarchy.
 	 */
-	const glm::vec3 GetFinalPosition() const;
+	const glm::vec3 GetWorldPosition() const;
 
 	/**
 	 * @brief Set final position.
 	 * @param[in] final_position Final position in Screen space.
 	 */
-	[[noreturn]] void SetFinalPosition(const glm::vec3& final_position);
+	[[noreturn]] void SetWorldPosition(const glm::vec3& final_position);
 
 	/**
 	 * @brief The method refresh final position. Nor overriadble.
 	 * @param[in] parent_position Position to apply for.
 	 */
-	[[noreturn]] void UpdateFinalPosition(const glm::vec3& parent_position);
+	[[noreturn]] void SetParentPosition(const glm::vec3& parent_position);
+
+    /*! Get Object's final position. */
+    const glm::vec3 GetFinalPosition() const;
 
     /**
      * @brief The method gets rotation values
      * @return Object's rotation angle value.
      */
-    const float GetRotationAngle() const;
+    const float GetAngle() const;
 
     /**
      * @brief The method sets rotation angle values.
@@ -175,7 +178,7 @@ public:
 	[[noreturn]] void SetActive(const bool value);
 
 	/** Get active value. */
-	bool GetActiveValue();
+	bool GetActive();
 
 	/**
 	 * @brief This initiate object as a child of base object.
@@ -304,12 +307,13 @@ public:
 
     size_t m_hash_value;
 private:
-	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
-	object_map m_children;
-
     name_counter_map m_name_counter;
 
 protected:
+	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
+
+	object_map m_children;
+
     std::vector<component_ptr> m_components{};
 
 private:

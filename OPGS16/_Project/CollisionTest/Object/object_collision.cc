@@ -34,8 +34,5 @@ void ObjectCollidable::Draw() {
     m_sprite_renderer.RenderSprite();
 }
 
-void ObjectCollidable::OnCollisionEnter(component::Rigidbody2D& collider) {
-    //if (collider.IsTag("Enemy"))
-        //std::cout << "Hello there\n";
-}
+void ObjectCollidable::OnCollisionEnter(component::Rigidbody2D& collider) {}
 

@@ -7,7 +7,7 @@ namespace component {
 void Rigidbody2D::Update() {
     auto& physics_manager = PhysicsManager::GetInstance();
     for (auto& collider : m_colliders) {
-        collider->ReflectPosition(m_bound_object.GetFinalPosition());
+        collider->ReflectPosition(m_bound_object.GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);
     }
 }

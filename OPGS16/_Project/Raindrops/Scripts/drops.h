@@ -18,6 +18,9 @@ public:
     virtual void Update() override final;
 
 private:
+    size_t count{ 5 };
+
+private:
     virtual void Start() override final {};
 
     /*! Create members related to type hash value. */

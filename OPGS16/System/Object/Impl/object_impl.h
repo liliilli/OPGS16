@@ -6,34 +6,44 @@
 
 class ObjectImpl final {
 public:
-	inline const glm::vec3 GetLocalPosition() const { return m_local_position; }
+    /*! Position */
+
+	inline const glm::vec3 GetLocalPosition() const {
+        return m_local_position;
+    }
 
 	[[noreturn]] inline void SetLocalPosition(const glm::vec3& position) {
-        //m_final_position += (position - m_local_position);
         m_local_position = position;
-
         m_model_matrix_deprecated = true;
         m_translate_deprecated = true;
+        m_final_pos_deprecated = true;
 	}
 
-	inline const glm::vec3 GetFinalPosition() const {
+	inline const glm::vec3 GetWorldPosition() const {
+        return m_world_position;
+    }
+
+    [[noreturn]] inline void SetWorldPosition(const glm::vec3& position);
+
+	[[noreturn]] inline void SetParentPosition(const glm::vec3& parent_position) {
+        m_parent_position = parent_position;
+        m_model_matrix_deprecated = true;
+        m_translate_deprecated = true;
+        m_final_pos_deprecated = true;
+	}
+
+    inline const glm::vec3 GetFinalPosition() const {
+        if (m_final_pos_deprecated) {
+            m_final_position = m_parent_position + m_world_position + m_local_position;
+            m_final_pos_deprecated = false;
+        }
+
         return m_final_position;
     }
 
-	inline void SetFinalPosition(const glm::vec3& final_position) {
-		m_final_position = final_position;
-        m_model_matrix_deprecated = true;
-        m_translate_deprecated = true;
-	}
+    /*! Angle */
 
-	inline void UpdateFinalPosition(const glm::vec3& parent_position) {
-        m_parent_position = parent_position;
-		m_final_position = m_local_position + parent_position;
-        m_model_matrix_deprecated = true;
-        m_translate_deprecated = true;
-	}
-
-	inline const float GetRotationAngle() const {
+	inline const float GetAngle() const {
         return m_rotation_angle;
     }
 
@@ -54,6 +64,8 @@ public:
         m_model_matrix_deprecated = true;
 		m_rotation_deprecated = true;
 	}
+
+    /*! Scale */
 
 	inline const float GetScaleValue() const {
         return m_scale_value;
@@ -77,6 +89,8 @@ public:
 		m_scale_deprecated = true;
 	}
 
+    /*! Matrix */
+
 	const glm::mat4 GetModelMatrix();
 
 	/**
@@ -86,7 +100,7 @@ public:
 	 */
 	[[noreturn]] void SetActive(const bool value) { m_active = value; }
 
-	inline bool GetActiveValue() const { return m_active; } /** Get active value. */
+	inline bool GetActive() const { return m_active; } /** Get active value. */
 
     /*!
      * @brief Set tag with tag name. This method will check whether or not exist matched tag name
@@ -116,7 +130,7 @@ private:
     glm::vec3   m_world_position{};     /*! (x, y, z) world position. */
     glm::vec3   m_parent_position{};    /*! (x, y, z) final position of parent. */
 
-	glm::vec3	m_final_position{};     /*! (x, y, z) final position in hierarchy. */
+	mutable glm::vec3 m_final_position{};     /*! (x, y, z) final position in hierarchy. */
 
     float       m_rotation_angle{};         /*! Rotation angle. Positive is CW, Negative is CCW */
     glm::vec3   m_rotation_factor{ 1.0f };  /*! Rotation factor is (x, y, z) factor */
@@ -133,6 +147,8 @@ private:
 
     mutable bool m_model_matrix_deprecated{ true };
     mutable bool m_translate_deprecated{ true };
+    mutable bool m_final_pos_deprecated{ true };
+
     mutable bool m_rotation_deprecated{ true };
     mutable bool m_scale_deprecated{ true };
 
@@ -147,6 +163,13 @@ private:
 
 inline size_t ObjectImpl::GetTagIndexOf() const {
     return m_tag_index;
+}
+
+inline void ObjectImpl::SetWorldPosition(const glm::vec3& position) {
+    m_world_position = position;
+    m_model_matrix_deprecated = true;
+    m_translate_deprecated = true;
+    m_final_pos_deprecated = true;
 }
 
 #endif /** OPGS16_SYSTEM_OBJECT_OBJECT_PRIVATE_IMPLEMENTATION_H */

@@ -25,8 +25,8 @@ RainDrop::RainDrop(const std::string& sprite_tag) :
 }
 
 void RainDrop::Draw() {
-    auto i = GetLocalPosition();
-    if (-2 <= i.x && i.x <= 128 && i.y <= 120 && -6 <= i.y) {
+    auto i = GetWorldPosition();
+    if (-2 <= i.x && i.x <= 256 && i.y <= 224 && -6 <= i.y) {
         auto M = GetModelMatrix();
         auto PV = SceneManager::GetInstance().GetPresentScene()->GetMainCamera()->GetPV();
         auto PVM = PV * M;

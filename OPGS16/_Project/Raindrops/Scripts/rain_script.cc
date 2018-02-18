@@ -12,12 +12,12 @@ RainScript::RainScript(Object& obj) :
 }
 
 void RainScript::Start() {
-    for (auto i = 0; i < 512; ++i) {
-        auto drops = std::make_unique<RainDrop>("Test");
-
+    for (auto i = 0; i < 256; ++i) {
         auto x = m_rng() % 256;
         auto y = m_rng() % 228 + 228;
-        drops->SetLocalPosition(glm::vec3{ x, y, 0 });
+
+        auto drops = std::make_unique<RainDrop>("Test");
+        drops->SetWorldPosition(glm::vec3{ x, y, 0 });
         GetObject().Instantiate<RainDrop>("Drops", drops);
     }
 }

@@ -8,14 +8,16 @@ Object::Object() {
 }
 
 void Object::Update() {
-    if (m_data->GetActiveValue()) {
+    if (m_data && GetActive()) {
         for (auto& component : m_components) {
             component->Update();
         }
 
         for (auto& child : m_children) {
-            child.second->UpdateFinalPosition(GetFinalPosition());
-            child.second->Update();
+            if (child.second && child.second->GetActive()) {
+                child.second->SetParentPosition(GetWorldPosition());
+                child.second->Update();
+            }
         }
     }
 }
@@ -28,26 +30,35 @@ void Object::SetLocalPosition(glm::vec3 position) {
 	m_data->SetLocalPosition(position);
 }
 
+const glm::vec3 Object::GetWorldPosition() const {
+    return m_data->GetWorldPosition();
+}
+
+void Object::SetWorldPosition(const glm::vec3& world_position) {
+	m_data->SetWorldPosition(world_position);
+
+    for (auto& child : m_children) {
+        if (child.second)
+            child.second->SetParentPosition(GetFinalPosition());
+    }
+}
+
+void Object::SetParentPosition(const glm::vec3& parent_position) {
+	m_data->SetParentPosition(parent_position);
+
+    for (auto& child : m_children) {
+        if (child.second)
+            child.second->SetParentPosition(GetFinalPosition());
+    }
+}
+
 const glm::vec3 Object::GetFinalPosition() const {
     return m_data->GetFinalPosition();
 }
 
-void Object::SetFinalPosition(const glm::vec3& final_position) {
-	m_data->SetFinalPosition(final_position);
+const float Object::GetAngle() const {
+    return m_data->GetAngle();
 }
-
-void Object::UpdateFinalPosition(const glm::vec3& parent_position) {
-	m_data->UpdateFinalPosition(parent_position);
-
-	for (auto& child : m_children)
-		child.second->UpdateFinalPosition(m_data->GetFinalPosition());
-}
-
-/**
- * @brief The method gets rotation values
- * @return Object's rotation angle value.
- */
-const float Object::GetRotationAngle() const { return m_data->GetRotationAngle(); }
 
 /**
  * @brief The method sets rotation angle values.
@@ -110,7 +121,9 @@ void Object::SetScaleFactor(const glm::vec3& factor) {
  *
  * @return Model matrix (M = TRS)
  */
-const glm::mat4 Object::GetModelMatrix() const { return m_data->GetModelMatrix(); }
+const glm::mat4 Object::GetModelMatrix() const {
+    return m_data->GetModelMatrix();
+}
 
  bool Object::DestroyChild(const std::string & tag) {
 	 decltype(m_children.end()) iterator = m_children.find(tag);
@@ -139,7 +152,7 @@ const glm::mat4 Object::GetModelMatrix() const { return m_data->GetModelMatrix()
 	 return m_children.at(tag).get();
  }
 
-bool Object::GetActiveValue() { return m_data->GetActiveValue(); }
+bool Object::GetActive() { return m_data->GetActive(); }
 
 void Object::SetActive(const bool value) {
 	m_data->SetActive(value);

@@ -3,19 +3,23 @@
 #include <glm\glm.hpp>
 
 void UiObject::Update() {
-	/** Update children */
-	for (auto& child : GetChildren()) {
-		auto child_temp = static_cast<UiObject*>(child.second.get());
-		child_temp->UpdateFinalPosition(screen_x, screen_y, screen_width, screen_height);
-		child_temp->Update();
-	}
+    if (m_data && GetActive()) {
+        for (auto& component : m_components) {
+            component->Update();
+        }
+
+        for (auto& child : m_children) {
+            if (child.second && child.second->GetActive()) {
+                auto child_temp = static_cast<UiObject*>(child.second.get());
+                child_temp->SetUiParentPosition(screen_x, screen_y, screen_width, screen_height);
+                child_temp->Update();
+            }
+        }
+    }
 }
 
-void UiObject::UpdateFinalPosition(
-	const float parent_x,
-	const float parent_y,
-	const float parent_width,
-	const float parent_height) {
+void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
+                                 const float parent_width, const float parent_height) {
 	/** Body */
 	auto origin	= static_cast<int>(GetOrigin()) - 1;
 	unsigned y = origin / 3;
@@ -24,17 +28,19 @@ void UiObject::UpdateFinalPosition(
 	GLint source_x = static_cast<GLint>(parent_x + (parent_width / 2) * x);
 	GLint source_y = static_cast<GLint>(parent_y + (parent_height / 2) * y);
 
-	SetFinalPosition({ GetLocalPosition() + glm::vec3{source_x, source_y, 0} });
+    SetParentPosition(glm::vec3{ source_x, source_y, 0 });
+	//SetWorldPosition({ GetLocalPosition() + glm::vec3{source_x, source_y, 0} });
 	for (auto& child : GetChildren()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());
-		child_temp->UpdateFinalPosition(screen_x, screen_y, screen_width, screen_height);
+		child_temp->SetUiParentPosition(screen_x, screen_y, screen_width, screen_height);
 	}
 }
 
 void UiObject::Draw() {
 	for (const auto& child : GetChildren()) {
-		child.second->Draw();
+        if (child.second)
+            child.second->Draw();
 	}
 }
 

@@ -49,9 +49,9 @@ void Image::Draw() {
 	}
 
 	/** Render this */
-	auto PVM = GetPvmMatrix();
-
 	auto& shader = m_sprite_renderer.GetWrapper();
+
+	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
 	shader.ReplaceUniformValue<glm::mat4>("projection", PVM);
 	shader.ReplaceUniformValue("alpha", 1.0f);
 	m_sprite_renderer.RenderSprite();
@@ -62,10 +62,4 @@ void Image::Draw() {
 	UiObject::Draw();
 }
 
-const glm::mat4 Image::GetPvmMatrix() const {
-	auto M = GetModelMatrix();
-	auto PV = m_ref_canvas->GetUiCameraPVMatrix();
-
-	return PV * M;
-}
 }

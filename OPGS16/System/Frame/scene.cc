@@ -3,7 +3,7 @@
 
 void Scene::Update() {
 	for (auto& object : objects) {
-		if (object.second->GetActiveValue())
+		if (object.second->GetActive())
 			object.second->Update();
 	}
 }

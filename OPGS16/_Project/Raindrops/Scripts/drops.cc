@@ -7,16 +7,21 @@
 void Drops::Update() {
     auto& obj = GetObject();
 
-    if (obj.GetFinalPosition().y < -16.f) {
-        std::random_device rng;
-        auto x = rng() % 256;
-        auto y = rng() % 128 + 256;
+    if (obj.GetWorldPosition().y < -16.f) {
+        if (count <= 0)
+            ObjectManager::GetInstance().Destroy(obj);
+        else {
+            std::random_device rng;
+            auto x = rng() % 256;
+            auto y = rng() % 128 + 256;
 
-        obj.SetLocalPosition({ x, y, 0 });
+            obj.SetWorldPosition({ x, y, 0 });
+            --count;
+        }
     }
     else {
-        auto pos = obj.GetLocalPosition();
-        pos.y -= 3.f;
-        obj.SetLocalPosition(pos);
+        auto pos = obj.GetWorldPosition();
+        pos.y -= 6.f;
+        obj.SetWorldPosition(pos);
     }
 }

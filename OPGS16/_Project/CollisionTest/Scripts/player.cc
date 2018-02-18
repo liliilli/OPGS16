@@ -4,16 +4,17 @@
 #include <glm\glm.hpp>
 
 void Player::Update() {
-    auto& input = InputManager::GetInstance();
+    const auto& input = InputManager::GetInstance();
+    auto& obj = GetObject();
 
-    auto position = GetObject().GetFinalPosition();
+    auto position = obj.GetWorldPosition();
 
     auto x_val = input.GetKeyValue("Horizontal");
     auto y_val = input.GetKeyValue("Vertical");
     if (x_val || y_val) {
         position.x += 2 * input.GetKeyValue("Horizontal");
         position.y += 2 * input.GetKeyValue("Vertical");
-        GetObject().SetFinalPosition(position);
+        obj.SetWorldPosition(position);
     }
 
 }

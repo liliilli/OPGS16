@@ -17,14 +17,12 @@ DebugUiManager::DebugUiManager(Object& obj,
                                Canvas::Text* const _m_date,
                                Canvas::Text* const _m_tree) :
     component::ScriptFrame(obj),
-    m_fps{ nullptr }, m_date{ _m_date }, m_tree{ nullptr } {
+    m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ nullptr } {
     Initiate();
     Start();
 }
 
-void DebugUiManager::Start() {
-    std::cout << "DebugUiManager::Start()" << '\n';
-}
+void DebugUiManager::Start() {}
 
 void DebugUiManager::Update() {
     if (m_fps) {

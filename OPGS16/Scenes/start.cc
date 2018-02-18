@@ -27,10 +27,10 @@ void Start::Initiate() {
 	Instantiate("Canvas", canvas);
 
     auto test_obj = std::make_unique<ObjectCollidable>("Test");
-    test_obj->SetFinalPosition(glm::vec3{ 128, 112,0 });
+    test_obj->SetWorldPosition(glm::vec3{ 128, 112,0 });
     test_obj->SetTag("Player");
     Instantiate("Object_1", test_obj);
-    GetObject("Object_1")->SetFinalPosition(glm::vec3{ 128, 112, 0 });
+    GetObject("Object_1")->SetWorldPosition(glm::vec3{ 128, 112, 0 });
 
     auto rain = std::make_unique<RainManager>();
     Instantiate("RainManager", rain);
@@ -38,21 +38,21 @@ void Start::Initiate() {
     //    auto subject = std::make_unique<RandomMoveObject>("Test");
     //    subject->SetTag("Enemy");
     //    Instantiate("Rd1", subject);
-    //    GetObject("Rd1")->SetFinalPosition(glm::vec3{ 224, 192, 0 });
+    //    GetObject("Rd1")->SetWorldPosition(glm::vec3{ 224, 192, 0 });
     //}
 
     //{
     //    auto subject = std::make_unique<RandomMoveObject>("Test");
     //    subject->SetTag("Enemy");
     //    Instantiate("Rd2", subject);
-    //    GetObject("Rd2")->SetFinalPosition(glm::vec3{ 73, 171, 0 });
+    //    GetObject("Rd2")->SetWorldPosition(glm::vec3{ 73, 171, 0 });
     //}
 
     //{
     //    auto subject = std::make_unique<RandomMoveObject>("Test");
     //    //subject->SetTag("Enemy");
     //    Instantiate("Rd3", subject);
-    //    GetObject("Rd3")->SetFinalPosition(glm::vec3{ 96, 64, 0 });
+    //    GetObject("Rd3")->SetWorldPosition(glm::vec3{ 96, 64, 0 });
     //}
 
     ///*! To call template function with specific type argument, must know complete information. */

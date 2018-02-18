@@ -46,7 +46,7 @@ public:
 	 * @param[in] key The key name which key instance has.
 	 * @return float The key value which has [-1, 1] range floating value.
 	 */
-	float GetKeyValue(const std::string& key);
+	float GetKeyValue(const std::string& key) const;
 
 	/**
 	 * @brief Get whether or not specific key was pressed.
@@ -122,7 +122,7 @@ private:
 	enum class ErrorFlag {
 		OK,				/** Everything is ok. */
 		NOT_FOUND_KEY,	/** This flag will be set up when GetKeyValue() failed. */
-	} m_error_flag{ ErrorFlag::OK };
+	} mutable m_error_flag{ ErrorFlag::OK };
 
     GLFWwindow* window; /** Window handle pointer */
 

@@ -64,9 +64,6 @@ private:
 	SpriteRenderer m_sprite_renderer;	/** Sprite Renderer */
 	Canvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 
-private:
-	/** Get PVM Matrix */
-	const glm::mat4 GetPvmMatrix() const;
 };
 }
 

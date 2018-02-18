@@ -21,7 +21,7 @@ Text::Text(const std::string & initial_txt, const glm::vec3& position, const glm
     m_text_impl->SetText(initial_txt);
     m_text_impl->SetColor(color);
 
-	SetLocalPosition(position);
+	SetWorldPosition(position);
 }
 
 void Text::Draw() {

@@ -6,8 +6,10 @@
 * @brief Refresh Translation matrix
 */
 void ObjectImpl::RefreshTranslateMatrix() {
-	m_translate = glm::translate(glm::mat4{}, m_local_position + m_final_position);
+    m_final_position = m_local_position + m_parent_position + m_world_position;
+
     m_translate_deprecated = false;
+    m_final_pos_deprecated = false;
 }
 
 /**
@@ -32,7 +34,14 @@ const glm::mat4 ObjectImpl::GetModelMatrix() {
         if (m_rotation_deprecated) RefreshRotateMatrix();
         if (m_scale_deprecated) RefreshScaleMatrix();
 
-		m_model = glm::mat4{} * m_translate * m_rotate * m_scale;
+		m_model = m_rotate;
+        m_model[0] *= m_scale_value * m_scale_factor[0];
+        m_model[1] *= m_scale_value * m_scale_factor[1];
+        m_model[2] *= m_scale_value * m_scale_factor[2];
+
+        m_model[3][0] = m_final_position.x;
+        m_model[3][1] = m_final_position.y;
+        m_model[3][2] = m_final_position.z;
 		m_model_matrix_deprecated = false;
 	}
 

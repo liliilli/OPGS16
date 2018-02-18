@@ -20,20 +20,21 @@ void ObjectManager::Destroy(const Object& object) {
         it_list.pop();
 
         for (; it != object_list.end(); ++it) {
-            auto target_hash_value = it->second->GetHash();
-            if (hash_value == target_hash_value) {
-                AddDestroyObject(std::move(it->second));
+            if (it->second) {   /*! If it is empty */
+                if (hash_value == it->second->GetHash()) {
+                    AddDestroyObject(std::move(it->second));
 
-                destroyed = true;
-                break;
-            }
-            else {
-                auto& additional_list = it->second->GetChildren();
-                if (!additional_list.empty()) {
-                    it_list.push(++it);
-                    tree_list.push(&additional_list);
-                    it_list.push(additional_list.begin());
+                    destroyed = true;
                     break;
+                }
+                else {
+                    auto& additional_list = it->second->GetChildren();
+                    if (!additional_list.empty()) {
+                        it_list.push(++it);
+                        tree_list.push(&additional_list);
+                        it_list.push(additional_list.begin());
+                        break;
+                    }
                 }
             }
         }

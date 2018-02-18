@@ -27,7 +27,7 @@ public:
 	 * /(1)|(2)\(3) applying child's local position.
      *
 	 * Afterward, this method sets final rendering position of child and apply changed value to
-	 * children of child calling UpdateFinalPosition() of children of child.
+	 * children of child calling SetUiParentPosition() of children of child.
 	 */
 	enum class Origin : int {
 		UP_LEFT = 7,		UP_CENTER = 8,		UP_RIGHT = 9,

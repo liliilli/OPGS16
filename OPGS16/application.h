@@ -174,7 +174,7 @@ private:
 	 *
 	 * @param[in] status New status value to pile up onto status stack.
 	 */
-	[[noreturn]] void PushStatus(GameStatus status) {
+	void PushStatus(GameStatus status) {
 		m_game_status.push(status);
 	}
 
