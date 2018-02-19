@@ -24,7 +24,7 @@ RainDrop::RainDrop(const std::string& sprite_tag) :
 	shader.InsertUniformValue<float>("alpha", 0.0f);
 }
 
-void RainDrop::Draw() {
+void RainDrop::Render() {
     auto i = GetWorldPosition();
     if (-2 <= i.x && i.x <= 256 && i.y <= 224 && -6 <= i.y) {
         auto M = GetModelMatrix();
@@ -45,5 +45,9 @@ void RainDrop::OnCollisionEnter(component::Rigidbody2D& body) {
         auto y = rng() % 228 + 228;
 
         SetLocalPosition({ x, y, 0 });
+        Drops* const script = GetComponent<Drops>();
+        if (script != nullptr) {
+            script->ScoreUpTrigger();
+        }
     }
 }

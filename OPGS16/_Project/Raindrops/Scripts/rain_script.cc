@@ -11,15 +11,21 @@ RainScript::RainScript(Object& obj) :
     Start();
 }
 
-void RainScript::Start() {
-    for (auto i = 0; i < 512; ++i) {
-        auto x = m_rng() % 256;
-        auto y = m_rng() % 228 + 228;
+void RainScript::Start() {}
 
-        auto drops = std::make_unique<RainDrop>("Test");
-        drops->SetWorldPosition(glm::vec3{ x, y, 0 });
-        GetObject().Instantiate<RainDrop>("Drops", drops);
+void RainScript::Update() {
+    if (!m_start) {
+        if (m_input.GetKeyValue("Vertical") == 1.0f) {
+            for (auto i = 0; i < 512; ++i) {
+                auto x = m_rng() % 256;
+                auto y = 232;
+
+                auto drops = std::make_unique<RainDrop>("Test");
+                drops->SetWorldPosition(glm::vec3{ x, y, 0 });
+                GetObject().Instantiate<RainDrop>("Drops", drops);
+            }
+
+            m_start = true;
+        }
     }
 }
-
-void RainScript::Update() {}

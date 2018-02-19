@@ -20,7 +20,7 @@
  * @brief ShaderManager class manages shaders on runtime in scene.
  *
  * ShaderManager class manages shaders compiled on runtime in scene, These are able to bind
- * the object in use, render binded objects, move binded object to another shader, and be deleted.
+ * the object in use, render binded m_object_list, move binded object to another shader, and be deleted.
  *
  * Shaders in container are managed by shader name, and Tags.
  * ShaderManager is singleton, so user cannot create another ShaderManager instance.

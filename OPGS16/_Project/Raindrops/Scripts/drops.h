@@ -17,8 +17,14 @@ public:
 
     virtual void Update() override final;
 
+    void ScoreUpTrigger();
+
 private:
-    size_t count{ 5 };
+    size_t  m_count{ 5 };
+    bool    m_trigger{ false };
+    float   m_mass;
+    float   m_velocity{ 0.f };
+    float   m_acc{ 0.05f };
 
 private:
     virtual void Start() override final {};

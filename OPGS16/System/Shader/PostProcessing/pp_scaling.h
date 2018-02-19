@@ -14,7 +14,7 @@
 
 /**
  * @namespace shading
- * @brief shading namespace is for objects related to shading and shader management.
+ * @brief shading namespace is for m_object_list related to shading and shader management.
  */
 namespace shading {
 

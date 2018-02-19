@@ -1,7 +1,5 @@
-#include "canvas.h"
-
-/** std::array */
-#include <array>
+#include "canvas.h" /*! Header file */
+#include <array>    /*! std::array */
 /**
  * camera::CameraObject,
  * camera::CameraObject::ViewType
@@ -17,20 +15,22 @@ Canvas::Canvas() : m_is_size_changed{ true } {
     m_camera = GetComponent<component::Camera>();
 }
 
-void Canvas::Update() {
+void Canvas::LocalUpdate() {
 	if (m_is_size_changed) {
 		std::array<GLint, 4> m_viewport_size{0, 0, 256, 224};
-		//glGetIntegerv(GL_VIEWPORT, &m_viewport_size[0]);
 		UpdateScreenXYWH(m_viewport_size);
 		m_is_size_changed = false;
 	}
 
-	UiObject::Update();
+	UiObject::LocalUpdate();
 }
 
-void Canvas::Draw() {
+void Canvas::Render() {
     glDisable(GL_DEPTH_TEST);
-	for (auto& child : GetChildren()) { child.second->Draw(); }
+
+    for (auto& child : GetChildList())
+        child.second->Draw();
+
     glEnable(GL_DEPTH_TEST);
 }
 

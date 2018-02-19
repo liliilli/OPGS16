@@ -1,0 +1,3 @@
+#include "..\Scripts\drops.h"		/*! Drops */
+#include "..\Scripts\rain_script.h"	/*! RainScript */
+#include "..\Scripts\rain_ui.h"		/*! RainUiManager */

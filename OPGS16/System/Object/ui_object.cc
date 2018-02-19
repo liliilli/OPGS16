@@ -2,24 +2,17 @@
 #include <array>
 #include <glm\glm.hpp>
 
-void UiObject::Update() {
-    if (m_data && GetActive()) {
-        for (auto& component : m_components) {
-            component->Update();
-        }
-
-        for (auto& child : m_children) {
-            if (child.second && child.second->GetActive()) {
-                auto child_temp = static_cast<UiObject*>(child.second.get());
-                child_temp->SetUiParentPosition(screen_x, screen_y, screen_width, screen_height);
-                child_temp->Update();
-            }
+void UiObject::LocalUpdate() {
+    for (auto& child : m_children) {
+        if (child.second && child.second->GetActive()) {
+            auto child_temp = static_cast<UiObject*>(child.second.get());
+            child_temp->SetUiParentPosition(screen_x, screen_y, screen_width, screen_height);
         }
     }
 }
 
 void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
-                                 const float parent_width, const float parent_height) {
+                                   const float parent_width, const float parent_height) {
 	/** Body */
 	auto origin	= static_cast<int>(GetOrigin()) - 1;
 	unsigned y = origin / 3;
@@ -30,17 +23,10 @@ void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
 
     SetParentPosition(glm::vec3{ source_x, source_y, 0 });
 	//SetWorldPosition({ GetLocalPosition() + glm::vec3{source_x, source_y, 0} });
-	for (auto& child : GetChildren()) {
+	for (auto& child : GetChildList()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());
 		child_temp->SetUiParentPosition(screen_x, screen_y, screen_width, screen_height);
-	}
-}
-
-void UiObject::Draw() {
-	for (const auto& child : GetChildren()) {
-        if (child.second)
-            child.second->Draw();
 	}
 }
 

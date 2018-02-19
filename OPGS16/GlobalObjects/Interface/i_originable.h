@@ -12,7 +12,7 @@
 /**
  * @class IOriginable
  * @brief This interface (not-pure, but work as a UI component checking type in RTTI and so on)
- * works as checking components type, get objects to align with Origin which is used for calcula
+ * works as checking components type, get m_object_list to align with Origin which is used for calcula
  * ting weight-center position of each object.
  */
 class IOriginable {

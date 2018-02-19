@@ -232,7 +232,7 @@ Shader::Shader(const GLchar * vertex_path, const GLchar * fragment_path, bool li
     std::ifstream vertex_shader_file;
     std::ifstream fragment_shader_file;
 
-    // Ensure ifstream objects can throw exceptions
+    // Ensure ifstream m_object_list can throw exceptions
     vertex_shader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     fragment_shader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 

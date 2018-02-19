@@ -20,7 +20,7 @@ RandomMoveObject::RandomMoveObject(const std::string & sprite_tag) :
 	shader.InsertUniformValue<float>("alpha", 0.0f);
 }
 
-void RandomMoveObject::Draw() {
+void RandomMoveObject::Render() {
     auto M = GetModelMatrix();
     auto PV = SceneManager::GetInstance().GetPresentScene()->GetMainCamera()->GetPV();
     auto PVM = PV * M;

@@ -7,6 +7,7 @@
 
 #include "..\_Project\CollisionTest\Object\object_collision.h"  /*! ObjectCollidable */
 #include "..\_Project\Raindrops\Object\rain_manager.h"  /*! RainManager */
+#include "..\_Project\Raindrops\Object\game_canvas.h"   /*! GameCanvas */
 //#include "..\Objects\TempDebug\test_image.h"    /*! TestImage for branch feature_instantiate */
 //#include "..\Objects\TempDebug\test_start_txt.h"/*! TestStartTxt for feature_instantiate */
 //#include "..\Objects\Temporary\object_collision.h"  /*! ObjecCOllision */
@@ -22,9 +23,8 @@ void Start::Initiate() {
     auto main_camera = std::make_unique<MainCameraObject>();
     Instantiate("MainCamera", main_camera);
 
-    auto canvas = std::make_unique<Canvas::Canvas>();
-    canvas->Instantiate<TestStartTCopy>("Copyright");
-	Instantiate("Canvas", canvas);
+    auto canvas = std::make_unique<GameCanvas>();
+    Instantiate("GameCanvas", canvas);
 
     auto test_obj = std::make_unique<ObjectCollidable>("Test");
     test_obj->SetWorldPosition(glm::vec3{ 128, 112,0 });
@@ -34,6 +34,10 @@ void Start::Initiate() {
 
     auto rain = std::make_unique<RainManager>();
     Instantiate("RainManager", rain);
+
+ //   auto canvas = std::make_unique<Canvas::Canvas>();
+ //   canvas->Instantiate<TestStartTCopy>("Copyright");
+	//Instantiate("Canvas", canvas);
     //{
     //    auto subject = std::make_unique<RandomMoveObject>("Test");
     //    subject->SetTag("Enemy");

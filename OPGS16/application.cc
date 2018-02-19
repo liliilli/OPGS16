@@ -26,7 +26,7 @@
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
     m_scene_instance{ SceneManager::GetInstance() },
-	m_option{ false, true, true, true },
+	m_option{ false, false, true, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
 	PushStatus(GameStatus::INIT);
 }
@@ -141,7 +141,7 @@ void Application::Run() {
             Draw();
         }
     }
-
+    /*! Must terminate glfw window */
     glfwTerminate();
 }
 
@@ -195,7 +195,7 @@ void Application::InputGlobal() {
 }
 
 /**
- * @brief The method calls scene to draw all objects.
+ * @brief The method calls scene to draw all m_object_list.
  */
 void Application::Draw() {
     /*! If there is no scene, do not rendering anything. */

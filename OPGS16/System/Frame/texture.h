@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_TEXTURE_H
-#define OPENGL_TUTORIAL_TEXTURE_H
+#ifndef OPGS16__TEXTURE_H
+#define OPGS16__TEXTURE_H
 
 #include <string>
 #include <vector>

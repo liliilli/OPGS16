@@ -19,7 +19,7 @@
  * InputManager has a rule of managing input signal such as keyboard key pressing, releasing and
  * mouse signal or joystick inputs. (Only keyboard input signal checking is implemented. 20180206)
  *
- * Any objects want to catch signal of input devices, and performs specific mechanism can use
+ * Any m_object_list want to catch signal of input devices, and performs specific mechanism can use
  * this manager by calling InputManager::GetInstance().
  *
  * @date 2018 - 02 - 06

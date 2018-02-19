@@ -6,7 +6,11 @@
  * @brief Image object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
- * @date 2018-02-08
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Remove Draw(ShaderNew) obsolete method.
+ *            Replace Draw(), Update() with Render() and LocalUpdate()
  */
 
 #include "..\..\System\Object\ui_object.h"          /** UiObject */
@@ -24,6 +28,9 @@ namespace Canvas {
  * size.
  *
  * Scale binding and Rotation binding has not been implemented yet.
+ *
+ * @log
+ * 2018-02-19 Remove Draw(ShaderNew) obsolete method.
  */
 class Image : public UiObject {
 public:
@@ -38,14 +45,7 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	 virtual void Update() override final;
-
-	/**
-	 * @brief The method calls scene to one objects.
-	 * @param[in] null NOT USE.
-	 * This virtual methods can not override any more.
-	 */
-	 virtual void Draw(helper::ShaderNew&) override final;
+	 virtual void LocalUpdate() override final;
 
 	/**
 	 * @brief This calls callee to draw or render something it has.
@@ -53,7 +53,7 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	 virtual void Draw() override final;
+	 virtual void Render() override final;
 
 	/**
 	 * @brief Set size.

@@ -12,6 +12,7 @@ public:
 private:
     InputManager& m_input;
     std::random_device m_rng;
+    bool m_start{ false };
 
 private:
     virtual void Start() override final;

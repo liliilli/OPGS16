@@ -19,7 +19,7 @@ Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
 	Image{ sprite_tag, ref_canvas.get() } { }
 
-void Image::Update() {
+void Image::LocalUpdate() {
 	/** Update my xywh */
 	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
 	const auto xy = GetFinalPosition() - (wh / 2.0f);
@@ -29,8 +29,7 @@ void Image::Update() {
 		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
 	UpdateScreenXYWH(xywh);
 
-	/** Update children */
-	UiObject::Update();
+	UiObject::LocalUpdate();
 }
 
 void Image::SetImageSize(const float width, const float height) {
@@ -38,9 +37,7 @@ void Image::SetImageSize(const float width, const float height) {
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
 }
 
-void Image::Draw(helper::ShaderNew&) { Draw(); }
-
-void Image::Draw() {
+void Image::Render() {
 	auto is_already_enabled{ false };
 	if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
 	else {
@@ -57,9 +54,6 @@ void Image::Draw() {
 	m_sprite_renderer.RenderSprite();
 
 	if (!is_already_enabled) glDisable(GL_BLEND);
-
-	/** Render Children */
-	UiObject::Draw();
 }
 
 }

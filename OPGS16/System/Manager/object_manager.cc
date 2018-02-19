@@ -10,7 +10,7 @@ void ObjectManager::Destroy(const Object& object) {
     using it_type = std::remove_pointer_t<decltype(tree_list)::value_type>::iterator;
     std::stack<it_type> it_list;
 
-    tree_list.push(&SceneManager::GetInstance().GetPresentScene()->GetObjects());
+    tree_list.push(&SceneManager::GetInstance().GetPresentScene()->GetObjectList());
     it_list.push(tree_list.top()->begin());
 
     bool destroyed = false;
@@ -28,7 +28,7 @@ void ObjectManager::Destroy(const Object& object) {
                     break;
                 }
                 else {
-                    auto& additional_list = it->second->GetChildren();
+                    auto& additional_list = it->second->GetChildList();
                     if (!additional_list.empty()) {
                         it_list.push(++it);
                         tree_list.push(&additional_list);
@@ -53,7 +53,7 @@ void ObjectManager::DestroyObjects() {
         using it_type = std::remove_pointer_t<decltype(tree_list)::value_type>::iterator;
         std::stack<it_type> it_list;
 
-        tree_list.push(&SceneManager::GetInstance().GetPresentScene()->GetObjects());
+        tree_list.push(&SceneManager::GetInstance().GetPresentScene()->GetObjectList());
         it_list.push(tree_list.top()->begin());
 
         bool destroyed = false;
@@ -70,7 +70,7 @@ void ObjectManager::DestroyObjects() {
                     break;
                 }
                 else {
-                    auto& additional_list = it->second->GetChildren();
+                    auto& additional_list = it->second->GetChildList();
                     if (!additional_list.empty()) {
                         it_list.push(++it);
                         tree_list.push(&additional_list);

@@ -6,5 +6,5 @@
 #include "..\..\Objects\Debug\Script\test_script.h"	/*! TestScript */
 
 #include "..\..\_Project\CollisionTest\Scripts\player.h"	/*! Player */
-#include "..\..\_Project\Raindrops\Scripts\drops.h"	/*! Drops */
-#include "..\..\_Project\Raindrops\Scripts\rain_script.h"	/*! Drops */
+
+#include "..\..\_Project\Raindrops\_meta\_header.meta"		/*! RainDrops */

@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H
-#define OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H
+#ifndef OPGS16__SYSTEM_FONT_MANAGER_H
+#define OPGS16__SYSTEM_FONT_MANAGER_H
 
 /**
  * @file System/font_manager.h
@@ -306,4 +306,4 @@ inline bool FontManager::DoesFontExist(const std::string& tag) {
 	else return true;
 }
 
-#endif // OPENGL_TUTORIAL_SYSTEM_FONT_MANAGER_H
+#endif // OPGS16__SYSTEM_FONT_MANAGER_H

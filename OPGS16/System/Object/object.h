@@ -6,11 +6,14 @@
  * @brief The file consist of basic scene API.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
- * When using each objects you have to use this type as a storing type to avoid cracking of
+ * When using each m_object_list you have to use this type as a storing type to avoid cracking of
  * polymorphism.
  *
  * @author Jongmin Yun
- * @date 2018-02-17
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
  */
 
 #include <algorithm>        /*! std::find_if */
@@ -26,139 +29,156 @@
                                               * ObjectImplDeleter
                                               */
 #include "..\..\System\Components\component.h"   /*! component::Component */
-//#include "..\Components\Physics2D\rigidbody_2d.h"   /*! Rigid*/
 
 /**
  * @class Object
  * @brief The class for every object to update and draw.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
- * When using each objects you have to use this type as a storing type to avoid cracking of
+ * When using each m_object_list you have to use this type as a storing type to avoid cracking of
  * polymorphism.
- *
  * Each object can be called using Update and Draw with shader to use.
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
+ * 2018-02-19 Add GetParentPosition(). Remove virtual property from Draw()
+ *            and Render() virtual methods. and Remove virtual property from Update() instead of
+ *            adding LocalUpdate() method which replaces Update() override.
  */
 class Object {
+private:
+    using component_ptr     = std::unique_ptr<component::Component>;
+    using name_counter_map  = std::unordered_map<std::string, size_t>;
+	using object_raw = Object*;
+	using object_ptr = std::unique_ptr<Object>;
+	using object_map = std::unordered_map<std::string, object_ptr>;
+    using pimpl_ptr  = std::unique_ptr<ObjectImpl, ObjectImplDeleter>;
+
 public:
 	Object();
 	virtual ~Object() = default;
 
-	using object_raw = Object*;
-	using object_ptr = std::unique_ptr<Object>;
-	using object_map = std::unordered_map<std::string, object_ptr>;
-    using name_counter_map = std::unordered_map<std::string, size_t>;
-    using component_ptr = std::unique_ptr<component::Component>;
+    /*! Local update method for derived object. */
+    virtual void LocalUpdate() {};
 
-    /**
-     * @brief The method updates components of object.
-     */
-     virtual void Update();
+    /*! Update components of object. */
+    void Update() {
+        if (m_data && GetActive()) {
+            LocalUpdate();
+            for (auto& component : m_components)
+                component->Update();
 
-    /**
-     * @brief [DEPRECATED] The method calls scene to one objects.
-     * @param[in] shader Shader to use.
-     */
+            for (auto& child : m_children) {
+                /*! If child.second is not emtpy and activated. */
+                if (child.second && child.second->GetActive()) {
+                    child.second->SetParentPosition(GetParentPosition());
+                    child.second->Update();
+                }
+            }
+        }
+    }
 
-	[[deprecated("Use plain-Draw method which do not have shader argument.")]]
-	virtual void Draw(helper::ShaderNew& shader) {};
+    /*! Render method for derived object. */
+    virtual void Render() {};
 
-	/** * @brief This calls callee to draw or render something it has.  */
-     virtual void Draw() {
+	/*! Calls children to draw or render something it has.  */
+    void Draw() {
+        Render();
+        /*! Order draw call to exist child object. */
         for (auto& object : m_children) {
             if (object.second) object.second->Draw();
         }
-    };
+    }
 
-    /*!  * @brief This method will be called when Collision.  */
-     virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
+    /*! This method will be called when Collision. */
+    virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
 
-    /*!  * @brief This method will be called when Trigger entered.  */
-     virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
+    /*! This method will be called when Trigger entered. */
+    virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
 
-    /**
-     * @brief The method gets position as glm::vec3 type. Not overridable.
-     * @return Object's position (x, y, z)
+    /*!
+     * @brief Return local position.
+     * @return Object's local position.
      */
-    const glm::vec3 GetLocalPosition() const;
+    const glm::vec3& GetLocalPosition() const noexcept;
 
-    /**
-     * @brief The method sets position. Not overridable.
-     * @param[in] position Position to set on.
+    /*!
+     * @brief Sets local position.
+     * @param[in] local position Position to set on.
      */
-     virtual void SetLocalPosition(glm::vec3 position);
+    void SetLocalPosition(const glm::vec3& position) noexcept;
 
-	/**
-	 * @brief Return final position. used for hierarchy structure.
-	 * @return Object's final position in hierarchy.
+	/*!
+	 * @brief Return world position.
+	 * @return Object's world position from parent object's position.
 	 */
-	const glm::vec3 GetWorldPosition() const;
+	const glm::vec3& GetWorldPosition() const noexcept;
 
 	/**
-	 * @brief Set final position.
-	 * @param[in] final_position Final position in Screen space.
+	 * @brief Set world position.
+	 * @param[in] world_position Winal position in Screen space and from parent' object.
 	 */
-	 void SetWorldPosition(const glm::vec3& final_position);
+	void SetWorldPosition(const glm::vec3& world_position);
 
 	/**
-	 * @brief The method refresh final position. Nor overriadble.
+	 * @brief The method refresh parent position.
 	 * @param[in] parent_position Position to apply for.
 	 */
-	 void SetParentPosition(const glm::vec3& parent_position);
+	void SetParentPosition(const glm::vec3& parent_position);
 
     /*! Get Object's final position. */
-    const glm::vec3 GetFinalPosition() const;
+    const glm::vec3& GetFinalPosition() const noexcept;
 
     /**
-     * @brief The method gets rotation values
+     * @brief The method gets rotation angle value
      * @return Object's rotation angle value.
      */
-    const float GetAngle() const;
+    const float GetRotationAngle() const noexcept;
 
     /**
      * @brief The method sets rotation angle values.
-     *
      * When input value is positive and factor is [0, 1], axis rotates clockwise.
      * input value is negative and factor is [0, 1], axis rotates counter-clockwise.
-     *
      * @param[in] angle_value Angle value to set on.
      */
-     void SetAngle(const float angle_value);
+    void SetRotationAngle(const float angle_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
      * @return Object's rotation vector which has (x, y, z) rotation axis factor.
      */
-    const glm::vec3 GetRotationFactor() const ;
+    const glm::vec3& GetRotationFactor() const noexcept;
 
     /**
      * @brief The method sets rotation factor have values which ranges [-1, 1].
      * @param[in] factor
      */
-     void SetRotationFactor(const glm::vec3& factor);
+    void SetRotationFactor(const glm::vec3& factor);
 
     /**
      * @brief The method gets scaling values
      * @return Object's scaling value.
      */
-    const float GetScaleValue() const;
+    const float GetScaleValue() const noexcept;
 
     /**
      * @brief The method sets scaling angle values.
      * @param[in] scale_value Scaling value to set on.
      */
-     void SetScaleValue(const float scale_value);
+    void SetScaleValue(const float scale_value);
 
     /**
      * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
      * @return Object's scaling vector which has (x, y, z) axis factors.
      */
-    const glm::vec3 GetScaleFactor() const;
+    const glm::vec3& GetScaleFactor() const noexcept;
 
     /**
      * @brief The method sets scaling vector have (x, y, z) scaling factors.
      * @param[in] factor Scaling factor
      */
-     void SetScaleFactor(const glm::vec3& factor);
+    void SetScaleFactor(const glm::vec3& factor);
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -168,17 +188,16 @@ public:
      *
      * @return Model matrix (M = TRS)
      */
-    const glm::mat4 GetModelMatrix() const;
+    const glm::mat4& GetModelMatrix() const;
 
 	/**
 	 * @brief Set active option of object.
 	 * If m_active is false, this object cannot update until m_active return to true.
 	 * @param[in] value Active option value.
 	 */
-	 void SetActive(const bool value);
+	void SetActive(const bool value);
 
-	/** Get active value. */
-	bool GetActive();
+	bool GetActive();   /*! Get active value. */
 
 	/**
 	 * @brief This initiate object as a child of base object.
@@ -201,22 +220,18 @@ public:
         class _Ty,
         class... _Types,
         class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
-    >   bool Instantiate(const std::string tag, _Types&&... _args);
+    >   bool Instantiate(const std::string name, _Types&&... _args);
 
+    /*! Overloaded function of Instantiate(Varadic...) */
     template <
         class _Ty,
         class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
-    >   bool Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance);
-
-    template <
-        class _Ty,
-        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
-    >   bool Instantiate(const std::string tag);
+    >   bool Instantiate(const std::string name, std::unique_ptr<_Ty>& instance);
 
 	/**
 	 * @brief Destroy child object has unique tag key.
 	 * @param[in] name Object name.
-	 * @return Success/Failed tag. If arbitary objects has been destroied, return ture.
+	 * @return Success/Failed tag. If arbitary m_object_list has been destroied, return ture.
 	 */
 	bool DestroyChild(const std::string& name);
 
@@ -224,20 +239,20 @@ public:
 	 * @brief Get children tag list.
 	 * @return Children's tags container of object.
 	 */
-	const std::vector<std::string> GetChildrenNameList() const;
+	std::vector<std::string> GetChildrenNameList() const;
 
 	/**
 	 * @brief Get children reference.
-	 * @return Children objects component list.
+	 * @return Children m_object_list component list.
 	 */
-	object_map& GetChildren();
+	object_map& GetChildList();
 
 	/**
 	 * @brief Get arbitary child object.
-	 * @param[in] name The name of object to find.
-	 * @return Object's smart-pointer instance.
+	 * @param[in] child_name The name of object to find.
+	 * @return Object's raw-pointer instance. this cannot removeable.
 	 */
-	object_raw GetChild(const std::string& name);
+	object_raw const GetChild(const std::string& child_name);
 
 	/**
 	 * @brief This only must be called by Application methods body,
@@ -246,21 +261,20 @@ public:
 	 void GetObjectTree(ObjectTree* const tree);
 
     /*!
-     * @brief
-     *
-     * @param[in] _Ty
-     * @param[in] _Params&& Universal reference.
+     * @brief Add component and bind to this object instance.
+     * @param[in] _Ty Component type class argument.
+     * @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
      */
     template<
         class _Ty,
         typename... _Params,
         typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
-    >    void AddComponent(_Params&&... params);
+    >   void AddComponent(_Params&&... params);
 
     /*!
-     * @brief
-     * @param[in] _Ty
-     * @return
+     * @brief Return component raw-pointer.
+     * @param[in] _Ty Component type argument.
+     * @return If found, return _Ty* but not found, return nullptr.
      */
     template<
         class _Ty,
@@ -268,9 +282,9 @@ public:
     >   _Ty* const GetComponent();
 
     /*!
-     * @brief
-     * @param[in] _Ty
-     * @return
+     * @brief Remove component.
+     * @param[in] _Ty Component type argument.
+     * @return If found, return true but otherwise false.
      */
     template <
         class _Ty,
@@ -282,9 +296,9 @@ public:
      * in SettingManager. If not exist, do nothing and chagne error flag.
      * @param[in] tag_name Tag name
      */
-     void SetTag(const std::string tag_name);
+     void SetTag(const std::string& tag_name);
 
-    /*! Overloading version of SetTag(tag_name) */
+     /*! Overloaded version of SetTag(tag_name) */
      void SetTag(const size_t tag_index);
 
     /*!
@@ -300,36 +314,55 @@ public:
      */
     std::string GetTagNameOf() const;
 
-    /*!
-     * @brief Get Hash value()
-     */
-    size_t GetHash() const { return m_hash_value; }
+    /*! Return hash value of this object. */
+    inline size_t GetHash() const {
+        return m_hash_value;
+    }
 
-    size_t m_hash_value;
+    /*! Set hash value */
+    inline void SetHash(const std::string& name) const {
+        if (!m_hash_initialized) {
+            m_object_name = name;
+            m_hash_value = std::hash<std::string>{}(name);
+            m_hash_initialized = true;
+        }
+    }
+
+    /*! Return object name */
+    inline const std::string& GetObjectName() const {
+        return m_object_name;
+    }
+
 private:
-    name_counter_map m_name_counter;
+    name_counter_map m_name_counter;    /*! Object name counter to avoid duplicated object name */
+
+    mutable std::string m_object_name{};        /*! this object name */
+    mutable size_t m_hash_value{};              /*! Hash value to verify object number */
+    mutable bool m_hash_initialized{ false };   /*! Flag */
 
 protected:
-	std::unique_ptr<ObjectImpl, ObjectImplDeleter> m_data{ nullptr };
+	pimpl_ptr   m_data{ nullptr };              /*! Pointer implementation heap instance. */
+	object_map  m_children;                     /*! The container stores child object. */
 
-	object_map m_children;
-
-    std::vector<component_ptr> m_components{};
+    std::vector<component_ptr> m_components{};  /*! Component list of thie object. */
 
 private:
     /*!
-     * @brief
-     * @param[in]
+     * @brief Create child object name.
+     * @param[in] name
      * @return
      */
-    inline const std::string CreateChildTag(const std::string& tag) noexcept;
+    inline const std::string CreateChildTag(const std::string& name) noexcept;
+
+    /*! Return object final position not included local position. */
+    const glm::vec3& GetParentPosition() const noexcept;
 };
 
 template <class _Ty, class... _Types, typename>
 bool Object::Instantiate(const std::string tag, _Types&&... _args) {
     const auto item_tag = CreateChildTag(tag);
-    m_children[item_tag] = std::make_unique<_Ty>(std::forward<_Types>(_args)...);
-    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
+    m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Types>(_args)...));
+    m_children[item_tag]->SetHash(item_tag);
     return true;
 }
 
@@ -337,15 +370,7 @@ template <class _Ty, typename>
 bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::move(instance);
-    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
-    return true;
-}
-
-template <class _Ty, typename>
-bool Object::Instantiate(const std::string tag) {
-    const auto item_tag = CreateChildTag(tag);
-    m_children[item_tag] = std::make_unique<_Ty>();
-    m_children[item_tag]->m_hash_value = std::hash<std::string>{}(item_tag);
+    m_children[item_tag]->SetHash(item_tag);
     return true;
 }
 

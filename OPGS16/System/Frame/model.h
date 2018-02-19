@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_MODEL_H
-#define OPENGL_TUTORIAL_MODEL_H
+#ifndef OPGS16__MODEL_H
+#define OPGS16__MODEL_H
 
 #include <vector>
 #include <assimp\Importer.hpp>

@@ -1,21 +1,20 @@
-#ifndef OPENGL_TUTORIAL_SCENE_H
-#define OPENGL_TUTORIAL_SCENE_H
+#ifndef OPGS16_SYSTEM_FRAME_SCENE_H
+#define OPGS16_SYSTEM_FRAME_SCENE_H
 
 /**
 * @file scene.h
 * @brief The file consist of basic scene API.
 *
 * All derived class based on Scene class can be used parameter of Application::PushScene().
-* Last updated :: 2018-02-02
 *
 * @author Jongmin Yun
-* @version 0.0.1
+* @date 2018-02-19
+*
+* @log 2018-02-19 Refactoring
 */
 
-#include <memory>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include "..\Object\object.h"
+#include <memory>                           /*! std::unique_ptr<> */
+#include "..\Object\object.h"               /*! Object */
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! component::Camera */
 
 /**
@@ -23,23 +22,27 @@
  * @brief Base scene interface.
  */
 class Scene {
+private:
+    using object_ptr = std::unique_ptr<Object>;
+    using object_map = std::unordered_map<std::string, object_ptr>;
+
 public:
 	/** Must need virtual dtor */
     virtual ~Scene() = default;
 
-     virtual void Initiate() = 0;
+    virtual void Initiate() = 0;
 
     /**
      * @brief The method update components movement, UI refresh, and so on.
 	 * This method is able to overriding,
-	 * but actual default behavior is just call ->Update() of objects.
+	 * but actual default behavior is just call ->Update() of m_object_list.
      */
 	 virtual void Update();
 
     /**
-     * @brief The method calls scene to draw all objects.
+     * @brief The method calls scene to draw all m_object_list.
 	 * This method is able to overriding,
-	 * but actual default behavior is just call ->Draw() of objects.
+	 * but actual default behavior is just call ->Draw() of m_object_list.
      */
 	 virtual void Draw();
 
@@ -54,17 +57,17 @@ public:
 	 */
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
-		if (objects.find(tag) != objects.end()) return false;
-		objects[tag] = std::move(obj);
-        objects[tag]->m_hash_value = std::hash<std::string>{}(tag);
+		if (m_object_list.find(tag) != m_object_list.end()) return false;
+		m_object_list[tag] = std::move(obj);
+        m_object_list[tag]->SetHash(tag);
 		return true;
 	}
 
 	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
 	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>& obj) {
-		if (objects.find(tag) != objects.end()) return false;
-		objects[tag] = std::move(obj);
-        objects[tag]->m_hash_value = std::hash<std::string>{}(tag);
+		if (m_object_list.find(tag) != m_object_list.end()) return false;
+		m_object_list[tag] = std::move(obj);
+        m_object_list[tag]->SetHash(tag);
 		return true;
 	}
 
@@ -72,16 +75,16 @@ public:
 	 * @brief Get object list loaded in scene.
 	 * @return The reference of object list with hash_map.
 	 */
-	Object::object_map& GetObjects();
+	object_map& GetObjectList();
 
 	/*!
 	 * @brief Get specific object with tag.
 	 */
-	Object::object_ptr& GetObject(const std::string& tag);
+	object_ptr& GetObject(const std::string& tag);
 
     /*!
      * @brief Set main camera of this scene, to display game scene.
-     * All object except for Canvas objects (UI object) uses to main_camera to display.
+     * All object except for Canvas m_object_list (UI object) uses to main_camera to display.
      * If main_camera value is nullptr, this means main_camera is detached.
      */
     inline void SetMainCamera(component::Camera* const main_camera);
@@ -92,7 +95,7 @@ public:
     inline const component::Camera* const GetMainCamera();
 
 private:
-    Object::object_map objects;
+    object_map m_object_list;
     component::Camera* m_main_camera{ nullptr };
 };
 
@@ -104,5 +107,5 @@ inline const component::Camera* const Scene::GetMainCamera() {
     return m_main_camera;
 }
 
-#endif // OPENGL_TUTORIAL_SCENE_H
+#endif // OPGS16_SYSTEM_FRAME_SCENE_H
 

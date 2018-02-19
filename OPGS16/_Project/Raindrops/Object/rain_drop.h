@@ -17,7 +17,7 @@ public:
 private:
     SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */
 
-    virtual void Draw() override final;
+    virtual void Render() override final;
 
     virtual void OnCollisionEnter(component::Rigidbody2D& body) override final;
 };

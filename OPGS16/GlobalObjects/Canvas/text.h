@@ -6,7 +6,10 @@
  * @brief Text object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
- * @date 2018-02-08
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace Draw() with Render()
  */
 
 #include <memory>       /** std::unique_ptr */
@@ -37,9 +40,7 @@ public:
 
 	virtual ~Text() = default;
 
-	virtual void Draw(helper::ShaderNew & shader) override final {};
-
-	virtual void Draw() override final;
+	virtual void Render() override final;
 
     /**
      * @brief Set text string to display.

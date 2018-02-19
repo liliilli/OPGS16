@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIALS_SYSTEM_SOUND_MANAGER_H
-#define OPENGL_TUTORIALS_SYSTEM_SOUND_MANAGER_H
+#ifndef OPGS16_S_SYSTEM_SOUND_MANAGER_H
+#define OPGS16_S_SYSTEM_SOUND_MANAGER_H
 
 /**
  * @file System/sound_manager.h
@@ -200,4 +200,4 @@ inline const bool SoundManager::CheckSoundError() const {
 	return true;
 }
 
-#endif /** OPENGL_TUTORIALS_SYSTEM_SOUND_MANAGER_H */
+#endif /** OPGS16_S_SYSTEM_SOUND_MANAGER_H */

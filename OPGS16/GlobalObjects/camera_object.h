@@ -12,7 +12,7 @@
 
 /**
  * @class MainCameraObject
- * @brief Refined camera object class, different legacy camera object is independent of objects.
+ * @brief Refined camera object class, different legacy camera object is independent of m_object_list.
  * You can set it up between two types, perspective (view-frustum) and orthographic (view-cube).
  * If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
  * no distortion, 3D world or 2D world with no sight distortion, set ORTHO.

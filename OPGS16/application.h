@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_APPLICATION_H
-#define OPENGL_TUTORIAL_APPLICATION_H
+#ifndef OPGS16__APPLICATION_H
+#define OPGS16__APPLICATION_H
 
 /**
  * @file application.h
@@ -150,7 +150,7 @@ private:
     /** The method update components movement, UI refresh, and so on. */
      void Update();
 
-    /** The method calls scene to draw all objects. */
+    /** The method calls scene to draw all m_object_list. */
      void Draw();
 
 	/**
@@ -208,4 +208,4 @@ private:
 	 void TogglePostProcessingEffect();
 };
 
-#endif // OPENGL_TUTORIAL_APPLICATION_H
+#endif // OPGS16__APPLICATION_H

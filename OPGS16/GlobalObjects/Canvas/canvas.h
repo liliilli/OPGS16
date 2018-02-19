@@ -6,28 +6,33 @@
  * @brief Canvas frame object to display UI components.
  *
  * @author Jongmin Yun
- * @date 2018-02-08
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace with Render(), LocalUpdate()
  */
 
-/** UiObject */
-#include "..\..\System\Object\ui_object.h"
-/**
- * glm::mat4
- * helper::ShaderNew;
- * camera::CameraObject; */
-#include "..\..\Headers\Fwd\objectfwd.h"
+#include "..\..\System\Object\ui_object.h"  /*! UiObject */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! glm::mat4
+                                              * helper::ShaderNew;
+                                              * camera::CameraObject; */
 
 namespace Canvas {
 
 /**
  * @class Canvas
- * @brief Canvas frame object saves and manages UI components and permit accessing from UI objects.
+ * @brief Canvas frame object saves and manages UI components and permit accessing from UI m_object_list.
  *
  * This canvas offers several features. (and comming soon features)
  * 1. Each update frame, canvas updates orthographic projection size
  * 2. Each draw frame, canvas object calls UI components.
  * 3. UI components can access Canvas object (parent), get orthographic projection.
  * 4. when Canvas object is destroyed, children UI components are automatically disorganized.
+ *
+ * @date 2018-02-19
+ *
+ * @log
+ * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace with Render(), LocalUpdate()
  */
 class Canvas : public UiObject {
 public:
@@ -38,11 +43,10 @@ public:
 	Canvas();
 	virtual ~Canvas() = default;
 
-	 virtual void Update() override;
+	virtual void LocalUpdate() override;
 
-	 virtual void Draw(helper::ShaderNew& shader) override final {};
-
-	 virtual void Draw() override;
+    /*! Disable DEPTH_TEST until All UiObject rendering is done. */
+	virtual void Render() override;
 
 	/** Get Ui camera's orthographic projection matrix. */
 	const glm::mat4 GetUiCameraPVMatrix() const;

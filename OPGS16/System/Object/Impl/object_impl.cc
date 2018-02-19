@@ -1,44 +1,35 @@
 #include "object_impl.h"                    /*! Header file */
-#include <glm\gtc\matrix_transform.hpp>     /*! glm::translate, glm::rotate, glm::scale */
+#include <glm\gtc\matrix_transform.hpp>     /*! glm::rotate */
 #include "..\..\Manager\setting_manager.h"  /*! SettingManager */
 
-/**
-* @brief Refresh Translation matrix
-*/
-void ObjectImpl::RefreshTranslateMatrix() {
-    m_final_position = m_local_position + m_parent_position + m_world_position;
-
-    m_translate_deprecated = false;
+void ObjectImpl::RefreshFinalPosition() const {
+    m_final_position = m_local_position + m_parent_from_position + m_world_position;
     m_final_pos_deprecated = false;
 }
 
-/**
- * @brief Refresh Rotation matrix
- */
-void ObjectImpl::RefreshRotateMatrix() {
-	m_rotate = glm::rotate(glm::mat4{}, glm::radians(m_rotation_angle), m_rotation_factor);
+void ObjectImpl::RefreshRotateMatrix() const {
+	m_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_angle), m_rotation_factor);
     m_rotation_deprecated = false;
 }
 
-/**
- * @brief Refresh Scaling matrix
- */
-void ObjectImpl::RefreshScaleMatrix() {
-	m_scale = glm::scale(glm::mat4{}, m_scale_value * m_scale_factor);
+void ObjectImpl::RefreshScaleVector() const {
+    m_scale_vector = m_scale_factor * m_scale_value;
     m_scale_deprecated = false;
 }
 
-const glm::mat4 ObjectImpl::GetModelMatrix() {
+const glm::mat4& ObjectImpl::GetModelMatrix() const {
 	if (m_model_matrix_deprecated) {
-        if (m_translate_deprecated) RefreshTranslateMatrix();
-        if (m_rotation_deprecated) RefreshRotateMatrix();
-        if (m_scale_deprecated) RefreshScaleMatrix();
+        if (m_final_pos_deprecated) RefreshFinalPosition();
+        if (m_rotation_deprecated)  RefreshRotateMatrix();
+        if (m_scale_deprecated)     RefreshScaleVector();
 
-		m_model = m_rotate;
-        m_model[0] *= m_scale_value * m_scale_factor[0];
-        m_model[1] *= m_scale_value * m_scale_factor[1];
-        m_model[2] *= m_scale_value * m_scale_factor[2];
-
+        /*! Rotation */
+		m_model = m_rotate_matrix;
+        /*! Scale */
+        m_model[0] *= m_scale_vector[0];
+        m_model[1] *= m_scale_vector[1];
+        m_model[2] *= m_scale_vector[2];
+        /*! Movement */
         m_model[3][0] = m_final_position.x;
         m_model[3][1] = m_final_position.y;
         m_model[3][2] = m_final_position.z;

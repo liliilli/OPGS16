@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
-#define OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
+#ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
+#define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 
 /**
  * @file System/Shader/pp_manager.h
@@ -18,7 +18,7 @@
 
 /**
  * @namespace shading
- * @brief shading namespace is for objects related to shading and shader management.
+ * @brief shading namespace is for m_object_list related to shading and shader management.
  */
 namespace shading {
 
@@ -165,4 +165,4 @@ inline bool PostProcessingManager::DoesEffectSequenceExist(const size_t id) {
 
 }
 
-#endif /** OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H */
+#endif /** OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H */

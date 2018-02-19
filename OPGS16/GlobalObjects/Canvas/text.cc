@@ -1,13 +1,13 @@
-#include "text.h"                       /** Header file */
-#include <iostream>                     /** std::cerr
+#include "text.h"                       /*! Header file */
+#include <iostream>                     /*! std::cerr
                                           * std::endl */
-#include "Impl\text_impl.h"             /** Canvas::TextImpl */
-#include "..\..\System\Manager\font_manager.h"  /** FontManager
-                                          * aliasing font_map_ptr
-                                          * FontManager& GetInstance()
-                                          * bool LoadDefaultFont()
-                                          * void RenderTextNew(params)
-                                          * bool DoesFontExist(std::string) */
+#include "Impl\text_impl.h"             /*! Canvas::TextImpl */
+#include "..\..\System\Manager\font_manager.h"  /*! FontManager
+                                                  * aliasing font_map_ptr
+                                                  * FontManager& GetInstance()
+                                                  * bool LoadDefaultFont()
+                                                  * void RenderTextNew(params)
+                                                  * bool DoesFontExist(std::string) */
 
 namespace Canvas {
 using fontMap = FontManager::font_map_ptr;
@@ -24,7 +24,7 @@ Text::Text(const std::string & initial_txt, const glm::vec3& position, const glm
 	SetWorldPosition(position);
 }
 
-void Text::Draw() {
+void Text::Render() {
 	if (m_font_manager) {
 		/** Set font */
         auto font_name = m_text_impl->GetFontName();

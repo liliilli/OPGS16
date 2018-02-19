@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_SCENES_START_H
-#define OPENGL_TUTORIAL_SCENES_START_H
+#ifndef OPGS16__SCENES_START_H
+#define OPGS16__SCENES_START_H
 #include "..\System\Frame\scene.h"
 #include "..\System\Object\object.h"
 
@@ -16,10 +16,10 @@ public:
      virtual void Update() override;
 
     /**
-    * @brief The method calls scene to draw all objects.
+    * @brief The method calls scene to draw all m_object_list.
     */
      virtual void Draw() override;
 
 };
 
-#endif /** OPENGL_TUTORIAL_SCENES_START_H */
+#endif /** OPGS16__SCENES_START_H */

@@ -10,12 +10,12 @@
 
 ObjectCollidable::ObjectCollidable(const std::string& sprite_tag) :
     m_sprite_renderer{ sprite_tag, "gQuad" } {
-    SetScaleValue(16.f);
+    SetScaleValue(8.f);
     AddComponent<Player>(*this);
     AddComponent<component::Rigidbody2D>(*this);
     component::Rigidbody2D* const rigidbody = GetComponent<component::Rigidbody2D>();
 
-    auto i = std::make_unique<collision::RectangleCollider2D>(-16.f, 16.f, 16.f, -16.f);
+    auto i = std::make_unique<collision::RectangleCollider2D>(-8.f, 8.f, 8.f, -8.f);
     rigidbody->AddCollider2D(std::move(i));
 
 	auto& shader = m_sprite_renderer.GetWrapper();
@@ -23,7 +23,7 @@ ObjectCollidable::ObjectCollidable(const std::string& sprite_tag) :
 	shader.InsertUniformValue<float>("alpha", 0.0f);
 }
 
-void ObjectCollidable::Draw() {
+void ObjectCollidable::Render() {
     auto M = GetModelMatrix();
     auto PV = SceneManager::GetInstance().GetPresentScene()->GetMainCamera()->GetPV();
     auto PVM = PV * M;

@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
-#define OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
+#ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
+#define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
 
 /**
  * @file System/Shader/pp_frame.h
@@ -21,7 +21,7 @@
 
 /**
  * @namespace shading
- * @brief shading namespace is for objects related to shading and shader management.
+ * @brief shading namespace is for m_object_list related to shading and shader management.
  */
 namespace shading {
 
@@ -29,7 +29,7 @@ namespace shading {
  * @class PostProcessingFrame
  * @brief The frame manages things to render on post-processing time.
  *
- * This class's objects has frame buffer, texture, and render buffer to be able to bind
+ * This class's m_object_list has frame buffer, texture, and render buffer to be able to bind
  * frame buffer object.
  * And PostProcessingFrame has also shaders to render post-processing effects.
  *
@@ -121,7 +121,7 @@ public:
 	 void InitiateShader(const std::string& name);
 
 	/**
-	 * @brief Bind frame buffer. This must be called to render objects to frame buffer.
+	 * @brief Bind frame buffer. This must be called to render m_object_list to frame buffer.
 	 * This methods could be overriden by derived class.
 	 */
 	 virtual void Bind();
@@ -239,4 +239,4 @@ private:
 
 }
 
-#endif /** OPENGL_TUTORIALS_SYSTEM_SHADER_POST_PROCESSING_FRAME_H */
+#endif /** OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_FRAME_H */

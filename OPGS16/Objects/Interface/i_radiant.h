@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_OBJECTS_INTERFACE_I_RADIANT_H
-#define OPENGL_TUTORIAL_OBJECTS_INTERFACE_I_RADIANT_H
+#ifndef OPGS16__OBJECTS_INTERFACE_I_RADIANT_H
+#define OPGS16__OBJECTS_INTERFACE_I_RADIANT_H
 
 /**
  * @file i_radiant.h
@@ -25,4 +25,4 @@ public:
      virtual void SetUpLight(const int index, helper::ShaderNew& shader) = 0;
 };
 
-#endif /** OPENGL_TUTORIAL_OBJECTS_INTERFACE_I_RADIANT_H */
+#endif /** OPGS16__OBJECTS_INTERFACE_I_RADIANT_H */

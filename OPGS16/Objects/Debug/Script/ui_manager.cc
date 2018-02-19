@@ -17,7 +17,7 @@ DebugUiManager::DebugUiManager(Object& obj,
                                Canvas::Text* const _m_date,
                                Canvas::Text* const _m_tree) :
     component::ScriptFrame(obj),
-    m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ nullptr } {
+    m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ _m_tree } {
     Initiate();
     Start();
 }
@@ -39,7 +39,7 @@ void DebugUiManager::Update() {
         m_date->SetText(stream.str());
     }
 
-    if (m_tree) {
+    if (false) {
         ObjectTree tree{};
 
         auto const top_scene = SceneManager::GetInstance().GetPresentScene();

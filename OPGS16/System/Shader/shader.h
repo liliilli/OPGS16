@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_SHADER_H
-#define OPENGL_TUTORIAL_SHADER_H
+#ifndef OPGS16__SHADER_H
+#define OPGS16__SHADER_H
 
 /**
 * @file shader.h

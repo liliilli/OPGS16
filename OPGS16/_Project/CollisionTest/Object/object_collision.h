@@ -15,7 +15,7 @@ class ObjectCollidable : public Object {
 public:
     ObjectCollidable(const std::string& sprite_tag);
 
-    virtual void Draw() override final;
+    virtual void Render() override final;
 
 private:
     SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */

@@ -25,11 +25,6 @@ public:
 	 */
 	CanvasDebug();
 	virtual ~CanvasDebug() = default;
-
-	 virtual void Update() override final;
-
-	 virtual void Draw() override final;
-
 };
 
 #endif /** OPGS16_OBJECTS_DB_DEBUG_CANVAS_H */

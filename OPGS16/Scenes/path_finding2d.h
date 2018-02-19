@@ -1,5 +1,5 @@
-#ifndef OPENGL_TUTORIAL_SCENES_PATH_FINDING_2D_H
-#define OPENGL_TUTORIAL_SCENES_PATH_FINDING_2D_H
+#ifndef OPGS16__SCENES_PATH_FINDING_2D_H
+#define OPGS16__SCENES_PATH_FINDING_2D_H
 
 /**
 * @file Scenes/path_finding_2d.h
@@ -25,15 +25,15 @@ public:
 	 virtual void Update() override final;
 
 	/**
-	* @brief The method calls scene to draw all objects.
+	* @brief The method calls scene to draw all m_object_list.
 	*/
 	 virtual void Draw() override final;
 
 private:
 	enum class SceneStatus {
 		INITIATE, /** INITIATE is for actual initial status. */
-		IDLE, /** IDLE is for idle status when all of objects have no work schedule. */
-		BUSY, /** BUSY is for busy status when objects are working and can't handle input intentionally. */
+		IDLE, /** IDLE is for idle status when all of m_object_list have no work schedule. */
+		BUSY, /** BUSY is for busy status when m_object_list are working and can't handle input intentionally. */
 		PROCESS, /** PROCESS is for processing, algorithm is working and showing procedures. */
 		DONE /** DONE is for the status that all work has done. */
 	};
@@ -50,4 +50,4 @@ private:
 	 void DrawUi();
 };
 
-#endif /** OPENGL_TUTORIAL_SCENES_PATH_FINDING_2D_H */
+#endif /** OPGS16__SCENES_PATH_FINDING_2D_H */
