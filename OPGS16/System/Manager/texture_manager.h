@@ -3,17 +3,17 @@
 
 /**
  * @file System\Manager\texture_manager.h
- * @brief
+ * @author Jongmin Yun
  *
- * @date 2018-02-06
+ * @date 2018-02-23
+ * @log
+ * 2018-02-23   TextureManager refactoring.
  */
 
-#include <memory>
-#include <string>
-#include <unordered_map>
-#include "..\Frame\texture.h"
-
-//namespace texture { class Texture2D; }
+#include <memory>               /*! std::unique_ptr<> */
+#include <string>               /*! std::string */
+#include <unordered_map>        /*! std::unordered_map */
+#include "..\Frame\texture.h"   /*! m_texture::Texture2D */
 
 /**
  * @class TextureManager
@@ -21,9 +21,16 @@
  * TextureManager manages textures which are used by PostProcessing Frame, related to rendering
  * such as sprite_renderer, etc.
  *
- * @date 2018-02-06
+ * @date 2018-02-23
+ * @log
+ * 2018-02-23   TextureManager refactoring.
  */
 class TextureManager final {
+private:
+	using texture_raw = texture::Texture2D*;    /*! Raw pointer of m_texture::Texture2D */
+	using texture_ptr = std::unique_ptr<std::remove_pointer_t<texture_raw>>; /*! Unique pointer. */
+	using texture_map = std::unordered_map<std::string, texture_ptr>;   /*! m_texture list */
+
 public:
 	/**
 	 * @brief Return single static instance. This must be called in initiation time once.
@@ -34,36 +41,29 @@ public:
 		return instance;
 	}
 
-	/** Internal type aliasings */
-	using texture_raw = texture::Texture2D*; // Raw pointer of texture::Texture2D;
-	using texture_ptr = std::unique_ptr<std::remove_pointer_t<texture_raw>>; // Unique pointer.
-	using texture_map = std::unordered_map<std::string, texture_ptr>;
-
 	/**
-	 * @brief Return bound texture with tag name.
-	 * If class did not find bound texture with tag, create texture2D named tag in ResourceManager.
-	 * and return bound texture as a shape of pointer.
+	 * @brief Return bound m_texture with tag name.
+	 * If class did not find bound m_texture with tag, create texture2D named tag in ResourceManager.
+	 * and return bound m_texture as a shape of pointer.
 	 *
-	 * @param[in] tag The tag name of bound texture.
-	 * @return Raw pointer of texture.
+	 * @param[in] tag The tag name of bound m_texture.
+	 * @return Raw pointer of m_texture.
 	 */
 	texture_raw GetTexture(const std::string& tag);
 
 	/**
-	 * @brief Destory texture and release memory space.
-	 * If class did not find bound texture with tag, do nothing and error flag set up.
+	 * @brief Destory m_texture and release memory space.
+	 * If class did not find bound m_texture with tag, do nothing and error flag set up.
 	 *
-	 * @param[in] tag The tag name of bound texture.
+	 * @param[in] tag The tag name of bound m_texture.
 	 */
 	 void Release(const std::string& tag);
 
-	/**
-	 * @brief
-	 */
+     /*! Check errors */
 	 void CheckError();
 
 private:
-	texture_map m_container;	// Texture container used in game.
+	texture_map m_container;	/*! Texture container used in game. */
 
 	enum class ErrorType {
 		OK,
@@ -72,14 +72,12 @@ private:
 
 private:
 	/** Check there is already Texture content with name. */
-	bool IsAlreadyExist(const std::string& tag);
+	bool DoesAlreadyExist(const std::string& tag);
 
 private:
 	TextureManager() = default;
 	TextureManager(const TextureManager&) = delete;
 	TextureManager(const TextureManager&&) = delete;
-	TextureManager operator=(const TextureManager&) = delete;
-	TextureManager operator=(const TextureManager&&) = delete;
 };
 
 #endif /** OPGS16_SYSTEM_MANAGER_TEXTURE_MANAGER_H */
