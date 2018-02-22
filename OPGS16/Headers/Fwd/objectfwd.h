@@ -37,12 +37,15 @@ class   ShaderNew;
 class   ShaderWrapper;
 
 /** Managers */
-class   FontManager;
-class   InputManager;
-class   ObjectManager;
-class   PhysicsManager;
-class   SceneManager;
-class   TimeManager;
+class   FontManager;    /*! Font management */
+class   InputManager;   /*! Input polling */
+class   ObjectManager;  /*! Objects */
+class   PhysicsManager; /*! Physics & collision */
+class   SceneManager;   /*! Scenes */
+class   TimeManager;    /*! Tick time */
+class   TimerManager;   /*! Timer */
+
+class   TimerHandle;   /*! sub-type of timermanager */
 
 /*! Custom Initiated Objects */
 class   TestImage;      /*! TestImage : public Canvas::Image */

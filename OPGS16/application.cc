@@ -13,15 +13,16 @@
 #include "System\Shader\PostProcessing\pp_convex.h"
 #include "System\Shader\PostProcessing\pp_sinewave.h"
 #include "System\Shader\PostProcessing\pp_gray.h"
-#include "System\Manager\font_manager.h"
-#include "System\Manager\input_manager.h"
+#include "System\Manager\font_manager.h"    /*! FontManager */
+#include "System\Manager\input_manager.h"   /*! InputManager */
 #include "System\Manager\object_manager.h"  /*! ObjectManager */
 #include "System\Manager\physics_manager.h" /*! PhysicsManager*/
 #include "System\Manager\resource_manager.h"/*! ResourceManager */
 #include "System\Manager\scene_manager.h"   /*! SceneManager */
 #include "System\Manager\setting_manager.h" /*! SettingManager */
-#include "System\Manager\sound_manager.h"
-#include "System\Manager\time_manager.h"
+#include "System\Manager\sound_manager.h"   /*! SoundManager */
+#include "System\Manager\time_manager.h"    /*! TimeManager */
+#include "System\Manager\timer_manager.h"   /*! TimerManager */
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
@@ -78,6 +79,7 @@ void Application::Initiate() {
 
         m_m_time = &TimeManager::GetInstance();
         m_m_time->SetFps(60.f);
+        m_m_timer = &TimerManager::GetInstance();
 
 		InitiateFonts();
 		InitiateDebugUi();
@@ -135,8 +137,9 @@ void Application::InitiateSoundSetting() {
 
 void Application::Run() {
     while (!glfwWindowShouldClose(window)) {
-        m_m_time->Update();
+        m_m_time->Update();         /*! Time ticking */
         if (m_m_time->Ticked()) {
+            m_m_timer->Update();    /*! Timer alarm event checking */
             Update();
             Draw();
         }

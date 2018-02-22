@@ -22,6 +22,7 @@
                                       * ObjectManager
                                       * PostProcessingManager
                                       * TimeManager
+                                      * TimerManager
                                       * PhysicsManager
                                       */
 #include "System\Object\object.h"   /*! Object for complete deleter of unique_ptr<Object> */
@@ -71,6 +72,7 @@ private:
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
 	InputManager*   m_m_input{ nullptr };
     TimeManager*    m_m_time{ nullptr };
+    TimerManager*   m_m_timer{ nullptr };
     PhysicsManager* m_physics_manager{ nullptr };
     ObjectManager*  m_object_manager{ nullptr };
 
