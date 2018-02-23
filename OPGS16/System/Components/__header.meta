@@ -5,6 +5,7 @@
 #include "..\..\Objects\Debug\Script\ui_manager.h"  /*! UiManager */
 #include "..\..\Objects\Debug\Script\test_script.h"	/*! TestScript */
 
-#include "..\..\_Project\CollisionTest\Scripts\player.h"	/*! Player */
+#include "..\..\_Project\Maintenance\_meta\_header.meta"
 
-#include "..\..\_Project\Raindrops\_meta\_header.meta"		/*! RainDrops */
+//#include "..\..\_Project\CollisionTest\Scripts\player.h"	/*! Player */
+//#include "..\..\_Project\Raindrops\_meta\_header.meta"		/*! RainDrops */

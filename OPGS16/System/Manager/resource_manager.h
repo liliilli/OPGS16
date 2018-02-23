@@ -28,6 +28,14 @@
  */
 class ResourceManager final {
 public:
+	/** Internal type aliasings. */
+	using shader_type = helper::ShaderNew::Type;
+	using shader_pair = std::pair<shader_type, const std::string>;
+	using shader_container = std::vector<shader_pair>;
+	/** Alisasings applied for forward declaration */
+	using shader_list = std::initializer_list<shader_pair>;
+
+public:
 	/**
 	 * @brief Return single static instance. This must be called in initiation time once.
 	 * @return The reference of ResourceManager instance.
@@ -37,12 +45,8 @@ public:
 		return instance;
 	}
 
-	/** Internal type aliasings. */
-	using shader_type = helper::ShaderNew::Type;
-	using shader_pair = std::pair<shader_type, const std::string>;
-	using shader_container = std::vector<shader_pair>;
-	/** Alisasings applied for forward declaration */
-	using shader_list = std::initializer_list<shader_pair>;
+    /*! Empty already allocated resources and load resource with file path. */
+    void LoadResource(const std::string& path);
 
 	/**
 	 * @brief In initialization time of game application, push shader information to container.

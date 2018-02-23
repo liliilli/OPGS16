@@ -6,4 +6,5 @@
 class GameCanvas : public Canvas::Canvas {
 public:
 	GameCanvas();
+	virtual ~GameCanvas() = default;
 };

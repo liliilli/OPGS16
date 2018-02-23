@@ -40,6 +40,7 @@ class   ShaderWrapper;
 class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ObjectManager;  /*! Objects */
+class   ResourceManager;/*! Resource */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */
 class   TimeManager;    /*! Tick time */

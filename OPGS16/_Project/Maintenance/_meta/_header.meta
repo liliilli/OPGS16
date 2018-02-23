@@ -1,0 +1,2 @@
+#include "..\Scripts\test_script_1.h"		/*! TestScript1 */
+#include "..\Scripts\obj_script_1.h"		/*! ObjectScript1 */

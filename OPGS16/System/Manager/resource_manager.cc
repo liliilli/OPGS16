@@ -1,10 +1,14 @@
 #include "resource_manager.h"
 #include <initializer_list>
+#include <fstream>      /*! std::ifstream */
 #include <iostream>		/** std::cerr, std::endl */
+#include <sstream>      /*! std::stringstream */
 #include <stdexcept>	/** std::runtime_error */
 #include <vector>		/** std::vector */
 
-ResourceManager::ResourceManager() {
+ResourceManager::ResourceManager() {}
+
+void ResourceManager::LoadResource(const std::string& path) {
 	using namespace std::string_literals;
 	PushShader("gQuad", {
 		{shader_type::VS, "Shaders/Global/image.vert"s},
@@ -43,6 +47,27 @@ ResourceManager::ResourceManager() {
 	);
 
 	PushTexture2D("Test", "Resources/test_2.png");
+
+    /*! Read */
+    std::ifstream file{ path, std::ios_base::in };
+    file.imbue(std::locale(""));
+
+    if (file.good()) {
+        std::string word;
+        while (file >> word) {
+            if (word == "TEX2D") /*! If resource to read is texture 2d */ {
+                std::string item_tag;
+                file >> item_tag;
+                std::string item_path;
+                file >> item_path;
+                /*! Instantiate Texture 2D */
+                PushTexture2D(item_tag, item_path);
+            }
+        }
+    }
+    else {
+        std::cerr << "ERROR::TAG::FILE::CAN::NOT::OPEN\n";
+    }
 }
 
 void ResourceManager::PushShader(const std::string& name_key, const shader_list& list) {

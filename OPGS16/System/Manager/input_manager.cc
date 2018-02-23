@@ -70,7 +70,7 @@ bool InputManager::ProceedKeyInit(std::stringstream& stream,
                                   InputManager::BindingKeyInfo* const info) {
     std::string token; stream >> token;
     if (!(token == "KB" || token == "MS" || token == "JS"))
-        /*! Break and display error message */
+        /*! Resume and display error message */
         assert(false);
 
     stream >> token;

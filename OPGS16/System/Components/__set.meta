@@ -7,6 +7,8 @@ SET_UP_HASH_VALUE_OF(Rigidbody2D)
 SET_UP_HASH_VALUE_OF(DebugUiManager)
 SET_UP_HASH_VALUE_OF(TestScript)
 
-SET_UP_HASH_VALUE_OF(Player)
+#include "..\..\_Project\Maintenance\_meta\_set.meta"
 
-#include "..\..\_Project\Raindrops\_meta\_set.meta"		/*! RainDrops */
+//SET_UP_HASH_VALUE_OF(Player)
+
+//#include "..\..\_Project\Raindrops\_meta\_set.meta"		/*! RainDrops */

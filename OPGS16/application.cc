@@ -7,7 +7,6 @@
 
 #include "GlobalObjects\Canvas\canvas.h"
 #include "Objects\Debug\debug_canvas.h"     /*! CanvasDebug */
-#include "Scenes\start.h"
 #include "System\Shader\pp_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
@@ -23,6 +22,9 @@
 #include "System\Manager\sound_manager.h"   /*! SoundManager */
 #include "System\Manager\time_manager.h"    /*! TimeManager */
 #include "System\Manager\timer_manager.h"   /*! TimerManager */
+
+//#include "Scenes\start.h"
+#include "_Project\Maintenance\Scene\test_1.h"  /*! Maintenance */
 
 Application::Application(std::string&& app_name)
     : window{ InitApplication(std::move(app_name)) },
@@ -74,7 +76,9 @@ void Application::Initiate() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        ResourceManager::GetInstance();	// Initialize resource list.
+        m_resource_manager = &ResourceManager::GetInstance();	// Initialize resource list.
+        m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
+
         SettingManager::GetInstance();  // Initialize
 
         m_m_time = &TimeManager::GetInstance();
@@ -92,7 +96,7 @@ void Application::Initiate() {
         m_object_manager = &ObjectManager::GetInstance();
 
 		/** Insert first scene */
-        m_scene_instance.PushScene<Start>();
+        m_scene_instance.PushScene<Maintenance>();
 
         glEnable(GL_DEPTH_TEST);
 		ReplacePresentStatus(GameStatus::PLAYING);
