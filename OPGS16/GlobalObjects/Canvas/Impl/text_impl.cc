@@ -1,6 +1,6 @@
 #include "text_impl.h"  /** Header file */
 #include "..\text.h"    /** Canvas::Text
-                          * void SetScaleValue(float)
+                          * void SetScaleLocalValue(float)
                           * const FontManager& GetFontManager() */
 #include "..\..\..\System\Manager\font_manager.h"
 

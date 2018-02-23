@@ -5,11 +5,12 @@
  * @file System\Object\Impl\object_impl.h
  * @brief Pointer to implementation file of Object.h
  * @author Jongmin Yun
- * @date 2018-02-19
+ * @date 2018-02-23
  *
  * @log
  * 2018-02-19 Refactoring, Inlining, and Removed not-used variables. add class description.
  * 2018-02-19 Add GetParentPosition() method, returns m_parent_to_position.
+ * 2018-02-23 Add succeeding flag of translation, rotation, scaling from parent.
  */
 
 #include <string>       /*! std::string */
@@ -27,35 +28,13 @@ public:
         return m_local_position;
     }
 
-	inline void SetLocalPosition(const glm::vec3& position) {
-        m_local_position = position;
-        m_model_matrix_deprecated = true;
-        m_final_pos_deprecated = true;
-	}
-
 	inline const glm::vec3& GetWorldPosition() const {
         return m_world_position;
-    }
-
-    inline void SetWorldPosition(const glm::vec3& position) {
-        m_world_position        = position;
-        m_parent_to_position    = m_parent_from_position + m_world_position;
-
-        m_model_matrix_deprecated = true;
-        m_final_pos_deprecated = true;
     }
 
     inline const glm::vec3& GetParentPosition() const {
         return m_parent_to_position;
     }
-
-	inline void SetParentPosition(const glm::vec3& parent_position) {
-        m_parent_from_position  = parent_position;
-        m_parent_to_position    = parent_position + m_world_position;
-
-        m_model_matrix_deprecated = true;
-        m_final_pos_deprecated = true;
-	}
 
     inline const glm::vec3& GetFinalPosition() const {
         if (m_final_pos_deprecated) {
@@ -66,64 +45,160 @@ public:
         return m_final_position;
     }
 
+	inline void SetLocalPosition(const glm::vec3& position) {
+        m_local_position = position;
+        m_model_matrix_deprecated = true;
+        m_final_pos_deprecated = true;
+	}
+
+    inline void SetWorldPosition(const glm::vec3& position) {
+        m_world_position        = position;
+        m_parent_to_position    = m_parent_from_position + m_world_position;
+
+        m_model_matrix_deprecated = true;
+        m_final_pos_deprecated = true;
+    }
+
+	inline void SetParentPosition(const glm::vec3& parent_position) {
+        m_parent_from_position  = parent_position;
+        m_parent_to_position    = parent_position + m_world_position;
+
+        m_model_matrix_deprecated = true;
+        m_final_pos_deprecated = true;
+	}
+
     /*! Angle */
 
-	inline const float GetRotationAngle() const {
-        return m_rotation_angle;
+	inline const float GetRotationLocalAngle() const noexcept {
+        return m_rotation_local_angle;
     }
 
-	inline void SetRotationAngle(const float angle_value) {
-		m_rotation_angle = angle_value;
+	inline const glm::vec3& GetRotationLocalFactor() const noexcept {
+        return m_rotation_local_factor;
+    }
+
+    inline const float GetRotationParentAngle() const noexcept {
+
+    }
+
+    inline const glm::vec3& GetRotationParentFactor() const noexcept {
+
+    }
+
+    inline const glm::vec3& GetRotationFinalAngle() const noexcept {
+
+    }
+
+    inline const glm::vec3& GetRotationFinalFactor() const noexcept {
+
+    }
+
+	inline void SetRotationLocalAngle(const float angle_value) noexcept {
+		m_rotation_local_angle = angle_value;
 
         m_model_matrix_deprecated = true;
 		m_rotation_deprecated = true;
 	}
 
-	inline const glm::vec3& GetRotationFactor() const {
-        return m_rotation_factor;
-    }
-
-	inline void SetRotationFactor(const glm::vec3& factor) {
-		m_rotation_factor = factor;
+	inline void SetRotationLocalFactor(const glm::vec3& factor) noexcept {
+		m_rotation_local_factor = factor;
 
         m_model_matrix_deprecated = true;
 		m_rotation_deprecated = true;
 	}
+
+    inline void SetRotationParentAngle(const float angle_value) noexcept {
+
+    }
+
+    inline void SetRotationParentFactor(const glm::vec3& factor) noexcept {
+
+    }
 
     /*! Scale */
 
-	inline const float GetScaleValue() const {
-        return m_scale_value;
+	inline const float GetScaleLocalValue() const noexcept {
+        return m_scale_local_value;
     }
 
-	inline void SetScaleValue(const float scale_value) {
-		m_scale_value = scale_value;
+	inline const glm::vec3& GetScaleLocalFactor() const noexcept {
+        return m_scale_local_factor;
+    }
+
+    inline const float GetScaleParentValue() const noexcept {
+
+    }
+
+    inline const glm::vec3& GetScaleParentFactor() const noexcept {
+
+    }
+
+    inline const float GetScaleFinalValue() const noexcept {
+
+    }
+
+    inline const glm::vec3& GetScaleFinalFactor() const noexcept {
+
+    }
+
+	inline void SetScaleLocalValue(const float scale_value) noexcept {
+		m_scale_local_value = scale_value;
 
         m_model_matrix_deprecated = true;
 		m_scale_deprecated = true;
 	}
 
-	inline const glm::vec3& GetScaleFactor() const {
-        return m_scale_factor;
-    }
-
-	void SetScaleFactor(const glm::vec3& scale_factor) {
-		m_scale_factor = scale_factor;
+	inline void SetScaleLocalFactor(const glm::vec3& scale_factor) noexcept {
+		m_scale_local_factor = scale_factor;
 
         m_model_matrix_deprecated = true;
 		m_scale_deprecated = true;
 	}
+
+    inline void SetScaleParentValue(const float scale_value) noexcept {
+
+    }
+
+    inline void SetScaleParentFactor(const glm::vec2& scale_factor) noexcept {
+
+    }
 
     /*! Matrix */
 
 	const glm::mat4& GetModelMatrix() const;
+
+    /*! Flag inline methods */
+
+    inline void SetSucceedingPositionFlag(bool value) {
+        m_position_succeedable = value;
+    }
+
+    inline void SetSucceedingRotationFlag(bool value) {
+        m_rotation_succeedable = value;
+    }
+
+    inline void SetSucceedingScalingFlag(bool value) {
+        m_scaling_succeedable = value;
+    }
+
+    inline bool GetSucceedingPositionFlag() {
+        return m_position_succeedable;
+    }
+
+    inline bool GetSucceedingRotationFlag() {
+        return m_rotation_succeedable;
+    }
+
+    inline bool GetSucceedingScalingFlag() {
+        return m_scaling_succeedable;
+    }
 
 	/**
 	 * @brief Set active option of object.
 	 * If m_active is false, this object cannot update until m_active return to true.
 	 * @param[in] value Active option value.
 	 */
-	void SetActive(const bool value) {
+	inline void SetActive(const bool value) {
         m_active = value;
     }
 
@@ -164,17 +239,27 @@ private:
     mutable glm::vec3 m_parent_to_position{};   /*! (x, y, z) parent position to bring child. */
 	mutable glm::vec3 m_final_position{};       /*! (x, y, z) final position in hierarchy. */
 
-    float       m_rotation_angle{};         /*! Rotation angle. Positive is CW, Negative is CCW */
-    glm::vec3   m_rotation_factor{ 1.0f };  /*! Rotation factor is (x, y, z) factor */
-    mutable glm::mat4 m_rotate_matrix;      /*! Rotate matrix */
+    float       m_rotation_local_angle{};       /*! Rotation angle. Positive CW, Negative CCW */
+    glm::vec3   m_rotation_local_factor{ 1.f }; /*! Rotation factor is (x, y, z) factor */
+    float       m_rotation_parent_from_angle{}; /*! Rotation angle value from parent */
+    glm::vec3   m_rotation_parent_from_factor{};/*! Rotation factor from parent */
+    mutable float m_rotation_final_angle{};     /*! Final rotation angle */
+    mutable glm::vec3 m_rotation_final_factor{ 1.f };   /*! Final rotation factor */
 
-    float       m_scale_value{ 1.0f };      /*! Scale value's default value is 1.0f */
-    glm::vec3   m_scale_factor{ 1.0f };     /*! Scale factor is (x, y, z), default is (1, 1, 1) */
-    mutable glm::vec3 m_scale_vector{};     /*! (x, y, z) scale vector to apply to matrix */
+    mutable glm::mat4 m_rotate_matrix;          /*! Rotate matrix */
+
+    float       m_scale_local_value{ 1.f };     /*! Scale value's default value is 1.0f */
+    glm::vec3   m_scale_local_factor{ 1.f };    /*! Scale local factor, default is (1, 1, 1) */
+    float       m_scale_parent_value{ 1.f };    /*! Scale value from parent */
+    glm::vec3   m_scale_parent_factor{ 1.f };   /*! Scale factor from parent */
+    mutable glm::vec3 m_scale_final_vector{};   /*! (x, y, z) scale vector to apply to matrix */
 
     mutable glm::mat4   m_model{};          /*! Model matrix */
 
 	bool m_active{ true };                  /*! Object update activation variable. */
+    bool m_position_succeedable{ true };    /*! Flag for succeeding parent position */
+    bool m_rotation_succeedable{ true };    /*! Flag for succeeding parent rotation information */
+    bool m_scaling_succeedable{ true };     /*! Flag for succeeding parent scaling information */
 
     mutable bool m_model_matrix_deprecated{ true }; /*! The flag model needs to be updated. */
     mutable bool m_final_pos_deprecated{ true };    /*! The flag final pos needs to be updated. */

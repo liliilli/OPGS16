@@ -36,7 +36,7 @@ void PathFinding2D::InitUserInterface() {
 	//		"(B) Change to A*";
 	//	Canvas::Text&& text_1{ description, { 16, -32, 0 } };
 	//	text_1.SetOrigin(IOriginable::Origin::UP_LEFT);
-	//	text_1.SetScaleValue(0.5f);
+	//	text_1.SetScaleLocalValue(0.5f);
 	//	image.InitiateChild("Description", std::move(text_1));
 	//}
 

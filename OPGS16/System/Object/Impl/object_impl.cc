@@ -8,12 +8,12 @@ void ObjectImpl::RefreshFinalPosition() const {
 }
 
 void ObjectImpl::RefreshRotateMatrix() const {
-	m_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_angle), m_rotation_factor);
+	m_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_local_angle), m_rotation_local_factor);
     m_rotation_deprecated = false;
 }
 
 void ObjectImpl::RefreshScaleVector() const {
-    m_scale_vector = m_scale_factor * m_scale_value;
+    m_scale_final_vector = m_scale_local_factor * m_scale_local_value;
     m_scale_deprecated = false;
 }
 
@@ -26,9 +26,9 @@ const glm::mat4& ObjectImpl::GetModelMatrix() const {
         /*! Rotation */
 		m_model = m_rotate_matrix;
         /*! Scale */
-        m_model[0] *= m_scale_vector[0];
-        m_model[1] *= m_scale_vector[1];
-        m_model[2] *= m_scale_vector[2];
+        m_model[0] *= m_scale_final_vector[0];
+        m_model[1] *= m_scale_final_vector[1];
+        m_model[2] *= m_scale_final_vector[2];
         /*! Movement */
         m_model[3][0] = m_final_position.x;
         m_model[3][1] = m_final_position.y;

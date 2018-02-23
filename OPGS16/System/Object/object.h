@@ -14,6 +14,7 @@
  *
  * @log
  * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
+ * 2018-02-23 Add hierarchy rotation and scaling option.
  */
 
 #include <algorithm>        /*! std::find_if */
@@ -49,6 +50,7 @@
 class Object {
 private:
     using component_ptr     = std::unique_ptr<component::Component>;
+    using component_list    = std::vector<component_ptr>;
     using name_counter_map  = std::unordered_map<std::string, size_t>;
 	using object_raw = Object*;
 	using object_ptr = std::unique_ptr<Object>;
@@ -58,9 +60,6 @@ private:
 public:
 	Object();
 	virtual ~Object() = default;
-
-    /*! Local update method for derived object. */
-    virtual void LocalUpdate() {};
 
     /*! Update components of object. */
     void Update() {
@@ -78,9 +77,6 @@ public:
             }
         }
     }
-
-    /*! Render method for derived object. */
-    virtual void Render() {};
 
 	/*! Calls children to draw or render something it has.  */
     void Draw() {
@@ -189,6 +185,18 @@ public:
      * @return Model matrix (M = TRS)
      */
     const glm::mat4& GetModelMatrix() const;
+
+    void SetSucceedingPositionFlag(bool value) noexcept;
+
+    void SetSucceedingRotationFlag(bool value) noexcept;
+
+    void SetSucceedingScalingFlag(bool value) noexcept;
+
+    bool GetSucceedingPositionFlag() const noexcept;
+
+    bool GetSucceedingRotationFlag() const noexcept;
+
+    bool GetSucceedingScalingFlag() const noexcept;
 
 	/**
 	 * @brief Set active option of object.
@@ -343,8 +351,7 @@ private:
 protected:
 	pimpl_ptr   m_data{ nullptr };              /*! Pointer implementation heap instance. */
 	object_map  m_children;                     /*! The container stores child object. */
-
-    std::vector<component_ptr> m_components{};  /*! Component list of thie object. */
+    component_list m_components{};              /*! Component list of thie object. */
 
 private:
     /*!
@@ -356,6 +363,13 @@ private:
 
     /*! Return object final position not included local position. */
     const glm::vec3& GetParentPosition() const noexcept;
+
+protected:
+    /*! Local update method for derived object. */
+    virtual void LocalUpdate() {};
+
+    /*! Render method for derived object. */
+    virtual void Render() {};
 };
 
 template <class _Ty, class... _Types, typename>

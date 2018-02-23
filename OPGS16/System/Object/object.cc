@@ -23,9 +23,10 @@ void Object::SetWorldPosition(const glm::vec3& world_position) {
 	m_data->SetWorldPosition(world_position);
 
     for (auto& child : m_children) {
-        /*! If child.second is not empty */
-        if (child.second && child.second->GetActive())
-            child.second->SetParentPosition(GetParentPosition());
+        auto& obj_ptr = child.second;
+        /*! If object is not empty and activated and permits succeeding positioning. */
+        if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingPositionFlag())
+            obj_ptr->SetParentPosition(GetParentPosition());
     }
 }
 
@@ -37,9 +38,10 @@ void Object::SetParentPosition(const glm::vec3& parent_position) {
 	m_data->SetParentPosition(parent_position);
 
     for (auto& child : m_children) {
-        /*! If child.second is not empty */
-        if (child.second && child.second->GetActive())
-            child.second->SetParentPosition(GetParentPosition());
+        auto& obj_ptr = child.second;
+        /*! If object is not empty and activated and permits succeeding positioning. */
+        if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingPositionFlag())
+            obj_ptr->SetParentPosition(GetParentPosition());
     }
 }
 
@@ -48,39 +50,69 @@ const glm::vec3& Object::GetFinalPosition() const noexcept {
 }
 
 const float Object::GetRotationAngle() const noexcept {
-    return m_data->GetRotationAngle();
+    return m_data->GetRotationLocalAngle();
 }
 
 void Object::SetRotationAngle(const float angle_value) {
-	m_data->SetRotationAngle(angle_value);
+	m_data->SetRotationLocalAngle(angle_value);
+
+    //for (auto& child : m_children) {
+    //    auto& obj_ptr = child.second;
+    //    /*! If child.second is not empty and activated and permits succeeding rotation */
+    //    if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingRotationFlag())
+    //}
 }
 
 const glm::vec3& Object::GetRotationFactor() const noexcept {
-    return m_data->GetRotationFactor();
+    return m_data->GetRotationLocalFactor();
 }
 
 void Object::SetRotationFactor(const glm::vec3& factor) {
-	m_data->SetRotationFactor(factor);
+	m_data->SetRotationLocalFactor(factor);
 }
 
 const float Object::GetScaleValue() const noexcept {
-    return m_data->GetScaleValue();
+    return m_data->GetScaleLocalValue();
 }
 
 void Object::SetScaleValue(const float scale_value) {
-	m_data->SetScaleValue(scale_value);
+	m_data->SetScaleLocalValue(scale_value);
 }
 
 const glm::vec3& Object::GetScaleFactor() const noexcept {
-    return m_data->GetScaleFactor();
+    return m_data->GetScaleLocalFactor();
 }
 
 void Object::SetScaleFactor(const glm::vec3& factor) {
-	m_data->SetScaleFactor(factor);
+	m_data->SetScaleLocalFactor(factor);
 }
 
 const glm::mat4& Object::GetModelMatrix() const {
     return m_data->GetModelMatrix();
+}
+
+void Object::SetSucceedingPositionFlag(bool value) noexcept {
+    m_data->SetSucceedingPositionFlag(value);
+}
+
+void Object::SetSucceedingRotationFlag(bool value) noexcept {
+    m_data->SetSucceedingRotationFlag(value);
+}
+
+void Object::SetSucceedingScalingFlag(bool value) noexcept {
+    m_data->SetSucceedingScalingFlag(value);
+}
+
+bool Object::GetSucceedingPositionFlag() const noexcept {
+    return m_data->GetSucceedingPositionFlag();
+}
+
+bool Object::GetSucceedingRotationFlag() const noexcept {
+    return m_data->GetSucceedingRotationFlag();
+}
+
+bool Object::GetSucceedingScalingFlag() const noexcept {
+    return m_data->GetSucceedingScalingFlag();
 }
 
 std::vector<std::string> Object::GetChildrenNameList() const {
