@@ -1,0 +1,54 @@
+﻿  autofit.c
+  ftbase.c
+  ftbbox.c
+  ftbdf.c
+  ftbitmap.c
+  ftcid.c
+  ftfntfmt.c
+  ftfstype.c
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afblue.c : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afblue.c(248): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+c:\_libraries\freetype\src\autofit\afscript.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\autofit\autofit.c)
+  ftgasp.c
+  ftglyph.c
+  ftgxval.c
+  ftinit.c
+  ftlcdfil.c
+  ftmm.c
+  ftotval.c
+  ftpatent.c
+  ftpfr.c
+  ftstroke.c
+  ftsynth.c
+  ftsystem.c
+  fttype1.c
+  ftwinfnt.c
+  bdf.c
+  ftcache.c
+  cff.c
+  type1cid.c
+  ftgzip.c
+  ftlzw.c
+  pcf.c
+  pfr.c
+  psaux.c
+  pshinter.c
+  psmodule.c
+  raster.c
+  sfnt.c
+  smooth.c
+  truetype.c
+  type1.c
+c:\_libraries\freetype\src\sfnt\ttload.c : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\sfnt\sfnt.c)
+  type42.c
+  winfnt.c
+c:\_libraries\freetype\src\truetype\ttobjs.c(787): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오. (소스 파일 컴파일 중 ..\..\..\src\truetype\truetype.c)
+c:\_libraries\freetype\src\truetype\ttgxvar.c(2137): warning C4701: 초기화되지 않았을 수 있는 'fvar_head' 지역 변수를 사용했습니다.
+  ftdebug.c
+     ..\..\..\objs\Win32\Release\freetype.lib 라이브러리 및 ..\..\..\objs\Win32\Release\freetype.exp 개체를 생성하고 있습니다.
+  freetype.vcxproj -> C:\_libraries\freetype\builds\windows\vc2010\..\..\..\objs\Win32\Release\freetype.dll
