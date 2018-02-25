@@ -4,6 +4,8 @@ glad.c
 /Debug
 /obj
 /bin
-/OpenGL/Resources
+/Docs/html
+/Docs/latex
+Doxyfile
 *.ttf
 *.ktx
