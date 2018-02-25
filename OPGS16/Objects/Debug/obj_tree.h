@@ -4,9 +4,9 @@
 #include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
 #include "..\..\Headers\Fwd\objectfwd.h"        /*! ObjecTree */
 
-class ObjectObjectTree : public Canvas::Text {
+class ObjectObjectTree : public canvas::Text {
 public:
-    ObjectObjectTree() : Canvas::Text{ "", glm::vec3{16, -32, 0} } {
+    ObjectObjectTree() : canvas::Text{ "", glm::vec3{16, -32, 0} } {
         SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");

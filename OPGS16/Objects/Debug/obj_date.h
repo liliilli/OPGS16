@@ -3,9 +3,9 @@
 
 #include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
 
-class ObjectDate : public Canvas::Text {
+class ObjectDate : public canvas::Text {
 public:
-    ObjectDate() : Canvas::Text{ "", glm::vec3{16, -24, 0} } {
+    ObjectDate() : canvas::Text{ "", glm::vec3{16, -24, 0} } {
         SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");

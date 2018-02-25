@@ -188,7 +188,7 @@ void TestScript1::ObjectPropertiesReset() {
 
 void TestScript1::ChangeText() {
     /*! Text statements change */
-    auto text = static_cast<::Canvas::Text*>(GetObject().GetChild("Text"));
+    auto text = static_cast<::canvas::Text*>(GetObject().GetChild("Text"));
     switch (m_sequence) {
     case Sequence::_1_NORMAL_LOCAL:
         text->SetText(u8"Look for local translation of\ncenter boxes.");

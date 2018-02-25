@@ -16,7 +16,7 @@ CanvasDebug::CanvasDebug() {
 
     /*! Script binding */
     AddComponent<DebugUiManager>(*this,
-        static_cast<::Canvas::Text*>(GetChild("Fps")),
-        static_cast<::Canvas::Text*>(GetChild("Date")),
-        static_cast<::Canvas::Text*>(GetChild("Hier")));
+        static_cast<::canvas::Text*>(GetChild("Fps")),
+        static_cast<::canvas::Text*>(GetChild("Date")),
+        static_cast<::canvas::Text*>(GetChild("Hier")));
 }

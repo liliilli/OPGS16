@@ -16,7 +16,7 @@
 
 class DebugUiManager final : public component::ScriptFrame {
 public:
-    DebugUiManager(Object& obj, Canvas::Text* const, Canvas::Text* const, Canvas::Text* const);
+    DebugUiManager(Object& obj, canvas::Text* const, canvas::Text* const, canvas::Text* const);
 
     virtual void Update() override final;
 
@@ -24,9 +24,9 @@ private:
     virtual void Start() override final;
 
     /*! This components must not be a dangling pointer! */
-    Canvas::Text* m_fps;
-    Canvas::Text* m_date;
-    Canvas::Text* m_tree;
+    canvas::Text* m_fps;
+    canvas::Text* m_date;
+    canvas::Text* m_tree;
 
 private:
     void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);

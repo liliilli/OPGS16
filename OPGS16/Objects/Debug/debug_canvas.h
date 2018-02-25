@@ -17,7 +17,7 @@
  * @class CanvasDebug
  * @brief temporary
  */
-class CanvasDebug : public Canvas::Canvas {
+class CanvasDebug : public canvas::Canvas {
 public:
 	/**
 	 * @brief Canvas constructor.

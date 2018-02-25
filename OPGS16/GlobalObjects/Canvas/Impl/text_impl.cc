@@ -4,7 +4,7 @@
                           * const FontManager& GetFontManager() */
 #include "..\..\..\System\Manager\font_manager.h"
 
-namespace Canvas {
+namespace canvas {
 TextImpl::TextImpl(Text& handle_ref) : m_handle_ref{ handle_ref } {}
 
 void TextImpl::SetFontSize(const unsigned size) {

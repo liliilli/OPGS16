@@ -3,9 +3,9 @@
 
 #include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
 
-class ObjectFps : public Canvas::Text {
+class ObjectFps : public canvas::Text {
 public:
-    ObjectFps() : Canvas::Text{ "", glm::vec3{16, -16, 0} } {
+    ObjectFps() : canvas::Text{ "", glm::vec3{16, -16, 0} } {
         SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");

@@ -17,7 +17,7 @@
 #include "..\..\System\Object\sprite_renderer.h"    /** SpriteRenderer */
 #include "..\..\Headers\Fwd\objectfwd.h"            /** Canvas::Canvas */
 
-namespace Canvas {
+namespace canvas {
 
 /**
  * @class Image

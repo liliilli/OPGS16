@@ -9,7 +9,7 @@
                                                   * void RenderTextNew(params)
                                                   * bool DoesFontExist(std::string) */
 
-namespace Canvas {
+namespace canvas {
 using fontMap = FontManager::font_map_ptr;
 void TextImplDeleter::operator()(TextImpl* p) { delete p; }
 

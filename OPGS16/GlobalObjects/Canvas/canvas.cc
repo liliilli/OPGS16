@@ -6,7 +6,7 @@
  */
 #include "..\..\System\Components\camera.h" /*! component::Camera */
 
-namespace Canvas {
+namespace canvas {
 
 Canvas::Canvas() : m_is_size_changed{ true } {
     /*! Body */

@@ -13,9 +13,9 @@
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
 
 DebugUiManager::DebugUiManager(Object& obj,
-                               Canvas::Text* const _m_fps,
-                               Canvas::Text* const _m_date,
-                               Canvas::Text* const _m_tree) :
+                               canvas::Text* const _m_fps,
+                               canvas::Text* const _m_date,
+                               canvas::Text* const _m_tree) :
     component::ScriptFrame(obj),
     m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ _m_tree } {
     Initiate();

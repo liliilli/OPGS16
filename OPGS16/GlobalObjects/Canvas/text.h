@@ -21,7 +21,7 @@
                                               * glm::vec3 */
 #include "..\..\System\Object\ui_object.h"  /** UiObject */
 
-namespace Canvas {
+namespace canvas {
 /**
  * @class Text
  * @brief This class display text on position aligned with FontManager.

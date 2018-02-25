@@ -15,9 +15,9 @@
  * @parent Canvas::Image
  * @brief
  */
-class TestImage : public Canvas::Image {
+class TestImage : public canvas::Image {
 public:
-    TestImage(const std::unique_ptr<Canvas::Canvas>& canvas);
+    TestImage(const std::unique_ptr<canvas::Canvas>& canvas);
 
 private:
 

@@ -17,7 +17,7 @@
                                               * helper::ShaderNew;
                                               * camera::CameraObject; */
 
-namespace Canvas {
+namespace canvas {
 
 /**
  * @class Canvas

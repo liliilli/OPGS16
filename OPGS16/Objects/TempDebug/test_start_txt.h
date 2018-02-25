@@ -3,7 +3,7 @@
 
 #include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
 
-class TestStartTxt : public Canvas::Text {
+class TestStartTxt : public canvas::Text {
 public:
     TestStartTxt();
 

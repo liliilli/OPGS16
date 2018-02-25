@@ -18,8 +18,8 @@ void PathFinding2D::Draw() {
 }
 
 void PathFinding2D::InitUserInterface() {
-	Instantiate("Canvas", std::make_unique<Canvas::Canvas>());
-	auto canvas = static_cast<Canvas::Canvas*>(GetObject("Canvas").get());
+	Instantiate("Canvas", std::make_unique<canvas::Canvas>());
+	auto canvas = static_cast<canvas::Canvas*>(GetObject("Canvas").get());
 
 	//// Menu
 	//Canvas::Image&& image{ "Resources/window.png", canvas }; {

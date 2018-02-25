@@ -6,7 +6,7 @@
 #include "..\..\System\Manager\texture_manager.h"
 #include <glm\gtc\matrix_transform.hpp>
 
-namespace Canvas {
+namespace canvas {
 Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 	m_sprite_renderer{ sprite_tag, "gQuad" },
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {

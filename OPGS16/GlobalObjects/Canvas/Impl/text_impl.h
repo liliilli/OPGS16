@@ -5,7 +5,7 @@
 #include <glm\glm.hpp>  /** glm::vec3 */
 #include "..\..\..\Headers\Fwd\objectfwd.h" /** Canvas::Text */
 
-namespace Canvas {
+namespace canvas {
 
 class TextImpl final {
 public:

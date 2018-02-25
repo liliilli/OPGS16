@@ -4,8 +4,8 @@
 
 GameCanvas::GameCanvas() {
     /*! Object binding */
-    Instantiate<::Canvas::Text>("Text", "Rotation, Scaling, Translation test.");
-    auto text = static_cast<::Canvas::Text*>(GetChild("Text")); {
+    Instantiate<::canvas::Text>("Text", "Rotation, Scaling, Translation test.");
+    auto text = static_cast<::canvas::Text*>(GetChild("Text")); {
         text->SetFontName("Solomon");
         text->SetFontSize(8);
         text->SetOrigin(IOriginable::Origin::DOWN_CENTER);

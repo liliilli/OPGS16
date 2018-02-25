@@ -19,7 +19,7 @@ struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
 struct	ObjectTree;
 
 // Derived
-namespace Canvas {
+namespace canvas {
 class   Canvas;
 class   Text;
 class   TextImpl;
