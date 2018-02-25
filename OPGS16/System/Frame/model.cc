@@ -1,7 +1,7 @@
 #include "Model.h"
 
 #include <stdexcept>
-#include "..\..\stb_image.h"
+#include "..\..\__ThirdParty\stb\stb_image.h"
 
 namespace model {
 #define SIZE_OF(size, type) (void*)(size * sizeof(type))

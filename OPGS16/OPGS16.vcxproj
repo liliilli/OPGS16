@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{05BFAE7E-5FB7-4354-B831-2104F01D1A85}</ProjectGuid>
+    <RootNamespace>OPGS16</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>OPGS16</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files (x86)\OpenAL 1.1 SDK\include;C:\_libraries\freetype\include;C:\_libraries\assimp-4.1.0\include;C:\_libraries\glm;C:\_libraries\glew-2.1.0\include;C:\_libraries\glfw-3.2.1\include;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\OpenAL 1.1 SDK\libs\Win32;C:\_libraries\freetype\objs\Win32\Release;C:\_libraries\assimp-4.1.0\lib\Release;C:\_libraries\glew-2.1.0\lib\Release\Win32;C:\_libraries\glfw-3.2.1\lib-vc2015;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>OpenAL32.lib;alut.lib;freetype.lib;assimp-vc140-mt.lib;glew32.lib;glu32.lib;opengl32.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="application.cc" />
+    <ClCompile Include="GlobalObjects\camera_object.cc" />
+    <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
+    <ClCompile Include="GlobalObjects\Canvas\image.cc" />
+    <ClCompile Include="GlobalObjects\Canvas\Impl\text_impl.cc" />
+    <ClCompile Include="GlobalObjects\Canvas\text.cc" />
+    <ClCompile Include="Objects\Debug\debug_canvas.cc" />
+    <ClCompile Include="Objects\Debug\Script\ui_manager.cc" />
+    <ClCompile Include="Objects\TempDebug\test_image.cc" />
+    <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
+    <ClCompile Include="System\Frame\timer_handle.cc" />
+    <ClCompile Include="System\Manager\timer_manager.cc" />
+    <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\test_obj.cc" />
+    <ClCompile Include="_Project\Maintenance\Scene\test_1.cc" />
+    <ClCompile Include="System\Components\camera.cc" />
+    <ClCompile Include="System\Components\Physics2D\Collider\rectangle.cc" />
+    <ClCompile Include="System\Components\Physics2D\collider_2d.cc" />
+    <ClCompile Include="System\Components\Physics2D\rigidbody_2d.cc" />
+    <ClCompile Include="System\Components\_type_hash.h" />
+    <ClCompile Include="System\Debugs\logger.cc" />
+    <ClCompile Include="System\Manager\font_manager.cc" />
+    <ClCompile Include="System\Manager\object_manager.cc" />
+    <ClCompile Include="System\Manager\physics_manager.cc" />
+    <ClCompile Include="System\Manager\scene_manager.cc" />
+    <ClCompile Include="System\Manager\setting_manager.cc" />
+    <ClCompile Include="System\Object\Impl\sprite_renderer_impl.cc" />
+    <ClCompile Include="System\Object\object.cc" />
+    <ClCompile Include="System\Frame\scene.cc" />
+    <ClCompile Include="Scenes\path_finding2d.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="System\Object\ui_object.cc" />
+    <ClCompile Include="System\Manager\input_manager.cc" />
+    <ClCompile Include="System\Manager\resource_manager.cc" />
+    <ClCompile Include="System\Manager\texture_manager.cc" />
+    <ClCompile Include="System\Object\Impl\object_impl.cc" />
+    <ClCompile Include="System\Object\sprite_renderer.cc" />
+    <ClCompile Include="System\Shader\Impl\pp_frame_impl.cc" />
+    <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
+    <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
+    <ClCompile Include="System\Shader\pp_frame.cc" />
+    <ClCompile Include="System\Shader\pp_manager.cc" />
+    <ClCompile Include="System\Shader\shader.cc" />
+    <ClCompile Include="System\Frame\constant.h" />
+    <ClCompile Include="entry.cc" />
+    <ClCompile Include="System\Frame\model.cc" />
+    <ClCompile Include="System\Shader\shader_manager.cc" />
+    <ClCompile Include="System\Frame\texture.cc" />
+    <ClCompile Include="System\Shader\shader_wrapper.cc" />
+    <ClCompile Include="System\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\obj_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\test_script_1.cc" />
+    <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="application.h" />
+    <ClInclude Include="GlobalObjects\camera_object.h" />
+    <ClInclude Include="GlobalObjects\Canvas\canvas.h" />
+    <ClInclude Include="GlobalObjects\Canvas\image.h" />
+    <ClInclude Include="GlobalObjects\Canvas\Impl\text_impl.h" />
+    <ClInclude Include="GlobalObjects\Canvas\text.h" />
+    <ClInclude Include="GlobalObjects\Interface\i_alignable.h" />
+    <ClInclude Include="GlobalObjects\Interface\i_originable.h" />
+    <ClInclude Include="Headers\canvas_components.h" />
+    <ClInclude Include="Headers\Fwd\componentfwd.h" />
+    <ClInclude Include="Headers\Fwd\lightfwd.h" />
+    <ClInclude Include="Headers\Fwd\objectfwd.h" />
+    <ClInclude Include="Headers\scene_common.h" />
+    <ClInclude Include="Headers\script_common.h" />
+    <ClInclude Include="Objects\Debug\debug_canvas.h" />
+    <ClInclude Include="Objects\Debug\obj_date.h" />
+    <ClInclude Include="Objects\Debug\obj_fps.h" />
+    <ClInclude Include="Objects\Debug\obj_tree.h" />
+    <ClInclude Include="Objects\Debug\Script\test_script.h" />
+    <ClInclude Include="Objects\Debug\Script\ui_manager.h" />
+    <ClInclude Include="Objects\TempDebug\test_image.h" />
+    <ClInclude Include="Objects\TempDebug\test_start_txt.h" />
+    <ClInclude Include="Objects\TempDebug\test_start_t_copy.h" />
+    <ClInclude Include="System\Frame\timer_handle.h" />
+    <ClInclude Include="System\Manager\timer_manager.h" />
+    <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
+    <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
+    <ClInclude Include="_Project\Maintenance\Object\test_obj.h" />
+    <ClInclude Include="_Project\Maintenance\Scene\test_1.h" />
+    <ClInclude Include="System\Components\camera.h" />
+    <ClInclude Include="System\Components\Physics2D\Collider\rectangle.h" />
+    <ClInclude Include="System\Components\Physics2D\collider_2d.h" />
+    <ClInclude Include="System\Components\Physics2D\rigidbody_2d.h" />
+    <ClInclude Include="System\Components\component.h" />
+    <ClInclude Include="System\Components\_macro.h" />
+    <ClInclude Include="System\Components\script_frame.h" />
+    <ClInclude Include="System\Debugs\hierarchy_tree.h" />
+    <ClInclude Include="System\Debugs\logger.h" />
+    <ClInclude Include="System\Manager\font_manager.h" />
+    <ClInclude Include="System\Frame\vertex_array_object.h" />
+    <ClInclude Include="System\Manager\object_manager.h" />
+    <ClInclude Include="System\Manager\physics_manager.h" />
+    <ClInclude Include="System\Manager\scene_manager.h" />
+    <ClInclude Include="System\Manager\setting_manager.h" />
+    <ClInclude Include="System\Manager\time_manager.h" />
+    <ClInclude Include="System\Object\Impl\sprite_renderer_impl.h" />
+    <ClInclude Include="System\Object\object.h" />
+    <ClInclude Include="Objects\Interface\i_radiant.h" />
+    <ClInclude Include="System\Frame\scene.h" />
+    <ClInclude Include="Scenes\path_finding2d.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="System\Object\ui_object.h" />
+    <ClInclude Include="System\Manager\input_manager.h" />
+    <ClInclude Include="System\Manager\resource_manager.h" />
+    <ClInclude Include="System\Manager\texture_manager.h" />
+    <ClInclude Include="System\Object\Impl\object_impl.h" />
+    <ClInclude Include="System\Object\sprite_renderer.h" />
+    <ClInclude Include="System\Shader\Impl\pp_frame_impl.h" />
+    <ClInclude Include="System\Shader\PostProcessing\pp_convex.h" />
+    <ClInclude Include="System\Shader\PostProcessing\pp_gray.h" />
+    <ClInclude Include="System\Shader\PostProcessing\pp_sinewave.h" />
+    <ClInclude Include="System\Shader\pp_frame.h" />
+    <ClInclude Include="System\Shader\pp_manager.h" />
+    <ClInclude Include="System\Shader\shader.h" />
+    <ClInclude Include="System\Frame\model.h" />
+    <ClInclude Include="System\Shader\shader_manager.h" />
+    <ClInclude Include="System\Frame\texture.h" />
+    <ClInclude Include="System\Shader\shader_wrapper.h" />
+    <ClInclude Include="System\Manager\sound_manager.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\obj_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\test_script_1.h" />
+    <ClInclude Include="__ThirdParty\stb\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="11_shaders\normal.frag" />
+    <None Include="11_shaders\normal.vert" />
+    <None Include="12_shaders\depth.frag" />
+    <None Include="13_shaders\single_color.frag" />
+    <None Include="14_shaders\grass.frag" />
+    <None Include="14_shaders\normal.vert" />
+    <None Include="14_shaders\window.frag" />
+    <None Include="16_shaders\gaussian.frag" />
+    <None Include="16_shaders\grayscale.frag" />
+    <None Include="16_shaders\edge.frag" />
+    <None Include="16_shaders\normal.vert" />
+    <None Include="16_shaders\retrieve.frag" />
+    <None Include="16_shaders\retrieve.vert" />
+    <None Include="16_shaders\rotation.vert" />
+    <None Include="17_shaders\cube.frag" />
+    <None Include="17_shaders\cube.vert" />
+    <None Include="17_shaders\normal.frag" />
+    <None Include="17_shaders\normal.vert" />
+    <None Include="17_shaders\reflection.frag" />
+    <None Include="17_shaders\reflection.vert" />
+    <None Include="17_shaders\refraction.frag" />
+    <None Include="20_shaders\house.frag" />
+    <None Include="20_shaders\house.geom" />
+    <None Include="20_shaders\model.vert" />
+    <None Include="20_shaders\model_explode.frag" />
+    <None Include="20_shaders\model_explode.geom" />
+    <None Include="20_shaders\normal.frag" />
+    <None Include="20_shaders\normal.geom" />
+    <None Include="20_shaders\normal.vert" />
+    <None Include="21_shaders\brute.vert" />
+    <None Include="21_shaders\clever_astroid.vert" />
+    <None Include="21_shaders\model.frag" />
+    <None Include="21_shaders\normal.frag" />
+    <None Include="21_shaders\normal.vert" />
+    <None Include="23_shaders\blinn_phong.frag" />
+    <None Include="23_shaders\normal.vert" />
+    <None Include="23_shaders\phong.frag" />
+    <None Include="25_shaders\light.frag" />
+    <None Include="25_shaders\light.vert" />
+    <None Include="25_shaders\plain.frag" />
+    <None Include="25_shaders\plain.vert" />
+    <None Include="25_shaders\shadow.frag" />
+    <None Include="25_shaders\shadow.vert" />
+    <None Include="26_shaders\cube.frag" />
+    <None Include="26_shaders\cube.vert" />
+    <None Include="26_shaders\light.frag" />
+    <None Include="26_shaders\light.geom" />
+    <None Include="26_shaders\light.vert" />
+    <None Include="26_shaders\lightbox.frag" />
+    <None Include="26_shaders\lightbox.vert" />
+    <None Include="26_shaders\shadow.frag" />
+    <None Include="26_shaders\shadow.vert" />
+    <None Include="27_shaders\quad.frag" />
+    <None Include="27_shaders\quad.vert" />
+    <None Include="29_shaders\quad.frag" />
+    <None Include="29_shaders\quad.vert" />
+    <None Include="29_shaders\steep_quad.frag" />
+    <None Include="glew32.dll" />
+    <None Include="glfw3.dll" />
+    <None Include="Shaders\Bloom\bloom.frag" />
+    <None Include="Shaders\Bloom\combine.frag" />
+    <None Include="Shaders\Bloom\hdr.frag" />
+    <None Include="Shaders\Bloom\full.frag" />
+    <None Include="Shaders\Bloom\lightbox.frag" />
+    <None Include="Shaders\Bloom\normal.frag" />
+    <None Include="Shaders\Bloom\normal.vert" />
+    <None Include="Shaders\Ch8\3_bezier.frag" />
+    <None Include="Shaders\Ch8\3_bezier.tcs" />
+    <None Include="Shaders\Ch8\3_bezier.tes" />
+    <None Include="Shaders\Ch8\3_bezier.vert" />
+    <None Include="Shaders\Ch8\3_contour.tcs" />
+    <None Include="Shaders\Ch8\3_contour.tes" />
+    <None Include="Shaders\Ch8\3_contour.vert" />
+    <None Include="Shaders\Ch8\3_land.frag" />
+    <None Include="Shaders\Ch8\3_land.tcs" />
+    <None Include="Shaders\Ch8\3_land.tes" />
+    <None Include="Shaders\Ch8\3_land.vert" />
+    <None Include="Shaders\Bloom\full.vert" />
+    <None Include="Shaders\Global\convex.frag" />
+    <None Include="Shaders\Global\font.frag" />
+    <None Include="Shaders\Global\font.vert" />
+    <None Include="Shaders\Global\quad.frag" />
+    <None Include="Shaders\Global\quad.vert" />
+    <None Include="Shaders\Global\image.frag" />
+    <None Include="Shaders\Global\image.vert" />
+    <None Include="Shaders\Global\sinewave.frag" />
+    <None Include="Shaders\pp\gray.frag" />
+    <None Include="Shaders\quad.frag" />
+    <None Include="Shaders\quad.vert" />
+    <None Include="Shaders\Ch8\simple_output.frag" />
+    <None Include="Shaders\Ch8\3_triangle.tcs" />
+    <None Include="Shaders\Ch8\3_triangle.tes" />
+    <None Include="Shaders\Ch8\3_triangle.vert" />
+    <None Include="Shaders\spring.frag" />
+    <None Include="Shaders\spring.vert" />
+    <None Include="Shaders\spring_render.frag" />
+    <None Include="Shaders\spring_render.vert" />
+    <None Include="Shaders\Starfield\point.vert" />
+    <None Include="System\Components\__header.meta" />
+    <None Include="System\Components\__set.meta" />
+    <None Include="_Project\Maintenance\_meta\_header.meta" />
+    <None Include="_Project\Maintenance\_meta\_resource.meta" />
+    <None Include="_Project\Maintenance\_meta\_set.meta" />
+    <None Include="_Setting\input.meta" />
+    <None Include="_Setting\tag.meta" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

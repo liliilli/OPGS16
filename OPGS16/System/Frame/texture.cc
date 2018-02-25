@@ -2,7 +2,7 @@
 
 #include <array>
 #include <iostream>
-#include "..\..\stb_image.h"
+#include "..\..\__ThirdParty\stb\stb_image.h"
 
 namespace texture {
 
