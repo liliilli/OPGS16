@@ -13,16 +13,14 @@ void UiObject::LocalUpdate() {
 
 void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
                                    const float parent_width, const float parent_height) {
-	/** Body */
 	auto origin	= static_cast<int>(GetOrigin()) - 1;
-	unsigned y = origin / 3;
 	unsigned x = origin % 3;
+	unsigned y = origin / 3;
 
 	GLint source_x = static_cast<GLint>(parent_x + (parent_width / 2) * x);
 	GLint source_y = static_cast<GLint>(parent_y + (parent_height / 2) * y);
 
     SetParentPosition(glm::vec3{ source_x, source_y, 0 });
-	//SetWorldPosition({ GetLocalPosition() + glm::vec3{source_x, source_y, 0} });
 	for (auto& child : GetChildList()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());

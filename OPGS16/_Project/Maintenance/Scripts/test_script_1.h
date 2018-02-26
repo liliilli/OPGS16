@@ -30,7 +30,7 @@ private:
 private:
     virtual void Start() override final;
 
-    void SetTimer();/*! Set timer (m_timer_break) */
+    void SetBreakTimer();/*! Set timer (m_timer_break) */
     void Resume();  /*! Callback function for m_timer_break */
 
     void ObjectPropertiesReset();
@@ -50,6 +50,8 @@ private:
     void Proceed_3WorldPosition();
 
     void ToggleObjectProperties();
+
+    void ResetObjectProperties();
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::ScriptFrame, TestScript1)

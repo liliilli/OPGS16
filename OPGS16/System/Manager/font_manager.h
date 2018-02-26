@@ -124,7 +124,7 @@ public:
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
      */
-    
+
 	[[deprecated("Use RenderTextNew instead. this method does not support alignment features.")]]
 	void RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color);
 
@@ -190,20 +190,6 @@ private:
 	 * @return Created font glyph container unique_ptr (moved)
      */
     FontManager::font_map_ptr GetCharTextures();
-
-	/**
-	 * @brief This method calculate and return barycenter position to render.
-	 *
-	 * @param[in] origin Origin position from which text strings rendered.
-	 * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
-	 * In contrast UP_RIGHT will be (width, height) in Screen space.
-	 *
-	 * @param[in] position Relatve position from origin position string will be rendered.
-	 * Returned position string rendered is (x, y) = (origin + relative_position)
-	 *
-	 * @return The position has (x, y) value.
-	 */
-	glm::vec2 CalculateCenterPosition(IOriginable::Origin& origin, glm::vec2& position);
 
 	/**
 	 * @brief This methods ends shader's operation.

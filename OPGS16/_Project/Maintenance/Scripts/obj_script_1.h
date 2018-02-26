@@ -31,6 +31,8 @@ private:
      */
     void Proceed_1NormalLocal();
 
+    void Proceed_3WorldPosition();
+
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::ScriptFrame, ObjectScript1)
 };

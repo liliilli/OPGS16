@@ -2,6 +2,8 @@
 #include "impl\object_impl.h"           /*! ObjectImpl */
 #include "..\Debugs\hierarchy_tree.h"   /*! ObjectTree */
 
+#include <iostream>
+
 Object::Object() {
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> instance{ new ObjectImpl() };
 	m_data = std::move(instance);
@@ -11,46 +13,47 @@ const glm::vec3& Object::GetLocalPosition() const noexcept {
     return m_data->GetLocalPosition();
 }
 
-void Object::SetLocalPosition(const glm::vec3& position) noexcept {
-	m_data->SetLocalPosition(position);
-}
-
 const glm::vec3& Object::GetWorldPosition() const noexcept {
     return m_data->GetWorldPosition();
-}
-
-void Object::SetWorldPosition(const glm::vec3& world_position) {
-	m_data->SetWorldPosition(world_position);
-
-    for (auto& child : m_children) {
-        auto& obj_ptr = child.second;
-        /*! If object is not empty and activated and permits succeeding positioning. */
-        if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingPositionFlag())
-            obj_ptr->SetParentPosition(GetParentPosition());
-    }
 }
 
 const glm::vec3& Object::GetParentPosition() const noexcept {
     return m_data->GetParentPosition();
 }
 
-void Object::SetParentPosition(const glm::vec3& parent_position) {
-	m_data->SetParentPosition(parent_position);
-
-    for (auto& child : m_children) {
-        auto& obj_ptr = child.second;
-        /*! If object is not empty and activated and permits succeeding positioning. */
-        if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingPositionFlag())
-            obj_ptr->SetParentPosition(GetParentPosition());
-    }
-}
-
 const glm::vec3& Object::GetFinalPosition() const noexcept {
     return m_data->GetFinalPosition();
 }
 
+void Object::SetLocalPosition(const glm::vec3& position) noexcept {
+	m_data->SetLocalPosition(position);
+}
+
+void Object::SetWorldPosition(const glm::vec3& world_position) {
+	m_data->SetWorldPosition(world_position);
+    PropagateParentPosition();
+}
+
+void Object::SetParentPosition(const glm::vec3& parent_position) {
+	m_data->SetParentPosition(parent_position);
+    PropagateParentPosition();
+}
+
+void Object::PropagateParentPosition() {
+    for (auto& child : m_children) {
+        auto& child_ptr = child.second;
+        /*! If object is not empty and activated and permits succeeding positioning. */
+        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingPositionFlag())
+            child_ptr->SetParentPosition(GetParentPosition());
+    }
+}
+
 const float Object::GetRotationAngle() const noexcept {
     return m_data->GetRotationLocalAngle();
+}
+
+const glm::vec3& Object::GetRotationFactor() const noexcept {
+    return m_data->GetRotationLocalFactor();
 }
 
 void Object::SetRotationAngle(const float angle_value) {
@@ -63,10 +66,6 @@ void Object::SetRotationAngle(const float angle_value) {
     //}
 }
 
-const glm::vec3& Object::GetRotationFactor() const noexcept {
-    return m_data->GetRotationLocalFactor();
-}
-
 void Object::SetRotationFactor(const glm::vec3& factor) {
 	m_data->SetRotationLocalFactor(factor);
 }
@@ -75,12 +74,12 @@ const float Object::GetScaleValue() const noexcept {
     return m_data->GetScaleLocalValue();
 }
 
-void Object::SetScaleValue(const float scale_value) {
-	m_data->SetScaleLocalValue(scale_value);
-}
-
 const glm::vec3& Object::GetScaleFactor() const noexcept {
     return m_data->GetScaleLocalFactor();
+}
+
+void Object::SetScaleValue(const float scale_value) {
+	m_data->SetScaleLocalValue(scale_value);
 }
 
 void Object::SetScaleFactor(const glm::vec3& factor) {

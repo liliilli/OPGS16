@@ -242,23 +242,22 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderTextNew
-(const std::string&text, IOriginable::Origin origin, glm::vec2 relative_position, glm::vec3 color,
+(const std::string&text, IOriginable::Origin origin, glm::vec2 final_position, glm::vec3 color,
  IAlignable::Alignment alignment, const float scale) {
     if (m_font_in_use) {
         StartShader(color);
         auto text_container = SeparateTextToList(text);
-        auto position = CalculateCenterPosition(origin, relative_position);
 
         using Align = IAlignable::Alignment;
         switch (alignment) {
         case Align::LEFT:
-            RenderLeftSide(text_container, position, scale);
+            RenderLeftSide(text_container, final_position, scale);
             break;
         case Align::CENTER:
-            RenderCenterSide(text_container, position, scale);
+            RenderCenterSide(text_container, final_position, scale);
             break;
         case Align::RIGHT:
-            RenderRightSide(text_container, position, scale);
+            RenderRightSide(text_container, final_position, scale);
             break;
         }
 
@@ -275,32 +274,6 @@ void FontManager::StartShader(const glm::vec3& color) {
 	m_shader->SetVec3f("textColor", color);
 	m_shader->SetVecMatrix4f("projection", m_projection);
 	glBindVertexArray(m_vao);
-}
-
-/**
- * @brief This method calculate and return barycenter position to render.
- *
- * @param[in] origin Origin position from which text strings rendered.
- * position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
- * In contrast UP_RIGHT will be (width, height) in Screen space.
- *
- * @param[in] position Relatve position from origin position string will be rendered.
- * Returned position string rendered is (x, y) = (origin + relative_position)
- *
- * @return The position has (x, y) value.
- */
-glm::vec2 FontManager::CalculateCenterPosition(IOriginable::Origin& origin, glm::vec2& position) {
-	/** x origin, y origin, width, height */
-	std::array<GLint, 4> viewport{0, 0, 256, 224};
-
-	auto origin_type = static_cast<int>(origin) - 1;
-	auto y_value = origin_type / 3;
-	auto x_value = origin_type % 3;
-
-	GLint x_pos = viewport[2] * x_value / 2;
-	GLint y_pos = viewport[3] * y_value / 2;
-
-	return glm::vec2(x_pos + position.x, y_pos + position.y);
 }
 
 /**

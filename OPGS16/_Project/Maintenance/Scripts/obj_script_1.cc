@@ -31,6 +31,9 @@ void ObjectScript1::Update() {
         case 1:
             Proceed_1NormalLocal();
             break;
+        case 3:
+            Proceed_3WorldPosition();
+            break;
         default: /*! Do nothing */ break;
         }
     }
@@ -79,4 +82,49 @@ void ObjectScript1::Proceed_1NormalLocal() {
     }
 
     GetObject().SetLocalPosition(local_pos);
+}
+
+void ObjectScript1::Proceed_3WorldPosition() {
+    auto pos = GetObject().GetWorldPosition();
+    auto speed = 2.0f;
+
+    if (m_switch == 0) {        /*! Right */
+        pos.x += speed;
+        if (static_cast<int>(pos.x) >= 128+64) ++m_switch;
+    }
+    else if (m_switch == 1) {   /*! Down */
+        pos.y -= speed;
+        if (static_cast<int>(pos.y) <= 112-64) ++m_switch;
+    }
+    else if (m_switch == 2) {   /*! Left */
+        pos.x -= speed;
+        if (static_cast<int>(pos.x) <= 128-64) ++m_switch;
+    }
+    else if (m_switch == 3) {   /*! Up */
+        pos.y += speed;
+        if (static_cast<int>(pos.y) >= 112+64) ++m_switch;
+    }
+    else if (m_switch == 4) {   /*! Up */
+        pos.x += speed;
+        if (static_cast<int>(pos.x) >= 128+64) ++m_switch;
+    }
+    else if (m_switch == 5) {
+        pos.y -= speed;
+        if (static_cast<int>(pos.y) <= 112) ++m_switch;
+    }
+    else if (m_switch == 6) {
+        pos.x -= speed;
+        if (static_cast<int>(pos.x) <= 128) {
+            m_switch = 0;
+            m_moving = false;
+
+            auto& canvas = SceneManager::GetInstance().GetPresentScene()->GetObject("GameCanvas");
+            if (canvas) {
+                TestScript1* canvas_script = canvas->GetComponent<TestScript1>();
+                canvas_script->TriggerProcessFinish();
+            }
+        }
+    }
+
+    GetObject().SetWorldPosition(pos);
 }

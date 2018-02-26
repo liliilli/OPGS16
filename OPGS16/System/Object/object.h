@@ -62,7 +62,7 @@ public:
 	virtual ~Object() = default;
 
     /*! Update components of object. */
-    void Update() {
+    inline void Update() {
         if (m_data && GetActive()) {
             LocalUpdate();
             for (auto& component : m_components)
@@ -70,16 +70,14 @@ public:
 
             for (auto& child : m_children) {
                 /*! If child.second is not emtpy and activated. */
-                if (child.second && child.second->GetActive()) {
-                    child.second->SetParentPosition(GetParentPosition());
+                if (child.second && child.second->GetActive())
                     child.second->Update();
-                }
             }
         }
     }
 
 	/*! Calls children to draw or render something it has.  */
-    void Draw() {
+    inline void Draw() {
         Render();
         /*! Order draw call to exist child object. */
         for (auto& object : m_children) {
@@ -341,6 +339,9 @@ public:
         return m_object_name;
     }
 
+    /*! Return object final position not included local position. */
+    const glm::vec3& GetParentPosition() const noexcept;
+
 private:
     name_counter_map m_name_counter;    /*! Object name counter to avoid duplicated object name */
 
@@ -361,8 +362,8 @@ private:
      */
     inline const std::string CreateChildTag(const std::string& name) noexcept;
 
-    /*! Return object final position not included local position. */
-    const glm::vec3& GetParentPosition() const noexcept;
+    /*! Propagate parent position recursively */
+    void PropagateParentPosition();
 
 protected:
     /*! Local update method for derived object. */
@@ -377,6 +378,7 @@ bool Object::Instantiate(const std::string tag, _Types&&... _args) {
     const auto item_tag = CreateChildTag(tag);
     m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Types>(_args)...));
     m_children[item_tag]->SetHash(item_tag);
+    m_children[item_tag]->SetParentPosition(GetParentPosition());
     return true;
 }
 
@@ -385,6 +387,7 @@ bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) 
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::move(instance);
     m_children[item_tag]->SetHash(item_tag);
+    m_children[item_tag]->SetParentPosition(GetParentPosition());
     return true;
 }
 

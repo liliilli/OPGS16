@@ -1,5 +1,7 @@
 #include "test_script_1.h"            /*! Header file */
 
+#include <iostream>
+
 #include <glm\glm.hpp>
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
@@ -13,7 +15,7 @@ TestScript1::TestScript1(Object& obj) : component::ScriptFrame{ obj } {
 }
 
 void TestScript1::Start() {
-    SetTimer();
+    SetBreakTimer();
 }
 
 void TestScript1::Update() {
@@ -27,15 +29,27 @@ void TestScript1::Update() {
             Proceed_2DependentWorld();
             break;
         case Sequence::_3_INDEPENDENT_WORLD:
-            //SetTimer(m_timer_third_test, 500, true, this, &TestScript1::ToggleObjectProperties);
-            //Proceed_3WorldPosition();
+            Proceed_3WorldPosition();
             break;
         }
     }
     else {
-        if (m_finished_obj == 4) {
-            m_finished_obj = 0;
-            SetTimer();
+        switch (m_sequence) {
+        default: /*! Do nothing */ break;
+        case Sequence::_1_NORMAL_LOCAL: {
+            if (m_finished_obj == 4) {
+                m_finished_obj = 0;
+                SetBreakTimer();
+            }
+        }   break;
+        case Sequence::_3_INDEPENDENT_WORLD: {
+            if (m_finished_obj == 1) {
+                m_finished_obj = 0;
+                ResetObjectProperties();
+                TimerManager::GetInstance().DetachTimer(m_timer_break);
+                SetBreakTimer();
+            }
+        }   break;
         }
     }
 }
@@ -98,7 +112,7 @@ void TestScript1::Proceed_2DependentWorld() {
             pos.x -= speed;
             if (static_cast<int>(pos.x) <= 128) {
                 ++m_switch;
-                SetTimer();
+                SetBreakTimer();
             }
         }
 
@@ -108,54 +122,21 @@ void TestScript1::Proceed_2DependentWorld() {
 
 void TestScript1::Proceed_3WorldPosition() {
     auto scene = SceneManager::GetInstance().GetPresentScene();
-    auto speed = 2.0f;
-
     if (scene) {
-        auto& object = scene->GetObject("Object");
-        auto pos = object->GetWorldPosition();
-        if (m_switch == 0) {        /*! Right */
-            pos.x += speed;
-            if (static_cast<int>(pos.x) >= 128+64) ++m_switch;
+        /*! Get 1-level object */
+        auto& root_obj = scene->GetObject("Object");
+        if (root_obj) {
+            ObjectScript1* script = root_obj->GetComponent<ObjectScript1>();
+            script->DoWork(3, 0);
         }
-        else if (m_switch == 1) {   /*! Down */
-            pos.y -= speed;
-            if (static_cast<int>(pos.y) <= 112-64) ++m_switch;
-        }
-        else if (m_switch == 2) {   /*! Left */
-            pos.x -= speed;
-            if (static_cast<int>(pos.x) <= 128-64) ++m_switch;
-        }
-        else if (m_switch == 3) {   /*! Up */
-            pos.y += speed;
-            if (static_cast<int>(pos.y) >= 112+64) ++m_switch;
-        }
-        else if (m_switch == 4) {   /*! Up */
-            pos.x += speed;
-            if (static_cast<int>(pos.x) >= 128+64) ++m_switch;
-        }
-        else if (m_switch == 5) {
-            pos.y -= speed;
-            if (static_cast<int>(pos.y) <= 112) ++m_switch;
-        }
-        else if (m_switch == 6) {
-            pos.x -= speed;
-            if (static_cast<int>(pos.x) <= 128) {
-                ++m_switch;
-                SetTimer();
-
-            }
-        }
-
-        object->SetWorldPosition(pos);
     }
+
+    m_is_break = true;
 }
 
-void TestScript1::ToggleObjectProperties() {
-
-}
-
-void TestScript1::SetTimer() {
-    TimerManager::GetInstance().SetTimer(m_timer_break, 1'500, false, this, &TestScript1::Resume);
+void TestScript1::SetBreakTimer() {
+    TimerManager::GetInstance().SetTimer(m_timer_break, 1'500, false,
+                                         this, &TestScript1::Resume);
 }
 
 void TestScript1::Resume() {
@@ -165,6 +146,13 @@ void TestScript1::Resume() {
 
     ObjectPropertiesReset();
     ChangeText();
+
+    switch (m_sequence) {
+    case Sequence::_3_INDEPENDENT_WORLD:
+        TimerManager::GetInstance().SetTimer(m_timer_third_test, 1'000, true,
+                                             this, &TestScript1::ToggleObjectProperties);
+        break;
+    }
 }
 
 void TestScript1::ObjectPropertiesReset() {
@@ -177,6 +165,7 @@ void TestScript1::ObjectPropertiesReset() {
         auto object = scene->GetObject("Object").get();
         while (object != nullptr) {
             object->SetSucceedingPositionFlag(translate_dependency);
+
             /*! Set translate succeeding flag */
             object = object->GetChild("Object");
             translate_dependency = !translate_dependency;
@@ -200,5 +189,24 @@ void TestScript1::ChangeText() {
         text->SetText(u8"Look for wierd but intentional\nworld translation of center boxes.");
         break;
     default: /*! Do nothing */ break;
+    }
+}
+
+void TestScript1::ToggleObjectProperties() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto object = scene->GetObject("Object").get();
+    while (object != nullptr) {
+        auto flag = object->GetSucceedingPositionFlag();
+        object->SetSucceedingPositionFlag(!flag);
+        object = object->GetChild("Object");
+    }
+}
+
+void TestScript1::ResetObjectProperties() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto object = scene->GetObject("Object").get();
+    while (object != nullptr) {
+        object->SetSucceedingPositionFlag(true);
+        object = object->GetChild("Object");
     }
 }
