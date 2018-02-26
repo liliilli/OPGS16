@@ -5,9 +5,11 @@
 * @file shader.h
 * @brief
 *
-*
 * @author Jongmin Yun
-* @version 0.0.2
+* @date 2018-02-26
+*
+* @log
+* 2018-02-26
 */
 
 #include <unordered_map>
@@ -18,6 +20,7 @@
 namespace helper {
 
 /**
+ * @class ShaderNew
  * @brief New shader wrapper class
  *
  *
@@ -45,6 +48,8 @@ public:
      * success flag is not on and go to the error calls but maybe shader program works probablly.
      */
     ShaderNew& SetShader(Type shader_type, const GLchar* path);
+
+    ~ShaderNew();
 
     /**
      * @brief
@@ -138,14 +143,9 @@ public:
                                          const light::Spotlight& container);
 
 private:
-    /** Shader's unique id */
-    mutable GLuint k_id{};
-
-    /** Boolean Flag. This value must be true when call Shader.Use() */
-    bool m_linked{ false };
-
-    /** Compiled Shader list */
-    std::unordered_map<Type, unsigned> m_shaders;
+    mutable GLuint m_program_id{};  /*! Unique id of shader program */
+    bool m_linked{ false }; /*! Boolean Flag. This value must be true when call Shader.Use() */
+    std::unordered_map<Type, unsigned> m_shaders; /*! Compiled Shader list */
 
     /**
      * @brief

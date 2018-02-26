@@ -46,9 +46,16 @@ public:
 	};
 
 	/*! This class stores sound information. */
-    struct SoundInfo {
+    class SoundInfo {
+    private:
         FMOD::Sound*    m_sound;    /*! Sound buffer */
 		const SoundType m_type;	    /*! The type of sound. */
+
+    public:
+        explicit SoundInfo(FMOD::Sound* sound, SoundType type) :
+            m_sound{ sound }, m_type{ type } {};
+
+        FMOD::Sound* const Sound() const { return m_sound; }
 	};
 
 public:
@@ -88,7 +95,6 @@ public:
 
 	/**
 	 * @brief Play specified sound with tag.
-	 *
 	 * @param[in] tag The tag to find sound object.
 	 */
 	void PlaySound(const std::string& tag);
@@ -101,6 +107,9 @@ public:
 
 	/*! Stop all of sounds which are playing. */
 	void StopAllSounds();
+
+    /*! Release all sounds, but leaves system on active. */
+    void Clear();
 
 	/**
 	 * @brief Check if any sound stream with 'tag' name is exist.

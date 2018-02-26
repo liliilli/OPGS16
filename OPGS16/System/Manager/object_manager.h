@@ -23,13 +23,15 @@ public:
         return instance;
     }
 
-     void Destroy(const Object& object);
-
-     void Update() {
+    void Update() {
         if (!m_destroy_candidates.empty()) {
             DestroyObjects();
         }
     }
+
+    void Destroy(const Object& object);
+
+    void Clear();
 
 private:
     std::list<object_ptr> m_destroy_candidates;

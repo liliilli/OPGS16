@@ -9,7 +9,8 @@
 
 #include <memory>
 #include <stack>
-#include "..\Frame\scene.h" /*! Scene */
+#include "..\Frame\scene.h"     /*! Scene */
+#include "..\..\application.h"  /*! Application for callback forwarding */
 
 /*!
  * @class SceneManager
@@ -33,28 +34,41 @@ public:
      * @param[in] _Ty* Type parameter is based on Scene, value must be nullptr to prevent
      * double initiation of scene.
      */
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Scene, _Ty>>>
-     void PushScene();
+    template <
+        class _Ty,
+        typename = std::enable_if_t<
+        std::is_base_of_v<Scene, _Ty>
+        >
+    >
+    void PushScene();
 
     /**
      * @brief The method replace scene with top scene.
+     * before actually replacing previous scene, application have to go through purify resources,
+     * to prevent unintentional memory leak and runtime errors.
      */
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-     void ReplaceScene(){
-		pReplaceScene<_Ty>();
+    template <
+        class _Ty,
+        typename = std::enable_if_t<
+        std::is_base_of_v<Scene, _Ty>
+        >
+    >
+    void ReplaceScene() {
+        auto& app = Application::getInstance();
+        app.SetOnBeforeUpdateCallback(std::bind(&SceneManager::PrivateReplaceScene<_Ty>, this));
     }
 
     /**
      * @brief The method removes top (present) scene.
-	 * If there is no scene, exit application automatically.
-	 * Otherwise all Update() and Rendering procedures delegates to previous scene.
+     * If there is no scene, exit application automatically.
+     * Otherwise all Update() and Rendering procedures delegates to previous scene.
      */
-     void PopScene();
+    void PopScene();
 
-    /*!
-     * @brief
-     * @return
-     */
+   /*!
+    * @brief
+    * @return
+    */
     inline scene_stack& GetLoadedSceneList() noexcept { return m_scenes; }
 
     /*!
@@ -73,24 +87,29 @@ private:
     scene_stack m_scenes;	/** Scene stack */
 
 private:
-   	/**
-	* @brief The method replace scene with old scene.
-	*/
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of<Scene, _Ty>::value>>
-	 void pReplaceScene() {
-		/** Pop present scene */
-		m_scenes.pop();
-		/** Push present scene */
-		PushScene<_Ty>();
-	}
+    /*! Release all resource used in scene, prevent runtime error and resource memory leak. */
+    void ReleaseAllResources();
+
+    template <
+        class _Ty,
+        typename = std::enable_if_t<
+           std::is_base_of_v<Scene, _Ty>
+        >
+    >
+    void PrivateReplaceScene() {
+         /*! Purify remain resources */
+         ReleaseAllResources();
+         /** Pop present scene */
+         m_scenes.pop();
+         /** Push present scene */
+         PushScene<_Ty>();
+    }
 
 private:
     SceneManager() = default;
     ~SceneManager();
     SceneManager(const SceneManager&) = delete;
     SceneManager(SceneManager&&) = delete;
-    SceneManager& operator=(const SceneManager&) = delete;
-    SceneManager& operator=(SceneManager&&) = delete;
 };
 
 template <class _Ty, typename>

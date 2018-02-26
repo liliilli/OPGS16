@@ -34,8 +34,10 @@ ShaderManager::shader_raw ShaderManager::CreateShader
 void ShaderManager::CheckError() {
 }
 
-void ShaderManager::ReleaseAll() {
+void ShaderManager::Clear() {
+
 }
 
 void ShaderManager::ReleaseShader(const std::string& shader_name) {
+
 }

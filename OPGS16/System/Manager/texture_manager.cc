@@ -25,6 +25,10 @@ void TextureManager::CheckError() {
 
 }
 
+void TextureManager::Clear() {
+    m_container.clear();
+}
+
 bool TextureManager::DoesAlreadyExist(const std::string & tag) {
 	return m_container.find(tag) != m_container.end();
 }

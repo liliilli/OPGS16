@@ -66,23 +66,27 @@ const std::array<unsigned, 2> Application::GetDefaultScreenSize() const {
 	return std::array<unsigned, 2>{SCREEN_WIDTH, SCREEN_HEIGHT};
 }
 
+void Application::SetOnBeforeUpdateCallback(std::function<void(void)> callback) {
+    m_on_before_update_callback = callback;
+}
+
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
+        /*! Initialize Global Setting. */
+        SettingManager::GetInstance();
         /*! Initialize resource list. */
         m_resource_manager = &ResourceManager::GetInstance();
         m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
-
-        /*! Initialize Global Setting. */
-        SettingManager::GetInstance();
-
+        /*! Initialize time manager manages time information. */
         m_m_time = &TimeManager::GetInstance();
         m_m_time->SetFps(60.f);
+        /*! Initialize timer manager. */
         m_m_timer = &TimerManager::GetInstance();
-
+        /*! Initialize sound manager. */
         m_sound_manager = &SoundManager::GetInstance();
         m_sound_manager->ProcessInitialSetting(); {
             using SoundType = SoundManager::SoundType;
@@ -91,9 +95,6 @@ void Application::Initiate() {
                                          SoundType::BACKGROUND);
             m_sound_manager->PlaySound("Music1");
         }
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		InitiateFonts();
 		InitiateDebugUi();
@@ -108,7 +109,10 @@ void Application::Initiate() {
 		/** Insert first scene */
         m_scene_instance.PushScene<Maintenance>();
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
+
 		ReplacePresentStatus(GameStatus::PLAYING);
 	}
 }
@@ -154,6 +158,11 @@ void Application::Run() {
 }
 
 void Application::Update() {
+    if (m_on_before_update_callback) {  /*! If callback is bound, call function once. */
+        m_on_before_update_callback();
+        m_on_before_update_callback = nullptr;
+    }
+
     /*! Input */
     Input();
     /*! Update */
@@ -202,9 +211,6 @@ void Application::InputGlobal() {
 	}
 }
 
-/**
- * @brief The method calls scene to draw all m_object_list.
- */
 void Application::Draw() {
     /*! If there is no scene, do not rendering anything. */
 	if (!m_scene_instance.SceneEmpty()) {
@@ -271,7 +277,6 @@ void Application::ToggleAntialiasing() {
     std::cout << "MSAA : " << (m_option.anti_aliasing ? "ON" : "OFF") << std::endl;
 #endif
 }
-
 
 void Application::Exit() {
     PushStatus(GameStatus::EXIT);

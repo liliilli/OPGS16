@@ -33,11 +33,14 @@ public:
      * @brief
      * @param[in]
      */
-     void AddCollider(collision::RectangleCollider2D* const collider,
-                                  component::Rigidbody2D* const rigidbody);
+    void AddCollider(collision::RectangleCollider2D* const collider,
+                     component::Rigidbody2D* const rigidbody);
 
     /*! Update and proceed collision routine */
-     void Update();
+    void Update();
+
+    /*! Release and clean physics object container */
+    void Clear();
 
 private:
     struct Item {

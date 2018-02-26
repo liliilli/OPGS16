@@ -37,6 +37,8 @@ private:
 	};
 
 public:
+    ~Texture2D();
+
 	/**
 	 * @brief Constructor get path and m_texture mode as arguments, build and set them.
 	 * @param[in] texture_path path to get m_texture data.

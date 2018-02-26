@@ -4,7 +4,9 @@
 /*!
  * @file SettingManager
  * @author Jongmin Yun
- * @date 2018-02-16
+ * @date 2018-02-26
+ * @log
+ * 2018-02-26 Removed redundant move special functions.
  */
 
 #include <string>   /*! std::string */
@@ -13,6 +15,9 @@
 /*!
  * @class SettingManager
  * @brief Setting Manager.
+ * @date 2018-02-26
+ * @log
+ * 2018-02-26 Removed redundant move special functions.
  */
 class SettingManager final {
 public:
@@ -58,8 +63,6 @@ private:
     SettingManager();
     SettingManager(const SettingManager&) = delete;
     SettingManager(SettingManager&&) = delete;
-    SettingManager& operator=(const SettingManager&) = delete;
-    SettingManager& operator=(SettingManager&&) = delete;
 };
 
 #endif // !OPGS16_SYSTEM_MANAGER_SETTING_MANAGER_H

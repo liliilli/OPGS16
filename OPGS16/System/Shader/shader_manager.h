@@ -78,7 +78,7 @@ public:
 	/**
 	 * @brief Release all shaders in shader container.
 	 */
-	 void ReleaseAll();
+	 void Clear();
 
 	/**
 	 * @brief
@@ -113,8 +113,6 @@ private:
 	ShaderManager() = default;
 	ShaderManager(const ShaderManager&) = delete;
 	ShaderManager& operator=(const ShaderManager&) = delete;
-	ShaderManager(const ShaderManager&&) = delete;
-	ShaderManager& operator=(const ShaderManager&&) = delete;
 };
 
 /**

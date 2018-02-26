@@ -1,5 +1,4 @@
 #include "test_1.h"     /*! Header file */
-//#include "..\Headers\canvas_components.h"
 
 #include <glm\glm.hpp>
 

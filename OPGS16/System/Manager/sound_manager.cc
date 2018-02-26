@@ -11,11 +11,12 @@ SoundManager::~SoundManager() {
     /*! Release all sounds */
 	for (auto& pair_item : m_sounds) {
 		auto& sound = pair_item.second;
-        if (sound.m_sound->release() != FMOD_OK) {
+        if (sound.Sound()->release() != FMOD_OK) {
             /*! Write to logger if debug mode. if not and after this, mute app. */
             std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
         }
 	}
+    m_sounds.clear();
 
     /*! Close and release sound system */
     m_system->close();
@@ -91,7 +92,7 @@ bool SoundManager::DestroySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 		StopSound(tag);
 
-        m_sounds.at(tag).m_sound->release();
+        //m_sounds.at(tag).m_sound->release();
         m_sounds.erase(tag);
 		return SUCCESS;
 	}
@@ -101,7 +102,7 @@ bool SoundManager::DestroySound(const std::string& tag) {
 
 void SoundManager::PlaySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
-	    auto result = m_system->playSound(m_sounds.at(tag).m_sound, 0, false, &m_sound_channel);
+	    auto result = m_system->playSound(m_sounds.at(tag).Sound(), 0, false, &m_sound_channel);
         if (result != FMOD_OK) {
             /*! Do something */
             std::cerr << "ERROR::CAN::NOT::PLAY::SOUND::" << tag << "\n";
@@ -121,6 +122,20 @@ void SoundManager::StopAllSounds() {
 		auto& sound = pair_item.second;
 		ProcessStopSound(sound);
 	}
+}
+
+void SoundManager::Clear() {
+    StopAllSounds();
+
+    /*! Release all sounds */
+	for (auto& pair_item : m_sounds) {
+		auto& sound = pair_item.second;
+        if (sound.Sound()->release() != FMOD_OK) {
+            /*! Write to logger if debug mode. if not and after this, mute app. */
+            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
+        }
+	}
+    m_sounds.clear();
 }
 
 void SoundManager::ProcessStopSound(const SoundInfo& sound) {

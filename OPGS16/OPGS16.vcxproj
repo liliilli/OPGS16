@@ -184,7 +184,9 @@
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
     <ClCompile Include="System\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scripts\obj_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scripts\test_script_1.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
@@ -259,8 +261,10 @@
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="System\Manager\sound_manager.h" />
+    <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
     <ClInclude Include="_Project\Maintenance\Scripts\obj_script_1.h" />
     <ClInclude Include="_Project\Maintenance\Scripts\test_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,10 @@ void ObjectManager::Destroy(const Object& object) {
     }
 }
 
+void ObjectManager::Clear() {
+    m_destroy_candidates.clear();
+}
+
 void ObjectManager::DestroyObjects() {
     for (auto& object : m_destroy_candidates) {
         auto hash_value = object->GetHash();

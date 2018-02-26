@@ -37,25 +37,34 @@ ShaderNew& ShaderNew::SetShader(Type shader_type, const GLchar* path) {
     return *this;
 }
 
+ShaderNew::~ShaderNew() {
+    if (!m_shaders.empty())
+        m_shaders.clear();
+
+    glDeleteProgram(m_program_id);
+}
+
 void ShaderNew::Link() {
-    k_id = glCreateProgram();
+    m_program_id = glCreateProgram();
 
     // Attach shader fragments (already compiled)
     for (auto& shader : m_shaders) {
-        glAttachShader(k_id, shader.second);
+        glAttachShader(m_program_id, shader.second);
     }
 
-    glLinkProgram(k_id);
+    glLinkProgram(m_program_id);
 
     for (auto& shader : m_shaders) {
+        glDetachShader(m_program_id, shader.second);
         glDeleteShader(shader.second);
     }
+    m_shaders.clear();
 
     int success = 0;
-    glGetShaderiv(k_id, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(m_program_id, GL_COMPILE_STATUS, &success);
 
     char info_log[LOG_SIZE];
-    if (!success) ShaderErrorPrint(k_id, info_log);
+    if (!success) ShaderErrorPrint(m_program_id, info_log);
 
     // Set flag to use Shader for now.
     m_linked = true;
@@ -66,10 +75,7 @@ void ShaderNew::Use() {
         std::cerr << "ERROR::SHADER::NOT::LINKED::YET" << std::endl;
         throw std::runtime_error("ERROR::SHADER::NOT::LINKED::YET");
     }
-    else {
-        // Just use kId to load associated with shader program object.
-        glUseProgram(k_id);
-    }
+    else { glUseProgram(m_program_id); }
 }
 
 std::string ShaderNew::ReadShaderCodeFrom(const std::string path) {
@@ -109,28 +115,28 @@ void ShaderNew::LinkingErrorPrint(GLuint shader, char* info_log) {
 
 
 void ShaderNew::SetBool(const std::string & name, bool value) const {
-    glUniform1i(glGetUniformLocation(k_id, name.c_str()), static_cast<GLint>(value));
+    glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), static_cast<GLint>(value));
 }
 
 void ShaderNew::SetInt(const std::string & name, int value) const {
-    glUniform1i(glGetUniformLocation(k_id, name.c_str()), value);
+    glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
 void ShaderNew::SetFloat(const std::string & name, float value) const {
-    glUniform1f(glGetUniformLocation(k_id, name.c_str()), value);
+    glUniform1f(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
 void ShaderNew::SetVec3f(const std::string & name,
                          const float _1, const float _2, const float _3) {
-    glUniform3f(glGetUniformLocation(k_id, name.c_str()), _1, _2, _3);
+    glUniform3f(glGetUniformLocation(m_program_id, name.c_str()), _1, _2, _3);
 }
 
 void ShaderNew::SetVec3f(const std::string& name, const glm::vec3& vector) {
-    glUniform3fv(glGetUniformLocation(k_id, name.c_str()), 1, glm::value_ptr(vector));
+    glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
 void ShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix) {
-    glUniformMatrix4fv(glGetUniformLocation(k_id, name.c_str()),
+    glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()),
                        1, GL_FALSE, glm::value_ptr(matrix));
 }
 

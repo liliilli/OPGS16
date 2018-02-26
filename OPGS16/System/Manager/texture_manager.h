@@ -5,9 +5,10 @@
  * @file System\Manager\texture_manager.h
  * @author Jongmin Yun
  *
- * @date 2018-02-23
+ * @date 2018-02-26
  * @log
  * 2018-02-23   TextureManager refactoring.
+ * 2018-02-26   Add function 'Clear()'.
  */
 
 #include <memory>               /*! std::unique_ptr<> */
@@ -21,9 +22,10 @@
  * TextureManager manages textures which are used by PostProcessing Frame, related to rendering
  * such as sprite_renderer, etc.
  *
- * @date 2018-02-23
+ * @date 2018-02-26
  * @log
  * 2018-02-23   TextureManager refactoring.
+ * 2018-02-26   Add function 'Clear()'.
  */
 class TextureManager final {
 private:
@@ -61,6 +63,9 @@ public:
 
      /*! Check errors */
 	 void CheckError();
+
+     /*! Release all resource and clear. */
+     void Clear();
 
 private:
 	texture_map m_container;	/*! Texture container used in game. */

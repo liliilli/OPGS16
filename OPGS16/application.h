@@ -65,6 +65,8 @@ public:
 	 */
 	const int GetScaleValue() const { return static_cast<int>(m_scale); }
 
+    void SetOnBeforeUpdateCallback(std::function<void(void)> callback);
+
 private:
     /** screen width, height */
     const unsigned      SCREEN_WIDTH     = 256u;
@@ -84,9 +86,10 @@ private:
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
 
-	/**
-	 * @brief Global game status in this game application.
-	 */
+    /*! This callback will be called before update routine only once. */
+    std::function<void(void)> m_on_before_update_callback;
+
+	/** Brief global game status in this game application. */
 	enum class GameStatus : size_t {
 		INIT,	/** First, and Initial status in game application. */
 		MENU,	/** Global Menu */

@@ -18,6 +18,12 @@ void TimerManager::Update() {
     }
 }
 
+void TimerManager::Clear() {
+    s_timer_count = 0u;
+    m_delete_list.clear();
+    m_timer_container.clear();
+}
+
 bool TimerManager::PauseTimer(TimerHandle& handle) {
     auto key = handle.GetKeyValue();
     if (m_timer_container.find(key) != m_timer_container.end() &&

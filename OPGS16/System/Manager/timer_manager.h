@@ -55,6 +55,9 @@ public:
     /*! Update tick count and check whether or not any of timers was triggered. */
     void Update();
 
+    /*! Clean all attached timers. */
+    void Clear();
+
     /*!
      * @brief Set Timer.
      *

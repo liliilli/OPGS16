@@ -5,6 +5,10 @@
 #include "..\..\__ThirdParty\stb\stb_image.h"
 
 namespace texture {
+Texture2D::~Texture2D() {
+    if (m_texture)
+        glDeleteTextures(1, &m_texture);
+}
 
 Texture2D::Texture2D(const std::string& texture_path) {
     glGenTextures(1, &m_texture);

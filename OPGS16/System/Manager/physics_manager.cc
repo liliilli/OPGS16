@@ -40,6 +40,10 @@ void PhysicsManager::Update() {
     }
 
     /*! Remove All potential, active list */
+    Clear();
+}
+
+void PhysicsManager::Clear() {
     m_active.clear();
     m_potential.clear();
 }
