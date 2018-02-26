@@ -31,6 +31,12 @@ void TestScript1::Update() {
         case Sequence::_3_INDEPENDENT_WORLD:
             Proceed_3WorldPosition();
             break;
+        case Sequence::_4_ALPHA_BLENDING_TEST:
+            Proceed_4AlphaBlending();
+            break;
+        case Sequence::_5_SCALING_TEST:
+            Proceed_5ScalingTest();
+            break;
         }
     }
     else {
@@ -51,6 +57,27 @@ void TestScript1::Update() {
             }
         }   break;
         }
+    }
+}
+
+void TestScript1::SetBreakTimer() {
+    TimerManager::GetInstance().SetTimer(m_timer_break, 1'500, false,
+                                         this, &TestScript1::Resume);
+}
+
+void TestScript1::Resume() {
+    m_is_break  = false;
+    m_switch    = 0;
+    m_sequence  = static_cast<Sequence>(static_cast<size_t>(m_sequence) + 1);
+
+    ObjectPropertiesReset();
+    ChangeText();
+
+    switch (m_sequence) {
+    case Sequence::_3_INDEPENDENT_WORLD:
+        TimerManager::GetInstance().SetTimer(m_timer_third_test, 500, true,
+                                             this, &TestScript1::ToggleObjectProperties);
+        break;
     }
 }
 
@@ -134,27 +161,6 @@ void TestScript1::Proceed_3WorldPosition() {
     m_is_break = true;
 }
 
-void TestScript1::SetBreakTimer() {
-    TimerManager::GetInstance().SetTimer(m_timer_break, 1'500, false,
-                                         this, &TestScript1::Resume);
-}
-
-void TestScript1::Resume() {
-    m_is_break  = false;
-    m_switch    = 0;
-    m_sequence  = static_cast<Sequence>(static_cast<size_t>(m_sequence) + 1);
-
-    ObjectPropertiesReset();
-    ChangeText();
-
-    switch (m_sequence) {
-    case Sequence::_3_INDEPENDENT_WORLD:
-        TimerManager::GetInstance().SetTimer(m_timer_third_test, 1'000, true,
-                                             this, &TestScript1::ToggleObjectProperties);
-        break;
-    }
-}
-
 void TestScript1::ObjectPropertiesReset() {
     /*! Reset all things */
     switch (m_sequence) {
@@ -186,8 +192,16 @@ void TestScript1::ChangeText() {
         text->SetText(u8"Look for world translation of\nblue box and its children.");
         break;
     case Sequence::_3_INDEPENDENT_WORLD:
-        text->SetText(u8"Look for wierd but intentional\nworld translation of center boxes.");
+        text->SetText(u8"Look for weird but intentional\nworld translation of center boxes.");
         break;
+    case Sequence::_4_ALPHA_BLENDING_TEST:
+        text->SetText(u8"Look for\nblinking boxes.");
+        break;
+    case Sequence::_5_SCALING_TEST:
+        text->SetText(u8"Look for scaling\neach box separately.");
+        break;
+    case Sequence::_6_ROTATION_TEST:
+        text->SetText(u8"Look for\nappropriate rotation");
     default: /*! Do nothing */ break;
     }
 }
@@ -205,8 +219,92 @@ void TestScript1::ToggleObjectProperties() {
 void TestScript1::ResetObjectProperties() {
     auto scene = SceneManager::GetInstance().GetPresentScene();
     auto object = scene->GetObject("Object").get();
+    auto root_object = object;
+
     while (object != nullptr) {
         object->SetSucceedingPositionFlag(true);
         object = object->GetChild("Object");
     }
+
+    root_object->SetWorldPosition({ 128, 112, 0 });
+}
+
+void TestScript1::Proceed_4AlphaBlending() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    if (scene) {
+        /*! Get objects */
+        std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
+        while (*obj_list.rbegin() != nullptr) {
+            auto object = *obj_list.rbegin();
+            obj_list.emplace_back(object->GetChild("Object"));
+        }
+        obj_list.erase(--obj_list.cend());
+
+        /*! Propagate them to do work */
+        auto obj_number = 0;
+        for (auto& obj_raw : obj_list) {
+            ObjectScript1* script = obj_raw->GetComponent<ObjectScript1>();
+            script->DoWork(4, obj_number);
+            ++obj_number;
+        }
+    }
+
+    TimerManager::GetInstance().SetTimer(m_timer_4_interval, 6'000, false,
+                                         this, &TestScript1::OnTrigger4Interval);
+    m_is_break = true;
+}
+
+void TestScript1::OnTrigger4Interval() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    if (scene) {
+        /*! Get Objects and let them stop their own timers */
+        auto object = scene->GetObject("Object").get();
+        while (object != nullptr) {
+            ObjectScript1* script = object->GetComponent<ObjectScript1>();
+            script->StopAllTimers();
+            object = object->GetChild("Object");
+        }
+    }
+    /*! Move to next level... */
+    SetBreakTimer();
+}
+
+void TestScript1::Proceed_5ScalingTest() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    if (scene) {
+        /*! Get objects */
+        std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
+        while (*obj_list.rbegin() != nullptr) {
+            auto object = *obj_list.rbegin();
+            obj_list.emplace_back(object->GetChild("Object"));
+        }
+        obj_list.erase(--obj_list.cend());
+
+        /*! Propagate them to do work */
+        auto obj_number = 0;
+        for (auto& obj_raw : obj_list) {
+            ObjectScript1* script = obj_raw->GetComponent<ObjectScript1>();
+            script->DoWork(5, obj_number);
+            ++obj_number;
+        }
+    }
+
+    TimerManager::GetInstance().SetTimer(m_timer_5_interval, 6'000, false,
+                                         this, &TestScript1::OnTrigger5Interval);
+    m_is_break = true;
+}
+
+void TestScript1::OnTrigger5Interval() {
+    auto scene = SceneManager::GetInstance().GetPresentScene();
+    if (scene) {
+        /*! Get Objects and let them stop their own timers */
+        auto object = scene->GetObject("Object").get();
+        while (object != nullptr) {
+            ObjectScript1* script = object->GetComponent<ObjectScript1>();
+            script->StopAllTimers();
+            object = object->GetChild("Object");
+        }
+    }
+    /*! Move to next level... */
+    SetBreakTimer();
 }

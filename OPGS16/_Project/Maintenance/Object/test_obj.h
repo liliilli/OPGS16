@@ -15,6 +15,10 @@ class TestObject1 final : public Object {
 public:
     TestObject1(const int i, const float size);
 
+    SpriteRenderer& GetRenderer() {
+        return m_sprite_renderer;
+    }
+
 private:
     SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */
 

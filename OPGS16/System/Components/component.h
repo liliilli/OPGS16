@@ -23,7 +23,7 @@ public:
     Component() = default;
     virtual ~Component() = default;
 
-     virtual void Update() = 0;
+    virtual void Update() = 0;
 
     /*!
      * @brief Return true/false flag whether or not your finding class is this.

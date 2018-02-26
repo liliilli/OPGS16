@@ -156,11 +156,11 @@ public:
 	}
 
     inline void SetScaleParentValue(const float scale_value) noexcept {
-
+        m_scale_parent_value = scale_value;
     }
 
-    inline void SetScaleParentFactor(const glm::vec2& scale_factor) noexcept {
-
+    inline void SetScaleParentFactor(const glm::vec3& scale_factor) noexcept {
+        m_scale_parent_factor = scale_factor;
     }
 
     /*! Matrix */

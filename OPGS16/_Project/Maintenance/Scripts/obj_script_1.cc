@@ -1,11 +1,15 @@
-#include "obj_script_1.h"            /*! Header file */
+#include "obj_script_1.h"                           /*! Header file */
 
 #include <glm\glm.hpp>
+#include <cmath>                                    /*! std::cosf() */
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
+#include "..\..\..\System\Manager\time_manager.h"   /*! TimeManager */
 #include "..\..\..\System\Manager\timer_manager.h"  /*! TimerManager */
 
+#include "..\Object\test_obj.h" /*! TestObject1 for temporary */
 #include "test_script_1.h"  /*! TestScript1 for Canvas */
+#include "..\..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
 
 ObjectScript1::ObjectScript1(Object& obj) : component::ScriptFrame{ obj } {
     Initiate();
@@ -13,30 +17,74 @@ ObjectScript1::ObjectScript1(Object& obj) : component::ScriptFrame{ obj } {
 }
 
 void ObjectScript1::DoWork(const size_t mode, const unsigned assigned_number) noexcept {
-    m_moving    = true;
     m_mode      = mode;
     m_assigned_number = assigned_number;
 
-    /*! If m_mode is 1, delay each object along with m_assigned_number */
-    if (m_mode == 1) {
+    switch (m_mode) {
+    default: m_moving = true; break;
+    case 1: /*! If m_mode is 1, delay each object along with m_assigned_number */
         m_moving = false;
         TimerManager::GetInstance().SetTimer(m_timer_1_delay, 300 * m_assigned_number,
-                                             false, this, &ObjectScript1::Do_1Work);
+                                             false, this, &ObjectScript1::OnWork_1Switch);
+        break;
+    case 4: /*! If m_mode is 4, delay each object along with m_assigned_number */
+        m_moving = false;
+        TimerManager::GetInstance().SetTimer(m_timer_4_delay, 200 * m_assigned_number,
+                                             false, this, &ObjectScript1::OnTriggered4Delay);
+        break;
+    case 5: /*! If m_mode is 5, delay each object along with m_assigned_number */
+        m_moving = false;
+        m_object_original_scale = GetObject().GetScaleValue();
+        TimerManager::GetInstance().SetTimer(m_timer_5_delay, 200 * m_assigned_number,
+                                             false, this, &ObjectScript1::OnTriggered5Delay);
+        break;
     }
 }
 
 void ObjectScript1::Update() {
     if (m_moving) {
         switch (m_mode) {
-        case 1:
-            Proceed_1NormalLocal();
-            break;
-        case 3:
-            Proceed_3WorldPosition();
-            break;
+        case 1: Proceed_1NormalLocal();     break;
+        case 3: Proceed_3WorldPosition();   break;
+        case 4: Proceed_4AlphaBlending();   break;
+        case 5: Proceed_5Scaling();         break;
         default: /*! Do nothing */ break;
         }
     }
+}
+
+void ObjectScript1::OnTriggered4Delay() {
+    m_moving        = true;
+    TimerManager::GetInstance().SetTimer(m_timer_4_interval, 2'000,
+                                         false, this,
+                                         &ObjectScript1::OnTriggered4Interval);
+}
+
+void ObjectScript1::OnTriggered4Interval() {
+    m_moving        = false;
+    m_object_alpha  = 1.0f;
+    m_elapsed_time  = 0.0f;
+    TimerManager::GetInstance().SetTimer(m_timer_4_waiting, 1'000,
+                                         false, this,
+                                         &ObjectScript1::OnTriggered4Delay);
+}
+
+void ObjectScript1::OnTriggered5Delay() {
+    m_moving = true;
+}
+
+void ObjectScript1::StopAllTimers() {
+    auto& timer = TimerManager::GetInstance();
+    timer.DetachTimer(m_timer_4_interval);
+    timer.DetachTimer(m_timer_4_waiting);
+
+    m_object_alpha = 1.0f;
+    m_elapsed_time = 0.0f;
+    m_moving = false;
+
+    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    auto& wrapper = renderer.GetWrapper();
+    wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
 void ObjectScript1::Proceed_1NormalLocal() {
@@ -127,4 +175,20 @@ void ObjectScript1::Proceed_3WorldPosition() {
     }
 
     GetObject().SetWorldPosition(pos);
+}
+
+void ObjectScript1::Proceed_4AlphaBlending() {
+    m_elapsed_time += TimeManager::GetInstance().GetDeltaTime();
+    m_object_alpha = (std::cosf(m_2pi * m_elapsed_time) + 1.0f) / 2;
+
+    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    auto& wrapper = renderer.GetWrapper();
+    wrapper.ReplaceUniformValue("alpha", m_object_alpha);
+}
+
+void ObjectScript1::Proceed_5Scaling() {
+    m_elapsed_time += TimeManager::GetInstance().GetDeltaTime();
+    m_object_scale_offset = (std::sinf(m_2pi * m_elapsed_time) / 2) + 0.5f;
+
+    GetObject().SetScaleValue(m_object_original_scale * m_object_scale_offset);
 }

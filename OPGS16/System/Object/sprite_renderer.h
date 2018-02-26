@@ -4,11 +4,12 @@
 /**
  * @file System\Object\sprite_renderer.h
  * @brief The file contains sprite renderer class members.
- * Last Updated 2018 - 02 - 04
- *
- *
  *
  * @author Jongmin Yun
+ * @date 2018-02-26
+ *
+ * @log
+ * 2018-02-26 Componentization of SpriteRenderer.
  */
 
 #include <string>
@@ -27,7 +28,10 @@
  * SpriteRender has layer, is sorted by internal mechanism and displayed in order.
  * The number of layers is restricted to 8 layer, 9 is UI, 10 is Global UI.
  *
- * Last Updated 2018 - 02 - 04
+ * @date 2018-02-26
+ *
+ * @log
+ * 2018-02-26 Componentization of SpriteRenderer.
  */
 class SpriteRenderer final {
 public:
