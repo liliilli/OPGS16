@@ -116,8 +116,8 @@ void Application::Initiate() {
 void Application::InitiateFonts() {
 	/** First we need initiate default font. */
 	auto& font = FontManager::GetInstance();
-	font.InitiateFont( "Sans", "Resources/arial.ttf" , true);
-	font.InitiateFont( "Solomon", "Resources/SolomonP.ttf" , false);
+	font.InitiateFont( "Sans", R"(Resources/Fonts/Liberate/LiberationSans-Regular.ttf)" , true);
+	font.InitiateFont( "Solomon", "Resources/Fonts/SolomonP.ttf" , false);
 	font.InitiateFont( "Menus", "Resources/Fonts/Menus.ttf" , false);	/** Recommend 9pt */
 	font.LoadDefaultFont();
 }
