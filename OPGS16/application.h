@@ -8,7 +8,7 @@
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @version 0.0.1
+ * @date 2018-02-26
  */
 
 #include <memory>
@@ -34,6 +34,8 @@
  *
  * This class is singleton, and must be initialized by calling getInstance method
  * to operate program.
+ *
+ * @date 2018-02-26
  */
 class Application final {
 public:
@@ -46,10 +48,10 @@ public:
     }
 
 	/** Let application initiate game settings */
-	 void Initiate();
+	void Initiate();
 
     /** Let application run and loop.  */
-     void Run();
+    void Run();
 
 	/**
 	 * @brief Get default screen size (no scaling screen size)
@@ -65,16 +67,17 @@ public:
 
 private:
     /** screen width, height */
-    unsigned SCREEN_WIDTH   = 256u;
-    unsigned SCREEN_HEIGHT  = 224u;
+    const unsigned      SCREEN_WIDTH     = 256u;
+    const unsigned      SCREEN_HEIGHT    = 224u;
 
-    GLFWwindow* window{ nullptr };					/** Window handle pointer */
+    GLFWwindow*         m_window{ nullptr };        /*! Window handle pointer */
     SceneManager&       m_scene_instance;           /*! SceneManager instance */
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
 	InputManager*       m_m_input{ nullptr };
     ObjectManager*      m_object_manager{ nullptr };
     PhysicsManager*     m_physics_manager{ nullptr };
     ResourceManager*    m_resource_manager{ nullptr };
+    SoundManager*       m_sound_manager{ nullptr };
     TimeManager*        m_m_time{ nullptr };
     TimerManager*       m_m_timer{ nullptr };
 
@@ -119,16 +122,13 @@ private:
     GLFWwindow* InitApplication(std::string&& app_name);
 
 	/** Initiate and Make font informations. */
-	 void InitiateFonts();
+	void InitiateFonts();
 
-	/** * @brief Initiate and Compose Debug Interface components.  */
-	 void InitiateDebugUi();
+	/** Initiate and Compose Debug Interface components.  */
+	void InitiateDebugUi();
 
-	/** * @brief Initiate post-processing effects in advance.  */
-	 void InitiatePostProcessingEffects();
-
-	/** * @brief Set sounds.  */
-	 void InitiateSoundSetting();
+	/** Initiate post-processing effects in advance.  */
+	void InitiatePostProcessingEffects();
 
     /**
      * @brief Static callback method for size checking and resizing.
@@ -146,16 +146,16 @@ private:
      *
      * @param[in] window Window handle pointer.
      */
-     void Input();
+    void Input();
 
 	/** Global input checking method */
-	 void InputGlobal();
+	void InputGlobal();
 
     /** The method update components movement, UI refresh, and so on. */
-     void Update();
+    void Update();
 
     /** The method calls scene to draw all m_object_list. */
-     void Draw();
+    void Draw();
 
 	/**
 	 * @brief Return present status.
@@ -167,7 +167,7 @@ private:
 	 * @brief Replace present status to the other status.
 	 * @param[in] status New status value to replace present status with.
 	 */
-	 void ReplacePresentStatus(GameStatus status) {
+	void ReplacePresentStatus(GameStatus status) {
 		m_game_status.pop();
 		m_game_status.push(status);
 	}
@@ -189,7 +189,7 @@ private:
 	 * Do not use this method when replace one value with the other status value,
 	 * This will crash game on playing.
 	 */
-	 void PopStatus() {
+	void PopStatus() {
         if (!m_game_status.empty()) {
             m_game_status.pop();
             if (m_game_status.empty()) Exit();
@@ -197,19 +197,19 @@ private:
 	}
 
 	/** Exit game */
-     void Exit();
+    void Exit();
 
-        /** Change window size. */
-	 void ChangeScalingOption(OptionScale value);
+    /** Change window size. */
+	void ChangeScalingOption(OptionScale value);
 
     /** The method toggles OpenGL antialiasing (MSAA) */
-     void ToggleAntialiasing();
+    void ToggleAntialiasing();
 
-    /** * @brief The method toggles FPS display.  */
-     void ToggleFpsDisplay();
+    /** The method toggles FPS display.  */
+    void ToggleFpsDisplay();
 
 	/** Toggle post-processing effects */
-	 void TogglePostProcessingEffect();
+	void TogglePostProcessingEffect();
 };
 
 #endif // OPGS16__APPLICATION_H

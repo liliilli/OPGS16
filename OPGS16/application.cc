@@ -23,11 +23,10 @@
 #include "System\Manager\time_manager.h"    /*! TimeManager */
 #include "System\Manager\timer_manager.h"   /*! TimerManager */
 
-//#include "Scenes\start.h"
 #include "_Project\Maintenance\Scene\test_1.h"  /*! Maintenance */
 
 Application::Application(std::string&& app_name)
-    : window{ InitApplication(std::move(app_name)) },
+    : m_window{ InitApplication(std::move(app_name)) },
     m_scene_instance{ SceneManager::GetInstance() },
 	m_option{ false, false, true, true },
 	m_scale{ OptionScale::X1_DEFAULT } {
@@ -73,27 +72,38 @@ void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int hei
 
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        m_resource_manager = &ResourceManager::GetInstance();	// Initialize resource list.
+        /*! Initialize resource list. */
+        m_resource_manager = &ResourceManager::GetInstance();
         m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
 
-        SettingManager::GetInstance();  // Initialize
+        /*! Initialize Global Setting. */
+        SettingManager::GetInstance();
 
         m_m_time = &TimeManager::GetInstance();
         m_m_time->SetFps(60.f);
         m_m_timer = &TimerManager::GetInstance();
 
+        m_sound_manager = &SoundManager::GetInstance();
+        m_sound_manager->ProcessInitialSetting(); {
+            using SoundType = SoundManager::SoundType;
+
+            m_sound_manager->CreateSound("Music1", R"(Resources/sample.wav)",
+                                         SoundType::BACKGROUND);
+            m_sound_manager->PlaySound("Music1");
+        }
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		InitiateFonts();
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
-		InitiateSoundSetting();
-		m_m_input = &InputManager::GetInstance();
-        m_m_input->Initialize(window);
 
-        m_physics_manager = &PhysicsManager::GetInstance();
-        m_object_manager = &ObjectManager::GetInstance();
+		m_m_input = &InputManager::GetInstance();
+        m_m_input->Initialize(m_window);
+
+        m_physics_manager   = &PhysicsManager::GetInstance();
+        m_object_manager    = &ObjectManager::GetInstance();
 
 		/** Insert first scene */
         m_scene_instance.PushScene<Maintenance>();
@@ -130,17 +140,8 @@ void Application::InitiatePostProcessingEffects() {
 	}
 }
 
-void Application::InitiateSoundSetting() {
-	auto& manager = SoundManager::GetInstance();
-
-	using SoundType = SoundManager::SoundType;
-	using FileType = SoundManager::FileType;
-	manager.InsertSound("Music1", "Resources/sample.wav", SoundType::BACKGROUND, FileType::WAV);
-	manager.PlaySound("Music1");
-}
-
 void Application::Run() {
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(m_window)) {
         m_m_time->Update();         /*! Time ticking */
         if (m_m_time->Ticked()) {
             m_m_timer->Update();    /*! Timer alarm event checking */
@@ -222,7 +223,7 @@ void Application::Draw() {
 
 	if (m_option.debug_mode) m_debug_ui_canvas->Draw();
 
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
 
@@ -240,13 +241,13 @@ void Application::ChangeScalingOption(OptionScale value) {
 	if (m_scale != value) {
 		switch (value) {
 		case OptionScale::X1_DEFAULT:
-			glfwSetWindowSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
+			glfwSetWindowSize(m_window, SCREEN_WIDTH, SCREEN_HEIGHT);
 			break;
 		case OptionScale::X2_DOUBLE:
-			glfwSetWindowSize(window, SCREEN_WIDTH << 1, SCREEN_HEIGHT << 1);
+			glfwSetWindowSize(m_window, SCREEN_WIDTH << 1, SCREEN_HEIGHT << 1);
 			break;
 		case OptionScale::X3_TRIPLE:
-			glfwSetWindowSize(window, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3);
+			glfwSetWindowSize(m_window, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3);
 			break;
 		}
 		m_scale = value;
@@ -274,6 +275,6 @@ void Application::ToggleAntialiasing() {
 
 void Application::Exit() {
     PushStatus(GameStatus::EXIT);
-    glfwSetWindowShouldClose(window, true);
+    glfwSetWindowShouldClose(m_window, true);
     ReplacePresentStatus(GameStatus::TERMINATE);
 }

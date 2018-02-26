@@ -75,8 +75,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files (x86)\OpenAL 1.1 SDK\include;$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\OpenAL 1.1 SDK\libs\Win32;$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\OpenAL 1.1 SDK\include;$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\OpenAL 1.1 SDK\libs\Win32;$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -91,7 +91,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>OpenAL32.lib;alut.lib;freetype.lib;assimp-vc140-mt.lib;glew32.lib;glu32.lib;opengl32.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenAL32.lib;alut.lib;fmodL_vc.lib;freetype.lib;assimp-vc140-mt.lib;glew32.lib;glu32.lib;opengl32.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>

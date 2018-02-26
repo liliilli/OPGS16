@@ -43,6 +43,7 @@ class   ObjectManager;  /*! Objects */
 class   ResourceManager;/*! Resource */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */
+class   SoundManager;   /*! Sounds */
 class   TimeManager;    /*! Tick time */
 class   TimerManager;   /*! Timer */
 

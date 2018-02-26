@@ -1,83 +1,116 @@
-#include "sound_manager.h"
-#include <iostream>
+#include "sound_manager.h"  /*! Header file */
+#include <iostream>         /*! std::cerr */
+#include <string>           /*! std::string */
 
-SoundManager::SoundManager() {
-	/** Find device automatically */
-	m_device = alcOpenDevice(nullptr);
-	if (!m_device) {
-		std::cerr << "ERROR::NOT::FOUND::SOUND::DEVICE" << std::endl;
-	}
-	/** In order to render audio scene, create and initialize a context */
-	m_context = alcCreateContext(m_device, nullptr);
-	if (!alcMakeContextCurrent(m_context) && !CheckSoundError()) {
-		std::cerr << "ERROR::FAILED::TO::CREATE::SOUND::CONTEXT" << std::endl;
-	}
-}
+constexpr bool FAILED   = false;
+constexpr bool SUCCESS  = true;
 
 SoundManager::~SoundManager() {
 	StopAllSounds();
 
+    /*! Release all sounds */
 	for (auto& pair_item : m_sounds) {
 		auto& sound = pair_item.second;
-		alDeleteSources(1, &sound.source);
-		alDeleteBuffers(1, &sound.buffer);
+        if (sound.m_sound->release() != FMOD_OK) {
+            /*! Write to logger if debug mode. if not and after this, mute app. */
+            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
+        }
 	}
 
-	m_device = alcGetContextsDevice(m_context);
-	alcMakeContextCurrent(NULL);
-	alcDestroyContext(m_context);
-	alcCloseDevice(m_device);
+    /*! Close and release sound system */
+    m_system->close();
+    m_system->release();
 }
 
-bool SoundManager::InsertSound(const std::string&& tag,
-	const std::string&& path, SoundType sound_type, FileType file_type) {
-	/** Body */
-	if (IsSoundExist(tag)) return false;
+bool SoundManager::ProcessInitialSetting() {
+    if (FMOD::System_Create(&m_system) != FMOD_OK) {
+        /*! Write to logger if debug mode. in release mode, mute application. */
+        std::cerr << "ERROR::DID::NOT::CREATE::SOUND::SYSTEM\n";
+        m_is_muted = true;
+        return FAILED;
+    }
 
-	FileType actual_file_type{ FileType::NONE };
-	if (file_type == FileType::NONE) {
-		// Figure out what type of file is.
-	}
-	else actual_file_type = file_type;
+    m_system->getVersion(&m_version);
+    if (m_version < FMOD_VERSION) {
+        /*! Write to logger if debug mode. if not and after this, mute app. */
+        std::cerr << "ERROR::DOES::NOT::MATCH::FMOD::LIBRARY::VERSION\n";
+        m_is_muted = true;
+        return FAILED;
+    }
 
-	auto success_flag = false;
-	switch (actual_file_type) {
-	case FileType::WAV: success_flag = InitiateWavSound(tag, path); break;
-	case FileType::OGG: success_flag = InitiateOggSound(tag, path); break;
-	default:
-		std::cerr << "ERROR::SOUND::TYPE::NOT::CORRECT" << std::endl;
-		break;
-	}
+    m_system->getNumDrivers(&m_sound_driver_count);
+    if (m_sound_driver_count <= 0) {
+        /*! Write to logger if debug mode. if not and after this, mute app. */
+        std::cerr << "ERROR::NOT::FOUND::SOUND::DEVICE\n";
+        m_is_muted = true;
+        return FAILED;
+    }
 
-	return success_flag;
+    if (m_system->init(32, FMOD_INIT_NORMAL, nullptr) != FMOD_OK) {
+        /*! Write to logger if debug mode. if not and after this, mute app. */
+        std::cerr << "ERROR::COULD::NOT::CREATE::SOUND::CHANNEL\n";
+        m_is_muted = true;
+        return FAILED;
+    }
+
+    return SUCCESS;
 }
 
-bool SoundManager::DestroySound(const std::string&& tag) {
-	if (IsSoundExist(tag)) {
-		StopSound(std::string(tag));
+bool SoundManager::CreateSound(const std::string& tag, const std::string& path,
+                               SoundType sound_type) {
+	if (DoesSoundExist(tag))
+        return FAILED;
 
-		auto& sound = m_sounds.at(tag);
-		alDeleteSources(1, &sound.source);
-		alDeleteBuffers(1, &sound.buffer);
-		m_sounds.erase(tag);
+    FMOD::Sound* sound;
+    if (m_system->createSound(path.c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
+        /*! Write to logger if debug mode. if not and after this, mute app. */
+        std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << path << "\n";
+        return FAILED;
+    }
+    else {
+        switch (sound_type) {
+        case SoundType::EFFECT:
+            sound->setMode(FMOD_LOOP_OFF);
+            break;
+        case SoundType::BACKGROUND:
+            //[[fallthrough]]
+        case SoundType::SURROUND:
+            sound->setMode(FMOD_LOOP_NORMAL);
+            sound->setLoopCount(-1);
+            break;
+        }
 
-		return true;
-	}
-	else return false;
+        /*! Insert created sound to sound container */
+        m_sounds.emplace(std::make_pair(tag, SoundInfo{ sound, sound_type }));
+    }
+
+	return SUCCESS;
 }
 
-void SoundManager::PlaySound(const std::string&& tag) {
-	if (IsSoundExist(tag)) {
-		auto& sound = m_sounds.at(tag);
-		/** Bind source to buffer, in order to actually output sound. */
-		alSourcei(sound.source, AL_BUFFER, sound.buffer);
-		alSourcePlay(sound.source);
-		CheckSoundError();
+bool SoundManager::DestroySound(const std::string& tag) {
+	if (DoesSoundExist(tag)) {
+		StopSound(tag);
+
+        m_sounds.at(tag).m_sound->release();
+        m_sounds.erase(tag);
+		return SUCCESS;
+	}
+	else
+        return FAILED;
+}
+
+void SoundManager::PlaySound(const std::string& tag) {
+	if (DoesSoundExist(tag)) {
+	    auto result = m_system->playSound(m_sounds.at(tag).m_sound, 0, false, &m_sound_channel);
+        if (result != FMOD_OK) {
+            /*! Do something */
+            std::cerr << "ERROR::CAN::NOT::PLAY::SOUND::" << tag << "\n";
+        }
 	}
 }
 
-void SoundManager::StopSound(const std::string&& tag) {
-	if (IsSoundExist(tag)) {
+void SoundManager::StopSound(const std::string& tag) {
+	if (DoesSoundExist(tag)) {
 		auto& sound = m_sounds.at(tag);
 		ProcessStopSound(sound);
 	}
@@ -91,42 +124,5 @@ void SoundManager::StopAllSounds() {
 }
 
 void SoundManager::ProcessStopSound(const SoundInfo& sound) {
-	ALint state;
-	alGetSourcei(sound.source, AL_SOURCE_STATE, &state);
-	CheckSoundError();
-
-	if (state == AL_PLAYING) {
-		alSourceStop(sound.source);
-		CheckSoundError();
-	}
+    //m_system->getChannel()
 }
-
-bool SoundManager::InitiateWavSound(const std::string& tag, const std::string& path) {
-	/** Must create the source which is actually the origin of sound. */
-	ALuint source;
-	alGenSources(1, &source);			if (!CheckSoundError()) return false;
-	alSourcef(source, AL_PITCH, 1);		if (!CheckSoundError()) return false;
-
-	/** Must create the buffer which stores stream of sound from source */
-	ALuint buffer;
-	alGenBuffers(1, &buffer);			if (!CheckSoundError()) return false;
-
-	/** And load sound stream to buffer */
-	ALsizei size, freq; ALenum format; ALvoid *data;
-	ALboolean loop = AL_FALSE;
-
-	alutLoadWAVFile(static_cast<ALbyte*>(const_cast<char*>(path.c_str())),
-		&format, &data, &size, &freq, &loop);
-	if (!CheckSoundError()) return false;
-	alBufferData(buffer, format, data, size, freq);
-
-	/** Insert container */
-	m_sounds.insert(std::make_pair(tag, SoundInfo{ source, buffer, SoundType::EFFECT }));
-	return true;
-}
-
-bool SoundManager::InitiateOggSound(const std::string & tag, const std::string & path) {
-	std::cerr << "ERROR::SOUND::NOT::IMPLEMENTED::YET" << std::endl;
-	return false;
-}
-
