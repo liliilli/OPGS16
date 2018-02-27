@@ -56,6 +56,7 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
     <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
     <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

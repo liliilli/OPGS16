@@ -242,11 +242,16 @@ void FontManager::RenderText(std::string input, glm::vec2 input_pos, GLfloat sca
  * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
  */
 void FontManager::RenderTextNew
-(const std::string&text, IOriginable::Origin origin, glm::vec2 final_position, glm::vec3 color,
+(const std::string& text, IOriginable::Origin origin, glm::vec2 final_position, glm::vec3 color,
  IAlignable::Alignment alignment, const float scale) {
     if (m_font_in_use) {
         StartShader(color);
-        auto text_container = SeparateTextToList(text);
+
+        std::vector<std::string> text_container;
+        if (std::string::npos == text.find('\n'))
+            text_container.emplace_back(text);
+        else
+            text_container = SeparateTextToList(text);
 
         using Align = IAlignable::Alignment;
         switch (alignment) {

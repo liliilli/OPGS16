@@ -1,4 +1,4 @@
-#include "application.h"
+#include "application.h"                    /*! Header file */
 
 #include <iostream>	// std::cerr, std::endl
 
@@ -115,9 +115,10 @@ void Application::Initiate() {
 void Application::InitiateFonts() {
 	/** First we need initiate default font. */
 	auto& font = FontManager::GetInstance();
-	font.InitiateFont( "Sans", R"(Resources/Fonts/Liberate/LiberationSans-Regular.ttf)" , true);
-	font.InitiateFont( "Solomon", "Resources/Fonts/SolomonP.ttf" , false);
-	font.InitiateFont( "Menus", "Resources/Fonts/Menus.ttf" , false);	/** Recommend 9pt */
+	font.InitiateFont("Sans", R"(Resources/Fonts/Liberate/LiberationSans-Regular.ttf)" , true);
+	font.InitiateFont("Solomon", "Resources/Fonts/SolomonP.ttf" , false);
+	font.InitiateFont("Menus", "Resources/Fonts/Menus.ttf" , false);	/** Recommend 9pt */
+    font.InitiateFont("BIOS", R"(Resources/Fonts/PxPlus_IBM_BIOS.ttf)", false);
 	font.LoadDefaultFont();
 }
 
@@ -158,11 +159,9 @@ void Application::Update() {
         m_on_before_update_callback = nullptr;
     }
 
-    /*! Input */
-    Input();
-    /*! Update */
-    switch (m_game_status.top()) {
-    case GameStatus::PLAYING: //[[fallthrough]] require /std:c++17
+    Input();                            /*! Input */
+    switch (m_game_status.top()) {      /*! Update */
+    case GameStatus::PLAYING:
     case GameStatus::MENU:
         if (!m_scene_instance.SceneEmpty()) {
             /*! pre-work such as Delete object, Replace object etc. */
