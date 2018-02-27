@@ -37,7 +37,7 @@ public:
 	using shader_ptr = std::unique_ptr<helper::ShaderNew>;
 	using shader_type = helper::ShaderNew::Type;
 	using shader_list = std::initializer_list<std::pair<shader_type, const std::string>>;
-	using shader_vec = ResourceManager::shader_container;
+	using shader_vec = ResourceManager::shader_list;
 
 	/**
 	 * @brief Static method gets unique instance of ShaderManager class.

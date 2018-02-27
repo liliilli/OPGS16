@@ -1,6 +1,7 @@
-#include "sound_manager.h"  /*! Header file */
-#include <iostream>         /*! std::cerr */
-#include <string>           /*! std::string */
+#include "sound_manager.h"      /*! Header file */
+#include <iostream>             /*! std::cerr */
+#include <string>               /*! std::string */
+#include "resource_manager.h"   /*! ResourceManager */
 
 constexpr bool FAILED   = false;
 constexpr bool SUCCESS  = true;
@@ -59,8 +60,11 @@ bool SoundManager::ProcessInitialSetting() {
 
 bool SoundManager::CreateSound(const std::string& tag, const std::string& path,
                                SoundType sound_type) {
-	if (DoesSoundExist(tag))
+    if (DoesSoundExist(tag)) {
+        ResourceManager::GetInstance().GetSound(tag);
+
         return FAILED;
+    }
 
     FMOD::Sound* sound;
     if (m_system->createSound(path.c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
@@ -86,6 +90,41 @@ bool SoundManager::CreateSound(const std::string& tag, const std::string& path,
     }
 
 	return SUCCESS;
+}
+
+bool SoundManager::CreateSound(const std::string& item_tag) {
+    if (DoesSoundExist(item_tag)) {
+        return true;
+    }
+    else {
+        auto& sound_path = ResourceManager::GetInstance().GetSound(item_tag);
+
+        FMOD::Sound* sound;
+        if (m_system->createSound(sound_path.c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
+            /*! Write to logger if debug mode. if not and after this, mute app. */
+            std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << sound_path << "\n";
+            return FAILED;
+        }
+
+        /*! @todo:Temporary */
+        SoundType sound_type{ SoundType::BACKGROUND };
+
+        switch (sound_type) {
+        case SoundType::EFFECT:
+            sound->setMode(FMOD_LOOP_OFF);
+            break;
+        case SoundType::BACKGROUND:
+            //[[fallthrough]]
+        case SoundType::SURROUND:
+            sound->setMode(FMOD_LOOP_NORMAL);
+            sound->setLoopCount(-1);
+            break;
+        }
+
+        /*! Insert created sound to sound container */
+        m_sounds.emplace(std::make_pair(item_tag, SoundInfo{ sound, sound_type }));
+        return SUCCESS;
+    }
 }
 
 bool SoundManager::DestroySound(const std::string& tag) {

@@ -88,23 +88,18 @@ void Application::Initiate() {
         m_m_timer = &TimerManager::GetInstance();
         /*! Initialize sound manager. */
         m_sound_manager = &SoundManager::GetInstance();
-        m_sound_manager->ProcessInitialSetting(); {
-            using SoundType = SoundManager::SoundType;
-
-            m_sound_manager->CreateSound("Music1", R"(Resources/sample.wav)",
-                                         SoundType::BACKGROUND);
-            m_sound_manager->PlaySound("Music1");
-        }
+        m_sound_manager->ProcessInitialSetting();
+        /*! Initailize input manager */
+		m_m_input = &InputManager::GetInstance();
+        m_m_input->Initialize(m_window);
+        /*! Initailize physics manager */
+        m_physics_manager   = &PhysicsManager::GetInstance();
+        /*! Initailize object manager */
+        m_object_manager    = &ObjectManager::GetInstance();
 
 		InitiateFonts();
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
-
-		m_m_input = &InputManager::GetInstance();
-        m_m_input->Initialize(m_window);
-
-        m_physics_manager   = &PhysicsManager::GetInstance();
-        m_object_manager    = &ObjectManager::GetInstance();
 
 		/** Insert first scene */
         m_scene_instance.PushScene<Maintenance>();

@@ -86,6 +86,16 @@ public:
 	 */
 	bool CreateSound(const std::string& tag, const std::string& path, SoundType sound_type);
 
+    /*!
+     * @brief Get sound resource and initialize sound.
+     * First, Check sound container if any already sound with same tag exists.
+     * and nothing found, get a resource from ResourceManager and initialize.
+     * or found sound item with same tag, do nothing and just exit method.
+     *
+     * @param[in] item_tag The tag to name to sound object.
+     */
+    bool CreateSound(const std::string& item_tag);
+
 	/**
 	 * @brief Destroy sound with tag.
 	 * @param[in] tag The tag to be used for searching sound object.

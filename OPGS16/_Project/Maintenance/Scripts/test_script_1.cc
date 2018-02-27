@@ -5,6 +5,7 @@
 #include <glm\glm.hpp>
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
+#include "..\..\..\System\Manager\sound_manager.h"  /*! SoundManager */
 #include "..\..\..\System\Manager\timer_manager.h"  /*! TimerManager */
 
 #include "obj_script_1.h"   /*! ObjectScript1 for TestObject1 */
@@ -16,6 +17,10 @@ TestScript1::TestScript1(Object& obj) : component::ScriptFrame{ obj } {
 
 void TestScript1::Start() {
     SetBreakTimer();
+
+    auto& sound_manager = SoundManager::GetInstance();
+    sound_manager.CreateSound("Music1");
+    sound_manager.PlaySound("Music1");
 }
 
 void TestScript1::Update() {

@@ -1,73 +1,191 @@
-#include "resource_manager.h"
-#include <initializer_list>
+#include "resource_manager.h"   /*! Header file */
 #include <fstream>      /*! std::ifstream */
 #include <iostream>		/** std::cerr, std::endl */
 #include <sstream>      /*! std::stringstream */
 #include <stdexcept>	/** std::runtime_error */
 #include <vector>		/** std::vector */
 
-ResourceManager::ResourceManager() {}
+enum class ResourceManager::ResourceType {
+    NOTHING,                    /*! Error type nothing found from token. */
+    TEXTURE_2D,                 /*! Texture 2d */
+    SHADER,                     /*! Shader program */
+    SOUND_EFFECT_BGM,           /*! SE background music */
+    SOUND_EFFECT_EFFECT,        /*! SE effect sound */
+};
 
-void ResourceManager::LoadResource(const std::string& path) {
-	using namespace std::string_literals;
-	PushShader("gQuad", {
-		{shader_type::VS, "Shaders/Global/image.vert"s},
-		{shader_type::FS, "Shaders/Global/image.frag"s}
-		}
-	);
+bool ResourceManager::LoadResource(const std::string& path) {
+    std::ifstream file_stream{ path, std::ios_base::in };
+    file_stream.imbue(std::locale(""));
 
-	PushShader("gCommonFont", {
-		{shader_type::VS, "Shaders/Global/font.vert"s},
-		{shader_type::FS, "Shaders/Global/font.frag"s}
-		}
-	);
+    std::string global_path;
 
-	PushShader("ppQuad", {
-		{ shader_type::VS, "Shaders/Global/quad.vert"s },
-		{ shader_type::FS, "Shaders/Global/quad.frag"s }
-		}
-	);
+    if (file_stream.good()) {
+        std::string file_line;
+        while (std::getline(file_stream, file_line)) {
+            if (file_line.empty()) continue;
 
-	PushShader("ppConvex", {
-		{ shader_type::VS, "Shaders/Global/quad.vert"s },
-		{ shader_type::FS, "Shaders/Global/convex.frag"s }
-		}
-	);
-
-	PushShader("ppGray", {
-		{ shader_type::VS, "Shaders/Global/quad.vert"s },
-		{ shader_type::FS, "Shaders/pp/gray.frag"s }
-		}
-	);
-
-	PushShader("ppSineWave", {
-		{ shader_type::VS, "Shaders/Global/quad.vert"s },
-		{ shader_type::FS, "Shaders/Global/sinewave.frag"s }
-		}
-	);
-
-	PushTexture2D("Test", "Resources/test_2.png");
-
-    /*! Read */
-    std::ifstream file{ path, std::ios_base::in };
-    file.imbue(std::locale(""));
-
-    if (file.good()) {
-        std::string word;
-        while (file >> word) {
-            if (word == "TEX2D") /*! If resource to read is texture 2d */ {
-                std::string item_tag;
-                file >> item_tag;
-                std::string item_path;
-                file >> item_path;
-                /*! Instantiate Texture 2D */
-                PushTexture2D(item_tag, item_path);
+            switch (auto[symbol, token] = ReadSymbol(file_line); symbol) {
+            default: break;
+            case SymbolType::GLOBAL_PATH: global_path = token; break;
+            case SymbolType::RESOURCE:
+                auto token_type = GetResourceType(token);
+                ReadResource(file_line, file_stream, global_path, token_type);
+                break;
             }
         }
+
+        if (file_stream.eof())
+            return true;
+        else
+            return false;
     }
     else {
         std::cerr << "ERROR::TAG::FILE::CAN::NOT::OPEN\n";
+        return false;
     }
+}
+
+void ResourceManager::InsertSampleResources() {
+	//using namespace std::string_literals;
+	//PushShader("gQuad", {
+	//	{shader_type::VS, "Shaders/Global/image.vert"s},
+	//	{shader_type::FS, "Shaders/Global/image.frag"s}
+	//	}
+	//);
+
+	//PushShader("gCommonFont", {
+	//	{shader_type::VS, "Shaders/Global/font.vert"s},
+	//	{shader_type::FS, "Shaders/Global/font.frag"s}
+	//	}
+	//);
+
+	//PushShader("ppQuad", {
+	//	{ shader_type::VS, "Shaders/Global/quad.vert"s },
+	//	{ shader_type::FS, "Shaders/Global/quad.frag"s }
+	//	}
+	//);
+
+	//PushShader("ppConvex", {
+	//	{ shader_type::VS, "Shaders/Global/quad.vert"s },
+	//	{ shader_type::FS, "Shaders/Global/convex.frag"s }
+	//	}
+	//);
+
+	//PushShader("ppGray", {
+	//	{ shader_type::VS, "Shaders/Global/quad.vert"s },
+	//	{ shader_type::FS, "Shaders/pp/gray.frag"s }
+	//	}
+	//);
+
+	//PushShader("ppSineWave", {
+	//	{ shader_type::VS, "Shaders/Global/quad.vert"s },
+	//	{ shader_type::FS, "Shaders/Global/sinewave.frag"s }
+	//	}
+	//);
+
+	//PushTexture2D("Test", "Resources/test_2.png");
+}
+
+std::pair<ResourceManager::SymbolType, std::string>
+ResourceManager::ReadSymbol(const std::string& line_token) {
+    SymbolType symbol{ SymbolType::NOTHING };
+    std::stringstream line_stream{ line_token };
+
+    std::string token; line_stream >> token;
+    switch (*token.cbegin()) {
+    default:
+        symbol = SymbolType::RESOURCE;      /*! This symbol is for Resouce token. */
+        break;
+    case '$':   /*! This statements is defualt resource path. */
+        symbol = SymbolType::GLOBAL_PATH;   /*! This symbol is for global path token. */
+        line_stream >> token;
+        break;
+    case '#':   /*! This statements is comment line. */
+        symbol = SymbolType::COMMENT;       /*! This symbol is for statement token. */
+        break;
+    }
+
+    return { symbol, token };
+}
+
+ResourceManager::ResourceType
+ResourceManager::GetResourceType(const std::string & resource_token) {
+    if (resource_token == TEX2D)        return ResourceType::TEXTURE_2D;
+    else if (resource_token == SHADE)   return ResourceType::SHADER;
+    else if (resource_token == SEBGM)   return ResourceType::SOUND_EFFECT_BGM;
+    else return ResourceType::NOTHING;
+}
+
+void ResourceManager::ReadResource(const std::string& token_line,
+                                   std::ifstream& stream,
+                                   const std::string& global_path,
+                                   ResourceManager::ResourceType type) {
+    std::string __;
+
+    switch (std::stringstream line_stream{ token_line }; type) {
+    default: /*! Do nothing */ break;
+    case ResourceType::TEXTURE_2D: {
+        line_stream >> __;
+
+        std::string tag;    line_stream >> tag;
+        char type;          line_stream >> type;
+        std::string path;   line_stream >> path;
+        path = global_path + path;
+        /*! Insert */
+        PushTexture2D(tag, path);
+    }   break;
+    case ResourceType::SHADER: {
+        line_stream >> __;
+
+        std::string tag;    line_stream >> tag;
+        char type;          line_stream >> type;
+        auto shader_list{ ReadShaderPath(stream, global_path) };/*! C++17 can accepts this. */
+        /*! Insert */
+        PushShader(tag, shader_list);
+    }   break;
+    case ResourceType::SOUND_EFFECT_BGM: {
+        line_stream >> __;
+
+        std::string tag;    line_stream >> tag;
+        char type;          line_stream >> type;
+        std::string path;   line_stream >> path;
+        path = global_path + path;
+        /*! Insert */
+        PushSound(tag, path);
+    }   break;
+    }
+}
+
+std::vector<ResourceManager::shader_pair>
+ResourceManager::ReadShaderPath(std::ifstream& stream,
+                                const std::string& global_path) {
+    std::vector<ResourceManager::shader_pair> shader_list;
+
+    while (true) {
+        std::string token_line;
+        std::getline(stream, token_line);
+        if (token_line.empty() || (token_line.at(0) != '-'))
+            break;
+        else {  /*! token_line is not empty and their is something. */
+            std::stringstream line_stream{ token_line };
+            /*! __ is used just for neglecting - (hypon character) */
+            std::string __; std::string token; line_stream >> __ >> token;
+
+            shader_type type;
+            if (token == "VS")          type = shader_type::VS;
+            else if (token == "GS")     type = shader_type::GS;
+            else if (token == "TCS")    type = shader_type::TCS;
+            else if (token == "TES")    type = shader_type::TES;
+            else if (token == "FS")     type = shader_type::FS;
+
+            line_stream >> token;
+            std::string file_path = global_path + token;
+
+            shader_list.emplace_back(std::make_pair(type, file_path));
+        }
+    }
+
+    return shader_list;
 }
 
 void ResourceManager::PushShader(const std::string& name_key, const shader_list& list) {
@@ -79,7 +197,7 @@ void ResourceManager::PushShader(const std::string& name_key, const shader_list&
 	m_shaders[name_key] = std::move(shader_list);
 }
 
-ResourceManager::shader_container& ResourceManager::GetShader(const std::string& name_key) {
+ResourceManager::shader_list& ResourceManager::GetShader(const std::string& name_key) {
 	if (ExistShaderKey(name_key)) {
 		return m_shaders.at(name_key);
 	}
@@ -95,6 +213,14 @@ void ResourceManager::PushTexture2D(const std::string& name_key, const std::stri
 	m_textures[name_key] = path;
 }
 
+void ResourceManager::PushSound(const std::string& name_key, const std::string& path) {
+    if (ExistSoundKey(name_key))
+        throw new std::runtime_error("Sound Key duplicated :: " + name_key);
+
+    m_sounds.emplace(std::make_pair(name_key, path));
+
+}
+
 const std::string& ResourceManager::GetTexture2D(const std::string& name_key) {
 	if (ExistTextureKey(name_key)) {
 		return m_textures.at(name_key);
@@ -102,6 +228,11 @@ const std::string& ResourceManager::GetTexture2D(const std::string& name_key) {
 	else { /** Error */
 		m_error = ErrorType::FAILED_INITIALIZE_TEXTURE2D;
 	}
+}
+
+const std::string& ResourceManager::GetSound(const std::string& name_key) {
+    if (ExistSoundKey(name_key))
+        return m_sounds.at(name_key);
 }
 
 void ResourceManager::CheckError() {
@@ -114,3 +245,5 @@ void ResourceManager::CheckError() {
 		break;
 	}
 }
+
+ResourceManager::ResourceManager() = default;
