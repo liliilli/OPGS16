@@ -4,31 +4,45 @@
 /*!
  * @file System\Object\Impl\sprite_renderer.h
  * @brief
- * @date 2018-02-08
+
+ * @author Jongmin Yun
+ * @date 2018-02-28
+ *
+ * @log
+ * 2018-02-28 Change constructor to use texture_index type.
  */
 
-#include "..\..\Shader\shader_wrapper.h"        /*! ShaderWrapper */
-#include "..\..\Headers\Fwd\objectfwd.h"        /*! texture::Texture2D */
 #include "..\..\Frame\vertex_array_object.h"    /*! VertexArrayObject */
+#include "..\..\Headers\Fwd\objectfwd.h"        /*! texture::Texture2D */
+#include "..\..\Manager\resource_type.h"        /*! resource::Texture2D::IndexSize */
+#include "..\..\Shader\shader_wrapper.h"        /*! ShaderWrapper */
 
 /*!
- * @class
- * @brief
+ * @class SpriteRendererImpl
+ * @brief Pointer to implementation structure.
+ *
+ * @log
+ * 2018-02-28 Change constructor to use texture_index type. and variable store texture index.
+ * Add related boilerplate function.
+ *
+ * @todo Implement rendering layer priority feature.
  */
 class SpriteRendererImpl final {
-public:
-    /**
-	 * @brief Make SpriteRenderer instance. (Constructor)
-	 */
-	SpriteRendererImpl(const std::string& image_path,
-                       const std::string& shader_tag,
-                       const unsigned layer = 0);
+private:
+    using IndexSize = resource::Texture2D::IndexSize;
 
-     inline void SetLayer(const unsigned layer) {
+public:
+    /** Make SpriteRenderer instance. (Constructor) */
+	SpriteRendererImpl(const std::string& sprite_tag,
+                       const std::string& shader_tag,
+                       const resource::Texture2D::IndexSize& texture_index,
+                       unsigned layer);
+
+    inline void SetLayer(const unsigned layer) {
 
     }
 
-    const unsigned GetLayer() const {
+    inline unsigned GetLayer() const noexcept {
         return m_layer;
     }
 
@@ -36,13 +50,26 @@ public:
         return m_wrapper;
     }
 
-     void RenderSprite();
+    void RenderSprite();
+
+    inline const IndexSize& GetTextureIndex() const noexcept {
+        return m_index;
+    }
+
+    inline void SetTextureIndex(const IndexSize& new_index) noexcept {
+        m_index = new_index;
+        m_wrapper.ReplaceUniformValue("uTexIndex", glm::vec2{ m_index.x_sep, m_index.y_sep });
+    }
 
 private:
 	texture::Texture2D* m_sprite;	/** Sprite 2d texture stores image information. */
 	VertexArrayObject m_vao;	    /** Quad VAO to render sprite on screen. */
 	ShaderWrapper m_wrapper;		/** Shader is in ShaderManager, render sprite. */
 	unsigned m_layer;				/** Layer ordering number. The bigger, The later. */
+
+    IndexSize m_index;
+
+    GLuint empty_vao;
 };
 
 #endif // !OPGS16_SYSTEM_OBJECT_IMPL_SPRITE_RENDERER_IMPL_H

@@ -6,8 +6,8 @@ $ _Project/Maintenance/Resource/
 
 # SHADERS
 SHADE gQuad G
-- VS Shader/Global/image.vert
-- FS Shader/Global/image.frag
+- VS Shader/Global/__2dquad.vert
+- FS Shader/Global/__2dquad.frag
 
 SHADE gCommonFont G
 - VS Shader/Global/font.vert
@@ -33,7 +33,7 @@ SHADE ppSineWave G
 SEBGM Music1 G sample.wav
 
 # TEXTURES
-TEX2D 128_1 L Sprite/128128_1.png
-TEX2D 128_2 L Sprite/128128_2.png
-TEX2D 128_3 L Sprite/128128_3.png
-TEX2D 128_4 L Sprite/128128_4.png
+TEX2D 128_1 L Sprite/128128_1.png 2 2
+TEX2D 128_2 L Sprite/128128_2.png 2 2
+TEX2D 128_3 L Sprite/128128_3.png 2 2
+TEX2D 128_4 L Sprite/128128_4.png 2 2

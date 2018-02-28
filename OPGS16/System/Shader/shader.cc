@@ -122,11 +122,15 @@ void ShaderNew::SetInt(const std::string & name, int value) const {
     glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
-void ShaderNew::SetFloat(const std::string & name, float value) const {
+void ShaderNew::SetFloat(const std::string& name, float value) const {
     glUniform1f(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
-void ShaderNew::SetVec3f(const std::string & name,
+void ShaderNew::SetVec2f(const std::string& name, const glm::vec2& vector) {
+    glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
+}
+
+void ShaderNew::SetVec3f(const std::string& name,
                          const float _1, const float _2, const float _3) {
     glUniform3f(glGetUniformLocation(m_program_id, name.c_str()), _1, _2, _3);
 }

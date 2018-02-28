@@ -31,8 +31,10 @@ private:
     TimerHandle m_timer_4_waiting;
     TimerHandle m_timer_5_delay;    /*! Test 5 timers */
 
+    TimerHandle m_timer_swap;       /*! Swap texture index timer each 500ms */
+
 private:
-    virtual void Start() override final {};
+    virtual void Start() override final;
 
     inline void OnWork_1Switch() {
         m_moving = true;
@@ -51,6 +53,8 @@ private:
     void Proceed_4AlphaBlending();
 
     void Proceed_5Scaling();
+
+    void OnTriggerSwap();
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(component::ScriptFrame, ObjectScript1)

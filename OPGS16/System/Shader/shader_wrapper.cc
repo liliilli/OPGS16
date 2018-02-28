@@ -15,9 +15,12 @@ void ShaderWrapper::UseShader() {
 
 void ShaderWrapper::RefreshUniformValues() {
     // Float
-    for (const auto& item : m_parameters.m_floats)
-        m_shader->SetFloat(item.first, item.second);
+    for (const auto& [name, value] : m_parameters.m_floats)
+        m_shader->SetFloat(name, value);
     // Matrix 4x4
-    for (const auto& item : m_parameters.m_mat4s)
-        m_shader->SetVecMatrix4f(item.first, item.second);
+    for (const auto& [name, value] : m_parameters.m_mat4s)
+        m_shader->SetVecMatrix4f(name, value);
+    // Vector2
+    for (const auto&[name, value] : m_parameters.m_vec2)
+        m_shader->SetVec2f(name, value);
 }

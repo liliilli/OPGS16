@@ -144,6 +144,7 @@
     <ClCompile Include="Objects\TempDebug\test_image.cc" />
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
+    <ClCompile Include="System\Manager\resource_type.cc" />
     <ClCompile Include="System\Manager\timer_manager.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Objects\TempDebug\test_start_txt.h" />
     <ClInclude Include="Objects\TempDebug\test_start_t_copy.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
+    <ClInclude Include="System\Manager\resource_type.h" />
     <ClInclude Include="System\Manager\timer_manager.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
@@ -371,11 +373,19 @@
     <None Include="Shaders\Starfield\point.vert" />
     <None Include="System\Components\__header.meta" />
     <None Include="System\Components\__set.meta" />
+    <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
+    <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />
     <None Include="_Project\Maintenance\_meta\_header.meta" />
     <None Include="_Project\Maintenance\_meta\_resource.meta" />
     <None Include="_Project\Maintenance\_meta\_set.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_header.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_set.meta" />
     <None Include="_Setting\input.meta" />
     <None Include="_Setting\tag.meta" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\_system.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

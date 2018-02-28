@@ -18,15 +18,18 @@
  * (되도록 스택에 올라갈 수 있도록 붙일 것) Use() 함수와 UpdateUniforms() 를 이용해
  * 쉐이더를 쓰고 유니폼 변수들을 바인딩할 수 있도록 한다.
  *
- * Last updated :: 2018 - 02 - 05
- *
  * @author Jongmin Yun
+ * @date 2018-02-28
+ *
+ * @log
+ * 2018-02-28 Add vector2 uniform value container and function related to vector2.
  */
 
 class ShaderWrapper final {
 private:
     struct Paramters {
         std::map<std::string, float>		m_floats{};
+        std::map<std::string, glm::vec2>    m_vec2{};
         std::map<std::string, glm::mat4>	m_mat4s{};
     } m_parameters;
 
@@ -55,16 +58,21 @@ public:
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-     void InsertUniformValue(const std::string& tag, const _Ty value) {};
+    void InsertUniformValue(const std::string& tag, const _Ty& value);
 
     template <>
-    void InsertUniformValue<float>(const std::string& tag, const float value) {
+    void InsertUniformValue<float>(const std::string& tag, const float& value) {
         if (!IsValueAlreadyExist(tag, value)) m_parameters.m_floats[tag] = value;
     }
 
     template <>
-    void InsertUniformValue<glm::mat4>(const std::string& tag, const glm::mat4 value) {
+    void InsertUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
         if (!IsValueAlreadyExist(tag, value)) m_parameters.m_mat4s[tag] = value;
+    }
+
+    template <>
+    void InsertUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
+        if (!IsValueAlreadyExist(tag, value)) m_parameters.m_vec2[tag] = value;
     }
 
     /**
@@ -74,18 +82,21 @@ public:
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-     void ReplaceUniformValue(const std::string& tag, const _Ty& value);
+    void ReplaceUniformValue(const std::string& tag, const _Ty& value);
 
     template <>
     void ReplaceUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
-        //if (m_parameters.m_mat4s.find(tag) != m_parameters.m_mat4s.end())
-            m_parameters.m_mat4s.at(tag) = value;
+        m_parameters.m_mat4s.at(tag) = value;
     }
 
     template <>
     void ReplaceUniformValue<float>(const std::string& tag, const float& value) {
-        //if (m_parameters.m_floats.find(tag) != m_parameters.m_floats.end())
-            m_parameters.m_floats.at(tag) = value;
+        m_parameters.m_floats.at(tag) = value;
+    }
+
+    template <>
+    void ReplaceUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
+        m_parameters.m_vec2.at(tag) = value;
     }
 
 private:
@@ -110,34 +121,13 @@ public:
             return m_parameters.m_floats.find(tag) != m_parameters.m_floats.end();
         if (std::is_same_v<glm::mat4, _Ty>)
             return m_parameters.m_mat4s.find(tag) != m_parameters.m_mat4s.end();
+        if (std::is_same_v<glm::vec2, _Ty>)
+            return m_parameters.m_vec2.find(tag) != m_parameters.m_vec2.end();
     }
 
 private:
-    template <class T> struct ReturnType { using type = T; };
-    template <> struct ReturnType<float> { using type = float; };
-    template <> struct ReturnType<glm::mat4> { using type = glm::mat4; };
-
-    /**
-     * @brief Searchs and Gets parameter container pointer.
-     * @param[in] tag
-     * @param[in] _Ty
-     * @return Paramter container pointer.(iterator)
-     */
-    template <typename _Ty>
-    typename ReturnType<_Ty>::type* GetIteratorOfSpecifiedPoint(const std::string& tag);
-
-    template <> float* GetIteratorOfSpecifiedPoint<float>(const std::string& tag) {
-        return &m_parameters.m_floats.at(tag);
-    }
-
-    template <> glm::mat4* GetIteratorOfSpecifiedPoint<glm::mat4>(const std::string& tag) {
-        return &m_parameters.m_mat4s.at(tag);
-    }
-
-    /**
-     * @brief Set uniform variables of shader with new values.
-     */
-     void RefreshUniformValues();
+    /*! Set uniform variables of shader with new values. */
+    void RefreshUniformValues();
 };
 
 #endif /** OPGS16_SYSTEM_SHADER_SHADER_WRAPPER_H */

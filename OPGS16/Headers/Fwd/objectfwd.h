@@ -18,6 +18,11 @@ struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
 
 struct	ObjectTree;
 
+namespace resource {
+enum class ScopeType;
+struct  Texture2D;
+}
+
 // Derived
 namespace canvas {
 class   Canvas;

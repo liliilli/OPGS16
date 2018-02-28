@@ -57,6 +57,7 @@
     <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
+    <ClCompile Include="System\Manager\resource_type.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
+    <ClInclude Include="System\Manager\resource_type.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -240,5 +242,13 @@
     <None Include="_Project\Maintenance\_meta\_header.meta" />
     <None Include="_Project\Maintenance\_meta\_resource.meta" />
     <None Include="_Project\Maintenance\_meta\_set.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_header.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
+    <None Include="_Project\SampleInvaders\_meta\_set.meta" />
+    <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />
+    <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\_system.png" />
   </ItemGroup>
 </Project>

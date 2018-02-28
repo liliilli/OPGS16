@@ -11,9 +11,19 @@
 #include "test_script_1.h"  /*! TestScript1 for Canvas */
 #include "..\..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
 
+#define M_SET_TIMER(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__) \
+TimerManager::GetInstance().SetTimer(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__)
+
+#define M_REPLACE_SCENE(__scene_name__) \
+SceneManager::GetInstance().ReplaceScene<__scene_name__>()
+
 ObjectScript1::ObjectScript1(Object& obj) : component::ScriptFrame{ obj } {
     Initiate();
     Start();
+}
+
+void ObjectScript1::Start() {
+    M_SET_TIMER(m_timer_swap, 500, true, this, &ObjectScript1::OnTriggerSwap);
 }
 
 void ObjectScript1::DoWork(const size_t mode, const unsigned assigned_number) noexcept {
@@ -191,4 +201,15 @@ void ObjectScript1::Proceed_5Scaling() {
     m_object_scale_offset = (std::sinf(m_2pi * m_elapsed_time) / 2) + 0.5f;
 
     GetObject().SetScaleValue(m_object_original_scale * m_object_scale_offset);
+}
+
+void ObjectScript1::OnTriggerSwap() {
+    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    const auto& index = renderer.GetTextureIndex();
+    auto value  = index.y_sep * 2 + index.x_sep + 1;
+
+    if (value == 4)
+        value = 0;
+
+    renderer.SetTextureIndex({ value % 2, value / 2 });
 }

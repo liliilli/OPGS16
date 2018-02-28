@@ -6,10 +6,11 @@
 * @brief
 *
 * @author Jongmin Yun
-* @date 2018-02-26
+* @date 2018-02-28
 *
 * @log
-* 2018-02-26
+* 2018-02-26 Undefined
+* 2018-02-28 Add SetVec2f();
 */
 
 #include <unordered_map>
@@ -54,12 +55,12 @@ public:
     /**
      * @brief
      */
-     void Link();
+    void Link();
 
     /**
      * @brief
      */
-     void Use();
+    void Use();
 
     /** Utility uniform functions */
 
@@ -69,7 +70,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
-     void SetBool(const std::string& name, bool value) const;
+    void SetBool(const std::string& name, bool value) const;
 
     /**
      * @brief The method sets singed-integer value to arbitary uniform variable.
@@ -77,7 +78,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
-     void SetInt(const std::string& name, int value) const;
+    void SetInt(const std::string& name, int value) const;
 
     /**
      * @brief The method sets float value to arbitary uniform variable.
@@ -87,7 +88,14 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
-     void SetFloat(const std::string& name, float value) const;
+    void SetFloat(const std::string& name, float value) const;
+
+    /**
+     * @brief The method sets $ R^2 $ vector to arbitary uniform variable.
+     * @param[in] name The name of uniform variable to be specified.
+     * @param[in] vector $ R^2 $ vector refernce l-value to input.
+     */
+    void SetVec2f(const std::string& name, const glm::vec2& vector);
 
     /**
      * @brief The method sets three float values to arbitary uniform variable.
@@ -97,7 +105,7 @@ public:
      * @param[in] _2 Second value to be defined.
      * @param[in] _3 Third value to be defined.
      */
-     void SetVec3f(const std::string& name, const float, const float, const float);
+    void SetVec3f(const std::string& name, const float, const float, const float);
 
     /**
      * @brief The method sets $ R^3 $ vector to arbitary uniform variable.
@@ -105,7 +113,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] vector $ R^3 $ vector refernce l-value to input.
      */
-     void SetVec3f(const std::string & name, const glm::vec3& vector);
+    void SetVec3f(const std::string & name, const glm::vec3& vector);
 
     /**
      * @brief The method sets $ \mathbf{M}_{4x4} $ matrix to arbitary uniform variable.
@@ -113,7 +121,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] vector $ \mathbf{M}_{4_4} $ matrix reference l-value to input.
      */
-     void SetVecMatrix4f(const std::string& name, const glm::mat4& matrix);
+    void SetVecMatrix4f(const std::string& name, const glm::mat4& matrix);
 
     /**
      * @brief The method sets light::DirectionalLight information to shader uniform variable.
@@ -121,8 +129,7 @@ public:
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] container DirectionalLight container instance.
      */
-     void SetStructDirLight(const std::string& name,
-                                        const light::DirectionalLight& container);
+    void SetStructDirLight(const std::string& name, const light::DirectionalLight& container);
 
     /**
      * @brief The method sets light::PointLight information to shader uniform variable.

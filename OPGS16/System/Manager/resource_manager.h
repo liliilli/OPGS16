@@ -4,15 +4,17 @@
 /**
  * @file System\Manager\resource_manager.h
  * @author Jongmin Yun
- * @date 2018-02-27
+ * @date 2018-02-28
  *
  * @log
  * 2018-02-27 Correction of loading mechanism
+ * 2018-02-28 Corrected GetTexture2D return type must be resource::Texture2D structure.
  */
 
 #include <string>				/** std::string */
 #include <utility>				/** std::pair */
 #include <unordered_map>		/** std::unordered_map */
+#include "resource_type.h"      /*! resource:: */
 #include "..\Shader\shader.h"
 
 /**
@@ -24,10 +26,11 @@
  * ResrouceManager has to be called (invoked) when game application is setting up, before
  * actual game update has been begun.
  *
- * @date 2018-02-27
+ * @date 2018-02-28
  *
  * @log
  * 2018-02-27 Correction of loading mechanism
+ * 2018-02-28 Corrected GetTexture2D return type must be resource::Texture2D structure.
  * @todo CheckError method must have a procedure to bring error message display call to logger.
  */
 class ResourceManager final {
@@ -36,8 +39,9 @@ public:
 	using shader_type       = helper::ShaderNew::Type;
 	using shader_pair       = std::pair<shader_type, const std::string>;
 	using shader_list       = std::vector<shader_pair>;
+
     /*! Resource map list */
-    using texture_map       = std::unordered_map<std::string, std::string>;
+    using texture_map       = std::unordered_map<std::string, resource::Texture2D>;
     using sound_map         = std::unordered_map<std::string, std::string>;
     using shader_map        = std::unordered_map<std::string, shader_list>;
 
@@ -66,7 +70,7 @@ public:
 	 * @param[in] name_key Wrapping tag name of actual sprite path.
 	 * @return Selected 2D texture path.
 	 */
-	const std::string& GetTexture2D(const std::string& name_key);
+	const resource::Texture2D& GetTexture2D(const std::string& name_key);
 
     /*!
      * @brief Get specified sound path information.
@@ -120,6 +124,9 @@ private:
                       const std::string& global_path,
                       ResourceType type);
 
+    void ReadTexture2D(std::ifstream& stream, const std::string& global_path);
+
+
     /*! Read shader path and return this as a vector container. */
     std::vector<shader_pair> ReadShaderPath(std::ifstream& stream,
                                             const std::string& global_path);
@@ -135,7 +142,7 @@ private:
 	void PushShader(const std::string& name_key, const shader_list& list);
 
 	/**
-	 * @brief In initialization time of game application, insert texture path information
+	 * @brief In initialization time of game application, insert texture_2d information
 	 * to container. This method must be called at initialzation time. otherwise method refuse
 	 * processing.
 	 * If name_key is duplicated, initialization halts and exit game with a message.
@@ -143,7 +150,7 @@ private:
 	 * param[in] name_key sprite path's wrapping name.
 	 * param[in] path String path to read file when called.
 	 */
-	void PushTexture2D(const std::string& name_key, const std::string& path);
+	void PushTexture2D(const std::string& name_key, const resource::Texture2D& container);
 
     /*! In initialization of game application or scene loading, insert sound path information. */
     void PushSound(const std::string& name_key, const std::string& path);

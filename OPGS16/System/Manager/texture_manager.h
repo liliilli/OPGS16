@@ -5,10 +5,11 @@
  * @file System\Manager\texture_manager.h
  * @author Jongmin Yun
  *
- * @date 2018-02-26
+ * @date 2018-02-28
  * @log
  * 2018-02-23   TextureManager refactoring.
  * 2018-02-26   Add function 'Clear()'.
+ * 2018-02-28   Made it makes Texture2D using resource::Texture2D, not plain path.
  */
 
 #include <memory>               /*! std::unique_ptr<> */

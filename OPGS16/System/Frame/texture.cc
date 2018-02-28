@@ -3,24 +3,23 @@
 #include <array>
 #include <iostream>
 #include "..\..\__ThirdParty\stb\stb_image.h"
+#include "..\Manager\resource_type.h"           /*! resource::Texture2D */
 
 namespace texture {
 Texture2D::~Texture2D() {
-    if (m_texture)
-        glDeleteTextures(1, &m_texture);
+    if (m_texture) glDeleteTextures(1, &m_texture);
 }
 
-Texture2D::Texture2D(const std::string& texture_path) {
+Texture2D::Texture2D(const resource::Texture2D& container) {
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-
 	stbi_set_flip_vertically_on_load(true);
     /*!
      * Set the m_texture wrapping and filtering options
-     * Load image file to use as m_texture image. */
-
+     * Load image file to use as m_texture image.
+     */
     auto nr_channels = 0;
-    auto data = stbi_load(texture_path.c_str(), &m_width, &m_height, &nr_channels, 0);
+    auto data = stbi_load(container.m_path.c_str(), &m_width, &m_height, &nr_channels, 0);
     if (data) {
         GLenum color_format;
         switch (nr_channels) {
@@ -30,9 +29,9 @@ Texture2D::Texture2D(const std::string& texture_path) {
         }
 
         /*! Make m_texture */
-        glTexImage2D(GL_TEXTURE_2D, 0, color_format,
-                     m_width, m_height, 0, color_format,
+        glTexImage2D(GL_TEXTURE_2D, 0, color_format, m_width, m_height, 0, color_format,
                      GL_UNSIGNED_BYTE, data);
+
         glGenerateMipmap(GL_TEXTURE_2D);
 
         /*! Setting default option */
@@ -42,11 +41,12 @@ Texture2D::Texture2D(const std::string& texture_path) {
 		t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
 		t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
 		SetTextureParameterI(t_p);
+
+        /*! Set cell size */
+        m_texture_cell_size = { 1.f / container.m_nm_size.x_sep, 1.f / container.m_nm_size.y_sep };
     }
-    else {
-        std::cerr << "FAILED::LOAD::TEXTURE" + texture_path << std::endl;
-        throw std::runtime_error{ "Failed load texture. " "Texture path is " + texture_path };
-    }
+    else
+        std::cerr << "FAILED::LOAD::TEXTURE" + container.m_path << std::endl;
 
     /*! Release image buffer */
     stbi_image_free(data);

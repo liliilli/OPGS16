@@ -7,6 +7,7 @@
 
 #include "GlobalObjects\Canvas\canvas.h"
 #include "Objects\Debug\debug_canvas.h"     /*! CanvasDebug */
+//#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
 #include "System\Shader\pp_manager.h"
 #include "System\Shader\shader_manager.h"
 #include "System\Shader\PostProcessing\pp_convex.h"
@@ -22,8 +23,7 @@
 #include "System\Manager\sound_manager.h"   /*! SoundManager */
 #include "System\Manager\time_manager.h"    /*! TimeManager */
 #include "System\Manager\timer_manager.h"   /*! TimerManager */
-
-#include "_Project\Maintenance\Scene\test_1.h"  /*! Maintenance */
+#include "_Project\Maintenance\Scene\test_1.h"
 
 Application::Application(std::string&& app_name)
     : m_window{ InitApplication(std::move(app_name)) },
@@ -79,35 +79,30 @@ void Application::Initiate() {
         /*! Initialize Global Setting. */
         SettingManager::GetInstance();
         /*! Initialize resource list. */
+        m_time_manager      = &TimeManager::GetInstance();
+        m_timer_manager     = &TimerManager::GetInstance();
+        m_sound_manager     = &SoundManager::GetInstance();
+		m_input_manager     = &InputManager::GetInstance();
+        m_physics_manager   = &PhysicsManager::GetInstance();
+        m_object_manager    = &ObjectManager::GetInstance();
+
+        m_time_manager->SetFps(60.f);
+        m_input_manager->Initialize(m_window);
+        m_sound_manager->ProcessInitialSetting();
+
+		/** Insert first scene */
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+
         m_resource_manager = &ResourceManager::GetInstance();
         m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
-        /*! Initialize time manager manages time information. */
-        m_m_time = &TimeManager::GetInstance();
-        m_m_time->SetFps(60.f);
-        /*! Initialize timer manager. */
-        m_m_timer = &TimerManager::GetInstance();
-        /*! Initialize sound manager. */
-        m_sound_manager = &SoundManager::GetInstance();
-        m_sound_manager->ProcessInitialSetting();
-        /*! Initailize input manager */
-		m_m_input = &InputManager::GetInstance();
-        m_m_input->Initialize(m_window);
-        /*! Initailize physics manager */
-        m_physics_manager   = &PhysicsManager::GetInstance();
-        /*! Initailize object manager */
-        m_object_manager    = &ObjectManager::GetInstance();
 
 		InitiateFonts();
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
 
-		/** Insert first scene */
         m_scene_instance.PushScene<Maintenance>();
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_DEPTH_TEST);
-
 		ReplacePresentStatus(GameStatus::PLAYING);
 	}
 }
@@ -142,9 +137,9 @@ void Application::InitiatePostProcessingEffects() {
 
 void Application::Run() {
     while (!glfwWindowShouldClose(m_window)) {
-        m_m_time->Update();         /*! Time ticking */
-        if (m_m_time->Ticked()) {
-            m_m_timer->Update();    /*! Timer alarm event checking */
+        m_time_manager->Update();         /*! Time ticking */
+        if (m_time_manager->Ticked()) {
+            m_timer_manager->Update();    /*! Timer alarm event checking */
             Update();
             Draw();
         }
@@ -181,7 +176,7 @@ void Application::Update() {
 }
 
 void Application::Input() {
-	m_m_input->Update();
+	m_input_manager->Update();
 	switch (GetPresentStatus()) {
 	case GameStatus::PLAYING: InputGlobal(); break;
 	case GameStatus::MENU: break;
@@ -189,18 +184,18 @@ void Application::Input() {
 }
 
 void Application::InputGlobal() {
-	if (m_m_input->IsKeyPressed("GlobalCancel"))
+	if (m_input_manager->IsKeyPressed("GlobalCancel"))
 		PopStatus();
 	if (m_option.size_scalable) {
-		if (m_m_input->IsKeyPressed("GlobalF1"))
+		if (m_input_manager->IsKeyPressed("GlobalF1"))
 			ChangeScalingOption(OptionScale::X1_DEFAULT);
-		else if (m_m_input->IsKeyPressed("GlobalF2"))
+		else if (m_input_manager->IsKeyPressed("GlobalF2"))
 			ChangeScalingOption(OptionScale::X2_DOUBLE);
-		else if (m_m_input->IsKeyPressed("GlobalF3"))
+		else if (m_input_manager->IsKeyPressed("GlobalF3"))
 			ChangeScalingOption(OptionScale::X3_TRIPLE);
-		else if (m_m_input->IsKeyPressed("GlobalF9"))
+		else if (m_input_manager->IsKeyPressed("GlobalF9"))
 			ToggleFpsDisplay();
-		else if (m_m_input->IsKeyPressed("GlobalF10"))
+		else if (m_input_manager->IsKeyPressed("GlobalF10"))
 			TogglePostProcessingEffect();
 	}
 }

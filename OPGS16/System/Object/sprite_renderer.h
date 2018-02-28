@@ -6,10 +6,11 @@
  * @brief The file contains sprite renderer class members.
  *
  * @author Jongmin Yun
- * @date 2018-02-26
+ * @date 2018-02-28
  *
  * @log
  * 2018-02-26 Componentization of SpriteRenderer.
+ * 2018-02-28 Add Get/SetTextureIndex() member function.
  */
 
 #include <string>
@@ -17,6 +18,7 @@
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! SpriteRendererImpl
                                               * SpriteRendererImplDeleter
                                               * ShaderWraper */
+#include "..\Manager\resource_type.h"       /*! resource::Texture2D::IndexSize */
 
 /**
  * @class SpriteRender
@@ -25,37 +27,41 @@
  * SpriteRender class has sprite to render on object position,
  * and has at least one more shader to display to screen.
  *
- * SpriteRender has layer, is sorted by internal mechanism and displayed in order.
- * The number of layers is restricted to 8 layer, 9 is UI, 10 is Global UI.
- *
- * @date 2018-02-26
+ * @date 2018-02-28
  *
  * @log
  * 2018-02-26 Componentization of SpriteRenderer.
+ * 2018-02-28 Add Get/SetTextureIndex() member function.
  */
 class SpriteRenderer final {
+private:
+    using IndexSize = resource::Texture2D::IndexSize;
+
 public:
-	/**
-	 * @brief Make SpriteRenderer instance. (Constructor)
-	 */
+	/*! Make SpriteRenderer instance. (Constructor) */
 	SpriteRenderer(const std::string& sprite_tag,
 				   const std::string& shader_tag,
+                   const resource::Texture2D::IndexSize& texture_index = {0, 0},
 				   const unsigned layer = 0);
 
-	/**
+	/*!
 	 * @brief Change layer number of this instance.
 	 * @param[in] layer Layer number.
 	 */
-	 void SetLayer(const unsigned layer);
+	void SetLayer(const unsigned layer);
 
-	/**
+	/*!
 	 * @brief Get layer number of bound instance.
 	 * @return layer number value.
 	 */
 	const unsigned GetLayer() const;
 
-	/** * @brief Get Shaderwrapper instance.  */
+	/*! Get ShaderWrapper instance.  */
 	ShaderWrapper& GetWrapper() const;
+
+    const IndexSize& GetTextureIndex() const noexcept ;
+
+    void SetTextureIndex(const IndexSize& new_index);
 
 	/**
 	 * @brief Render sprite on screen. Procedure is below.

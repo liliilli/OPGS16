@@ -75,13 +75,13 @@ private:
     GLFWwindow*         m_window{ nullptr };        /*! Window handle pointer */
     SceneManager&       m_scene_instance;           /*! SceneManager instance */
 	shading::PostProcessingManager* m_pp_manager{ nullptr };
-	InputManager*       m_m_input{ nullptr };
+	InputManager*       m_input_manager{ nullptr };
     ObjectManager*      m_object_manager{ nullptr };
     PhysicsManager*     m_physics_manager{ nullptr };
     ResourceManager*    m_resource_manager{ nullptr };
     SoundManager*       m_sound_manager{ nullptr };
-    TimeManager*        m_m_time{ nullptr };
-    TimerManager*       m_m_timer{ nullptr };
+    TimeManager*        m_time_manager{ nullptr };
+    TimerManager*       m_timer_manager{ nullptr };
 
 	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
 	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */

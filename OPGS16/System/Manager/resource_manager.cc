@@ -17,15 +17,15 @@ bool ResourceManager::LoadResource(const std::string& path) {
     std::ifstream file_stream{ path, std::ios_base::in };
     file_stream.imbue(std::locale(""));
 
-    std::string global_path;
-
     if (file_stream.good()) {
+        std::string global_path;
         std::string file_line;
+
         while (std::getline(file_stream, file_line)) {
             if (file_line.empty()) continue;
 
             switch (auto[symbol, token] = ReadSymbol(file_line); symbol) {
-            default: break;
+            default: /*! Do nothing */ break;
             case SymbolType::GLOBAL_PATH: global_path = token; break;
             case SymbolType::RESOURCE:
                 auto token_type = GetResourceType(token);
@@ -34,10 +34,8 @@ bool ResourceManager::LoadResource(const std::string& path) {
             }
         }
 
-        if (file_stream.eof())
-            return true;
-        else
-            return false;
+        if (file_stream.eof()) return true;
+        else return false;
     }
     else {
         std::cerr << "ERROR::TAG::FILE::CAN::NOT::OPEN\n";
@@ -124,15 +122,21 @@ void ResourceManager::ReadResource(const std::string& token_line,
 
     switch (std::stringstream line_stream{ token_line }; type) {
     default: /*! Do nothing */ break;
-    case ResourceType::TEXTURE_2D: {
+    case ResourceType::TEXTURE_2D: {    /*! Texture 2D information generating sequence */
         line_stream >> __;
 
-        std::string tag;    line_stream >> tag;
-        char type;          line_stream >> type;
-        std::string path;   line_stream >> path;
-        path = global_path + path;
+        /*! Read information from stream */
+        std::string tag;        line_stream >> tag;
+        char type;              line_stream >> type;
+        std::string local_path; line_stream >> local_path;
+        unsigned x_sep, y_sep;  line_stream >> x_sep >> y_sep;
+
         /*! Insert */
-        PushTexture2D(tag, path);
+        PushTexture2D(tag,
+                      resource::Texture2D{ resource::GetScopeType(type),
+                                           global_path + local_path,
+                                           {x_sep, y_sep}
+                      });
     }   break;
     case ResourceType::SHADER: {
         line_stream >> __;
@@ -154,6 +158,10 @@ void ResourceManager::ReadResource(const std::string& token_line,
         PushSound(tag, path);
     }   break;
     }
+}
+
+void ResourceManager::ReadTexture2D(std::ifstream& line_stream,
+                                    const std::string& global_path) {
 }
 
 std::vector<ResourceManager::shader_pair>
@@ -206,11 +214,12 @@ ResourceManager::shader_list& ResourceManager::GetShader(const std::string& name
 	}
 }
 
-void ResourceManager::PushTexture2D(const std::string& name_key, const std::string& path) {
+void ResourceManager::PushTexture2D(const std::string& name_key,
+                                    const resource::Texture2D& container) {
 	if (ExistTextureKey(name_key))
 		throw new std::runtime_error("Texture Key duplicated :: " + name_key);
 
-	m_textures[name_key] = path;
+	m_textures.emplace(std::make_pair(name_key, container));
 }
 
 void ResourceManager::PushSound(const std::string& name_key, const std::string& path) {
@@ -221,9 +230,9 @@ void ResourceManager::PushSound(const std::string& name_key, const std::string& 
 
 }
 
-const std::string& ResourceManager::GetTexture2D(const std::string& name_key) {
+const resource::Texture2D& ResourceManager::GetTexture2D(const std::string& name_key) {
 	if (ExistTextureKey(name_key)) {
-		return m_textures.at(name_key);
+        return m_textures.at(name_key);
 	}
 	else { /** Error */
 		m_error = ErrorType::FAILED_INITIALIZE_TEXTURE2D;

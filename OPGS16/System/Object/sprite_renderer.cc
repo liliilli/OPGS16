@@ -4,11 +4,10 @@
 void SpriteRendererImplDeleter::operator()(SpriteRendererImpl* p) { delete p; }
 
 SpriteRenderer::SpriteRenderer(const std::string& sprite_tag,
-							   const std::string& shader_tag,
-							   const unsigned layer) {
-    /*! Body */
-    pimpl_type instance{ new SpriteRendererImpl(sprite_tag, shader_tag, layer) };
-    m_impl = std::move(instance);
+                               const std::string& shader_tag,
+                               const resource::Texture2D::IndexSize& texture_index,
+                               const unsigned layer) :
+    m_impl { new SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
 }
 
 void SpriteRenderer::SetLayer(const unsigned layer) {
@@ -21,6 +20,14 @@ const unsigned SpriteRenderer::GetLayer() const {
 
 ShaderWrapper& SpriteRenderer::GetWrapper() const {
     return m_impl->GetWrapper();
+}
+
+const SpriteRenderer::IndexSize& SpriteRenderer::GetTextureIndex() const noexcept {
+    return m_impl->GetTextureIndex();
+}
+
+void SpriteRenderer::SetTextureIndex(const IndexSize& new_index) {
+    m_impl->SetTextureIndex(new_index);
 }
 
 void SpriteRenderer::RenderSprite() {
