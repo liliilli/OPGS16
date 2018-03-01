@@ -1,3 +1,5 @@
+#include "..\Public\core_setting.h" /*! Header file */
+
 /*!
  * @license BSD 2-Clause License
  *
@@ -26,27 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file entry.cc
- * @brief The file which operates actual application.
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-01 Refactoring.
- */
+#include <fstream>
 
-/*! This statements are for checking memory leaks. */
-//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
-//_crtBreakAlloc = 180;
-//_CrtDumpMemoryLeaks();
+namespace opgs16 {
 
-#include "System/Core/Public/application.h"
+GlobalSetting::GlobalSetting() {
 
-int main() {
-    using opgs16::Application;
-    auto& app = Application::Instance();
-    app.Initiate();
-    app.Run();
+}
 
-    return 0;
 }

@@ -1,0 +1,308 @@
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "../Public/application.h"      /*! Header file */
+#include "../Public/core_setting.h"
+
+#include <iostream>	                /*! std::cerr, std::endl */
+#include "../Public/core_header.h"  /*! Header files */
+
+namespace opgs16 {
+
+void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+Application::Application() :
+    m_window{ InitApplication(u8"OPGS16") },
+    m_input_manager{ InputManager::GetInstance() },
+    m_object_manager{ ObjectManager::GetInstance() },
+    m_physics_manager{ PhysicsManager::GetInstance() },
+    m_scene_manager{ SceneManager::GetInstance() },
+    m_sound_manager{ SoundManager::GetInstance() },
+    m_time_manager{ TimeManager::GetInstance() },
+    m_timer_manager{ TimerManager::GetInstance() } {
+
+    m_setting = std::make_unique<GlobalSetting>();
+	PushStatus(GameStatus::INIT);
+}
+
+
+GLFWwindow* Application::InitApplication(const std::string& app_name) {
+    glfwInit();
+
+    /*! OpenGL Setting */
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    /*! Set MSAAx4 */
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
+    auto window = glfwCreateWindow(GlobalSetting::ScreenWidth(),
+                                   GlobalSetting::ScreenHeight(),
+                                   app_name.c_str(),
+                                   nullptr, nullptr);
+    if (!window) {
+        std::cerr << "failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return nullptr;
+    }
+
+    glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_FALSE);
+    glfwSetFramebufferSizeCallback(window, &opgs16::OnCallbackFrameBufferSize);
+    //glfwSetCursorPosCallback(window, camera::MouseControl);
+
+    glewInit();
+    return window;
+}
+
+void Application::Initiate() {
+	if (GetPresentStatus() == GameStatus::INIT) {
+        /*! Initialize Global Setting. */
+        SettingManager::GetInstance();
+
+        /*! Initialize resource list. */
+        m_time_manager.SetFps(60.f);
+        m_input_manager.Initialize(m_window);
+        m_sound_manager.ProcessInitialSetting();
+
+        m_resource_manager = &ResourceManager::GetInstance();
+        m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
+
+		InitiateFonts();
+		InitiateDebugUi();
+		InitiatePostProcessingEffects();
+
+        /*! Set gl rendering options. */
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+
+		/** Insert first scene */
+        m_scene_manager.PushScene<Maintenance>();
+		ReplacePresentStatus(GameStatus::PLAYING);
+	}
+}
+
+void Application::InitiateFonts() {
+	/** First we need initiate default font. */
+	auto& font = FontManager::GetInstance();
+	font.InitiateFont("Sans", R"(Resources/Fonts/Liberate/LiberationSans-Regular.ttf)" , true);
+	font.InitiateFont("Solomon", R"(Resources/Fonts/SolomonP.ttf)" , false);
+	font.InitiateFont("Menus", R"(Resources/Fonts/Menus.ttf)" , false);	/** Recommend 9pt */
+    font.InitiateFont("BIOS", R"(Resources/Fonts/PxPlus_IBM_BIOS.ttf)", false);
+	font.LoadDefaultFont();
+}
+
+void Application::InitiateDebugUi() {
+	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
+}
+
+void Application::InitiatePostProcessingEffects() {
+	m_pp_manager = &shading::PostProcessingManager::GetInstance();
+
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectGray>("Gray");
+	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
+
+	/** Set sample sequence */
+	auto const result = m_pp_manager->SetSequence(1u, { "Convex" });
+	if (result == nullptr) {
+		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
+	}
+}
+
+void Application::SetOnBeforeUpdateCallback(std::function<void(void)> callback) {
+    m_on_before_update_callback = callback;
+}
+
+void Application::Run() {
+    while (!glfwWindowShouldClose(m_window)) {
+        m_time_manager.Update();         /*! Time ticking */
+        if (m_time_manager.Ticked()) {
+            m_timer_manager.Update();    /*! Timer alarm event checking */
+            Update();
+            Draw();
+        }
+    }
+    /*! Must terminate glfw window */
+    glfwTerminate();
+}
+
+void Application::Update() {
+    if (m_on_before_update_callback) {  /*! If callback is bound, call function once. */
+        m_on_before_update_callback();
+        m_on_before_update_callback = nullptr;
+    }
+
+    Input();                            /*! Input */
+    switch (GetPresentStatus()) {       /*! Update */
+    case GameStatus::PLAYING:
+    case GameStatus::MENU:
+        if (!m_scene_manager.SceneEmpty()) {
+            /*! pre-work such as Delete object, Replace object etc. */
+            m_object_manager.Update();
+
+            /*! Update */
+            m_scene_manager.GetPresentScene()->Update();
+            m_physics_manager.Update();
+        }
+        break;
+    }
+
+	if (IsSwitchOn(m_setting->DebugMode()))
+        m_debug_ui_canvas->Update();
+	if (IsSwitchOn(m_setting->PostProcessing()))
+        m_pp_manager->UpdateSequences(); // Update active effects.
+}
+
+void Application::Input() {
+	m_input_manager.Update();
+	switch (GetPresentStatus()) {
+	case GameStatus::PLAYING: InputGlobal(); break;
+	case GameStatus::MENU: break;
+	}
+}
+
+void Application::InputGlobal() {
+	if (m_input_manager.IsKeyPressed("GlobalCancel"))
+		PopStatus();
+    if (IsSwitchOn(m_setting->SizeScalable())) {
+        if (m_input_manager.IsKeyPressed("GlobalF1"))
+        	ChangeScalingOption(ScaleType::X1);
+        else if (m_input_manager.IsKeyPressed("GlobalF2"))
+        	ChangeScalingOption(ScaleType::X2);
+        else if (m_input_manager.IsKeyPressed("GlobalF3"))
+        	ChangeScalingOption(ScaleType::X3);
+    }
+
+    if (m_input_manager.IsKeyPressed("GlobalF9"))
+        ToggleFpsDisplay();
+    if (m_input_manager.IsKeyPressed("GlobalF10"))
+        TogglePostProcessingEffect();
+}
+
+void Application::Draw() {
+    /*! If there is no scene, do not rendering anything. */
+	if (!m_scene_manager.SceneEmpty()) {
+        glViewport(0, 0, GlobalSetting::ScreenWidth(), GlobalSetting::ScreenHeight());
+
+		if (IsSwitchOn(m_setting->PostProcessing()))
+			m_pp_manager->BindSequence(1);
+        else
+            m_pp_manager->BindSequence(0);
+
+		/** Actual Rendering */
+        m_scene_manager.GetPresentScene()->Draw();
+		/** Post-processing */
+        m_pp_manager->Render();
+	}
+
+	if (IsSwitchOn(m_setting->DebugMode())) m_debug_ui_canvas->Draw();
+
+    glfwSwapBuffers(m_window);
+    glfwPollEvents();
+}
+
+void Application::ToggleFpsDisplay() {
+    m_setting->ToggleDebugMode();
+	std::cerr << static_cast<bool>(m_setting->DebugMode()) << std::endl;
+}
+
+void Application::TogglePostProcessingEffect() {
+    m_setting->TogglePostProcessing();
+	std::cerr << "POST::PROCESSING::SWITCH::" <<
+        static_cast<bool>(m_setting->PostProcessing()) << std::endl;
+}
+
+void Application::ChangeScalingOption(ScaleType value) {
+	if (!IsSameValue(value, m_setting->ScaleValue())) {
+        auto [width, height] = GlobalSetting::ScreenSize();
+
+		switch (value) {
+		case ScaleType::X1: glfwSetWindowSize(m_window, width, height); break;
+		case ScaleType::X2: glfwSetWindowSize(m_window, width << 1, height << 1); break;
+		case ScaleType::X3: glfwSetWindowSize(m_window, width * 3, height * 3); break;
+		}
+
+		m_setting->SetScaleValue(value);
+	}
+	else {
+		std::cerr << "NOTIFY::M_SCALE::VALUE::ARE::SAME" << std::endl;
+	}
+}
+
+//void Application::ToggleAntialiasing() {
+//    if (m_option.anti_aliasing) {
+//        glDisable(GL_MULTISAMPLE);
+//        m_option.anti_aliasing = false;
+//    }
+//    else {
+//        glEnable(GL_MULTISAMPLE);
+//        m_option.anti_aliasing = true;
+//    }
+//
+//#ifdef _DEBUG
+//    std::cout << "MSAA : " << (m_option.anti_aliasing ? "ON" : "OFF") << std::endl;
+//#endif
+//}
+//
+
+void Application::Exit() {
+    PushStatus(GameStatus::EXIT);
+    glfwSetWindowShouldClose(m_window, true);
+    ReplacePresentStatus(GameStatus::TERMINATE);
+}
+
+Application::GameStatus Application::GetPresentStatus() {
+    return m_game_status.top();
+}
+
+void Application::ReplacePresentStatus(GameStatus status) {
+    m_game_status.pop();
+    m_game_status.push(status);
+}
+
+void Application::PushStatus(GameStatus status) {
+    m_game_status.push(status);
+}
+
+void Application::PopStatus() {
+    if (!m_game_status.empty()) {
+        m_game_status.pop();
+        if (m_game_status.empty())
+            Exit();
+    }
+}
+
+Application::~Application() = default;
+
+}

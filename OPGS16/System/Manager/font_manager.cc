@@ -3,14 +3,14 @@
 #include <iostream>
 #include <sstream>
 #include <glm\gtc\matrix_transform.hpp>
-#include "..\..\application.h"
+
+#include "..\Core\Public\core_setting.h"
 
 #include "..\..\System\Shader\shader_manager.h"
 
 FontManager::FontManager() {
 	{	/** Set Font rendering orthographic projection matrix. */
-		auto& app = Application::getInstance();
-		auto size = app.GetDefaultScreenSize();
+		auto size = opgs16::GlobalSetting::ScreenSize();
 		m_projection = glm::ortho(0.f, static_cast<float>(size[0]),
 								0.f, static_cast<float>(size[1]));
 	}

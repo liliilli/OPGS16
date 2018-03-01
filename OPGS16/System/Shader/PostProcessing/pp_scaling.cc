@@ -1,5 +1,6 @@
 #include "pp_scaling.h"             /*! Header file */
-#include "..\..\..\application.h"   /*! Application */
+#include "../../Core/Public/application.h" /*! opgs16::Application */
+#include "../../Core/Public/core_setting.h"
 
 namespace shading {
 
@@ -15,7 +16,7 @@ void PpEffectScaling::Initiate() {
 }
 
 void PpEffectScaling::RenderEffect() {
-    auto scale_val = Application::getInstance().GetScaleValue();
+    auto scale_val = opgs16::Application::Instance().Setting().ScaleValueIntegerOf();
 
     glViewport(0, 0, 256 * scale_val, 224 * scale_val);
     PostProcessingFrame::RenderEffect();

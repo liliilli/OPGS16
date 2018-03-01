@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="entry.cc" />
-    <ClCompile Include="application.cc" />
     <ClCompile Include="Scenes\path_finding2d.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Shader\shader_manager.cc" />
@@ -58,9 +57,10 @@
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
     <ClCompile Include="System\Manager\resource_type.cc" />
+    <ClCompile Include="System\Core\Private\application.cc" />
+    <ClCompile Include="System\Core\Private\core_setting.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
     <ClInclude Include="Objects\Interface\i_radiant.h" />
     <ClInclude Include="Scenes\path_finding2d.h" />
     <ClInclude Include="System\Shader\shader.h" />
@@ -135,6 +135,10 @@
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
     <ClInclude Include="System\Manager\resource_type.h" />
+    <ClInclude Include="System\Core\Public\core_setting.h" />
+    <ClInclude Include="System\Core\Public\core_header.h" />
+    <ClInclude Include="System\Helper\Public\switch.h" />
+    <ClInclude Include="System\Core\Public\application.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

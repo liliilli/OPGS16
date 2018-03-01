@@ -9,8 +9,8 @@
 
 #include <memory>
 #include <stack>
-#include "..\Frame\scene.h"     /*! Scene */
-#include "..\..\application.h"  /*! Application for callback forwarding */
+#include "../Frame/scene.h"     /*! Scene */
+#include "../Core/Public/application.h" /*! Application for callback forwarding */
 
 /*!
  * @class SceneManager
@@ -54,7 +54,7 @@ public:
         >
     >
     void ReplaceScene() {
-        auto& app = Application::getInstance();
+        auto& app = opgs16::Application::Instance();
         app.SetOnBeforeUpdateCallback(std::bind(&SceneManager::PrivateReplaceScene<_Ty>, this));
     }
 

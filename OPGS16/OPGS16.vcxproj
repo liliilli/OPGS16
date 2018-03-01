@@ -133,7 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application.cc" />
+    <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
     <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
     <ClCompile Include="GlobalObjects\Canvas\image.cc" />
@@ -143,6 +143,7 @@
     <ClCompile Include="Objects\Debug\Script\ui_manager.cc" />
     <ClCompile Include="Objects\TempDebug\test_image.cc" />
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
+    <ClCompile Include="System\Core\Private\core_setting.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
     <ClCompile Include="System\Manager\resource_type.cc" />
     <ClCompile Include="System\Manager\timer_manager.cc" />
@@ -194,7 +195,7 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
+    <ClInclude Include="System\Core\Public\application.h" />
     <ClInclude Include="GlobalObjects\camera_object.h" />
     <ClInclude Include="GlobalObjects\Canvas\canvas.h" />
     <ClInclude Include="GlobalObjects\Canvas\image.h" />
@@ -217,7 +218,10 @@
     <ClInclude Include="Objects\TempDebug\test_image.h" />
     <ClInclude Include="Objects\TempDebug\test_start_txt.h" />
     <ClInclude Include="Objects\TempDebug\test_start_t_copy.h" />
+    <ClInclude Include="System\Core\Public\core_header.h" />
+    <ClInclude Include="System\Core\Public\core_setting.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
+    <ClInclude Include="System\Helper\Public\switch.h" />
     <ClInclude Include="System\Manager\resource_type.h" />
     <ClInclude Include="System\Manager\timer_manager.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />

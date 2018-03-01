@@ -1,3 +1,6 @@
+#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
+#define OPGS16_SYSTEM_HELPER_SWITCH_H
+
 /*!
  * @license BSD 2-Clause License
  *
@@ -27,26 +30,32 @@
  */
 
 /*!
- * @file entry.cc
- * @brief The file which operates actual application.
- * @author Jongmin Yun
+ * @file System/Helper/Public/switch.h
+ * @brief Switch enum class replaces plain boolean type.
  *
+ * @author Jongmin Yun
  * @log
- * 2018-03-01 Refactoring.
+ * 2018-03-01 Create file.
  */
 
-/*! This statements are for checking memory leaks. */
-//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
-//_crtBreakAlloc = 180;
-//_CrtDumpMemoryLeaks();
+namespace opgs16 {
 
-#include "System/Core/Public/application.h"
+/*! Switch enum constant used everywhere instead of just using plain bool type. */
+enum class Switch : bool {
+    OFF = false,
+    ON = true
+};
 
-int main() {
-    using opgs16::Application;
-    auto& app = Application::Instance();
-    app.Initiate();
-    app.Run();
-
-    return 0;
+/*! Toggle switch value helper function. */
+inline Switch ToggleSwitch(Switch value) noexcept {
+    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
 }
+
+/*! Return boolean value whether state of switch value is ON. */
+inline constexpr bool IsSwitchOn(Switch value) {
+    return value == Switch::ON;
+}
+
+}
+
+#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */
