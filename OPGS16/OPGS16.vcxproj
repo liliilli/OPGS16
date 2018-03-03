@@ -247,7 +247,7 @@
     <ClInclude Include="System\Manager\physics_manager.h" />
     <ClInclude Include="System\Manager\scene_manager.h" />
     <ClInclude Include="System\Manager\setting_manager.h" />
-    <ClInclude Include="System\Manager\time_manager.h" />
+    <ClInclude Include="System\Manager\Public\time_manager.h" />
     <ClInclude Include="System\Object\Impl\sprite_renderer_impl.h" />
     <ClInclude Include="System\Object\object.h" />
     <ClInclude Include="Objects\Interface\i_radiant.h" />

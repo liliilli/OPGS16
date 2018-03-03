@@ -94,7 +94,7 @@ private:
     manager::ResourceManager&    m_resource_manager;
     SceneManager&       m_scene_manager;    /*! SceneManager instance */
     SoundManager&       m_sound_manager;
-    TimeManager&        m_time_manager;
+    manager::TimeManager&        m_time_manager;
     TimerManager&       m_timer_manager;
 
     std::unique_ptr<GlobalSetting> m_setting;

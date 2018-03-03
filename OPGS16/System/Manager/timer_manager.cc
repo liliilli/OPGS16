@@ -1,10 +1,10 @@
 #include "timer_manager.h"  /*! Header file */
-#include "time_manager.h"   /*! TimeManager */
+#include "Public/time_manager.h"   /*! opgs16::manager::TimeManager */
 
 size_t TimerManager::s_timer_count = 0;
 
 void TimerManager::Update() {
-    auto time_quantum = TimeManager::GetInstance().GetDeltaTime();
+    auto time_quantum = opgs16::manager::TimeManager::Instance().GetDeltaTime();
 
     /*! Iteration & Checking */
     for (auto& timer : m_timer_container) {

@@ -4,7 +4,7 @@
 #include <cmath>                                    /*! std::cosf() */
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
-#include "..\..\..\System\Manager\time_manager.h"   /*! TimeManager */
+#include "..\..\..\System\Manager\Public\time_manager.h"   /*! TimeManager */
 #include "..\..\..\System\Manager\timer_manager.h"  /*! TimerManager */
 
 #include "..\Object\test_obj.h" /*! TestObject1 for temporary */
@@ -188,7 +188,7 @@ void ObjectScript1::Proceed_3WorldPosition() {
 }
 
 void ObjectScript1::Proceed_4AlphaBlending() {
-    m_elapsed_time += TimeManager::GetInstance().GetDeltaTime();
+    m_elapsed_time += opgs16::manager::TimeManager::Instance().GetDeltaTime();
     m_object_alpha = (std::cosf(m_2pi * m_elapsed_time) + 1.0f) / 2;
 
     SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
@@ -197,7 +197,7 @@ void ObjectScript1::Proceed_4AlphaBlending() {
 }
 
 void ObjectScript1::Proceed_5Scaling() {
-    m_elapsed_time += TimeManager::GetInstance().GetDeltaTime();
+    m_elapsed_time += opgs16::manager::TimeManager::Instance().GetDeltaTime();
     m_object_scale_offset = (std::sinf(m_2pi * m_elapsed_time) / 2) + 0.5f;
 
     GetObject().SetScaleValue(m_object_original_scale * m_object_scale_offset);

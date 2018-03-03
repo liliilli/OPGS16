@@ -98,7 +98,6 @@
     <ClInclude Include="System\Shader\Impl\pp_frame_impl.h" />
     <ClInclude Include="System\Manager\font_manager.h" />
     <ClInclude Include="System\Manager\sound_manager.h" />
-    <ClInclude Include="System\Manager\time_manager.h" />
     <ClInclude Include="System\Components\script_frame.h" />
     <ClInclude Include="Objects\TempDebug\test_image.h" />
     <ClInclude Include="Objects\TempDebug\test_start_txt.h" />
@@ -142,6 +141,7 @@
     <ClInclude Include="System\Manager\Public\resource_manager.h" />
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Public\input_manager.h" />
+    <ClInclude Include="System\Manager\Public\time_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

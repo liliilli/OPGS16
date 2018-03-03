@@ -55,7 +55,7 @@ Application::Application() :
     m_resource_manager{ manager::ResourceManager::Instance() },
     m_scene_manager{ SceneManager::GetInstance() },
     m_sound_manager{ SoundManager::GetInstance() },
-    m_time_manager{ TimeManager::GetInstance() },
+    m_time_manager{ manager::TimeManager::Instance() },
     m_timer_manager{ TimerManager::GetInstance() } {
 
     m_setting = std::make_unique<GlobalSetting>();

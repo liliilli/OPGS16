@@ -44,7 +44,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
-#include "../time_manager.h"
+#include "../Public/time_manager.h"   /*! opgs16::manager::TimeManager */
 
 namespace opgs16 {
 
@@ -251,7 +251,7 @@ void InputManager::Update() {
 }
 
 void InputManager::ProceedGravity(BindingKeyInfo & key_info) {
-	const auto dt = TimeManager::GetInstance().GetDeltaTime();
+	const auto dt = TimeManager::Instance().GetDeltaTime();
 	auto value = key_info.value;
 	key_info.send_signal = false;
 

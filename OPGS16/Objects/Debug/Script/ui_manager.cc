@@ -5,7 +5,7 @@
 #include <iostream>                                 /*! std::cout */
 #include <sstream>                                  /*! std::ostringstream */
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
-#include "..\..\..\System\Manager\time_manager.h"   /*! TimeManager::GetInstance() */
+#include "../../../System/Manager/Public/time_manager.h"   /*! opgs16::manager::TimeManager */
 
 /*! Tree */
 #include "..\..\..\System\Debugs\hierarchy_tree.h"  /*! ObjectTree */
@@ -27,7 +27,7 @@ void DebugUiManager::Start() {}
 void DebugUiManager::Update() {
     if (m_fps) {
         std::ostringstream str;
-        str << std::setprecision(4) << TimeManager::GetInstance().GetFpsSeconds();
+        str << std::setprecision(4) << opgs16::manager::TimeManager::Instance().GetFpsSeconds();
         m_fps->SetText("Fps : " + str.str());
     }
 
