@@ -4,31 +4,6 @@ $ _Project/Maintenance/Resource/
 # GLOBAL (not release until game end.) = G
 # LOCAL (will be release until game end.) = L
 
-# SHADERS
-SHADE gQuad G
-- VS Shader/Global/__2dquad.vert
-- FS Shader/Global/__2dquad.frag
-
-SHADE gCommonFont G
-- VS Shader/Global/font.vert
-- FS Shader/Global/font.frag
-
-SHADE ppQuad G
-- VS Shader/Global/quad.vert
-- FS Shader/Global/quad.frag
-
-SHADE ppConvex G
-- VS Shader/Global/quad.vert
-- FS Shader/PostProcessing/convex.frag
-
-SHADE ppGray G
-- VS Shader/Global/quad.vert
-- FS Shader/PostProcessing/gray.frag
-
-SHADE ppSineWave G
-- VS Shader/Global/quad.vert
-- FS Shader/PostProcessing/sinewave.frag
-
 # SOUND EFFECTS
 SEBGM Music1 G sample.wav
 

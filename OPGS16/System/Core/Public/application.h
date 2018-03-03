@@ -53,9 +53,6 @@
 /*! Framework overall namespace includes all components. */
 namespace opgs16 {
 
-/*! Callback method for size check and resizing */
-void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height);
-
 /*!
  * @class Application
  * @brief Application class runs application.
@@ -91,7 +88,7 @@ private:
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
 	shading::PostProcessingManager* m_pp_manager;
-	InputManager&       m_input_manager;
+	manager::InputManager&       m_input_manager;
     ObjectManager&      m_object_manager;
     PhysicsManager&     m_physics_manager;
     manager::ResourceManager&    m_resource_manager;

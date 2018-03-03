@@ -49,6 +49,7 @@ class   GlobalSetting;
 
 namespace manager {
 
+class   InputManager;   /*! Input polling */
 class   ResourceManager;
 
 } /*! opgs16::manager */
@@ -109,7 +110,6 @@ class   ShaderWrapper;
 
 /** Managers */
 class   FontManager;    /*! Font management */
-class   InputManager;   /*! Input polling */
 class   ObjectManager;  /*! Objects */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */

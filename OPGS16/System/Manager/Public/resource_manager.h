@@ -47,7 +47,6 @@
 #include "../../../Headers/Fwd/objectfwd.h"
 
 namespace opgs16 {
-
 /*! Namespace for manager */
 namespace manager {
 

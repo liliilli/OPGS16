@@ -40,15 +40,16 @@ namespace {
 using namespace std::string_view_literals;
 constexpr std::string_view g_global_resource_path{ "_resource.meta"sv };
 
-}
-
+/*! Callback method for size check and resizing */
 void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+}
+
 Application::Application() :
     m_window{ InitApplication(u8"OPGS16") },
-    m_input_manager{ InputManager::GetInstance() },
+    m_input_manager{ manager::InputManager::Instance() },
     m_object_manager{ ObjectManager::GetInstance() },
     m_physics_manager{ PhysicsManager::GetInstance() },
     m_resource_manager{ manager::ResourceManager::Instance() },
@@ -104,8 +105,6 @@ void Application::Initiate() {
         m_input_manager.Initialize(m_window);
         m_sound_manager.ProcessInitialSetting();
 
-        m_resource_manager.ReadResourceFile(R"(_Project/Maintenance/_meta/_resource.meta)");
-
 		InitiateFonts();
 		InitiateDebugUi();
 		InitiatePostProcessingEffects();
@@ -116,6 +115,7 @@ void Application::Initiate() {
         glEnable(GL_DEPTH_TEST);
 
 		/** Insert first scene */
+        m_resource_manager.ReadResourceFile(R"(_Project/Maintenance/_meta/_resource.meta)");
         m_scene_manager.PushScene<Maintenance>();
 		ReplacePresentStatus(GameStatus::PLAYING);
 	}

@@ -1,40 +1,40 @@
 # KB, MS, ETC.
 
 KB GlobalCancel
-+ GLFW_KEY_ESCAPE
++ 256
 g 1000
 
 KB GlobalF1
-+ GLFW_KEY_F1
++ 290
 g 1000
 
 KB GlobalF2
-+ GLFW_KEY_F2
++ 291
 g 1000
 
 KB GlobalF3
-+ GLFW_KEY_F3
++ 292
 g 1000
 
 KB GlobalF9
-+ GLFW_KEY_F9
++ 298
 g 1000
 
 KB GlobalF10
-+ GLFW_KEY_F10
++ 299
 g 1000
 
 KB PlusKey
-+ GLFW_KEY_F4
++ 293
 g 1000
 
 KB Horizontal
-+ GLFW_KEY_RIGHT
-- GLFW_KEY_LEFT
++ 262
+- 263
 g 10
 
 KB Vertical
-+ GLFW_KEY_UP
-- GLFW_KEY_DOWN
++ 265
+- 264
 g 10
 

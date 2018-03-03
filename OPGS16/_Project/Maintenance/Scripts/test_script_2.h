@@ -10,7 +10,7 @@ public:
     virtual void Update() override final;
 
 private:
-    InputManager& m_input;
+    opgs16::manager::InputManager& m_input;
 
     virtual void Start() override final {};
 

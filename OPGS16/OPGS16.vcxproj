@@ -170,7 +170,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="System\Object\ui_object.cc" />
-    <ClCompile Include="System\Manager\input_manager.cc" />
+    <ClCompile Include="System\Manager\Private\input_manager.cc" />
     <ClCompile Include="System\Manager\Private\resource_manager.cc" />
     <ClCompile Include="System\Manager\texture_manager.cc" />
     <ClCompile Include="System\Object\Impl\object_impl.cc" />
@@ -223,6 +223,7 @@
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="System\Helper\Public\access_ptr.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
+    <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Internal\resource_internal.h" />
     <ClInclude Include="System\Manager\Public\resource_type.h" />
     <ClInclude Include="System\Manager\timer_manager.h" />
@@ -255,7 +256,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="System\Object\ui_object.h" />
-    <ClInclude Include="System\Manager\input_manager.h" />
+    <ClInclude Include="System\Manager\Public\input_manager.h" />
     <ClInclude Include="System\Manager\Public\resource_manager.h" />
     <ClInclude Include="System\Manager\texture_manager.h" />
     <ClInclude Include="System\Object\Impl\object_impl.h" />

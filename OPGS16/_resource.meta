@@ -6,3 +6,28 @@ FONT Sans G Fonts/Liberate/LiberationSans-Regular.ttf 1
 FONT Solomon G Fonts/SolomonP.ttf 0
 FONT Menus G Fonts/Menus.ttf 0
 FONT BIOS G Fonts/PxPlus_IBM_BIOS.ttf 0
+
+# SHADERS
+SHADE gQuad G
+- VS Shader/Global/__2dquad.vert
+- FS Shader/Global/__2dquad.frag
+
+SHADE gCommonFont G
+- VS Shader/Global/font.vert
+- FS Shader/Global/font.frag
+
+SHADE ppQuad G
+- VS Shader/Global/quad.vert
+- FS Shader/Global/quad.frag
+
+SHADE ppConvex G
+- VS Shader/Global/quad.vert
+- FS Shader/PostProcessing/convex.frag
+
+SHADE ppGray G
+- VS Shader/Global/quad.vert
+- FS Shader/PostProcessing/gray.frag
+
+SHADE ppSineWave G
+- VS Shader/Global/quad.vert
+- FS Shader/PostProcessing/sinewave.frag

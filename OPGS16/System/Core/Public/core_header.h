@@ -33,9 +33,10 @@
  * @file System/Core/Public/core_header.h
  * @brief Header file list to include on application.cc
  *
- * @author Author
+ * @author Jongmin Yun
  * @log
  * 2018-03-01 Create file.
+ * 2018-03-03 Refactoring.
  */
 
 #include "..\..\GlobalObjects\Canvas\canvas.h"
@@ -47,7 +48,7 @@
 #include "..\..\System\Shader\PostProcessing\pp_sinewave.h"
 #include "..\..\System\Shader\PostProcessing\pp_gray.h"
 #include "..\..\System\Manager\font_manager.h"    /*! FontManager */
-#include "..\..\System\Manager\input_manager.h"   /*! InputManager */
+#include "../../System/Manager/Public/input_manager.h"   /*! InputManager */
 #include "..\..\System\Manager\object_manager.h"  /*! ObjectManager */
 #include "..\..\System\Manager\physics_manager.h" /*! PhysicsManager*/
 #include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
