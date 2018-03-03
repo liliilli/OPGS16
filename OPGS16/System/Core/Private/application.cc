@@ -123,7 +123,7 @@ void Application::Initiate() {
 
 void Application::InitiateFonts() {
 	/** First we need initiate default font. */
-	auto& font = FontManager::GetInstance();
+	auto& font = manager::FontManager::Instance();
     font.GenerateFont("Sans");
     font.GenerateFont("Solomon");
     font.GenerateFont("Menus");

@@ -1,5 +1,5 @@
-#ifndef OPGS16__SYSTEM_FONT_MANAGER_H
-#define OPGS16__SYSTEM_FONT_MANAGER_H
+#ifndef OPGS16_SYSTEM_FONT_MANAGER_H
+#define OPGS16_SYSTEM_FONT_MANAGER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,19 +30,23 @@
  */
 
 /**
- * @file System/font_manager.h
+ * @file System/Manager/Public/font_manager.h
  * @brief Fundamental font renderer to render string, and manages font glyphs.
  *
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @date 2018 - 02 - 06
+ * @log
+ * 2018-02-06 Create file.
+ * 2018-03-03 Refactoring.
  */
 
-#include <string>
 #include <array>
+#include <string>
+#include <iostream>
 #include <memory>
-#include <unordered_map>
+#include <map>
+
 #include <ft2build.h>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
@@ -53,12 +57,22 @@
 #include "..\..\GlobalObjects\Interface\i_originable.h"
 #include "..\..\GlobalObjects\Interface\i_alignable.h"
 
-/**
+namespace opgs16 {
+namespace manager {
+
+/*! Default font size variable */
+constexpr unsigned k_default_font_size = 16u;
+
+/*!
  * @class FontManager
  * @brief The class manages reading fonts, rendering fonts.
  *
  * This class manages reading fonts, rendering fonts.
  * default shader is initiated as creating font instance.
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-03-03 Refactoring. Move it to opgs16::manager.
  *
  * @todo Shader must be static instance to reduce memory usage.
  */
@@ -78,33 +92,16 @@ public:
     };
 
 	/** Internal type aliasing */
-	using font_type		= std::unordered_map<GLchar, Character>;
-	using font_raw		= font_type*;
+	using font_type		= std::map<GLchar, Character>;
 	using font_map_ptr	= std::unique_ptr<font_type>;
+	using font_raw		= font_type*;
 
 public:
-	/**
-	 * @brief Return single static instance. This must be called in initiation time once.
-	 * @return The reference of FontManager instance.
-	 */
-	static FontManager& GetInstance() {
+	/*! Return single static instance. This must be called in initiation time once. */
+	static FontManager& Instance() {
 		static FontManager instance{};
 		return instance;
 	}
-
-	/**
-	 * @brief Initiate font glyph includes ASCII characters to use in program.
-	 *
-	 * @param[in] tag The tag refer to stored font glyphs later.
-	 * @param[in] font_path Font path to load.
-	 * @param[in] is_default The flag to set up this font to default in use.
-	 * default value is false (not default).
-	 *
-	 * @return The suceess flag.
-	 */
-	bool InitiateFont(const std::string& tag,
-                      const std::string& font_path,
-                      bool is_default = false);
 
     /*!
      * @brief Generate font glyphs with name_tag from ResourceManager.
@@ -142,30 +139,6 @@ public:
 	 */
 	inline bool DoesFontExist(const std::string& font_name);
 
-    /**
-     * @brief Get defult font size value, set at initialization time of FontManager.
-     * @return Default font size.
-     */
-    inline unsigned GetDefaultFontSize() const {
-        return m_default_font_size;
-    }
-
-    /**
-     * @brief The method renders given text on given position with given color.
-	 *
-	 * This method is deprecated. (version 0.0.2~)
-     *
-     * @param[in] text String text
-     * @param[in] pos Position text has to be shown on. x, y.
-     * @param[in] scale Scale factor
-     * @param[in] color Color to be colored.
-	 *
-	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
-     */
-
-	[[deprecated("Use RenderTextNew instead. this method does not support alignment features.")]]
-	void RenderText(std::string text, glm::vec2 pos, GLfloat scale, glm::vec3 color);
-
 	/**
 	 * @brief The method renders given text on given position with given color.
 	 *
@@ -186,9 +159,10 @@ public:
 	 *
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
-	 void RenderTextNew(const std::string& text, IOriginable::Origin origin,
-		glm::vec2 relative_position, glm::vec3 color,
-		IAlignable::Alignment alignment = IAlignable::Alignment::LEFT, const float scale = 1.0f);
+	void RenderTextNew(const std::string& text, IOriginable::Origin origin,
+                       glm::vec2 relative_position, glm::vec3 color,
+                       IAlignable::Alignment alignment = IAlignable::Alignment::LEFT,
+                       const float scale = 1.0f);
 
 private:
     /** Freetype pointer */
@@ -201,26 +175,40 @@ private:
 	font_raw	m_default_font{ nullptr };
 
     std::array<GLuint, 4> m_viewport_size;
-	glm::mat4 m_projection;
+    const glm::mat4 m_projection;
 
     GLuint m_vao, m_vbo;
 
 	helper::ShaderNew* m_shader{};
-	const unsigned m_default_font_size = 16u;
 
 private:
 	/**
 	 * @brief This method starts shader with color to render.
 	 * @param[in] color The color to be attached to shader.
 	 */
-	 void StartShader(const glm::vec3& color);
+	void StartShader(const glm::vec3& color);
 
 	/**
 	 * @brief Checks freetype pointer with FontPath.
 	 * @param[in] font_path Font's path to refer.
 	 * @return If checking is successful, return true. otherwise return false.
 	 */
-	bool CheckFreeType(const std::string& font_path);
+    inline bool CheckFreeType(const std::string& font_path) noexcept {
+        // Check Freetype is well.
+        if (FT_Init_FreeType(&m_freetype)) {
+            std::cerr << "ERROR::FREETYPE: Could not init Freetype Library\n";
+            return false;
+        }
+        else return true;
+    }
+
+    inline bool LoadFreeType(const std::string& font_path) noexcept {
+        if (FT_New_Face(m_freetype, font_path.c_str(), 0, &m_ft_face)) {
+            std::cerr << "ERROR::FREETYPE: Failed to load font\n";
+            return false;
+        }
+        else return true;
+    }
 
     /**
      * @brief The method sets character textures from glyphs and store them to container.
@@ -232,7 +220,7 @@ private:
 	/**
 	 * @brief This methods ends shader's operation.
 	 */
-	 inline void EndShader() {
+	inline void EndShader() {
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -244,8 +232,8 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	 void RenderLeftSide(const std::vector<std::string>& container,
-		const glm::vec2& position, const float scale);
+	void RenderLeftSide(const std::vector<std::string>& container,
+                        const glm::vec2& position, const float scale);
 
 	/**
 	 * @brief Final render method actually renders strings from center side.
@@ -254,8 +242,8 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	 void RenderCenterSide(const std::vector<std::string>& container,
-		const glm::vec2& position, const float scale);
+	void RenderCenterSide(const std::vector<std::string>& container,
+                          const glm::vec2& position, const float scale);
 
 	/**
 	 * @brief Final render method actually renders strings from right side.
@@ -264,8 +252,8 @@ private:
 	 * @param[in] position Position on which to render.
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
-	 void RenderRightSide(const std::vector<std::string>& container,
-		const glm::vec2& position, const float scale);
+	void RenderRightSide(const std::vector<std::string>& container,
+                         const glm::vec2& position, const float scale);
 
 	/**
 	 * @brief The method gets character quad vertices to be needed for rendering.
@@ -277,7 +265,7 @@ private:
 	 * @return Character glyph render vertices information.
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
-	std::array<glm::vec4, 6> GetCharacterVertices
+	std::array<float, 24> GetCharacterVertices
 	(const Character& info, const glm::vec2& position, const float scale);
 
 	/**
@@ -297,14 +285,14 @@ private:
 	 * @param[in] ch_info
 	 * @param[in] vertices
 	 */
-	 void Render(const Character& ch_info, const std::array<glm::vec4, 6>& vertices);
+	void Render(const Character& ch_info, const std::array<float, 24>& vertices);
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.
      *
      * This methods called when initiate instance.
      */
-     void BindVertexAttributes();
+    void BindVertexAttributes();
 
     /**
      * @brief The method separate input to multi-lines strings detecting line-feed return carriage.
@@ -319,15 +307,17 @@ private:
 	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
 	 */
 	FontManager();
+
+public:
 	FontManager(const FontManager&) = delete;
 	FontManager& operator=(const FontManager&) = delete;
-	FontManager(const FontManager&&) = delete;
-	FontManager&& operator=(const FontManager&&) = delete;
 };
 
 inline bool FontManager::DoesFontExist(const std::string& tag) {
-	if (m_fonts.find(tag) == m_fonts.end()) return false;
-	else return true;
+    return m_fonts.find(tag) != m_fonts.end();
 }
 
-#endif // OPGS16__SYSTEM_FONT_MANAGER_H
+} /*! opgs16::manager */
+} /*! opgs16 */
+
+#endif /*! OPGS16_SYSTEM_FONT_MANAGER_H */

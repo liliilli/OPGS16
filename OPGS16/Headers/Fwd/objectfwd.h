@@ -49,6 +49,7 @@ class   GlobalSetting;
 
 namespace manager {
 
+class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ResourceManager;
 class   TimeManager;    /*! Tick time */
@@ -110,7 +111,6 @@ class   ShaderNew;
 class   ShaderWrapper;
 
 /** Managers */
-class   FontManager;    /*! Font management */
 class   ObjectManager;  /*! Objects */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */

@@ -88,14 +88,14 @@ public:
      * does not alter bit-consistancy of FontManager.
      * @return Const reference of FontManager which this class grasps (must not be a nullptr.)
      */
-    inline const FontManager& GetFontManager() const {
+    inline const opgs16::manager::FontManager& GetFontManager() const {
         return *m_font_manager;
     }
 
 private:
     /** private implementation instance */
     std::unique_ptr<TextImpl, TextImplDeleter> m_text_impl{ nullptr };
-	FontManager* const m_font_manager{ nullptr };
+	opgs16::manager::FontManager* const m_font_manager{ nullptr };
 };
 }
 
