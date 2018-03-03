@@ -18,7 +18,7 @@
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! SpriteRendererImpl
                                               * SpriteRendererImplDeleter
                                               * ShaderWraper */
-#include "..\Manager\resource_type.h"       /*! resource::Texture2D::IndexSize */
+#include "../Manager/Public/resource_type.h"       /*! resource::Texture2D::IndexSize */
 
 /**
  * @class SpriteRender
@@ -35,13 +35,13 @@
  */
 class SpriteRenderer final {
 private:
-    using IndexSize = resource::Texture2D::IndexSize;
+    using IndexSize = opgs16::resource::Texture2D::IndexSize;
 
 public:
 	/*! Make SpriteRenderer instance. (Constructor) */
 	SpriteRenderer(const std::string& sprite_tag,
 				   const std::string& shader_tag,
-                   const resource::Texture2D::IndexSize& texture_index = {0, 0},
+                   const opgs16::resource::Texture2D::IndexSize& texture_index = {0, 0},
 				   const unsigned layer = 0);
 
 	/*!

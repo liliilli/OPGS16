@@ -1,7 +1,8 @@
 #include "sound_manager.h"      /*! Header file */
 #include <iostream>             /*! std::cerr */
 #include <string>               /*! std::string */
-#include "resource_manager.h"   /*! ResourceManager */
+#include "Public/resource_manager.h"   /*! ResourceManager */
+#include "Public/resource_type.h"
 
 constexpr bool FAILED   = false;
 constexpr bool SUCCESS  = true;
@@ -61,7 +62,7 @@ bool SoundManager::ProcessInitialSetting() {
 bool SoundManager::CreateSound(const std::string& tag, const std::string& path,
                                SoundType sound_type) {
     if (DoesSoundExist(tag)) {
-        ResourceManager::GetInstance().GetSound(tag);
+        opgs16::manager::ResourceManager::Instance().GetSound(tag);
 
         return FAILED;
     }
@@ -97,12 +98,12 @@ bool SoundManager::CreateSound(const std::string& item_tag) {
         return true;
     }
     else {
-        auto& sound_path = ResourceManager::GetInstance().GetSound(item_tag);
+        auto& sound_item = opgs16::manager::ResourceManager::Instance().GetSound(item_tag);
 
         FMOD::Sound* sound;
-        if (m_system->createSound(sound_path.c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
+        if (m_system->createSound(sound_item.Path().c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
             /*! Write to logger if debug mode. if not and after this, mute app. */
-            std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << sound_path << "\n";
+            std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << sound_item.Path() << "\n";
             return FAILED;
         }
 

@@ -41,10 +41,38 @@
 #include <glm/fwd.hpp>	/** glm matrix forward declaration. */
 
 namespace opgs16 {
+
 enum class ScaleType : unsigned;
+
 struct  GlobalOption;
 class   GlobalSetting;
-}
+
+namespace manager {
+
+class   ResourceManager;
+
+} /*! opgs16::manager */
+
+namespace resource {
+
+enum class EScopeType;
+enum class EShaderType : int;
+
+struct  Texture2D;
+class   SFont;
+class   SSound;
+class   SShader;
+
+namespace _internal {
+
+enum class ESymbolType;
+enum class EResourceType;
+
+} /*! resource::_internal */
+
+} /*! resource */
+
+} /*! opgs16 */
 
 namespace helper { class ShaderNew; }
 namespace camera { class CameraObject; }
@@ -60,11 +88,6 @@ class	ObjectImpl;
 struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
 
 struct	ObjectTree;
-
-namespace resource {
-enum class ScopeType;
-struct  Texture2D;
-}
 
 // Derived
 namespace canvas {
@@ -88,7 +111,6 @@ class   ShaderWrapper;
 class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ObjectManager;  /*! Objects */
-class   ResourceManager;/*! Resource */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */
 class   SoundManager;   /*! Sounds */

@@ -1,4 +1,32 @@
-#include "font_manager.h"
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "font_manager.h"   /*! Header file */
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -6,6 +34,7 @@
 
 #include "..\Core\Public\core_setting.h"
 
+#include "Public/resource_manager.h"
 #include "..\..\System\Shader\shader_manager.h"
 
 FontManager::FontManager() {
@@ -44,8 +73,9 @@ void FontManager::BindVertexAttributes() {
  *
  * @return The suceess flag.
  */
-bool FontManager::InitiateFont(const std::string& tag, const std::string& font_path,
-	bool is_default) {
+bool FontManager::InitiateFont(const std::string& tag,
+                               const std::string& font_path,
+                               bool is_default) {
 	if (m_fonts.find(tag) != m_fonts.end()) {
 		std::cerr << "ERROR::FREETYPE: There is already another font in tag." << std::endl;
 		return false;
@@ -64,6 +94,27 @@ bool FontManager::InitiateFont(const std::string& tag, const std::string& font_p
 		return true;
 	}
 	else return false;
+}
+
+bool FontManager::GenerateFont(const std::string& name_tag) {
+    if (DoesFontExist(name_tag))
+        return false;
+
+    const auto [success, information] = opgs16::manager::ResourceManager::Instance().GetFont(name_tag);
+    if (success && CheckFreeType(information->Path())) {
+		FT_Set_Pixel_Sizes(m_ft_face, 0, m_default_font_size);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		// Create font and move it.
+		m_fonts.emplace(std::make_pair(name_tag, GetCharTextures()));
+		// If caller ordere this font must be a default, insert raw pointer.
+		if (information->IsDefault()) m_default_font = m_fonts[name_tag].get();
+
+		FT_Done_Face(m_ft_face);
+		FT_Done_FreeType(m_freetype);
+		return true;
+    }
+    else return false;
 }
 
 FontManager::font_map_ptr FontManager::GetCharTextures() {

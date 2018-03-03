@@ -1,19 +1,56 @@
 #ifndef OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H
 #define OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H
 
-/**
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
  * @file System\Shader\shader_manager.h
  * @brief Shader management class.
  *
  * @author Jongmin Yun
- * @date 2018-02-06
+ * @log
+ * 2018-03-03 Refactoring.
  */
 
 #include <memory>
 #include <unordered_map>
 #include "shader.h"
 #include "..\Object\object.h"
-#include "..\Manager\resource_manager.h"
+#include "../Manager/Public/resource_manager.h"
+
+namespace opgs16 {
+
+namespace manager {
+
+} /*! opgs16::manager */
+
+} /*! opgs16 */
 
 /**
  * @class ShaderManager
@@ -30,14 +67,11 @@
 class ShaderManager final {
 private:
 	template<typename _Ty>
-	using hash_container = std::unordered_map<std::string, _Ty>;
+	using container_map = std::unordered_map<std::string, _Ty>;
 
 public:
 	using shader_raw = helper::ShaderNew*;
 	using shader_ptr = std::unique_ptr<helper::ShaderNew>;
-	using shader_type = helper::ShaderNew::Type;
-	using shader_list = std::initializer_list<std::pair<shader_type, const std::string>>;
-	using shader_vec = ResourceManager::shader_list;
 
 	/**
 	 * @brief Static method gets unique instance of ShaderManager class.
@@ -57,27 +91,7 @@ public:
 	 */
 	inline shader_raw GetShaderWithName(const std::string& name);
 
-	/**
-	 * @brief This create new shader return created shader or already existed shader.
-	 *
-	 *
-	 * @param[in] tag The tag to specify.
-	 * @param[in] initializer_list Shader arugments to create appropriate shader.
-	 * @return Shader raw-pointer.
-	 */
-	shader_raw CreateShader(const std::string& tag, const shader_list& initializer_list);
-
-	/**
-	 * @brief Override version method of CreateShader(std::string, shader_list).
-	 * @param[in] tag The tag to specify.
-	 * @param[in] list vector conatiner contains shader arguments to create.
-	 * @return created shader raw-pointer.
-	 */
-	shader_raw CreateShader(const std::string& tag, const shader_vec& list);
-
-	/**
-	 * @brief Release all shaders in shader container.
-	 */
+	/** Release all shader program in shader container. */
 	 void Clear();
 
 	/**
@@ -92,12 +106,21 @@ public:
 	 void CheckError();
 
 private:
+	/**
+	 * @brief Override version method of CreateShader(std::string, shader_list).
+	 * @param[in] tag The tag to specify.
+	 * @param[in] list vector conatiner contains shader arguments to create.
+	 * @return created shader raw-pointer.
+	 */
+	shader_raw CreateShader(const std::string& tag, const opgs16::resource::SShader& container);
+
+private:
 	/** ShaderManager error type */
 	enum class ErrorType {
 		OK,
 	} m_error{ ErrorType::OK };
 
-	hash_container<shader_ptr> m_shaders{};	// Shader container.
+	container_map<shader_ptr> m_shaders{};	// Shader container.
 
 private:
 	/**
@@ -111,6 +134,8 @@ private:
 
 private:
 	ShaderManager() = default;
+
+public:
 	ShaderManager(const ShaderManager&) = delete;
 	ShaderManager& operator=(const ShaderManager&) = delete;
 };
@@ -125,7 +150,7 @@ private:
 inline ShaderManager::shader_raw ShaderManager::GetShaderWithName(const std::string& name) {
 	if (m_shaders.find(name) == m_shaders.end()) {
 		// late Initialize
-		auto& list = ResourceManager::GetInstance().GetShader(name);
+		auto& list = opgs16::manager::ResourceManager::Instance().GetShader(name);
 		CreateShader(name, list);
 	}
 	return m_shaders.at(name).get();

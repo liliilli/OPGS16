@@ -6,11 +6,12 @@
 #include <string>
 #include <glm\gtc\type_ptr.hpp>
 #include "..\..\GlobalObjects\light.h"
+#include "../Manager/Public/resource_type.h"
 
 namespace helper {
 constexpr unsigned LOG_SIZE = 0x200;
 
-ShaderNew& ShaderNew::SetShader(Type shader_type, const GLchar* path) {
+ShaderNew& ShaderNew::SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path) {
     if (m_linked || IsCompiled(shader_type)) {
         std::cerr << "ERROR::SHADER::ALREADY::COMPILED" << std::endl;
     }

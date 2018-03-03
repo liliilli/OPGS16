@@ -50,7 +50,7 @@
 #include "..\..\System\Manager\input_manager.h"   /*! InputManager */
 #include "..\..\System\Manager\object_manager.h"  /*! ObjectManager */
 #include "..\..\System\Manager\physics_manager.h" /*! PhysicsManager*/
-#include "..\..\System\Manager\resource_manager.h"/*! ResourceManager */
+#include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
 #include "..\..\System\Manager\scene_manager.h"   /*! SceneManager */
 #include "..\..\System\Manager\setting_manager.h" /*! SettingManager */
 #include "..\..\System\Manager\sound_manager.h"   /*! SoundManager */

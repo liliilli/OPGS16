@@ -6,7 +6,7 @@
 
 SpriteRendererImpl::SpriteRendererImpl(const std::string & sprite_tag,
                                        const std::string & shader_tag,
-                                       const resource::Texture2D::IndexSize& texture_index,
+                                       const opgs16::resource::Texture2D::IndexSize& texture_index,
                                        unsigned layer) :
     m_sprite{ TextureManager::GetInstance().GetTexture(sprite_tag) },
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },

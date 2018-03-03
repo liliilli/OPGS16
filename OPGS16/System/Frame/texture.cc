@@ -3,14 +3,14 @@
 #include <array>
 #include <iostream>
 #include "..\..\__ThirdParty\stb\stb_image.h"
-#include "..\Manager\resource_type.h"           /*! resource::Texture2D */
+#include "../Manager/Public/resource_type.h"           /*! resource::Texture2D */
 
 namespace texture {
 Texture2D::~Texture2D() {
     if (m_texture) glDeleteTextures(1, &m_texture);
 }
 
-Texture2D::Texture2D(const resource::Texture2D& container) {
+Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 	stbi_set_flip_vertically_on_load(true);

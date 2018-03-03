@@ -22,7 +22,6 @@
     <ClCompile Include="System\Object\sprite_renderer.cc" />
     <ClCompile Include="System\Manager\texture_manager.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
-    <ClCompile Include="System\Manager\resource_manager.cc" />
     <ClCompile Include="System\Object\ui_object.cc" />
     <ClCompile Include="System\Object\object.cc" />
     <ClCompile Include="GlobalObjects\Canvas\Impl\text_impl.cc" />
@@ -56,9 +55,10 @@
     <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
-    <ClCompile Include="System\Manager\resource_type.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="System\Core\Private\core_setting.cc" />
+    <ClCompile Include="System\Manager\Private\resource_type.cc" />
+    <ClCompile Include="System\Manager\Private\resource_manager.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -87,7 +87,6 @@
     <ClInclude Include="System\Object\sprite_renderer.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="System\Manager\texture_manager.h" />
-    <ClInclude Include="System\Manager\resource_manager.h" />
     <ClInclude Include="Headers\Fwd\lightfwd.h" />
     <ClInclude Include="Headers\Fwd\componentfwd.h" />
     <ClInclude Include="Headers\Fwd\objectfwd.h" />
@@ -134,11 +133,14 @@
     <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
-    <ClInclude Include="System\Manager\resource_type.h" />
     <ClInclude Include="System\Core\Public\core_setting.h" />
     <ClInclude Include="System\Core\Public\core_header.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
     <ClInclude Include="System\Core\Public\application.h" />
+    <ClInclude Include="System\Helper\Public\access_ptr.h" />
+    <ClInclude Include="System\Manager\Internal\resource_internal.h" />
+    <ClInclude Include="System\Manager\Public\resource_type.h" />
+    <ClInclude Include="System\Manager\Public\resource_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -251,6 +253,7 @@
     <None Include="_Project\SampleInvaders\_meta\_set.meta" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
+    <None Include="_resource.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

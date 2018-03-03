@@ -145,7 +145,7 @@
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
     <ClCompile Include="System\Core\Private\core_setting.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
-    <ClCompile Include="System\Manager\resource_type.cc" />
+    <ClCompile Include="System\Manager\Private\resource_type.cc" />
     <ClCompile Include="System\Manager\timer_manager.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
@@ -171,7 +171,7 @@
     </ClCompile>
     <ClCompile Include="System\Object\ui_object.cc" />
     <ClCompile Include="System\Manager\input_manager.cc" />
-    <ClCompile Include="System\Manager\resource_manager.cc" />
+    <ClCompile Include="System\Manager\Private\resource_manager.cc" />
     <ClCompile Include="System\Manager\texture_manager.cc" />
     <ClCompile Include="System\Object\Impl\object_impl.cc" />
     <ClCompile Include="System\Object\sprite_renderer.cc" />
@@ -221,8 +221,10 @@
     <ClInclude Include="System\Core\Public\core_header.h" />
     <ClInclude Include="System\Core\Public\core_setting.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
+    <ClInclude Include="System\Helper\Public\access_ptr.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
-    <ClInclude Include="System\Manager\resource_type.h" />
+    <ClInclude Include="System\Manager\Internal\resource_internal.h" />
+    <ClInclude Include="System\Manager\Public\resource_type.h" />
     <ClInclude Include="System\Manager\timer_manager.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
@@ -254,7 +256,7 @@
     </ClInclude>
     <ClInclude Include="System\Object\ui_object.h" />
     <ClInclude Include="System\Manager\input_manager.h" />
-    <ClInclude Include="System\Manager\resource_manager.h" />
+    <ClInclude Include="System\Manager\Public\resource_manager.h" />
     <ClInclude Include="System\Manager\texture_manager.h" />
     <ClInclude Include="System\Object\Impl\object_impl.h" />
     <ClInclude Include="System\Object\sprite_renderer.h" />
@@ -377,6 +379,7 @@
     <None Include="Shaders\Starfield\point.vert" />
     <None Include="System\Components\__header.meta" />
     <None Include="System\Components\__set.meta" />
+    <None Include="_resource.meta" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />
     <None Include="_Project\Maintenance\_meta\_header.meta" />

@@ -148,7 +148,7 @@ public:
     GlobalSetting operator=(const GlobalSetting&) = delete;
 };
 
-}
+} /*! opgs16 */
 
 #endif
 

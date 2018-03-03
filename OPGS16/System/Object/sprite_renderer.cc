@@ -5,7 +5,7 @@ void SpriteRendererImplDeleter::operator()(SpriteRendererImpl* p) { delete p; }
 
 SpriteRenderer::SpriteRenderer(const std::string& sprite_tag,
                                const std::string& shader_tag,
-                               const resource::Texture2D::IndexSize& texture_index,
+                               const opgs16::resource::Texture2D::IndexSize& texture_index,
                                const unsigned layer) :
     m_impl { new SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
 }

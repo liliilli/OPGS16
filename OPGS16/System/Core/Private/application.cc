@@ -26,13 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "../Public/application.h"      /*! Header file */
+#include "../Public/application.h"              /*! Header file */
+
+#include <iostream>	                            /*! std::cerr, std::endl */
+#include <string_view>                          /*! std::string_view */
+#include "../Public/core_header.h"              /*! Subsequential header files */
 #include "../Public/core_setting.h"
 
-#include <iostream>	                /*! std::cerr, std::endl */
-#include "../Public/core_header.h"  /*! Header files */
-
 namespace opgs16 {
+
+namespace {
+
+using namespace std::string_view_literals;
+constexpr std::string_view g_global_resource_path{ "_resource.meta"sv };
+
+}
 
 void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -43,6 +51,7 @@ Application::Application() :
     m_input_manager{ InputManager::GetInstance() },
     m_object_manager{ ObjectManager::GetInstance() },
     m_physics_manager{ PhysicsManager::GetInstance() },
+    m_resource_manager{ manager::ResourceManager::Instance() },
     m_scene_manager{ SceneManager::GetInstance() },
     m_sound_manager{ SoundManager::GetInstance() },
     m_time_manager{ TimeManager::GetInstance() },
@@ -51,7 +60,6 @@ Application::Application() :
     m_setting = std::make_unique<GlobalSetting>();
 	PushStatus(GameStatus::INIT);
 }
-
 
 GLFWwindow* Application::InitApplication(const std::string& app_name) {
     glfwInit();
@@ -89,13 +97,14 @@ void Application::Initiate() {
         /*! Initialize Global Setting. */
         SettingManager::GetInstance();
 
+        m_resource_manager.ReadResourceFile(g_global_resource_path.data());
+
         /*! Initialize resource list. */
         m_time_manager.SetFps(60.f);
         m_input_manager.Initialize(m_window);
         m_sound_manager.ProcessInitialSetting();
 
-        m_resource_manager = &ResourceManager::GetInstance();
-        m_resource_manager->LoadResource(R"(_Project/Maintenance/_meta/_resource.meta)");
+        m_resource_manager.ReadResourceFile(R"(_Project/Maintenance/_meta/_resource.meta)");
 
 		InitiateFonts();
 		InitiateDebugUi();
@@ -115,10 +124,10 @@ void Application::Initiate() {
 void Application::InitiateFonts() {
 	/** First we need initiate default font. */
 	auto& font = FontManager::GetInstance();
-	font.InitiateFont("Sans", R"(Resources/Fonts/Liberate/LiberationSans-Regular.ttf)" , true);
-	font.InitiateFont("Solomon", R"(Resources/Fonts/SolomonP.ttf)" , false);
-	font.InitiateFont("Menus", R"(Resources/Fonts/Menus.ttf)" , false);	/** Recommend 9pt */
-    font.InitiateFont("BIOS", R"(Resources/Fonts/PxPlus_IBM_BIOS.ttf)", false);
+    font.GenerateFont("Sans");
+    font.GenerateFont("Solomon");
+    font.GenerateFont("Menus");
+    font.GenerateFont("BIOS");
 	font.LoadDefaultFont();
 }
 

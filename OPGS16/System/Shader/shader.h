@@ -17,6 +17,7 @@
 #include <GL\glew.h>
 #include <glm\glm.hpp>
 #include "..\..\Headers\Fwd\lightfwd.h"
+#include "../../Headers/Fwd/objectfwd.h"
 
 namespace helper {
 
@@ -28,18 +29,7 @@ namespace helper {
  */
 class ShaderNew {
 public:
-    /**
-     * @brief
-     */
-    enum class Type : int {
-        VS  = GL_VERTEX_SHADER,
-        TCS = GL_TESS_CONTROL_SHADER,
-        TES = GL_TESS_EVALUATION_SHADER,
-        GS  = GL_GEOMETRY_SHADER,
-        FS  = GL_FRAGMENT_SHADER
-    };
-
-    /**
+    /*!
      * @brief
      *
      * @param[in] shader_type
@@ -48,7 +38,7 @@ public:
      * @bug When binds const char* code ptr into shader,
      * success flag is not on and go to the error calls but maybe shader program works probablly.
      */
-    ShaderNew& SetShader(Type shader_type, const GLchar* path);
+    ShaderNew& SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path);
 
     ~ShaderNew();
 
@@ -152,15 +142,15 @@ public:
 private:
     mutable GLuint m_program_id{};  /*! Unique id of shader program */
     bool m_linked{ false }; /*! Boolean Flag. This value must be true when call Shader.Use() */
-    std::unordered_map<Type, unsigned> m_shaders; /*! Compiled Shader list */
+    std::unordered_map<opgs16::resource::EShaderType, unsigned> m_shaders; /*! Compiled Shader list */
 
     /**
      * @brief
      *
      * @param[in] type
      */
-    bool IsCompiled(Type type) {
-        return (m_shaders.find(type) != m_shaders.end());
+    inline bool IsCompiled(opgs16::resource::EShaderType type) const {
+        return m_shaders.find(type) != m_shaders.end();
     }
 
     /**

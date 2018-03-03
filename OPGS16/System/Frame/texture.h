@@ -50,7 +50,7 @@ public:
 	 * @param[in] bind_mode mode to bind m_texture as what m_texture's color data type is.
 	 * bind_mode is limited in GL_RGB, GL_RGBA, and so on.
 	 */
-	Texture2D(const resource::Texture2D& texture_container);
+	Texture2D(const opgs16::resource::Texture2D& texture_container);
 
 	/**
 	 * @brief Create m_texture with no m_texture path, but for later use.

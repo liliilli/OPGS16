@@ -14,7 +14,7 @@
 
 #include "..\..\Frame\vertex_array_object.h"    /*! VertexArrayObject */
 #include "..\..\Headers\Fwd\objectfwd.h"        /*! texture::Texture2D */
-#include "..\..\Manager\resource_type.h"        /*! resource::Texture2D::IndexSize */
+#include "../../Manager/Public/resource_type.h"        /*! resource::Texture2D::IndexSize */
 #include "..\..\Shader\shader_wrapper.h"        /*! ShaderWrapper */
 
 /*!
@@ -29,13 +29,13 @@
  */
 class SpriteRendererImpl final {
 private:
-    using IndexSize = resource::Texture2D::IndexSize;
+    using IndexSize = opgs16::resource::Texture2D::IndexSize;
 
 public:
     /** Make SpriteRenderer instance. (Constructor) */
 	SpriteRendererImpl(const std::string& sprite_tag,
                        const std::string& shader_tag,
-                       const resource::Texture2D::IndexSize& texture_index,
+                       const opgs16::resource::Texture2D::IndexSize& texture_index,
                        unsigned layer);
 
     inline void SetLayer(const unsigned layer) {

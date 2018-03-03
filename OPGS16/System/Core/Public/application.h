@@ -94,7 +94,7 @@ private:
 	InputManager&       m_input_manager;
     ObjectManager&      m_object_manager;
     PhysicsManager&     m_physics_manager;
-    ResourceManager*    m_resource_manager;
+    manager::ResourceManager&    m_resource_manager;
     SceneManager&       m_scene_manager;    /*! SceneManager instance */
     SoundManager&       m_sound_manager;
     TimeManager&        m_time_manager;
@@ -199,6 +199,6 @@ public:
     Application& operator=(const Application&) = delete;
 };
 
-};
+}; /*! opgs16 */
 
 #endif // OPGS16_APPLICATION_H

@@ -1,10 +1,10 @@
 #include "texture_manager.h"
 #include "..\Frame\texture.h"
-#include "..\Manager\resource_manager.h"
+#include "../Manager/Public/resource_manager.h"
 
 TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
 	if (!DoesAlreadyExist(name)) {
-		const auto& file_path = ResourceManager::GetInstance().GetTexture2D(name);
+		const auto& file_path = opgs16::manager::ResourceManager::Instance().GetTexture2D(name);
 
         /*! _ is unused. */
         auto [it, _] = m_container.emplace(
