@@ -4,7 +4,6 @@
     <ClCompile Include="entry.cc" />
     <ClCompile Include="Scenes\path_finding2d.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
-    <ClCompile Include="System\Shader\shader_manager.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Frame\scene.cc" />
     <ClCompile Include="System\Frame\model.cc" />
@@ -59,12 +58,12 @@
     <ClCompile Include="System\Manager\Private\scene_manager.cc" />
     <ClCompile Include="System\Manager\Private\sound_manager.cc" />
     <ClCompile Include="System\Manager\Private\setting_manager.cc" />
+    <ClCompile Include="System\Manager\Private\shader_manager.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
     <ClInclude Include="Scenes\path_finding2d.h" />
     <ClInclude Include="System\Shader\shader.h" />
-    <ClInclude Include="System\Shader\shader_manager.h" />
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="System\Frame\scene.h" />
     <ClInclude Include="System\Frame\model.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="System\Manager\Internal\sound_internal.h" />
     <ClInclude Include="System\Manager\Public\sound_manager.h" />
     <ClInclude Include="System\Manager\Public\setting_manager.h" />
+    <ClInclude Include="System\Manager\Public\shader_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

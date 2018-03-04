@@ -27,40 +27,44 @@
  */
 
 /*!
- * @file System/Manager/Private/scene_manager.cc
- * @author Jongmin Yun
+ * @file System/Manager/Private/shader_manager.cc
+ * @brief ShaderManager implementation file.
  *
+ * @author Jongmin Yun
  * @log
- * 2018-03-04 Refactoring.
+ * 2018-03-04 Refactoring. Add copyright and comments.
  */
 
-#include "../Public/scene_manager.h"        /*! Header file */
-
-#include "../Public/physics_manager.h"      /*! opgs16::manager::PhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::TimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::ObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::SoundManager */
+#include "../Public/shader_manager.h"   /*! Header file */
 
 namespace opgs16 {
 namespace manager {
 
-void SceneManager::PopScene() {
-    if (!m_scenes.empty())
-        m_scenes.pop();
+ShaderManager::shader_raw ShaderManager::CreateShader(const std::string& tag,
+                                                      const opgs16::resource::SShader& container) {
+	if (DoesShaderExist(tag))
+        return Shader(tag);
+
+	auto shader = std::make_unique<helper::ShaderNew>();
+	for (auto& [type, shader_path] : container.List()) {
+		shader->SetShader(type, shader_path.c_str());
+	}
+	shader->Link();
+
+	/** Bind */
+	m_shaders[tag] = std::move(shader);
+	return m_shaders[tag].get();
 }
 
-void SceneManager::ReleaseAllResources() const {
-    PhysicsManager::Instance().Clear();  /*! precise */
-    TimerManager::Instance().Clear();    /*! precise */
-    SoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    ObjectManager::Instance().Clear();   /*! Not precise? */
+void ShaderManager::Clear() {
+    //m_shaders.clear();
 }
 
-SceneManager::~SceneManager() = default;
+void ShaderManager::ReleaseShader(const std::string& shader_name) {
+    if (DoesShaderExist(shader_name))
+        m_shaders.erase(shader_name);
+}
 
 } /*! opgs16::manager */
 } /*! opgs16 */
+

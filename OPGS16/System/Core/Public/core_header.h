@@ -43,7 +43,6 @@
 #include "../../Objects/Debug/debug_canvas.h"     /*! CanvasDebug */
 //#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
 #include "../../System/Shader/pp_manager.h"
-#include "../../System/Shader/shader_manager.h"
 #include "../../System/Shader/PostProcessing/pp_convex.h"
 #include "../../System/Shader/PostProcessing/pp_sinewave.h"
 #include "../../System/Shader/PostProcessing/pp_gray.h"
@@ -54,6 +53,7 @@
 #include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
 #include "../../System/Manager/Public/scene_manager.h"   /*! SceneManager */
 #include "../../System/Manager/Public/setting_manager.h" /*! SettingManager */
+#include "../../System/Manager/Public/shader_manager.h"  /*! ShaderManager */
 #include "../../System/Manager/Public/sound_manager.h"   /*! SoundManager */
 #include "../../System/Manager/Public/time_manager.h"    /*! TimeManager */
 #include "../../System/Manager/Public/timer_manager.h"   /*! TimerManager */

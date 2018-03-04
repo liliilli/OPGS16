@@ -184,7 +184,7 @@
     <ClCompile Include="System\Frame\constant.h" />
     <ClCompile Include="entry.cc" />
     <ClCompile Include="System\Frame\model.cc" />
-    <ClCompile Include="System\Shader\shader_manager.cc" />
+    <ClCompile Include="System\Manager\Private\shader_manager.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
     <ClCompile Include="System\Manager\Private\sound_manager.cc" />
@@ -274,7 +274,7 @@
     <ClInclude Include="System\Shader\pp_manager.h" />
     <ClInclude Include="System\Shader\shader.h" />
     <ClInclude Include="System\Frame\model.h" />
-    <ClInclude Include="System\Shader\shader_manager.h" />
+    <ClInclude Include="System\Manager\Public\shader_manager.h" />
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="System\Manager\Public\sound_manager.h" />

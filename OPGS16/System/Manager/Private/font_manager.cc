@@ -41,9 +41,9 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../Public/resource_manager.h"
+#include "../Public/resource_manager.h"     /*! opgs16::manager::ResourceManager */
+#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
 #include "../../Core/Public/core_setting.h"
-#include "../../Shader/shader_manager.h"
 
 namespace opgs16 {
 namespace manager {
@@ -51,7 +51,7 @@ namespace manager {
 FontManager::FontManager() :
     m_projection{ glm::ortho(0.f, static_cast<float>(GlobalSetting::ScreenWidth()),
                              0.f, static_cast<float>(GlobalSetting::ScreenHeight())) } {
-	m_shader = ShaderManager::GetInstance().GetShaderWithName("gCommonFont");
+	m_shader = ShaderManager::Instance().Shader("gCommonFont");
 	BindVertexAttributes();
 }
 

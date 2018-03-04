@@ -35,24 +35,20 @@
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-03 Refactoring.
+ * 2018-03-04 Refactoring.
  */
 
 #include <memory>
 #include <unordered_map>
-#include "shader.h"
-#include "..\Object\object.h"
-#include "../Manager/Public/resource_manager.h"
+
+#include "resource_manager.h"       /*! opgs16::manager::resource_manager */
+#include "../../Shader/shader.h"
+#include "../../Object/object.h"
 
 namespace opgs16 {
-
 namespace manager {
 
-} /*! opgs16::manager */
-
-} /*! opgs16 */
-
-/**
+/*!
  * @class ShaderManager
  * @brief ShaderManager class manages shaders on runtime in scene.
  *
@@ -61,23 +57,22 @@ namespace manager {
  *
  * Shaders in container are managed by shader name, and Tags.
  * ShaderManager is singleton, so user cannot create another ShaderManager instance.
- * @date 2018 - 02 - 06
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-02-06 Create file and make basic features.
+ * 2018-03-04 Refactoring.
+ *
  * @todo Implement ReleaseAll(), ReleaseShader(), CheckError();
  */
 class ShaderManager final {
-private:
-	template<typename _Ty>
-	using container_map = std::unordered_map<std::string, _Ty>;
-
 public:
 	using shader_raw = helper::ShaderNew*;
 	using shader_ptr = std::unique_ptr<helper::ShaderNew>;
+    using shader_map = std::unordered_map<std::string, shader_ptr>;
 
-	/**
-	 * @brief Static method gets unique instance of ShaderManager class.
-	 * @return The reference of ShaderManager instance.
-	 */
-	static ShaderManager& GetInstance() {
+	/*! Return singleton instance of ShaderManager class. */
+	static ShaderManager& Instance() {
 		static ShaderManager instance{};
 		return instance;
 	}
@@ -89,21 +84,16 @@ public:
 	 * @param[in] name The tag to find.
 	 * @return Founded shader pointer, if fails create shader and return late.
 	 */
-	inline shader_raw GetShaderWithName(const std::string& name);
+	inline shader_raw Shader(const std::string& name);
 
 	/** Release all shader program in shader container. */
-	 void Clear();
+	void Clear();
 
 	/**
 	 * @brief
 	 * @param[in] shader_name The name tag to release.
 	 */
-	 void ReleaseShader(const std::string& shader_name);
-
-	/**
-	 * @brief
-	 */
-	 void CheckError();
+	void ReleaseShader(const std::string& shader_name);
 
 private:
 	/**
@@ -120,7 +110,7 @@ private:
 		OK,
 	} m_error{ ErrorType::OK };
 
-	container_map<shader_ptr> m_shaders{};	// Shader container.
+	shader_map m_shaders{};	// Shader container.
 
 private:
 	/**
@@ -147,7 +137,7 @@ public:
  * @param[in] name The tag to find.
  * @return Founded shader pointer, if fails create shader and return late.
  */
-inline ShaderManager::shader_raw ShaderManager::GetShaderWithName(const std::string& name) {
+inline ShaderManager::shader_raw ShaderManager::Shader(const std::string& name) {
 	if (m_shaders.find(name) == m_shaders.end()) {
 		// late Initialize
 		auto& list = opgs16::manager::ResourceManager::Instance().GetShader(name);
@@ -155,5 +145,8 @@ inline ShaderManager::shader_raw ShaderManager::GetShaderWithName(const std::str
 	}
 	return m_shaders.at(name).get();
 }
+
+} /*! opgs16::manager */
+} /*! opgs16 */
 
 #endif /** OPGS16_SYSTEM_SHADER_SHADER_MANAGER_H */

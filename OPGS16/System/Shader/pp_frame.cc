@@ -2,8 +2,8 @@
 
 #include <iostream> /*! std::cerr
                       * std::endl */
-#include "..\Frame\vertex_array_object.h"   /*! VertexArrayObject */
-#include "shader_manager.h"
+#include "../Frame/vertex_array_object.h"       /*! VertexArrayObject */
+#include "../Manager/Public/shader_manager.h"   /*! opgs16::manager::ShaderManager */
 
 namespace shading {
 
@@ -65,7 +65,7 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
 
 void PostProcessingFrame::InitiateShader(const std::string& name) {
 	/** Check If pp+Name is exist, push created shader */
-    m_shader_wrapper.SetShader(ShaderManager::GetInstance().GetShaderWithName("pp" + name));
+    m_shader_wrapper.SetShader(opgs16::manager::ShaderManager::Instance().Shader("pp" + name));
 }
 
 void PostProcessingFrame::InitiateDefaultDepthBuffer() {
