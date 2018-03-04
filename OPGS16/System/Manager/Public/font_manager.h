@@ -52,9 +52,10 @@
 #include <glm/glm.hpp>
 #include FT_FREETYPE_H
 
-#include "../Shader/shader.h"
-#include "../../GlobalObjects/Interface/i_originable.h"
-#include "../../GlobalObjects/Interface/i_alignable.h"
+#include "../Internal/font_internal.h"
+#include "../../Shader/shader.h"
+#include "../../../GlobalObjects/Interface/i_originable.h"
+#include "../../../GlobalObjects/Interface/i_alignable.h"
 
 namespace opgs16 {
 namespace manager {
@@ -77,26 +78,9 @@ constexpr unsigned k_default_font_size = 16u;
  */
 class FontManager final {
 public:
-    /**
-     * @struct Chracter
-     * @brief Container manages each texture of font glyphes.
-     */
-    struct Character {
-        GLuint      texture_id;	/** texture id of each character. */
-
-        /** glyph information */
-        glm::ivec2  size;		/** glyph size */
-        glm::ivec2  bearing;	/** glyph bearing position */
-        GLuint      advance;	/** glyph advance width */
-
-        explicit Character(const GLuint texture_id, const glm::ivec2 size,
-                           const glm::ivec2 bearing, const GLuint advance) :
-            texture_id{ texture_id }, size{ size }, bearing{ bearing }, advance{ advance } {};
-        Character() : texture_id(GLuint{}), advance(GLuint{}) {};
-    };
 
 	/** Internal type aliasing */
-	using font_type		= std::map<GLchar, Character>;
+	using font_type		= std::map<GLchar, _internal::Character>;
 	using font_map_ptr	= std::unique_ptr<font_type>;
 	using font_raw		= font_type*;
 
@@ -180,9 +164,7 @@ private:
 	font_raw	m_font_in_use{ nullptr };
 	font_raw	m_default_font{ nullptr };
 
-    std::array<GLuint, 4> m_viewport_size{};
     const glm::mat4 m_projection;
-
     GLuint m_vao{}, m_vbo{};
 
 	helper::ShaderNew* m_shader{};
@@ -272,7 +254,7 @@ private:
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	std::array<float, 24> GetCharacterVertices
-	(const Character& info, const glm::vec2& position, const float scale) const;
+	(const _internal::Character& info, const glm::vec2& position, const float scale) const;
 
 	/**
 	 * @brief The method gets text and returns total rendering width size.
@@ -291,7 +273,7 @@ private:
 	 * @param[in] ch_info
 	 * @param[in] vertices
 	 */
-	void Render(const Character& ch_info, const std::array<float, 24>& vertices) const;
+	void Render(const _internal::Character& ch_info, const std::array<float, 24>& vertices) const;
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.

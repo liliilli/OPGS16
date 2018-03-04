@@ -158,7 +158,7 @@
     <ClCompile Include="System\Components\Physics2D\rigidbody_2d.cc" />
     <ClCompile Include="System\Components\_type_hash.h" />
     <ClCompile Include="System\Debugs\logger.cc" />
-    <ClCompile Include="System\Manager\font_manager.cc" />
+    <ClCompile Include="System\Manager\Private\font_manager.cc" />
     <ClCompile Include="System\Manager\object_manager.cc" />
     <ClCompile Include="System\Manager\physics_manager.cc" />
     <ClCompile Include="System\Manager\scene_manager.cc" />
@@ -223,6 +223,7 @@
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="System\Helper\Public\access_ptr.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
+    <ClInclude Include="System\Manager\Internal\font_internal.h" />
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Internal\resource_internal.h" />
     <ClInclude Include="System\Manager\Public\resource_type.h" />
@@ -241,7 +242,7 @@
     <ClInclude Include="System\Components\script_frame.h" />
     <ClInclude Include="System\Debugs\hierarchy_tree.h" />
     <ClInclude Include="System\Debugs\logger.h" />
-    <ClInclude Include="System\Manager\font_manager.h" />
+    <ClInclude Include="System\Manager\Public\font_manager.h" />
     <ClInclude Include="System\Frame\vertex_array_object.h" />
     <ClInclude Include="System\Manager\object_manager.h" />
     <ClInclude Include="System\Manager\physics_manager.h" />

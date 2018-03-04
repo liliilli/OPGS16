@@ -27,7 +27,6 @@
     <ClCompile Include="System\Object\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="System\Object\Impl\object_impl.cc" />
     <ClCompile Include="System\Shader\Impl\pp_frame_impl.cc" />
-    <ClCompile Include="System\Manager\font_manager.cc" />
     <ClCompile Include="System\Manager\sound_manager.cc" />
     <ClCompile Include="Objects\TempDebug\test_image.cc" />
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
@@ -59,6 +58,7 @@
     <ClCompile Include="System\Manager\Private\resource_type.cc" />
     <ClCompile Include="System\Manager\Private\resource_manager.cc" />
     <ClCompile Include="System\Manager\Private\input_manager.cc" />
+    <ClCompile Include="System\Manager\Private\font_manager.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -96,7 +96,6 @@
     <ClInclude Include="System\Object\Impl\sprite_renderer_impl.h" />
     <ClInclude Include="System\Object\Impl\object_impl.h" />
     <ClInclude Include="System\Shader\Impl\pp_frame_impl.h" />
-    <ClInclude Include="System\Manager\font_manager.h" />
     <ClInclude Include="System\Manager\sound_manager.h" />
     <ClInclude Include="System\Components\script_frame.h" />
     <ClInclude Include="Objects\TempDebug\test_image.h" />
@@ -142,6 +141,8 @@
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Public\input_manager.h" />
     <ClInclude Include="System\Manager\Public\time_manager.h" />
+    <ClInclude Include="System\Manager\Internal\font_internal.h" />
+    <ClInclude Include="System\Manager\Public\font_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

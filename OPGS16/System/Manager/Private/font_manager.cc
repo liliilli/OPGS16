@@ -35,15 +35,15 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "font_manager.h"   /*! Header file */
+#include "../Public/font_manager.h"   /*! Header file */
 #include <functional>
 #include <sstream>
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Public/resource_manager.h"
-#include "../Core/Public/core_setting.h"
-#include "../../System/Shader/shader_manager.h"
+#include "../Public/resource_manager.h"
+#include "../../Core/Public/core_setting.h"
+#include "../../Shader/shader_manager.h"
 
 namespace opgs16 {
 namespace manager {
@@ -121,7 +121,7 @@ FontManager::font_map_ptr FontManager::GetCharTextures() const {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Store character for later use
-        glyphs->emplace(c, Character{ texture,
+        glyphs->emplace(c, _internal::Character{ texture,
                         glm::ivec2(width, height),
                         glm::ivec2(m_ft_face->glyph->bitmap_left, m_ft_face->glyph->bitmap_top),
                         static_cast<GLuint>(m_ft_face->glyph->advance.x)
@@ -210,7 +210,7 @@ void FontManager::RenderLeftSide(const std::vector<std::string>& container,
 
 	for (const auto& t_text : container) {
 		for (const auto& chr : t_text) {
-		    const Character ch_info = (*m_font_in_use)[chr];
+		    const auto& ch_info = (*m_font_in_use)[chr];
 			Render(ch_info, GetCharacterVertices(ch_info, pos, scale));
 			pos.x += (ch_info.advance >> 6) * scale;
 		}
@@ -229,7 +229,7 @@ void FontManager::RenderCenterSide(const std::vector<std::string>& container,
 		pos.x -= GetStringRenderWidth(t_text, scale) >> 1;
 
 		for (const auto& chr : t_text) {
-			Character ch_info = (*m_font_in_use)[chr];
+		    const auto& ch_info = (*m_font_in_use)[chr];
 			Render(ch_info, GetCharacterVertices(ch_info, pos, scale));
 			pos.x += (ch_info.advance >> 6) * scale;
 		}
@@ -248,7 +248,7 @@ void FontManager::RenderRightSide(const std::vector<std::string>& container,
 		pos.x -= GetStringRenderWidth(t_text, scale);
 
 		for (const auto& chr : t_text) {
-			Character ch_info = (*m_font_in_use)[chr];
+		    const auto& ch_info = (*m_font_in_use)[chr];
 			Render(ch_info, GetCharacterVertices(ch_info, pos, scale));
 			pos.x += (ch_info.advance >> 6) * scale;
 		}
@@ -258,7 +258,7 @@ void FontManager::RenderRightSide(const std::vector<std::string>& container,
 	}
 }
 
-std::array<float, 24> FontManager::GetCharacterVertices(const Character& ch_info,
+std::array<float, 24> FontManager::GetCharacterVertices(const _internal::Character& ch_info,
                                                         const glm::vec2& position,
                                                         const float scale) const {
     const auto x_offset     = ch_info.bearing.x * scale;
@@ -296,14 +296,14 @@ unsigned FontManager::GetStringRenderWidth(const std::string& text,
                                            const float scale) const {
 	unsigned width{};
 	for (const auto& chr : text) {
-	    const Character ch_info = (*m_font_in_use)[chr];
+	    const auto& ch_info = (*m_font_in_use)[chr];
 		width += static_cast<decltype(width)>((ch_info.advance >> 6) * scale);
 	}
 
 	return width;
 }
 
-void FontManager::Render(const Character& ch_info,
+void FontManager::Render(const _internal::Character& ch_info,
                          const std::array<float, 24>& vertices) const {
 	// Render texture glyph
 	glActiveTexture(GL_TEXTURE0);

@@ -39,24 +39,24 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "..\..\GlobalObjects\Canvas\canvas.h"
-#include "..\..\Objects\Debug\debug_canvas.h"     /*! CanvasDebug */
+#include "../../GlobalObjects/Canvas/canvas.h"
+#include "../../Objects/Debug/debug_canvas.h"     /*! CanvasDebug */
 //#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
-#include "..\..\System\Shader\pp_manager.h"
-#include "..\..\System\Shader\shader_manager.h"
-#include "..\..\System\Shader\PostProcessing\pp_convex.h"
-#include "..\..\System\Shader\PostProcessing\pp_sinewave.h"
-#include "..\..\System\Shader\PostProcessing\pp_gray.h"
-#include "..\..\System\Manager\font_manager.h"    /*! FontManager */
+#include "../../System/Shader/pp_manager.h"
+#include "../../System/Shader/shader_manager.h"
+#include "../../System/Shader/PostProcessing/pp_convex.h"
+#include "../../System/Shader/PostProcessing/pp_sinewave.h"
+#include "../../System/Shader/PostProcessing/pp_gray.h"
+#include "../../System/Manager/Public/font_manager.h"    /*! FontManager */
 #include "../../System/Manager/Public/input_manager.h"   /*! InputManager */
-#include "..\..\System\Manager\object_manager.h"  /*! ObjectManager */
-#include "..\..\System\Manager\physics_manager.h" /*! PhysicsManager*/
+#include "../../System/Manager/object_manager.h"  /*! ObjectManager */
+#include "../../System/Manager/physics_manager.h" /*! PhysicsManager*/
 #include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
-#include "..\..\System\Manager\scene_manager.h"   /*! SceneManager */
-#include "..\..\System\Manager\setting_manager.h" /*! SettingManager */
-#include "..\..\System\Manager\sound_manager.h"   /*! SoundManager */
+#include "../../System/Manager/scene_manager.h"   /*! SceneManager */
+#include "../../System/Manager/setting_manager.h" /*! SettingManager */
+#include "../../System/Manager/sound_manager.h"   /*! SoundManager */
 #include "../../System/Manager/Public/time_manager.h"    /*! TimeManager */
-#include "..\..\System\Manager\timer_manager.h"   /*! TimerManager */
-#include "..\..\_Project\Maintenance\Scene\test_1.h"
+#include "../../System/Manager/timer_manager.h"   /*! TimerManager */
+#include "../../_Project/Maintenance/Scene/test_1.h"
 
 #endif

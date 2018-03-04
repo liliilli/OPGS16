@@ -60,7 +60,7 @@ struct BindingKeyInfo {
     using positive_button = int;
 
     /**
-     * @enum class KeyInputStatus
+     * @enum KeyInputStatus
      * @brief Indicates key status of keys.
      */
     enum class KeyInputStatus : int {

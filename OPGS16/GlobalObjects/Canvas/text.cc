@@ -2,7 +2,7 @@
 #include <iostream>                     /*! std::cerr
                                           * std::endl */
 #include "Impl\text_impl.h"             /*! Canvas::TextImpl */
-#include "..\..\System\Manager\font_manager.h"  /*! FontManager
+#include "..\..\System\Manager\Public\font_manager.h"  /*! FontManager
                                                   * aliasing font_map_ptr
                                                   * FontManager& GetInstance()
                                                   * bool LoadDefaultFont()
