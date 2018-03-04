@@ -48,14 +48,13 @@
 #include <map>
 
 #include <ft2build.h>
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include FT_FREETYPE_H
 
-#include "..\Shader\shader.h"
-#include "..\..\GlobalObjects\Interface\i_originable.h"
-#include "..\..\GlobalObjects\Interface\i_alignable.h"
+#include "../Shader/shader.h"
+#include "../../GlobalObjects/Interface/i_originable.h"
+#include "../../GlobalObjects/Interface/i_alignable.h"
 
 namespace opgs16 {
 namespace manager {
@@ -89,6 +88,11 @@ public:
         glm::ivec2  size;		/** glyph size */
         glm::ivec2  bearing;	/** glyph bearing position */
         GLuint      advance;	/** glyph advance width */
+
+        explicit Character(const GLuint texture_id, const glm::ivec2 size,
+                           const glm::ivec2 bearing, const GLuint advance) :
+            texture_id{ texture_id }, size{ size }, bearing{ bearing }, advance{ advance } {};
+        Character() : texture_id(GLuint{}), advance(GLuint{}) {};
     };
 
 	/** Internal type aliasing */
@@ -134,10 +138,12 @@ public:
 
 	/**
 	 * @brief Check font exists.
-	 * @param[in] font_name Font name to find in font container.
+	 * @param[in] font_tag Font name to find in font container.
 	 * @return The success flag. If font is exist, return true.
 	 */
-	inline bool DoesFontExist(const std::string& font_name);
+	inline bool DoesFontExist(const std::string& font_tag) const {
+        return m_fonts.find(font_tag) != m_fonts.end();
+    }
 
 	/**
 	 * @brief The method renders given text on given position with given color.
@@ -160,7 +166,7 @@ public:
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	void RenderTextNew(const std::string& text, IOriginable::Origin origin,
-                       glm::vec2 relative_position, glm::vec3 color,
+                       const glm::vec2 final_position, const glm::vec3 color,
                        IAlignable::Alignment alignment = IAlignable::Alignment::LEFT,
                        const float scale = 1.0f);
 
@@ -174,10 +180,10 @@ private:
 	font_raw	m_font_in_use{ nullptr };
 	font_raw	m_default_font{ nullptr };
 
-    std::array<GLuint, 4> m_viewport_size;
+    std::array<GLuint, 4> m_viewport_size{};
     const glm::mat4 m_projection;
 
-    GLuint m_vao, m_vbo;
+    GLuint m_vao{}, m_vbo{};
 
 	helper::ShaderNew* m_shader{};
 
@@ -186,14 +192,14 @@ private:
 	 * @brief This method starts shader with color to render.
 	 * @param[in] color The color to be attached to shader.
 	 */
-	void StartShader(const glm::vec3& color);
+	void StartShader(const glm::vec3& color) const;
 
 	/**
 	 * @brief Checks freetype pointer with FontPath.
 	 * @param[in] font_path Font's path to refer.
 	 * @return If checking is successful, return true. otherwise return false.
 	 */
-    inline bool CheckFreeType(const std::string& font_path) noexcept {
+    inline bool CheckFreeType() noexcept {
         // Check Freetype is well.
         if (FT_Init_FreeType(&m_freetype)) {
             std::cerr << "ERROR::FREETYPE: Could not init Freetype Library\n";
@@ -215,7 +221,7 @@ private:
      * This methods called when initiate instance.
 	 * @return Created font glyph container unique_ptr (moved)
      */
-    FontManager::font_map_ptr GetCharTextures();
+    FontManager::font_map_ptr GetCharTextures() const;
 
 	/**
 	 * @brief This methods ends shader's operation.
@@ -233,7 +239,7 @@ private:
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
 	void RenderLeftSide(const std::vector<std::string>& container,
-                        const glm::vec2& position, const float scale);
+                        const glm::vec2& position, const float scale) const;
 
 	/**
 	 * @brief Final render method actually renders strings from center side.
@@ -243,7 +249,7 @@ private:
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
 	void RenderCenterSide(const std::vector<std::string>& container,
-                          const glm::vec2& position, const float scale);
+                          const glm::vec2& position, const float scale) const;
 
 	/**
 	 * @brief Final render method actually renders strings from right side.
@@ -253,7 +259,7 @@ private:
 	 * @param[in] scale Scale factor, it magnify or minify rendered string textures.
 	 */
 	void RenderRightSide(const std::vector<std::string>& container,
-                         const glm::vec2& position, const float scale);
+                         const glm::vec2& position, const float scale) const;
 
 	/**
 	 * @brief The method gets character quad vertices to be needed for rendering.
@@ -266,7 +272,7 @@ private:
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
 	std::array<float, 24> GetCharacterVertices
-	(const Character& info, const glm::vec2& position, const float scale);
+	(const Character& info, const glm::vec2& position, const float scale) const;
 
 	/**
 	 * @brief The method gets text and returns total rendering width size.
@@ -277,7 +283,7 @@ private:
 	 * @return The size
 	 * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 	 */
-	unsigned GetStringRenderWidth(const std::string& text, const float scale);
+	unsigned GetStringRenderWidth(const std::string& text, const float scale) const;
 
 	/**
 	 * @brief Actual render method. This method must be called in Render__Side() method.
@@ -285,7 +291,7 @@ private:
 	 * @param[in] ch_info
 	 * @param[in] vertices
 	 */
-	void Render(const Character& ch_info, const std::array<float, 24>& vertices);
+	void Render(const Character& ch_info, const std::array<float, 24>& vertices) const;
 
     /**
      * @brief The method sets VAO, VBO to render string on screen.
@@ -299,7 +305,7 @@ private:
      * @param[in] text String text to separate
      * @return string list.
      */
-    std::vector<std::string> SeparateTextToList(const std::string text);
+    std::vector<std::string> SeparateTextToList(const std::string& text) const;
 
 private:
 	/**
@@ -309,13 +315,9 @@ private:
 	FontManager();
 
 public:
-	FontManager(const FontManager&) = delete;
-	FontManager& operator=(const FontManager&) = delete;
+    FontManager(const FontManager&) = delete;
+    FontManager& operator=(const FontManager&) = delete;
 };
-
-inline bool FontManager::DoesFontExist(const std::string& tag) {
-    return m_fonts.find(tag) != m_fonts.end();
-}
 
 } /*! opgs16::manager */
 } /*! opgs16 */

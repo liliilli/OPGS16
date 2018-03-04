@@ -44,8 +44,8 @@
 
 #include <memory>
 #include <stack>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
 #include "../../Object/object.h" /*! Object for complete deleter of unique_ptr<Object> */
@@ -127,10 +127,10 @@ private:
      * @param[in] app_name Application title name.
      * @return Window handle pointer.
      */
-    GLFWwindow* InitApplication(const std::string& app_name);
+    GLFWwindow* InitApplication(const std::string& app_name) const;
 
 	/** Initiate and Make font informations. */
-	void InitiateFonts();
+	void InitiateFonts() const;
 
 	/** Initiate and Compose Debug Interface components.  */
 	void InitiateDebugUi();
@@ -148,19 +148,19 @@ private:
     void Update();
 
     /*! The method calls scene to draw all m_object_list. */
-    void Draw();
+    void Draw() const;
 
 	/** Exit game */
     void Exit();
 
     /** Change window size. */
-	void ChangeScalingOption(ScaleType value);
+	void ChangeScalingOption(ScaleType value) const;
 
     /** The method toggles FPS display.  */
-    void ToggleFpsDisplay();
+    void ToggleFpsDisplay() const;
 
 	/** Toggle post-processing effects */
-	void TogglePostProcessingEffect();
+	void TogglePostProcessingEffect() const;
 
     /**
      * @brief Return present status.

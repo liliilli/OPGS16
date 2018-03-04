@@ -62,7 +62,7 @@ Application::Application() :
 	PushStatus(GameStatus::INIT);
 }
 
-GLFWwindow* Application::InitApplication(const std::string& app_name) {
+GLFWwindow* Application::InitApplication(const std::string& app_name) const {
     glfwInit();
 
     /*! OpenGL Setting */
@@ -73,10 +73,10 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) {
     /*! Set MSAAx4 */
     glfwWindowHint(GLFW_SAMPLES, 4);
 
-    auto window = glfwCreateWindow(GlobalSetting::ScreenWidth(),
-                                   GlobalSetting::ScreenHeight(),
-                                   app_name.c_str(),
-                                   nullptr, nullptr);
+    const auto window = glfwCreateWindow(GlobalSetting::ScreenWidth(),
+                                         GlobalSetting::ScreenHeight(),
+                                         app_name.c_str(),
+                                         nullptr, nullptr);
     if (!window) {
         std::cerr << "failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -121,7 +121,7 @@ void Application::Initiate() {
 	}
 }
 
-void Application::InitiateFonts() {
+void Application::InitiateFonts() const {
 	/** First we need initiate default font. */
 	auto& font = manager::FontManager::Instance();
     font.GenerateFont("Sans");
@@ -149,7 +149,7 @@ void Application::InitiatePostProcessingEffects() {
 	}
 }
 
-void Application::SetOnBeforeUpdateCallback(std::function<void(void)> callback) {
+void Application::SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
     m_on_before_update_callback = callback;
 }
 
@@ -196,6 +196,7 @@ void Application::Update() {
 void Application::Input() {
 	m_input_manager.Update();
 	switch (GetPresentStatus()) {
+    default: /*! Do nothing */ break;
 	case GameStatus::PLAYING: InputGlobal(); break;
 	case GameStatus::MENU: break;
 	}
@@ -219,7 +220,7 @@ void Application::InputGlobal() {
         TogglePostProcessingEffect();
 }
 
-void Application::Draw() {
+void Application::Draw() const {
     /*! If there is no scene, do not rendering anything. */
 	if (!m_scene_manager.SceneEmpty()) {
         glViewport(0, 0, GlobalSetting::ScreenWidth(), GlobalSetting::ScreenHeight());
@@ -241,18 +242,18 @@ void Application::Draw() {
     glfwPollEvents();
 }
 
-void Application::ToggleFpsDisplay() {
+void Application::ToggleFpsDisplay() const {
     m_setting->ToggleDebugMode();
 	std::cerr << static_cast<bool>(m_setting->DebugMode()) << std::endl;
 }
 
-void Application::TogglePostProcessingEffect() {
+void Application::TogglePostProcessingEffect() const {
     m_setting->TogglePostProcessing();
 	std::cerr << "POST::PROCESSING::SWITCH::" <<
         static_cast<bool>(m_setting->PostProcessing()) << std::endl;
 }
 
-void Application::ChangeScalingOption(ScaleType value) {
+void Application::ChangeScalingOption(ScaleType value) const {
 	if (!IsSameValue(value, m_setting->ScaleValue())) {
         auto [width, height] = GlobalSetting::ScreenSize();
 
