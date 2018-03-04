@@ -53,6 +53,7 @@ class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ResourceManager;
 class   TimeManager;    /*! Tick time */
+class   TimerManager;   /*! Timer */
 
 } /*! opgs16::manager */
 
@@ -115,7 +116,6 @@ class   ObjectManager;  /*! Objects */
 class   PhysicsManager; /*! Physics & collision */
 class   SceneManager;   /*! Scenes */
 class   SoundManager;   /*! Sounds */
-class   TimerManager;   /*! Timer */
 
 class   TimerHandle;   /*! sub-type of timermanager */
 

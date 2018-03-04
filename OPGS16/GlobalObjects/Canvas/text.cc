@@ -4,7 +4,7 @@
 #include "Impl\text_impl.h"             /*! Canvas::TextImpl */
 #include "..\..\System\Manager\Public\font_manager.h"  /*! FontManager
                                                   * aliasing font_map_ptr
-                                                  * FontManager& GetInstance()
+                                                  * FontManager& Instance()
                                                   * bool LoadDefaultFont()
                                                   * void RenderTextNew(params)
                                                   * bool DoesFontExist(std::string) */

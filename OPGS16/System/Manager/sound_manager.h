@@ -22,7 +22,7 @@
  * @brief This class manages rich sounds like a background music, effect sounds,
  * anything related to sound from WAV file, OGG file...
  * SoundManager is not able to copy, move and have property of singleton. So you have to call
- * GetInstance() to use SoundManager.
+ * Instance() to use SoundManager.
  *
  * @bug
  * Although sound mute status is on, sound on playing actually does not stop.

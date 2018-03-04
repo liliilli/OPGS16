@@ -53,7 +53,7 @@ namespace manager {
  * mouse signal or joystick inputs. (Only keyboard input signal checking is implemented. 20180206)
  *
  * Any m_object_list want to catch signal of input devices, and performs specific mechanism can use
- * this manager by calling InputManager::GetInstance().
+ * this manager by calling InputManager::Instance().
  *
  * @log
  * 2018-03-03 Move BindingKeyInfo to separate file for readability.

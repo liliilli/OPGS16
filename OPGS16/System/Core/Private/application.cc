@@ -56,7 +56,7 @@ Application::Application() :
     m_scene_manager{ SceneManager::GetInstance() },
     m_sound_manager{ SoundManager::GetInstance() },
     m_time_manager{ manager::TimeManager::Instance() },
-    m_timer_manager{ TimerManager::GetInstance() } {
+    m_timer_manager{ manager::TimerManager::Instance() } {
 
     m_setting = std::make_unique<GlobalSetting>();
 	PushStatus(GameStatus::INIT);

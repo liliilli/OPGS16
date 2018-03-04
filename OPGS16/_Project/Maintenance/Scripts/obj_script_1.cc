@@ -5,14 +5,11 @@
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
 #include "..\..\..\System\Manager\Public\time_manager.h"   /*! TimeManager */
-#include "..\..\..\System\Manager\timer_manager.h"  /*! TimerManager */
+#include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
 
 #include "..\Object\test_obj.h" /*! TestObject1 for temporary */
 #include "test_script_1.h"  /*! TestScript1 for Canvas */
 #include "..\..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
-
-#define M_SET_TIMER(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__) \
-TimerManager::GetInstance().SetTimer(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__)
 
 #define M_REPLACE_SCENE(__scene_name__) \
 SceneManager::GetInstance().ReplaceScene<__scene_name__>()
@@ -34,18 +31,18 @@ void ObjectScript1::DoWork(const size_t mode, const unsigned assigned_number) no
     default: m_moving = true; break;
     case 1: /*! If m_mode is 1, delay each object along with m_assigned_number */
         m_moving = false;
-        TimerManager::GetInstance().SetTimer(m_timer_1_delay, 300 * m_assigned_number,
+        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_1_delay, 300 * m_assigned_number,
                                              false, this, &ObjectScript1::OnWork_1Switch);
         break;
     case 4: /*! If m_mode is 4, delay each object along with m_assigned_number */
         m_moving = false;
-        TimerManager::GetInstance().SetTimer(m_timer_4_delay, 200 * m_assigned_number,
+        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_delay, 200 * m_assigned_number,
                                              false, this, &ObjectScript1::OnTriggered4Delay);
         break;
     case 5: /*! If m_mode is 5, delay each object along with m_assigned_number */
         m_moving = false;
         m_object_original_scale = GetObject().GetScaleValue();
-        TimerManager::GetInstance().SetTimer(m_timer_5_delay, 200 * m_assigned_number,
+        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_5_delay, 200 * m_assigned_number,
                                              false, this, &ObjectScript1::OnTriggered5Delay);
         break;
     }
@@ -65,7 +62,7 @@ void ObjectScript1::Update() {
 
 void ObjectScript1::OnTriggered4Delay() {
     m_moving        = true;
-    TimerManager::GetInstance().SetTimer(m_timer_4_interval, 2'000,
+    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_interval, 2'000,
                                          false, this,
                                          &ObjectScript1::OnTriggered4Interval);
 }
@@ -74,7 +71,7 @@ void ObjectScript1::OnTriggered4Interval() {
     m_moving        = false;
     m_object_alpha  = 1.0f;
     m_elapsed_time  = 0.0f;
-    TimerManager::GetInstance().SetTimer(m_timer_4_waiting, 1'000,
+    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_waiting, 1'000,
                                          false, this,
                                          &ObjectScript1::OnTriggered4Delay);
 }
@@ -84,7 +81,7 @@ void ObjectScript1::OnTriggered5Delay() {
 }
 
 void ObjectScript1::StopAllTimers() {
-    auto& timer = TimerManager::GetInstance();
+    auto& timer = opgs16::manager::TimerManager::Instance();
     timer.DetachTimer(m_timer_4_interval);
     timer.DetachTimer(m_timer_4_waiting);
 

@@ -56,7 +56,7 @@ namespace opgs16 {
 /*!
  * @class Application
  * @brief Application class runs application.
- * This class is singleton, and must be initialized calling GetInstance member function
+ * This class is singleton, and must be initialized calling Instance member function
  * to operate actual program.
  *
  * @log
@@ -95,7 +95,7 @@ private:
     SceneManager&       m_scene_manager;    /*! SceneManager instance */
     SoundManager&       m_sound_manager;
     manager::TimeManager&        m_time_manager;
-    TimerManager&       m_timer_manager;
+    manager::TimerManager&       m_timer_manager;
 
     std::unique_ptr<GlobalSetting> m_setting;
 

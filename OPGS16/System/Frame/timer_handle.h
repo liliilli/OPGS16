@@ -31,7 +31,7 @@ public:
     inline void SetKeyValue(size_t key);
 
     /*! Get hash_key value for TimerManager container */
-    inline size_t GetKeyValue();
+    inline size_t GetKeyValue() const;
 
     /*!
      * @brief Set start, end time point have interval between them.
@@ -60,7 +60,7 @@ inline void TimerHandle::SetKeyValue(size_t value) {
     m_key_value = value;
 }
 
-inline size_t TimerHandle::GetKeyValue() {
+inline size_t TimerHandle::GetKeyValue() const {
     return m_key_value;
 }
 

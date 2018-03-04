@@ -146,7 +146,7 @@
     <ClCompile Include="System\Core\Private\core_setting.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
     <ClCompile Include="System\Manager\Private\resource_type.cc" />
-    <ClCompile Include="System\Manager\timer_manager.cc" />
+    <ClCompile Include="System\Manager\Private\timer_manager.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
@@ -226,8 +226,9 @@
     <ClInclude Include="System\Manager\Internal\font_internal.h" />
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Internal\resource_internal.h" />
+    <ClInclude Include="System\Manager\Internal\timer_internal.h" />
     <ClInclude Include="System\Manager\Public\resource_type.h" />
-    <ClInclude Include="System\Manager\timer_manager.h" />
+    <ClInclude Include="System\Manager\Public\timer_manager.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />

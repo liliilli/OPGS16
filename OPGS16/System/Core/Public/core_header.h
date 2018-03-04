@@ -56,7 +56,7 @@
 #include "../../System/Manager/setting_manager.h" /*! SettingManager */
 #include "../../System/Manager/sound_manager.h"   /*! SoundManager */
 #include "../../System/Manager/Public/time_manager.h"    /*! TimeManager */
-#include "../../System/Manager/timer_manager.h"   /*! TimerManager */
+#include "../../System/Manager/Public/timer_manager.h"   /*! TimerManager */
 #include "../../_Project/Maintenance/Scene/test_1.h"
 
 #endif

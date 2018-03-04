@@ -2,22 +2,53 @@
 #define OPGS16_SYSTEM_MANAGER_TIMER_MANAGER_H
 
 /*!
- * @file System\Manager\timer_manager.h
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Manager/Public/timer_manager.h
  * @author Jongmin Yun
- * @date 2018-02-22
  *
  * @log
  * 2018-02-22 Implemented fundamental TimerManager class.
+ * 2018-03-04 Refactoring.
  */
 
 #include <algorithm>                        /*! std::hash */
-#include <chrono>                           /*! std::chrono */
 #include <functional>                       /*! std::functional */
 #include <limits>                           /*! std::limit<size_t> */
+#include <type_traits>
 #include <unordered_map>                    /*! std::unordered_map */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! Object
-                                              * TimerHandle */
-#include "..\Frame\timer_handle.h"          /*! TimerHandle Definition */
+
+#include "../Internal/timer_internal.h"     /*! _internal:: */
+#include "../../Frame/timer_handle.h"       /*! TimerHandle Definition */
+
+namespace opgs16 {
+namespace manager {
 
 /*!
  * @class TimerManager
@@ -25,29 +56,12 @@
  * @caveat Not precise timer because of dependency of tick delta time (fps tick interval)
  */
 class TimerManager final {
-private:
-    /*! This status enum is used for notifying status information of each timer handler. */
-    enum class Status {
-        ACTIVATED,  /*! Timer handler is activated */
-        PAUSED,     /*! Timer handler is paused */
-        REMOVED,    /*! Timer handler will be removed */
-    };
-
-    /*! This structure is used to store handler pointer and status of timer handler. */
-    struct TimerWrapper {
-        Status m_status;
-        TimerHandle* m_handle{ nullptr };
-
-        explicit TimerWrapper(Status status, TimerHandle* handle) :
-            m_status{ status }, m_handle{ handle } {};
-    };
-
 public:
     /*!
      * @brief Get reference of unique instance of TimerManager.
      * @return Reference instance of timer manager.
      */
-    static TimerManager& GetInstance() {
+    static TimerManager& Instance() {
         static TimerManager instance{};
         return instance;
     }
@@ -66,7 +80,7 @@ public:
      * @param[in] is_loop   Loop mode variable. If this is true, this timer will be loop until
      * the object which     TimerHandle is being bound is destroyed.
      * @param[in] ref       Reference pointer related to callback function.
-     * @param[in] pmf       Member function pointer or reference.
+     * @param[in] func      Member function pointer or reference.
      * @param[in] args      Input arguments of member function.
      */
     template <
@@ -79,7 +93,7 @@ public:
             >
         >
     void SetTimer(TimerHandle& handle, long interval, bool is_loop,
-                  _Ref* ref, _Callable&& pmf, _Argument&&... args);
+                  _Ref* ref, _Callable&& func, _Argument&&... args);
 
     /*!
      * @brief Pause timer.
@@ -99,24 +113,34 @@ public:
     /*!
      * @brief Deatch timer regardless of the status.
      * @param[in] handle    TimerHandle to resume.
-     * @todo Test it
      */
     bool DetachTimer(TimerHandle& handle);
 
 private:
-    static size_t s_timer_count;    /*! key value for assignment of timer handler, default is 0 */
+    /*! key value for assignment of timer handler, default is 0 */
+    inline static size_t s_timer_count = 0;
 
-    std::unordered_map<size_t, TimerWrapper> m_timer_container; /*! Timer container */
+    std::unordered_map<size_t, _internal::TimerWrapper> m_timer_container; /*! Timer container */
     std::list<size_t> m_delete_list; /*! Deletion candidates list */
 
 private:
     TimerManager() = default;
-    ~TimerManager() = default;
+
+    inline bool DoesTimerExist(const TimerHandle& handle) {
+        return m_timer_container.find(handle.GetKeyValue()) != m_timer_container.end();
+    }
+
+public:
     TimerManager(const TimerManager&) = delete;
     TimerManager& operator=(const TimerManager&) = delete;
 };
 
-template <class _Ref, class _Callable, class... _Argument, typename>
+template <
+    class _Ref,
+    class _Callable,
+    class... _Argument,
+    typename
+>
 void TimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
                             _Ref* ref, _Callable&& func, _Argument&&... args) {
     /*! Setting */
@@ -130,6 +154,8 @@ void TimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
     handle.SetCallbackFunction(i);
 
     /*! Insert */
+    using _internal::TimerWrapper;
+    using _internal::Status;
     m_timer_container.emplace(std::make_pair(s_timer_count,
                                              TimerWrapper( Status::ACTIVATED, &handle ))
     );
@@ -140,5 +166,11 @@ void TimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
     if (s_timer_count == std::numeric_limits<size_t>::max())
         s_timer_count = std::numeric_limits<size_t>::min();
 }
+
+} /*! opgs16::manager */
+} /*! opgs16 */
+
+#define M_SET_TIMER(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__) \
+opgs16::manager::TimerManager::Instance().SetTimer(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__)
 
 #endif // !OPGS16_SYSTEM_MANAGER_TIMER_MANAGER_H

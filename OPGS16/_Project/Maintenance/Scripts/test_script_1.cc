@@ -6,7 +6,7 @@
 #include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
 #include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
 #include "..\..\..\System\Manager\sound_manager.h"  /*! SoundManager */
-#include "..\..\..\System\Manager\timer_manager.h"  /*! TimerManager */
+#include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
 
 #include "obj_script_1.h"   /*! ObjectScript1 for TestObject1 */
 
@@ -57,7 +57,7 @@ void TestScript1::Update() {
             if (m_finished_obj == 1) {
                 m_finished_obj = 0;
                 ResetObjectProperties();
-                TimerManager::GetInstance().DetachTimer(m_timer_break);
+                opgs16::manager::TimerManager::Instance().DetachTimer(m_timer_break);
                 SetBreakTimer();
             }
         }   break;
@@ -66,7 +66,7 @@ void TestScript1::Update() {
 }
 
 void TestScript1::SetBreakTimer() {
-    TimerManager::GetInstance().SetTimer(m_timer_break, 1'500, false,
+    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_break, 1'500, false,
                                          this, &TestScript1::Resume);
 }
 
@@ -79,8 +79,7 @@ void TestScript1::Resume() {
     ChangeText();
 
     switch (m_sequence) {
-    case Sequence::_3_INDEPENDENT_WORLD:
-        TimerManager::GetInstance().SetTimer(m_timer_third_test, 500, true,
+    case Sequence::_3_INDEPENDENT_WORLD: opgs16::manager::TimerManager::Instance().SetTimer(m_timer_third_test, 500, true,
                                              this, &TestScript1::ToggleObjectProperties);
         break;
     }
@@ -254,7 +253,7 @@ void TestScript1::Proceed_4AlphaBlending() {
         }
     }
 
-    TimerManager::GetInstance().SetTimer(m_timer_4_interval, 6'000, false,
+    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_interval, 6'000, false,
                                          this, &TestScript1::OnTrigger4Interval);
     m_is_break = true;
 }
@@ -294,7 +293,7 @@ void TestScript1::Proceed_5ScalingTest() {
         }
     }
 
-    TimerManager::GetInstance().SetTimer(m_timer_5_interval, 6'000, false,
+    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_5_interval, 6'000, false,
                                          this, &TestScript1::OnTrigger5Interval);
     m_is_break = true;
 }
