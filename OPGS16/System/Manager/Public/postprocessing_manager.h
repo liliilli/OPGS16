@@ -1,26 +1,53 @@
 #ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 #define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 
-/**
- * @file System/Shader/pp_manager.h
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Manager/Public/postprocessing_manager.h
  * @brief Elementary manager class to manage post-processing shaders.
  *
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @date 2018-02-18
+ * @log
+ * 2018-02-18 Create file.
+ * 2018-03-04 Refactoring. Move class to /Manager class.
  */
 
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "pp_frame.h"
+#include "../../Shader/pp_frame.h"
 
-/**
- * @namespace shading
- * @brief shading namespace is for m_object_list related to shading and shader management.
- */
-namespace shading {
+namespace opgs16 {
+namespace manager {
 
 /**
  * @class PostProcessingManager
@@ -35,7 +62,6 @@ public:
 	using sequence_type = std::list<ppf_ptr>;
 
 public:
-
 	/**
 	 * @brief Static method gets unique instance of PostProcessingManager class.
 	 * @return Lvalue reference of singleton instance.
@@ -106,8 +132,8 @@ public:
 	 * @return Pointer of initialized effect sequence.
 	 * If this fails to create sequence, return nullptr.
 	 */
-	const sequence_type* const
-		SetSequence(const size_t id, const std::initializer_list<std::string>& list);
+	const sequence_type* SetSequence(const size_t id,
+                                     const std::initializer_list<std::string>& list);
 
 	/**
 	 * @brief Updates each effects of each sequences. (each effects of sequence is active)
@@ -144,25 +170,22 @@ private:
 	/** Return id'th position of effect_sequences is already exist. */
 	inline bool DoesEffectSequenceExist(const size_t id);
 
-private:
 	PostProcessingManager();
+
+public:
     PostProcessingManager(const PostProcessingManager&) = delete;
-    PostProcessingManager(const PostProcessingManager&&) = delete;
     PostProcessingManager& operator=(const PostProcessingManager&) = delete;
-    PostProcessingManager& operator=(const PostProcessingManager&&) = delete;
 };
 
-// Inline Methods
-
 inline bool PostProcessingManager::IsEffectExist(const std::string tag) {
-	if (m_effects.find(tag) == m_effects.end()) return false;
-	return true;
+    return m_effects.find(tag) != m_effects.end();
 }
 
 inline bool PostProcessingManager::DoesEffectSequenceExist(const size_t id) {
 	return m_effect_sequences.find(id) != m_effect_sequences.end();
 }
 
-}
+} /*! opgs16::manager */
+} /*! opgs16 */
 
 #endif /** OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H */

@@ -11,7 +11,6 @@
     <ClCompile Include="GlobalObjects\Canvas\image.cc" />
     <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
     <ClCompile Include="GlobalObjects\Canvas\text.cc" />
-    <ClCompile Include="System\Shader\pp_manager.cc" />
     <ClCompile Include="System\Shader\pp_frame.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
@@ -59,6 +58,7 @@
     <ClCompile Include="System\Manager\Private\sound_manager.cc" />
     <ClCompile Include="System\Manager\Private\setting_manager.cc" />
     <ClCompile Include="System\Manager\Private\shader_manager.cc" />
+    <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -74,7 +74,6 @@
     <ClInclude Include="GlobalObjects\Canvas\text.h" />
     <ClInclude Include="Headers\canvas_components.h" />
     <ClInclude Include="GlobalObjects\Interface\i_alignable.h" />
-    <ClInclude Include="System\Shader\pp_manager.h" />
     <ClInclude Include="System\Shader\pp_frame.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_convex.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_sinewave.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="System\Manager\Public\sound_manager.h" />
     <ClInclude Include="System\Manager\Public\setting_manager.h" />
     <ClInclude Include="System\Manager\Public\shader_manager.h" />
+    <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

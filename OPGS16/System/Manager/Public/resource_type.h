@@ -54,7 +54,7 @@ enum class EScopeType {
     SCENE_LOCAL /*! L */
 };
 
-EScopeType GetScopeType(char type);
+EScopeType GetScopeType(const char type);
 
 /*! Information structure of Texture2D */
 struct Texture2D {

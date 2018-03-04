@@ -53,6 +53,7 @@ class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ObjectManager;  /*! Objects */
 class   PhysicsManager; /*! Physics & collision */
+class   PostProcessingManager;
 class   ResourceManager;
 class   SceneManager;   /*! Scenes */
 class   SoundManager;   /*! Sounds */
@@ -85,9 +86,6 @@ enum class EResourceType;
 namespace helper { class ShaderNew; }
 namespace camera { class CameraObject; }
 namespace texture { class Texture2D; }
-namespace shading {
-class PostProcessingManager;
-}
 
 struct	GLFWwindow;
 

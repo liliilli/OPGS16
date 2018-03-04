@@ -179,7 +179,7 @@
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
     <ClCompile Include="System\Shader\pp_frame.cc" />
-    <ClCompile Include="System\Shader\pp_manager.cc" />
+    <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\constant.h" />
     <ClCompile Include="entry.cc" />
@@ -271,7 +271,7 @@
     <ClInclude Include="System\Shader\PostProcessing\pp_gray.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_sinewave.h" />
     <ClInclude Include="System\Shader\pp_frame.h" />
-    <ClInclude Include="System\Shader\pp_manager.h" />
+    <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
     <ClInclude Include="System\Shader\shader.h" />
     <ClInclude Include="System\Frame\model.h" />
     <ClInclude Include="System\Manager\Public\shader_manager.h" />

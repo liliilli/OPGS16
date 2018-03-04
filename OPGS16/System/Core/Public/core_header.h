@@ -42,7 +42,6 @@
 #include "../../GlobalObjects/Canvas/canvas.h"
 #include "../../Objects/Debug/debug_canvas.h"     /*! CanvasDebug */
 //#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
-#include "../../System/Shader/pp_manager.h"
 #include "../../System/Shader/PostProcessing/pp_convex.h"
 #include "../../System/Shader/PostProcessing/pp_sinewave.h"
 #include "../../System/Shader/PostProcessing/pp_gray.h"
@@ -50,6 +49,7 @@
 #include "../../System/Manager/Public/input_manager.h"   /*! InputManager */
 #include "../../System/Manager/Public/object_manager.h"  /*! ObjectManager */
 #include "../../System/Manager/Public/physics_manager.h" /*! PhysicsManager*/
+#include "../../System/Manager/Public/postprocessing_manager.h" /*! opgs16::manager::PostProcessingManager */
 #include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
 #include "../../System/Manager/Public/scene_manager.h"   /*! SceneManager */
 #include "../../System/Manager/Public/setting_manager.h" /*! SettingManager */

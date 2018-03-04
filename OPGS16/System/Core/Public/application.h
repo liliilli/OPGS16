@@ -44,7 +44,9 @@
 
 #include <memory>
 #include <stack>
+// ReSharper disable CppUnusedIncludeDirective
 #include <GL/glew.h>
+// ReSharper restore CppUnusedIncludeDirective
 #include <GLFW/glfw3.h>
 
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
@@ -87,7 +89,7 @@ public:
 private:
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
-	shading::PostProcessingManager* m_pp_manager;
+	manager::PostProcessingManager* m_pp_manager;
 	manager::InputManager&       m_input_manager;
     manager::ObjectManager&      m_object_manager;
     manager::PhysicsManager&     m_physics_manager;

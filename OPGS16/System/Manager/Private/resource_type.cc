@@ -38,9 +38,9 @@
 namespace opgs16 {
 namespace resource {
 
-EScopeType GetScopeType(char type) {
+EScopeType GetScopeType(const char type) {
     switch (type) {
-    default: break;
+    default:  return EScopeType::GLOBAL;      break;
     case 'G': return EScopeType::GLOBAL;      break;
     case 'L': return EScopeType::SCENE_LOCAL; break;
     }

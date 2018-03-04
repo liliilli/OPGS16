@@ -136,7 +136,7 @@ void Application::InitiateDebugUi() {
 }
 
 void Application::InitiatePostProcessingEffects() {
-	m_pp_manager = &shading::PostProcessingManager::GetInstance();
+	m_pp_manager = &manager::PostProcessingManager::GetInstance();
 
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectGray>("Gray");
