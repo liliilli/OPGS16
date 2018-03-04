@@ -2,7 +2,7 @@
 #include <array>            /*! std::array<GLint, 4> */
 #include <GL\glew.h>        /*! type specifier */
 #include <glm\gtc\matrix_transform.hpp> /*! glm::ortho */
-#include "..\Manager\scene_manager.h"   /*! SceneManager */
+#include "../Manager/Public/scene_manager.h"   /*! SceneManager */
 
 namespace component {
 
@@ -22,7 +22,7 @@ Camera::Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bo
          * to display world.
          */
         s_main_camera_initiated = true;
-        SceneManager::GetInstance().GetPresentScene()->SetMainCamera(this);
+        opgs16::manager::SceneManager::Instance().PresentScene()->SetMainCamera(this);
     }
     else
         m_cameratype = CameraType::SUB;
@@ -31,7 +31,7 @@ Camera::Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bo
 Camera::~Camera() {
     if (m_cameratype == CameraType::MAIN) {
         s_main_camera_initiated = false;
-        SceneManager::GetInstance().GetPresentScene()->SetMainCamera(nullptr);
+        opgs16::manager::SceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
     }
 }
 

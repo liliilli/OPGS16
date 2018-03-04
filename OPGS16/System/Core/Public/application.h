@@ -89,11 +89,11 @@ private:
 
 	shading::PostProcessingManager* m_pp_manager;
 	manager::InputManager&       m_input_manager;
-    ObjectManager&      m_object_manager;
-    PhysicsManager&     m_physics_manager;
+    manager::ObjectManager&      m_object_manager;
+    manager::PhysicsManager&     m_physics_manager;
     manager::ResourceManager&    m_resource_manager;
-    SceneManager&       m_scene_manager;    /*! SceneManager instance */
-    SoundManager&       m_sound_manager;
+    manager::SceneManager&       m_scene_manager;    /*! SceneManager instance */
+    manager::SoundManager&       m_sound_manager;
     manager::TimeManager&        m_time_manager;
     manager::TimerManager&       m_timer_manager;
 

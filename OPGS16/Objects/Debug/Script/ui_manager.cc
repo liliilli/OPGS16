@@ -10,7 +10,7 @@
 /*! Tree */
 #include "..\..\..\System\Debugs\hierarchy_tree.h"  /*! ObjectTree */
 #include "..\..\..\System\Frame\scene.h"            /*! GetObjectTree() */
-#include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
+#include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
 
 DebugUiManager::DebugUiManager(Object& obj,
                                canvas::Text* const _m_fps,
@@ -42,7 +42,7 @@ void DebugUiManager::Update() {
     if (false) {
         ObjectTree tree{};
 
-        auto const top_scene = SceneManager::GetInstance().GetPresentScene();
+        auto const top_scene = opgs16::manager::SceneManager::Instance().PresentScene();
         if (top_scene != nullptr) {
             top_scene->GetObjectTree(&tree);
             std::string text{};

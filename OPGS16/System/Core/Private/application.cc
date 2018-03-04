@@ -50,11 +50,11 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 Application::Application() :
     m_window{ InitApplication(u8"OPGS16") },
     m_input_manager{ manager::InputManager::Instance() },
-    m_object_manager{ ObjectManager::GetInstance() },
-    m_physics_manager{ PhysicsManager::GetInstance() },
+    m_object_manager{ manager::ObjectManager::Instance() },
+    m_physics_manager{ manager::PhysicsManager::Instance() },
     m_resource_manager{ manager::ResourceManager::Instance() },
-    m_scene_manager{ SceneManager::GetInstance() },
-    m_sound_manager{ SoundManager::GetInstance() },
+    m_scene_manager{ manager::SceneManager::Instance() },
+    m_sound_manager{ manager::SoundManager::Instance() },
     m_time_manager{ manager::TimeManager::Instance() },
     m_timer_manager{ manager::TimerManager::Instance() } {
 
@@ -96,7 +96,7 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
         /*! Initialize Global Setting. */
-        SettingManager::GetInstance();
+	    manager::SettingManager::Instance();
 
         m_resource_manager.ReadResourceFile(g_global_resource_path.data());
 
@@ -176,12 +176,12 @@ void Application::Update() {
     switch (GetPresentStatus()) {       /*! Update */
     case GameStatus::PLAYING:
     case GameStatus::MENU:
-        if (!m_scene_manager.SceneEmpty()) {
+        if (!m_scene_manager.Empty()) {
             /*! pre-work such as Delete object, Replace object etc. */
             m_object_manager.Update();
 
             /*! Update */
-            m_scene_manager.GetPresentScene()->Update();
+            m_scene_manager.PresentScene()->Update();
             m_physics_manager.Update();
         }
         break;
@@ -222,7 +222,7 @@ void Application::InputGlobal() {
 
 void Application::Draw() const {
     /*! If there is no scene, do not rendering anything. */
-	if (!m_scene_manager.SceneEmpty()) {
+	if (!m_scene_manager.Empty()) {
         glViewport(0, 0, GlobalSetting::ScreenWidth(), GlobalSetting::ScreenHeight());
 
 		if (IsSwitchOn(m_setting->PostProcessing()))
@@ -231,7 +231,7 @@ void Application::Draw() const {
             m_pp_manager->BindSequence(0);
 
 		/** Actual Rendering */
-        m_scene_manager.GetPresentScene()->Draw();
+        m_scene_manager.PresentScene()->Draw();
 		/** Post-processing */
         m_pp_manager->Render();
 	}

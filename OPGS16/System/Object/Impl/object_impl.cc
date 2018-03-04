@@ -1,6 +1,10 @@
 #include "object_impl.h"                    /*! Header file */
-#include <glm\gtc\matrix_transform.hpp>     /*! glm::rotate */
-#include "..\..\Manager\setting_manager.h"  /*! SettingManager */
+#include <glm/gtc/matrix_transform.hpp>     /*! glm::rotate */
+#include "../../Manager/Public/setting_manager.h"  /*! SettingManager */
+
+namespace {
+using opgs16::manager::SettingManager;
+}
 
 void ObjectImpl::RefreshFinalPosition() const {
     m_final_position = m_local_position + m_parent_from_position + m_world_position;
@@ -40,11 +44,11 @@ const glm::mat4& ObjectImpl::GetModelMatrix() const {
 }
 
 std::string ObjectImpl::GetTagNameOf() const {
-    return SettingManager::GetInstance().GetTagName(m_tag_index);
+    return SettingManager::Instance().GetTagName(m_tag_index);
 }
 
 void ObjectImpl::SetTag(const std::string tag_name) {
-    auto& tag_list = SettingManager::GetInstance().GetTagNameList();
+    auto& tag_list = SettingManager::Instance().GetTagNameList();
 
     decltype(tag_list.size()) i = 0;
     for (; i < tag_list.size(); ++i) {
@@ -58,7 +62,7 @@ void ObjectImpl::SetTag(const std::string tag_name) {
 }
 
 void ObjectImpl::SetTag(const size_t tag_index) {
-    auto list_size = SettingManager::GetInstance().GetTagNameList().size();
+    auto list_size = SettingManager::Instance().GetTagNameList().size();
 
     if (tag_index >= list_size)
         m_tag_index = 0;

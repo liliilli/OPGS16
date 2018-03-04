@@ -1,6 +1,4 @@
 #include "rectangle.h"          /*! Header file */
-#include "..\rigidbody_2d.h"
-#include "..\..\..\..\System\Manager\scene_manager.h"   /*! Scene manager */
 
 namespace collision {
 

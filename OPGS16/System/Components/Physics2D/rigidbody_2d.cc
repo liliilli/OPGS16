@@ -1,11 +1,11 @@
 #include "rigidbody_2d.h"                   /*! Header file */
-#include "..\..\Manager\physics_manager.h"  /*! PhysicsManager */
+#include "../../Manager/Public/physics_manager.h"  /*! PhysicsManager */
 #include "..\..\Object\object.h"            /*! Object */
 
 namespace component {
 
 void Rigidbody2D::Update() {
-    auto& physics_manager = PhysicsManager::GetInstance();
+    auto& physics_manager = opgs16::manager::PhysicsManager::Instance();
     for (auto& collider : m_colliders) {
         collider->ReflectPosition(m_bound_object.GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);

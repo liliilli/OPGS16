@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
-#define OPGS16_SYSTEM_HELPER_SWITCH_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,33 +26,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Helper/Public/switch.h
- * @brief Switch enum class replaces plain boolean type.
- *
+/**
+ * @file System/Manager/Private/texture_manager.cc
  * @author Jongmin Yun
+ *
  * @log
- * 2018-03-01 Create file.
+ * 2018-03-04 Refactoring.
  */
 
+#include "../Public/texture_manager.h"  /*! Header file */
+
+#include "../../Frame/texture.h"
+#include "../../Manager/Public/resource_manager.h"
+
 namespace opgs16 {
+namespace manager {
 
-/*! Switch enum constant used everywhere instead of just using plain bool type. */
-enum class Switch : bool {
-    OFF = false,
-    ON = true
-};
+TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
+	if (!DoesTextureExist(name)) {
+		const auto& file_path = ResourceManager::Instance().GetTexture2D(name);
 
-/*! Toggle switch value helper function. */
-inline Switch ToggleSwitch(const Switch value) noexcept {
-    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
+        /*! _ is unused. */
+        auto [it, _] = m_container.emplace(name, std::make_unique<texture::Texture2D>(file_path));
+		return it->second.get();
+	}
+    return m_container.at(name).get();
 }
 
-/*! Return boolean value whether state of switch value is ON. */
-inline constexpr bool IsSwitchOn(const Switch value) {
-    return value == Switch::ON;
+void TextureManager::Release(const std::string& tag) {
+	if (DoesTextureExist(tag)) m_container.erase(tag);
 }
 
+void TextureManager::Clear() {
+    m_container.clear();
 }
 
-#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */
+} /*! opgs16::manager */
+} /*! opgs16 */

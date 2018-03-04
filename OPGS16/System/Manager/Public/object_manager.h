@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
-#define OPGS16_SYSTEM_HELPER_SWITCH_H
+#ifndef OPGS16_SYSTEM_MANAGER_OBJECT_MANAGER_H
+#define OPGS16_SYSTEM_MANAGER_OBJECT_MANAGER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,32 +30,63 @@
  */
 
 /*!
- * @file System/Helper/Public/switch.h
- * @brief Switch enum class replaces plain boolean type.
+ * @file System\Manager\object_manager.h
+ * @brief
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-01 Create file.
+ * 2018-03-04 Refactoring.
  */
 
-namespace opgs16 {
+#include <memory>               /*! std::unique_ptr */
+#include <list>                 /*! std::list */
+#include "../../Object/object.h"   /*! Object */
 
-/*! Switch enum constant used everywhere instead of just using plain bool type. */
-enum class Switch : bool {
-    OFF = false,
-    ON = true
+namespace opgs16 {
+namespace manager {
+
+/*!
+ * @class ObjectManager
+ * @brief
+ */
+class ObjectManager final {
+    using object_ptr = std::unique_ptr<Object>;
+
+public:
+    static ObjectManager& Instance() {
+        static ObjectManager instance{};
+        return instance;
+    }
+
+    inline void Update() {
+        if (!m_destroy_candidates.empty()) {
+            DestroyObjects();
+        }
+    }
+
+    void Destroy(const Object& object);
+
+    /*! Clear all destroy candidates */
+    void Clear();
+
+private:
+    std::list<object_ptr> m_destroy_candidates;
+
+private:
+    inline void AddDestroyObject(object_ptr& ptr) {
+        m_destroy_candidates.emplace_back(std::move(ptr));
+    }
+
+    void DestroyObjects();
+
+    ObjectManager() = default;
+
+public:
+    ObjectManager(const ObjectManager&) = delete;
+    ObjectManager& operator=(const ObjectManager&) = delete;
 };
 
-/*! Toggle switch value helper function. */
-inline Switch ToggleSwitch(const Switch value) noexcept {
-    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
-}
+} /*! opgs16::manager */
+} /*! opgs16 */
 
-/*! Return boolean value whether state of switch value is ON. */
-inline constexpr bool IsSwitchOn(const Switch value) {
-    return value == Switch::ON;
-}
-
-}
-
-#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */
+#endif // !OPGS16_SYSTEM_MANAGER_OBJECT_MANAGER_H

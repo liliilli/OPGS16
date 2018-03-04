@@ -1,29 +1,60 @@
-#include "sound_manager.h"      /*! Header file */
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Manager/Private/sound_manager.cc
+ * @brief Sound manager implementation file.
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-03-04 Refactoring.
+ */
+
+#include "../Public/sound_manager.h"      /*! Header file */
+
 #include <iostream>             /*! std::cerr */
 #include <string>               /*! std::string */
-#include "Public/resource_manager.h"   /*! ResourceManager */
-#include "Public/resource_type.h"
+
+#include "../Public/resource_manager.h"   /*! ResourceManager */
+#include "../Public/resource_type.h"
+
+namespace opgs16 {
+namespace manager {
+
+namespace {
 
 constexpr bool FAILED   = false;
 constexpr bool SUCCESS  = true;
 
-SoundManager::~SoundManager() {
-	StopAllSounds();
+} /*! unnamed namespace */
 
-    /*! Release all sounds */
-	for (auto& pair_item : m_sounds) {
-		auto& sound = pair_item.second;
-        if (sound.Sound()->release() != FMOD_OK) {
-            /*! Write to logger if debug mode. if not and after this, mute app. */
-            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
-        }
-	}
-    m_sounds.clear();
-
-    /*! Close and release sound system */
-    m_system->close();
-    m_system->release();
-}
+using _internal::ESoundType;
+using _internal::SSoundInfo;
 
 bool SoundManager::ProcessInitialSetting() {
     if (FMOD::System_Create(&m_system) != FMOD_OK) {
@@ -59,40 +90,6 @@ bool SoundManager::ProcessInitialSetting() {
     return SUCCESS;
 }
 
-bool SoundManager::CreateSound(const std::string& tag, const std::string& path,
-                               SoundType sound_type) {
-    if (DoesSoundExist(tag)) {
-        opgs16::manager::ResourceManager::Instance().GetSound(tag);
-
-        return FAILED;
-    }
-
-    FMOD::Sound* sound;
-    if (m_system->createSound(path.c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
-        /*! Write to logger if debug mode. if not and after this, mute app. */
-        std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << path << "\n";
-        return FAILED;
-    }
-    else {
-        switch (sound_type) {
-        case SoundType::EFFECT:
-            sound->setMode(FMOD_LOOP_OFF);
-            break;
-        case SoundType::BACKGROUND:
-            //[[fallthrough]]
-        case SoundType::SURROUND:
-            sound->setMode(FMOD_LOOP_NORMAL);
-            sound->setLoopCount(-1);
-            break;
-        }
-
-        /*! Insert created sound to sound container */
-        m_sounds.emplace(std::make_pair(tag, SoundInfo{ sound, sound_type }));
-    }
-
-	return SUCCESS;
-}
-
 bool SoundManager::CreateSound(const std::string& item_tag) {
     if (DoesSoundExist(item_tag)) {
         return true;
@@ -108,22 +105,21 @@ bool SoundManager::CreateSound(const std::string& item_tag) {
         }
 
         /*! @todo:Temporary */
-        SoundType sound_type{ SoundType::BACKGROUND };
+        ESoundType sound_type{ ESoundType::BACKGROUND };
 
         switch (sound_type) {
-        case SoundType::EFFECT:
+        case ESoundType::EFFECT:
             sound->setMode(FMOD_LOOP_OFF);
             break;
-        case SoundType::BACKGROUND:
-            //[[fallthrough]]
-        case SoundType::SURROUND:
+        case ESoundType::BACKGROUND:
+        case ESoundType::SURROUND:
             sound->setMode(FMOD_LOOP_NORMAL);
             sound->setLoopCount(-1);
             break;
         }
 
         /*! Insert created sound to sound container */
-        m_sounds.emplace(std::make_pair(item_tag, SoundInfo{ sound, sound_type }));
+        m_sounds.emplace(std::make_pair(item_tag, SSoundInfo{ sound, sound_type }));
         return SUCCESS;
     }
 }
@@ -178,6 +174,28 @@ void SoundManager::Clear() {
     m_sounds.clear();
 }
 
-void SoundManager::ProcessStopSound(const SoundInfo& sound) {
+void SoundManager::ProcessStopSound(const SSoundInfo& sound) {
     //m_system->getChannel()
 }
+
+SoundManager::~SoundManager() {
+	StopAllSounds();
+
+    /*! Release all sounds */
+	for (auto& pair_item : m_sounds) {
+		auto& sound = pair_item.second;
+        if (sound.Sound()->release() != FMOD_OK) {
+            /*! Write to logger if debug mode. if not and after this, mute app. */
+            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
+        }
+	}
+    m_sounds.clear();
+
+    /*! Close and release sound system */
+    m_system->close();
+    m_system->release();
+}
+
+} /*! opgs16::manager */
+} /*! opgs16 */
+

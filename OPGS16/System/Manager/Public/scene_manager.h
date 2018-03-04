@@ -2,32 +2,66 @@
 #define OPGS16_SYSTEM_MANAGER_SCENE_MANAGER_H
 
 /*!
- * @file System\Manager\scene_manager.h
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Manager/Public/scene_manager.h
  * @author Jongmin Yun
- * @date 2018-02-14
+ *
+ * @log
+ * 2018-02-14 Create file.
+ * 2018-03-04 Refactoring.
  */
 
 #include <memory>
 #include <stack>
-#include "../Frame/scene.h"     /*! Scene */
-#include "../Core/Public/application.h" /*! Application for callback forwarding */
+#include "../../Core/Public/application.h" /*! Application for callback forwarding */
+#include "../../Frame/scene.h"     /*! Scene */
+
+namespace opgs16 {
+namespace manager {
 
 /*!
  * @class SceneManager
- * @brief
+ * @brief Manager class manages game scene.
  */
 class SceneManager final {
 private:
     using scene_stack = std::stack<std::unique_ptr<Scene>>;
 
 public:
-    /** * @brief Static method gets unique instance of SceneManager class.  */
-    static SceneManager& GetInstance() {
+    /*! Return singleton instance of SceneManager. */
+    static SceneManager& Instance() {
         static SceneManager instance{};
         return instance;
     }
 
-    /**
+    /*!
      * @brief The method that adds scene to scene stack.
      * Add scene to scene stack stores scenes is paused, and move to top scene.
      *
@@ -42,7 +76,7 @@ public:
     >
     void PushScene();
 
-    /**
+    /*!
      * @brief The method replace scene with top scene.
      * before actually replacing previous scene, application have to go through purify resources,
      * to prevent unintentional memory leak and runtime errors.
@@ -75,20 +109,20 @@ public:
      * @brief Get top scene's pointer.
      * @return The pointer of top scene, if application has no scene return nullptr
      */
-    inline Scene* const GetPresentScene();
+    inline Scene* const PresentScene();
 
     /*!
      * @brief
      * @return
      */
-    inline bool SceneEmpty() const noexcept;
+    inline bool Empty() const noexcept;
 
 private:
     scene_stack m_scenes;	/** Scene stack */
 
 private:
     /*! Release all resource used in scene, prevent runtime error and resource memory leak. */
-    void ReleaseAllResources();
+    void ReleaseAllResources() const;
 
     template <
         class _Ty,
@@ -107,9 +141,11 @@ private:
 
 private:
     SceneManager() = default;
+
+public:
     ~SceneManager();
     SceneManager(const SceneManager&) = delete;
-    SceneManager(SceneManager&&) = delete;
+    SceneManager& operator=(SceneManager&) = delete;
 };
 
 template <class _Ty, typename>
@@ -118,13 +154,19 @@ void SceneManager::PushScene() {
     m_scenes.top()->Initiate();
 }
 
-inline Scene* const SceneManager::GetPresentScene() {
+inline Scene* const SceneManager::PresentScene() {
     if (m_scenes.empty()) return nullptr;
     else return m_scenes.top().get();
 }
 
-inline bool SceneManager::SceneEmpty() const noexcept {
+inline bool SceneManager::Empty() const noexcept {
     return m_scenes.empty();
 }
+
+} /*! opgs16::manager */
+} /*! opgs16 */
+
+#define M_REPLACE_SCENE(__scene_name__) \
+opgs16::manager::SceneManager::Instance().ReplaceScene<__scene_name__>()
 
 #endif // !OPGS16_SYSTEM_MANAGER_SCENE_MANAGER_H

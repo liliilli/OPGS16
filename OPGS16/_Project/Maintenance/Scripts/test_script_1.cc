@@ -1,14 +1,14 @@
 #include "test_script_1.h"            /*! Header file */
 
-#include <iostream>
-
-#include <glm\glm.hpp>
-#include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
-#include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
-#include "..\..\..\System\Manager\sound_manager.h"  /*! SoundManager */
+#include <glm/glm.hpp>
+#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
+#include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
+#include "../../../System/Manager/Public/sound_manager.h"  /*! SoundManager */
 #include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
 
 #include "obj_script_1.h"   /*! ObjectScript1 for TestObject1 */
+
+using opgs16::manager::SceneManager;
 
 TestScript1::TestScript1(Object& obj) : component::ScriptFrame{ obj } {
     Initiate();
@@ -18,7 +18,7 @@ TestScript1::TestScript1(Object& obj) : component::ScriptFrame{ obj } {
 void TestScript1::Start() {
     SetBreakTimer();
 
-    auto& sound_manager = SoundManager::GetInstance();
+    auto& sound_manager = opgs16::manager::SoundManager::Instance();
     sound_manager.CreateSound("Music1");
     sound_manager.PlaySound("Music1");
 }
@@ -86,7 +86,7 @@ void TestScript1::Resume() {
 }
 
 void TestScript1::Proceed_1NormalLocal() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
         std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
@@ -109,7 +109,7 @@ void TestScript1::Proceed_1NormalLocal() {
 }
 
 void TestScript1::Proceed_2DependentWorld() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     auto speed = 2.0f;
 
     if (scene) {
@@ -152,7 +152,7 @@ void TestScript1::Proceed_2DependentWorld() {
 }
 
 void TestScript1::Proceed_3WorldPosition() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = opgs16::manager::SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get 1-level object */
         auto& root_obj = scene->GetObject("Object");
@@ -169,7 +169,7 @@ void TestScript1::ObjectPropertiesReset() {
     /*! Reset all things */
     switch (m_sequence) {
     case Sequence::_3_INDEPENDENT_WORLD: {
-        auto scene = SceneManager::GetInstance().GetPresentScene();
+        auto scene = SceneManager::Instance().PresentScene();
 
         bool translate_dependency = true;
         auto object = scene->GetObject("Object").get();
@@ -211,7 +211,7 @@ void TestScript1::ChangeText() {
 }
 
 void TestScript1::ToggleObjectProperties() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     auto object = scene->GetObject("Object").get();
     while (object != nullptr) {
         auto flag = object->GetSucceedingPositionFlag();
@@ -221,7 +221,7 @@ void TestScript1::ToggleObjectProperties() {
 }
 
 void TestScript1::ResetObjectProperties() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     auto object = scene->GetObject("Object").get();
     auto root_object = object;
 
@@ -234,7 +234,7 @@ void TestScript1::ResetObjectProperties() {
 }
 
 void TestScript1::Proceed_4AlphaBlending() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
         std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
@@ -259,7 +259,7 @@ void TestScript1::Proceed_4AlphaBlending() {
 }
 
 void TestScript1::OnTrigger4Interval() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get Objects and let them stop their own timers */
         auto object = scene->GetObject("Object").get();
@@ -274,7 +274,7 @@ void TestScript1::OnTrigger4Interval() {
 }
 
 void TestScript1::Proceed_5ScalingTest() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
         std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
@@ -299,7 +299,7 @@ void TestScript1::Proceed_5ScalingTest() {
 }
 
 void TestScript1::OnTrigger5Interval() {
-    auto scene = SceneManager::GetInstance().GetPresentScene();
+    auto scene = SceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get Objects and let them stop their own timers */
         auto object = scene->GetObject("Object").get();

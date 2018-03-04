@@ -42,8 +42,8 @@
 #include <list>         /*! std::list */
 #include <string>       /*! std::string */
 
-#include <GL\glew.h>
-#include <glm\glm.hpp>  /*! glm vector types */
+#include <GL/glew.h>
+#include <glm/glm.hpp>  /*! glm vector types */
 
 namespace opgs16 {
 namespace resource {

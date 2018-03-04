@@ -3,7 +3,7 @@
 #include <array>            /*! std::array */
 #include "canvas.h"
 #include "..\..\System\Shader\shader_wrapper.h"        /*! ShaderWrapper */
-#include "..\..\System\Manager\texture_manager.h"
+#include "../../System/Manager/Public/texture_manager.h"
 #include <glm\gtc\matrix_transform.hpp>
 
 namespace canvas {

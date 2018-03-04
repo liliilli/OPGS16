@@ -1,18 +1,16 @@
 #include "obj_script_1.h"                           /*! Header file */
 
-#include <glm\glm.hpp>
-#include <cmath>                                    /*! std::cosf() */
-#include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
-#include "..\..\..\System\Manager\scene_manager.h"  /*! SceneManager */
-#include "..\..\..\System\Manager\Public\time_manager.h"   /*! TimeManager */
+#include <glm/glm.hpp>
+#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
+#include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
+#include "../../../System/Manager/Public/time_manager.h"   /*! TimeManager */
 #include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
 
-#include "..\Object\test_obj.h" /*! TestObject1 for temporary */
-#include "test_script_1.h"  /*! TestScript1 for Canvas */
-#include "..\..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
+#include "test_script_1.h"      /*! TestScript1 for Canvas */
+#include "../Object/test_obj.h" /*! TestObject1 for temporary */
+#include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
 
-#define M_REPLACE_SCENE(__scene_name__) \
-SceneManager::GetInstance().ReplaceScene<__scene_name__>()
+using opgs16::manager::SceneManager;
 
 ObjectScript1::ObjectScript1(Object& obj) : component::ScriptFrame{ obj } {
     Initiate();
@@ -128,7 +126,7 @@ void ObjectScript1::Proceed_1NormalLocal() {
             m_switch = 0;
             m_moving = false;
 
-            auto& canvas = SceneManager::GetInstance().GetPresentScene()->GetObject("GameCanvas");
+            auto& canvas = SceneManager::Instance().PresentScene()->GetObject("GameCanvas");
             if (canvas) {
                 TestScript1* canvas_script = canvas->GetComponent<TestScript1>();
                 canvas_script->TriggerProcessFinish();
@@ -173,7 +171,7 @@ void ObjectScript1::Proceed_3WorldPosition() {
             m_switch = 0;
             m_moving = false;
 
-            auto& canvas = SceneManager::GetInstance().GetPresentScene()->GetObject("GameCanvas");
+            auto& canvas = SceneManager::Instance().PresentScene()->GetObject("GameCanvas");
             if (canvas) {
                 TestScript1* canvas_script = canvas->GetComponent<TestScript1>();
                 canvas_script->TriggerProcessFinish();

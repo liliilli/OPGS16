@@ -277,8 +277,8 @@ std::array<float, 24> FontManager::GetCharacterVertices(const _internal::Charact
             h <<= 1;
         }
         else {
-            w *= scale;
-            h *= scale;
+            w *= static_cast<int>(scale);
+            h *= static_cast<int>(scale);
         }
     }
 

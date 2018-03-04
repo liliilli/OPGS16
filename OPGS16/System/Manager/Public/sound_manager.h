@@ -1,23 +1,56 @@
-#ifndef OPGS16_SYSTEM_SOUND_MANAGER_H
-#define OPGS16_SYSTEM_SOUND_MANAGER_H
+#ifndef OPGS16_SYSTEM_MANAGER_SOUND_MANAGER_H
+#define OPGS16_SYSTEM_MANAGER_SOUND_MANAGER_H
 
-/**
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
  * @file System/sound_manager.h
  * @brief Elementary manager class to manage sounds.
  *
  * This file consists of application operation class and member API functions.
  *
  * @author Jongmin Yun
- * @date 2018-02-26
  *
  * @log
  * 2018-02-26 Change sound library from OpenAL & alut to Fmod.
+ * 2018-03-04 Refactoring.
  */
 
 #include <unordered_map>    /*! std::unordered_map */
 #include <fmod.hpp>         /*! FMOD */
 
-/**
+#include "../Internal/sound_internal.h"
+
+namespace opgs16 {
+namespace manager {
+
+/*!
  * @class SoundManager
  * @brief This class manages rich sounds like a background music, effect sounds,
  * anything related to sound from WAV file, OGG file...
@@ -31,38 +64,14 @@
  * 1. Stop sound feature and pause also.
  * 2. Multiple stimutaneous effect playing.
  *
- * @date 2018-02-26
- *
  * @log
  * 2018-02-26 Replace OpenAL with FMOD.
+ * 2018-03-04 Refactoring, Move class in opgs16::manager.
  */
 class SoundManager final {
 public:
-	/*! SoundType is type of each sounds to have been storing. */
-	enum class SoundType {
-		EFFECT,		/** This is for effect sound, once play but not looped normally. */
-		BACKGROUND, /** This is for background sound, looped normally. */
-		SURROUND	/** This is for 3D surround ambient sound have distance. */
-	};
-
-	/*! This class stores sound information. */
-    class SoundInfo {
-    private:
-        FMOD::Sound*    m_sound;    /*! Sound buffer */
-		const SoundType m_type;	    /*! The type of sound. */
-
-    public:
-        explicit SoundInfo(FMOD::Sound* sound, SoundType type) :
-            m_sound{ sound }, m_type{ type } {};
-
-        FMOD::Sound* const Sound() const { return m_sound; }
-	};
-
-public:
-	/**
-     * @brief Static method returns unique instance of SoundManager class.
-	 */
-	static SoundManager& GetInstance() {
+	/*! Returns unique instance of SoundManager class. */
+	static SoundManager& Instance() {
 		static SoundManager instance{};
 		return instance;
 	}
@@ -72,19 +81,6 @@ public:
 	 * SoundManager apply OpenAL for openning device automatically.
 	 */
     bool ProcessInitialSetting();
-
-	/**
-	 * @brief Creates sound.
-	 * @param[in] tag The tag to name sound object.
-	 * @param[in] path The file path to load.
-	 * @param[in] sound_type The type of sound, EFFECT, BACKGROUND, SURROUND.
-	 * @param[in] file_type The type of file, default value is NONE. Thereby this method retrieve
-	 * file's file type automatically.
-	 * @return The success flag, return true if success.
-	 *
-	 * @todo Implement detection file type when file_type is FileType::NONE.
-	 */
-	bool CreateSound(const std::string& tag, const std::string& path, SoundType sound_type);
 
     /*!
      * @brief Get sound resource and initialize sound.
@@ -125,13 +121,13 @@ public:
 	 * @brief Check if any sound stream with 'tag' name is exist.
 	 * @return If duplicated name is exist already, return true, elsewhere false.
 	 */
-	inline const bool DoesSoundExist(const std::string& tag) const;
+	inline bool DoesSoundExist(const std::string& tag) const;
 
 	/**
 	 * @brief Return true or false whenever sound is muted or not.
 	 * @return If sound is muted, return true, else return false.
 	 */
-	inline const bool IsSoundMuted() const;
+	inline bool IsSoundMuted() const;
 
 	/**
 	 * @brief Set mute with true or false.
@@ -140,14 +136,14 @@ public:
 	inline void SetMute(const bool value);
 
 private:
-    FMOD::System*   m_system;
-    FMOD_RESULT     m_result;
-    unsigned        m_version;
-    int             m_sound_driver_count;
+    FMOD::System*   m_system{ nullptr };
+    FMOD_RESULT     m_result{ FMOD_OK };
+    unsigned        m_version{ 0 };
+    int             m_sound_driver_count{ 0 };
     FMOD::Channel*  m_sound_channel{ nullptr };
 
 	/** Sound container stores all of sound to be played in application. */
-	std::unordered_map<std::string, SoundInfo> m_sounds{};
+	std::unordered_map<std::string, _internal::SSoundInfo> m_sounds{};
 
 	bool m_is_muted{ false };	/** Switch if all sounds needs to be sliented. */
     mutable bool m_not_initiated{ true };
@@ -158,25 +154,25 @@ private:
 	 * This must be called StopSound method and StopAllSounds method.
 	 * @param[in] sound The sound container to stop.
 	 */
-	 void ProcessStopSound(const SoundInfo& sound);
+	void ProcessStopSound(const _internal::SSoundInfo& sound);
 
-private:
 	/**
 	 * @brief Stop all playing sounds, and release resources.
 	 * This destructor called when Application ends.
 	 */
     SoundManager() = default;
-	~SoundManager();
 
+public:
+	~SoundManager();
 	SoundManager(const SoundManager&) = delete;
 	SoundManager& operator=(const SoundManager&) = delete;
 };
 
-inline const bool SoundManager::DoesSoundExist(const std::string& tag) const {
+inline bool SoundManager::DoesSoundExist(const std::string& tag) const {
 	return m_sounds.find(tag) != m_sounds.end();
 }
 
-inline const bool SoundManager::IsSoundMuted() const {
+inline bool SoundManager::IsSoundMuted() const {
     return m_is_muted;
 }
 
@@ -184,4 +180,7 @@ inline void SoundManager::SetMute(const bool value) {
     m_is_muted = value;
 }
 
-#endif /** OPGS16_SYSTEM_SOUND_MANAGER_H */
+} /*! opgs16::manager */
+} /*! opgs16 */
+
+#endif /** OPGS16_SYSTEM_MANAGER_SOUND_MANAGER_H */

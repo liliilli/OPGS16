@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
-#define OPGS16_SYSTEM_HELPER_SWITCH_H
+#ifndef OPGS16_SYSTEM_MANAGER_INTERNAL_SOUND_INTERNAL_H
+#define OPGS16_SYSTEM_MANAGER_INTERNAL_SOUND_INTERNAL_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,32 +30,44 @@
  */
 
 /*!
- * @file System/Helper/Public/switch.h
- * @brief Switch enum class replaces plain boolean type.
+ * @file System/Manager/Internal/sound_internal.h
+ * @brief
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-01 Create file.
+ * 2018-03-04 Create file, move internal structure to it.
  */
 
-namespace opgs16 {
+#include <fmod.hpp>
 
-/*! Switch enum constant used everywhere instead of just using plain bool type. */
-enum class Switch : bool {
-    OFF = false,
-    ON = true
+namespace opgs16 {
+namespace manager {
+namespace _internal {
+
+/*! ESoundType is type of each sounds to have been storing. */
+enum class ESoundType {
+    EFFECT,		/** This is for effect sound, once play but not looped normally. */
+    BACKGROUND, /** This is for background sound, looped normally. */
+    SURROUND	/** This is for 3D surround ambient sound have distance. */
 };
 
-/*! Toggle switch value helper function. */
-inline Switch ToggleSwitch(const Switch value) noexcept {
-    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
-}
+/*! This class stores sound information. */
+class SSoundInfo {
+private:
+    FMOD::Sound*    m_sound;    /*! Sound buffer */
+    const ESoundType m_type;	    /*! The type of sound. */
 
-/*! Return boolean value whether state of switch value is ON. */
-inline constexpr bool IsSwitchOn(const Switch value) {
-    return value == Switch::ON;
-}
+public:
+    explicit SSoundInfo(FMOD::Sound* sound, const ESoundType type) :
+        m_sound{ sound }, m_type{ type } {};
 
-}
+    FMOD::Sound*    Sound() const { return m_sound; }
+    ESoundType      Type() const { return m_type; }
+};
 
-#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */
+} /*! opgs16::manager::_internal */
+} /*! opgs16::manager */
+} /*! opgs16 */
+
+#endif // !OPGS16_SYSTEM_MANAGER_INTERNAL_SOUND_INTERNAL_H
+

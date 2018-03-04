@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
-#define OPGS16_SYSTEM_HELPER_SWITCH_H
+#ifndef OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
+#define OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,32 +30,41 @@
  */
 
 /*!
- * @file System/Helper/Public/switch.h
- * @brief Switch enum class replaces plain boolean type.
+ * @file System/Manager/Internal/physics_internal.h
+ * @brief
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-01 Create file.
+ * 2018-03-04 Create file. Move PhysicsManager::Item to this file.
  */
 
-namespace opgs16 {
+#include "../../Components/Physics2D/rigidbody_2d.h"
 
-/*! Switch enum constant used everywhere instead of just using plain bool type. */
-enum class Switch : bool {
-    OFF = false,
-    ON = true
+namespace opgs16 {
+namespace manager {
+namespace _internal {
+
+struct Item {
+    collision::RectangleCollider2D* const    m_collider;
+    component::Rigidbody2D* const   m_rigidbody;
+    const glm::vec2 m_position;
+
+    enum class Type {
+        BEGIN,
+        END
+    } m_type = { Type::BEGIN };
+
+    explicit Item(collision::RectangleCollider2D* const collider,
+                  component::Rigidbody2D* const rigidbody,
+                  const glm::vec2 axis_value,
+                  Type type) :
+        m_collider{ collider }, m_rigidbody{ rigidbody },
+        m_position{ axis_value }, m_type{ type } {};
 };
 
-/*! Toggle switch value helper function. */
-inline Switch ToggleSwitch(const Switch value) noexcept {
-    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
-}
+} /*! opgs16::manager::_internal */
+} /*! opgs16::manager */
+} /*! opgs16::manager */
 
-/*! Return boolean value whether state of switch value is ON. */
-inline constexpr bool IsSwitchOn(const Switch value) {
-    return value == Switch::ON;
-}
+#endif // !OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
 
-}
-
-#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */

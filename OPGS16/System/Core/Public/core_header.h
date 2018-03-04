@@ -49,12 +49,12 @@
 #include "../../System/Shader/PostProcessing/pp_gray.h"
 #include "../../System/Manager/Public/font_manager.h"    /*! FontManager */
 #include "../../System/Manager/Public/input_manager.h"   /*! InputManager */
-#include "../../System/Manager/object_manager.h"  /*! ObjectManager */
-#include "../../System/Manager/physics_manager.h" /*! PhysicsManager*/
+#include "../../System/Manager/Public/object_manager.h"  /*! ObjectManager */
+#include "../../System/Manager/Public/physics_manager.h" /*! PhysicsManager*/
 #include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
-#include "../../System/Manager/scene_manager.h"   /*! SceneManager */
-#include "../../System/Manager/setting_manager.h" /*! SettingManager */
-#include "../../System/Manager/sound_manager.h"   /*! SoundManager */
+#include "../../System/Manager/Public/scene_manager.h"   /*! SceneManager */
+#include "../../System/Manager/Public/setting_manager.h" /*! SettingManager */
+#include "../../System/Manager/Public/sound_manager.h"   /*! SoundManager */
 #include "../../System/Manager/Public/time_manager.h"    /*! TimeManager */
 #include "../../System/Manager/Public/timer_manager.h"   /*! TimerManager */
 #include "../../_Project/Maintenance/Scene/test_1.h"

@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_HELPER_SWITCH_H
-#define OPGS16_SYSTEM_HELPER_SWITCH_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -30,32 +27,40 @@
  */
 
 /*!
- * @file System/Helper/Public/switch.h
- * @brief Switch enum class replaces plain boolean type.
- *
+ * @file System/Manager/Private/scene_manager.cc
  * @author Jongmin Yun
+ *
  * @log
- * 2018-03-01 Create file.
+ * 2018-03-04 Refactoring.
  */
 
+#include "../Public/scene_manager.h"        /*! Header file */
+
+#include "../Public/physics_manager.h"      /*! PhysicsManager */
+#include "../Public/timer_manager.h"        /*! TimerManager */
+#include "../Public/texture_manager.h"      /*! TextureManager */
+#include "../Public/object_manager.h"       /*! ObjectManager */
+#include "../Public/sound_manager.h"               /*! SoundManager */
+#include "../../Shader/shader_manager.h"    /*! ShaderManager */
+
 namespace opgs16 {
+namespace manager {
 
-/*! Switch enum constant used everywhere instead of just using plain bool type. */
-enum class Switch : bool {
-    OFF = false,
-    ON = true
-};
-
-/*! Toggle switch value helper function. */
-inline Switch ToggleSwitch(const Switch value) noexcept {
-    return ((value == Switch::OFF) ? Switch::ON : Switch::OFF);
+void SceneManager::PopScene() {
+    if (!m_scenes.empty())
+        m_scenes.pop();
 }
 
-/*! Return boolean value whether state of switch value is ON. */
-inline constexpr bool IsSwitchOn(const Switch value) {
-    return value == Switch::ON;
+void SceneManager::ReleaseAllResources() const {
+    PhysicsManager::Instance().Clear();  /*! precise */
+    TimerManager::Instance().Clear();    /*! precise */
+    SoundManager::Instance().Clear();    /*! Not precise */
+    ShaderManager::GetInstance().Clear();   /*! Not implemented */
+    TextureManager::Instance().Clear();  /*! Not precise? */
+    ObjectManager::Instance().Clear();   /*! Not precise? */
 }
 
-}
+SceneManager::~SceneManager() = default;
 
-#endif /*! OPGS16_SYSTEM_HELPER_SWITCH_H */
+} /*! opgs16::manager */
+} /*! opgs16 */
