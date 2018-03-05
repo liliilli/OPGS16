@@ -55,7 +55,8 @@ class   ObjectManager;  /*! Objects */
 class   PhysicsManager; /*! Physics & collision */
 class   PostProcessingManager;
 class   ResourceManager;
-class   SceneManager;   /*! Scenes */
+class   SceneManager;   /*! ScenesManager */
+class   SettingManager; /*! SettingManager */
 class   SoundManager;   /*! Sounds */
 class   TimeManager;    /*! Tick time */
 class   TimerManager;   /*! Timer */

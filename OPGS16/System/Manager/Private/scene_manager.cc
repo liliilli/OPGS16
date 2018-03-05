@@ -57,7 +57,7 @@ void SceneManager::ReleaseAllResources() const {
     SoundManager::Instance().Clear();    /*! Not precise */
     ShaderManager::Instance().Clear();   /*! Not implemented */
     TextureManager::Instance().Clear();  /*! Not precise? */
-    ObjectManager::Instance().Clear();   /*! Not precise? */
+    Clear(ObjectManager::Instance());
 }
 
 SceneManager::~SceneManager() = default;

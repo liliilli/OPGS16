@@ -83,12 +83,13 @@ public:
     void SetOnBeforeUpdateCallback(std::function<void(void)> callback);
 
     inline const GlobalSetting& Setting() const noexcept {
-        return *m_setting.get();
+        return *m_setting;
     }
 
 private:
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
+    manager::SettingManager&     m_setting_manager;
 	manager::PostProcessingManager* m_pp_manager;
 	manager::InputManager&       m_input_manager;
     manager::ObjectManager&      m_object_manager;

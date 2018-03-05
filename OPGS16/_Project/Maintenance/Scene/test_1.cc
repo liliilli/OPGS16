@@ -24,9 +24,11 @@ void Maintenance::Initiate() {
         Instantiate("Object", obj_1);
 
         auto ptr = GetObject("Object").get();
+        ptr->SetRenderLayer(3);
         for (int i = 2; i <= 4; ++i) {
             ptr->Instantiate<TestObject1>("Object", i, 16.f * (5 - i));
             ptr = ptr->GetChild("Object");
+            ptr->SetRenderLayer(3);
         }
     }
 }

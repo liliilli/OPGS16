@@ -260,6 +260,7 @@
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
     <None Include="_resource.meta" />
+    <None Include="_Setting\render_layer.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

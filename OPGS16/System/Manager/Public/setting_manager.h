@@ -73,8 +73,32 @@ public:
      */
     const std::vector<std::string>& GetTagNameList() const;
 
+    /*!
+     * @brief Return rendering layer name of indicated index.
+     * @param[in] id index number to find in rendering layer list.
+     * @return Rendering name of index.
+     */
+    inline std::string RenderingLayerName(const size_t id) const noexcept {
+        if (id >= m_render_layer_list.size()) return "";
+        else return m_render_layer_list[id];
+    }
+
+    /*!
+     * @brief Return rendering layer name list.
+     * @return Rendering layer name list.
+     */
+    const std::vector<std::string>& RenderingLayerNameList() const noexcept {
+        return m_render_layer_list;
+    }
+
+    /*! Return rendering layer list size. */
+    inline size_t RenderingLayerListSize() const noexcept {
+        return m_render_layer_list.size();
+    }
+
 private:
     std::vector<std::string> m_tag_list;    /*! Tag list used in Application. */
+    std::vector<std::string> m_render_layer_list;  /*! Render layer list */
 
 private:
     /*!
@@ -87,7 +111,7 @@ private:
      * @brief Initailize layer list using file stream.
      * NOT IMPLEMENTED YET.
      */
-    void InitializeLayerList();
+    void InitializeRenderLayerList();
 
 private:
     SettingManager();

@@ -46,12 +46,12 @@ namespace manager {
 
 namespace {
 constexpr char s_tag_file[] = R"(_Setting/tag.meta)";
-constexpr char s_layer_file[] = R"(_Setting/layer.meta)";
+constexpr char s_render_layer_file[] = R"(_Setting/render_layer.meta)";
 } /*! unnamed namespace */
 
 SettingManager::SettingManager() {
     InitializeTagList();
-    InitializeLayerList();
+    InitializeRenderLayerList();
 }
 
 void SettingManager::InitializeTagList() {
@@ -64,18 +64,33 @@ void SettingManager::InitializeTagList() {
             if (!tag.empty()) m_tag_list.emplace_back(tag);
         }
 
-        // DEBUG
-        for (size_t i = 0u; i < m_tag_list.size(); ++i) {
+#ifdef _DEBUG
+        for (auto i = 0u; i < m_tag_list.size(); ++i) {
             std::cout << i << " : " << m_tag_list[i] << "\n";
         }
+#endif
     }
     else {
         std::cerr << "ERROR::TAG::FILE::CAN::NOT::OPEN\n";
     }
 }
 
-void SettingManager::InitializeLayerList() {
-    std::cout << "LAYER FEATURE IS NOT IMPLEMENTED, COMMING SOON\n";
+void SettingManager::InitializeRenderLayerList() {
+    std::ifstream file_stream{ s_render_layer_file, std::ios_base::in };
+    file_stream.imbue(std::locale(""));
+
+    if (file_stream.good()) {
+        std::string layer_name;
+        while (file_stream >> layer_name) {
+            if (!layer_name.empty()) m_render_layer_list.emplace_back(layer_name);
+        }
+
+#ifdef _DEBUG
+        for (auto i = 0u; i < m_render_layer_list.size(); ++i) {
+            std::cout << i << " : " << m_render_layer_list[i] << "\n";
+        }
+#endif
+    }
 }
 
 std::string SettingManager::GetTagName(const size_t id) {

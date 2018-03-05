@@ -36,11 +36,13 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring.
+ * 2018-03-05 Add Render function and rendering layer container.
  */
 
-#include <memory>               /*! std::unique_ptr */
-#include <list>                 /*! std::list */
-#include "../../Object/object.h"   /*! Object */
+#include <memory>                   /*! std::unique_ptr */
+#include <list>                     /*! std::list */
+#include <vector>                   /*! std::vector */
+#include "../../../Headers/Fwd/objectfwd.h"
 
 namespace opgs16 {
 namespace manager {
@@ -51,6 +53,7 @@ namespace manager {
  */
 class ObjectManager final {
     using object_ptr = std::unique_ptr<Object>;
+    using object_raw = Object * ;
 
 public:
     static ObjectManager& Instance() {
@@ -66,11 +69,22 @@ public:
 
     void Destroy(const Object& object);
 
+    void InsertRenderingObject(object_raw const object);
+
+    void Render();
+
     /*! Clear all destroy candidates */
-    void Clear();
+    void ClearDestroyCandidates() {
+        m_destroy_candidates.clear();
+    }
+
+    void ClearRenderingList() {
+        m_rendering_list.clear();
+    }
 
 private:
     std::list<object_ptr> m_destroy_candidates;
+    std::vector<std::list<object_raw>> m_rendering_list;
 
 private:
     inline void AddDestroyObject(object_ptr& ptr) {
@@ -79,12 +93,17 @@ private:
 
     void DestroyObjects();
 
-    ObjectManager() = default;
+    ObjectManager();
 
 public:
     ObjectManager(const ObjectManager&) = delete;
     ObjectManager& operator=(const ObjectManager&) = delete;
 };
+
+inline void Clear(ObjectManager& manager) {
+    manager.ClearDestroyCandidates();
+    manager.ClearRenderingList();
+}
 
 } /*! opgs16::manager */
 } /*! opgs16 */

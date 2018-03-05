@@ -395,6 +395,7 @@
     <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
     <None Include="_Project\SampleInvaders\_meta\_set.meta" />
     <None Include="_Setting\input.meta" />
+    <None Include="_Setting\render_layer.meta" />
     <None Include="_Setting\tag.meta" />
   </ItemGroup>
   <ItemGroup>

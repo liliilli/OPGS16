@@ -2,19 +2,47 @@
 #define OPGS16_SYSTEM_OBJECT_OBJECT_PRIVATE_IMPLEMENTATION_H
 
 /*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
  * @file System\Object\Impl\object_impl.h
  * @brief Pointer to implementation file of Object.h
  * @author Jongmin Yun
- * @date 2018-02-23
  *
  * @log
  * 2018-02-19 Refactoring, Inlining, and Removed not-used variables. add class description.
  * 2018-02-19 Add GetParentPosition() method, returns m_parent_to_position.
  * 2018-02-23 Add succeeding flag of translation, rotation, scaling from parent.
+ * 2018-03-05 Add rendering layer member functions.
  */
 
 #include <string>       /*! std::string */
-#include <glm\glm.hpp>  /*! glm::vec_x */
+#include <glm/glm.hpp>  /*! glm::vec_x */
 
 /*!
  * @class ObjectImpl
@@ -212,16 +240,13 @@ public:
      * in SettingManager. If not exist, do nothing and chagne error flag.
      * @param[in] tag_name Tag name
      */
-    void SetTag(const std::string tag_name);
+    void SetTag(const std::string& tag_name);
 
     /*! Overloading version of SetTag(tag_name) */
     void SetTag(const size_t tag_index);
 
-    /*!
-     * @brief Get tag index of this object.
-     * @return Tag index value.
-     */
-    inline size_t GetTagIndexOf() const {
+    /*! Return tag index value of this object. */
+    inline size_t GetTagIndexOf() const noexcept {
         return m_tag_index;
     }
 
@@ -231,6 +256,16 @@ public:
      * @return Tag name string.
      */
     std::string GetTagNameOf() const;
+
+    void SetRenderLayer(const std::string& layer_name);
+
+    void SetRenderLayer(const size_t layer_index);
+
+    inline size_t RenderLayerIndexOf() const noexcept {
+        return m_render_layer_index;
+    }
+
+    std::string RenderLayerNameOf() const;
 
 private:
     glm::vec3   m_local_position{};             /*! (x, y, z) local position. */
@@ -266,7 +301,8 @@ private:
     mutable bool m_rotation_deprecated{ true };     /*! The flag rotation needs to be updated. */
     mutable bool m_scale_deprecated{ true };        /*! The flag scale vec needs to be updated. */
 
-    size_t m_tag_index{ 0 };            /*! Tag index */
+    size_t m_tag_index{ 0 };                /*! Tag index */
+    size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
 
 private:
 	void RefreshFinalPosition() const;	/** Refresh Translation matrix */

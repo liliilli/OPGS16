@@ -1,6 +1,34 @@
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "object.h"                     /*! Header file */
-#include "impl\object_impl.h"           /*! ObjectImpl */
-#include "..\Debugs\hierarchy_tree.h"   /*! ObjectTree */
+#include "impl/object_impl.h"           /*! ObjectImpl */
+#include "../Debugs/hierarchy_tree.h"   /*! ObjectTree */
 
 #include <iostream>
 
@@ -25,7 +53,9 @@ const glm::vec3& Object::GetFinalPosition() const noexcept {
     return m_data->GetFinalPosition();
 }
 
+// ReSharper disable CppMemberFunctionMayBeConst
 void Object::SetLocalPosition(const glm::vec3& position) noexcept {
+    // ReSharper restore CppMemberFunctionMayBeConst
 	m_data->SetLocalPosition(position);
 }
 
@@ -141,7 +171,7 @@ bool Object::DestroyChild(const std::string& child_name) {
     return true;
 }
 
-bool Object::GetActive() {
+bool Object::GetActive() const {
     return m_data->GetActive();
 }
 
@@ -163,6 +193,26 @@ size_t Object::GetTagIndexOf() const {
 
 std::string Object::GetTagNameOf() const {
     return m_data->GetTagNameOf();
+}
+
+// ReSharper disable CppMemberFunctionMayBeConst
+void Object::SetRenderLayer(const std::string& layer_name) {
+    // ReSharper restore CppMemberFunctionMayBeConst
+    m_data->SetRenderLayer(layer_name);
+}
+
+// ReSharper disable CppMemberFunctionMayBeConst
+void Object::SetRenderLayer(const size_t layer_index) {
+    // ReSharper restore CppMemberFunctionMayBeConst
+    m_data->SetRenderLayer(layer_index);
+}
+
+size_t Object::RenderLayerIndexOf() const noexcept {
+    return m_data->RenderLayerIndexOf();
+}
+
+std::string Object::RenderLayerNameOf() const {
+    return m_data->RenderLayerNameOf();
 }
 
 void Object::GetObjectTree(ObjectTree* const tree) {

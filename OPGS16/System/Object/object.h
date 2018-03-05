@@ -1,7 +1,35 @@
 #ifndef OPGS16_SYSTEM_OBJECT_OBJECT_H
 #define OPGS16_SYSTEM_OBJECT_OBJECT_H
 
-/**
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
  * @file System\Object\object.h
  * @brief The file consist of basic scene API.
  *
@@ -10,11 +38,13 @@
  * polymorphism.
  *
  * @author Jongmin Yun
- * @date 2018-02-19
  *
  * @log
  * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
- * 2018-02-23 Add hierarchy rotation and scaling option.
+ * 2018-02-23 Add hierarchy rotation and scaling option. (mechanism is not implemented yet)
+ * 2018-03-05 Add member function related to controlling rendering layer.
+ *
+ * @todo Implement hierarchy rotation mechanism.
  */
 
 #include <algorithm>        /*! std::find_if */
@@ -22,14 +52,15 @@
 #include <memory>			/** std::unique_ptr */
 #include <unordered_map>	/** std::unordered_map */
 #include <string>           /*! std::to_string */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::ShaderNew
+#include "../../Headers/Fwd/objectfwd.h"    /*! helper::ShaderNew
                                               * glm::vec3
                                               * component::Component
                                               * component::Rigidbody2D
                                               * ObjectTree
                                               * ObjectImplDeleter
                                               */
-#include "..\..\System\Components\component.h"   /*! component::Component */
+#include "../../System/Components/component.h"  /*! component::Component */
+#include "../Manager/Public/object_manager.h"   /*! opgs16::manager::ObjectManager */
 
 /**
  * @class Object
@@ -39,13 +70,14 @@
  * When using each m_object_list you have to use this type as a storing type to avoid cracking of
  * polymorphism.
  * Each object can be called using Update and Draw with shader to use.
- * @date 2018-02-19
  *
  * @log
  * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
  * 2018-02-19 Add GetParentPosition(). Remove virtual property from Draw()
  *            and Render() virtual methods. and Remove virtual property from Update() instead of
  *            adding LocalUpdate() method which replaces Update() override.
+ * 2018-03-05 Add member function related to controlling rendering layer.
+ * @todo Implement hierarchy rotation mechanism.
  */
 class Object {
 private:
@@ -74,15 +106,20 @@ public:
                     child.second->Update();
             }
         }
+
+        if (m_data) {
+            opgs16::manager::ObjectManager::Instance().InsertRenderingObject(this);
+        }
     }
 
 	/*! Calls children to draw or render something it has.  */
     inline void Draw() {
         Render();
-        /*! Order draw call to exist child object. */
-        for (auto& object : m_children) {
-            if (object.second) object.second->Draw();
-        }
+
+        ///*! Order draw call to exist child object. */
+        //for (auto& object : m_children) {
+        //    if (object.second) object.second->Draw();
+        //}
     }
 
     /*! This method will be called when Collision. */
@@ -99,7 +136,7 @@ public:
 
     /*!
      * @brief Sets local position.
-     * @param[in] local position Position to set on.
+     * @param[in] position local position Position to set on.
      */
     void SetLocalPosition(const glm::vec3& position) noexcept;
 
@@ -203,7 +240,7 @@ public:
 	 */
 	void SetActive(const bool value);
 
-	bool GetActive();   /*! Get active value. */
+	bool GetActive() const;   /*! Get active value. */
 
 	/**
 	 * @brief This initiate object as a child of base object.
@@ -319,6 +356,14 @@ public:
      * @return Tag name string.
      */
     std::string GetTagNameOf() const;
+
+    void SetRenderLayer(const std::string& layer_name);
+
+    void SetRenderLayer(const size_t layer_index);
+
+    size_t RenderLayerIndexOf() const noexcept;
+
+    std::string RenderLayerNameOf() const;
 
     /*! Return hash value of this object. */
     inline size_t GetHash() const {

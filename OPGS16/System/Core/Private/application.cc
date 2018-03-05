@@ -49,6 +49,7 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 
 Application::Application() :
     m_window{ InitApplication(u8"OPGS16") },
+    m_setting_manager{ manager::SettingManager::Instance() },
     m_input_manager{ manager::InputManager::Instance() },
     m_object_manager{ manager::ObjectManager::Instance() },
     m_physics_manager{ manager::PhysicsManager::Instance() },
@@ -96,8 +97,6 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
 void Application::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
         /*! Initialize Global Setting. */
-	    manager::SettingManager::Instance();
-
         m_resource_manager.ReadResourceFile(g_global_resource_path.data());
 
         /*! Initialize resource list. */
@@ -231,7 +230,8 @@ void Application::Draw() const {
             m_pp_manager->BindSequence(0);
 
 		/** Actual Rendering */
-        m_scene_manager.PresentScene()->Draw();
+        m_object_manager.Render();
+        //m_scene_manager.PresentScene()->Draw();
 		/** Post-processing */
         m_pp_manager->Render();
 	}

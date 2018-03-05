@@ -33,11 +33,13 @@
  * 2018-03-04 Refactoring.
  */
 
-#include "../Public/object_manager.h" /*! Header file */
+#include "../Public/object_manager.h"   /*! Header file */
 
-#include <stack>                /*! std::stack */
+#include <stack>                        /*! std::stack */
 
-#include "../Public/scene_manager.h"   /*! SceneManager */
+#include "../Public/scene_manager.h"    /*! opgs16::manager::SceneManager */
+#include "../Public/setting_manager.h"  /*! opgs16::manager::SettingManager */
+#include "../../Object/object.h"        /*! Object */
 
 namespace opgs16 {
 namespace manager {
@@ -81,10 +83,6 @@ void ObjectManager::Destroy(const Object& object) {
     }
 }
 
-void ObjectManager::Clear() {
-    m_destroy_candidates.clear();
-}
-
 void ObjectManager::DestroyObjects() {
     for (auto& object : m_destroy_candidates) {
         auto hash_value = object->GetHash();
@@ -125,6 +123,23 @@ void ObjectManager::DestroyObjects() {
     }
 
     m_destroy_candidates.clear();
+}
+
+ObjectManager::ObjectManager() :
+    m_rendering_list(SettingManager::Instance().RenderingLayerListSize()) {
+}
+
+void ObjectManager::InsertRenderingObject(object_raw const object) {
+    m_rendering_list[object->RenderLayerIndexOf()].emplace_front(object);
+}
+
+void ObjectManager::Render() {
+    for (auto& list : m_rendering_list) {
+        for (auto& item : list) {
+            item->Draw();
+        }
+        list.clear();
+    }
 }
 
 } /*! opgs16::manager */
