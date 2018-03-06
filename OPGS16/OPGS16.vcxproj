@@ -157,7 +157,7 @@
     <ClCompile Include="System\Components\Physics2D\collider_2d.cc" />
     <ClCompile Include="System\Components\Physics2D\rigidbody_2d.cc" />
     <ClCompile Include="System\Components\_type_hash.h" />
-    <ClCompile Include="System\Debugs\logger.cc" />
+    <ClCompile Include="System\Core\Private\logger.cc" />
     <ClCompile Include="System\Manager\Private\font_manager.cc" />
     <ClCompile Include="System\Manager\Private\object_manager.cc" />
     <ClCompile Include="System\Manager\Private\physics_manager.cc" />
@@ -195,6 +195,7 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="System\Core\Internal\logger_internal.h" />
     <ClInclude Include="System\Core\Public\application.h" />
     <ClInclude Include="GlobalObjects\camera_object.h" />
     <ClInclude Include="GlobalObjects\Canvas\canvas.h" />
@@ -245,7 +246,7 @@
     <ClInclude Include="System\Components\_macro.h" />
     <ClInclude Include="System\Components\script_frame.h" />
     <ClInclude Include="System\Debugs\hierarchy_tree.h" />
-    <ClInclude Include="System\Debugs\logger.h" />
+    <ClInclude Include="System\Core\Public\logger.h" />
     <ClInclude Include="System\Manager\Public\font_manager.h" />
     <ClInclude Include="System\Frame\vertex_array_object.h" />
     <ClInclude Include="System\Manager\Public\object_manager.h" />

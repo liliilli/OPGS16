@@ -15,7 +15,6 @@
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
-    <ClCompile Include="System\Debugs\logger.cc" />
     <ClCompile Include="System\Object\sprite_renderer.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
     <ClCompile Include="System\Object\ui_object.cc" />
@@ -59,6 +58,7 @@
     <ClCompile Include="System\Manager\Private\setting_manager.cc" />
     <ClCompile Include="System\Manager\Private\shader_manager.cc" />
     <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
+    <ClCompile Include="System\Core\Private\logger.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -80,7 +80,6 @@
     <ClInclude Include="GlobalObjects\camera_object.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_gray.h" />
     <ClInclude Include="System\Debugs\hierarchy_tree.h" />
-    <ClInclude Include="System\Debugs\logger.h" />
     <ClInclude Include="System\Object\sprite_renderer.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="Headers\Fwd\lightfwd.h" />
@@ -147,6 +146,8 @@
     <ClInclude Include="System\Manager\Public\setting_manager.h" />
     <ClInclude Include="System\Manager\Public\shader_manager.h" />
     <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
+    <ClInclude Include="System\Core\Public\logger.h" />
+    <ClInclude Include="System\Core\Internal\logger_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
