@@ -79,7 +79,8 @@ public:
     }
 
     void ClearRenderingList() {
-        m_rendering_list.clear();
+        for (auto& sub_list : m_rendering_list)
+            sub_list.clear();
     }
 
 private:
