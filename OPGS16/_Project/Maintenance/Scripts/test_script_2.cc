@@ -5,7 +5,7 @@
 #include "../Scene/test_2.h"    /*! Maintenance_2 scene */
 
 TestScript2::TestScript2(Object& obj) :
-    component::ScriptFrame(obj), m_input{ opgs16::manager::InputManager::Instance() } {
+    ScriptFrame(obj), m_input{ opgs16::manager::InputManager::Instance() } {
 }
 
 void TestScript2::Update() {

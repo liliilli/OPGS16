@@ -59,8 +59,10 @@
                                               * ObjectTree
                                               * ObjectImplDeleter
                                               */
-#include "../../System/Components/component.h"  /*! component::Component */
-#include "../Manager/Public/object_manager.h"   /*! opgs16::manager::ObjectManager */
+/*! opgs16::component::_internal::Component */
+#include "../../System/Components/Internal/component.h"
+/*! opgs16::manager::ObjectManager */
+#include "../Manager/Public/object_manager.h"
 
 /**
  * @class Object
@@ -81,7 +83,7 @@
  */
 class Object {
 private:
-    using component_ptr     = std::unique_ptr<component::Component>;
+    using component_ptr     = std::unique_ptr<opgs16::component::_internal::Component>;
     using component_list    = std::vector<component_ptr>;
     using name_counter_map  = std::unordered_map<std::string, size_t>;
 	using object_raw = Object*;
@@ -123,10 +125,10 @@ public:
     }
 
     /*! This method will be called when Collision. */
-    virtual void OnCollisionEnter(component::Rigidbody2D& collider) {};
+    virtual void OnCollisionEnter(opgs16::component::Rigidbody2D& collider) {};
 
     /*! This method will be called when Trigger entered. */
-    virtual void OnTriggerEnter(component::Rigidbody2D& collider) {};
+    virtual void OnTriggerEnter(opgs16::component::Rigidbody2D& collider) {};
 
     /*!
      * @brief Return local position.
@@ -301,17 +303,19 @@ public:
 	 * @brief This only must be called by Application methods body,
 	 * @returns traversal recursive object tree, to be checked in DEBUG MODE.
 	 */
-	 void GetObjectTree(ObjectTree* const tree);
+    void GetObjectTree(ObjectTree* const tree);
+
 
     /*!
      * @brief Add component and bind to this object instance.
      * @param[in] _Ty Component type class argument.
      * @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
      */
+    using _Component = opgs16::component::_internal::Component;
     template<
         class _Ty,
         typename... _Params,
-        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
     >   void AddComponent(_Params&&... params);
 
     /*!
@@ -321,7 +325,7 @@ public:
      */
     template<
         class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
     >   _Ty* const GetComponent();
 
     /*!
@@ -331,7 +335,7 @@ public:
      */
     template <
         class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<component::Component, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
     >   bool RemoveComponent();
 
     /*!

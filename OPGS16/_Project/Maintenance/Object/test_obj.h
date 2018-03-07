@@ -9,18 +9,20 @@
  */
 
 #include "..\..\System\Object\object.h"             /*! Object */
-#include "..\..\System\Object\sprite_renderer.h"    /*! SpriteRenderer */
+#include "../../System/Components/Public/sprite_renderer.h"    /*! Sprite2DRenderer */
 
 class TestObject1 final : public Object {
+    using Sprite2DRenderer = opgs16::component::Sprite2DRenderer;
+
 public:
     TestObject1(const int i, const float size);
 
-    SpriteRenderer& GetRenderer() {
+    Sprite2DRenderer& GetRenderer() {
         return m_sprite_renderer;
     }
 
 private:
-    SpriteRenderer m_sprite_renderer;   /*! Sprite Renderer */
+    Sprite2DRenderer m_sprite_renderer;   /*! Sprite Renderer */
 
     virtual void Render() override final;
 };

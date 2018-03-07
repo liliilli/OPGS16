@@ -14,7 +14,7 @@
  * Canvas::Text * Object * ObjectTree
  */
 
-class DebugUiManager final : public component::ScriptFrame {
+class DebugUiManager final : public opgs16::component::ScriptFrame {
 public:
     DebugUiManager(Object& obj, canvas::Text* const, canvas::Text* const, canvas::Text* const);
 
@@ -32,7 +32,7 @@ private:
     void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(component::ScriptFrame, DebugUiManager)
+SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, DebugUiManager)
 };
 
 #endif // !OPGS16_OBJECTS_DEBUG_SCRIPT_UI_MANAGER_H

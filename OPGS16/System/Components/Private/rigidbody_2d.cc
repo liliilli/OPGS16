@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
-#define OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -30,41 +27,42 @@
  */
 
 /*!
- * @file System/Manager/Internal/physics_internal.h
- * @brief
- *
+ * @file System/Components/Private/rigidbody_2d.cc
  * @author Jongmin Yun
  * @log
- * 2018-03-04 Create file. Move PhysicsManager::Item to this file.
+ * 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
  */
 
-#include "../../Components/Public/rigidbody_2d.h"   /*! opgs16::component::Rigidbody2D */
+#include "../Public/rigidbody_2d.h"                 /*! Header file */
+#include "../../Manager/Public/physics_manager.h"   /*! opgs16::manager::PhysicsManager */
+#include "../../Object/object.h"                    /*! Object */
 
 namespace opgs16 {
-namespace manager {
-namespace _internal {
+namespace component {
 
-struct Item {
-    collision::RectangleCollider2D* const    m_collider;
-    component::Rigidbody2D* const   m_rigidbody;
-    const glm::vec2 m_position;
+void Rigidbody2D::Update() {
+    auto& physics_manager = opgs16::manager::PhysicsManager::Instance();
+    for (auto& collider : m_colliders) {
+        collider->ReflectPosition(m_bound_object.GetWorldPosition());
+        physics_manager.AddCollider(collider.get(), this);
+    }
+}
 
-    enum class Type {
-        BEGIN,
-        END
-    } m_type = { Type::BEGIN };
+void Rigidbody2D::OnCollisionEnter(Rigidbody2D& collider) {
+    m_bound_object.OnCollisionEnter(collider);
+}
 
-    explicit Item(collision::RectangleCollider2D* const collider,
-                  component::Rigidbody2D* const rigidbody,
-                  const glm::vec2 axis_value,
-                  Type type) :
-        m_collider{ collider }, m_rigidbody{ rigidbody },
-        m_position{ axis_value }, m_type{ type } {};
-};
+void Rigidbody2D::OnTriggerEnter(Rigidbody2D& collider) {
+    m_bound_object.OnTriggerEnter(collider);
+}
 
-} /*! opgs16::manager::_internal */
-} /*! opgs16::manager */
-} /*! opgs16::manager */
+bool Rigidbody2D::IsTag(const std::string&& tag) const {
+    return tag == m_bound_object.GetTagNameOf();
+}
 
-#endif // !OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
+bool Rigidbody2D::IsTag(const size_t index) const {
+    return index == m_bound_object.GetTagIndexOf();
+}
 
+} /*! opgs16::component */
+} /*! opgs16 */

@@ -25,6 +25,7 @@ class Scene {
 private:
     using object_ptr = std::unique_ptr<Object>;
     using object_map = std::unordered_map<std::string, object_ptr>;
+    using _camera = opgs16::component::Camera;
 
 public:
 	/** Must need virtual dtor */
@@ -87,23 +88,23 @@ public:
      * All object except for Canvas m_object_list (UI object) uses to main_camera to display.
      * If main_camera value is nullptr, this means main_camera is detached.
      */
-    inline void SetMainCamera(component::Camera* const main_camera);
+    inline void SetMainCamera(_camera* const main_camera);
 
     /*!
      * @brief Get bound main camera. if main camera is not bound, return nullptr.
      */
-    inline const component::Camera* const GetMainCamera();
+    inline const _camera* const GetMainCamera();
 
 private:
     object_map m_object_list;
-    component::Camera* m_main_camera{ nullptr };
+    _camera* m_main_camera{ nullptr };
 };
 
-inline void Scene::SetMainCamera(component::Camera* const main_camera) {
+inline void Scene::SetMainCamera(_camera* const main_camera) {
     m_main_camera = main_camera;
 }
 
-inline const component::Camera* const Scene::GetMainCamera() {
+inline const opgs16::component::Camera* const Scene::GetMainCamera() {
     return m_main_camera;
 }
 

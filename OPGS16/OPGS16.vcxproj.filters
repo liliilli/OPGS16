@@ -15,23 +15,18 @@
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
-    <ClCompile Include="System\Object\sprite_renderer.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
     <ClCompile Include="System\Object\ui_object.cc" />
     <ClCompile Include="System\Object\object.cc" />
     <ClCompile Include="GlobalObjects\Canvas\Impl\text_impl.cc" />
-    <ClCompile Include="System\Object\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="System\Object\Impl\object_impl.cc" />
     <ClCompile Include="System\Shader\Impl\pp_frame_impl.cc" />
     <ClCompile Include="Objects\TempDebug\test_image.cc" />
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
     <ClCompile Include="Objects\Debug\debug_canvas.cc" />
     <ClCompile Include="Objects\Debug\Script\ui_manager.cc" />
-    <ClCompile Include="System\Components\_type_hash.h" />
     <ClCompile Include="System\Components\Physics2D\Collider\rectangle.cc" />
     <ClCompile Include="System\Components\Physics2D\collider_2d.cc" />
-    <ClCompile Include="System\Components\Physics2D\rigidbody_2d.cc" />
-    <ClCompile Include="System\Components\camera.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
     <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
@@ -59,6 +54,11 @@
     <ClCompile Include="System\Manager\Private\shader_manager.cc" />
     <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
     <ClCompile Include="System\Core\Private\logger.cc" />
+    <ClCompile Include="System\Components\Private\sprite_renderer.cc" />
+    <ClCompile Include="System\Components\Impl\sprite_renderer_impl.cc" />
+    <ClCompile Include="System\Components\__type_hash.h" />
+    <ClCompile Include="System\Components\Private\camera.cc" />
+    <ClCompile Include="System\Components\Private\rigidbody_2d.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -80,7 +80,6 @@
     <ClInclude Include="GlobalObjects\camera_object.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_gray.h" />
     <ClInclude Include="System\Debugs\hierarchy_tree.h" />
-    <ClInclude Include="System\Object\sprite_renderer.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="Headers\Fwd\lightfwd.h" />
     <ClInclude Include="Headers\Fwd\componentfwd.h" />
@@ -89,10 +88,8 @@
     <ClInclude Include="System\Object\object.h" />
     <ClInclude Include="GlobalObjects\Canvas\Impl\text_impl.h" />
     <ClInclude Include="System\Frame\vertex_array_object.h" />
-    <ClInclude Include="System\Object\Impl\sprite_renderer_impl.h" />
     <ClInclude Include="System\Object\Impl\object_impl.h" />
     <ClInclude Include="System\Shader\Impl\pp_frame_impl.h" />
-    <ClInclude Include="System\Components\script_frame.h" />
     <ClInclude Include="Objects\TempDebug\test_image.h" />
     <ClInclude Include="Objects\TempDebug\test_start_txt.h" />
     <ClInclude Include="Objects\TempDebug\test_start_t_copy.h" />
@@ -101,14 +98,11 @@
     <ClInclude Include="Objects\Debug\obj_tree.h" />
     <ClInclude Include="Objects\Debug\debug_canvas.h" />
     <ClInclude Include="Objects\Debug\Script\ui_manager.h" />
-    <ClInclude Include="System\Components\component.h" />
     <ClInclude Include="System\Components\_macro.h" />
     <ClInclude Include="Headers\script_common.h" />
     <ClInclude Include="Objects\Debug\Script\test_script.h" />
     <ClInclude Include="System\Components\Physics2D\Collider\rectangle.h" />
     <ClInclude Include="System\Components\Physics2D\collider_2d.h" />
-    <ClInclude Include="System\Components\Physics2D\rigidbody_2d.h" />
-    <ClInclude Include="System\Components\camera.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
@@ -148,6 +142,12 @@
     <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
     <ClInclude Include="System\Core\Public\logger.h" />
     <ClInclude Include="System\Core\Internal\logger_internal.h" />
+    <ClInclude Include="System\Components\Public\sprite_renderer.h" />
+    <ClInclude Include="System\Components\Impl\sprite_renderer_impl.h" />
+    <ClInclude Include="System\Components\Internal\component.h" />
+    <ClInclude Include="System\Components\Public\script_frame.h" />
+    <ClInclude Include="System\Components\Public\camera.h" />
+    <ClInclude Include="System\Components\Public\rigidbody_2d.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

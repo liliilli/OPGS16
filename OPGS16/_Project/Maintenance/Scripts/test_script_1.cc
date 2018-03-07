@@ -10,7 +10,7 @@
 
 using opgs16::manager::SceneManager;
 
-TestScript1::TestScript1(Object& obj) : component::ScriptFrame{ obj } {
+TestScript1::TestScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
     Initiate();
     Start();
 }

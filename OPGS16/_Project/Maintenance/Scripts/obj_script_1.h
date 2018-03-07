@@ -3,7 +3,7 @@
 #include "..\..\..\Headers\script_common.h"     /*! component::ScriptFrame */
 #include "..\..\..\System\Frame\timer_handle.h" /*! TimerHandle */
 
-class ObjectScript1 final : public component::ScriptFrame {
+class ObjectScript1 final : public opgs16::component::ScriptFrame {
 public:
     ObjectScript1(Object& obj);
 
@@ -57,6 +57,6 @@ private:
     void OnTriggerSwap();
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(component::ScriptFrame, ObjectScript1)
+SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, ObjectScript1)
 };
 

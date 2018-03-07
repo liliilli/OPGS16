@@ -39,8 +39,8 @@
 
 #include <algorithm>                    /*! std::sort */
 
+#include "../../Components/Public/rigidbody_2d.h"        /*! opgs16::component::Rigidbody2D */
 #include "../../Components/Physics2D/Collider/rectangle.h"  /*! collision::RectangleCollider2D */
-#include "../../Components/Physics2D/rigidbody_2d.h"        /*! component::Rigidbody2D */
 
 namespace opgs16 {
 namespace manager {

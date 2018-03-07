@@ -36,19 +36,27 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-01 Added opgs16 namespace and elements.
+ * 2018-03-07 Remove SpriteRenderImplDeleter. (Redundant)
  */
 
 #include <glm/fwd.hpp>	/** glm matrix forward declaration. */
 
 namespace opgs16 {
-
 enum class ScaleType : unsigned;
-
 struct  GlobalOption;
 class   GlobalSetting;
 
-namespace manager {
+namespace component {
+class   Camera;
+class   Rigidbody2D;
+class   ScriptFrame;
 
+namespace _internal {
+class   Component;
+} /*! opgs16::component::_internal */
+} /*! opgs16::component */
+
+namespace manager {
 class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
 class   ObjectManager;  /*! Objects */
@@ -60,28 +68,21 @@ class   SettingManager; /*! SettingManager */
 class   SoundManager;   /*! Sounds */
 class   TimeManager;    /*! Tick time */
 class   TimerManager;   /*! Timer */
-
 } /*! opgs16::manager */
 
 namespace resource {
-
 enum class EScopeType;
 enum class EShaderType : int;
-
 struct  Texture2D;
 class   SFont;
 class   SSound;
 class   SShader;
 
 namespace _internal {
-
 enum class ESymbolType;
 enum class EResourceType;
-
 } /*! resource::_internal */
-
 } /*! resource */
-
 } /*! opgs16 */
 
 namespace helper { class ShaderNew; }
@@ -106,9 +107,8 @@ struct  TextImplDeleter { void operator()(TextImpl* p); };
 
 class   Scene;
 
-class   SpriteRenderer;
+class   Sprite2DRenderer;
 class   SpriteRendererImpl;
-struct  SpriteRendererImplDeleter { void operator()(SpriteRendererImpl* p); };
 
 class   VertexArrayObject;
 class   ShaderNew;
@@ -122,13 +122,6 @@ class   TimerHandle;   /*! sub-type of timermanager */
 class   TestImage;      /*! TestImage : public Canvas::Image */
 class   TestStartTxt;   /*! TestImage : public Canvas::Text */
 class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
-
-namespace component {
-class Component;
-class ScriptFrame;
-class Rigidbody2D;
-class Camera;
-}
 
 namespace collision {
 class Collider2D;

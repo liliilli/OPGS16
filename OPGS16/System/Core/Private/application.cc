@@ -48,7 +48,7 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-}
+} /*! unnamed namespace */
 
 Application::Application() :
     m_logger{ &debug::Logger::operator(), std::ref(debug::Logger::Instance()) },

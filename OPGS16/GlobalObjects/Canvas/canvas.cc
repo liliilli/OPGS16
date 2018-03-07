@@ -4,15 +4,15 @@
  * camera::CameraObject,
  * camera::CameraObject::ViewType
  */
-#include "..\..\System\Components\camera.h" /*! component::Camera */
+#include "../../System/Components/Public/camera.h" /*! opgs16::component::Camera */
 
 namespace canvas {
 
 Canvas::Canvas() : m_is_size_changed{ true } {
     /*! Body */
-    using Camera = component::Camera;
-    AddComponent<component::Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
-    m_camera = GetComponent<component::Camera>();
+    using Camera = opgs16::component::Camera;
+    AddComponent<Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
+    m_camera = GetComponent<Camera>();
 }
 
 void Canvas::LocalUpdate() {

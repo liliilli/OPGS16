@@ -1,23 +1,48 @@
-#ifndef OPGL16_SYSTEM_COMPONENTS_CAMERA_H
-#define OPGL16_SYSTEM_COMPONENTS_CAMERA_H
+#ifndef OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
+#define OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
 
-/**
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
  * @file System\Components\camera_object.h
  * @brief Camera component file.
  * @author Jongmin Yun
- * @date 2018-02-14
+ * @log
+ * 2018-02-14 Create file and implement basic features.
  */
 
 #include <glm\glm.hpp>
-#include "_macro.h"                         /*! SET_UP_HASH_MEMBER_DERIVED() */
-#include "component.h"                      /*! component::Component */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! Object as reference */
+#include "../_macro.h"                      /*! SET_UP_HASH_MEMBER_DERIVED() */
+#include "../Internal/component.h"          /*! component::Component */
+#include "../../Headers/Fwd/objectfwd.h"    /*! Object as reference */
 
-/*!
- * @namespace component
- * @brief The namespace stores informations of basic OPGS16 components to be used in each object.
- * Derived user-defined component class should not exist or insert in component namespace.
- */
+namespace opgs16 {
 namespace component {
 
 /**
@@ -27,9 +52,12 @@ namespace component {
  *
  * If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
  * no distortion, 3D world or 2D world with no sight distortion, set ORTHO.
- * @date 2018-02-14
+ *
+ * @log
+ * 2018-02-14 Implemented basic features.
+ * 2018-02-14 Move class from ::component to ::opgs16::component.
  */
-class Camera final : public component::Component {
+class Camera final : public _internal::Component {
 public:
 	/** Camera type how to see worlds. */
 	enum class ViewType {
@@ -75,11 +103,11 @@ private:
 	 void InitiatePerspectiveProjection();
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(component::Component, Camera)
-
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Camera)
 };
 
-}
+} /*! opgs16::component */
+} /*! opgs16 */
 
-#endif /** OPGL16_SYSTEM_COMPONENTS_CAMERA_H */
+#endif /** OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H */
 

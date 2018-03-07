@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
-#define OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
+#ifndef OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
+#define OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,71 +30,47 @@
  */
 
 /*!
- * @file System/Manager/Pubilc/physics_manager.h
- * @brief
+ * @file System/Components/Internal/component.h
  * @author Jongmin Yun
- *
  * @log
- * 2018-02-15 Create file. Implement fundamental mechanism.
- * 2018-03-04 Refactoring.
+ * 2018-02-13 Create file and implement fundamental logic.
+ * 2018-03-07 Move it from ::component to ::opgs16::component::_internal.
  */
-
-#include <memory>       /*! std::unique_ptr */
-#include <vector>       /*! std::list */
-
-#include "../Internal/physics_internal.h"
-#include "../../../Headers/Fwd/objectfwd.h"    /*! component::Rigidbody2D */
 
 namespace opgs16 {
-namespace manager {
+/*!
+ * @namespace component
+ * @brief The namespace stores informations of basic OPGS16 components to be used in each object.
+ * Derived user-defined component class should not exist or insert in component namespace.
+ */
+namespace component {
+namespace _internal {
 
 /*!
- * @class PhysicsManager
- * @brief Physics manager manages object collision and rigidbody movement.
+ * @class Component
+ * @brief The most base class of derived component classes.
  */
-class PhysicsManager final {
-    using item_ptr = std::unique_ptr<_internal::Item>;
-    using item_raw = _internal::Item* ;
-
+class Component {
 public:
-    /*! Get Instance of PhysicsManager. */
-    static PhysicsManager& Instance() {
-        static PhysicsManager instance{};
-        return instance;
+    virtual ~Component() = default;
+
+    virtual void Update() = 0;
+
+    /*!
+     * @brief Return true/false flag whether or not your finding class is this.
+     * @param[in] type_value Hashed type value of type which you want to find.
+     * @return True/False flag, if you found proper class return true else false.
+     */
+    inline virtual bool DoesTypeMatch(const size_t type_value) const noexcept {
+        return type == type_value;
     }
 
-    /*!
-     * @brief
-     * @param[in]
-     */
-    void AddCollider(collision::RectangleCollider2D* const collider,
-                     component::Rigidbody2D* const rigidbody);
-
-    /*! Update and proceed collision routine */
-    void Update();
-
-    /*! Release and clean physics object container */
-    void Clear();
-
-private:
-    std::vector<item_ptr> m_potential;
-    std::vector<item_raw> m_active;
-
-private:
-    /*!
-     * @brief
-     * @param[in]
-     */
-     void ProceedCollisionCheck(item_ptr& item);
-
-    /*!
-     * @brief
-     * @param[in]
-     */
-     void EraseItem(item_ptr& item);
+public:
+    static const size_t type;
 };
 
-} /*! opgs16::manager */
+} /*! opgs16::component::_internal */
+} /*! opgs16::component */
 } /*! opgs16 */
 
-#endif // !OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
+#endif // !OPGS16_SYSTEM_COMPONENTS_COMPONENT_H

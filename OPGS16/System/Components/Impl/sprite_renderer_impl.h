@@ -32,7 +32,7 @@ private:
     using IndexSize = opgs16::resource::Texture2D::IndexSize;
 
 public:
-    /** Make SpriteRenderer instance. (Constructor) */
+    /** Make Sprite2DRenderer instance. (Constructor) */
 	SpriteRendererImpl(const std::string& sprite_tag,
                        const std::string& shader_tag,
                        const opgs16::resource::Texture2D::IndexSize& texture_index,

@@ -1,9 +1,14 @@
+namespace opgs16 {
 namespace component {
-SET_UP_HASH_VALUE_OF(Component)
-SET_UP_HASH_VALUE_OF(ScriptFrame)
 SET_UP_HASH_VALUE_OF(Camera)
 SET_UP_HASH_VALUE_OF(Rigidbody2D)
+SET_UP_HASH_VALUE_OF(ScriptFrame)
+namespace _internal{
+SET_UP_HASH_VALUE_OF(Component)
 }
+}
+}
+
 SET_UP_HASH_VALUE_OF(DebugUiManager)
 SET_UP_HASH_VALUE_OF(TestScript)
 

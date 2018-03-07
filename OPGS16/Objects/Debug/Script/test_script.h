@@ -15,9 +15,9 @@
 
 #include <iostream>
 
-class TestScript final : public component::ScriptFrame {
+class TestScript final : public opgs16::component::ScriptFrame {
 public:
-    TestScript(Object& obj) : component::ScriptFrame(obj) {
+    TestScript(Object& obj) : opgs16::component::ScriptFrame(obj) {
         Initiate();
         Start();
     }
@@ -32,5 +32,5 @@ private:
     }
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(component::ScriptFrame, TestScript)
+SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, TestScript)
 };

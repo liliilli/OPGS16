@@ -1,9 +1,9 @@
 #include "test_obj.h"   /*! Header file */
 
-#include "..\..\..\System\Components\camera.h"         /*! component::Camera */
+#include "../../../System/Components/Public/camera.h"         /*! opgs16::component::Camera */
 #include "../../../System/Manager/Public/scene_manager.h"     /*! SceneManager */
-#include "..\..\..\System\Shader\shader_wrapper.h"     /*! ShaderWrapper */
-#include "..\Scripts\obj_script_1.h"    /*! ObjectScript1 */
+#include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
+#include "../Scripts/obj_script_1.h"    /*! ObjectScript1 */
 
 TestObject1::TestObject1(const int i, const float size) :
     m_sprite_renderer{ "128_" + std::to_string(i) , "gQuad" } {
@@ -17,9 +17,8 @@ TestObject1::TestObject1(const int i, const float size) :
 }
 
 void TestObject1::Render() {
-    auto PVM =
-        opgs16::manager::SceneManager::Instance().PresentScene()->GetMainCamera()->GetPV() *
-        GetModelMatrix();
+    using opgs16::manager::SceneManager;
+    auto PVM = SceneManager::Instance().PresentScene()->GetMainCamera()->GetPV() * GetModelMatrix();
 
     auto& shader = m_sprite_renderer.GetWrapper();
     shader.ReplaceUniformValue<glm::mat4>("projection", PVM);

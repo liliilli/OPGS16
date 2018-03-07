@@ -16,7 +16,7 @@ DebugUiManager::DebugUiManager(Object& obj,
                                canvas::Text* const _m_fps,
                                canvas::Text* const _m_date,
                                canvas::Text* const _m_tree) :
-    component::ScriptFrame(obj),
+    opgs16::component::ScriptFrame(obj),
     m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ _m_tree } {
     Initiate();
     Start();

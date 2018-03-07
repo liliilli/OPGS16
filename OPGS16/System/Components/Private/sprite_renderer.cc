@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
-#define OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -30,41 +27,53 @@
  */
 
 /*!
- * @file System/Manager/Internal/physics_internal.h
- * @brief
+ * @file System/Components/Private/sprite_renderer.cc
+ * @brief Definition file of sprite_renderer.h
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-04 Create file. Move PhysicsManager::Item to this file.
+ * 2018-03-07 Move file to /Component and Add boilerplate comments.
  */
 
-#include "../../Components/Public/rigidbody_2d.h"   /*! opgs16::component::Rigidbody2D */
+#include "../Public/sprite_renderer.h"          /*! Header file */
+#include "../Impl/sprite_renderer_impl.h"       /*! SpriteRendererImpl */
 
 namespace opgs16 {
-namespace manager {
-namespace _internal {
+namespace component {
 
-struct Item {
-    collision::RectangleCollider2D* const    m_collider;
-    component::Rigidbody2D* const   m_rigidbody;
-    const glm::vec2 m_position;
+Sprite2DRenderer::Sprite2DRenderer(const std::string& sprite_tag,
+                               const std::string& shader_tag,
+                               const opgs16::resource::Texture2D::IndexSize& texture_index,
+                               const unsigned layer) :
+    m_impl { new SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
+}
 
-    enum class Type {
-        BEGIN,
-        END
-    } m_type = { Type::BEGIN };
+void Sprite2DRenderer::SetLayer(const unsigned layer) {
+    m_impl->SetLayer(layer);
+}
 
-    explicit Item(collision::RectangleCollider2D* const collider,
-                  component::Rigidbody2D* const rigidbody,
-                  const glm::vec2 axis_value,
-                  Type type) :
-        m_collider{ collider }, m_rigidbody{ rigidbody },
-        m_position{ axis_value }, m_type{ type } {};
-};
+unsigned Sprite2DRenderer::GetLayer() const {
+    return m_impl->GetLayer();
+}
 
-} /*! opgs16::manager::_internal */
-} /*! opgs16::manager */
-} /*! opgs16::manager */
+ShaderWrapper& Sprite2DRenderer::GetWrapper() const {
+    return m_impl->GetWrapper();
+}
 
-#endif // !OPGS16_SYSTEM_MANAGER_INTERNAL_PHYSICS_INTERNAL_H
+const Sprite2DRenderer::IndexSize& Sprite2DRenderer::GetTextureIndex() const noexcept {
+    return m_impl->GetTextureIndex();
+}
+
+void Sprite2DRenderer::SetTextureIndex(const IndexSize& new_index) {
+    m_impl->SetTextureIndex(new_index);
+}
+
+void Sprite2DRenderer::RenderSprite() {
+    m_impl->RenderSprite();
+}
+
+Sprite2DRenderer::~Sprite2DRenderer() = default;
+
+} /*! opgs16::component */
+} /*! opgs16 */
 

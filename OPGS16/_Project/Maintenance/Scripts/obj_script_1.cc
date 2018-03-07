@@ -12,7 +12,7 @@
 
 using opgs16::manager::SceneManager;
 
-ObjectScript1::ObjectScript1(Object& obj) : component::ScriptFrame{ obj } {
+ObjectScript1::ObjectScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
     Initiate();
     Start();
 }
@@ -87,7 +87,8 @@ void ObjectScript1::StopAllTimers() {
     m_elapsed_time = 0.0f;
     m_moving = false;
 
-    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    using opgs16::component::Sprite2DRenderer;
+    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
     auto& wrapper = renderer.GetWrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
@@ -186,7 +187,8 @@ void ObjectScript1::Proceed_4AlphaBlending() {
     m_elapsed_time += opgs16::manager::TimeManager::Instance().GetDeltaTime();
     m_object_alpha = (std::cosf(m_2pi * m_elapsed_time) + 1.0f) / 2;
 
-    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    using opgs16::component::Sprite2DRenderer;
+    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
     auto& wrapper = renderer.GetWrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
@@ -199,7 +201,8 @@ void ObjectScript1::Proceed_5Scaling() {
 }
 
 void ObjectScript1::OnTriggerSwap() {
-    SpriteRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
+    using opgs16::component::Sprite2DRenderer;
+    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
     const auto& index = renderer.GetTextureIndex();
     auto value  = index.y_sep * 2 + index.x_sep + 1;
 

@@ -1,9 +1,7 @@
-#include "camera_object.h"
-#include "..\System\Components\camera.h"    /*! component::Camera */
+#include "camera_object.h"                      /*! Header file */
+#include "../System/Components/Public/camera.h" /*! component::Camera */
 
 MainCameraObject::MainCameraObject() {
-    AddComponent<component::Camera>(
-        *this,
-        component::Camera::ViewType::ORTHO,
-        component::Camera::CameraType::MAIN);
+    using Camera = opgs16::component::Camera;
+    AddComponent<Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::MAIN);
 }

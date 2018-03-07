@@ -53,7 +53,7 @@ public:
 
 private:
 	/** Camera object uses just one orthographic type. */
-    component::Camera* m_camera{ nullptr };
+    opgs16::component::Camera* m_camera{ nullptr };
 
 	bool m_is_size_changed;
 };

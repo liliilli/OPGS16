@@ -14,7 +14,7 @@
  */
 
 #include "..\..\System\Object\ui_object.h"          /** UiObject */
-#include "..\..\System\Object\sprite_renderer.h"    /** SpriteRenderer */
+#include "../../System/Components/Public/sprite_renderer.h"    /** Sprite2DRenderer */
 #include "..\..\Headers\Fwd\objectfwd.h"            /** Canvas::Canvas */
 
 namespace canvas {
@@ -61,7 +61,7 @@ public:
 	 void SetImageSize(const float width, const float height);
 
 private:
-	SpriteRenderer m_sprite_renderer;	/** Sprite Renderer */
+	opgs16::component::Sprite2DRenderer m_sprite_renderer;	/** Sprite Renderer */
 	Canvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 
 };
