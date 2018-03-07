@@ -38,8 +38,8 @@
  */
 
 #include <glm\glm.hpp>
-#include "../_macro.h"                      /*! SET_UP_HASH_MEMBER_DERIVED() */
 #include "../Internal/component.h"          /*! component::Component */
+#include "../Internal/component_macro.h"    /*! SET_UP_HASH_MEMBER_DERIVED() */
 #include "../../Headers/Fwd/objectfwd.h"    /*! Object as reference */
 
 namespace opgs16 {

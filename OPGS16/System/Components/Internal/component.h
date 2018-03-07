@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
-#define OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
+#ifndef OPGS16_SYSTEM_COMPONENTS_INTERNAL_COMPONENT_H
+#define OPGS16_SYSTEM_COMPONENTS_INTERNAL_COMPONENT_H
 
 /*!
  * @license BSD 2-Clause License
@@ -37,6 +37,8 @@
  * 2018-03-07 Move it from ::component to ::opgs16::component::_internal.
  */
 
+#include "component_macro.h"    /*! SET_UP_HASH_VALUE(__TYPE__) */
+
 namespace opgs16 {
 /*!
  * @namespace component
@@ -65,12 +67,11 @@ public:
         return type == type_value;
     }
 
-public:
-    static const size_t type;
+    SET_UP_HASH_VALUE(Component)
 };
 
 } /*! opgs16::component::_internal */
 } /*! opgs16::component */
 } /*! opgs16 */
 
-#endif // !OPGS16_SYSTEM_COMPONENTS_COMPONENT_H
+#endif // !OPGS16_SYSTEM_COMPONENTS_INTERNAL_COMPONENT_H

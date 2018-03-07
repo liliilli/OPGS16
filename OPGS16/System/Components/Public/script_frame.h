@@ -40,8 +40,8 @@
  */
 
 #include <string>                           /*! std::string as member */
-#include "../_macro.h"                      /*! SET_UP_HASH_MEMBER_DERIVED() */
 #include "../Internal/component.h"          /*! Component as base class */
+#include "../Internal/component_macro.h"    /*! SET_UP_HASH_MEMBER_DERIVED() */
 #include "../../../Headers/Fwd/objectfwd.h"    /*! Object as reference */
 
 namespace opgs16 {

@@ -48,7 +48,17 @@
 
 /*! USE THIS MACROS */
 
-#define HASH(s)     ((uint32_t)(H256(#s,0,0)))
+#if _MSC_VER
+#define HASH(s) \
+    __pragma( warning(push) ) \
+    __pragma( warning(disable:4307) ) \
+    ((uint32_t)(H256(#s,0,0))) \
+    __pragma( warning(pop) )
+#else
+#define HASH(s) \
+    ((uint32_t)(H256(#s,0,0)))
+#endif
+
 #define HASH_STR(s) ((uint32_t)(H256(s,0,0)))
 
 #endif /*! SYSTEM_HELPER_PUBLIC_HASH_FUNCTION_H */

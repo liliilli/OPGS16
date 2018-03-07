@@ -41,8 +41,8 @@
 #include <list>
 #include <utility>
 #include <memory>
-#include "../_macro.h"
 #include "../Internal/component.h"
+#include "../Internal/component_macro.h"
 #include "../Physics2D/Collider/rectangle.h"    /*! collision::RectangleCollider2D */
 #include "../../../Headers/Fwd/objectfwd.h"     /*! Object as reference */
 

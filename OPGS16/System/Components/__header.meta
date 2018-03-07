@@ -1,9 +1,0 @@
-#include "Internal/component.h"                             /*! component::Header file */
-#include "Public/script_frame.h"							/*! component::ScriptFrame */
-#include "Public/camera.h"									/*! component::Camera */
-#include "Public/rigidbody_2d.h"					/*! component::Camera */
-#include "..\..\Objects\Debug\Script\ui_manager.h"  /*! UiManager */
-#include "..\..\Objects\Debug\Script\test_script.h"	/*! TestScript */
-
-//#include "..\Boot\_meta\_header.meta";
-#include "..\..\..\_Project\Maintenance\_meta\_header.meta"

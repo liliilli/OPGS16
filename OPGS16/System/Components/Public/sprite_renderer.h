@@ -43,8 +43,8 @@
 #include <string>
 #include <memory>
 
-#include "../_macro.h"
 #include "../Internal/component.h"
+#include "../Internal/component_macro.h"
 #include "../../Headers/Fwd/objectfwd.h"    /*! SpriteRendererImpl
                                               * SpriteRendererImplDeleter
                                               * ShaderWraper */

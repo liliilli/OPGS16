@@ -156,7 +156,6 @@
     <ClCompile Include="System\Components\Physics2D\Collider\rectangle.cc" />
     <ClCompile Include="System\Components\Physics2D\collider_2d.cc" />
     <ClCompile Include="System\Components\Private\rigidbody_2d.cc" />
-    <ClCompile Include="System\Components\__type_hash.h" />
     <ClCompile Include="System\Core\Private\logger.cc" />
     <ClCompile Include="System\Manager\Private\font_manager.cc" />
     <ClCompile Include="System\Manager\Private\object_manager.cc" />
@@ -224,6 +223,7 @@
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="System\Helper\Public\access_ptr.h" />
     <ClInclude Include="System\Helper\Public\fixed_stack.h" />
+    <ClInclude Include="System\Helper\Public\hash_function.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
     <ClInclude Include="System\Manager\Internal\font_internal.h" />
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
@@ -243,7 +243,7 @@
     <ClInclude Include="System\Components\Physics2D\collider_2d.h" />
     <ClInclude Include="System\Components\Public\rigidbody_2d.h" />
     <ClInclude Include="System\Components\Internal\component.h" />
-    <ClInclude Include="System\Components\_macro.h" />
+    <ClInclude Include="System\Components\Internal\component_macro.h" />
     <ClInclude Include="System\Components\Public\script_frame.h" />
     <ClInclude Include="System\Debugs\hierarchy_tree.h" />
     <ClInclude Include="System\Core\Public\logger.h" />
@@ -384,8 +384,6 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
-    <None Include="System\Components\__header.meta" />
-    <None Include="System\Components\__set.meta" />
     <None Include="_resource.meta" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />

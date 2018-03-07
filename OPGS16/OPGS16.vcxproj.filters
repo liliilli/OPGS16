@@ -56,7 +56,6 @@
     <ClCompile Include="System\Core\Private\logger.cc" />
     <ClCompile Include="System\Components\Private\sprite_renderer.cc" />
     <ClCompile Include="System\Components\Impl\sprite_renderer_impl.cc" />
-    <ClCompile Include="System\Components\__type_hash.h" />
     <ClCompile Include="System\Components\Private\camera.cc" />
     <ClCompile Include="System\Components\Private\rigidbody_2d.cc" />
   </ItemGroup>
@@ -98,7 +97,6 @@
     <ClInclude Include="Objects\Debug\obj_tree.h" />
     <ClInclude Include="Objects\Debug\debug_canvas.h" />
     <ClInclude Include="Objects\Debug\Script\ui_manager.h" />
-    <ClInclude Include="System\Components\_macro.h" />
     <ClInclude Include="Headers\script_common.h" />
     <ClInclude Include="Objects\Debug\Script\test_script.h" />
     <ClInclude Include="System\Components\Physics2D\Collider\rectangle.h" />
@@ -148,6 +146,8 @@
     <ClInclude Include="System\Components\Public\script_frame.h" />
     <ClInclude Include="System\Components\Public\camera.h" />
     <ClInclude Include="System\Components\Public\rigidbody_2d.h" />
+    <ClInclude Include="System\Helper\Public\hash_function.h" />
+    <ClInclude Include="System\Components\Internal\component_macro.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -248,8 +248,6 @@
     <None Include="Shaders\Global\sinewave.frag" />
     <None Include="Shaders\Global\quad.frag" />
     <None Include="Shaders\pp\gray.frag" />
-    <None Include="System\Components\__header.meta" />
-    <None Include="System\Components\__set.meta" />
     <None Include="_Setting\input.meta" />
     <None Include="_Setting\tag.meta" />
     <None Include="_Project\Maintenance\_meta\_header.meta" />
