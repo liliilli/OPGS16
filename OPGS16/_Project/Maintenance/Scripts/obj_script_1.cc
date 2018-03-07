@@ -5,6 +5,7 @@
 #include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
 #include "../../../System/Manager/Public/time_manager.h"   /*! TimeManager */
 #include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
+#include "../../../System/Components/Public/sprite_renderer.h"    /*! Sprite2DRenderer */
 
 #include "test_script_1.h"      /*! TestScript1 for Canvas */
 #include "../Object/test_obj.h" /*! TestObject1 for temporary */
@@ -88,8 +89,8 @@ void ObjectScript1::StopAllTimers() {
     m_moving = false;
 
     using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
-    auto& wrapper = renderer.GetWrapper();
+    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    auto& wrapper = renderer->GetWrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
@@ -188,8 +189,8 @@ void ObjectScript1::Proceed_4AlphaBlending() {
     m_object_alpha = (std::cosf(m_2pi * m_elapsed_time) + 1.0f) / 2;
 
     using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
-    auto& wrapper = renderer.GetWrapper();
+    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    auto& wrapper = renderer->GetWrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
@@ -202,12 +203,12 @@ void ObjectScript1::Proceed_5Scaling() {
 
 void ObjectScript1::OnTriggerSwap() {
     using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer& renderer = static_cast<TestObject1*>(&GetObject())->GetRenderer();
-    const auto& index = renderer.GetTextureIndex();
+    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    const auto& index = renderer->GetTextureIndex();
     auto value  = index.y_sep * 2 + index.x_sep + 1;
 
     if (value == 4)
         value = 0;
 
-    renderer.SetTextureIndex({ value % 2, value / 2 });
+    renderer->SetTextureIndex({ value % 2, value / 2 });
 }

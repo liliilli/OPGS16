@@ -43,8 +43,8 @@
 #include <string>
 #include <memory>
 
-#include "../Internal/component.h"
-#include "../Internal/component_macro.h"
+#include "../Internal/component.h"          /*! opgs16::component::_internal::Component */
+#include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
 #include "../../Headers/Fwd/objectfwd.h"    /*! SpriteRendererImpl
                                               * SpriteRendererImplDeleter
                                               * ShaderWraper */
@@ -64,7 +64,7 @@ namespace component {
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move to opgs16::component namespace.
  */
-class Sprite2DRenderer final {
+class Sprite2DRenderer final : public _internal::Component {
 private:
     using IndexSize = opgs16::resource::Texture2D::IndexSize;
 
@@ -94,6 +94,8 @@ public:
 
     void SetTextureIndex(const IndexSize& new_index);
 
+    virtual void Update() override final {};
+
 	/**
 	 * @brief Render sprite on screen. Procedure is below.
 	 * 1. m_shader is enable (must be enabled), active shader to use.
@@ -107,6 +109,8 @@ public:
 private:
     using pimpl_type = std::unique_ptr<SpriteRendererImpl>;
     pimpl_type m_impl{ nullptr };
+
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Sprite2DRenderer)
 };
 
 } /*! opgs16::component */

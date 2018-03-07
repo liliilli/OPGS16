@@ -50,6 +50,7 @@ namespace component {
 class   Camera;
 class   Rigidbody2D;
 class   ScriptFrame;
+class   Sprite2DRenderer;
 
 namespace _internal {
 class   Component;
@@ -107,7 +108,6 @@ struct  TextImplDeleter { void operator()(TextImpl* p); };
 
 class   Scene;
 
-class   Sprite2DRenderer;
 class   SpriteRendererImpl;
 
 class   VertexArrayObject;
