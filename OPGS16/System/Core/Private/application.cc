@@ -38,6 +38,9 @@ namespace opgs16 {
 namespace {
 
 using namespace std::string_view_literals;
+using opgs16::debug::PushLog;
+using opgs16::debug::MsgType;
+
 constexpr std::string_view g_global_resource_path{ "_resource.meta"sv };
 
 /*! Callback method for size check and resizing */
@@ -48,6 +51,7 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 }
 
 Application::Application() :
+    m_logger{ &debug::Logger::operator(), std::ref(debug::Logger::Instance()) },
     m_window{ InitApplication(u8"OPGS16") },
     m_setting_manager{ manager::SettingManager::Instance() },
     m_input_manager{ manager::InputManager::Instance() },
@@ -70,16 +74,17 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    PushLog(MsgType::OK, "GLFW CONTEXT VERSION 4.3 Core.");
 
     /*! Set MSAAx4 */
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    //glfwWindowHint(GLFW_SAMPLES, 4);
 
     const auto window = glfwCreateWindow(GlobalSetting::ScreenWidth(),
                                          GlobalSetting::ScreenHeight(),
                                          app_name.c_str(),
                                          nullptr, nullptr);
     if (!window) {
-        std::cerr << "failed to create GLFW window" << std::endl;
+        PushLog(MsgType::ERROR, "Failed to create GLFW window. Application will terminate.");
         glfwTerminate();
         return nullptr;
     }
@@ -163,6 +168,10 @@ void Application::Run() {
     }
     /*! Must terminate glfw window */
     glfwTerminate();
+    if (m_logger.joinable()) {
+        debug::Logger::Instance().Terminate();
+        m_logger.join();
+    }
 }
 
 void Application::Update() {
@@ -269,22 +278,6 @@ void Application::ChangeScalingOption(ScaleType value) const {
 		std::cerr << "NOTIFY::M_SCALE::VALUE::ARE::SAME" << std::endl;
 	}
 }
-
-//void Application::ToggleAntialiasing() {
-//    if (m_option.anti_aliasing) {
-//        glDisable(GL_MULTISAMPLE);
-//        m_option.anti_aliasing = false;
-//    }
-//    else {
-//        glEnable(GL_MULTISAMPLE);
-//        m_option.anti_aliasing = true;
-//    }
-//
-//#ifdef _DEBUG
-//    std::cout << "MSAA : " << (m_option.anti_aliasing ? "ON" : "OFF") << std::endl;
-//#endif
-//}
-//
 
 void Application::Exit() {
     PushStatus(GameStatus::EXIT);

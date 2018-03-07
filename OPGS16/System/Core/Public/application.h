@@ -49,8 +49,9 @@
 // ReSharper restore CppUnusedIncludeDirective
 #include <GLFW/glfw3.h>
 
+#include "../../Core/Public/logger.h"   /*! Logger class running on separate thread. */
+#include "../../Object/object.h"        /*! Object for complete deleter of unique_ptr<Object> */
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
-#include "../../Object/object.h" /*! Object for complete deleter of unique_ptr<Object> */
 
 /*! Framework overall namespace includes all components. */
 namespace opgs16 {
@@ -87,6 +88,8 @@ public:
     }
 
 private:
+    std::thread m_logger;
+
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
     manager::SettingManager&     m_setting_manager;

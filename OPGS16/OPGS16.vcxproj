@@ -75,7 +75,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
