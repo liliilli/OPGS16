@@ -36,6 +36,8 @@
  * 2018-03-10 Create file, Add state enum.
  */
 
+#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
+
 namespace opgs16 {
 namespace component {
 namespace _internal {
@@ -47,6 +49,29 @@ enum class AnimatorState {
     ANIMATION_END,
     END,
     SLEEP
+};
+
+class AnimationCell {
+    using IndexSize = resource::Texture2D::IndexSize;
+
+    unsigned    m_texture_id;
+    IndexSize   m_index;
+    unsigned    m_time_milli;
+
+public:
+    AnimationCell() {};
+    explicit AnimationCell(unsigned texture_id, IndexSize index, unsigned time_milli) :
+        m_texture_id{ texture_id }, m_index{ index }, m_time_milli{ time_milli } {};
+
+    IndexSize Index() const noexcept {
+        return m_index;
+    }
+    unsigned TextureId() const noexcept {
+        return m_texture_id;
+    }
+    unsigned TimeMilli() const noexcept {
+        return m_time_milli;
+    }
 };
 
 } /*! opgs16::component::_internal */

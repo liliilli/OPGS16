@@ -58,6 +58,7 @@
     <ClCompile Include="System\Components\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="System\Components\Private\camera.cc" />
     <ClCompile Include="System\Components\Private\rigidbody_2d.cc" />
+    <ClCompile Include="System\Components\Private\animator.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -148,6 +149,8 @@
     <ClInclude Include="System\Components\Public\rigidbody_2d.h" />
     <ClInclude Include="System\Helper\Public\hash_function.h" />
     <ClInclude Include="System\Components\Internal\component_macro.h" />
+    <ClInclude Include="System\Components\Public\animator.h" />
+    <ClInclude Include="System\Components\Internal\animator_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -260,6 +263,7 @@
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
     <None Include="_resource.meta" />
     <None Include="_Setting\render_layer.meta" />
+    <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

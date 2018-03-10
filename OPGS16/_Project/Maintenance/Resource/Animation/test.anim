@@ -1,19 +1,19 @@
 # 2018-03-10 Test Animation Sheet by Jongmin Yun
 # Texture2D_name | Index | wait_time (ms)
-AnimChar 0 250
-AnimChar 1 250
-AnimChar 2 250
-AnimChar 3 250
-AnimChar 4 250
-AnimChar 5 250
-AnimChar 6 250
-AnimChar 7 250
-AnimChar 8 250
-AnimChar 9 250
-AnimChar 10 250
-AnimChar 11 250
-AnimChar 12 250
-AnimChar 13 250
-AnimChar 14 250
-AnimChar 15 250
+AnimChar 0 0 250
+AnimChar 1 0 250
+AnimChar 2 0 250
+AnimChar 3 0 250
+AnimChar 4 0 250
+AnimChar 5 0 250
+AnimChar 6 0 250
+AnimChar 7 0 250
+AnimChar 0 1 250
+AnimChar 1 1 250
+AnimChar 2 1 250
+AnimChar 3 1 250
+AnimChar 4 1 250
+AnimChar 5 1 250
+AnimChar 6 1 250
+AnimChar 7 1 250
 # End

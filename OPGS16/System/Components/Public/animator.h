@@ -64,6 +64,10 @@ private:
     TimerHandle m_timer;
     _internal::AnimatorState m_state;
 
+    std::vector<_internal::AnimationCell> m_cells;
+    size_t m_cell_length;
+    size_t m_cell_index{};
+
 private:
     void OnStart();
 
