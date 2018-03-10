@@ -46,7 +46,6 @@
 #include "../Internal/component.h"          /*! opgs16::component::_internal::Component */
 #include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
 #include "../../Headers/Fwd/objectfwd.h"    /*! SpriteRendererImpl
-                                              * SpriteRendererImplDeleter
                                               * ShaderWraper */
 #include "../../Manager/Public/resource_type.h" /*! resource::Texture2D::IndexSize */
 
@@ -67,13 +66,14 @@ namespace component {
 class Sprite2DRenderer final : public _internal::Component {
 private:
     using IndexSize = opgs16::resource::Texture2D::IndexSize;
+    using pimpl_type = std::unique_ptr<_internal::SpriteRendererImpl>;
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
 	Sprite2DRenderer(const std::string& sprite_tag,
-				   const std::string& shader_tag,
-                   const opgs16::resource::Texture2D::IndexSize& texture_index = {0, 0},
-				   const unsigned layer = 0);
+                     const std::string& shader_tag,
+                     const IndexSize& texture_index = {0, 0},
+                     const unsigned layer = 0);
 
 	/*!
 	 * @brief Change layer number of this instance.
@@ -81,16 +81,14 @@ public:
 	 */
 	void SetLayer(const unsigned layer);
 
-	/*!
-	 * @brief Get layer number of bound instance.
-	 * @return layer number value.
-	 */
-    unsigned GetLayer() const;
+	/*! Get layer number of bound instance. */
+    unsigned Layer() const;
 
-	/*! Get ShaderWrapper instance.  */
-	ShaderWrapper& GetWrapper() const;
+	/*! Get ShaderWrapper instance. */
+	ShaderWrapper& Wrapper() const;
 
-    const IndexSize& GetTextureIndex() const noexcept ;
+    /*! Get Texture index position. */
+    const IndexSize& TextureIndex() const noexcept;
 
     void SetTextureIndex(const IndexSize& new_index);
 
@@ -107,8 +105,7 @@ public:
     ~Sprite2DRenderer();
 
 private:
-    using pimpl_type = std::unique_ptr<SpriteRendererImpl>;
-    pimpl_type m_impl{ nullptr };
+    pimpl_type m_impl{};
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Sprite2DRenderer)
 };

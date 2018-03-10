@@ -42,26 +42,26 @@ namespace opgs16 {
 namespace component {
 
 Sprite2DRenderer::Sprite2DRenderer(const std::string& sprite_tag,
-                               const std::string& shader_tag,
-                               const opgs16::resource::Texture2D::IndexSize& texture_index,
-                               const unsigned layer) :
-    m_impl { new SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
+                                   const std::string& shader_tag,
+                                   const opgs16::resource::Texture2D::IndexSize& texture_index,
+                                   const unsigned layer) :
+    m_impl { new _internal::SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
 }
 
 void Sprite2DRenderer::SetLayer(const unsigned layer) {
     m_impl->SetLayer(layer);
 }
 
-unsigned Sprite2DRenderer::GetLayer() const {
-    return m_impl->GetLayer();
+unsigned Sprite2DRenderer::Layer() const {
+    return m_impl->Layer();
 }
 
-ShaderWrapper& Sprite2DRenderer::GetWrapper() const {
-    return m_impl->GetWrapper();
+ShaderWrapper& Sprite2DRenderer::Wrapper() const {
+    return m_impl->Wrapper();
 }
 
-const Sprite2DRenderer::IndexSize& Sprite2DRenderer::GetTextureIndex() const noexcept {
-    return m_impl->GetTextureIndex();
+const Sprite2DRenderer::IndexSize& Sprite2DRenderer::TextureIndex() const noexcept {
+    return m_impl->TextureIndex();
 }
 
 void Sprite2DRenderer::SetTextureIndex(const IndexSize& new_index) {

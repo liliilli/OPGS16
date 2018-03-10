@@ -11,7 +11,7 @@ TestObject1::TestObject1(const int i, const float size) {
 
     using opgs16::component::Sprite2DRenderer;
     AddComponent<Sprite2DRenderer>("128_" + std::to_string(i), "gQuad");
-	m_wrapper = &GetComponent<Sprite2DRenderer>()->GetWrapper();
+	m_wrapper = &GetComponent<Sprite2DRenderer>()->Wrapper();
 	m_wrapper->InsertUniformValue<glm::mat4>("projection", glm::mat4{});
 	m_wrapper->InsertUniformValue<float>("alpha", 1.0f);
 

@@ -54,6 +54,7 @@ class   Sprite2DRenderer;
 
 namespace _internal {
 class   Component;
+class   SpriteRendererImpl;
 } /*! opgs16::component::_internal */
 } /*! opgs16::component */
 
@@ -84,11 +85,14 @@ enum class ESymbolType;
 enum class EResourceType;
 } /*! resource::_internal */
 } /*! resource */
+
+namespace texture {
+class Texture2D;
+} /*! opgs16::texture */
 } /*! opgs16 */
 
 namespace helper { class ShaderNew; }
 namespace camera { class CameraObject; }
-namespace texture { class Texture2D; }
 
 struct	GLFWwindow;
 
@@ -108,14 +112,12 @@ struct  TextImplDeleter { void operator()(TextImpl* p); };
 
 class   Scene;
 
-class   SpriteRendererImpl;
 
 class   VertexArrayObject;
 class   ShaderNew;
 class   ShaderWrapper;
 
 /** Managers */
-
 class   TimerHandle;   /*! sub-type of timermanager */
 
 /*! Custom Initiated Objects */

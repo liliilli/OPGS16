@@ -11,7 +11,7 @@ Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 	m_sprite_renderer{ sprite_tag, "gQuad" },
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
 
-	auto& shader = m_sprite_renderer.GetWrapper();
+	auto& shader = m_sprite_renderer.Wrapper();
 	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
 	shader.InsertUniformValue<float>("alpha", 0.0f);
 }
@@ -46,7 +46,7 @@ void Image::Render() {
 	}
 
 	/** Render this */
-	auto& shader = m_sprite_renderer.GetWrapper();
+	auto& shader = m_sprite_renderer.Wrapper();
 
 	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
 	shader.ReplaceUniformValue<glm::mat4>("projection", PVM);

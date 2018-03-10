@@ -90,7 +90,7 @@ void ObjectScript1::StopAllTimers() {
 
     using opgs16::component::Sprite2DRenderer;
     Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
-    auto& wrapper = renderer->GetWrapper();
+    auto& wrapper = renderer->Wrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
@@ -190,7 +190,7 @@ void ObjectScript1::Proceed_4AlphaBlending() {
 
     using opgs16::component::Sprite2DRenderer;
     Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
-    auto& wrapper = renderer->GetWrapper();
+    auto& wrapper = renderer->Wrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
@@ -204,7 +204,7 @@ void ObjectScript1::Proceed_5Scaling() {
 void ObjectScript1::OnTriggerSwap() {
     using opgs16::component::Sprite2DRenderer;
     Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
-    const auto& index = renderer->GetTextureIndex();
+    const auto& index = renderer->TextureIndex();
     auto value  = index.y_sep * 2 + index.x_sep + 1;
 
     if (value == 4)

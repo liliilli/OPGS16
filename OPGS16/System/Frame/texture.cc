@@ -1,10 +1,48 @@
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Frame/Private/texture.cc
+ * @brief Texture2D implementation file.
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-03-10 Move it to opgs16::texture namespace.
+ */
+
 #include "texture.h"
 
 #include <array>
 #include <iostream>
-#include "..\..\__ThirdParty\stb\stb_image.h"
+#include "../../__ThirdParty/stb/stb_image.h"
 #include "../Manager/Public/resource_type.h"           /*! resource::Texture2D */
 
+namespace opgs16 {
 namespace texture {
 Texture2D::~Texture2D() {
     if (m_texture) glDeleteTextures(1, &m_texture);
@@ -13,7 +51,7 @@ Texture2D::~Texture2D() {
 Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-	stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(true);
     /*!
      * Set the m_texture wrapping and filtering options
      * Load image file to use as m_texture image.
@@ -23,9 +61,9 @@ Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
     if (data) {
         GLenum color_format;
         switch (nr_channels) {
-            case 1: color_format = GL_RED;    break;    /*! Gray or Red (one channel) */
-            case 3: color_format = GL_RGB;    break;    /*! RGB no alpha */
-            case 4: color_format = GL_RGBA;   break;    /*! RGB and alpha */
+        case 1: color_format = GL_RED;    break;    /*! Gray or Red (one channel) */
+        case 3: color_format = GL_RGB;    break;    /*! RGB no alpha */
+        case 4: color_format = GL_RGBA;   break;    /*! RGB and alpha */
         }
 
         /*! Make m_texture */
@@ -35,12 +73,12 @@ Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
         glGenerateMipmap(GL_TEXTURE_2D);
 
         /*! Setting default option */
-		std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
-		t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
-		t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
-		t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
-		t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
-		SetTextureParameterI(t_p);
+        std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
+        t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
+        t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
+        t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
+        t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
+        SetTextureParameterI(t_p);
 
         /*! Set cell size */
         m_texture_cell_size = { 1.f / container.m_nm_size.x_sep, 1.f / container.m_nm_size.y_sep };
@@ -55,21 +93,21 @@ Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
 Texture2D::Texture2D(const GLint internal_format,
                      GLenum format, GLenum type, GLsizei width, GLsizei height) {
     /*! Temporary */
-    m_width     = 256;
-    m_height    = 224;
+    m_width = 256;
+    m_height = 224;
 
     /*! Make Texture for entire screen size */
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_width, m_height, 0, format, type, 0);
+    glGenTextures(1, &m_texture);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_width, m_height, 0, format, type, 0);
 
     /*! Setting default option */
-	std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
-	t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
-	t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
-	t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
-	t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
-	SetTextureParameterI(t_p);
+    std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
+    t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
+    SetTextureParameterI(t_p);
 }
 
 void Texture2D::SetTextureParameterI(const GLint option, const GLint mode) {
@@ -87,7 +125,7 @@ void Texture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists)
 }
 
 void Texture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
 }
 
 ///**
@@ -144,4 +182,5 @@ void Texture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
 //    return texture_cubemap;
 //}
 
-}
+} /*! opgs16::texture */
+} /*! opgs16 */

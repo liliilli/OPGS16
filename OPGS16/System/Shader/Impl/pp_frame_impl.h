@@ -20,7 +20,7 @@ public:
 
 private:
     std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
-    using texture_ptr = std::unique_ptr<texture::Texture2D>;
+    using texture_ptr = std::unique_ptr<opgs16::texture::Texture2D>;
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 	std::vector<helper::ShaderNew*> m_shaders;

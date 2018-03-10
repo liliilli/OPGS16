@@ -92,7 +92,7 @@ public:
 	 * @param[in] id Index to verify.
 	 * @return The reference of std::unique_ptr<helper::Texture2D>.
 	 */
-	using texture_ptr = std::unique_ptr<texture::Texture2D>;
+	using texture_ptr = std::unique_ptr<opgs16::texture::Texture2D>;
 	texture_ptr& GetTexture(const size_t id) { return m_color_buffers.at(id); }
 
 	/**
