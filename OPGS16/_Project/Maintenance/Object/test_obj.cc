@@ -1,10 +1,10 @@
 #include "test_obj.h"   /*! Header file */
 
-#include "../../../System/Components/Public/camera.h"         /*! opgs16::component::Camera */
+#include "../../../System/Components/Public/camera.h"       /*! opgs16::component::Camera */
 #include "../../../System/Components/Public/sprite_renderer.h"    /*! Sprite2DRenderer */
-#include "../../../System/Manager/Public/scene_manager.h"     /*! SceneManager */
-#include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
-#include "../Scripts/obj_script_1.h"    /*! ObjectScript1 */
+#include "../../../System/Manager/Public/scene_manager.h"   /*! SceneManager */
+#include "../../../System/Shader/shader_wrapper.h"          /*! ShaderWrapper */
+#include "../Scripts/obj_script_1.h"                        /*! ObjectScript1 */
 
 TestObject1::TestObject1(const int i, const float size) {
     SetScaleValue(size);
