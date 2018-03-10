@@ -47,7 +47,8 @@
 #include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
 #include "../../Headers/Fwd/objectfwd.h"    /*! SpriteRendererImpl
                                               * ShaderWraper */
-#include "../../Manager/Public/resource_type.h" /*! resource::Texture2D::IndexSize */
+#include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::ObjectManager */
+#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
 
 namespace opgs16 {
 namespace component {
@@ -70,19 +71,11 @@ private:
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
-	Sprite2DRenderer(const std::string& sprite_tag,
+	Sprite2DRenderer(Object& bind_object,
+                     const std::string& sprite_tag,
                      const std::string& shader_tag,
                      const IndexSize& texture_index = {0, 0},
                      const unsigned layer = 0);
-
-	/*!
-	 * @brief Change layer number of this instance.
-	 * @param[in] layer Layer number.
-	 */
-	void SetLayer(const unsigned layer);
-
-	/*! Get layer number of bound instance. */
-    unsigned Layer() const;
 
 	/*! Get ShaderWrapper instance. */
 	ShaderWrapper& Wrapper() const;
@@ -92,7 +85,20 @@ public:
 
     void SetTextureIndex(const IndexSize& new_index);
 
-    virtual void Update() override final {};
+    void SetRenderLayer(const std::string& layer_name);
+
+    void SetRenderLayer(const size_t layer_index);
+
+    inline size_t RenderLayerIndexOf() const noexcept {
+        return m_render_layer_index;
+    }
+
+    std::string RenderLayerNameOf() const;
+
+    virtual void Update() override final {
+        opgs16::manager::ObjectManager::Instance().InsertRenderingObject(&GetObject(),
+                                                                         m_render_layer_index);
+    };
 
 	/**
 	 * @brief Render sprite on screen. Procedure is below.
@@ -106,6 +112,7 @@ public:
 
 private:
     pimpl_type m_impl{};
+    size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Sprite2DRenderer)
 };

@@ -35,25 +35,21 @@
  * 2018-03-07 Move file to /Component and Add boilerplate comments.
  */
 
-#include "../Public/sprite_renderer.h"          /*! Header file */
-#include "../Impl/sprite_renderer_impl.h"       /*! SpriteRendererImpl */
+#include "../Public/sprite_renderer.h"              /*! Header file */
+#include "../Impl/sprite_renderer_impl.h"           /*! SpriteRendererImpl */
+#include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::SettingManager */
+#include "../../Object/object.h"
 
 namespace opgs16 {
 namespace component {
 
-Sprite2DRenderer::Sprite2DRenderer(const std::string& sprite_tag,
+Sprite2DRenderer::Sprite2DRenderer(Object& bind_object,
+                                   const std::string& sprite_tag,
                                    const std::string& shader_tag,
                                    const opgs16::resource::Texture2D::IndexSize& texture_index,
                                    const unsigned layer) :
+    Component{ bind_object },
     m_impl { new _internal::SpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
-}
-
-void Sprite2DRenderer::SetLayer(const unsigned layer) {
-    m_impl->SetLayer(layer);
-}
-
-unsigned Sprite2DRenderer::Layer() const {
-    return m_impl->Layer();
 }
 
 ShaderWrapper& Sprite2DRenderer::Wrapper() const {
@@ -64,11 +60,37 @@ const Sprite2DRenderer::IndexSize& Sprite2DRenderer::TextureIndex() const noexce
     return m_impl->TextureIndex();
 }
 
+// ReSharper disable CppMemberFunctionMayBeConst
 void Sprite2DRenderer::SetTextureIndex(const IndexSize& new_index) {
+    // ReSharper restore CppMemberFunctionMayBeConst
     m_impl->SetTextureIndex(new_index);
 }
 
+void Sprite2DRenderer::SetRenderLayer(const std::string& layer_name) {
+    auto& layer_list = manager::SettingManager::Instance().RenderingLayerNameList();
+    decltype(layer_list.size()) i = 0;
+    for (; i < layer_list.size(); ++i) {
+        if (layer_name == layer_list[i]) {
+            m_render_layer_index = i;
+            break;
+        }
+    }
+
+    if (i == layer_list.size()) m_render_layer_index = 0;
+}
+
+void Sprite2DRenderer::SetRenderLayer(const size_t layer_index) {
+    const auto list_size = manager::SettingManager::Instance().RenderingLayerNameList().size();
+    m_render_layer_index = (layer_index >= list_size) ? 0 : layer_index;
+}
+
+std::string Sprite2DRenderer::RenderLayerNameOf() const {
+    return manager::SettingManager::Instance().RenderingLayerName(m_render_layer_index);
+}
+
+// ReSharper disable CppMemberFunctionMayBeConst
 void Sprite2DRenderer::RenderSprite() {
+    // ReSharper restore CppMemberFunctionMayBeConst
     m_impl->RenderSprite();
 }
 

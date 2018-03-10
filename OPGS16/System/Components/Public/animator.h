@@ -52,7 +52,8 @@ namespace component {
  */
 class Animator final : public _internal::Component {
 public:
-    explicit Animator(Sprite2DRenderer& bind_renderer, Switch loop = Switch::OFF);
+    explicit Animator(Object& bind_object,
+                      Sprite2DRenderer& bind_renderer, Switch loop = Switch::OFF);
 
     /*! Update animator each frame. */
     virtual void Update() override final;

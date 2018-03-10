@@ -69,7 +69,7 @@ public:
 
     void Destroy(const Object& object);
 
-    void InsertRenderingObject(object_raw const object);
+    void InsertRenderingObject(object_raw const object, unsigned layer_index);
 
     void Render();
 

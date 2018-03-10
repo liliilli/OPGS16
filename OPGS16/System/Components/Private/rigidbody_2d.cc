@@ -43,25 +43,25 @@ namespace component {
 void Rigidbody2D::Update() {
     auto& physics_manager = opgs16::manager::PhysicsManager::Instance();
     for (auto& collider : m_colliders) {
-        collider->ReflectPosition(m_bound_object.GetWorldPosition());
+        collider->ReflectPosition(GetObject().GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);
     }
 }
 
 void Rigidbody2D::OnCollisionEnter(Rigidbody2D& collider) {
-    m_bound_object.OnCollisionEnter(collider);
+    GetObject().OnCollisionEnter(collider);
 }
 
 void Rigidbody2D::OnTriggerEnter(Rigidbody2D& collider) {
-    m_bound_object.OnTriggerEnter(collider);
+    GetObject().OnTriggerEnter(collider);
 }
 
 bool Rigidbody2D::IsTag(const std::string&& tag) const {
-    return tag == m_bound_object.GetTagNameOf();
+    return tag == GetObject().GetTagNameOf();
 }
 
 bool Rigidbody2D::IsTag(const size_t index) const {
-    return index == m_bound_object.GetTagIndexOf();
+    return index == GetObject().GetTagIndexOf();
 }
 
 } /*! opgs16::component */

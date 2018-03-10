@@ -57,7 +57,7 @@ namespace component {
  */
 class ScriptFrame : public _internal::Component {
 public:
-    ScriptFrame(Object& bound_obj) : m_bound_object{ bound_obj } {}
+    ScriptFrame(Object& bound_obj) : _internal::Component{ bound_obj } {}
 
     /*!
      * @brief This method will be called only one time, when ScriptFrame is attached to object,
@@ -85,12 +85,8 @@ public:
      */
      virtual void Destroy() {};
 
-    /*!  * @brief Get Object reference.  */
-    Object& GetObject() { return m_bound_object; }
-
 private:
     const std::string m_script_name;    /*! Name must be same as ScriptFrame derived. */
-    Object& m_bound_object;             /*! Bound object which script instance refers to */
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, ScriptFrame)

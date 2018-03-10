@@ -83,28 +83,6 @@ std::string ObjectImpl::GetTagNameOf() const {
     return SettingManager::Instance().GetTagName(m_tag_index);
 }
 
-void ObjectImpl::SetRenderLayer(const std::string& layer_name) {
-    auto& layer_list = SettingManager::Instance().RenderingLayerNameList();
-    decltype(layer_list.size()) i = 0;
-    for (; i < layer_list.size(); ++i) {
-        if (layer_name == layer_list[i]) {
-            m_tag_index = i;
-            break;
-        }
-    }
-
-    if (i == layer_list.size()) m_tag_index = 0;
-}
-
-void ObjectImpl::SetRenderLayer(const size_t layer_index) {
-    const auto list_size = SettingManager::Instance().RenderingLayerNameList().size();
-    m_render_layer_index = (layer_index >= list_size) ? 0 : layer_index;
-}
-
-std::string ObjectImpl::RenderLayerNameOf() const {
-    return SettingManager::Instance().RenderingLayerName(m_render_layer_index);
-}
-
 void ObjectImpl::SetTag(const std::string& tag_name) {
     auto& tag_list = SettingManager::Instance().GetTagNameList();
 

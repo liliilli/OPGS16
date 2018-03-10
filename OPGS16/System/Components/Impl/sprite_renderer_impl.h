@@ -69,20 +69,12 @@ public:
                        const opgs16::resource::Texture2D::IndexSize& texture_index,
                        unsigned layer);
 
-    inline unsigned Layer() const noexcept {
-        return m_layer;
-    }
-
     inline ShaderWrapper& Wrapper() {
         return m_wrapper;
     }
 
     inline const IndexSize& TextureIndex() const noexcept {
         return m_index;
-    }
-
-    inline void SetLayer(const unsigned layer) {
-
     }
 
     inline void SetTextureIndex(const IndexSize& new_index) noexcept {
@@ -96,10 +88,8 @@ private:
 	texture::Texture2D* m_sprite;	/** Sprite 2d texture stores image information. */
 	VertexArrayObject m_vao;	    /** Quad VAO to render sprite on screen. */
 	ShaderWrapper m_wrapper;		/** Shader is in ShaderManager, render sprite. */
-	unsigned m_layer;				/** Layer ordering number. The bigger, The later. */
 
     IndexSize m_index;
-
     GLuint empty_vao;
 };
 

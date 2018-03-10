@@ -92,7 +92,6 @@ private:
 	float m_near, m_far;			/** Distance sets region of sight. used only for perspective */
 	float m_perspective_angle;		/** Angle sets how to see world, used only for perspective */
 
-    Object& m_bound_object;             /*! Bound object which script instance refers to */
     static bool s_main_camera_initiated;/** Check flag if main camera is already initiated */
 
 private:

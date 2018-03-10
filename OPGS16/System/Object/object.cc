@@ -195,26 +195,6 @@ std::string Object::GetTagNameOf() const {
     return m_data->GetTagNameOf();
 }
 
-// ReSharper disable CppMemberFunctionMayBeConst
-void Object::SetRenderLayer(const std::string& layer_name) {
-    // ReSharper restore CppMemberFunctionMayBeConst
-    m_data->SetRenderLayer(layer_name);
-}
-
-// ReSharper disable CppMemberFunctionMayBeConst
-void Object::SetRenderLayer(const size_t layer_index) {
-    // ReSharper restore CppMemberFunctionMayBeConst
-    m_data->SetRenderLayer(layer_index);
-}
-
-size_t Object::RenderLayerIndexOf() const noexcept {
-    return m_data->RenderLayerIndexOf();
-}
-
-std::string Object::RenderLayerNameOf() const {
-    return m_data->RenderLayerNameOf();
-}
-
 void Object::GetObjectTree(ObjectTree* const tree) {
 	for (const auto& object : m_children) {
         if (object.second) {

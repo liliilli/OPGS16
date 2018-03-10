@@ -35,9 +35,11 @@
  * @log
  * 2018-02-13 Create file and implement fundamental logic.
  * 2018-03-07 Move it from ::component to ::opgs16::component::_internal.
+ * 2018-03-10 Make components bind Object explicitly.
  */
 
-#include "component_macro.h"    /*! SET_UP_HASH_VALUE(__TYPE__) */
+#include "component_macro.h"                /*! SET_UP_HASH_VALUE(__TYPE__) */
+#include "../../../Headers/Fwd/objectfwd.h" /*! Forward declaration */
 
 namespace opgs16 {
 /*!
@@ -54,6 +56,7 @@ namespace _internal {
  */
 class Component {
 public:
+    Component(Object& bind_object) : m_object{ bind_object } {};
     virtual ~Component() = default;
 
     virtual void Update() = 0;
@@ -66,6 +69,14 @@ public:
     inline virtual bool DoesTypeMatch(const size_t type_value) const noexcept {
         return type == type_value;
     }
+
+    /*! Get Object reference */
+    Object& GetObject() const {
+        return m_object;
+    }
+
+private:
+    Object& m_object;   /*! Bound object which script instance refers to */
 
     SET_UP_HASH_VALUE(Component)
 };

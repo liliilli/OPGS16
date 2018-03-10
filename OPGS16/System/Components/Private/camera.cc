@@ -49,7 +49,7 @@ namespace component {
 bool Camera::s_main_camera_initiated{ false };
 
 Camera::Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
-    m_bound_object{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
+    _internal::Component{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
     /*! Body */
 	switch (m_viewtype) {
 	case ViewType::ORTHO:       InitiateOrthographicProjection();   break;

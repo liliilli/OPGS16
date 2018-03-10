@@ -257,16 +257,6 @@ public:
      */
     std::string GetTagNameOf() const;
 
-    void SetRenderLayer(const std::string& layer_name);
-
-    void SetRenderLayer(const size_t layer_index);
-
-    inline size_t RenderLayerIndexOf() const noexcept {
-        return m_render_layer_index;
-    }
-
-    std::string RenderLayerNameOf() const;
-
 private:
     glm::vec3   m_local_position{};             /*! (x, y, z) local position. */
     glm::vec3   m_world_position{};             /*! (x, y, z) world position. */
@@ -302,7 +292,6 @@ private:
     mutable bool m_scale_deprecated{ true };        /*! The flag scale vec needs to be updated. */
 
     size_t m_tag_index{ 0 };                /*! Tag index */
-    size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
 
 private:
 	void RefreshFinalPosition() const;	/** Refresh Translation matrix */

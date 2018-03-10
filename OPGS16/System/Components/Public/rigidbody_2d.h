@@ -53,7 +53,7 @@ namespace component {
  * @class Rigidbody2D
  * @brief There is only one Rigidbody class in each object. or undefined behavior occurs.
  */
-class Rigidbody2D final : public opgs16::component::_internal::Component {
+class Rigidbody2D final : public _internal::Component {
 public:
     enum class BodyType {
         NORMAL,     /*! Move it with physics simulation */
@@ -61,10 +61,10 @@ public:
     };
 
 public:
-    Rigidbody2D(Object& bound_obj) : m_bound_object{ bound_obj } {}
+    Rigidbody2D(Object& bound_obj) : _internal::Component{ bound_obj } {}
 
     /*!  * Update physics/collision process.  */
-     void Update();
+    void Update();
 
     /*!
      * @brief Add (insert) 2D collider object. This method could be used as just plain object
@@ -92,8 +92,6 @@ public:
     bool IsTag(const size_t index) const;
 
 private:
-    Object& m_bound_object;             /*! Bound object which script instance refers to */
-
     bool m_simulated{ true };           /*! If you want to simulate physics/collision wit this,
                                          *  you have to set it on true. */
     float m_object_mass{ 1.0f };        /*! Define the mass of the Rigidbody2D */

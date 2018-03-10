@@ -42,6 +42,7 @@
 #include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
 #include "../../Manager/Public/texture_manager.h"   /*! opgs16::manager::TextureManager */
 #include "../../Manager/Public/timer_manager.h"     /*! TimerManager */
+#include "../../Object/object.h"
 
 namespace opgs16 {
 namespace component {
@@ -73,7 +74,8 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
 
 using _internal::AnimatorState;
 
-Animator::Animator(Sprite2DRenderer& bind_renderer, Switch loop) :
+Animator::Animator(Object& bind_object, Sprite2DRenderer& bind_renderer, Switch loop) :
+    _internal::Component{ bind_object },
     m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
     OnStart();
 

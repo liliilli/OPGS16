@@ -61,8 +61,6 @@
                                               */
 /*! opgs16::component::_internal::Component */
 #include "../../System/Components/Internal/component.h"
-/*! opgs16::manager::ObjectManager */
-#include "../Manager/Public/object_manager.h"
 
 /**
  * @class Object
@@ -109,9 +107,9 @@ public:
             }
         }
 
-        if (m_data) {
-            opgs16::manager::ObjectManager::Instance().InsertRenderingObject(this);
-        }
+        //if (m_data) {
+        //    opgs16::manager::ObjectManager::Instance().InsertRenderingObject(this);
+        //}
     }
 
 	/*! Calls children to draw or render something it has.  */
@@ -360,14 +358,6 @@ public:
      * @return Tag name string.
      */
     std::string GetTagNameOf() const;
-
-    void SetRenderLayer(const std::string& layer_name);
-
-    void SetRenderLayer(const size_t layer_index);
-
-    size_t RenderLayerIndexOf() const noexcept;
-
-    std::string RenderLayerNameOf() const;
 
     /*! Return hash value of this object. */
     inline size_t GetHash() const {

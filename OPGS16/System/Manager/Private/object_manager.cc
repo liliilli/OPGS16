@@ -129,8 +129,8 @@ ObjectManager::ObjectManager() :
     m_rendering_list(SettingManager::Instance().RenderingLayerListSize()) {
 }
 
-void ObjectManager::InsertRenderingObject(object_raw const object) {
-    m_rendering_list[object->RenderLayerIndexOf()].emplace_front(object);
+void ObjectManager::InsertRenderingObject(object_raw const object, unsigned layer_index) {
+    m_rendering_list[layer_index].emplace_back(object);
 }
 
 void ObjectManager::Render() {
