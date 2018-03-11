@@ -61,9 +61,9 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
             std::string texture2d_name; unsigned index_x, index_y, time_milli;
             line_stream >> texture2d_name >> index_x >> index_y >> time_milli;
 
-            using IndexSize = opgs16::resource::Texture2D::IndexSize;
             if (auto raw = manager::TextureManager::Instance().GetTexture(texture2d_name); raw) {
-                container.emplace_back(raw->GetId(),
+                using IndexSize = opgs16::resource::Texture2D::IndexSize;
+                container.emplace_back(texture2d_name,
                                        IndexSize{ index_x, index_y },
                                        time_milli);
             } else throw new std::runtime_error("there is no texture_2d.");
@@ -71,9 +71,8 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
     }
 }
 
-} /*! unnamed namespace */
-
 using _internal::AnimatorState;
+} /*! unnamed namespace */
 
 Animator::Animator(Object& bind_object, Sprite2DRenderer& bind_renderer, Switch loop) :
     _internal::Component{ bind_object },
@@ -132,8 +131,18 @@ void Animator::OnSleep() {
 }
 
 void Animator::OnTriggerTick() {
-    if ((++m_cell_index) != m_cell_length) {
-        //m_renderer.SetTextureId(m_cells[m_cell_index].TextureId());
+    if ((++m_cell_index) < m_cell_length) {
+        m_renderer.SetTexture(m_cells[m_cell_index].TextureName());
+        m_renderer.SetTextureIndex(m_cells[m_cell_index].Index());
+
+        using manager::TimerManager;
+        TimerManager::Instance().SetTimer(m_timer,
+                                          static_cast<long>(m_cells[m_cell_index].TimeMilli()),
+                                          false, this, &Animator::OnTriggerTick);
+    }
+    else if (IsSwitchOn(m_loop)) {
+        m_cell_index = 0;
+        m_renderer.SetTexture(m_cells[m_cell_index].TextureName());
         m_renderer.SetTextureIndex(m_cells[m_cell_index].Index());
 
         using manager::TimerManager;

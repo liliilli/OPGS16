@@ -35,13 +35,15 @@
  *
  * @log
  * 2018-02-23 m_texture::Texture2D Refactoring
- * 2018-02-28 Add GetTextureWidth, GetTextureHeight inline functions.
+ * 2018-02-28 Add Width, Height inline functions.
  * 2018-03-10 Refactoring.
  */
 
 #include <vector>       /*! std::vector */
 #include <GL/glew.h>    /*! GL specific types */
-#include "../../Headers/Fwd/objectfwd.h"    /*! resource::Texture2D structure */
+#include "../Element/Internal/texture_internal.h"   /*! ::opgs16::element::texture::_internal */
+#include "../Manager/Public/resource_type.h"        /*! ::opgs16::resource */
+#include "../../Headers/Fwd/objectfwd.h"            /*! ::opgs16::resource::Texture2D structure */
 
 namespace opgs16 {
 /*!
@@ -56,17 +58,12 @@ namespace texture {
  *
  * @log
  * 2018-02-23 m_texture::Texture2D Refactoring
- * 2018-02-28 Add GetTextureWidth, GetTextureHeight inline functions.
+ * 2018-02-28 Add Width, Height inline functions.
  * 2018-03-10 Refactoring.
  */
 class Texture2D {
 private:
-	/*! Inner struct used in class Texture2D methods, SetTextureParameterI. */
-	struct TextureParameter {
-		GLint option;   /*! Option of m_texture parameter, such as GL_TEXTURE_MIN_FILTER, etc. */
-		GLint mode;     /*! Mode of m_texture parameter option, like a GL_NEAREST, GL_REPEAT. */
-	};
-
+    using TextureParameter = element::texture::_internal::TextureParameter;
     using cell_size = std::pair<float, float>;
 
 public:
@@ -78,7 +75,7 @@ public:
 	 * @param[in] bind_mode mode to bind m_texture as what m_texture's color data type is.
 	 * bind_mode is limited in GL_RGB, GL_RGBA, and so on.
 	 */
-	Texture2D(const opgs16::resource::Texture2D& texture_container);
+	Texture2D(const resource::Texture2D& container);
 
 	/**
 	 * @brief Create m_texture with no m_texture path, but for later use.
@@ -111,34 +108,40 @@ public:
 	void SetBorderColor(const std::array<GLfloat, 4>& border_color);
 
 	/*! Get Texture id */
-	inline GLuint GetId() const {
+	inline GLuint Id() const {
         return m_texture;
     }
 
     /*! Get Texture overall width */
-    inline int GetTextureWidth() const noexcept {
+    inline int Width() const noexcept {
         return m_width;
     }
 
     /*! Get Texture overall height */
-    inline int GetTextureHeight() const noexcept {
+    inline int Height() const noexcept {
         return m_height;
     }
 
     /*! Get Texture cell size ranges [0, 1] */
-    inline cell_size GetTextureCellSize() const noexcept {
+    inline cell_size CellSize() const noexcept {
         return m_texture_cell_size;
     }
+
+    inline resource::Texture2D::IndexSize CellWH() const noexcept {
+        return m_cell_number;
+	}
 
 private:
 	mutable GLuint m_texture;           /*! Texture binding id */
 
-    int m_width;                        /*! Texture int width */
-    int m_height;                       /*! Texture int height */
+    int m_width;                        /*! Texture width */
+    int m_height;                       /*! Texture height */
 
     cell_size m_texture_cell_size{};    /*! Texture coordinate cell size */
+    resource::Texture2D::IndexSize m_cell_number{};
 };
 
 } /*! opgs16::texture */
 } /*! opgs16 */
+
 #endif // OPGS16_SYSTEM_FRAME_TEXTURE_H

@@ -42,6 +42,7 @@
 #include "../../Frame/vertex_array_object.h"    /*! VertexArrayObject */
 #include "../../Headers/Fwd/objectfwd.h"        /*! texture::Texture2D */
 #include "../../Manager/Public/resource_type.h" /*! resource::Texture2D::IndexSize */
+#include "../../Manager/Public/texture_manager.h"
 #include "../../Shader/shader_wrapper.h"        /*! ShaderWrapper */
 
 namespace opgs16 {
@@ -80,6 +81,12 @@ public:
     inline void SetTextureIndex(const IndexSize& new_index) noexcept {
         m_index = new_index;
         m_wrapper.ReplaceUniformValue("uTexIndex", glm::vec2{ m_index.x_sep, m_index.y_sep });
+    }
+
+    inline void SetTexture(const std::string& texture_name) {
+        m_sprite = manager::TextureManager::Instance().GetTexture(texture_name);
+        auto [cell_x, cell_y] = m_sprite->CellSize();
+        m_wrapper.ReplaceUniformValue("uWHSize", glm::vec2{ cell_x, cell_y });
     }
 
     void RenderSprite();

@@ -92,7 +92,7 @@ void PostProcessingFrame::BindTextureToFrameBuffer(
 		/** Bind */
 		auto GL_FB = GL_FRAMEBUFFER;
 		glBindFramebuffer(GL_FB, m_frame_buffers[framebuffer_id]);
-		glFramebufferTexture2D(GL_FB, attachment, target, m_color_buffers[texture_id]->GetId(), 0);
+		glFramebufferTexture2D(GL_FB, attachment, target, m_color_buffers[texture_id]->Id(), 0);
 		glBindFramebuffer(GL_FB, 0);
 	}
 	else { /** Error flag */
@@ -119,7 +119,7 @@ void PostProcessingFrame::RenderEffect() {
 		glBindVertexArray(empty_vao);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_color_buffers.at(0)->GetId());
+		glBindTexture(GL_TEXTURE_2D, m_color_buffers.at(0)->Id());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glBindTexture(GL_TEXTURE_2D, 0);

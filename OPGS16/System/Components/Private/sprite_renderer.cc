@@ -56,6 +56,10 @@ ShaderWrapper& Sprite2DRenderer::Wrapper() const {
     return m_impl->Wrapper();
 }
 
+void Sprite2DRenderer::SetTexture(const std::string& texture_name) {
+    return m_impl->SetTexture(texture_name);
+}
+
 const Sprite2DRenderer::IndexSize& Sprite2DRenderer::TextureIndex() const noexcept {
     return m_impl->TextureIndex();
 }

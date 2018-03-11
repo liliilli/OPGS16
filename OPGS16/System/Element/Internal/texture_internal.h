@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_COMPONENTS_INTERNAL_ANIMATOR_INTERNAL_H
-#define OPGS16_SYSTEM_COMPONENTS_INTERNAL_ANIMATOR_INTERNAL_H
+#ifndef OPGS16_SYSTEM_ELEMENT_INTERNAL_TEXTURE_INTERNAL_H
+#define OPGS16_SYSTEM_ELEMENT_INTERNAL_TEXTURE_INTERNAL_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,55 +30,32 @@
  */
 
 /*!
- * @file System/Components/Internal/animator_internal.h
+ * @file System/Element/Internal/texture_internal.h
+ * @brief ::opgs16::element::texture internal type implementation file.
+ *
  * @author Jongmin Yun
  * @log
- * 2018-03-10 Create file, Add state enum.
+ * 2018-03-11 Create file
  */
 
-#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
-#include <string>   /*! std::string */
+#include <GL/glew.h>
 
 namespace opgs16 {
-namespace component {
+namespace element {
+namespace texture {
 namespace _internal {
 
-enum class AnimatorState {
-    START,
-    ANIMATION_START,
-    UPDATE,
-    ANIMATION_END,
-    END,
-    SLEEP
+/*! Inner struct used in class Texture2D methods, SetTextureParameterI. */
+struct TextureParameter {
+    GLint option;   /*! Option of m_texture parameter, such as GL_TEXTURE_MIN_FILTER, etc. */
+    GLint mode;     /*! Mode of m_texture parameter option, like a GL_NEAREST, GL_REPEAT. */
 };
 
-class AnimationCell {
-    using IndexSize = resource::Texture2D::IndexSize;
-
-    std::string m_texture_name;
-    IndexSize   m_index;
-    unsigned    m_time_milli;
-
-public:
-    AnimationCell() {};
-    explicit AnimationCell(const std::string& texture_name, IndexSize index, unsigned time_milli) :
-        m_texture_name{ texture_name }, m_index{ index }, m_time_milli{ time_milli } {};
-
-    IndexSize Index() const noexcept {
-        return m_index;
-    }
-    const std::string& TextureName() const noexcept {
-        return m_texture_name;
-    }
-    unsigned TimeMilli() const noexcept {
-        return m_time_milli;
-    }
-};
-
-} /*! opgs16::component::_internal */
-} /*! opgs16::component */
+} /*! opgs16::element::texture::_internal */
+} /*! opgs16::element::texture */
+} /*! opgs16::element */
 } /*! opgs16 */
 
-#endif // !OPGS16_SYSTEM_COMPONENTS_INTERNAL_ANIMATOR_INTERNAL_H
+#endif // !OPGS16_SYSTEM_ELEMENT_INTERNAL_TEXTURE_INTERNAL_H
 
 

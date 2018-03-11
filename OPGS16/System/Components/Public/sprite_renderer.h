@@ -80,14 +80,16 @@ public:
 	/*! Get ShaderWrapper instance. */
 	ShaderWrapper& Wrapper() const;
 
-    /*! Get Texture index position. */
-    const IndexSize& TextureIndex() const noexcept;
+    void SetTexture(const std::string& texture_name);
 
     void SetTextureIndex(const IndexSize& new_index);
 
     void SetRenderLayer(const std::string& layer_name);
 
     void SetRenderLayer(const size_t layer_index);
+
+    /*! Get Texture index position. */
+    const IndexSize& TextureIndex() const noexcept;
 
     inline size_t RenderLayerIndexOf() const noexcept {
         return m_render_layer_index;

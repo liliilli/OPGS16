@@ -20,7 +20,7 @@ ObjectScript1::ObjectScript1(Object& obj) : opgs16::component::ScriptFrame{ obj 
 }
 
 void ObjectScript1::Start() {
-    M_SET_TIMER(m_timer_swap, 500, true, this, &ObjectScript1::OnTriggerSwap);
+    //M_SET_TIMER(m_timer_swap, 500, true, this, &ObjectScript1::OnTriggerSwap);
 }
 
 void ObjectScript1::DoWork(const size_t mode, const unsigned assigned_number) noexcept {

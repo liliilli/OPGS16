@@ -44,13 +44,14 @@ namespace manager {
 
 TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
 	if (!DoesTextureExist(name)) {
-		const auto& file_path = ResourceManager::Instance().GetTexture2D(name);
+		const auto& container = ResourceManager::Instance().GetTexture2D(name);
 
-        /*! _ is unused. */
-        auto [it, _] = m_container.emplace(name, std::make_unique<texture::Texture2D>(file_path));
-		return it->second.get();
+        auto [it, good] = m_container.emplace(name,
+                                              std::make_unique<texture::Texture2D>(container));
+        if (good) return it->second.get();
+        else return nullptr;
 	}
-    return m_container.at(name).get();
+    return m_container[name].get();
 }
 
 void TextureManager::Release(const std::string& tag) {

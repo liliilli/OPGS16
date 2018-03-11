@@ -151,6 +151,7 @@
     <ClInclude Include="System\Element\Public\object.h" />
     <ClInclude Include="System\Element\Impl\object_impl.h" />
     <ClInclude Include="System\Element\Public\ui_object.h" />
+    <ClInclude Include="System\Element\Internal\texture_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

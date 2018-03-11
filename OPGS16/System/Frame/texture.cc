@@ -44,49 +44,58 @@
 
 namespace opgs16 {
 namespace texture {
+namespace {
+
+GLenum ColorFormat(const int channels) noexcept {
+    switch (channels) {
+    default: return GL_NONE;    /*! else, return Error type */
+    case 1: return GL_RED;      /*! Gray or Red (one channel) */
+    case 3: return GL_RGB;      /*! RGB no alpha */
+    case 4: return GL_RGBA;     /*! RGB and alpha */
+    }
+}
+
+void SetTextureCellInformation(const resource::Texture2D::IndexSize& input,
+                               resource::Texture2D::IndexSize& cell_number,
+                               std::pair<float, float>& cell_size) {
+    cell_number = input;
+    cell_size   = { 1.f / input.x_sep, 1.f / input.y_sep };
+}
+
+void SetDefaultParameterSetting(Texture2D& texture) {
+    using element::texture::_internal::TextureParameter;
+    std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
+    t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
+    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
+    texture.SetTextureParameterI(t_p);
+}
+
+} /*! unnamed namespace */
+
 Texture2D::~Texture2D() {
     if (m_texture) glDeleteTextures(1, &m_texture);
 }
 
-Texture2D::Texture2D(const opgs16::resource::Texture2D& container) {
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+Texture2D::Texture2D(const resource::Texture2D& container) {
     stbi_set_flip_vertically_on_load(true);
-    /*!
-     * Set the m_texture wrapping and filtering options
-     * Load image file to use as m_texture image.
-     */
     auto nr_channels = 0;
     auto data = stbi_load(container.m_path.c_str(), &m_width, &m_height, &nr_channels, 0);
     if (data) {
-        GLenum color_format;
-        switch (nr_channels) {
-        case 1: color_format = GL_RED;    break;    /*! Gray or Red (one channel) */
-        case 3: color_format = GL_RGB;    break;    /*! RGB no alpha */
-        case 4: color_format = GL_RGBA;   break;    /*! RGB and alpha */
-        }
-
         /*! Make m_texture */
-        glTexImage2D(GL_TEXTURE_2D, 0, color_format, m_width, m_height, 0, color_format,
-                     GL_UNSIGNED_BYTE, data);
-
+        glGenTextures(1, &m_texture);
+        glBindTexture(GL_TEXTURE_2D, m_texture);
+        const auto fmt = ColorFormat(nr_channels);
+        glTexImage2D(GL_TEXTURE_2D, 0, fmt, m_width, m_height, 0, fmt, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        /*! Setting default option */
-        std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
-        t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
-        t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
-        t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
-        t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
-        SetTextureParameterI(t_p);
-
-        /*! Set cell size */
-        m_texture_cell_size = { 1.f / container.m_nm_size.x_sep, 1.f / container.m_nm_size.y_sep };
+        SetDefaultParameterSetting(*this);
+        SetTextureCellInformation(container.m_nm_size, m_cell_number, m_texture_cell_size);
     }
     else
         std::cerr << "FAILED::LOAD::TEXTURE" + container.m_path << std::endl;
 
-    /*! Release image buffer */
     stbi_image_free(data);
 }
 
@@ -100,21 +109,13 @@ Texture2D::Texture2D(const GLint internal_format,
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_width, m_height, 0, format, type, 0);
-
-    /*! Setting default option */
-    std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
-    t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
-    t_p.push_back(TextureParameter{ GL_TEXTURE_MAG_FILTER, GL_NEAREST });
-    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_S, GL_REPEAT });
-    t_p.push_back(TextureParameter{ GL_TEXTURE_WRAP_T, GL_REPEAT });
-    SetTextureParameterI(t_p);
+    SetDefaultParameterSetting(*this);
 }
 
 void Texture2D::SetTextureParameterI(const GLint option, const GLint mode) {
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexParameteri(GL_TEXTURE_2D, option, mode);
 }
-
 
 void Texture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists) {
 

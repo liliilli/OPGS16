@@ -47,6 +47,7 @@ struct  GlobalOption;
 class   GlobalSetting;
 
 namespace component {
+class   Animator;
 class   Camera;
 class   Rigidbody2D;
 class   ScriptFrame;
@@ -83,8 +84,8 @@ class   SShader;
 namespace _internal {
 enum class ESymbolType;
 enum class EResourceType;
-} /*! resource::_internal */
-} /*! resource */
+} /*! opgs16::resource::_internal */
+} /*! opgs16::resource */
 
 namespace texture {
 class   Texture2D;
@@ -99,8 +100,12 @@ struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
 } /*! opgs16::element */
 } /*! opgs16 */
 
-namespace helper { class ShaderNew; }
-namespace camera { class CameraObject; }
+namespace helper {
+    class ShaderNew;
+}
+namespace camera {
+    class CameraObject;
+}
 
 struct	GLFWwindow;
 

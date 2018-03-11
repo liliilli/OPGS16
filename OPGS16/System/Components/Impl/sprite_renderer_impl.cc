@@ -54,7 +54,7 @@ SpriteRendererImpl::SpriteRendererImpl(const std::string & sprite_tag,
     m_wrapper.SetShader(opgs16::manager::ShaderManager::Instance().Shader(shader_tag));
     glGenVertexArrays(1, &empty_vao);
 
-    auto [cell_x, cell_y] = m_sprite->GetTextureCellSize();
+    auto [cell_x, cell_y] = m_sprite->CellSize();
     m_wrapper.InsertUniformValue("uWHSize", glm::vec2{ cell_x, cell_y });
     m_wrapper.InsertUniformValue("uTexIndex",
                                  glm::vec2{
@@ -68,7 +68,7 @@ void SpriteRendererImpl::RenderSprite() {
 	glBindVertexArray(empty_vao);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_sprite->GetId());
+	glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glActiveTexture(GL_TEXTURE0);
