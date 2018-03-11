@@ -71,7 +71,7 @@ private:
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
-	Sprite2DRenderer(Object& bind_object,
+	Sprite2DRenderer(element::Object& bind_object,
                      const std::string& sprite_tag,
                      const std::string& shader_tag,
                      const IndexSize& texture_index = {0, 0},

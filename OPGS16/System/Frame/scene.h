@@ -1,21 +1,21 @@
 #ifndef OPGS16_SYSTEM_FRAME_SCENE_H
 #define OPGS16_SYSTEM_FRAME_SCENE_H
 
-/**
-* @file scene.h
-* @brief The file consist of basic scene API.
-*
-* All derived class based on Scene class can be used parameter of Application::PushScene().
-*
-* @author Jongmin Yun
-* @date 2018-02-19
-*
-* @log 2018-02-19 Refactoring
-*/
+/*!
+ * @file scene.h
+ * @brief The file consist of basic scene API.
+ *
+ * All derived class based on Scene class can be used parameter of Application::PushScene().
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-02-19 Refactoring
+ * 2018-03-11 Correcton of Object to opgs16::element::Object.
+ */
 
 #include <memory>                           /*! std::unique_ptr<> */
-#include "..\Object\object.h"               /*! Object */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! component::Camera */
+#include "../Element/Public/object.h"       /*! ::opgs16::elent::Object */
+#include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::Camera */
 
 /**
  * @class Scene
@@ -23,6 +23,7 @@
  */
 class Scene {
 private:
+    using Object = opgs16::element::Object;
     using object_ptr = std::unique_ptr<Object>;
     using object_map = std::unordered_map<std::string, object_ptr>;
     using _camera = opgs16::component::Camera;
@@ -38,20 +39,14 @@ public:
 	 * This method is able to overriding,
 	 * but actual default behavior is just call ->Update() of m_object_list.
      */
-	 virtual void Update();
+	virtual void Update();
 
     /**
      * @brief The method calls scene to draw all m_object_list.
 	 * This method is able to overriding,
 	 * but actual default behavior is just call ->Draw() of m_object_list.
      */
-	 virtual void Draw();
-
-	/**
-	 * @brief This only must be called by Application methods body,
-	 * retuns traversal recursive object tree, to be checked in DEBUG MODE.
-	 */
-	 virtual void GetObjectTree(ObjectTree* const tree);
+	virtual void Draw();
 
 	/**
 	 *

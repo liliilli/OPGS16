@@ -36,14 +36,15 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring.
+ * 2018-03-11 Correction of object namespace position and path.
  */
 
 #include <memory>
 #include <unordered_map>
 
-#include "resource_manager.h"       /*! opgs16::manager::resource_manager */
+#include "resource_manager.h"               /*! ::opgs16::manager::resource_manager */
+#include "../../Element/Public/object.h"    /*! ::opgs16::element::Object */
 #include "../../Shader/shader.h"
-#include "../../Object/object.h"
 
 namespace opgs16 {
 namespace manager {

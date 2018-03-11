@@ -31,17 +31,18 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
+ * 2018-03-11 Corection of ::opgs16::element::Object class.
  */
 
 #include "../Public/rigidbody_2d.h"                 /*! Header file */
-#include "../../Manager/Public/physics_manager.h"   /*! opgs16::manager::PhysicsManager */
-#include "../../Object/object.h"                    /*! Object */
+#include "../../Element/Public/object.h"            /*! ::opgs16::element::Object */
+#include "../../Manager/Public/physics_manager.h"   /*! ::opgs16::manager::PhysicsManager */
 
 namespace opgs16 {
 namespace component {
 
 void Rigidbody2D::Update() {
-    auto& physics_manager = opgs16::manager::PhysicsManager::Instance();
+    auto& physics_manager = manager::PhysicsManager::Instance();
     for (auto& collider : m_colliders) {
         collider->ReflectPosition(GetObject().GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);

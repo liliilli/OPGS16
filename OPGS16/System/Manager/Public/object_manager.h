@@ -52,8 +52,8 @@ namespace manager {
  * @brief
  */
 class ObjectManager final {
-    using object_ptr = std::unique_ptr<Object>;
-    using object_raw = Object * ;
+    using object_ptr = std::unique_ptr<element::Object>;
+    using object_raw = element::Object * ;
 
 public:
     static ObjectManager& Instance() {
@@ -67,7 +67,7 @@ public:
         }
     }
 
-    void Destroy(const Object& object);
+    void Destroy(const element::Object& object);
 
     void InsertRenderingObject(object_raw const object, unsigned layer_index);
 

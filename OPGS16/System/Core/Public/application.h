@@ -37,6 +37,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-01 Done refactoring following "studioN coding style convention".
+ * 2018-03-11 Corection of ::opgs16::element::Object class.
  *
  * @todo
  * 2018-03-01 Instantiate logger and bind it to Application.
@@ -50,7 +51,7 @@
 #include <GLFW/glfw3.h>
 
 #include "../../Core/Public/logger.h"   /*! Logger class running on separate thread. */
-#include "../../Object/object.h"        /*! Object for complete deleter of unique_ptr<Object> */
+#include "../../Element/Public/object.h"     /*! ::opgs16::element::Object */
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
 
 /*! Framework overall namespace includes all components. */
@@ -105,8 +106,8 @@ private:
 
     std::unique_ptr<GlobalSetting> m_setting;
 
-	std::unique_ptr<Object> m_debug_ui_canvas;		/** Debug UI components container */
-	std::unique_ptr<Object> m_menu_ui_canvas;		/** Global Menu UI components container */
+	std::unique_ptr<element::Object> m_debug_ui_canvas;	/*! Debug UI components container */
+	std::unique_ptr<element::Object> m_menu_ui_canvas;	/*! Global Menu UI components container */
 
     /*! This callback will be called before update routine only once. */
     std::function<void(void)> m_on_before_update_callback;

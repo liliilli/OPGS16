@@ -31,6 +31,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring.
+ * 2018-03-11 Cope with ::element::Object
  */
 
 #include "../Public/object_manager.h"   /*! Header file */
@@ -39,10 +40,13 @@
 
 #include "../Public/scene_manager.h"    /*! opgs16::manager::SceneManager */
 #include "../Public/setting_manager.h"  /*! opgs16::manager::SettingManager */
-#include "../../Object/object.h"        /*! Object */
+#include "../../Element/Public/object.h"    /*! ::opgs16::element::Object */
 
 namespace opgs16 {
 namespace manager {
+namespace {
+using element::Object;
+} /*! unnamed namespace */
 
 void ObjectManager::Destroy(const Object& object) {
     const auto hash_value = object.GetHash();

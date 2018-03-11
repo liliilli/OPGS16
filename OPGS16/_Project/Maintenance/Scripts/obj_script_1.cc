@@ -12,6 +12,7 @@
 #include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
 
 using opgs16::manager::SceneManager;
+using opgs16::element::Object;
 
 ObjectScript1::ObjectScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
     Initiate();

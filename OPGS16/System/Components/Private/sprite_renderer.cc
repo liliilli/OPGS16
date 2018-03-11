@@ -37,13 +37,13 @@
 
 #include "../Public/sprite_renderer.h"              /*! Header file */
 #include "../Impl/sprite_renderer_impl.h"           /*! SpriteRendererImpl */
+#include "../../Element/Public/object.h"            /*! ::opgs16::element::Object */
 #include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::SettingManager */
-#include "../../Object/object.h"
 
 namespace opgs16 {
 namespace component {
 
-Sprite2DRenderer::Sprite2DRenderer(Object& bind_object,
+Sprite2DRenderer::Sprite2DRenderer(element::Object& bind_object,
                                    const std::string& sprite_tag,
                                    const std::string& shader_tag,
                                    const opgs16::resource::Texture2D::IndexSize& texture_index,

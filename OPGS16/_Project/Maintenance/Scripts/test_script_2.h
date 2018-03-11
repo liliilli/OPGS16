@@ -5,7 +5,7 @@
 
 class TestScript2 final : public opgs16::component::ScriptFrame {
 public:
-    TestScript2(Object& obj);
+    TestScript2(opgs16::element::Object& obj);
 
     virtual void Update() override final;
 

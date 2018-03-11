@@ -8,9 +8,9 @@
  * 2018-02-23 Fuck
  */
 
-#include "..\..\System\Object\object.h"             /*! Object */
+#include "../../../System/Element/Public/object.h"
 
-class TestObject1 final : public Object {
+class TestObject1 final : public opgs16::element::Object {
 public:
     TestObject1(const int i, const float size);
 private:

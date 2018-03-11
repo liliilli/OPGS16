@@ -34,6 +34,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Create file.
+ * 2018-03-11 Corection of ::opgs16::element::Object class.
  */
 
 #include "../Internal/animator_internal.h"  /*! opgs16::component::_internal::AnimatorState*/
@@ -52,7 +53,7 @@ namespace component {
  */
 class Animator final : public _internal::Component {
 public:
-    explicit Animator(Object& bind_object,
+    explicit Animator(element::Object& bind_object,
                       Sprite2DRenderer& bind_renderer, Switch loop = Switch::OFF);
 
     /*! Update animator each frame. */

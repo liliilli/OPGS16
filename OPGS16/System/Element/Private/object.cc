@@ -26,11 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "object.h"                     /*! Header file */
-#include "impl/object_impl.h"           /*! ObjectImpl */
-#include "../Debugs/hierarchy_tree.h"   /*! ObjectTree */
+#include "../Public/object.h"              /*! Header file */
+#include "../Impl/object_impl.h"           /*! ObjectImpl */
 
 #include <iostream>
+
+namespace opgs16 {
+namespace element {
+namespace _internal {
+void ObjectImplDeleter::operator()(ObjectImpl* p) {
+	delete p;
+}
+} /*! opgs16::element::_internal */
+
+using _internal::ObjectImpl;
+using _internal::ObjectImplDeleter;
 
 Object::Object() {
 	std::unique_ptr<ObjectImpl, ObjectImplDeleter> instance{ new ObjectImpl() };
@@ -195,16 +205,6 @@ std::string Object::GetTagNameOf() const {
     return m_data->GetTagNameOf();
 }
 
-void Object::GetObjectTree(ObjectTree* const tree) {
-	for (const auto& object : m_children) {
-        if (object.second) {
-            ObjectTree child; child.name = object.first;
-            tree->children.push_back(std::move(child));
-            object.second->GetObjectTree(&*tree->children.rbegin());
-        }
-	}
-}
+} /*! opgs16::element */
+} /*! opgs16 */
 
-void ObjectImplDeleter::operator()(ObjectImpl* p) {
-	delete p;
-}

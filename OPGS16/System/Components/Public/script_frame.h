@@ -57,7 +57,7 @@ namespace component {
  */
 class ScriptFrame : public _internal::Component {
 public:
-    ScriptFrame(Object& bound_obj) : _internal::Component{ bound_obj } {}
+    ScriptFrame(element::Object& bound_obj) : _internal::Component{ bound_obj } {}
 
     /*!
      * @brief This method will be called only one time, when ScriptFrame is attached to object,

@@ -1,32 +1,59 @@
 #ifndef OPGS16_GLOBAL_OBJECTS_CANVAS_TEXT_H
 #define OPGS16_GLOBAL_OBJECTS_CANVAS_TEXT_H
 
-/**
- * @file GlobalObjects\Canvas\text.h
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file GlobalObjects/Canvas/text.h
  * @brief Text object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
- * @date 2018-02-19
- *
  * @log
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace Draw() with Render()
+ * 2018-03-11 Correction of UiObject namespace hierarchy positioning, and path.
  */
 
-#include <memory>       /** std::unique_ptr */
-#include <glm\glm.hpp>  /** using glm::vec3<float, 0> = glm::tvec3<float, 0> */
-#include "..\..\GlobalObjects\Interface\i_alignable.h"  /** IAlignable */
-#include "..\..\Headers\Fwd\objectfwd.h"    /** FontManager
+#include <memory>       /*! std::unique_ptr */
+#include <glm/glm.hpp>  /*! using glm::vec3<float, 0> = glm::tvec3<float, 0> */
+#include "../../GlobalObjects/Interface/i_alignable.h"  /*! IAlignable */
+#include "../../Headers/Fwd/objectfwd.h"    /*! FontManager
                                               * Canvas::TextImpl
                                               * Canvas::TextImplDeleter
                                               * glm::vec3 */
-#include "..\..\System\Object\ui_object.h"  /** UiObject */
+#include "../../System/Element/Public/ui_object.h"      /*! ::opgs16::element::UiObject */
 
 namespace canvas {
-/**
+/*!
  * @class Text
  * @brief This class display text on position aligned with FontManager.
  */
-class Text : public UiObject, public IAlignable {
+class Text : public opgs16::element::UiObject, public IAlignable {
 public:
     /**
      * @brief Text component (stand-alone) constructor.
@@ -46,7 +73,7 @@ public:
      * @brief Set text string to display.
      * @param[in] new_text New text string.
      */
-	 void SetText(const std::string& new_text);
+	void SetText(const std::string& new_text);
 
     /**
      * @brief Get text string to display.
@@ -59,7 +86,7 @@ public:
      * This method has side-effect for accessing FontManager.
 	 * @param[in] size;
 	 */
-	 void SetFontSize(const unsigned size);
+	void SetFontSize(const unsigned size);
 
     /**
      * @brief Get font size which this instance has.
@@ -80,7 +107,7 @@ public:
      * @param[in] color New color value with consists of {r, g, b} glm::vec3 vector.
      * each value must be in range of [0, 1], otherwise clamped to 0 or 1.
      */
-     void SetColor(const glm::vec3& color);
+    void SetColor(const glm::vec3& color);
 
     /**
      * @brief Get reference of FontManager which this class grasps.

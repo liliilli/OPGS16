@@ -2,17 +2,16 @@
 #include <chrono>                                   /*! std::chrono::system_clock */
 #include <ctime>                                    /*! std::time_t */
 #include <iomanip>                                  /*! std::setprecision */
-#include <iostream>                                 /*! std::cout */
 #include <sstream>                                  /*! std::ostringstream */
-#include "..\..\..\GlobalObjects\Canvas\text.h"     /*! Canvas::Text */
+#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
 #include "../../../System/Manager/Public/time_manager.h"   /*! opgs16::manager::TimeManager */
 
 /*! Tree */
-#include "..\..\..\System\Debugs\hierarchy_tree.h"  /*! ObjectTree */
-#include "..\..\..\System\Frame\scene.h"            /*! GetObjectTree() */
+#include "../../../System/Debugs/hierarchy_tree.h"  /*! ObjectTree */
+#include "../../../System/Frame/scene.h"            /*! GetObjectTree() */
 #include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
 
-DebugUiManager::DebugUiManager(Object& obj,
+DebugUiManager::DebugUiManager(opgs16::element::Object& obj,
                                canvas::Text* const _m_fps,
                                canvas::Text* const _m_date,
                                canvas::Text* const _m_tree) :
@@ -37,18 +36,6 @@ void DebugUiManager::Update() {
         std::ostringstream stream;
         stream << std::put_time(std::localtime(&time_struct), "%F %T");
         m_date->SetText(stream.str());
-    }
-
-    if (false) {
-        ObjectTree tree{};
-
-        auto const top_scene = opgs16::manager::SceneManager::Instance().PresentScene();
-        if (top_scene != nullptr) {
-            top_scene->GetObjectTree(&tree);
-            std::string text{};
-            SetHierarchyText(&tree, 0, &text);
-            m_tree->SetText(text);
-        }
     }
 }
 

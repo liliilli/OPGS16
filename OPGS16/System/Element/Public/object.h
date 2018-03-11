@@ -43,26 +43,30 @@
  * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
  * 2018-02-23 Add hierarchy rotation and scaling option. (mechanism is not implemented yet)
  * 2018-03-05 Add member function related to controlling rendering layer.
+ * 2018-03-11 Move contents into ::opgs16::element namespace.
  *
  * @todo Implement hierarchy rotation mechanism.
  */
 
 #include <algorithm>        /*! std::find_if */
 #include <functional>       /*! std::hash */
-#include <memory>			/** std::unique_ptr */
-#include <unordered_map>	/** std::unordered_map */
+#include <memory>			/*! std::unique_ptr */
+#include <unordered_map>	/*! std::unordered_map */
 #include <string>           /*! std::to_string */
-#include "../../Headers/Fwd/objectfwd.h"    /*! helper::ShaderNew
+#include "../../../Headers/Fwd/objectfwd.h"  /*! helper::ShaderNew
                                               * glm::vec3
-                                              * component::Component
-                                              * component::Rigidbody2D
                                               * ObjectTree
-                                              * ObjectImplDeleter
+                                              * ::opgs16::component::_internal::Component
+                                              * ::opgs16::component::Rigidbody2D
+                                              * ::opgs16::element::_internal::ObjectImplDeleter
                                               */
 /*! opgs16::component::_internal::Component */
 #include "../../System/Components/Internal/component.h"
 
-/**
+namespace opgs16 {
+namespace element {
+
+/*!
  * @class Object
  * @brief The class for every object to update and draw.
  *
@@ -77,17 +81,19 @@
  *            and Render() virtual methods. and Remove virtual property from Update() instead of
  *            adding LocalUpdate() method which replaces Update() override.
  * 2018-03-05 Add member function related to controlling rendering layer.
+ * 2018-03-11 Move contents into ::opgs16::element namespace.
+ *
  * @todo Implement hierarchy rotation mechanism.
  */
 class Object {
 private:
-    using component_ptr     = std::unique_ptr<opgs16::component::_internal::Component>;
+    using component_ptr     = std::unique_ptr<component::_internal::Component>;
     using component_list    = std::vector<component_ptr>;
     using name_counter_map  = std::unordered_map<std::string, size_t>;
 	using object_raw = Object*;
 	using object_ptr = std::unique_ptr<Object>;
 	using object_map = std::unordered_map<std::string, object_ptr>;
-    using pimpl_ptr  = std::unique_ptr<ObjectImpl, ObjectImplDeleter>;
+    using pimpl_ptr  = std::unique_ptr<_internal::ObjectImpl, _internal::ObjectImplDeleter>;
 
 public:
 	Object();
@@ -106,20 +112,11 @@ public:
                     child.second->Update();
             }
         }
-
-        //if (m_data) {
-        //    opgs16::manager::ObjectManager::Instance().InsertRenderingObject(this);
-        //}
     }
 
 	/*! Calls children to draw or render something it has.  */
     inline void Draw() {
         Render();
-
-        ///*! Order draw call to exist child object. */
-        //for (auto& object : m_children) {
-        //    if (object.second) object.second->Draw();
-        //}
     }
 
     /*! This method will be called when Collision. */
@@ -297,13 +294,6 @@ public:
 	 */
 	object_raw const GetChild(const std::string& child_name);
 
-	/**
-	 * @brief This only must be called by Application methods body,
-	 * @returns traversal recursive object tree, to be checked in DEBUG MODE.
-	 */
-    void GetObjectTree(ObjectTree* const tree);
-
-
     /*!
      * @brief Add component and bind to this object instance.
      * @param[in] _Ty Component type class argument.
@@ -468,5 +458,8 @@ inline const std::string Object::CreateChildTag(const std::string& tag) noexcept
 
     return item_tag;
 }
+
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_SYSTEM_OBJECT_OBJECT_H */

@@ -9,6 +9,7 @@
 #include "obj_script_1.h"   /*! ObjectScript1 for TestObject1 */
 
 using opgs16::manager::SceneManager;
+using opgs16::element::Object;
 
 TestScript1::TestScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
     Initiate();

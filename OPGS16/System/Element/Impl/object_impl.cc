@@ -32,15 +32,20 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-05 Add rendering layer member functions.
+ * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
  */
 
 #include "object_impl.h"                    /*! Header file */
 #include <glm/gtc/matrix_transform.hpp>     /*! glm::rotate */
 #include "../../Manager/Public/setting_manager.h"  /*! SettingManager */
 
+namespace opgs16 {
+namespace element {
+namespace _internal {
+
 namespace {
-using opgs16::manager::SettingManager;
-}
+using manager::SettingManager;
+} /*! unnamed namespace */
 
 void ObjectImpl::RefreshFinalPosition() const {
     m_final_position = m_local_position + m_parent_from_position + m_world_position;
@@ -105,3 +110,8 @@ void ObjectImpl::SetTag(const size_t tag_index) {
     else
         m_tag_index = tag_index;
 }
+
+} /*! opgs16::element::_internal */
+} /*! opgs16::element */
+} /*! opgs16 */
+

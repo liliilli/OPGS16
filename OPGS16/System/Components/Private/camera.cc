@@ -39,12 +39,15 @@
 #include "../Public/camera.h"   /*! Header file */
 
 #include <array>                /*! std::array<GLint, 4> */
-#include <GL\glew.h>            /*! type specifier */
-#include <glm\gtc\matrix_transform.hpp>         /*! glm::ortho */
+#include <GL/glew.h>            /*! type specifier */
+#include <glm/gtc/matrix_transform.hpp>         /*! glm::ortho */
 #include "../../Manager/Public/scene_manager.h" /*! SceneManager */
 
 namespace opgs16 {
 namespace component {
+namespace {
+using Object = element::Object;
+} /*! unnamed namespace */
 
 bool Camera::s_main_camera_initiated{ false };
 

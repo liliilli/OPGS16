@@ -35,6 +35,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-02-14 Create file and implement basic features.
+ * 2018-03-11 Corection of ::opgs16::element::Object class.
  */
 
 #include <glm\glm.hpp>
@@ -74,7 +75,8 @@ public:
      virtual void Update() override;     /*! Inherited via component::Component */
 
 public:
-	Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto = true);
+	Camera(element::Object& bound_obj,
+           ViewType view_type, CameraType camera_type, bool _auto = true);
 	virtual ~Camera();
 
     const glm::mat4 GetViewMatrix() const noexcept;         /*! Get View matrix */

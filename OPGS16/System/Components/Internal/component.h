@@ -56,7 +56,7 @@ namespace _internal {
  */
 class Component {
 public:
-    Component(Object& bind_object) : m_object{ bind_object } {};
+    Component(element::Object& bind_object) : m_object{ bind_object } {};
     virtual ~Component() = default;
 
     virtual void Update() = 0;
@@ -71,12 +71,12 @@ public:
     }
 
     /*! Get Object reference */
-    Object& GetObject() const {
+    element::Object& GetObject() const {
         return m_object;
     }
 
 private:
-    Object& m_object;   /*! Bound object which script instance refers to */
+    element::Object& m_object;   /*! Bound object which script instance refers to */
 
     SET_UP_HASH_VALUE(Component)
 };

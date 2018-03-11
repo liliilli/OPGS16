@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System\Object\Impl\object_impl.h
+ * @file System/Object/Impl/object_impl.h
  * @brief Pointer to implementation file of Object.h
  * @author Jongmin Yun
  *
@@ -39,10 +39,15 @@
  * 2018-02-19 Add GetParentPosition() method, returns m_parent_to_position.
  * 2018-02-23 Add succeeding flag of translation, rotation, scaling from parent.
  * 2018-03-05 Add rendering layer member functions.
+ * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
  */
 
 #include <string>       /*! std::string */
 #include <glm/glm.hpp>  /*! glm::vec_x */
+
+namespace opgs16 {
+namespace element {
+namespace _internal {
 
 /*!
  * @class ObjectImpl
@@ -298,5 +303,9 @@ private:
 	void RefreshRotateMatrix() const;	/** Refresh Rotation matrix */
 	void RefreshScaleVector() const;	/** Refresh Scaling matrix */
 };
+
+} /*! opgs16::element::_internal */
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_SYSTEM_OBJECT_OBJECT_PRIVATE_IMPLEMENTATION_H */

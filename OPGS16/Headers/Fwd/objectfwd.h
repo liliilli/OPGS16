@@ -87,18 +87,22 @@ enum class EResourceType;
 } /*! resource */
 
 namespace texture {
-class Texture2D;
+class   Texture2D;
 } /*! opgs16::texture */
+
+namespace element {
+class   Object;
+namespace _internal {
+class	ObjectImpl;
+struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
+} /*! opgs16::element::_inetrnal */
+} /*! opgs16::element */
 } /*! opgs16 */
 
 namespace helper { class ShaderNew; }
 namespace camera { class CameraObject; }
 
 struct	GLFWwindow;
-
-class   Object;
-class	ObjectImpl;
-struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
 
 struct	ObjectTree;
 
@@ -111,7 +115,6 @@ struct  TextImplDeleter { void operator()(TextImpl* p); };
 }
 
 class   Scene;
-
 
 class   VertexArrayObject;
 class   ShaderNew;

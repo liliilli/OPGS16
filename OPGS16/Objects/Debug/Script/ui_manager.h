@@ -16,7 +16,8 @@
 
 class DebugUiManager final : public opgs16::component::ScriptFrame {
 public:
-    DebugUiManager(Object& obj, canvas::Text* const, canvas::Text* const, canvas::Text* const);
+    DebugUiManager(opgs16::element::Object& obj,
+                   canvas::Text* const, canvas::Text* const, canvas::Text* const);
 
     virtual void Update() override final;
 

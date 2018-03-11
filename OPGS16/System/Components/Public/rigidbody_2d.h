@@ -61,7 +61,7 @@ public:
     };
 
 public:
-    Rigidbody2D(Object& bound_obj) : _internal::Component{ bound_obj } {}
+    Rigidbody2D(element::Object& bound_obj) : _internal::Component{ bound_obj } {}
 
     /*!  * Update physics/collision process.  */
     void Update();
@@ -99,12 +99,6 @@ private:
 
     BodyType m_type{ BodyType::NORMAL };
     std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};
-
-private:
-    /*!
-     * @brief
-     */
-     void ReflectPositionToLastCollider();
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Rigidbody2D)

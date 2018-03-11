@@ -42,12 +42,13 @@
 #include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
 #include "../../Manager/Public/texture_manager.h"   /*! opgs16::manager::TextureManager */
 #include "../../Manager/Public/timer_manager.h"     /*! TimerManager */
-#include "../../Object/object.h"
+#include "../../Element/Public/object.h"            /*! ::opgs16::element::Object */
 
 namespace opgs16 {
 namespace component {
 
 namespace {
+using Object = element::Object;
 
 void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& container) {
     std::ifstream file_stream{ file_path, std::ios::in };

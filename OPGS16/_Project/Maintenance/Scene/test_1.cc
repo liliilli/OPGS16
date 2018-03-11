@@ -5,7 +5,7 @@
 #include "../Object/game_canvas.h"                  /*! GameCanvas */
 #include "../Object/test_obj.h"                     /*! TestObject1 */
 #include "../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
-#include "../../../System/Object/object.h"
+#include "../../../System/Element/Public/object.h"
 #include "../../../System/Components/Public/sprite_renderer.h"
 
 void Maintenance::Draw() {
