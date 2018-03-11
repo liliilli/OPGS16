@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="System\Components\Private\animator.cc" />
+    <ClCompile Include="System\Core\Impl\logger_impl.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
     <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClInclude Include="System\Components\Internal\animator_internal.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
+    <ClInclude Include="System\Core\Impl\logger_impl.h" />
     <ClInclude Include="System\Core\Internal\logger_internal.h" />
     <ClInclude Include="System\Core\Public\application.h" />
     <ClInclude Include="GlobalObjects\camera_object.h" />

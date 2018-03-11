@@ -59,6 +59,21 @@ class   SpriteRendererImpl;
 } /*! opgs16::component::_internal */
 } /*! opgs16::component */
 
+namespace debug {
+class   CLogger;
+namespace _internal {
+class   CLoggerImpl;
+} /*! opgs16::debug::_internal */
+} /*! opgs16::debug */
+
+namespace element {
+class   Object;
+namespace _internal {
+class	ObjectImpl;
+struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
+} /*! opgs16::element::_inetrnal */
+} /*! opgs16::element */
+
 namespace manager {
 class   FontManager;    /*! Font management */
 class   InputManager;   /*! Input polling */
@@ -80,7 +95,6 @@ struct  Texture2D;
 class   SFont;
 class   SSound;
 class   SShader;
-
 namespace _internal {
 enum class ESymbolType;
 enum class EResourceType;
@@ -90,14 +104,6 @@ enum class EResourceType;
 namespace texture {
 class   Texture2D;
 } /*! opgs16::texture */
-
-namespace element {
-class   Object;
-namespace _internal {
-class	ObjectImpl;
-struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
-} /*! opgs16::element::_inetrnal */
-} /*! opgs16::element */
 } /*! opgs16 */
 
 namespace helper {

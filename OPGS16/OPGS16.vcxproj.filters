@@ -59,6 +59,7 @@
     <ClCompile Include="System\Element\Private\object.cc" />
     <ClCompile Include="System\Element\Impl\object_impl.cc" />
     <ClCompile Include="System\Element\Private\ui_object.cc" />
+    <ClCompile Include="System\Core\Impl\logger_impl.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="System\Element\Impl\object_impl.h" />
     <ClInclude Include="System\Element\Public\ui_object.h" />
     <ClInclude Include="System\Element\Internal\texture_internal.h" />
+    <ClInclude Include="System\Core\Impl\logger_impl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

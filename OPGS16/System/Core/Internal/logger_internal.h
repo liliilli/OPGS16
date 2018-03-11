@@ -31,7 +31,7 @@
 
 /*!
  * @file System/Core/Internal/logger_internal.h
- * @brief Internal Type used to in Logger instance.
+ * @brief Internal Type used to in CLogger instance.
  * @author Jongmin Yun
  * @log
  * 2018-03-06 Create file.
@@ -39,12 +39,15 @@
 
 namespace opgs16 {
 namespace debug {
+namespace _internal {
 
 enum class MsgType : int {
-    OK      = 0x0200,   /*! Ok signal */
-    ERROR   = 0xDEAD,   /*! When error occured, message are brought must have this type. */
+    INFO     = 0x0200,  /*! Info */
+    WARN     = 0x0400,  /*! Warning */
+    _ERROR   = 0xDEAD,   /*! When error occured, message are brought must have this type. */
 };
 
+} /*! opgs16::debug::_internal */
 } /*! opgs16::debug */
 } /*! opgs16 */
 

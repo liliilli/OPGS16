@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H
-#define OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -30,50 +27,21 @@
  */
 
 /*!
- * @file System/Core/Public/logger.h
- * @brief CLogger class declaration file.
+ * @file System/Core/Impl/logger_impl.cc
  * @author Jongmin Yun
  * @log
- * 2018-03-06 Add logger frame.
- * 2018-03-11 Attach spdlog logging library.
+ * 2018-03-11 Create file
  */
 
-#include <memory>
-#include "../Internal/logger_internal.h"    /*! ::opgs16::debug::_internal */
-#include "../../../Headers/Fwd/objectfwd.h" /*! Forward declaration */
+#include "logger_impl.h"    /*! Header file */
 
 namespace opgs16 {
 namespace debug {
+namespace _internal {
 
-/**
- * @class CLogger
- * @brief CLogger static sub-program.
- */
-class CLogger final {
-public:
-    /*! Get static instance of CLogger. */
-    static CLogger& Instance() {
-        static CLogger instance{};
-        return instance;
-    }
+CLoggerImpl::CLoggerImpl() : m_console{ spdlog::stdout_color_mt("OPGS16") } {}
 
-    /*! Push message into logger */
-    void Push(_internal::MsgType type, const char* log_message);
-
-private:
-    CLogger();
-    std::unique_ptr<_internal::CLoggerImpl> m_impl; /*! Private implementation instance. */
-
-public:
-    ~CLogger();
-    CLogger(const CLogger&) = delete;
-    CLogger operator=(const CLogger&) = delete;
-};
-
-/*! Helper function */
-void PushLog(_internal::MsgType type, const char* log_message);
-
+} /*! opgs16::debug::_internal */
 } /*! opgs16::debug */
 } /*! opgs16 */
 
-#endif /** OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H */

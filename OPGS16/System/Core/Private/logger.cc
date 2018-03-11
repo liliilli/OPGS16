@@ -28,39 +28,45 @@
 
 /*!
  * @file System/Core/Private/logger.h
- * @brief Logger class implementation file.
+ * @brief CLogger class implementation file.
  * @author Jongmin Yun
  * @log
  * 2018-03-06 Add logger implementation file.
  */
 
 #include "../Public/logger.h"   /*! Header file */
-#include <cstdio>
-#include <ctime>
-
-#include <chrono>
-#include <sstream>
-#include <iomanip>
+#include "../Impl/logger_impl.h"    /*! ::opgs16::debug::_internal::CLoggerImpl */
 
 namespace opgs16 {
 namespace debug {
 
-void Logger::Do(const list_type::value_type& log) {
-    using std::chrono::system_clock;
+CLogger::CLogger() :
+    m_impl { std::make_unique<_internal::CLoggerImpl>() } {
 
-    auto&[type, message] = log;
-    const auto time_struct = system_clock::to_time_t(system_clock::now());
+    auto& m_console = m_impl->Logger();
+    using _internal::MsgType;
+    Push(MsgType::INFO, "Welcome to spdlog Hello world.");
+    Push(MsgType::WARN, "This is warning message...");
+    Push(MsgType::_ERROR, "An info message example 1..");
+}
 
-    std::ostringstream stream;
-    stream << std::put_time(std::localtime(&time_struct), "%F %T");
-
+void CLogger::Push(_internal::MsgType type, const char* log_message) {
+    using _internal::MsgType;
     switch (type) {
-    case MsgType::OK:       stream << "    OK : "; break;
-    case MsgType::ERROR:    stream << " ERROR : "; break;
+    case MsgType::INFO: m_impl->Logger().info(log_message);
+        break;
+    case MsgType::WARN: m_impl->Logger().warn(log_message);
+        break;
+    case MsgType::_ERROR: m_impl->Logger().error(log_message);
+        break;
+    default: /*! Do nothing */ break;
     }
+}
 
-    stream << message;
-    printf("%s\n", stream.str().c_str());
+CLogger::~CLogger() = default;
+
+void PushLog(_internal::MsgType type, const char* log_message) {
+    CLogger::Instance().Push(type, log_message);
 }
 
 } /*! opgs16::debug */

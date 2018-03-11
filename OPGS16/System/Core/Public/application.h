@@ -50,7 +50,7 @@
 // ReSharper restore CppUnusedIncludeDirective
 #include <GLFW/glfw3.h>
 
-#include "../../Core/Public/logger.h"   /*! Logger class running on separate thread. */
+#include "../../Core/Public/logger.h"   /*! CLogger class running on separate thread. */
 #include "../../Element/Public/object.h"     /*! ::opgs16::element::Object */
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
 
@@ -89,8 +89,7 @@ public:
     }
 
 private:
-    std::thread m_logger;
-
+    debug::CLogger&              m_logger;
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
     manager::SettingManager&     m_setting_manager;

@@ -36,22 +36,18 @@
 namespace opgs16 {
 
 namespace {
-
+using debug::_internal::MsgType;
 using namespace std::string_view_literals;
-using opgs16::debug::PushLog;
-using opgs16::debug::MsgType;
-
 constexpr std::string_view g_global_resource_path{ "_resource.meta"sv };
 
 /*! Callback method for size check and resizing */
 void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
-
 } /*! unnamed namespace */
 
 Application::Application() :
-    m_logger{ &debug::Logger::operator(), std::ref(debug::Logger::Instance()) },
+    m_logger{ debug::CLogger::Instance() },
     m_window{ InitApplication(u8"OPGS16") },
     m_setting_manager{ manager::SettingManager::Instance() },
     m_input_manager{ manager::InputManager::Instance() },
@@ -74,7 +70,7 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    PushLog(MsgType::OK, "GLFW CONTEXT VERSION 4.3 Core.");
+    debug::PushLog(MsgType::INFO, "GLFW CONTEXT VERSION 4.3 Core.");
 
     /*! Set MSAAx4 */
     //glfwWindowHint(GLFW_SAMPLES, 4);
@@ -84,7 +80,7 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
                                          app_name.c_str(),
                                          nullptr, nullptr);
     if (!window) {
-        PushLog(MsgType::ERROR, "Failed to create GLFW window. Application will terminate.");
+        debug::PushLog(MsgType::_ERROR, "Failed to create GLFW window. Application will terminate.");
         glfwTerminate();
         return nullptr;
     }
@@ -168,10 +164,6 @@ void Application::Run() {
     }
     /*! Must terminate glfw window */
     glfwTerminate();
-    if (m_logger.joinable()) {
-        debug::Logger::Instance().Terminate();
-        m_logger.join();
-    }
 }
 
 void Application::Update() {
@@ -240,7 +232,6 @@ void Application::Draw() const {
 
 		/** Actual Rendering */
         m_object_manager.Render();
-        //m_scene_manager.PresentScene()->Draw();
 		/** Post-processing */
         m_pp_manager->Render();
 	}
