@@ -41,18 +41,18 @@
 #include <array>                /*! std::array<GLint, 4> */
 #include <GL/glew.h>            /*! type specifier */
 #include <glm/gtc/matrix_transform.hpp>         /*! glm::ortho */
-#include "../../Manager/Public/scene_manager.h" /*! SceneManager */
+#include "../../Manager/Public/scene_manager.h" /*! MSceneManager */
 
 namespace opgs16 {
 namespace component {
 namespace {
-using Object = element::Object;
+using Object = element::CObject;
 } /*! unnamed namespace */
 
-bool Camera::s_main_camera_initiated{ false };
+bool CCamera::s_main_camera_initiated{ false };
 
-Camera::Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
-    _internal::Component{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
+CCamera::CCamera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
+    _internal::CComponent{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
     /*! Body */
 	switch (m_viewtype) {
 	case ViewType::ORTHO:       InitiateOrthographicProjection();   break;
@@ -65,32 +65,32 @@ Camera::Camera(Object& bound_obj, ViewType view_type, CameraType camera_type, bo
          * to display world.
          */
         s_main_camera_initiated = true;
-        opgs16::manager::SceneManager::Instance().PresentScene()->SetMainCamera(this);
+        opgs16::manager::MSceneManager::Instance().PresentScene()->SetMainCamera(this);
     }
     else
         m_cameratype = CameraType::SUB;
 }
 
-Camera::~Camera() {
+CCamera::~CCamera() {
     if (m_cameratype == CameraType::MAIN) {
         s_main_camera_initiated = false;
-        opgs16::manager::SceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
+        opgs16::manager::MSceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
     }
 }
 
-const glm::mat4 Camera::GetViewMatrix() const noexcept {
+const glm::mat4 CCamera::GetViewMatrix() const noexcept {
     return m_view;
 }
 
-const glm::mat4 Camera::GetProjectionMatrix() const noexcept {
+const glm::mat4 CCamera::GetProjectionMatrix() const noexcept {
     return m_projection;
 }
 
-const glm::mat4 Camera::GetPV() const noexcept {
+const glm::mat4 CCamera::GetPV() const noexcept {
     return m_PV;
 }
 
-void Camera::InitiateOrthographicProjection() {
+void CCamera::InitiateOrthographicProjection() {
     std::array<GLint, 4> viewport_size{0, 0, 256, 224};
 	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
 
@@ -103,7 +103,7 @@ void Camera::InitiateOrthographicProjection() {
     m_PV = m_projection * m_view;
 }
 
-void Camera::InitiatePerspectiveProjection() {
+void CCamera::InitiatePerspectiveProjection() {
     std::array<GLint, 4> viewport_size{0, 0, 256, 224};
 	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
 
@@ -115,7 +115,7 @@ void Camera::InitiatePerspectiveProjection() {
     m_PV = m_projection * m_view;
 }
 
-void Camera::Update() {
+void CCamera::Update() {
 }
 
 } /*! opgs16::component */

@@ -51,13 +51,13 @@ namespace component {
 namespace _internal {
 
 /*!
- * @class Component
+ * @class CComponent
  * @brief The most base class of derived component classes.
  */
-class Component {
+class CComponent {
 public:
-    Component(element::Object& bind_object) : m_object{ bind_object } {};
-    virtual ~Component() = default;
+    CComponent(element::CObject& bind_object) : m_object{ bind_object } {};
+    virtual ~CComponent() = default;
 
     virtual void Update() = 0;
 
@@ -71,12 +71,12 @@ public:
     }
 
     /*! Get Object reference */
-    element::Object& GetObject() const {
+    element::CObject& GetObject() const {
         return m_object;
     }
 
 private:
-    element::Object& m_object;   /*! Bound object which script instance refers to */
+    element::CObject& m_object;   /*! Bound object which script instance refers to */
 
     SET_UP_HASH_VALUE(Component)
 };

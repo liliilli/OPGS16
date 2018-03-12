@@ -51,7 +51,7 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class SoundManager
+ * @class MSoundManager
  * @brief This class manages rich sounds like a background music, effect sounds,
  * anything related to sound from WAV file, OGG file...
  * SoundManager is not able to copy, move and have property of singleton. So you have to call
@@ -68,11 +68,11 @@ namespace manager {
  * 2018-02-26 Replace OpenAL with FMOD.
  * 2018-03-04 Refactoring, Move class in opgs16::manager.
  */
-class SoundManager final {
+class MSoundManager final {
 public:
 	/*! Returns unique instance of SoundManager class. */
-	static SoundManager& Instance() {
-		static SoundManager instance{};
+	static MSoundManager& Instance() {
+		static MSoundManager instance{};
 		return instance;
 	}
 
@@ -160,23 +160,23 @@ private:
 	 * @brief Stop all playing sounds, and release resources.
 	 * This destructor called when Application ends.
 	 */
-    SoundManager() = default;
+    MSoundManager() = default;
 
 public:
-	~SoundManager();
-	SoundManager(const SoundManager&) = delete;
-	SoundManager& operator=(const SoundManager&) = delete;
+	~MSoundManager();
+	MSoundManager(const MSoundManager&) = delete;
+	MSoundManager& operator=(const MSoundManager&) = delete;
 };
 
-inline bool SoundManager::DoesSoundExist(const std::string& tag) const {
+inline bool MSoundManager::DoesSoundExist(const std::string& tag) const {
 	return m_sounds.find(tag) != m_sounds.end();
 }
 
-inline bool SoundManager::IsSoundMuted() const {
+inline bool MSoundManager::IsSoundMuted() const {
     return m_is_muted;
 }
 
-inline void SoundManager::SetMute(const bool value) {
+inline void MSoundManager::SetMute(const bool value) {
     m_is_muted = value;
 }
 

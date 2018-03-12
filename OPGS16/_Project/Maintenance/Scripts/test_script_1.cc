@@ -2,16 +2,16 @@
 
 #include <glm/glm.hpp>
 #include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
-#include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
-#include "../../../System/Manager/Public/sound_manager.h"  /*! SoundManager */
-#include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
+#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
+#include "../../../System/Manager/Public/sound_manager.h"  /*! MSoundManager */
+#include "../../../System/Manager/Public/timer_manager.h"  /*! MTimerManager */
 
 #include "obj_script_1.h"   /*! ObjectScript1 for TestObject1 */
 
-using opgs16::manager::SceneManager;
-using opgs16::element::Object;
+using opgs16::manager::MSceneManager;
+using opgs16::element::CObject;
 
-TestScript1::TestScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
+TestScript1::TestScript1(CObject& obj) : opgs16::component::CScriptFrame{ obj } {
     Initiate();
     Start();
 }
@@ -19,7 +19,7 @@ TestScript1::TestScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
 void TestScript1::Start() {
     SetBreakTimer();
 
-    auto& sound_manager = opgs16::manager::SoundManager::Instance();
+    auto& sound_manager = opgs16::manager::MSoundManager::Instance();
     sound_manager.CreateSound("Music1");
     sound_manager.PlaySound("Music1");
 }
@@ -58,7 +58,7 @@ void TestScript1::Update() {
             if (m_finished_obj == 1) {
                 m_finished_obj = 0;
                 ResetObjectProperties();
-                opgs16::manager::TimerManager::Instance().DetachTimer(m_timer_break);
+                opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer_break);
                 SetBreakTimer();
             }
         }   break;
@@ -67,7 +67,7 @@ void TestScript1::Update() {
 }
 
 void TestScript1::SetBreakTimer() {
-    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_break, 1'500, false,
+    opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_break, 1'500, false,
                                          this, &TestScript1::Resume);
 }
 
@@ -80,17 +80,17 @@ void TestScript1::Resume() {
     ChangeText();
 
     switch (m_sequence) {
-    case Sequence::_3_INDEPENDENT_WORLD: opgs16::manager::TimerManager::Instance().SetTimer(m_timer_third_test, 500, true,
+    case Sequence::_3_INDEPENDENT_WORLD: opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_third_test, 500, true,
                                              this, &TestScript1::ToggleObjectProperties);
         break;
     }
 }
 
 void TestScript1::Proceed_1NormalLocal() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
-        std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
+        std::vector<CObject*> obj_list{ scene->GetObject("Object").get() };
         while (*obj_list.rbegin() != nullptr) {
             auto object = *obj_list.rbegin();
             obj_list.emplace_back(object->GetChild("Object"));
@@ -110,7 +110,7 @@ void TestScript1::Proceed_1NormalLocal() {
 }
 
 void TestScript1::Proceed_2DependentWorld() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     auto speed = 2.0f;
 
     if (scene) {
@@ -153,7 +153,7 @@ void TestScript1::Proceed_2DependentWorld() {
 }
 
 void TestScript1::Proceed_3WorldPosition() {
-    auto scene = opgs16::manager::SceneManager::Instance().PresentScene();
+    auto scene = opgs16::manager::MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get 1-level object */
         auto& root_obj = scene->GetObject("Object");
@@ -170,7 +170,7 @@ void TestScript1::ObjectPropertiesReset() {
     /*! Reset all things */
     switch (m_sequence) {
     case Sequence::_3_INDEPENDENT_WORLD: {
-        auto scene = SceneManager::Instance().PresentScene();
+        auto scene = MSceneManager::Instance().PresentScene();
 
         bool translate_dependency = true;
         auto object = scene->GetObject("Object").get();
@@ -212,7 +212,7 @@ void TestScript1::ChangeText() {
 }
 
 void TestScript1::ToggleObjectProperties() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     auto object = scene->GetObject("Object").get();
     while (object != nullptr) {
         auto flag = object->GetSucceedingPositionFlag();
@@ -222,7 +222,7 @@ void TestScript1::ToggleObjectProperties() {
 }
 
 void TestScript1::ResetObjectProperties() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     auto object = scene->GetObject("Object").get();
     auto root_object = object;
 
@@ -235,10 +235,10 @@ void TestScript1::ResetObjectProperties() {
 }
 
 void TestScript1::Proceed_4AlphaBlending() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
-        std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
+        std::vector<CObject*> obj_list{ scene->GetObject("Object").get() };
         while (*obj_list.rbegin() != nullptr) {
             auto object = *obj_list.rbegin();
             obj_list.emplace_back(object->GetChild("Object"));
@@ -254,13 +254,13 @@ void TestScript1::Proceed_4AlphaBlending() {
         }
     }
 
-    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_interval, 6'000, false,
+    opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_4_interval, 6'000, false,
                                          this, &TestScript1::OnTrigger4Interval);
     m_is_break = true;
 }
 
 void TestScript1::OnTrigger4Interval() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get Objects and let them stop their own timers */
         auto object = scene->GetObject("Object").get();
@@ -275,10 +275,10 @@ void TestScript1::OnTrigger4Interval() {
 }
 
 void TestScript1::Proceed_5ScalingTest() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get objects */
-        std::vector<Object*> obj_list{ scene->GetObject("Object").get() };
+        std::vector<CObject*> obj_list{ scene->GetObject("Object").get() };
         while (*obj_list.rbegin() != nullptr) {
             auto object = *obj_list.rbegin();
             obj_list.emplace_back(object->GetChild("Object"));
@@ -294,13 +294,13 @@ void TestScript1::Proceed_5ScalingTest() {
         }
     }
 
-    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_5_interval, 6'000, false,
+    opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_5_interval, 6'000, false,
                                          this, &TestScript1::OnTrigger5Interval);
     m_is_break = true;
 }
 
 void TestScript1::OnTrigger5Interval() {
-    auto scene = SceneManager::Instance().PresentScene();
+    auto scene = MSceneManager::Instance().PresentScene();
     if (scene) {
         /*! Get Objects and let them stop their own timers */
         auto object = scene->GetObject("Object").get();

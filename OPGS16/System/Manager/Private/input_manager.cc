@@ -44,7 +44,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
-#include "../Public/time_manager.h"   /*! opgs16::manager::TimeManager */
+#include "../Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
 
 namespace opgs16 {
 
@@ -63,7 +63,7 @@ enum class LoadStatus {
 namespace manager {
 using _internal::BindingKeyInfo;
 
-void InputManager::Initialize(GLFWwindow* window) {
+void MInputManager::Initialize(GLFWwindow* window) {
     m_window = window;
 
     std::ifstream file_stream(opgs16::input_path.data(), std::ios_base::in);
@@ -115,7 +115,7 @@ void InputManager::Initialize(GLFWwindow* window) {
     }
 }
 
-bool InputManager::ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& info) {
+bool MInputManager::ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& info) {
     /*! Check input style (KB, MS, JS) */
     {
         std::string input_style; stream >> input_style;
@@ -134,7 +134,7 @@ bool InputManager::ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& inf
     }
 }
 
-bool InputManager::ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& info) {
+bool MInputManager::ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& info) {
     std::string token; stream >> token;
     if (token == "+" || token == "-") {
         int* bind_pos{ nullptr };
@@ -153,7 +153,7 @@ bool InputManager::ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& in
     else return false;
 }
 
-float InputManager::GetKeyValue(const std::string& key) const {
+float MInputManager::GetKeyValue(const std::string& key) const {
 	if (m_key_inputs.find(key) != m_key_inputs.end()) {
 		return m_key_inputs.at(key).value;
 	}
@@ -163,7 +163,7 @@ float InputManager::GetKeyValue(const std::string& key) const {
 	}
 }
 
-bool InputManager::IsKeyPressed(const std::string & key) const {
+bool MInputManager::IsKeyPressed(const std::string & key) const {
 	auto it = m_key_inputs.find(key);
 	if (it != m_key_inputs.end()) {
 		auto& key = (*it).second;
@@ -186,7 +186,7 @@ bool InputManager::IsKeyPressed(const std::string & key) const {
 	}
 }
 
-bool InputManager::IsKeyReleased(const std::string & key) const {
+bool MInputManager::IsKeyReleased(const std::string & key) const {
 	if (m_key_inputs.find(key) != m_key_inputs.end()) {
 		switch (m_key_inputs.at(key).key_status) {
 		case BindingKeyInfo::KeyInputStatus::NEUTRAL:
@@ -201,11 +201,11 @@ bool InputManager::IsKeyReleased(const std::string & key) const {
 	}
 }
 
-bool InputManager::IsErrorExist() {
+bool MInputManager::IsErrorExist() {
 	return m_error_flag != ErrorFlag::OK;
 }
 
-void InputManager::Update() {
+void MInputManager::Update() {
 	for (auto& key_info : m_key_inputs) {
 		auto& key = key_info.second;
 		// PRESSED, NEUTRAL checks key pressed event.
@@ -250,8 +250,8 @@ void InputManager::Update() {
 	}
 }
 
-void InputManager::ProceedGravity(BindingKeyInfo & key_info) {
-	const auto dt = TimeManager::Instance().GetDeltaTime();
+void MInputManager::ProceedGravity(BindingKeyInfo & key_info) {
+	const auto dt = MTimeManager::Instance().GetDeltaTime();
 	auto value = key_info.value;
 	key_info.send_signal = false;
 

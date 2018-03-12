@@ -14,8 +14,8 @@
 #include <array>	/** std::array */
 #include <memory>	/** std::shared_ptr */
 #include <vector>	/** std::vector<std::shared_ptr> */
-#include "shader.h"	/** helper::ShaderNew */
-#include "..\Frame\texture.h"   /*! texture::Texture2D */
+#include "shader.h"	/** helper::CShaderNew */
+#include "..\Frame\texture.h"   /*! texture::CTexture2D */
 #include "..\..\Headers\Fwd\objectfwd.h"    /*! VertexArrayObject */
 #include "shader_wrapper.h" /*! ShaderWrapper */
 
@@ -90,9 +90,9 @@ public:
 	/**
 	 * @brief Get reference of binded texture.
 	 * @param[in] id Index to verify.
-	 * @return The reference of std::unique_ptr<helper::Texture2D>.
+	 * @return The reference of std::unique_ptr<helper::CTexture2D>.
 	 */
-	using texture_ptr = std::unique_ptr<opgs16::texture::Texture2D>;
+	using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2D>;
 	texture_ptr& GetTexture(const size_t id) { return m_color_buffers.at(id); }
 
 	/**
@@ -213,7 +213,7 @@ private:
 	 * @param[in] id Index to verify.
 	 * @param[in] buffer Container to be verified by id.
 	 * @return Success or failure flag. Return true if buffer in index is already generated.
-	 * (except for helper::Texture2D. helper::Texture2D version is below.)
+	 * (except for helper::CTexture2D. helper::CTexture2D version is below.)
 	 */
 	template <size_t _Amnt>
 	bool IsAlreadyGenerated(const size_t id, const std::array<GLuint, _Amnt>& buffer) const {

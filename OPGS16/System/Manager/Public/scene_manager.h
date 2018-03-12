@@ -47,17 +47,17 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class SceneManager
+ * @class MSceneManager
  * @brief Manager class manages game scene.
  */
-class SceneManager final {
+class MSceneManager final {
 private:
     using scene_stack = std::stack<std::unique_ptr<Scene>>;
 
 public:
     /*! Return singleton instance of SceneManager. */
-    static SceneManager& Instance() {
-        static SceneManager instance{};
+    static MSceneManager& Instance() {
+        static MSceneManager instance{};
         return instance;
     }
 
@@ -88,8 +88,8 @@ public:
         >
     >
     void ReplaceScene() {
-        auto& app = opgs16::Application::Instance();
-        app.SetOnBeforeUpdateCallback(std::bind(&SceneManager::PrivateReplaceScene<_Ty>, this));
+        auto& app = opgs16::MApplication::Instance();
+        app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivateReplaceScene<_Ty>, this));
     }
 
     /**
@@ -140,26 +140,26 @@ private:
     }
 
 private:
-    SceneManager() = default;
+    MSceneManager() = default;
 
 public:
-    ~SceneManager();
-    SceneManager(const SceneManager&) = delete;
-    SceneManager& operator=(SceneManager&) = delete;
+    ~MSceneManager();
+    MSceneManager(const MSceneManager&) = delete;
+    MSceneManager& operator=(MSceneManager&) = delete;
 };
 
 template <class _Ty, typename>
-void SceneManager::PushScene() {
+void MSceneManager::PushScene() {
     m_scenes.push(std::make_unique<_Ty>());
     m_scenes.top()->Initiate();
 }
 
-inline Scene* const SceneManager::PresentScene() {
+inline Scene* const MSceneManager::PresentScene() {
     if (m_scenes.empty()) return nullptr;
     else return m_scenes.top().get();
 }
 
-inline bool SceneManager::Empty() const noexcept {
+inline bool MSceneManager::Empty() const noexcept {
     return m_scenes.empty();
 }
 

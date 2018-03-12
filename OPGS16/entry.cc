@@ -43,8 +43,8 @@
 #include "System/Core/Public/application.h"
 
 int main() {
-    using opgs16::Application;
-    auto& app = Application::Instance();
+    using opgs16::MApplication;
+    auto& app = MApplication::Instance();
     app.Initiate();
     app.Run();
 

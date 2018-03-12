@@ -43,18 +43,18 @@
 #include <string>
 #include <memory>
 
-#include "../Internal/component.h"          /*! opgs16::component::_internal::Component */
+#include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
 #include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
-#include "../../Headers/Fwd/objectfwd.h"    /*! SpriteRendererImpl
+#include "../../Headers/Fwd/objectfwd.h"    /*! CSpriteRendererImpl
                                               * ShaderWraper */
-#include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::ObjectManager */
-#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
+#include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::MObjectManager */
+#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
 
 namespace opgs16 {
 namespace component {
 
 /*!
- * @class Sprite2DRenderer
+ * @class CSprite2DRenderer
  * @brief The class for object has to render 2d rendering sprite.
  * SpriteRender class has sprite to render on object position,
  * and has at least one more shader to display to screen.
@@ -64,14 +64,14 @@ namespace component {
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move to opgs16::component namespace.
  */
-class Sprite2DRenderer final : public _internal::Component {
+class CSprite2DRenderer final : public _internal::CComponent {
 private:
-    using IndexSize = opgs16::resource::Texture2D::IndexSize;
-    using pimpl_type = std::unique_ptr<_internal::SpriteRendererImpl>;
+    using IndexSize = opgs16::resource::STexture2D::IndexSize;
+    using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
-	Sprite2DRenderer(element::Object& bind_object,
+	CSprite2DRenderer(element::CObject& bind_object,
                      const std::string& sprite_tag,
                      const std::string& shader_tag,
                      const IndexSize& texture_index = {0, 0},
@@ -98,7 +98,7 @@ public:
     std::string RenderLayerNameOf() const;
 
     virtual void Update() override final {
-        opgs16::manager::ObjectManager::Instance().InsertRenderingObject(&GetObject(),
+        opgs16::manager::MObjectManager::Instance().InsertRenderingObject(&GetObject(),
                                                                          m_render_layer_index);
     };
 
@@ -110,13 +110,13 @@ public:
 	 */
 	void RenderSprite();
 
-    ~Sprite2DRenderer();
+    ~CSprite2DRenderer();
 
 private:
     pimpl_type m_impl{};
     size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
 
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Sprite2DRenderer)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CSprite2DRenderer)
 };
 
 } /*! opgs16::component */

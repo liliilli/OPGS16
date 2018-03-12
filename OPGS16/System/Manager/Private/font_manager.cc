@@ -41,21 +41,21 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../Public/resource_manager.h"     /*! opgs16::manager::ResourceManager */
+#include "../Public/resource_manager.h"     /*! opgs16::manager::MResourceManager */
 #include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
 #include "../../Core/Public/core_setting.h"
 
 namespace opgs16 {
 namespace manager {
 
-FontManager::FontManager() :
-    m_projection{ glm::ortho(0.f, static_cast<float>(GlobalSetting::ScreenWidth()),
-                             0.f, static_cast<float>(GlobalSetting::ScreenHeight())) } {
+MFontManager::MFontManager() :
+    m_projection{ glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
+                             0.f, static_cast<float>(SGlobalSetting::ScreenHeight())) } {
 	m_shader = ShaderManager::Instance().Shader("gCommonFont");
 	BindVertexAttributes();
 }
 
-void FontManager::BindVertexAttributes() {
+void MFontManager::BindVertexAttributes() {
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
     glBindVertexArray(m_vao);
@@ -70,11 +70,11 @@ void FontManager::BindVertexAttributes() {
     glBindVertexArray(0);
 }
 
-bool FontManager::GenerateFont(const std::string& name_tag) {
+bool MFontManager::GenerateFont(const std::string& name_tag) {
     if (DoesFontExist(name_tag))
         return false;
 
-    const auto [success, information] = ResourceManager::Instance().GetFont(name_tag);
+    const auto [success, information] = MResourceManager::Instance().GetFont(name_tag);
     if (success && CheckFreeType() && LoadFreeType(information->Path())) {
 		FT_Set_Pixel_Sizes(m_ft_face, 0, k_default_font_size);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -92,7 +92,7 @@ bool FontManager::GenerateFont(const std::string& name_tag) {
     else return false;
 }
 
-FontManager::font_map_ptr FontManager::GetCharTextures() const {
+MFontManager::font_map_ptr MFontManager::GetCharTextures() const {
 	auto glyphs = std::make_unique<font_type>();
 
     for (GLubyte c = 0; c < 128; ++c) {
@@ -131,7 +131,7 @@ FontManager::font_map_ptr FontManager::GetCharTextures() const {
 	return glyphs;
 }
 
-bool FontManager::LoadDefaultFont() {
+bool MFontManager::LoadDefaultFont() {
 	if (m_default_font == nullptr)
         return false;
     else {
@@ -140,7 +140,7 @@ bool FontManager::LoadDefaultFont() {
     }
 }
 
-bool FontManager::LoadFont(const std::string& tag) {
+bool MFontManager::LoadFont(const std::string& tag) {
     if (DoesFontExist(tag)) {
         m_font_in_use = m_fonts[tag].get();
         return true;
@@ -148,7 +148,7 @@ bool FontManager::LoadFont(const std::string& tag) {
     else return false;
 }
 
-bool FontManager::DeleteFont(const std::string& tag) {
+bool MFontManager::DeleteFont(const std::string& tag) {
     if (DoesFontExist(tag)) {
         /** Remove pointer reference */
         auto font = m_fonts.at(tag).get();
@@ -161,7 +161,7 @@ bool FontManager::DeleteFont(const std::string& tag) {
     else return false;
 }
 
-void FontManager::RenderTextNew (const std::string& text,
+void MFontManager::RenderTextNew (const std::string& text,
                                  IOriginable::Origin origin,
                                  const glm::vec2 final_position,
                                  const glm::vec3 color,
@@ -186,7 +186,7 @@ void FontManager::RenderTextNew (const std::string& text,
     }
 }
 
-std::vector<std::string> FontManager::SeparateTextToList(const std::string& text) const {
+std::vector<std::string> MFontManager::SeparateTextToList(const std::string& text) const {
     std::vector<std::string> result;
 
     std::stringstream stream{text};
@@ -196,14 +196,14 @@ std::vector<std::string> FontManager::SeparateTextToList(const std::string& text
     return result;
 }
 
-void FontManager::StartShader(const glm::vec3& color) const {
+void MFontManager::StartShader(const glm::vec3& color) const {
 	m_shader->Use();
 	m_shader->SetVec3f("textColor", color);
 	m_shader->SetVecMatrix4f("projection", m_projection);
 	glBindVertexArray(m_vao);
 }
 
-void FontManager::RenderLeftSide(const std::vector<std::string>& container,
+void MFontManager::RenderLeftSide(const std::vector<std::string>& container,
                                  const glm::vec2& position,
                                  const float scale) const {
 	auto pos = position;
@@ -220,7 +220,7 @@ void FontManager::RenderLeftSide(const std::vector<std::string>& container,
 	}
 }
 
-void FontManager::RenderCenterSide(const std::vector<std::string>& container,
+void MFontManager::RenderCenterSide(const std::vector<std::string>& container,
                                    const glm::vec2& position,
                                    const float scale) const {
 	auto pos = position;
@@ -239,7 +239,7 @@ void FontManager::RenderCenterSide(const std::vector<std::string>& container,
 	}
 }
 
-void FontManager::RenderRightSide(const std::vector<std::string>& container,
+void MFontManager::RenderRightSide(const std::vector<std::string>& container,
                                   const glm::vec2& position,
                                   const float scale) const {
 	auto pos = position;
@@ -258,7 +258,7 @@ void FontManager::RenderRightSide(const std::vector<std::string>& container,
 	}
 }
 
-std::array<float, 24> FontManager::GetCharacterVertices(const _internal::Character& ch_info,
+std::array<float, 24> MFontManager::GetCharacterVertices(const _internal::Character& ch_info,
                                                         const glm::vec2& position,
                                                         const float scale) const {
     const auto x_offset     = ch_info.bearing.x * scale;
@@ -292,7 +292,7 @@ std::array<float, 24> FontManager::GetCharacterVertices(const _internal::Charact
     };
 }
 
-unsigned FontManager::GetStringRenderWidth(const std::string& text,
+unsigned MFontManager::GetStringRenderWidth(const std::string& text,
                                            const float scale) const {
 	unsigned width{};
 	for (const auto& chr : text) {
@@ -303,7 +303,7 @@ unsigned FontManager::GetStringRenderWidth(const std::string& text,
 	return width;
 }
 
-void FontManager::Render(const _internal::Character& ch_info,
+void MFontManager::Render(const _internal::Character& ch_info,
                          const std::array<float, 24>& vertices) const {
 	// Render texture glyph
 	glActiveTexture(GL_TEXTURE0);

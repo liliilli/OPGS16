@@ -40,7 +40,7 @@
 #include <iostream>             /*! std::cerr */
 #include <string>               /*! std::string */
 
-#include "../Public/resource_manager.h"   /*! ResourceManager */
+#include "../Public/resource_manager.h"   /*! MResourceManager */
 #include "../Public/resource_type.h"
 
 namespace opgs16 {
@@ -56,7 +56,7 @@ constexpr bool SUCCESS  = true;
 using _internal::ESoundType;
 using _internal::SSoundInfo;
 
-bool SoundManager::ProcessInitialSetting() {
+bool MSoundManager::ProcessInitialSetting() {
     if (FMOD::System_Create(&m_system) != FMOD_OK) {
         /*! Write to logger if debug mode. in release mode, mute application. */
         std::cerr << "ERROR::DID::NOT::CREATE::SOUND::SYSTEM\n";
@@ -90,12 +90,12 @@ bool SoundManager::ProcessInitialSetting() {
     return SUCCESS;
 }
 
-bool SoundManager::CreateSound(const std::string& item_tag) {
+bool MSoundManager::CreateSound(const std::string& item_tag) {
     if (DoesSoundExist(item_tag)) {
         return true;
     }
     else {
-        auto& sound_item = opgs16::manager::ResourceManager::Instance().GetSound(item_tag);
+        auto& sound_item = opgs16::manager::MResourceManager::Instance().GetSound(item_tag);
 
         FMOD::Sound* sound;
         if (m_system->createSound(sound_item.Path().c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
@@ -124,7 +124,7 @@ bool SoundManager::CreateSound(const std::string& item_tag) {
     }
 }
 
-bool SoundManager::DestroySound(const std::string& tag) {
+bool MSoundManager::DestroySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 		StopSound(tag);
 
@@ -136,7 +136,7 @@ bool SoundManager::DestroySound(const std::string& tag) {
         return FAILED;
 }
 
-void SoundManager::PlaySound(const std::string& tag) {
+void MSoundManager::PlaySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 	    auto result = m_system->playSound(m_sounds.at(tag).Sound(), 0, false, &m_sound_channel);
         if (result != FMOD_OK) {
@@ -146,21 +146,21 @@ void SoundManager::PlaySound(const std::string& tag) {
 	}
 }
 
-void SoundManager::StopSound(const std::string& tag) {
+void MSoundManager::StopSound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 		auto& sound = m_sounds.at(tag);
 		ProcessStopSound(sound);
 	}
 }
 
-void SoundManager::StopAllSounds() {
+void MSoundManager::StopAllSounds() {
 	for (auto& pair_item : m_sounds) {
 		auto& sound = pair_item.second;
 		ProcessStopSound(sound);
 	}
 }
 
-void SoundManager::Clear() {
+void MSoundManager::Clear() {
     StopAllSounds();
 
     /*! Release all sounds */
@@ -174,11 +174,11 @@ void SoundManager::Clear() {
     m_sounds.clear();
 }
 
-void SoundManager::ProcessStopSound(const SSoundInfo& sound) {
+void MSoundManager::ProcessStopSound(const SSoundInfo& sound) {
     //m_system->getChannel()
 }
 
-SoundManager::~SoundManager() {
+MSoundManager::~MSoundManager() {
 	StopAllSounds();
 
     /*! Release all sounds */

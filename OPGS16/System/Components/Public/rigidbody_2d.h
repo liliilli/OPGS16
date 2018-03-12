@@ -50,10 +50,10 @@ namespace opgs16 {
 namespace component {
 
 /*!
- * @class Rigidbody2D
+ * @class CRigidbody2D
  * @brief There is only one Rigidbody class in each object. or undefined behavior occurs.
  */
-class Rigidbody2D final : public _internal::Component {
+class CRigidbody2D final : public _internal::CComponent {
 public:
     enum class BodyType {
         NORMAL,     /*! Move it with physics simulation */
@@ -61,7 +61,7 @@ public:
     };
 
 public:
-    Rigidbody2D(element::Object& bound_obj) : _internal::Component{ bound_obj } {}
+    CRigidbody2D(element::CObject& bound_obj) : _internal::CComponent{ bound_obj } {}
 
     /*!  * Update physics/collision process.  */
     void Update();
@@ -83,9 +83,9 @@ public:
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
     >    void AddCollider2D(std::unique_ptr<_Ty>&& collider);
 
-     void OnCollisionEnter(Rigidbody2D& collier);
+     void OnCollisionEnter(CRigidbody2D& collier);
 
-     void OnTriggerEnter(Rigidbody2D& collider);
+     void OnTriggerEnter(CRigidbody2D& collider);
 
     bool IsTag(const std::string&& tag) const;
 
@@ -101,16 +101,16 @@ private:
     std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Rigidbody2D)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbody2D)
 };
 
 template <class _Ty, class... _Params, typename>
- void Rigidbody2D::AddCollider2D(_Params&&... args) {
+ void CRigidbody2D::AddCollider2D(_Params&&... args) {
     m_colliders.emplace_back(std::make_unique<_Ty>( std::forward<_Params>(args)... ));
 }
 
 template <class _Ty, typename>
- void Rigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
+ void CRigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
     m_colliders.emplace_back(std::move(collider));
 }
 

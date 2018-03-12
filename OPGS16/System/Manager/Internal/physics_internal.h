@@ -38,7 +38,7 @@
  * 2018-03-04 Create file. Move PhysicsManager::Item to this file.
  */
 
-#include "../../Components/Public/rigidbody_2d.h"   /*! opgs16::component::Rigidbody2D */
+#include "../../Components/Public/rigidbody_2d.h"   /*! opgs16::component::CRigidbody2D */
 
 namespace opgs16 {
 namespace manager {
@@ -46,7 +46,7 @@ namespace _internal {
 
 struct Item {
     collision::RectangleCollider2D* const    m_collider;
-    component::Rigidbody2D* const   m_rigidbody;
+    component::CRigidbody2D* const   m_rigidbody;
     const glm::vec2 m_position;
 
     enum class Type {
@@ -55,7 +55,7 @@ struct Item {
     } m_type = { Type::BEGIN };
 
     explicit Item(collision::RectangleCollider2D* const collider,
-                  component::Rigidbody2D* const rigidbody,
+                  component::CRigidbody2D* const rigidbody,
                   const glm::vec2 axis_value,
                   Type type) :
         m_collider{ collider }, m_rigidbody{ rigidbody },

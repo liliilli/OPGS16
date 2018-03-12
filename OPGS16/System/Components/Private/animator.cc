@@ -38,17 +38,17 @@
 #include <string>
 
 #include "../Public/animator.h"                     /*! Header file */
-#include "../../Components/Public/sprite_renderer.h"/*! opgs16::component::Sprite2DRenderer */
-#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
+#include "../../Components/Public/sprite_renderer.h"/*! opgs16::component::CSprite2DRenderer */
+#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
 #include "../../Manager/Public/texture_manager.h"   /*! opgs16::manager::TextureManager */
-#include "../../Manager/Public/timer_manager.h"     /*! TimerManager */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::Object */
+#include "../../Manager/Public/timer_manager.h"     /*! MTimerManager */
+#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
 
 namespace opgs16 {
 namespace component {
 
 namespace {
-using Object = element::Object;
+using Object = element::CObject;
 
 void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& container) {
     std::ifstream file_stream{ file_path, std::ios::in };
@@ -62,7 +62,7 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
             line_stream >> texture2d_name >> index_x >> index_y >> time_milli;
 
             if (auto raw = manager::TextureManager::Instance().GetTexture(texture2d_name); raw) {
-                using IndexSize = opgs16::resource::Texture2D::IndexSize;
+                using IndexSize = opgs16::resource::STexture2D::IndexSize;
                 container.emplace_back(texture2d_name,
                                        IndexSize{ index_x, index_y },
                                        time_milli);
@@ -74,8 +74,8 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
 using _internal::AnimatorState;
 } /*! unnamed namespace */
 
-Animator::Animator(Object& bind_object, Sprite2DRenderer& bind_renderer, Switch loop) :
-    _internal::Component{ bind_object },
+CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer, Switch loop) :
+    _internal::CComponent{ bind_object },
     m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
     OnStart();
 
@@ -85,14 +85,14 @@ Animator::Animator(Object& bind_object, Sprite2DRenderer& bind_renderer, Switch 
         m_cell_index = 0;
         m_cell_length = m_cells.size();
 
-        using manager::TimerManager;
-        TimerManager::Instance().SetTimer(m_timer,
+        using manager::MTimerManager;
+        MTimerManager::Instance().SetTimer(m_timer,
                                           static_cast<long>(m_cells[m_cell_index].TimeMilli()),
-                                          false, this, &Animator::OnTriggerTick);
+                                          false, this, &CAnimator::OnTriggerTick);
     }
 }
 
-void Animator::Update() {
+void CAnimator::Update() {
     switch (m_state) {
     default: /*! Do nothing */ break;;
     case AnimatorState::ANIMATION_START: break;
@@ -103,52 +103,52 @@ void Animator::Update() {
     }
 }
 
-void Animator::OnStart() {
+void CAnimator::OnStart() {
     m_state = AnimatorState::ANIMATION_START;
 }
 
-void Animator::OnAnimationStart() {
+void CAnimator::OnAnimationStart() {
     m_state = AnimatorState::UPDATE;
 }
 
-void Animator::OnUpdate() {
+void CAnimator::OnUpdate() {
     /*! Do nothing now */
 }
 
-void Animator::OnAnimationEnd() {
+void CAnimator::OnAnimationEnd() {
     if (IsSwitchOn(m_loop))
         m_state = AnimatorState::UPDATE;
     else
         m_state = AnimatorState::END;
 }
 
-void Animator::OnEnd() {
+void CAnimator::OnEnd() {
     m_state = AnimatorState::SLEEP;
 }
 
-void Animator::OnSleep() {
+void CAnimator::OnSleep() {
     /*! Do nothing now */
 }
 
-void Animator::OnTriggerTick() {
+void CAnimator::OnTriggerTick() {
     if ((++m_cell_index) < m_cell_length) {
         m_renderer.SetTexture(m_cells[m_cell_index].TextureName());
         m_renderer.SetTextureIndex(m_cells[m_cell_index].Index());
 
-        using manager::TimerManager;
-        TimerManager::Instance().SetTimer(m_timer,
+        using manager::MTimerManager;
+        MTimerManager::Instance().SetTimer(m_timer,
                                           static_cast<long>(m_cells[m_cell_index].TimeMilli()),
-                                          false, this, &Animator::OnTriggerTick);
+                                          false, this, &CAnimator::OnTriggerTick);
     }
     else if (IsSwitchOn(m_loop)) {
         m_cell_index = 0;
         m_renderer.SetTexture(m_cells[m_cell_index].TextureName());
         m_renderer.SetTextureIndex(m_cells[m_cell_index].Index());
 
-        using manager::TimerManager;
-        TimerManager::Instance().SetTimer(m_timer,
+        using manager::MTimerManager;
+        MTimerManager::Instance().SetTimer(m_timer,
                                           static_cast<long>(m_cells[m_cell_index].TimeMilli()),
-                                          false, this, &Animator::OnTriggerTick);
+                                          false, this, &CAnimator::OnTriggerTick);
     }
 }
 

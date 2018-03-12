@@ -84,13 +84,13 @@ EResourceType GetResourceType(const std::string_view& resource_token) {
     else return EResourceType::NOTHING;
 }
 
-resource::Texture2D MakeTexture2DContainer(std::stringstream& line_stream,
+resource::STexture2D MakeTexture2DContainer(std::stringstream& line_stream,
                                            const std::string& global_path) {
     char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
     unsigned x_sep, y_sep;  line_stream >> x_sep >> y_sep;
 
-    return resource::Texture2D{ resource::GetScopeType(type), global_path + local_path, {x_sep, y_sep} };
+    return resource::STexture2D{ resource::GetScopeType(type), global_path + local_path, {x_sep, y_sep} };
 };
 
 resource::SSound MakeSoundContainer(std::stringstream& line_stream,
@@ -138,7 +138,7 @@ resource::SFont MakeFontContainer(std::stringstream& line_stream,
 
 namespace manager {
 
-bool ResourceManager::ReadResourceFile(const std::string& path) {
+bool MResourceManager::ReadResourceFile(const std::string& path) {
     std::ifstream file_stream{ path, std::ios_base::in };
     file_stream.imbue(std::locale(""));
 
@@ -168,7 +168,7 @@ bool ResourceManager::ReadResourceFile(const std::string& path) {
     }
 }
 
-void ResourceManager::ReadResource(const std::string& token_line,
+void MResourceManager::ReadResource(const std::string& token_line,
                                    std::ifstream& stream,
                                    const std::string& global_path,
                                    EResourceType type) {
@@ -205,7 +205,7 @@ void ResourceManager::ReadResource(const std::string& token_line,
     }
 }
 
-void ResourceManager::PushShader(const std::string& name_key,
+void MResourceManager::PushShader(const std::string& name_key,
                                  const resource::SShader& list) {
 	if (ExistShaderKey(name_key))
 		throw new std::runtime_error("Shader Key duplicated :: " + name_key);
@@ -213,15 +213,15 @@ void ResourceManager::PushShader(const std::string& name_key,
     m_shaders.emplace(name_key, list);
 }
 
-void ResourceManager::PushTexture2D(const std::string& name_key,
-                                    const resource::Texture2D& container) {
+void MResourceManager::PushTexture2D(const std::string& name_key,
+                                    const resource::STexture2D& container) {
 	if (ExistTextureKey(name_key))
 		throw new std::runtime_error("Texture Key duplicated :: " + name_key);
 
 	m_textures.emplace(name_key, container);
 }
 
-void ResourceManager::PushSound(const std::string& name_key,
+void MResourceManager::PushSound(const std::string& name_key,
                                 const resource::SSound& container) {
     if (ExistSoundKey(name_key))
         throw new std::runtime_error("Sound Key duplicated :: " + name_key);
@@ -230,7 +230,7 @@ void ResourceManager::PushSound(const std::string& name_key,
 
 }
 
-void ResourceManager::PushFont(const std::string& name_key,
+void MResourceManager::PushFont(const std::string& name_key,
                                const resource::SFont& container) {
     if (ExistFontKey(name_key))
         throw new std::runtime_error("Font Key duplicated :: " + name_key);
@@ -238,7 +238,7 @@ void ResourceManager::PushFont(const std::string& name_key,
     m_fonts.emplace(name_key, container);
 }
 
-const resource::SShader& ResourceManager::GetShader(const std::string& name_key) {
+const resource::SShader& MResourceManager::GetShader(const std::string& name_key) {
 	if (ExistShaderKey(name_key)) {
 		return m_shaders.at(name_key);
 	}
@@ -247,7 +247,7 @@ const resource::SShader& ResourceManager::GetShader(const std::string& name_key)
 	}
 }
 
-const resource::Texture2D& ResourceManager::GetTexture2D(const std::string& name_key) {
+const resource::STexture2D& MResourceManager::GetTexture2D(const std::string& name_key) {
 	if (ExistTextureKey(name_key)) {
         return m_textures.at(name_key);
 	}
@@ -256,19 +256,19 @@ const resource::Texture2D& ResourceManager::GetTexture2D(const std::string& name
 	}
 }
 
-const resource::SSound& ResourceManager::GetSound(const std::string& name_key) {
+const resource::SSound& MResourceManager::GetSound(const std::string& name_key) {
     if (ExistSoundKey(name_key))
         return m_sounds.at(name_key);
 }
 
-std::pair<bool, const resource::SFont*> ResourceManager::GetFont(const std::string & name_key) {
+std::pair<bool, const resource::SFont*> MResourceManager::GetFont(const std::string & name_key) {
     if (ExistFontKey(name_key))
         return { true, &m_fonts.at(name_key) };
     else
         return { false, nullptr };
 }
 
-void ResourceManager::CheckError() {
+void MResourceManager::CheckError() {
 	switch (m_error) {
 	case ErrorType::FAILED_INITIALIZE_SHADER:
 		std::cerr << "ERROR::FAILED::INITIALIZE::SHADER" << std::endl;

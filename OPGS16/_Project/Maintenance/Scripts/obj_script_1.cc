@@ -2,19 +2,19 @@
 
 #include <glm/glm.hpp>
 #include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
-#include "../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
-#include "../../../System/Manager/Public/time_manager.h"   /*! TimeManager */
-#include "../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
-#include "../../../System/Components/Public/sprite_renderer.h"    /*! Sprite2DRenderer */
+#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
+#include "../../../System/Manager/Public/time_manager.h"   /*! MTimeManager */
+#include "../../../System/Manager/Public/timer_manager.h"  /*! MTimerManager */
+#include "../../../System/Components/Public/sprite_renderer.h"    /*! CSprite2DRenderer */
 
 #include "test_script_1.h"      /*! TestScript1 for Canvas */
 #include "../Object/test_obj.h" /*! TestObject1 for temporary */
 #include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
 
-using opgs16::manager::SceneManager;
-using opgs16::element::Object;
+using opgs16::manager::MSceneManager;
+using opgs16::element::CObject;
 
-ObjectScript1::ObjectScript1(Object& obj) : opgs16::component::ScriptFrame{ obj } {
+ObjectScript1::ObjectScript1(CObject& obj) : opgs16::component::CScriptFrame{ obj } {
     Initiate();
     Start();
 }
@@ -31,18 +31,18 @@ void ObjectScript1::DoWork(const size_t mode, const unsigned assigned_number) no
     default: m_moving = true; break;
     case 1: /*! If m_mode is 1, delay each object along with m_assigned_number */
         m_moving = false;
-        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_1_delay, 300 * m_assigned_number,
+        opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_1_delay, 300 * m_assigned_number,
                                              false, this, &ObjectScript1::OnWork_1Switch);
         break;
     case 4: /*! If m_mode is 4, delay each object along with m_assigned_number */
         m_moving = false;
-        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_delay, 200 * m_assigned_number,
+        opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_4_delay, 200 * m_assigned_number,
                                              false, this, &ObjectScript1::OnTriggered4Delay);
         break;
     case 5: /*! If m_mode is 5, delay each object along with m_assigned_number */
         m_moving = false;
         m_object_original_scale = GetObject().GetScaleValue();
-        opgs16::manager::TimerManager::Instance().SetTimer(m_timer_5_delay, 200 * m_assigned_number,
+        opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_5_delay, 200 * m_assigned_number,
                                              false, this, &ObjectScript1::OnTriggered5Delay);
         break;
     }
@@ -62,7 +62,7 @@ void ObjectScript1::Update() {
 
 void ObjectScript1::OnTriggered4Delay() {
     m_moving        = true;
-    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_interval, 2'000,
+    opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_4_interval, 2'000,
                                          false, this,
                                          &ObjectScript1::OnTriggered4Interval);
 }
@@ -71,7 +71,7 @@ void ObjectScript1::OnTriggered4Interval() {
     m_moving        = false;
     m_object_alpha  = 1.0f;
     m_elapsed_time  = 0.0f;
-    opgs16::manager::TimerManager::Instance().SetTimer(m_timer_4_waiting, 1'000,
+    opgs16::manager::MTimerManager::Instance().SetTimer(m_timer_4_waiting, 1'000,
                                          false, this,
                                          &ObjectScript1::OnTriggered4Delay);
 }
@@ -81,7 +81,7 @@ void ObjectScript1::OnTriggered5Delay() {
 }
 
 void ObjectScript1::StopAllTimers() {
-    auto& timer = opgs16::manager::TimerManager::Instance();
+    auto& timer = opgs16::manager::MTimerManager::Instance();
     timer.DetachTimer(m_timer_4_interval);
     timer.DetachTimer(m_timer_4_waiting);
 
@@ -89,8 +89,8 @@ void ObjectScript1::StopAllTimers() {
     m_elapsed_time = 0.0f;
     m_moving = false;
 
-    using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    using opgs16::component::CSprite2DRenderer;
+    CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
     auto& wrapper = renderer->Wrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
@@ -129,7 +129,7 @@ void ObjectScript1::Proceed_1NormalLocal() {
             m_switch = 0;
             m_moving = false;
 
-            auto& canvas = SceneManager::Instance().PresentScene()->GetObject("GameCanvas");
+            auto& canvas = MSceneManager::Instance().PresentScene()->GetObject("GameCanvas");
             if (canvas) {
                 TestScript1* canvas_script = canvas->GetComponent<TestScript1>();
                 canvas_script->TriggerProcessFinish();
@@ -174,7 +174,7 @@ void ObjectScript1::Proceed_3WorldPosition() {
             m_switch = 0;
             m_moving = false;
 
-            auto& canvas = SceneManager::Instance().PresentScene()->GetObject("GameCanvas");
+            auto& canvas = MSceneManager::Instance().PresentScene()->GetObject("GameCanvas");
             if (canvas) {
                 TestScript1* canvas_script = canvas->GetComponent<TestScript1>();
                 canvas_script->TriggerProcessFinish();
@@ -186,25 +186,25 @@ void ObjectScript1::Proceed_3WorldPosition() {
 }
 
 void ObjectScript1::Proceed_4AlphaBlending() {
-    m_elapsed_time += opgs16::manager::TimeManager::Instance().GetDeltaTime();
+    m_elapsed_time += opgs16::manager::MTimeManager::Instance().GetDeltaTime();
     m_object_alpha = (std::cosf(m_2pi * m_elapsed_time) + 1.0f) / 2;
 
-    using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    using opgs16::component::CSprite2DRenderer;
+    CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
     auto& wrapper = renderer->Wrapper();
     wrapper.ReplaceUniformValue("alpha", m_object_alpha);
 }
 
 void ObjectScript1::Proceed_5Scaling() {
-    m_elapsed_time += opgs16::manager::TimeManager::Instance().GetDeltaTime();
+    m_elapsed_time += opgs16::manager::MTimeManager::Instance().GetDeltaTime();
     m_object_scale_offset = (std::sinf(m_2pi * m_elapsed_time) / 2) + 0.5f;
 
     GetObject().SetScaleValue(m_object_original_scale * m_object_scale_offset);
 }
 
 void ObjectScript1::OnTriggerSwap() {
-    using opgs16::component::Sprite2DRenderer;
-    Sprite2DRenderer* renderer = GetObject().GetComponent<Sprite2DRenderer>();
+    using opgs16::component::CSprite2DRenderer;
+    CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
     const auto& index = renderer->TextureIndex();
     auto value  = index.y_sep * 2 + index.x_sep + 1;
 

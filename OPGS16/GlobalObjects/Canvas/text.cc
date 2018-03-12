@@ -2,7 +2,7 @@
 #include <iostream>                     /*! std::cerr
                                           * std::endl */
 #include "Impl\text_impl.h"             /*! Canvas::TextImpl */
-#include "..\..\System\Manager\Public\font_manager.h"  /*! FontManager
+#include "..\..\System\Manager\Public\font_manager.h"  /*! MFontManager
                                                   * aliasing font_map_ptr
                                                   * FontManager& Instance()
                                                   * bool LoadDefaultFont()
@@ -10,11 +10,11 @@
                                                   * bool DoesFontExist(std::string) */
 
 namespace canvas {
-using fontMap = opgs16::manager::FontManager::font_map_ptr;
+using fontMap = opgs16::manager::MFontManager::font_map_ptr;
 void TextImplDeleter::operator()(TextImpl* p) { delete p; }
 
 Text::Text(const std::string & initial_txt, const glm::vec3& position, const glm::vec3& color) :
-	m_font_manager{ &opgs16::manager::FontManager::Instance() } {
+	m_font_manager{ &opgs16::manager::MFontManager::Instance() } {
 	/** Body */
     std::unique_ptr<TextImpl, TextImplDeleter> impl{ new TextImpl(*this) };
     m_text_impl = std::move(impl);

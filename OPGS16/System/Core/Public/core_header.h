@@ -45,18 +45,18 @@
 #include "../../System/Shader/PostProcessing/pp_convex.h"
 #include "../../System/Shader/PostProcessing/pp_sinewave.h"
 #include "../../System/Shader/PostProcessing/pp_gray.h"
-#include "../../System/Manager/Public/font_manager.h"    /*! FontManager */
-#include "../../System/Manager/Public/input_manager.h"   /*! InputManager */
-#include "../../System/Manager/Public/object_manager.h"  /*! ObjectManager */
-#include "../../System/Manager/Public/physics_manager.h" /*! PhysicsManager*/
-#include "../../System/Manager/Public/postprocessing_manager.h" /*! opgs16::manager::PostProcessingManager */
-#include "../../System/Manager/Public/resource_manager.h"/*! ResourceManager */
-#include "../../System/Manager/Public/scene_manager.h"   /*! SceneManager */
-#include "../../System/Manager/Public/setting_manager.h" /*! SettingManager */
+#include "../../System/Manager/Public/font_manager.h"    /*! MFontManager */
+#include "../../System/Manager/Public/input_manager.h"   /*! MInputManager */
+#include "../../System/Manager/Public/object_manager.h"  /*! MObjectManager */
+#include "../../System/Manager/Public/physics_manager.h" /*! MPhysicsManager*/
+#include "../../System/Manager/Public/postprocessing_manager.h" /*! opgs16::manager::MPostProcessingManager */
+#include "../../System/Manager/Public/resource_manager.h"/*! MResourceManager */
+#include "../../System/Manager/Public/scene_manager.h"   /*! MSceneManager */
+#include "../../System/Manager/Public/setting_manager.h" /*! MSettingManager */
 #include "../../System/Manager/Public/shader_manager.h"  /*! ShaderManager */
-#include "../../System/Manager/Public/sound_manager.h"   /*! SoundManager */
-#include "../../System/Manager/Public/time_manager.h"    /*! TimeManager */
-#include "../../System/Manager/Public/timer_manager.h"   /*! TimerManager */
+#include "../../System/Manager/Public/sound_manager.h"   /*! MSoundManager */
+#include "../../System/Manager/Public/time_manager.h"    /*! MTimeManager */
+#include "../../System/Manager/Public/timer_manager.h"   /*! MTimerManager */
 #include "../../_Project/Maintenance/Scene/test_1.h"
 
 #endif

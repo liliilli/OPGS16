@@ -44,9 +44,9 @@ namespace opgs16 {
 namespace component {
 namespace _internal {
 
-SpriteRendererImpl::SpriteRendererImpl(const std::string & sprite_tag,
+CSpriteRendererImpl::CSpriteRendererImpl(const std::string & sprite_tag,
                                        const std::string & shader_tag,
-                                       const opgs16::resource::Texture2D::IndexSize& texture_index,
+                                       const opgs16::resource::STexture2D::IndexSize& texture_index,
                                        unsigned layer) :
     m_sprite{ opgs16::manager::TextureManager::Instance().GetTexture(sprite_tag) },
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },
@@ -63,7 +63,7 @@ SpriteRendererImpl::SpriteRendererImpl(const std::string & sprite_tag,
     );
 }
 
-void SpriteRendererImpl::RenderSprite() {
+void CSpriteRendererImpl::RenderSprite() {
 	m_wrapper.UseShader();  /*! the name is incorrect... */
 	glBindVertexArray(empty_vao);
 

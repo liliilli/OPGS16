@@ -9,15 +9,15 @@
 #include "..\..\..\Headers\script_common.h"
 /*!
  * SET_UP_HASH_MEMBER_DERIVED()
- * component::ScriptFrame
- * Canvas::Text * Object * ObjectTree
+ * component::CScriptFrame
+ * Canvas::Text * CObject * ObjectTree
  */
 
 #include <iostream>
 
-class TestScript final : public opgs16::component::ScriptFrame {
+class TestScript final : public opgs16::component::CScriptFrame {
 public:
-    TestScript(Object& obj) : opgs16::component::ScriptFrame(obj) {
+    TestScript(Object& obj) : opgs16::component::CScriptFrame(obj) {
         Initiate();
         Start();
     }
@@ -32,5 +32,5 @@ private:
     }
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, TestScript)
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, TestScript)
 };

@@ -49,28 +49,28 @@
 
 namespace opgs16 {
 
-enum class ScaleType : unsigned {
+enum class EScaleType : unsigned {
     X1 = 1, /*! Screen will be shown with screen size */
     X2 = 2,	/*! Screen will be shown with double of screen size */
     X3 = 3,	/*! Screen will be shown with triple of screen size */
 };
 
 /*! Check and return boolean value whether lhs is same to rhs. */
-inline constexpr bool IsSameValue(ScaleType lhs, ScaleType rhs) {
+inline constexpr bool IsSameValue(EScaleType lhs, EScaleType rhs) {
     return lhs == rhs;
 }
 
 /*!
- * @class GlobalSetting
+ * @class SGlobalSetting
  * @brief Storage of application global setting. these setting options are provided by default,
  * so user could not insert new option or remove existed option.
  *
  * Example : get screen size or either width or height.
- *     auto var = opgs16::GlobalSetting::ScreenSize();
- *     auto var = opgs16::GlobalSetting::ScreenWidth();
- *     auto var = opgs16::GlobalSetting::ScreenHeight();
+ *     auto var = opgs16::SGlobalSetting::ScreenSize();
+ *     auto var = opgs16::SGlobalSetting::ScreenWidth();
+ *     auto var = opgs16::SGlobalSetting::ScreenHeight();
  */
-class GlobalSetting final {
+class SGlobalSetting final {
 private:
     using size_type = std::array<unsigned, 2>;
 
@@ -97,7 +97,7 @@ public:
     inline Switch SizeScalable() const noexcept {
         return m_size_scalable;
     }
-    inline ScaleType ScaleValue() const noexcept {
+    inline EScaleType ScaleValue() const noexcept {
         return m_scale_value;
     }
     inline auto ScaleValueIntegerOf() const noexcept {
@@ -116,7 +116,7 @@ public:
     inline void SetSizeScalable(Switch value) noexcept {
         m_size_scalable = value;
     }
-    inline void SetScaleValue(ScaleType value) noexcept {
+    inline void SetScaleValue(EScaleType value) noexcept {
         m_scale_value = value;
     }
 
@@ -140,12 +140,12 @@ private:
     Switch m_debug_mode{ false };
     Switch m_post_processing{ false };
     Switch m_size_scalable{ true };
-    ScaleType m_scale_value{ ScaleType::X1 };
+    EScaleType m_scale_value{ EScaleType::X1 };
 
 public:
-    GlobalSetting();
-    GlobalSetting(const GlobalSetting&) = delete;
-    GlobalSetting operator=(const GlobalSetting&) = delete;
+    SGlobalSetting();
+    SGlobalSetting(const SGlobalSetting&) = delete;
+    SGlobalSetting operator=(const SGlobalSetting&) = delete;
 };
 
 } /*! opgs16 */

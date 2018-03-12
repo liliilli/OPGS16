@@ -27,59 +27,49 @@
  */
 
 #include "../Public/object.h"              /*! Header file */
-#include "../Impl/object_impl.h"           /*! ObjectImpl */
-
-#include <iostream>
+#include "../Impl/object_impl.h"           /*! CObjectImpl */
 
 namespace opgs16 {
 namespace element {
-namespace _internal {
-void ObjectImplDeleter::operator()(ObjectImpl* p) {
-	delete p;
-}
-} /*! opgs16::element::_internal */
+namespace {
+using _internal::CObjectImpl;
+} /*! unnamed namespace */
 
-using _internal::ObjectImpl;
-using _internal::ObjectImplDeleter;
+CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } { }
 
-Object::Object() {
-	std::unique_ptr<ObjectImpl, ObjectImplDeleter> instance{ new ObjectImpl() };
-	m_data = std::move(instance);
-}
-
-const glm::vec3& Object::GetLocalPosition() const noexcept {
+const glm::vec3& CObject::GetLocalPosition() const noexcept {
     return m_data->GetLocalPosition();
 }
 
-const glm::vec3& Object::GetWorldPosition() const noexcept {
+const glm::vec3& CObject::GetWorldPosition() const noexcept {
     return m_data->GetWorldPosition();
 }
 
-const glm::vec3& Object::GetParentPosition() const noexcept {
+const glm::vec3& CObject::GetParentPosition() const noexcept {
     return m_data->GetParentPosition();
 }
 
-const glm::vec3& Object::GetFinalPosition() const noexcept {
+const glm::vec3& CObject::GetFinalPosition() const noexcept {
     return m_data->GetFinalPosition();
 }
 
 // ReSharper disable CppMemberFunctionMayBeConst
-void Object::SetLocalPosition(const glm::vec3& position) noexcept {
+void CObject::SetLocalPosition(const glm::vec3& position) noexcept {
     // ReSharper restore CppMemberFunctionMayBeConst
 	m_data->SetLocalPosition(position);
 }
 
-void Object::SetWorldPosition(const glm::vec3& world_position) {
+void CObject::SetWorldPosition(const glm::vec3& world_position) {
 	m_data->SetWorldPosition(world_position);
     PropagateParentPosition();
 }
 
-void Object::SetParentPosition(const glm::vec3& parent_position) {
+void CObject::SetParentPosition(const glm::vec3& parent_position) {
 	m_data->SetParentPosition(parent_position);
     PropagateParentPosition();
 }
 
-void Object::PropagateParentPosition() {
+void CObject::PropagateParentPosition() {
     for (auto& child : m_children) {
         auto& child_ptr = child.second;
         /*! If object is not empty and activated and permits succeeding positioning. */
@@ -88,15 +78,15 @@ void Object::PropagateParentPosition() {
     }
 }
 
-const float Object::GetRotationAngle() const noexcept {
+const float CObject::GetRotationAngle() const noexcept {
     return m_data->GetRotationLocalAngle();
 }
 
-const glm::vec3& Object::GetRotationFactor() const noexcept {
+const glm::vec3& CObject::GetRotationFactor() const noexcept {
     return m_data->GetRotationLocalFactor();
 }
 
-void Object::SetRotationAngle(const float angle_value) {
+void CObject::SetRotationAngle(const float angle_value) {
 	m_data->SetRotationLocalAngle(angle_value);
 
     //for (auto& child : m_children) {
@@ -106,55 +96,55 @@ void Object::SetRotationAngle(const float angle_value) {
     //}
 }
 
-void Object::SetRotationFactor(const glm::vec3& factor) {
+void CObject::SetRotationFactor(const glm::vec3& factor) {
 	m_data->SetRotationLocalFactor(factor);
 }
 
-const float Object::GetScaleValue() const noexcept {
+const float CObject::GetScaleValue() const noexcept {
     return m_data->GetScaleLocalValue();
 }
 
-const glm::vec3& Object::GetScaleFactor() const noexcept {
+const glm::vec3& CObject::GetScaleFactor() const noexcept {
     return m_data->GetScaleLocalFactor();
 }
 
-void Object::SetScaleValue(const float scale_value) {
+void CObject::SetScaleValue(const float scale_value) {
 	m_data->SetScaleLocalValue(scale_value);
 }
 
-void Object::SetScaleFactor(const glm::vec3& factor) {
+void CObject::SetScaleFactor(const glm::vec3& factor) {
 	m_data->SetScaleLocalFactor(factor);
 }
 
-const glm::mat4& Object::GetModelMatrix() const {
+const glm::mat4& CObject::GetModelMatrix() const {
     return m_data->GetModelMatrix();
 }
 
-void Object::SetSucceedingPositionFlag(bool value) noexcept {
+void CObject::SetSucceedingPositionFlag(bool value) noexcept {
     m_data->SetSucceedingPositionFlag(value);
 }
 
-void Object::SetSucceedingRotationFlag(bool value) noexcept {
+void CObject::SetSucceedingRotationFlag(bool value) noexcept {
     m_data->SetSucceedingRotationFlag(value);
 }
 
-void Object::SetSucceedingScalingFlag(bool value) noexcept {
+void CObject::SetSucceedingScalingFlag(bool value) noexcept {
     m_data->SetSucceedingScalingFlag(value);
 }
 
-bool Object::GetSucceedingPositionFlag() const noexcept {
+bool CObject::GetSucceedingPositionFlag() const noexcept {
     return m_data->GetSucceedingPositionFlag();
 }
 
-bool Object::GetSucceedingRotationFlag() const noexcept {
+bool CObject::GetSucceedingRotationFlag() const noexcept {
     return m_data->GetSucceedingRotationFlag();
 }
 
-bool Object::GetSucceedingScalingFlag() const noexcept {
+bool CObject::GetSucceedingScalingFlag() const noexcept {
     return m_data->GetSucceedingScalingFlag();
 }
 
-std::vector<std::string> Object::GetChildrenNameList() const {
+std::vector<std::string> CObject::GetChildrenNameList() const {
 	std::vector<std::string> list(m_children.size());
 	for (const auto& object_pair : m_children) {
         /*! emplace_back evades unnecessary temp instance. */
@@ -164,16 +154,16 @@ std::vector<std::string> Object::GetChildrenNameList() const {
 	return list;
 }
 
-Object::object_map& Object::GetChildList() {
+CObject::object_map& CObject::GetChildList() {
 	 return m_children;
  }
 
-Object::object_raw const Object::GetChild(const std::string& tag) {
+CObject::object_raw const CObject::GetChild(const std::string& tag) {
     if (m_children.find(tag) == m_children.end()) return nullptr;
     return m_children.at(tag).get();
 }
 
-bool Object::DestroyChild(const std::string& child_name) {
+bool CObject::DestroyChild(const std::string& child_name) {
     if (m_children.find(child_name) == m_children.end())
 	    return false;
 
@@ -181,29 +171,31 @@ bool Object::DestroyChild(const std::string& child_name) {
     return true;
 }
 
-bool Object::GetActive() const {
+bool CObject::GetActive() const {
     return m_data->GetActive();
 }
 
-void Object::SetActive(const bool value) {
+void CObject::SetActive(const bool value) {
 	m_data->SetActive(value);
 }
 
-void Object::SetTag(const std::string& tag_name) {
+void CObject::SetTag(const std::string& tag_name) {
     m_data->SetTag(tag_name);
 }
 
-void Object::SetTag(const size_t tag_index) {
+void CObject::SetTag(const size_t tag_index) {
     m_data->SetTag(tag_index);
 }
 
-size_t Object::GetTagIndexOf() const {
+size_t CObject::GetTagIndexOf() const {
     return m_data->GetTagIndexOf();
 }
 
-std::string Object::GetTagNameOf() const {
+std::string CObject::GetTagNameOf() const {
     return m_data->GetTagNameOf();
 }
+
+CObject::~CObject() = default;
 
 } /*! opgs16::element */
 } /*! opgs16 */

@@ -48,16 +48,16 @@ namespace opgs16 {
 namespace component {
 
 /*!
- * @class ScriptFrame
+ * @class CScriptFrame
  * @brief The most base script class, which is derived by all user-defined script class.
- * ScriptFrame inherits component::Component class the most base class of all components.
+ * ScriptFrame inherits component::CComponent class the most base class of all components.
  *
  * All derived class must be a final, and define Start() and Update() member function.
  * Initiate() and Start() must be called only once in initialization time.
  */
-class ScriptFrame : public _internal::Component {
+class CScriptFrame : public _internal::CComponent {
 public:
-    ScriptFrame(element::Object& bound_obj) : _internal::Component{ bound_obj } {}
+    CScriptFrame(element::CObject& bound_obj) : _internal::CComponent{ bound_obj } {}
 
     /*!
      * @brief This method will be called only one time, when ScriptFrame is attached to object,
@@ -89,7 +89,7 @@ private:
     const std::string m_script_name;    /*! Name must be same as ScriptFrame derived. */
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, ScriptFrame)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CScriptFrame)
 };
 
 } /*! opgs16::component */

@@ -57,7 +57,7 @@ enum class EScopeType {
 EScopeType GetScopeType(const char type);
 
 /*! Information structure of Texture2D */
-struct Texture2D {
+struct STexture2D {
     struct IndexSize { unsigned x_sep, y_sep; };
 
     EScopeType       m_type;

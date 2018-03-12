@@ -35,7 +35,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-02-14 Create file and implement basic features.
- * 2018-03-11 Corection of ::opgs16::element::Object class.
+ * 2018-03-11 Corection of ::opgs16::element::CObject class.
  */
 
 #include <glm\glm.hpp>
@@ -58,7 +58,7 @@ namespace component {
  * 2018-02-14 Implemented basic features.
  * 2018-02-14 Move class from ::component to ::opgs16::component.
  */
-class Camera final : public _internal::Component {
+class CCamera final : public _internal::CComponent {
 public:
 	/** Camera type how to see worlds. */
 	enum class ViewType {
@@ -72,12 +72,12 @@ public:
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
-     virtual void Update() override;     /*! Inherited via component::Component */
+     virtual void Update() override;     /*! Inherited via component::CComponent */
 
 public:
-	Camera(element::Object& bound_obj,
+	CCamera(element::CObject& bound_obj,
            ViewType view_type, CameraType camera_type, bool _auto = true);
-	virtual ~Camera();
+	virtual ~CCamera();
 
     const glm::mat4 GetViewMatrix() const noexcept;         /*! Get View matrix */
 	const glm::mat4 GetProjectionMatrix() const noexcept;   /*! Get Projection matrix */
@@ -104,7 +104,7 @@ private:
 	 void InitiatePerspectiveProjection();
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Camera)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CCamera)
 };
 
 } /*! opgs16::component */

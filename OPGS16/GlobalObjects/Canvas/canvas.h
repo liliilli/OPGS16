@@ -40,7 +40,7 @@
  */
 
 #include "../../Headers/Fwd/objectfwd.h"    /*! glm::mat4
-                                              * helper::ShaderNew;
+                                              * helper::CShaderNew;
                                               * camera::CameraObject; */
 #include "../../System/Element/Public/ui_object.h"  /*! ::opgs16::element::UiObject */
 
@@ -80,7 +80,7 @@ public:
 
 private:
 	/** Camera object uses just one orthographic type. */
-    opgs16::component::Camera* m_camera{ nullptr };
+    opgs16::component::CCamera* m_camera{ nullptr };
 
 	bool m_is_size_changed;
 };

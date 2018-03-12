@@ -1,46 +1,71 @@
-#ifndef OPGS16__SHADER_H
-#define OPGS16__SHADER_H
+#ifndef OPGS16_SYSTEM_ELEMENT_PUBLIC_SHADER_H
+#define OPGS16_SYSTEM_ELEMENT_PUBLIC_SHADER_H
 
-/**
-* @file shader.h
-* @brief
-*
-* @author Jongmin Yun
-* @date 2018-02-28
-*
-* @log
-* 2018-02-26 Undefined
-* 2018-02-28 Add SetVec2f();
-*/
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file shader.h
+ * @brief
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-02-26 Undefined
+ * 2018-02-28 Add SetVec2f();
+ * 2018-03-12 Refactoring.
+ */
 
 #include <unordered_map>
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include "..\..\Headers\Fwd\lightfwd.h"
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include "../../Headers/Fwd/lightfwd.h"
 #include "../../Headers/Fwd/objectfwd.h"
 
-namespace helper {
+namespace opgs16 {
+namespace element {
 
-/**
- * @class ShaderNew
+/*!
+ * @class CShaderNew
  * @brief New shader wrapper class
- *
- *
  */
-class ShaderNew {
+class CShaderNew {
 public:
     /*!
      * @brief
-     *
      * @param[in] shader_type
      * @param[in] path
      *
      * @bug When binds const char* code ptr into shader,
      * success flag is not on and go to the error calls but maybe shader program works probablly.
      */
-    ShaderNew& SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path);
+    CShaderNew& SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path);
 
-    ~ShaderNew();
+    ~CShaderNew();
 
     /**
      * @brief
@@ -56,7 +81,6 @@ public:
 
     /**
      * @brief The method sets boolean value to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
@@ -64,7 +88,6 @@ public:
 
     /**
      * @brief The method sets singed-integer value to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
@@ -72,9 +95,7 @@ public:
 
     /**
      * @brief The method sets float value to arbitary uniform variable.
-     *
      * The method sets float (single-precision real) value to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] value value to be inputted.
      */
@@ -89,7 +110,6 @@ public:
 
     /**
      * @brief The method sets three float values to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] _1 First value to be defined.
      * @param[in] _2 Second value to be defined.
@@ -99,7 +119,6 @@ public:
 
     /**
      * @brief The method sets $ R^3 $ vector to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] vector $ R^3 $ vector refernce l-value to input.
      */
@@ -107,7 +126,6 @@ public:
 
     /**
      * @brief The method sets $ \mathbf{M}_{4x4} $ matrix to arbitary uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] vector $ \mathbf{M}_{4_4} $ matrix reference l-value to input.
      */
@@ -115,7 +133,6 @@ public:
 
     /**
      * @brief The method sets light::DirectionalLight information to shader uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] container DirectionalLight container instance.
      */
@@ -123,21 +140,17 @@ public:
 
     /**
      * @brief The method sets light::PointLight information to shader uniform variable.
-     *
      * @param[in] name The name of uniform variable to be specified.
      * @param[in] container PointLight container instance.
      */
-     void SetStructPointLight(const std::string& name,
-                                          const light::PointLight& container);
+     void SetStructPointLight(const std::string& name, const light::PointLight& container);
 
     /**
      * @brief The method sets light::Spotlight information to shader uniform variable.
-     *
      * @param[in] name THe name of uniform variable to be specified.
      * @param[in] container Spotlight container instance.
      */
-     void SetStructSpotlight(const std::string& name,
-                                         const light::Spotlight& container);
+     void SetStructSpotlight(const std::string& name, const light::Spotlight& container);
 
 private:
     mutable GLuint m_program_id{};  /*! Unique id of shader program */
@@ -146,7 +159,6 @@ private:
 
     /**
      * @brief
-     *
      * @param[in] type
      */
     inline bool IsCompiled(opgs16::resource::EShaderType type) const {
@@ -155,14 +167,12 @@ private:
 
     /**
      * @brief
-     *
      * @param[in] path
      */
     std::string ReadShaderCodeFrom(const std::string path);
 
     /**
      * @brief
-     *
      * @param[in] shader
      * @param[in] info_log
      */
@@ -170,17 +180,19 @@ private:
 
     /**
      * @brief
-     *
      * @param[in] shader
      * @param[in] info_log
      */
     void LinkingErrorPrint(GLuint shader, char* info_log);
 };
 
+} /*! opgs16::element */
+} /*! opgs16 */
+
+namespace helper {
 
 /**
  * @brief Old Shader wrapper class
- *
  * @deprecated
  */
 class Shader {
@@ -219,4 +231,4 @@ private:
 
 }
 
-#endif
+#endif /*! OPGS16_SYSTEM_ELEMENT_PUBLIC_SHADER_H */

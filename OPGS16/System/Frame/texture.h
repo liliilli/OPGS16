@@ -43,7 +43,7 @@
 #include <GL/glew.h>    /*! GL specific types */
 #include "../Element/Internal/texture_internal.h"   /*! ::opgs16::element::texture::_internal */
 #include "../Manager/Public/resource_type.h"        /*! ::opgs16::resource */
-#include "../../Headers/Fwd/objectfwd.h"            /*! ::opgs16::resource::Texture2D structure */
+#include "../../Headers/Fwd/objectfwd.h"            /*! ::opgs16::resource::STexture2D structure */
 
 namespace opgs16 {
 /*!
@@ -53,7 +53,7 @@ namespace opgs16 {
 namespace texture {
 
 /*!
- * @class Texture2D
+ * @class CTexture2D
  * @brief The class for binding Texture id and can set m_texture's parameters.
  *
  * @log
@@ -61,13 +61,13 @@ namespace texture {
  * 2018-02-28 Add Width, Height inline functions.
  * 2018-03-10 Refactoring.
  */
-class Texture2D {
+class CTexture2D {
 private:
     using TextureParameter = element::texture::_internal::TextureParameter;
     using cell_size = std::pair<float, float>;
 
 public:
-    ~Texture2D();
+    ~CTexture2D();
 
 	/**
 	 * @brief Constructor get path and m_texture mode as arguments, build and set them.
@@ -75,7 +75,7 @@ public:
 	 * @param[in] bind_mode mode to bind m_texture as what m_texture's color data type is.
 	 * bind_mode is limited in GL_RGB, GL_RGBA, and so on.
 	 */
-	Texture2D(const resource::Texture2D& container);
+	CTexture2D(const resource::STexture2D& container);
 
 	/**
 	 * @brief Create m_texture with no m_texture path, but for later use.
@@ -85,7 +85,7 @@ public:
 	 * @param[in] width texture width size to create.
 	 * @param[in] height texture height size to create.
 	 */
-	Texture2D(const GLint internal_format, GLenum format, GLenum type,
+	CTexture2D(const GLint internal_format, GLenum format, GLenum type,
               GLsizei width = 256, GLsizei height = 224);
 
 	/**
@@ -127,7 +127,7 @@ public:
         return m_texture_cell_size;
     }
 
-    inline resource::Texture2D::IndexSize CellWH() const noexcept {
+    inline resource::STexture2D::IndexSize CellWH() const noexcept {
         return m_cell_number;
 	}
 
@@ -138,7 +138,7 @@ private:
     int m_height;                       /*! Texture height */
 
     cell_size m_texture_cell_size{};    /*! Texture coordinate cell size */
-    resource::Texture2D::IndexSize m_cell_number{};
+    resource::STexture2D::IndexSize m_cell_number{};
 };
 
 } /*! opgs16::texture */

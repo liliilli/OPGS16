@@ -58,7 +58,7 @@ void PostProcessingFrame::InsertColorBuffer(const unsigned id,
     }
 
     /*! Insert. */
-	m_color_buffers[id] = std::make_unique<opgs16::texture::Texture2D>(internal_format,
+	m_color_buffers[id] = std::make_unique<opgs16::texture::CTexture2D>(internal_format,
                                                                format, type,
                                                                width, height);
 }

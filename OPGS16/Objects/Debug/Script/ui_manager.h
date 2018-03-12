@@ -10,13 +10,13 @@
 #include "..\..\..\Headers\script_common.h"
 /*!
  * SET_UP_HASH_MEMBER_DERIVED()
- * component::ScriptFrame
- * Canvas::Text * Object * ObjectTree
+ * component::CScriptFrame
+ * Canvas::Text * CObject * ObjectTree
  */
 
-class DebugUiManager final : public opgs16::component::ScriptFrame {
+class DebugUiManager final : public opgs16::component::CScriptFrame {
 public:
-    DebugUiManager(opgs16::element::Object& obj,
+    DebugUiManager(opgs16::element::CObject& obj,
                    canvas::Text* const, canvas::Text* const, canvas::Text* const);
 
     virtual void Update() override final;
@@ -30,10 +30,10 @@ private:
     canvas::Text* m_tree;
 
 private:
-    void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
+    //void SetHierarchyText(const ObjectTree* item, size_t count, std::string* const text);
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, DebugUiManager)
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, DebugUiManager)
 };
 
 #endif // !OPGS16_OBJECTS_DEBUG_SCRIPT_UI_MANAGER_H

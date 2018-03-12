@@ -43,7 +43,7 @@
 #include <unordered_map>
 
 #include "resource_manager.h"               /*! ::opgs16::manager::resource_manager */
-#include "../../Element/Public/object.h"    /*! ::opgs16::element::Object */
+#include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
 #include "../../Shader/shader.h"
 
 namespace opgs16 {
@@ -68,8 +68,8 @@ namespace manager {
  */
 class ShaderManager final {
 public:
-	using shader_raw = helper::ShaderNew*;
-	using shader_ptr = std::unique_ptr<helper::ShaderNew>;
+	using shader_raw = element::CShaderNew*;
+	using shader_ptr = std::unique_ptr<element::CShaderNew>;
     using shader_map = std::unordered_map<std::string, shader_ptr>;
 
 	/*! Return singleton instance of ShaderManager class. */
@@ -141,7 +141,7 @@ public:
 inline ShaderManager::shader_raw ShaderManager::Shader(const std::string& name) {
 	if (m_shaders.find(name) == m_shaders.end()) {
 		// late Initialize
-		auto& list = opgs16::manager::ResourceManager::Instance().GetShader(name);
+		auto& list = opgs16::manager::MResourceManager::Instance().GetShader(name);
 		CreateShader(name, list);
 	}
 	return m_shaders.at(name).get();

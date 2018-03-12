@@ -49,12 +49,12 @@ constexpr char s_tag_file[] = R"(_Setting/tag.meta)";
 constexpr char s_render_layer_file[] = R"(_Setting/render_layer.meta)";
 } /*! unnamed namespace */
 
-SettingManager::SettingManager() {
+MSettingManager::MSettingManager() {
     InitializeTagList();
     InitializeRenderLayerList();
 }
 
-void SettingManager::InitializeTagList() {
+void MSettingManager::InitializeTagList() {
     std::ifstream in_file_stream(s_tag_file, std::ios_base::in);
     in_file_stream.imbue(std::locale(""));
 
@@ -75,7 +75,7 @@ void SettingManager::InitializeTagList() {
     }
 }
 
-void SettingManager::InitializeRenderLayerList() {
+void MSettingManager::InitializeRenderLayerList() {
     std::ifstream file_stream{ s_render_layer_file, std::ios_base::in };
     file_stream.imbue(std::locale(""));
 
@@ -93,13 +93,13 @@ void SettingManager::InitializeRenderLayerList() {
     }
 }
 
-std::string SettingManager::GetTagName(const size_t id) {
+std::string MSettingManager::GetTagName(const size_t id) {
     if (id >= m_tag_list.size()) return "";
 
     return m_tag_list[id];
 }
 
-const std::vector<std::string>& SettingManager::GetTagNameList() const {
+const std::vector<std::string>& MSettingManager::GetTagNameList() const {
     return m_tag_list;
 }
 

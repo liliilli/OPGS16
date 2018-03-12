@@ -36,16 +36,16 @@
  */
 
 #include "../Public/timer_manager.h"  /*! Header file */
-#include "../Public/time_manager.h"   /*! opgs16::manager::TimeManager */
+#include "../Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
 
 namespace opgs16 {
 namespace manager {
 
 using _internal::Status;
 
-void TimerManager::Update() {
+void MTimerManager::Update() {
     /*! Iteration & Checking */
-    const auto time_quantum = TimeManager::Instance().GetDeltaTime();
+    const auto time_quantum = MTimeManager::Instance().GetDeltaTime();
     for (auto& [__, timer] : m_timer_container) {
         if (timer.m_status == Status::ACTIVATED)
             timer.m_handle->Try(time_quantum);
@@ -57,13 +57,13 @@ void TimerManager::Update() {
     }
 }
 
-void TimerManager::Clear() {
+void MTimerManager::Clear() {
     s_timer_count = 0u;
     m_delete_list.clear();
     m_timer_container.clear();
 }
 
-bool TimerManager::PauseTimer(TimerHandle& handle) {
+bool MTimerManager::PauseTimer(TimerHandle& handle) {
     if (const auto key = handle.GetKeyValue();
         DoesTimerExist(handle) && m_timer_container[key].m_status == Status::ACTIVATED) {
 
@@ -73,7 +73,7 @@ bool TimerManager::PauseTimer(TimerHandle& handle) {
     return false;
 }
 
-bool TimerManager::ResumeTimer(TimerHandle& handle) {
+bool MTimerManager::ResumeTimer(TimerHandle& handle) {
     if (const auto key = handle.GetKeyValue();
         DoesTimerExist(handle) && m_timer_container[key].m_status == Status::PAUSED) {
 
@@ -83,7 +83,7 @@ bool TimerManager::ResumeTimer(TimerHandle& handle) {
     return false;
 }
 
-bool TimerManager::DetachTimer(TimerHandle& handle) {
+bool MTimerManager::DetachTimer(TimerHandle& handle) {
     if (const auto key = handle.GetKeyValue(); DoesTimerExist(handle)) {
 
         m_timer_container[key].m_status = Status::REMOVED;

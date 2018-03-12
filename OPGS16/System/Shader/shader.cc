@@ -1,3 +1,35 @@
+/*!
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*!
+ * @file System/Element/Private/shader.h
+ */
+
 #include "shader.h"
 
 #include <fstream>
@@ -5,13 +37,15 @@
 #include <sstream>
 #include <string>
 #include <glm\gtc\type_ptr.hpp>
-#include "..\..\GlobalObjects\light.h"
+#include "../../GlobalObjects/light.h"
 #include "../Manager/Public/resource_type.h"
 
-namespace helper {
 constexpr unsigned LOG_SIZE = 0x200;
 
-ShaderNew& ShaderNew::SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path) {
+namespace opgs16 {
+namespace element {
+
+CShaderNew& CShaderNew::SetShader(resource::EShaderType shader_type, const GLchar* path) {
     if (m_linked || IsCompiled(shader_type)) {
         std::cerr << "ERROR::SHADER::ALREADY::COMPILED" << std::endl;
     }
@@ -38,14 +72,14 @@ ShaderNew& ShaderNew::SetShader(opgs16::resource::EShaderType shader_type, const
     return *this;
 }
 
-ShaderNew::~ShaderNew() {
+CShaderNew::~CShaderNew() {
     if (!m_shaders.empty())
         m_shaders.clear();
 
     glDeleteProgram(m_program_id);
 }
 
-void ShaderNew::Link() {
+void CShaderNew::Link() {
     m_program_id = glCreateProgram();
 
     // Attach shader fragments (already compiled)
@@ -71,7 +105,7 @@ void ShaderNew::Link() {
     m_linked = true;
 }
 
-void ShaderNew::Use() {
+void CShaderNew::Use() {
     if (!m_linked) {
         std::cerr << "ERROR::SHADER::NOT::LINKED::YET" << std::endl;
         throw std::runtime_error("ERROR::SHADER::NOT::LINKED::YET");
@@ -79,7 +113,7 @@ void ShaderNew::Use() {
     else { glUseProgram(m_program_id); }
 }
 
-std::string ShaderNew::ReadShaderCodeFrom(const std::string path) {
+std::string CShaderNew::ReadShaderCodeFrom(const std::string path) {
     std::string code;
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -103,49 +137,47 @@ std::string ShaderNew::ReadShaderCodeFrom(const std::string path) {
     return code;
 }
 
-void ShaderNew::ShaderErrorPrint(GLuint shader, char* info_log) {
+void CShaderNew::ShaderErrorPrint(GLuint shader, char* info_log) {
     glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
     std::cout << "ERROR::SHADER::COMPILATION_FAILED" << info_log << std::endl;
 }
 
-void ShaderNew::LinkingErrorPrint(GLuint shader, char* info_log) {
+void CShaderNew::LinkingErrorPrint(GLuint shader, char* info_log) {
     glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
     std::cout << "ERROR::SHADER::LINKING_FAILED" << info_log << std::endl;
 }
 
-
-
-void ShaderNew::SetBool(const std::string & name, bool value) const {
+void CShaderNew::SetBool(const std::string & name, bool value) const {
     glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), static_cast<GLint>(value));
 }
 
-void ShaderNew::SetInt(const std::string & name, int value) const {
+void CShaderNew::SetInt(const std::string & name, int value) const {
     glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
-void ShaderNew::SetFloat(const std::string& name, float value) const {
+void CShaderNew::SetFloat(const std::string& name, float value) const {
     glUniform1f(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
-void ShaderNew::SetVec2f(const std::string& name, const glm::vec2& vector) {
+void CShaderNew::SetVec2f(const std::string& name, const glm::vec2& vector) {
     glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
-void ShaderNew::SetVec3f(const std::string& name,
+void CShaderNew::SetVec3f(const std::string& name,
                          const float _1, const float _2, const float _3) {
     glUniform3f(glGetUniformLocation(m_program_id, name.c_str()), _1, _2, _3);
 }
 
-void ShaderNew::SetVec3f(const std::string& name, const glm::vec3& vector) {
+void CShaderNew::SetVec3f(const std::string& name, const glm::vec3& vector) {
     glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
-void ShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix) {
+void CShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix) {
     glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()),
                        1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void ShaderNew::SetStructDirLight(const std::string & name,
+void CShaderNew::SetStructDirLight(const std::string & name,
                                   const light::DirectionalLight & container) {
     SetVec3f(name + ".direction", container.GetDirection());
 
@@ -154,7 +186,7 @@ void ShaderNew::SetStructDirLight(const std::string & name,
     SetVec3f(name + ".specular", container.GetSpecular());
 }
 
-void ShaderNew::SetStructPointLight(const std::string & name,
+void CShaderNew::SetStructPointLight(const std::string & name,
                                     const light::PointLight & container) {
     SetVec3f(name + ".position", container.GetLocalPosition());
 
@@ -167,7 +199,7 @@ void ShaderNew::SetStructPointLight(const std::string & name,
     SetFloat(name + ".quadratic", container.GetQuadratic());
 }
 
-void ShaderNew::SetStructSpotlight(const std::string & name,
+void CShaderNew::SetStructSpotlight(const std::string & name,
                                    const light::Spotlight & container) {
         SetVec3f(name + ".direction", container.direction);
     SetVec3f(name + ".position", container.position);
@@ -183,6 +215,11 @@ void ShaderNew::SetStructSpotlight(const std::string & name,
     SetFloat(name + ".linear", container.linear);
     SetFloat(name + ".quadratic", container.quadratic);
 }
+
+} /*! opgs16::element */
+} /*! opgs16 */
+
+namespace helper {
 
 /**
  * @brief Old Shader wrapper class

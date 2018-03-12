@@ -44,18 +44,18 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class TimerManager
+ * @class MTimerManager
  * @brief Manages time quantum.
  * @author Jongmin Yun
  *
  * @log
  * 2018-03-03 Refactoring. Moved it to opgs16::manager namespace.
  */
-class TimeManager final {
+class MTimeManager final {
 public:
     /*! Return static instance. */
-    static TimeManager& Instance() {
-        static TimeManager instance{};
+    static MTimeManager& Instance() {
+        static MTimeManager instance{};
         return instance;
     }
 
@@ -133,11 +133,11 @@ private:
     bool is_first{ true };
 
 private:
-    TimeManager() = default;
+    MTimeManager() = default;
 
 public:
-    TimeManager(const TimeManager&) = delete;
-    TimeManager(const TimeManager&&) = delete;
+    MTimeManager(const MTimeManager&) = delete;
+    MTimeManager(const MTimeManager&&) = delete;
 };
 
 } /*! opgs16::manager */

@@ -11,7 +11,7 @@
 
 #include <vector>                               /*! std::vector */
 #include "..\..\GlobalObjects\Canvas\canvas.h"  /*! Canvas::Canvas */
-#include "..\..\Headers\Fwd\objectfwd.h"        /*! component::ScriptFrame */
+#include "..\..\Headers\Fwd\objectfwd.h"        /*! component::CScriptFrame */
 
 /*!
  * @class CanvasDebug

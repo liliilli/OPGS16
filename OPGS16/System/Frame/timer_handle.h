@@ -13,7 +13,7 @@
 #include <chrono>       /*! std::chrono */
 #include <functional>   /*! std::bind */
 #include <thread>       /*! std::thread */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! Object */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! CObject */
 
 /*!
  * @class TimerHandle

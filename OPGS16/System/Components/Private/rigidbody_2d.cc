@@ -31,37 +31,37 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
- * 2018-03-11 Corection of ::opgs16::element::Object class.
+ * 2018-03-11 Corection of ::opgs16::element::CObject class.
  */
 
 #include "../Public/rigidbody_2d.h"                 /*! Header file */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::Object */
-#include "../../Manager/Public/physics_manager.h"   /*! ::opgs16::manager::PhysicsManager */
+#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
+#include "../../Manager/Public/physics_manager.h"   /*! ::opgs16::manager::MPhysicsManager */
 
 namespace opgs16 {
 namespace component {
 
-void Rigidbody2D::Update() {
-    auto& physics_manager = manager::PhysicsManager::Instance();
+void CRigidbody2D::Update() {
+    auto& physics_manager = manager::MPhysicsManager::Instance();
     for (auto& collider : m_colliders) {
         collider->ReflectPosition(GetObject().GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);
     }
 }
 
-void Rigidbody2D::OnCollisionEnter(Rigidbody2D& collider) {
+void CRigidbody2D::OnCollisionEnter(CRigidbody2D& collider) {
     GetObject().OnCollisionEnter(collider);
 }
 
-void Rigidbody2D::OnTriggerEnter(Rigidbody2D& collider) {
+void CRigidbody2D::OnTriggerEnter(CRigidbody2D& collider) {
     GetObject().OnTriggerEnter(collider);
 }
 
-bool Rigidbody2D::IsTag(const std::string&& tag) const {
+bool CRigidbody2D::IsTag(const std::string&& tag) const {
     return tag == GetObject().GetTagNameOf();
 }
 
-bool Rigidbody2D::IsTag(const size_t index) const {
+bool CRigidbody2D::IsTag(const size_t index) const {
     return index == GetObject().GetTagIndexOf();
 }
 

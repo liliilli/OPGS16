@@ -50,10 +50,10 @@ namespace element {
 namespace _internal {
 
 /*!
- * @class ObjectImpl
+ * @class CObjectImpl
  * @brief Pointer to implementation of class Object.
  */
-class ObjectImpl final {
+class CObjectImpl final {
 public:
     /*! Position */
 

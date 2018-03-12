@@ -10,7 +10,7 @@
 
 #include "../../../System/Element/Public/object.h"
 
-class TestObject1 final : public opgs16::element::Object {
+class TestObject1 final : public opgs16::element::CObject {
 public:
     TestObject1(const int i, const float size);
 private:

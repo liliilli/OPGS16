@@ -25,7 +25,7 @@ void Maintenance::Initiate() {
         obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
         Instantiate("Object", obj_1);
 
-        using Sprite2DRenderer = opgs16::component::Sprite2DRenderer;
+        using Sprite2DRenderer = opgs16::component::CSprite2DRenderer;
         auto ptr = GetObject("Object").get(); {
             Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
             renderer->SetRenderLayer(3);

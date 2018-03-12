@@ -64,7 +64,7 @@ namespace manager {
 constexpr unsigned k_default_font_size = 16u;
 
 /*!
- * @class FontManager
+ * @class MFontManager
  * @brief The class manages reading fonts, rendering fonts.
  *
  * This class manages reading fonts, rendering fonts.
@@ -76,7 +76,7 @@ constexpr unsigned k_default_font_size = 16u;
  *
  * @todo Shader must be static instance to reduce memory usage.
  */
-class FontManager final {
+class MFontManager final {
 public:
 
 	/** Internal type aliasing */
@@ -86,8 +86,8 @@ public:
 
 public:
 	/*! Return single static instance. This must be called in initiation time once. */
-	static FontManager& Instance() {
-		static FontManager instance{};
+	static MFontManager& Instance() {
+		static MFontManager instance{};
 		return instance;
 	}
 
@@ -167,7 +167,7 @@ private:
     const glm::mat4 m_projection;
     GLuint m_vao{}, m_vbo{};
 
-	helper::ShaderNew* m_shader{};
+	element::CShaderNew* m_shader{};
 
 private:
 	/**
@@ -203,7 +203,7 @@ private:
      * This methods called when initiate instance.
 	 * @return Created font glyph container unique_ptr (moved)
      */
-    FontManager::font_map_ptr GetCharTextures() const;
+    MFontManager::font_map_ptr GetCharTextures() const;
 
 	/**
 	 * @brief This methods ends shader's operation.
@@ -294,11 +294,11 @@ private:
 	 * @brief Initialize Font renderer instance with font path.
 	 * @param[in] font_path Font path to be rendered. this parameter is only for r-value.
 	 */
-	FontManager();
+	MFontManager();
 
 public:
-    FontManager(const FontManager&) = delete;
-    FontManager& operator=(const FontManager&) = delete;
+    MFontManager(const MFontManager&) = delete;
+    MFontManager& operator=(const MFontManager&) = delete;
 };
 
 } /*! opgs16::manager */

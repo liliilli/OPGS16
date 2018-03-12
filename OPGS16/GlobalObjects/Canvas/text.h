@@ -42,7 +42,7 @@
 #include <memory>       /*! std::unique_ptr */
 #include <glm/glm.hpp>  /*! using glm::vec3<float, 0> = glm::tvec3<float, 0> */
 #include "../../GlobalObjects/Interface/i_alignable.h"  /*! IAlignable */
-#include "../../Headers/Fwd/objectfwd.h"    /*! FontManager
+#include "../../Headers/Fwd/objectfwd.h"    /*! MFontManager
                                               * Canvas::TextImpl
                                               * Canvas::TextImplDeleter
                                               * glm::vec3 */
@@ -115,14 +115,14 @@ public:
      * does not alter bit-consistancy of FontManager.
      * @return Const reference of FontManager which this class grasps (must not be a nullptr.)
      */
-    inline const opgs16::manager::FontManager& GetFontManager() const {
+    inline const opgs16::manager::MFontManager& GetFontManager() const {
         return *m_font_manager;
     }
 
 private:
     /** private implementation instance */
     std::unique_ptr<TextImpl, TextImplDeleter> m_text_impl{ nullptr };
-	opgs16::manager::FontManager* const m_font_manager{ nullptr };
+	opgs16::manager::MFontManager* const m_font_manager{ nullptr };
 };
 }
 

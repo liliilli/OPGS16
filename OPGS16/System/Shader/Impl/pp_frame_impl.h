@@ -10,8 +10,8 @@
 #include <memory>       /*! std::memory */
 #include <unordered_map>/*! std::unordered_map */
 #include <GL\glew.h>    /*! GLuint */
-#include "..\..\Frame\texture.h"            /*! texture::Texture2D */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::ShaderNew */
+#include "..\..\Frame\texture.h"            /*! texture::CTexture2D */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::CShaderNew */
 
 namespace shading {
 
@@ -20,10 +20,10 @@ public:
 
 private:
     std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
-    using texture_ptr = std::unique_ptr<opgs16::texture::Texture2D>;
+    using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2D>;
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
-	std::vector<helper::ShaderNew*> m_shaders;
+	std::vector<opgs16::element::CShaderNew*> m_shaders;
 
 	struct ShaderParameters {
 		std::unordered_map<std::string, GLfloat> m_floats{};

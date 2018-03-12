@@ -1,11 +1,11 @@
 #pragma once
 
-#include "..\..\..\Headers\script_common.h"     /*! component::ScriptFrame */
+#include "..\..\..\Headers\script_common.h"     /*! component::CScriptFrame */
 #include "..\..\..\System\Frame\timer_handle.h" /*! TimerHandle */
 
-class ObjectScript1 final : public opgs16::component::ScriptFrame {
+class ObjectScript1 final : public opgs16::component::CScriptFrame {
 public:
-    ObjectScript1(opgs16::element::Object& obj);
+    ObjectScript1(opgs16::element::CObject& obj);
 
     virtual void Update() override final;
 
@@ -57,6 +57,6 @@ private:
     void OnTriggerSwap();
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, ObjectScript1)
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, ObjectScript1)
 };
 

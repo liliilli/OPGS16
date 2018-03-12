@@ -36,31 +36,31 @@
 
 #include "../Public/scene_manager.h"        /*! Header file */
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::PhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::TimerManager */
+#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
+#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
 #include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::ObjectManager */
+#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
 #include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::SoundManager */
+#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
 
 namespace opgs16 {
 namespace manager {
 
-void SceneManager::PopScene() {
+void MSceneManager::PopScene() {
     if (!m_scenes.empty())
         m_scenes.pop();
 }
 
-void SceneManager::ReleaseAllResources() const {
-    PhysicsManager::Instance().Clear();  /*! precise */
-    TimerManager::Instance().Clear();    /*! precise */
-    SoundManager::Instance().Clear();    /*! Not precise */
+void MSceneManager::ReleaseAllResources() const {
+    MPhysicsManager::Instance().Clear();  /*! precise */
+    MTimerManager::Instance().Clear();    /*! precise */
+    MSoundManager::Instance().Clear();    /*! Not precise */
     ShaderManager::Instance().Clear();   /*! Not implemented */
     TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(ObjectManager::Instance());
+    Clear(MObjectManager::Instance());
 }
 
-SceneManager::~SceneManager() = default;
+MSceneManager::~MSceneManager() = default;
 
 } /*! opgs16::manager */
 } /*! opgs16 */

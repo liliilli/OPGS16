@@ -51,7 +51,7 @@ public: static constexpr uint32_t type { HASH(__TYPE__) };
 
 /*!
  * @macro OVERRIDE_TYPEMATCH
- * @brief Define override function of component::Component's DoesTypeMatch() to match with
+ * @brief Define override function of component::CComponent's DoesTypeMatch() to match with
  * new type value of __DERIVED__ type. Defined function does not throw exception.
  *
  * @param[in] __BASE__ Base type of __DERIVED__ type.

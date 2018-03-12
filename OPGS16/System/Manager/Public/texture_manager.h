@@ -44,7 +44,7 @@
 #include <string>                   /*! std::string */
 #include <unordered_map>            /*! std::unordered_map */
 
-#include "../../Frame/texture.h"    /*! m_texture::Texture2D */
+#include "../../Frame/texture.h"    /*! m_texture::CTexture2D */
 
 namespace opgs16 {
 namespace manager {
@@ -62,8 +62,8 @@ namespace manager {
  */
 class TextureManager final {
 private:
-	using texture_raw = texture::Texture2D*;    /*! Raw pointer of m_texture::Texture2D */
-	using texture_ptr = std::unique_ptr<texture::Texture2D>;            /*! Unique pointer. */
+	using texture_raw = texture::CTexture2D*;    /*! Raw pointer of m_texture::CTexture2D */
+	using texture_ptr = std::unique_ptr<texture::CTexture2D>;            /*! Unique pointer. */
 	using texture_map = std::unordered_map<std::string, texture_ptr>;   /*! m_texture list */
 
 public:

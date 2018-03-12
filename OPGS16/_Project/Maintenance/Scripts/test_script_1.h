@@ -3,9 +3,9 @@
 #include "..\..\..\Headers\script_common.h"     /*! component::ScriptFrame */
 #include "..\..\..\System\Frame\timer_handle.h" /*! TimerHandle */
 
-class TestScript1 final : public opgs16::component::ScriptFrame {
+class TestScript1 final : public opgs16::component::CScriptFrame {
 public:
-    TestScript1(opgs16::element::Object& obj);
+    TestScript1(opgs16::element::CObject& obj);
 
     virtual void Update() override final;
 
@@ -64,6 +64,6 @@ private:
     void OnTrigger5Interval();
 
     /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::ScriptFrame, TestScript1)
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, TestScript1)
 };
 

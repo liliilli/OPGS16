@@ -16,7 +16,7 @@ void PpEffectScaling::Initiate() {
 }
 
 void PpEffectScaling::RenderEffect() {
-    auto scale_val = opgs16::Application::Instance().Setting().ScaleValueIntegerOf();
+    auto scale_val = opgs16::MApplication::Instance().Setting().ScaleValueIntegerOf();
 
     glViewport(0, 0, 256 * scale_val, 224 * scale_val);
     PostProcessingFrame::RenderEffect();

@@ -35,7 +35,7 @@
  *
  * @log
  * 2018-02-27 Correction of loading mechanism
- * 2018-02-28 Corrected GetTexture2D return type must be resource::Texture2D structure.
+ * 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
  * 2018-03-02 Move ResourceManager class inside opgs16::manager namespace for uniformation.
  * 2018-03-03 Refactored and removed member functions are not appropriate for class.
  */
@@ -51,7 +51,7 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class ResourceManager
+ * @class MResourceManager
  * @brief This class is singleton and not derivable as derived class.
  * ResourceManager has a rule of managing resource files path, each shader path,
  * , error statement path and so on.
@@ -61,25 +61,25 @@ namespace manager {
  *
  * @log
  * 2018-02-27 Correction of loading mechanism
- * 2018-02-28 Corrected GetTexture2D return type must be resource::Texture2D structure.
+ * 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
  * 2018-03-02 Move to opgs16::manager namespace.
  * 2018-03-03 Move private functions which don't match class to non-member function.
  *
  * @todo
  * 2018-02-28 CheckError method must have a procedure to bring error message display call to logger.
  */
-class ResourceManager final {
+class MResourceManager final {
 public:
     /*! Resource map list */
-    using texture_map       = std::unordered_map<std::string, resource::Texture2D>;
+    using texture_map       = std::unordered_map<std::string, resource::STexture2D>;
     using sound_map         = std::unordered_map<std::string, resource::SSound>;
     using shader_map        = std::unordered_map<std::string, resource::SShader>;
     using font_map          = std::unordered_map<std::string, resource::SFont>;
 
 public:
 	/*! Return single static instance. This must be called in initiation time once. */
-	static ResourceManager& Instance() {
-		static ResourceManager instance{};
+	static MResourceManager& Instance() {
+		static MResourceManager instance{};
 		return instance;
 	}
 
@@ -98,7 +98,7 @@ public:
 	 * @param[in] name_key Wrapping tag name of actual sprite path.
 	 * @return Selected 2D texture path.
 	 */
-	const resource::Texture2D& GetTexture2D(const std::string& name_key);
+	const resource::STexture2D& GetTexture2D(const std::string& name_key);
 
     /*!
      * @brief Get specified sound path information.
@@ -136,7 +136,7 @@ private:
                       const std::string& global_path, resource::_internal::EResourceType type);
 
 	void PushShader(const std::string& name_key, const resource::SShader& list);
-	void PushTexture2D(const std::string& name_key, const resource::Texture2D& container);
+	void PushTexture2D(const std::string& name_key, const resource::STexture2D& container);
     void PushSound(const std::string& name_key, const resource::SSound& container);
     void PushFont(const std::string& name_key, const resource::SFont& container);
 
@@ -154,11 +154,11 @@ private:
     }
 
 private:
-    ResourceManager() = default;
+    MResourceManager() = default;
 
 public:
-	ResourceManager(const ResourceManager&) = delete;
-	ResourceManager(const ResourceManager&&) = delete;
+	MResourceManager(const MResourceManager&) = delete;
+	MResourceManager(const MResourceManager&&) = delete;
 };
 
 } /*! opgs16::manager */

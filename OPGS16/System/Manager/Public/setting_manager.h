@@ -45,17 +45,17 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class SettingManager
+ * @class MSettingManager
  * @brief Setting Manager.
  *
  * @log
  * 2018-02-26 Removed redundant move special functions.
  * 2018-03-04 Refactoring.
  */
-class SettingManager final {
+class MSettingManager final {
 public:
-    static SettingManager& Instance() {
-        static SettingManager instance{};
+    static MSettingManager& Instance() {
+        static MSettingManager instance{};
         return instance;
     }
 
@@ -114,11 +114,11 @@ private:
     void InitializeRenderLayerList();
 
 private:
-    SettingManager();
+    MSettingManager();
 
 public:
-    SettingManager(const SettingManager&) = delete;
-    SettingManager& operator=(const SettingManager&) = delete;
+    MSettingManager(const MSettingManager&) = delete;
+    MSettingManager& operator=(const MSettingManager&) = delete;
 };
 
 } /*! opgs16::manager */

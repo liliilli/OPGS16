@@ -50,12 +50,12 @@ namespace opgs16 {
 namespace manager {
 
 /**
- * @class PostProcessingManager
+ * @class MPostProcessingManager
  * @brief This class manages post-processing frame (instances) to be used in Application.
  * Each post-processing instance stored in container could be attached, released, destroyed in
  * any time but Strongly recommends it in Initiate time and Update time.
  */
-class PostProcessingManager final {
+class MPostProcessingManager final {
 public:
 	using pp_effect = std::unique_ptr<shading::PostProcessingFrame>; // Abbreviation.
 	using ppf_ptr	= shading::PostProcessingFrame*;
@@ -66,8 +66,8 @@ public:
 	 * @brief Static method gets unique instance of PostProcessingManager class.
 	 * @return Lvalue reference of singleton instance.
 	 */
-	static PostProcessingManager& GetInstance() {
-		static PostProcessingManager instance{};
+	static MPostProcessingManager& GetInstance() {
+		static MPostProcessingManager instance{};
 		return instance;
 	}
 
@@ -170,18 +170,18 @@ private:
 	/** Return id'th position of effect_sequences is already exist. */
 	inline bool DoesEffectSequenceExist(const size_t id);
 
-	PostProcessingManager();
+	MPostProcessingManager();
 
 public:
-    PostProcessingManager(const PostProcessingManager&) = delete;
-    PostProcessingManager& operator=(const PostProcessingManager&) = delete;
+    MPostProcessingManager(const MPostProcessingManager&) = delete;
+    MPostProcessingManager& operator=(const MPostProcessingManager&) = delete;
 };
 
-inline bool PostProcessingManager::IsEffectExist(const std::string tag) {
+inline bool MPostProcessingManager::IsEffectExist(const std::string tag) {
     return m_effects.find(tag) != m_effects.end();
 }
 
-inline bool PostProcessingManager::DoesEffectSequenceExist(const size_t id) {
+inline bool MPostProcessingManager::DoesEffectSequenceExist(const size_t id) {
 	return m_effect_sequences.find(id) != m_effect_sequences.end();
 }
 

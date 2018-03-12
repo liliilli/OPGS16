@@ -46,24 +46,24 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 }
 } /*! unnamed namespace */
 
-Application::Application() :
+MApplication::MApplication() :
     m_logger{ debug::CLogger::Instance() },
     m_window{ InitApplication(u8"OPGS16") },
-    m_setting_manager{ manager::SettingManager::Instance() },
-    m_input_manager{ manager::InputManager::Instance() },
-    m_object_manager{ manager::ObjectManager::Instance() },
-    m_physics_manager{ manager::PhysicsManager::Instance() },
-    m_resource_manager{ manager::ResourceManager::Instance() },
-    m_scene_manager{ manager::SceneManager::Instance() },
-    m_sound_manager{ manager::SoundManager::Instance() },
-    m_time_manager{ manager::TimeManager::Instance() },
-    m_timer_manager{ manager::TimerManager::Instance() } {
+    m_setting_manager{ manager::MSettingManager::Instance() },
+    m_input_manager{ manager::MInputManager::Instance() },
+    m_object_manager{ manager::MObjectManager::Instance() },
+    m_physics_manager{ manager::MPhysicsManager::Instance() },
+    m_resource_manager{ manager::MResourceManager::Instance() },
+    m_scene_manager{ manager::MSceneManager::Instance() },
+    m_sound_manager{ manager::MSoundManager::Instance() },
+    m_time_manager{ manager::MTimeManager::Instance() },
+    m_timer_manager{ manager::MTimerManager::Instance() } {
 
-    m_setting = std::make_unique<GlobalSetting>();
+    m_setting = std::make_unique<SGlobalSetting>();
 	PushStatus(GameStatus::INIT);
 }
 
-GLFWwindow* Application::InitApplication(const std::string& app_name) const {
+GLFWwindow* MApplication::InitApplication(const std::string& app_name) const {
     glfwInit();
 
     /*! OpenGL Setting */
@@ -75,8 +75,8 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
     /*! Set MSAAx4 */
     //glfwWindowHint(GLFW_SAMPLES, 4);
 
-    const auto window = glfwCreateWindow(GlobalSetting::ScreenWidth(),
-                                         GlobalSetting::ScreenHeight(),
+    const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(),
+                                         SGlobalSetting::ScreenHeight(),
                                          app_name.c_str(),
                                          nullptr, nullptr);
     if (!window) {
@@ -95,7 +95,7 @@ GLFWwindow* Application::InitApplication(const std::string& app_name) const {
     return window;
 }
 
-void Application::Initiate() {
+void MApplication::Initiate() {
 	if (GetPresentStatus() == GameStatus::INIT) {
         /*! Initialize Global Setting. */
         m_resource_manager.ReadResourceFile(g_global_resource_path.data());
@@ -121,9 +121,9 @@ void Application::Initiate() {
 	}
 }
 
-void Application::InitiateFonts() const {
+void MApplication::InitiateFonts() const {
 	/** First we need initiate default font. */
-	auto& font = manager::FontManager::Instance();
+	auto& font = manager::MFontManager::Instance();
     font.GenerateFont("Sans");
     font.GenerateFont("Solomon");
     font.GenerateFont("Menus");
@@ -131,12 +131,12 @@ void Application::InitiateFonts() const {
 	font.LoadDefaultFont();
 }
 
-void Application::InitiateDebugUi() {
+void MApplication::InitiateDebugUi() {
 	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
 }
 
-void Application::InitiatePostProcessingEffects() {
-	m_pp_manager = &manager::PostProcessingManager::GetInstance();
+void MApplication::InitiatePostProcessingEffects() {
+	m_pp_manager = &manager::MPostProcessingManager::GetInstance();
 
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
 	m_pp_manager->InsertEffectInitiate<shading::PpEffectGray>("Gray");
@@ -149,11 +149,11 @@ void Application::InitiatePostProcessingEffects() {
 	}
 }
 
-void Application::SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
+void MApplication::SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
     m_on_before_update_callback = callback;
 }
 
-void Application::Run() {
+void MApplication::Run() {
     while (!glfwWindowShouldClose(m_window)) {
         m_time_manager.Update();         /*! Time ticking */
         if (m_time_manager.Ticked()) {
@@ -166,7 +166,7 @@ void Application::Run() {
     glfwTerminate();
 }
 
-void Application::Update() {
+void MApplication::Update() {
     if (m_on_before_update_callback) {  /*! If callback is bound, call function once. */
         m_on_before_update_callback();
         m_on_before_update_callback = nullptr;
@@ -193,7 +193,7 @@ void Application::Update() {
         m_pp_manager->UpdateSequences(); // Update active effects.
 }
 
-void Application::Input() {
+void MApplication::Input() {
 	m_input_manager.Update();
 	switch (GetPresentStatus()) {
     default: /*! Do nothing */ break;
@@ -202,16 +202,16 @@ void Application::Input() {
 	}
 }
 
-void Application::InputGlobal() {
+void MApplication::InputGlobal() {
 	if (m_input_manager.IsKeyPressed("GlobalCancel"))
 		PopStatus();
     if (IsSwitchOn(m_setting->SizeScalable())) {
         if (m_input_manager.IsKeyPressed("GlobalF1"))
-        	ChangeScalingOption(ScaleType::X1);
+        	ChangeScalingOption(EScaleType::X1);
         else if (m_input_manager.IsKeyPressed("GlobalF2"))
-        	ChangeScalingOption(ScaleType::X2);
+        	ChangeScalingOption(EScaleType::X2);
         else if (m_input_manager.IsKeyPressed("GlobalF3"))
-        	ChangeScalingOption(ScaleType::X3);
+        	ChangeScalingOption(EScaleType::X3);
     }
 
     if (m_input_manager.IsKeyPressed("GlobalF9"))
@@ -220,10 +220,10 @@ void Application::InputGlobal() {
         TogglePostProcessingEffect();
 }
 
-void Application::Draw() const {
+void MApplication::Draw() const {
     /*! If there is no scene, do not rendering anything. */
 	if (!m_scene_manager.Empty()) {
-        glViewport(0, 0, GlobalSetting::ScreenWidth(), GlobalSetting::ScreenHeight());
+        glViewport(0, 0, SGlobalSetting::ScreenWidth(), SGlobalSetting::ScreenHeight());
 
 		if (IsSwitchOn(m_setting->PostProcessing()))
 			m_pp_manager->BindSequence(1);
@@ -242,25 +242,25 @@ void Application::Draw() const {
     glfwPollEvents();
 }
 
-void Application::ToggleFpsDisplay() const {
+void MApplication::ToggleFpsDisplay() const {
     m_setting->ToggleDebugMode();
 	std::cerr << static_cast<bool>(m_setting->DebugMode()) << std::endl;
 }
 
-void Application::TogglePostProcessingEffect() const {
+void MApplication::TogglePostProcessingEffect() const {
     m_setting->TogglePostProcessing();
 	std::cerr << "POST::PROCESSING::SWITCH::" <<
         static_cast<bool>(m_setting->PostProcessing()) << std::endl;
 }
 
-void Application::ChangeScalingOption(ScaleType value) const {
+void MApplication::ChangeScalingOption(EScaleType value) const {
 	if (!IsSameValue(value, m_setting->ScaleValue())) {
-        auto [width, height] = GlobalSetting::ScreenSize();
+        auto [width, height] = SGlobalSetting::ScreenSize();
 
 		switch (value) {
-		case ScaleType::X1: glfwSetWindowSize(m_window, width, height); break;
-		case ScaleType::X2: glfwSetWindowSize(m_window, width << 1, height << 1); break;
-		case ScaleType::X3: glfwSetWindowSize(m_window, width * 3, height * 3); break;
+		case EScaleType::X1: glfwSetWindowSize(m_window, width, height); break;
+		case EScaleType::X2: glfwSetWindowSize(m_window, width << 1, height << 1); break;
+		case EScaleType::X3: glfwSetWindowSize(m_window, width * 3, height * 3); break;
 		}
 
 		m_setting->SetScaleValue(value);
@@ -270,26 +270,26 @@ void Application::ChangeScalingOption(ScaleType value) const {
 	}
 }
 
-void Application::Exit() {
+void MApplication::Exit() {
     PushStatus(GameStatus::EXIT);
     glfwSetWindowShouldClose(m_window, true);
     ReplacePresentStatus(GameStatus::TERMINATE);
 }
 
-Application::GameStatus Application::GetPresentStatus() {
+MApplication::GameStatus MApplication::GetPresentStatus() {
     return m_game_status.top();
 }
 
-void Application::ReplacePresentStatus(GameStatus status) {
+void MApplication::ReplacePresentStatus(GameStatus status) {
     m_game_status.pop();
     m_game_status.push(status);
 }
 
-void Application::PushStatus(GameStatus status) {
+void MApplication::PushStatus(GameStatus status) {
     m_game_status.push(status);
 }
 
-void Application::PopStatus() {
+void MApplication::PopStatus() {
     if (!m_game_status.empty()) {
         m_game_status.pop();
         if (m_game_status.empty())
@@ -297,6 +297,6 @@ void Application::PopStatus() {
     }
 }
 
-Application::~Application() = default;
+MApplication::~MApplication() = default;
 
 }

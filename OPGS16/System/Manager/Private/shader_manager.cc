@@ -45,7 +45,7 @@ ShaderManager::shader_raw ShaderManager::CreateShader(const std::string& tag,
 	if (DoesShaderExist(tag))
         return Shader(tag);
 
-	auto shader = std::make_unique<helper::ShaderNew>();
+	auto shader = std::make_unique<element::CShaderNew>();
 	for (auto& [type, shader_path] : container.List()) {
 		shader->SetShader(type, shader_path.c_str());
 	}

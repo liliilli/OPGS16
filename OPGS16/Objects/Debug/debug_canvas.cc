@@ -4,7 +4,7 @@
 #include "obj_fps.h"            /*! ObjectFps */
 #include "obj_date.h"           /*! ObjectDate */
 #include "obj_tree.h"           /*! ObjectObjectTree */
-#include "Script\ui_manager.h"  /*! component::ScriptFrame
+#include "Script\ui_manager.h"  /*! component::CScriptFrame
                                   * DebugUiManager script */
 #include "..\..\GlobalObjects\camera_object.h"  /*! For base class's constructor. */
 

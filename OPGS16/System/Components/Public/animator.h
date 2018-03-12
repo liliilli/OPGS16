@@ -34,11 +34,11 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Create file.
- * 2018-03-11 Corection of ::opgs16::element::Object class.
+ * 2018-03-11 Corection of ::opgs16::element::CObject class.
  */
 
 #include "../Internal/animator_internal.h"  /*! opgs16::component::_internal::AnimatorState*/
-#include "../Internal/component.h"          /*! opgs16::component::_internal::Component */
+#include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
 #include "../Internal/component_macro.h"    /*! Component macros */
 #include "../../Frame/timer_handle.h"       /*! TimerHandle */
 #include "../../Helper/Public/switch.h"     /*! opgs16::Switch */
@@ -48,19 +48,19 @@ namespace opgs16 {
 namespace component {
 
 /*!
- * @class Animator
+ * @class CAnimator
  * @brief Animator class for object.
  */
-class Animator final : public _internal::Component {
+class CAnimator final : public _internal::CComponent {
 public:
-    explicit Animator(element::Object& bind_object, Sprite2DRenderer& bind_renderer,
+    explicit CAnimator(element::CObject& bind_object, CSprite2DRenderer& bind_renderer,
                       Switch loop = Switch::OFF);
 
     /*! Update animator each frame. */
     virtual void Update() override final;
 
 private:
-    Sprite2DRenderer& m_renderer;
+    CSprite2DRenderer& m_renderer;
     Switch m_loop;
 
     TimerHandle m_timer;
@@ -86,7 +86,7 @@ private:
     /*! Only used for timer trigger callback. */
     void OnTriggerTick();
 
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::Component, Animator)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CAnimator)
 };
 
 } /*! opgs16::component */

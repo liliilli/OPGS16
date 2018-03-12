@@ -40,7 +40,7 @@
 #include <array>
 #include <iostream>
 #include "../../__ThirdParty/stb/stb_image.h"
-#include "../Manager/Public/resource_type.h"           /*! resource::Texture2D */
+#include "../Manager/Public/resource_type.h"           /*! resource::STexture2D */
 
 namespace opgs16 {
 namespace texture {
@@ -55,14 +55,14 @@ GLenum ColorFormat(const int channels) noexcept {
     }
 }
 
-void SetTextureCellInformation(const resource::Texture2D::IndexSize& input,
-                               resource::Texture2D::IndexSize& cell_number,
+void SetTextureCellInformation(const resource::STexture2D::IndexSize& input,
+                               resource::STexture2D::IndexSize& cell_number,
                                std::pair<float, float>& cell_size) {
     cell_number = input;
     cell_size   = { 1.f / input.x_sep, 1.f / input.y_sep };
 }
 
-void SetDefaultParameterSetting(Texture2D& texture) {
+void SetDefaultParameterSetting(CTexture2D& texture) {
     using element::texture::_internal::TextureParameter;
     std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
     t_p.push_back(TextureParameter{ GL_TEXTURE_MIN_FILTER, GL_NEAREST });
@@ -74,11 +74,11 @@ void SetDefaultParameterSetting(Texture2D& texture) {
 
 } /*! unnamed namespace */
 
-Texture2D::~Texture2D() {
+CTexture2D::~CTexture2D() {
     if (m_texture) glDeleteTextures(1, &m_texture);
 }
 
-Texture2D::Texture2D(const resource::Texture2D& container) {
+CTexture2D::CTexture2D(const resource::STexture2D& container) {
     stbi_set_flip_vertically_on_load(true);
     auto nr_channels = 0;
     auto data = stbi_load(container.m_path.c_str(), &m_width, &m_height, &nr_channels, 0);
@@ -99,7 +99,7 @@ Texture2D::Texture2D(const resource::Texture2D& container) {
     stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const GLint internal_format,
+CTexture2D::CTexture2D(const GLint internal_format,
                      GLenum format, GLenum type, GLsizei width, GLsizei height) {
     /*! Temporary */
     m_width = 256;
@@ -112,12 +112,12 @@ Texture2D::Texture2D(const GLint internal_format,
     SetDefaultParameterSetting(*this);
 }
 
-void Texture2D::SetTextureParameterI(const GLint option, const GLint mode) {
+void CTexture2D::SetTextureParameterI(const GLint option, const GLint mode) {
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexParameteri(GL_TEXTURE_2D, option, mode);
 }
 
-void Texture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists) {
+void CTexture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists) {
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
     for (const auto& option_item : lists) {
@@ -125,7 +125,7 @@ void Texture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists)
     }
 }
 
-void Texture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
+void CTexture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
 }
 

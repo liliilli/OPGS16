@@ -36,7 +36,7 @@
  * 2018-03-10 Create file, Add state enum.
  */
 
-#include "../../Manager/Public/resource_type.h"     /*! resource::Texture2D::IndexSize */
+#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
 #include <string>   /*! std::string */
 
 namespace opgs16 {
@@ -53,7 +53,7 @@ enum class AnimatorState {
 };
 
 class AnimationCell {
-    using IndexSize = resource::Texture2D::IndexSize;
+    using IndexSize = resource::STexture2D::IndexSize;
 
     std::string m_texture_name;
     IndexSize   m_index;

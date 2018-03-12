@@ -40,7 +40,7 @@
  */
 
 #include <GL/glew.h>
-#include "object.h"                                     /*! Object */
+#include "object.h"                                     /*! CObject */
 #include "../../GlobalObjects/Interface/i_originable.h" /*! IOriginable */
 
 namespace opgs16 {
@@ -54,7 +54,7 @@ namespace element {
  * Second, UiObject has only a child inherits UiObject class.
  * Otherwise, undefined behavior will occur (I swear)
  */
-class UiObject : public Object, public IOriginable {
+class UiObject : public CObject, public IOriginable {
 public:
 	virtual ~UiObject() = default;
 

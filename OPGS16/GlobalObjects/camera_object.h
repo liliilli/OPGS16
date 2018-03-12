@@ -10,7 +10,7 @@
  * 2018-02-15 Create file and implement basic features.
  * 2018-03-11 Correction of object namespace position and path.
  */
-#include "../System/Element/Public/object.h"    /*! ::opgs16::element::Object */
+#include "../System/Element/Public/object.h"    /*! ::opgs16::element::CObject */
 
 /**
  * @class MainCameraObject
@@ -19,7 +19,7 @@
  * If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
  * no distortion, 3D world or 2D world with no sight distortion, set ORTHO.
  */
-class MainCameraObject final : public opgs16::element::Object {
+class MainCameraObject final : public opgs16::element::CObject {
 public:
     MainCameraObject();
 };

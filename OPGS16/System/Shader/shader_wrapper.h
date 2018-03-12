@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <map>
 #include <glm\glm.hpp>
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! ShaderNew */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! CShaderNew */
 
 /**
  * @file System/Shader/shader_wrapper.h
@@ -38,7 +38,7 @@ public:
      * @brief Set shader.
      * @param[in] shader
      */
-     void SetShader(helper::ShaderNew* const shader);
+     void SetShader(opgs16::element::CShaderNew* const shader);
 
     /**
      * @brief Use shader.
@@ -100,7 +100,7 @@ public:
     }
 
 private:
-    helper::ShaderNew* m_shader{ nullptr };	// Shader pointer retrieved from ShaderManager.
+    opgs16::element::CShaderNew* m_shader{ nullptr };// Shader pointer retrieved from ShaderManager.
     bool m_is_useable{ false };				// The flag for preventing using of nullptr shader.
 
     enum class ErrorType {

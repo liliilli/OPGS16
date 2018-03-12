@@ -40,7 +40,7 @@
  * 2018-03-11 Correction of UiObject namespace hierarchy positioning, and path.
  */
 
-#include "../../System/Components/Public/sprite_renderer.h" /*! Sprite2DRenderer */
+#include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */
 #include "../../System/Element/Public/ui_object.h"          /*! ::opgs16::element::UiObject */
 #include "../../Headers/Fwd/objectfwd.h"                    /*! Canvas::Canvas */
 
@@ -88,7 +88,7 @@ public:
 	 void SetImageSize(const float width, const float height);
 
 private:
-	opgs16::component::Sprite2DRenderer m_sprite_renderer;	/** Sprite Renderer */
+	opgs16::component::CSprite2DRenderer m_sprite_renderer;	/** Sprite Renderer */
 	Canvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 
 };

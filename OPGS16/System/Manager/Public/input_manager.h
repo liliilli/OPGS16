@@ -47,18 +47,18 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class InputManager
+ * @class MInputManager
  * @brief This class is singleton and can not be a base of any derived class instance.
  * InputManager has a rule of managing input signal such as keyboard key pressing, releasing and
  * mouse signal or joystick inputs. (Only keyboard input signal checking is implemented. 20180206)
  *
  * Any m_object_list want to catch signal of input devices, and performs specific mechanism can use
- * this manager by calling InputManager::Instance().
+ * this manager by calling MInputManager::Instance().
  *
  * @log
  * 2018-03-03 Move BindingKeyInfo to separate file for readability.
  */
-class InputManager final {
+class MInputManager final {
 public:
     using key_map = std::unordered_map<std::string, _internal::BindingKeyInfo>;
 
@@ -67,8 +67,8 @@ public:
 	 * @brief Static method gets unique instance of Application class.
 	 * @return InputManager static instance.
 	 */
-	static InputManager& Instance() {
-		static InputManager instance{};
+	static MInputManager& Instance() {
+		static MInputManager instance{};
 		return instance;
 	}
 
@@ -142,11 +142,11 @@ private:
     }
 
 private:
-	InputManager() = default;
+	MInputManager() = default;
 
 public:
-	InputManager(const InputManager&) = delete;
-	InputManager(const InputManager&&) = delete;
+	MInputManager(const MInputManager&) = delete;
+	MInputManager(const MInputManager&&) = delete;
 };
 
 } /*! opgs16::manager */

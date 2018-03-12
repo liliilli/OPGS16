@@ -31,24 +31,24 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring.
- * 2018-03-11 Cope with ::element::Object
+ * 2018-03-11 Cope with ::element::CObject
  */
 
 #include "../Public/object_manager.h"   /*! Header file */
 
 #include <stack>                        /*! std::stack */
 
-#include "../Public/scene_manager.h"    /*! opgs16::manager::SceneManager */
-#include "../Public/setting_manager.h"  /*! opgs16::manager::SettingManager */
-#include "../../Element/Public/object.h"    /*! ::opgs16::element::Object */
+#include "../Public/scene_manager.h"    /*! opgs16::manager::MSceneManager */
+#include "../Public/setting_manager.h"  /*! opgs16::manager::MSettingManager */
+#include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
 
 namespace opgs16 {
 namespace manager {
 namespace {
-using element::Object;
+using element::CObject;
 } /*! unnamed namespace */
 
-void ObjectManager::Destroy(const Object& object) {
+void MObjectManager::Destroy(const CObject& object) {
     const auto hash_value = object.GetHash();
 
     using object_map    = std::unordered_map<std::string, object_ptr>;
@@ -56,7 +56,7 @@ void ObjectManager::Destroy(const Object& object) {
     std::stack<object_map*> tree_list;
     std::stack<it_type> it_list;
 
-    tree_list.emplace(&SceneManager::Instance().PresentScene()->GetObjectList());
+    tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
     it_list.emplace(tree_list.top()->begin());
 
     auto destroyed = false;
@@ -87,7 +87,7 @@ void ObjectManager::Destroy(const Object& object) {
     }
 }
 
-void ObjectManager::DestroyObjects() {
+void MObjectManager::DestroyObjects() {
     for (auto& object : m_destroy_candidates) {
         auto hash_value = object->GetHash();
 
@@ -96,7 +96,7 @@ void ObjectManager::DestroyObjects() {
         std::stack<object_map*> tree_list;
         std::stack<it_type> it_list;
 
-        tree_list.emplace(&SceneManager::Instance().PresentScene()->GetObjectList());
+        tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
         it_list.emplace(tree_list.top()->begin());
 
         bool destroyed = false;
@@ -129,15 +129,15 @@ void ObjectManager::DestroyObjects() {
     m_destroy_candidates.clear();
 }
 
-ObjectManager::ObjectManager() :
-    m_rendering_list(SettingManager::Instance().RenderingLayerListSize()) {
+MObjectManager::MObjectManager() :
+    m_rendering_list(MSettingManager::Instance().RenderingLayerListSize()) {
 }
 
-void ObjectManager::InsertRenderingObject(object_raw const object, unsigned layer_index) {
+void MObjectManager::InsertRenderingObject(object_raw const object, unsigned layer_index) {
     m_rendering_list[layer_index].emplace_back(object);
 }
 
-void ObjectManager::Render() {
+void MObjectManager::Render() {
     for (auto& list : m_rendering_list) {
         for (auto& item : list) {
             item->Draw();

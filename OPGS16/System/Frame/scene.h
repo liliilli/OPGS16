@@ -10,12 +10,12 @@
  * @author Jongmin Yun
  * @log
  * 2018-02-19 Refactoring
- * 2018-03-11 Correcton of Object to opgs16::element::Object.
+ * 2018-03-11 Correcton of Object to opgs16::element::CObject.
  */
 
 #include <memory>                           /*! std::unique_ptr<> */
-#include "../Element/Public/object.h"       /*! ::opgs16::elent::Object */
-#include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::Camera */
+#include "../Element/Public/object.h"       /*! ::opgs16::elent::CObject */
+#include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::CCamera */
 
 /**
  * @class Scene
@@ -23,10 +23,10 @@
  */
 class Scene {
 private:
-    using Object = opgs16::element::Object;
+    using Object = opgs16::element::CObject;
     using object_ptr = std::unique_ptr<Object>;
     using object_map = std::unordered_map<std::string, object_ptr>;
-    using _camera = opgs16::component::Camera;
+    using _camera = opgs16::component::CCamera;
 
 public:
 	/** Must need virtual dtor */
@@ -99,7 +99,7 @@ inline void Scene::SetMainCamera(_camera* const main_camera) {
     m_main_camera = main_camera;
 }
 
-inline const opgs16::component::Camera* const Scene::GetMainCamera() {
+inline const opgs16::component::CCamera* const Scene::GetMainCamera() {
     return m_main_camera;
 }
 

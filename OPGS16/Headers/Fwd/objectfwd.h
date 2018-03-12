@@ -41,21 +41,23 @@
 
 #include <glm/fwd.hpp>	/** glm matrix forward declaration. */
 
+struct	GLFWwindow;
+//struct	ObjectTree;
+
 namespace opgs16 {
-enum class ScaleType : unsigned;
-struct  GlobalOption;
-class   GlobalSetting;
+enum class EScaleType : unsigned;
+class   SGlobalSetting;
 
 namespace component {
-class   Animator;
-class   Camera;
-class   Rigidbody2D;
-class   ScriptFrame;
-class   Sprite2DRenderer;
+class   CAnimator;
+class   CCamera;
+class   CRigidbody2D;
+class   CScriptFrame;
+class   CSprite2DRenderer;
 
 namespace _internal {
-class   Component;
-class   SpriteRendererImpl;
+class   CComponent;
+class   CSpriteRendererImpl;
 } /*! opgs16::component::_internal */
 } /*! opgs16::component */
 
@@ -67,31 +69,35 @@ class   CLoggerImpl;
 } /*! opgs16::debug */
 
 namespace element {
-class   Object;
+class   CObject;
+class   CShaderNew;
 namespace _internal {
-class	ObjectImpl;
-struct	ObjectImplDeleter { void operator()(ObjectImpl* p); };
+class	CObjectImpl;
 } /*! opgs16::element::_inetrnal */
 } /*! opgs16::element */
 
 namespace manager {
-class   FontManager;    /*! Font management */
-class   InputManager;   /*! Input polling */
-class   ObjectManager;  /*! Objects */
-class   PhysicsManager; /*! Physics & collision */
-class   PostProcessingManager;
-class   ResourceManager;
-class   SceneManager;   /*! ScenesManager */
-class   SettingManager; /*! SettingManager */
-class   SoundManager;   /*! Sounds */
-class   TimeManager;    /*! Tick time */
-class   TimerManager;   /*! Timer */
+class   MFontManager;    /*! Font management */
+class   MInputManager;   /*! Input polling */
+class   MObjectManager;  /*! Objects */
+class   MPhysicsManager; /*! Physics & collision */
+class   MPostProcessingManager;
+class   MResourceManager;
+class   MSceneManager;   /*! ScenesManager */
+class   MSettingManager; /*! MSettingManager */
+class   MSoundManager;   /*! Sounds */
+class   MTimeManager;    /*! Tick time */
+class   MTimerManager;   /*! Timer */
 } /*! opgs16::manager */
+
+namespace physics {
+
+} /*! opgs16::namespace */
 
 namespace resource {
 enum class EScopeType;
 enum class EShaderType : int;
-struct  Texture2D;
+struct  STexture2D;
 class   SFont;
 class   SSound;
 class   SShader;
@@ -102,20 +108,9 @@ enum class EResourceType;
 } /*! opgs16::resource */
 
 namespace texture {
-class   Texture2D;
+class   CTexture2D;
 } /*! opgs16::texture */
 } /*! opgs16 */
-
-namespace helper {
-    class ShaderNew;
-}
-namespace camera {
-    class CameraObject;
-}
-
-struct	GLFWwindow;
-
-struct	ObjectTree;
 
 // Derived
 namespace canvas {
@@ -128,7 +123,6 @@ struct  TextImplDeleter { void operator()(TextImpl* p); };
 class   Scene;
 
 class   VertexArrayObject;
-class   ShaderNew;
 class   ShaderWrapper;
 
 /** Managers */

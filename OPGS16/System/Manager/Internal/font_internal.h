@@ -33,7 +33,7 @@
  * @file System/Manager/Internal/font_internal.h
  * @author Jongmin Yun
  * @log
- * 2018-03-04 Create file, move FontManager::Character to this file.
+ * 2018-03-04 Create file, move MFontManager::Character to this file.
  */
 
 #include <glm/vec2.hpp> /*! glm::ivec2 */

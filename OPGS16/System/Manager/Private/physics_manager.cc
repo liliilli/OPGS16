@@ -39,7 +39,7 @@
 
 #include <algorithm>                    /*! std::sort */
 
-#include "../../Components/Public/rigidbody_2d.h"        /*! opgs16::component::Rigidbody2D */
+#include "../../Components/Public/rigidbody_2d.h"        /*! opgs16::component::CRigidbody2D */
 #include "../../Components/Physics2D/Collider/rectangle.h"  /*! collision::RectangleCollider2D */
 
 namespace opgs16 {
@@ -47,8 +47,8 @@ namespace manager {
 
 using _internal::Item;
 
-void PhysicsManager::AddCollider(collision::RectangleCollider2D* const collider,
-                                 component::Rigidbody2D* const rigidbody) {
+void MPhysicsManager::AddCollider(collision::RectangleCollider2D* const collider,
+                                 component::CRigidbody2D* const rigidbody) {
     using Type = collision::RectangleCollider2D::PositionType;
     auto ld = collider->GetTipPosition(Type::LEFT_DOWN);
     auto ru = collider->GetTipPosition(Type::RIGHT_UP);
@@ -60,7 +60,7 @@ void PhysicsManager::AddCollider(collision::RectangleCollider2D* const collider,
         std::make_unique<Item>(collider, rigidbody, ru, Item::Type::END));
 }
 
-void PhysicsManager::Update() {
+void MPhysicsManager::Update() {
     /*! Sorting */
     std::sort(m_potential.begin(), m_potential.end(),
               [](const item_ptr& lhs, const item_ptr& rhs) {
@@ -84,12 +84,12 @@ void PhysicsManager::Update() {
     Clear();
 }
 
-void PhysicsManager::Clear() {
+void MPhysicsManager::Clear() {
     m_active.clear();
     m_potential.clear();
 }
 
-void PhysicsManager::ProceedCollisionCheck(PhysicsManager::item_ptr& item) {
+void MPhysicsManager::ProceedCollisionCheck(MPhysicsManager::item_ptr& item) {
     for (auto& active_item : m_active) {
         /*! If rigidbody is same, do not check collision. */
         if (active_item->m_rigidbody == item->m_rigidbody) continue;
@@ -124,7 +124,7 @@ void PhysicsManager::ProceedCollisionCheck(PhysicsManager::item_ptr& item) {
     }
 }
 
-void PhysicsManager::EraseItem(PhysicsManager::item_ptr& item) {
+void MPhysicsManager::EraseItem(MPhysicsManager::item_ptr& item) {
     for (auto it = m_active.cbegin(); it != m_active.cend(); ++it) {
         if ((*it)->m_collider == item->m_collider) {
             m_active.erase(it);

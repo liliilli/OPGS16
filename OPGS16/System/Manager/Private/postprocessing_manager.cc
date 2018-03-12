@@ -45,26 +45,26 @@ namespace manager {
 
 namespace {
 
-using PPManager = PostProcessingManager;
-using sequence_type = PostProcessingManager::sequence_type;
+using PPManager = MPostProcessingManager;
+using sequence_type = MPostProcessingManager::sequence_type;
 
 using namespace std::string_view_literals;
 constexpr std::string_view scale_effect{ "__df__"sv };
 
 } /*! unnamed namespace */
 
-PostProcessingManager::PostProcessingManager() {
+MPostProcessingManager::MPostProcessingManager() {
     /*! Insert display size scaling post processing effect */
 	InsertEffectInitiate<shading::PpEffectScaling>("__df__");
     SetSequence(0u, { });
 }
 
-PPManager::pp_effect& PostProcessingManager::GetEffect(const std::string&& tag) {
+PPManager::pp_effect& MPostProcessingManager::GetEffect(const std::string&& tag) {
 	if (IsEffectExist(tag))
         return m_effects[tag];
 }
 
-bool PostProcessingManager::InsertEffect(const std::string& tag) {
+bool MPostProcessingManager::InsertEffect(const std::string& tag) {
 	return InsertEffect<shading::PostProcessingFrame>(tag);
 }
 
@@ -89,14 +89,14 @@ const sequence_type* PPManager::SetSequence(const size_t id,
 	else return nullptr;
 }
 
-void PostProcessingManager::UpdateSequences() {
+void MPostProcessingManager::UpdateSequences() {
 	for (auto& effect : m_effects) {
 		auto& item = effect.second;
 		if (item->IsActive()) item->Update();
 	}
 }
 
-void PostProcessingManager::BindSequence(const size_t id) {
+void MPostProcessingManager::BindSequence(const size_t id) {
 	if (DoesEffectSequenceExist(id)) {
 		m_binded_number = id;
 
@@ -105,7 +105,7 @@ void PostProcessingManager::BindSequence(const size_t id) {
 	}
 }
 
-void PostProcessingManager::Render() {
+void MPostProcessingManager::Render() {
     /*! If any of effect sequence is bound, render post-processing */
 	if (m_binded_number != m_reset) {
 		auto& list = m_effect_sequences.at(m_binded_number);
@@ -129,7 +129,7 @@ void PostProcessingManager::Render() {
 	}
 }
 
-void PostProcessingManager::ReleaseSequence(const size_t id) {
+void MPostProcessingManager::ReleaseSequence(const size_t id) {
 	if (DoesEffectSequenceExist(id)) {
 		if (m_binded_number == id) m_binded_number = m_reset;
 

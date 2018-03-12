@@ -51,18 +51,18 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class TimerManager
+ * @class MTimerManager
  * @brief Manager class to globally manage timers.
  * @caveat Not precise timer because of dependency of tick delta time (fps tick interval)
  */
-class TimerManager final {
+class MTimerManager final {
 public:
     /*!
      * @brief Get reference of unique instance of TimerManager.
      * @return Reference instance of timer manager.
      */
-    static TimerManager& Instance() {
-        static TimerManager instance{};
+    static MTimerManager& Instance() {
+        static MTimerManager instance{};
         return instance;
     }
 
@@ -124,15 +124,15 @@ private:
     std::list<size_t> m_delete_list; /*! Deletion candidates list */
 
 private:
-    TimerManager() = default;
+    MTimerManager() = default;
 
     inline bool DoesTimerExist(const TimerHandle& handle) {
         return m_timer_container.find(handle.GetKeyValue()) != m_timer_container.end();
     }
 
 public:
-    TimerManager(const TimerManager&) = delete;
-    TimerManager& operator=(const TimerManager&) = delete;
+    MTimerManager(const MTimerManager&) = delete;
+    MTimerManager& operator=(const MTimerManager&) = delete;
 };
 
 template <
@@ -141,7 +141,7 @@ template <
     class... _Argument,
     typename
 >
-void TimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
+void MTimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
                             _Ref* ref, _Callable&& func, _Argument&&... args) {
     /*! Setting */
     handle.SetLoopMode(is_loop);

@@ -1,5 +1,5 @@
 #include "timer_handle.h"               /*! Header file */
-#include "../Manager/Public/timer_manager.h"   /*! TimerManager */
+#include "../Manager/Public/timer_manager.h"   /*! MTimerManager */
 
 void TimerHandle::SetTimepoint(long interval) {
     m_interval  = static_cast<float>(interval) / 1000.f;
@@ -18,7 +18,7 @@ void TimerHandle::Try(const float quantum) {
         if (m_loop)     /*! If it has to loop, reset remain value */
             m_remain = m_interval;
         else {
-            opgs16::manager::TimerManager::Instance().DetachTimer(*this);
+            opgs16::manager::MTimerManager::Instance().DetachTimer(*this);
         }
     }
 }

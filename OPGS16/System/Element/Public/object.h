@@ -53,21 +53,21 @@
 #include <memory>			/*! std::unique_ptr */
 #include <unordered_map>	/*! std::unordered_map */
 #include <string>           /*! std::to_string */
-#include "../../../Headers/Fwd/objectfwd.h"  /*! helper::ShaderNew
+#include "../../../Headers/Fwd/objectfwd.h"  /*! helper::CShaderNew
                                               * glm::vec3
                                               * ObjectTree
-                                              * ::opgs16::component::_internal::Component
-                                              * ::opgs16::component::Rigidbody2D
+                                              * ::opgs16::component::_internal::CComponent
+                                              * ::opgs16::component::CRigidbody2D
                                               * ::opgs16::element::_internal::ObjectImplDeleter
                                               */
-/*! opgs16::component::_internal::Component */
+/*! opgs16::component::_internal::CComponent */
 #include "../../System/Components/Internal/component.h"
 
 namespace opgs16 {
 namespace element {
 
 /*!
- * @class Object
+ * @class CObject
  * @brief The class for every object to update and draw.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
@@ -85,19 +85,19 @@ namespace element {
  *
  * @todo Implement hierarchy rotation mechanism.
  */
-class Object {
+class CObject {
 private:
-    using component_ptr     = std::unique_ptr<component::_internal::Component>;
+    using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
     using component_list    = std::vector<component_ptr>;
     using name_counter_map  = std::unordered_map<std::string, size_t>;
-	using object_raw = Object*;
-	using object_ptr = std::unique_ptr<Object>;
+	using object_raw = CObject*;
+	using object_ptr = std::unique_ptr<CObject>;
 	using object_map = std::unordered_map<std::string, object_ptr>;
-    using pimpl_ptr  = std::unique_ptr<_internal::ObjectImpl, _internal::ObjectImplDeleter>;
+    using pimpl_ptr  = std::unique_ptr<_internal::CObjectImpl>;
 
 public:
-	Object();
-	virtual ~Object() = default;
+	CObject();
+	virtual ~CObject();
 
     /*! Update components of object. */
     inline void Update() {
@@ -120,10 +120,10 @@ public:
     }
 
     /*! This method will be called when Collision. */
-    virtual void OnCollisionEnter(opgs16::component::Rigidbody2D& collider) {};
+    virtual void OnCollisionEnter(opgs16::component::CRigidbody2D& collider) {};
 
     /*! This method will be called when Trigger entered. */
-    virtual void OnTriggerEnter(opgs16::component::Rigidbody2D& collider) {};
+    virtual void OnTriggerEnter(opgs16::component::CRigidbody2D& collider) {};
 
     /*!
      * @brief Return local position.
@@ -259,13 +259,13 @@ public:
     template <
         class _Ty,
         class... _Types,
-        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
+        class = std::enable_if_t<std::is_base_of_v<CObject, _Ty>>
     >   bool Instantiate(const std::string name, _Types&&... _args);
 
     /*! Overloaded function of Instantiate(Varadic...) */
     template <
         class _Ty,
-        class = std::enable_if_t<std::is_base_of_v<Object, _Ty>>
+        class = std::enable_if_t<std::is_base_of_v<CObject, _Ty>>
     >   bool Instantiate(const std::string name, std::unique_ptr<_Ty>& instance);
 
 	/**
@@ -299,7 +299,7 @@ public:
      * @param[in] _Ty Component type class argument.
      * @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
      */
-    using _Component = opgs16::component::_internal::Component;
+    using _Component = opgs16::component::_internal::CComponent;
     template<
         class _Ty,
         typename... _Params,
@@ -381,7 +381,7 @@ private:
 protected:
 	pimpl_ptr   m_data{ nullptr };              /*! Pointer implementation heap instance. */
 	object_map  m_children;                     /*! The container stores child object. */
-    component_list m_components{};              /*! Component list of thie object. */
+    component_list m_components{};              /*! CComponent list of thie object. */
 
 private:
     /*!
@@ -403,7 +403,7 @@ protected:
 };
 
 template <class _Ty, class... _Types, typename>
-bool Object::Instantiate(const std::string tag, _Types&&... _args) {
+bool CObject::Instantiate(const std::string tag, _Types&&... _args) {
     const auto item_tag = CreateChildTag(tag);
     m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Types>(_args)...));
     m_children[item_tag]->SetHash(item_tag);
@@ -412,7 +412,7 @@ bool Object::Instantiate(const std::string tag, _Types&&... _args) {
 }
 
 template <class _Ty, typename>
-bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
+bool CObject::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
     const auto item_tag = CreateChildTag(tag);
     m_children[item_tag] = std::move(instance);
     m_children[item_tag]->SetHash(item_tag);
@@ -421,12 +421,12 @@ bool Object::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) 
 }
 
 template<class _Ty, typename... _Params, typename>
-void Object::AddComponent(_Params&&... params) {
+void CObject::AddComponent(_Params&&... params) {
     m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
 }
 
 template<class _Ty, typename>
-_Ty* const Object::GetComponent() {
+_Ty* const CObject::GetComponent() {
     for (auto& item : m_components) {
         if (item->DoesTypeMatch(_Ty::type)) return static_cast<_Ty*>(item.get());
     }
@@ -434,7 +434,7 @@ _Ty* const Object::GetComponent() {
 }
 
 template <class _Ty, typename>
-bool Object::RemoveComponent() {
+bool CObject::RemoveComponent() {
     auto it = std::find_if(m_components.cbegin(), m_components.cend(),
                            [](const std::unique_ptr<component::Component>& item) {
         return item->DoesTypeMatch(_Ty::type);
@@ -446,7 +446,7 @@ bool Object::RemoveComponent() {
     else return false;
 }
 
-inline const std::string Object::CreateChildTag(const std::string& tag) noexcept {
+inline const std::string CObject::CreateChildTag(const std::string& tag) noexcept {
     std::string item_tag{ tag };
 
     if (m_name_counter.find(tag) != m_name_counter.end()) {

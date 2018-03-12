@@ -43,23 +43,23 @@
 #include <vector>       /*! std::list */
 
 #include "../Internal/physics_internal.h"
-#include "../../../Headers/Fwd/objectfwd.h"    /*! component::Rigidbody2D */
+#include "../../../Headers/Fwd/objectfwd.h"    /*! component::CRigidbody2D */
 
 namespace opgs16 {
 namespace manager {
 
 /*!
- * @class PhysicsManager
+ * @class MPhysicsManager
  * @brief Physics manager manages object collision and rigidbody movement.
  */
-class PhysicsManager final {
+class MPhysicsManager final {
     using item_ptr = std::unique_ptr<_internal::Item>;
     using item_raw = _internal::Item* ;
 
 public:
     /*! Get Instance of PhysicsManager. */
-    static PhysicsManager& Instance() {
-        static PhysicsManager instance{};
+    static MPhysicsManager& Instance() {
+        static MPhysicsManager instance{};
         return instance;
     }
 
@@ -68,7 +68,7 @@ public:
      * @param[in]
      */
     void AddCollider(collision::RectangleCollider2D* const collider,
-                     component::Rigidbody2D* const rigidbody);
+                     component::CRigidbody2D* const rigidbody);
 
     /*! Update and proceed collision routine */
     void Update();

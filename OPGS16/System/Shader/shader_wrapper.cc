@@ -1,7 +1,7 @@
 #include "shader_wrapper.h"
 #include "shader.h"
 
-void ShaderWrapper::SetShader(helper::ShaderNew * const shader) {
+void ShaderWrapper::SetShader(opgs16::element::CShaderNew * const shader) {
     m_shader = shader;
     m_is_useable = true;
 }

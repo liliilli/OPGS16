@@ -37,7 +37,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-01 Done refactoring following "studioN coding style convention".
- * 2018-03-11 Corection of ::opgs16::element::Object class.
+ * 2018-03-11 Corection of ::opgs16::element::CObject class.
  *
  * @todo
  * 2018-03-01 Instantiate logger and bind it to Application.
@@ -51,14 +51,14 @@
 #include <GLFW/glfw3.h>
 
 #include "../../Core/Public/logger.h"   /*! CLogger class running on separate thread. */
-#include "../../Element/Public/object.h"     /*! ::opgs16::element::Object */
+#include "../../Element/Public/object.h"     /*! ::opgs16::element::CObject */
 #include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
 
 /*! Framework overall namespace includes all components. */
 namespace opgs16 {
 
 /*!
- * @class Application
+ * @class MApplication
  * @brief Application class runs application.
  * This class is singleton, and must be initialized calling Instance member function
  * to operate actual program.
@@ -67,11 +67,11 @@ namespace opgs16 {
  * 2018-03-01 Move class inside opgs16 namespace for uniformation.
  *            Refactored and removed member functions are not appropriate for class.
  */
-class Application final {
+class MApplication final {
 public:
     /*! Static method gets unique instance of Application class. */
-    static Application& Instance() {
-        static Application instance{};
+    static MApplication& Instance() {
+        static MApplication instance{};
         return instance;
     }
 
@@ -84,7 +84,7 @@ public:
     /*! Set callback function will be called before update frame. */
     void SetOnBeforeUpdateCallback(std::function<void(void)> callback);
 
-    inline const GlobalSetting& Setting() const noexcept {
+    inline const SGlobalSetting& Setting() const noexcept {
         return *m_setting;
     }
 
@@ -92,21 +92,21 @@ private:
     debug::CLogger&              m_logger;
     GLFWwindow*         m_window;           /*! Window handle pointer */
 
-    manager::SettingManager&     m_setting_manager;
-	manager::PostProcessingManager* m_pp_manager;
-	manager::InputManager&       m_input_manager;
-    manager::ObjectManager&      m_object_manager;
-    manager::PhysicsManager&     m_physics_manager;
-    manager::ResourceManager&    m_resource_manager;
-    manager::SceneManager&       m_scene_manager;    /*! SceneManager instance */
-    manager::SoundManager&       m_sound_manager;
-    manager::TimeManager&        m_time_manager;
-    manager::TimerManager&       m_timer_manager;
+    manager::MSettingManager&     m_setting_manager;
+	manager::MPostProcessingManager* m_pp_manager;
+	manager::MInputManager&       m_input_manager;
+    manager::MObjectManager&      m_object_manager;
+    manager::MPhysicsManager&     m_physics_manager;
+    manager::MResourceManager&    m_resource_manager;
+    manager::MSceneManager&       m_scene_manager;    /*! SceneManager instance */
+    manager::MSoundManager&       m_sound_manager;
+    manager::MTimeManager&        m_time_manager;
+    manager::MTimerManager&       m_timer_manager;
 
-    std::unique_ptr<GlobalSetting> m_setting;
+    std::unique_ptr<SGlobalSetting> m_setting;
 
-	std::unique_ptr<element::Object> m_debug_ui_canvas;	/*! Debug UI components container */
-	std::unique_ptr<element::Object> m_menu_ui_canvas;	/*! Global Menu UI components container */
+	std::unique_ptr<element::CObject> m_debug_ui_canvas;	/*! Debug UI components container */
+	std::unique_ptr<element::CObject> m_menu_ui_canvas;	/*! Global Menu UI components container */
 
     /*! This callback will be called before update routine only once. */
     std::function<void(void)> m_on_before_update_callback;
@@ -123,8 +123,8 @@ private:
     std::stack<GameStatus> m_game_status;
 
 private:
-    Application();
-    ~Application();
+    MApplication();
+    ~MApplication();
 
     /**
      * @brief The method that initiates application.
@@ -160,7 +160,7 @@ private:
     void Exit();
 
     /** Change window size. */
-	void ChangeScalingOption(ScaleType value) const;
+	void ChangeScalingOption(EScaleType value) const;
 
     /** The method toggles FPS display.  */
     void ToggleFpsDisplay() const;
@@ -198,8 +198,8 @@ private:
     void PopStatus();
 
 public:
-    Application(const Application&) = delete;
-    Application& operator=(const Application&) = delete;
+    MApplication(const MApplication&) = delete;
+    MApplication& operator=(const MApplication&) = delete;
 };
 
 }; /*! opgs16 */

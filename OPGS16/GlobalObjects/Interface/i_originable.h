@@ -20,7 +20,7 @@ public:
 	/**
 	 * @brief This enum is need for calculating originable instance's final rendering position.
      * IOriginable instance has a feature of calculating final poisiton mechanism with UiObject,
-     * or FontManager.
+     * or MFontManager.
      *
 	 * \(7)|(8)/(9) At first, method gets Origin value of child which is left and calculate
 	 * -(4).(5)-(6) with parent_x, y, width, height to be aligned Parent's region without

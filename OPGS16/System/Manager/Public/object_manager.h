@@ -48,16 +48,16 @@ namespace opgs16 {
 namespace manager {
 
 /*!
- * @class ObjectManager
+ * @class MObjectManager
  * @brief
  */
-class ObjectManager final {
-    using object_ptr = std::unique_ptr<element::Object>;
-    using object_raw = element::Object * ;
+class MObjectManager final {
+    using object_ptr = std::unique_ptr<element::CObject>;
+    using object_raw = element::CObject * ;
 
 public:
-    static ObjectManager& Instance() {
-        static ObjectManager instance{};
+    static MObjectManager& Instance() {
+        static MObjectManager instance{};
         return instance;
     }
 
@@ -67,7 +67,7 @@ public:
         }
     }
 
-    void Destroy(const element::Object& object);
+    void Destroy(const element::CObject& object);
 
     void InsertRenderingObject(object_raw const object, unsigned layer_index);
 
@@ -94,14 +94,14 @@ private:
 
     void DestroyObjects();
 
-    ObjectManager();
+    MObjectManager();
 
 public:
-    ObjectManager(const ObjectManager&) = delete;
-    ObjectManager& operator=(const ObjectManager&) = delete;
+    MObjectManager(const MObjectManager&) = delete;
+    MObjectManager& operator=(const MObjectManager&) = delete;
 };
 
-inline void Clear(ObjectManager& manager) {
+inline void Clear(MObjectManager& manager) {
     manager.ClearDestroyCandidates();
     manager.ClearRenderingList();
 }

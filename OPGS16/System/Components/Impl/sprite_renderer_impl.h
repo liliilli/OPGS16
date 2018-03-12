@@ -40,8 +40,8 @@
  */
 
 #include "../../Frame/vertex_array_object.h"    /*! VertexArrayObject */
-#include "../../Headers/Fwd/objectfwd.h"        /*! texture::Texture2D */
-#include "../../Manager/Public/resource_type.h" /*! resource::Texture2D::IndexSize */
+#include "../../Headers/Fwd/objectfwd.h"        /*! texture::CTexture2D */
+#include "../../Manager/Public/resource_type.h" /*! resource::STexture2D::IndexSize */
 #include "../../Manager/Public/texture_manager.h"
 #include "../../Shader/shader_wrapper.h"        /*! ShaderWrapper */
 
@@ -50,7 +50,7 @@ namespace component {
 namespace _internal {
 
 /*!
- * @class SpriteRendererImpl
+ * @class CSpriteRendererImpl
  * @brief Pointer to implementation structure.
  *
  * @log
@@ -59,15 +59,15 @@ namespace _internal {
  *
  * @todo Implement rendering layer priority feature.
  */
-class SpriteRendererImpl final {
+class CSpriteRendererImpl final {
 private:
-    using IndexSize = opgs16::resource::Texture2D::IndexSize;
+    using IndexSize = opgs16::resource::STexture2D::IndexSize;
 
 public:
     /** Make Sprite2DRenderer instance. (Constructor) */
-	SpriteRendererImpl(const std::string& sprite_tag,
+	CSpriteRendererImpl(const std::string& sprite_tag,
                        const std::string& shader_tag,
-                       const opgs16::resource::Texture2D::IndexSize& texture_index,
+                       const opgs16::resource::STexture2D::IndexSize& texture_index,
                        unsigned layer);
 
     inline ShaderWrapper& Wrapper() {
@@ -92,7 +92,7 @@ public:
     void RenderSprite();
 
 private:
-	texture::Texture2D* m_sprite;	/** Sprite 2d texture stores image information. */
+	texture::CTexture2D* m_sprite;	/** Sprite 2d texture stores image information. */
 	VertexArrayObject m_vao;	    /** Quad VAO to render sprite on screen. */
 	ShaderWrapper m_wrapper;		/** Shader is in ShaderManager, render sprite. */
 

@@ -37,32 +37,32 @@
 
 #include "object_impl.h"                    /*! Header file */
 #include <glm/gtc/matrix_transform.hpp>     /*! glm::rotate */
-#include "../../Manager/Public/setting_manager.h"  /*! SettingManager */
+#include "../../Manager/Public/setting_manager.h"  /*! MSettingManager */
 
 namespace opgs16 {
 namespace element {
 namespace _internal {
 
 namespace {
-using manager::SettingManager;
+using manager::MSettingManager;
 } /*! unnamed namespace */
 
-void ObjectImpl::RefreshFinalPosition() const {
+void CObjectImpl::RefreshFinalPosition() const {
     m_final_position = m_local_position + m_parent_from_position + m_world_position;
     m_final_pos_deprecated = false;
 }
 
-void ObjectImpl::RefreshRotateMatrix() const {
+void CObjectImpl::RefreshRotateMatrix() const {
 	m_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_local_angle), m_rotation_local_factor);
     m_rotation_deprecated = false;
 }
 
-void ObjectImpl::RefreshScaleVector() const {
+void CObjectImpl::RefreshScaleVector() const {
     m_scale_final_vector = m_scale_local_factor * m_scale_local_value;
     m_scale_deprecated = false;
 }
 
-const glm::mat4& ObjectImpl::GetModelMatrix() const {
+const glm::mat4& CObjectImpl::GetModelMatrix() const {
 	if (m_model_matrix_deprecated) {
         if (m_final_pos_deprecated) RefreshFinalPosition();
         if (m_rotation_deprecated)  RefreshRotateMatrix();
@@ -84,12 +84,12 @@ const glm::mat4& ObjectImpl::GetModelMatrix() const {
 	return m_model;
 }
 
-std::string ObjectImpl::GetTagNameOf() const {
-    return SettingManager::Instance().GetTagName(m_tag_index);
+std::string CObjectImpl::GetTagNameOf() const {
+    return MSettingManager::Instance().GetTagName(m_tag_index);
 }
 
-void ObjectImpl::SetTag(const std::string& tag_name) {
-    auto& tag_list = SettingManager::Instance().GetTagNameList();
+void CObjectImpl::SetTag(const std::string& tag_name) {
+    auto& tag_list = MSettingManager::Instance().GetTagNameList();
 
     decltype(tag_list.size()) i = 0;
     for (; i < tag_list.size(); ++i) {
@@ -102,8 +102,8 @@ void ObjectImpl::SetTag(const std::string& tag_name) {
     if (i == tag_list.size()) m_tag_index = 0;
 }
 
-void ObjectImpl::SetTag(const size_t tag_index) {
-    const auto list_size = SettingManager::Instance().GetTagNameList().size();
+void CObjectImpl::SetTag(const size_t tag_index) {
+    const auto list_size = MSettingManager::Instance().GetTagNameList().size();
 
     if (tag_index >= list_size)
         m_tag_index = 0;

@@ -32,7 +32,7 @@
 
 namespace opgs16 {
 
-GlobalSetting::GlobalSetting() {
+SGlobalSetting::SGlobalSetting() {
 
 }
 
