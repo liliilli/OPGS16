@@ -32,19 +32,33 @@
  * @log
  * 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
  * 2018-03-11 Corection of ::opgs16::element::CObject class.
+ * 2018-03-12 Add gravity and accelation feature.
  */
 
 #include "../Public/rigidbody_2d.h"                 /*! Header file */
 #include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
 #include "../../Manager/Public/physics_manager.h"   /*! ::opgs16::manager::MPhysicsManager */
+#include "../../Manager/Public/time_manager.h"      /*! ::opgs16::manager::MTimeManager */
 
 namespace opgs16 {
 namespace component {
 
 void CRigidbody2D::Update() {
+    auto& object = GetObject();
+
+    /*! Accelation */
+    if (!m_stable) {
+        auto delta = manager::MTimeManager::Instance().GetDeltaTime();
+        m_accelation.y -= m_gravity * delta;
+        m_velocity += m_accelation;
+
+        object.SetWorldPosition(object.GetWorldPosition() + (m_velocity * delta));
+    }
+
+    /*! Collision */
     auto& physics_manager = manager::MPhysicsManager::Instance();
     for (auto& collider : m_colliders) {
-        collider->ReflectPosition(GetObject().GetWorldPosition());
+        collider->ReflectPosition(object.GetWorldPosition());
         physics_manager.AddCollider(collider.get(), this);
     }
 }

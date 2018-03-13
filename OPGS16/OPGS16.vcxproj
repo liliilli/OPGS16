@@ -400,6 +400,7 @@
     <None Include="_Project\SampleInvaders\_meta\_header.meta" />
     <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
     <None Include="_Project\SampleInvaders\_meta\_set.meta" />
+    <None Include="_Setting\global_setting.meta" />
     <None Include="_Setting\input.meta" />
     <None Include="_Setting\render_layer.meta" />
     <None Include="_Setting\tag.meta" />

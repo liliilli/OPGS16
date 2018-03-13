@@ -36,6 +36,7 @@
  * @log
  * 2018-02-14 Create file and Make declarations.
  * 2018-03-07 Move file from ::component to ::opgs16::component.
+ * 2018-03-12 Add gravity and accelation feature.
  */
 
 #include <list>
@@ -52,6 +53,8 @@ namespace component {
 /*!
  * @class CRigidbody2D
  * @brief There is only one Rigidbody class in each object. or undefined behavior occurs.
+ * @log
+ * 2018-03-12 Add gravity and accelation feature.
  */
 class CRigidbody2D final : public _internal::CComponent {
 public:
@@ -63,7 +66,7 @@ public:
 public:
     CRigidbody2D(element::CObject& bound_obj) : _internal::CComponent{ bound_obj } {}
 
-    /*!  * Update physics/collision process.  */
+    /*! Update physics/collision process.  */
     void Update();
 
     /*!
@@ -83,19 +86,24 @@ public:
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
     >    void AddCollider2D(std::unique_ptr<_Ty>&& collider);
 
-     void OnCollisionEnter(CRigidbody2D& collier);
+    void OnCollisionEnter(CRigidbody2D& collier);
 
-     void OnTriggerEnter(CRigidbody2D& collider);
+    void OnTriggerEnter(CRigidbody2D& collider);
 
     bool IsTag(const std::string&& tag) const;
 
     bool IsTag(const size_t index) const;
 
 private:
+    bool m_stable{ false };             /*! Do not check collision when value is true. */
     bool m_simulated{ true };           /*! If you want to simulate physics/collision wit this,
                                          *  you have to set it on true. */
     float m_object_mass{ 1.0f };        /*! Define the mass of the Rigidbody2D */
     float m_gravity_scale{ 1.0f };      /*! The degree to which the object affected by gravity */
+    float m_gravity{ 9.8f };            /*! Gravity factor */
+
+    glm::vec3 m_velocity;   /*! Velocity variable for moving bound object. */
+    glm::vec3 m_accelation; /*! Accelation variable for moving bound object. */
 
     BodyType m_type{ BodyType::NORMAL };
     std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};
