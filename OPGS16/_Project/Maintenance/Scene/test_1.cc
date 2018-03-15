@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "../Object/game_canvas.h"                  /*! GameCanvas */
-#include "../Object/test_obj.h"                     /*! TestObject1 */
+#include "../Object/Test1/game_canvas.h"         /*! GameCanvas */
+#include "../Object/Test1/test_obj.h"            /*! TestObject1 */
 #include "../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
 #include "../../../System/Element/Public/object.h"
 #include "../../../System/Components/Public/sprite_renderer.h"
@@ -15,9 +15,6 @@ void Maintenance::Draw() {
 }
 
 void Maintenance::Initiate() {
-    auto main_camera = std::make_unique<MainCameraObject>();
-    Instantiate("MainCamera", main_camera);
-
     auto canvas = std::make_unique<GameCanvas>();
     Instantiate("GameCanvas", canvas);
 
@@ -29,6 +26,9 @@ void Maintenance::Initiate() {
         auto ptr = GetObject("Object").get(); {
             Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
             renderer->SetRenderLayer(3);
+
+            auto main_camera = std::make_unique<MainCameraObject>();
+            ptr->Instantiate("MainCamera", main_camera);
         }
 
         for (int i = 2; i <= 4; ++i) {

@@ -1,7 +1,7 @@
 #include "game_canvas.h"                        /*! Header file */
-#include "..\..\..\GlobalObjects\Canvas\text.h" /*! Canvas::Text */
-#include "..\Scripts\test_script_1.h"           /*! TestScript1 */
-#include "..\Scripts\test_script_2.h"           /*! TestScript2 */
+#include "../../../../GlobalObjects/Canvas/text.h" /*! Canvas::Text */
+#include "../../Scripts/Test1/test_script_1.h"     /*! TestScript1 */
+#include "../../Scripts/Test1/test_script_2.h"     /*! TestScript2 */
 
 GameCanvas::GameCanvas() {
     /*! Object binding */

@@ -35,7 +35,7 @@ void Canvas::Render() {
 }
 
 const glm::mat4 Canvas::GetUiCameraPVMatrix() const {
-	return m_camera->GetPV();
+	return m_camera->PvMatrix();
 }
 
 }

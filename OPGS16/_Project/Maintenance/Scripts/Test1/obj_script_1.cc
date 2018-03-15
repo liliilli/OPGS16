@@ -1,15 +1,15 @@
 #include "obj_script_1.h"                           /*! Header file */
 
 #include <glm/glm.hpp>
-#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
-#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
-#include "../../../System/Manager/Public/time_manager.h"   /*! MTimeManager */
-#include "../../../System/Manager/Public/timer_manager.h"  /*! MTimerManager */
-#include "../../../System/Components/Public/sprite_renderer.h"    /*! CSprite2DRenderer */
+#include "../../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
+#include "../../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
+#include "../../../../System/Manager/Public/time_manager.h"   /*! MTimeManager */
+#include "../../../../System/Manager/Public/timer_manager.h"  /*! MTimerManager */
+#include "../../../../System/Components/Public/sprite_renderer.h"    /*! CSprite2DRenderer */
 
 #include "test_script_1.h"      /*! TestScript1 for Canvas */
-#include "../Object/test_obj.h" /*! TestObject1 for temporary */
-#include "../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
+#include "../../Object/Test1/test_obj.h" /*! TestObject1 for temporary */
+#include "../../../../System/Shader/shader_wrapper.h"     /*! ShaderWrapper */
 
 using opgs16::manager::MSceneManager;
 using opgs16::element::CObject;

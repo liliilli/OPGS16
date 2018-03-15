@@ -150,9 +150,10 @@
     <ClCompile Include="System\Manager\Private\resource_type.cc" />
     <ClCompile Include="System\Manager\Private\timer_manager.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
-    <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test1\game_canvas.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
-    <ClCompile Include="_Project\Maintenance\Object\test_obj.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test3\moveable_character.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test1\test_obj.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_1.cc" />
     <ClCompile Include="System\Components\Private\camera.cc" />
     <ClCompile Include="System\Components\Physics2D\Collider\rectangle.cc" />
@@ -190,9 +191,11 @@
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
     <ClCompile Include="System\Manager\Private\sound_manager.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\obj_script_1.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\test_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scene\test_3.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\obj_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test3\mc_script.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\test_script_2.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\test_script_1.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +243,10 @@
     <ClInclude Include="System\Manager\Public\resource_type.h" />
     <ClInclude Include="System\Manager\Public\timer_manager.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
-    <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test1\game_canvas.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
-    <ClInclude Include="_Project\Maintenance\Object\test_obj.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test3\moveable_character.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test1\test_obj.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_1.h" />
     <ClInclude Include="System\Components\Public\camera.h" />
     <ClInclude Include="System\Components\Physics2D\Collider\rectangle.h" />
@@ -286,9 +290,11 @@
     <ClInclude Include="System\Shader\shader_wrapper.h" />
     <ClInclude Include="System\Manager\Public\sound_manager.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\obj_script_1.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\test_script_1.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
+    <ClInclude Include="_Project\Maintenance\Scene\test_3.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\obj_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test3\mc_script.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\test_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\test_script_2.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +397,7 @@
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
     <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
+    <None Include="_Project\Maintenance\_meta\_input.meta" />
     <None Include="_resource.meta" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.frag" />
     <None Include="_Project\Maintenance\Resource\Shader\Global\__2dquad.vert" />

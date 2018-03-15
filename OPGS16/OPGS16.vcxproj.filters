@@ -26,13 +26,8 @@
     <ClCompile Include="System\Components\Physics2D\collider_2d.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
-    <ClCompile Include="_Project\Maintenance\Object\game_canvas.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_1.cc" />
-    <ClCompile Include="_Project\Maintenance\Object\test_obj.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\test_script_1.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\obj_script_1.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
-    <ClCompile Include="_Project\Maintenance\Scripts\test_script_2.cc" />
     <ClCompile Include="_Project\Maintenance\Scene\test_2.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
@@ -60,6 +55,14 @@
     <ClCompile Include="System\Element\Impl\object_impl.cc" />
     <ClCompile Include="System\Element\Private\ui_object.cc" />
     <ClCompile Include="System\Core\Impl\logger_impl.cc" />
+    <ClCompile Include="_Project\Maintenance\Scene\test_3.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test3\moveable_character.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test3\mc_script.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test1\game_canvas.cc" />
+    <ClCompile Include="_Project\Maintenance\Object\Test1\test_obj.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\obj_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\test_script_1.cc" />
+    <ClCompile Include="_Project\Maintenance\Scripts\Test1\test_script_2.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -102,13 +105,8 @@
     <ClInclude Include="System\Components\Physics2D\collider_2d.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
-    <ClInclude Include="_Project\Maintenance\Object\game_canvas.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_1.h" />
-    <ClInclude Include="_Project\Maintenance\Object\test_obj.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\test_script_1.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\obj_script_1.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
-    <ClInclude Include="_Project\Maintenance\Scripts\test_script_2.h" />
     <ClInclude Include="_Project\Maintenance\Scene\test_2.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test2\game_canvas_2.h" />
     <ClInclude Include="System\Core\Public\core_setting.h" />
@@ -154,6 +152,14 @@
     <ClInclude Include="System\Element\Public\ui_object.h" />
     <ClInclude Include="System\Element\Internal\texture_internal.h" />
     <ClInclude Include="System\Core\Impl\logger_impl.h" />
+    <ClInclude Include="_Project\Maintenance\Scene\test_3.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test3\moveable_character.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test3\mc_script.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test1\test_obj.h" />
+    <ClInclude Include="_Project\Maintenance\Object\Test1\game_canvas.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\obj_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\test_script_1.h" />
+    <ClInclude Include="_Project\Maintenance\Scripts\Test1\test_script_2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -268,6 +274,7 @@
     <None Include="_Setting\render_layer.meta" />
     <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
     <None Include="_Setting\global_setting.meta" />
+    <None Include="_Project\Maintenance\_meta\_input.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

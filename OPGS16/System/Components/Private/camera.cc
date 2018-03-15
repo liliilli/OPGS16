@@ -38,8 +38,6 @@
 
 #include "../Public/camera.h"   /*! Header file */
 
-#include <array>                /*! std::array<GLint, 4> */
-#include <GL/glew.h>            /*! type specifier */
 #include <glm/gtc/matrix_transform.hpp>         /*! glm::ortho */
 #include "../../Manager/Public/scene_manager.h" /*! MSceneManager */
 
@@ -47,25 +45,39 @@ namespace opgs16 {
 namespace component {
 namespace {
 using Object = element::CObject;
+const glm::vec3 y_direction{ 0, 1, 0 };
+
+/*! Initiate orthographic projection. automatically set it to screen size. */
+void InitiateOrthographicProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
+    view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, y_direction);
+    projection = glm::ortho<float>(0.f, 256.f, 0.f, 224.f);
+    pv = projection * view;
+}
+
+/*! Initiate perspective projection matrix. automatically set it to screen size ratio. */
+void InitiatePerspectiveProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
+    view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, y_direction);
+
+	const auto fovy = glm::radians(50.f);
+	const auto ratio = (256.f / 224.f);
+	projection = glm::perspective(fovy, ratio, 0.03f, 100.f);
+    pv = projection * view;
+}
 } /*! unnamed namespace */
 
 bool CCamera::s_main_camera_initiated{ false };
 
 CCamera::CCamera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
-    _internal::CComponent{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
+    CComponent{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
     /*! Body */
 	switch (m_viewtype) {
-	case ViewType::ORTHO:       InitiateOrthographicProjection();   break;
-    case ViewType::PERSPECTIVE: InitiatePerspectiveProjection();    break;
+	case ViewType::ORTHO:       InitiateOrthographicProjection(m_view, m_projection, m_PV); break;
+    case ViewType::PERSPECTIVE: InitiatePerspectiveProjection(m_view, m_projection, m_PV);  break;
 	}
 
     if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
-        /*!
-         * If the scene have not main camera, signal scene to bind it to scene
-         * to display world.
-         */
         s_main_camera_initiated = true;
-        opgs16::manager::MSceneManager::Instance().PresentScene()->SetMainCamera(this);
+        manager::MSceneManager::Instance().PresentScene()->SetMainCamera(this);
     }
     else
         m_cameratype = CameraType::SUB;
@@ -74,48 +86,27 @@ CCamera::CCamera(Object& bound_obj, ViewType view_type, CameraType camera_type, 
 CCamera::~CCamera() {
     if (m_cameratype == CameraType::MAIN) {
         s_main_camera_initiated = false;
-        opgs16::manager::MSceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
+        manager::MSceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
     }
 }
 
-const glm::mat4 CCamera::GetViewMatrix() const noexcept {
+const glm::mat4& CCamera::ViewMatrix() const noexcept {
     return m_view;
 }
 
-const glm::mat4 CCamera::GetProjectionMatrix() const noexcept {
+const glm::mat4& CCamera::ProjectionMatrix() const noexcept {
     return m_projection;
 }
 
-const glm::mat4 CCamera::GetPV() const noexcept {
+const glm::mat4& CCamera::PvMatrix() const noexcept {
     return m_PV;
 }
 
-void CCamera::InitiateOrthographicProjection() {
-    std::array<GLint, 4> viewport_size{0, 0, 256, 224};
-	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
-
-    // 이동은 구현하지 않았음.
-    m_view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
-	m_projection = glm::ortho<float>(static_cast<float>(viewport_size[0]),
-                                     static_cast<float>(viewport_size[2]),
-                                     static_cast<float>(viewport_size[1]),
-                                     static_cast<float>(viewport_size[3]));
-    m_PV = m_projection * m_view;
-}
-
-void CCamera::InitiatePerspectiveProjection() {
-    std::array<GLint, 4> viewport_size{0, 0, 256, 224};
-	//glGetIntegerv(GL_VIEWPORT, &viewport_size[0]);
-
-    m_view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, glm::vec3{ 0, 1, 0 });
-
-	auto fovy = glm::radians(50.f);
-	auto ratio = static_cast<float>(viewport_size[2]) / viewport_size[3];
-	m_projection = glm::perspective(fovy, ratio, 0.03f, 100.f);
-    m_PV = m_projection * m_view;
-}
-
 void CCamera::Update() {
+    if (m_information_changed) {
+        m_view = glm::lookAt(m_world, m_world_look, y_direction);
+        m_information_changed = false;
+    }
 }
 
 } /*! opgs16::component */

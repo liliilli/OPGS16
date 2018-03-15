@@ -72,16 +72,26 @@ public:
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
-     virtual void Update() override;     /*! Inherited via component::CComponent */
-
-public:
-	CCamera(element::CObject& bound_obj,
-           ViewType view_type, CameraType camera_type, bool _auto = true);
+	CCamera(element::CObject& bound_obj, ViewType view_type,
+            CameraType camera_type, bool _auto = true);
 	virtual ~CCamera();
+    virtual void Update() override;     /*! Inherited via component::CComponent */
 
-    const glm::mat4 GetViewMatrix() const noexcept;         /*! Get View matrix */
-	const glm::mat4 GetProjectionMatrix() const noexcept;   /*! Get Projection matrix */
-    const glm::mat4 GetPV() const noexcept;                 /*! Get PV matrix */
+    const glm::mat4& ViewMatrix() const noexcept;         /*! Get View matrix */
+	const glm::mat4& ProjectionMatrix() const noexcept;   /*! Get Projection matrix */
+    const glm::mat4& PvMatrix() const noexcept;                 /*! Get PV matrix */
+
+    inline void SetWorldPosition(const glm::vec3& position) {
+        m_world = position;
+        m_world_look = m_look + m_world;
+        m_information_changed = true;
+    }
+
+    inline void SetLookDirection(const glm::vec3& look) {
+        m_look = look;
+        m_world_look = m_look + m_world;
+        m_information_changed = true;
+    }
 
 private:
 	mutable ViewType m_viewtype;	/** View type variable */
@@ -91,18 +101,17 @@ private:
 	glm::mat4 m_projection{};		/** Projection matrix world space or ui canvas to screen. */
     glm::mat4 m_PV{};               /*! Projection * View matrix */
 
-	float m_near, m_far;			/** Distance sets region of sight. used only for perspective */
-	float m_perspective_angle;		/** Angle sets how to see world, used only for perspective */
+    glm::vec3 m_world{};
+    glm::vec3 m_look{};
+    mutable glm::vec3 m_world_look{};
+
+	float m_near, m_far;			/*! Distance sets region of sight. used only for perspective */
+	float m_perspective_angle;		/*! Angle sets how to see world, used only for perspective */
+    bool  m_information_changed{ false };
 
     static bool s_main_camera_initiated;/** Check flag if main camera is already initiated */
 
 private:
-	/** Initiate orthographic projection. automatically set it to screen size. */
-	 void InitiateOrthographicProjection();
-
-	/** Initiate perspective projection matrix. automatically set it to screen size ratio. */
-	 void InitiatePerspectiveProjection();
-
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CCamera)
 };

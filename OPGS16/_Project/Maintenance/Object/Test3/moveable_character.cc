@@ -1,14 +1,12 @@
-#include "test_obj.h"   /*! Header file */
+#include "moveable_character.h"   /*! Header file */
+#include "../../Scripts/Test3/mc_script.h"
 
 #include "../../../System/Components/Public/camera.h"       /*! ::opgs16::component::Camera */
-#include "../../../System/Components/Public/animator.h"     /*! ::opgs16::component::CAnimator */
-/*! ::opgs16::component::CSprite2DRenderer */
 #include "../../../System/Components/Public/sprite_renderer.h"
 #include "../../../System/Manager/Public/scene_manager.h"   /*! MSceneManager */
 #include "../../../System/Shader/shader_wrapper.h"          /*! ShaderWrapper */
-#include "../Scripts/obj_script_1.h"                        /*! ObjectScript1 */
 
-TestObject1::TestObject1(const int i, const float size) {
+MoveableCharacter::MoveableCharacter(const int i, const float size) {
     SetScaleValue(size);
 
     {
@@ -17,19 +15,16 @@ TestObject1::TestObject1(const int i, const float size) {
         m_wrapper = &GetComponent<CSprite2DRenderer>()->Wrapper();
         m_wrapper->InsertUniformValue<glm::mat4>("projection", glm::mat4{});
         m_wrapper->InsertUniformValue<float>("alpha", 1.0f);
-
-        using opgs16::component::CAnimator;
-        AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), opgs16::Switch::ON);
     }
 
-    AddComponent<ObjectScript1>(*this);
+    AddComponent<McScript>(*this);
 }
 
-void TestObject1::Render() {
+void MoveableCharacter::Render() {
     using opgs16::manager::MSceneManager;
-    auto PVM = MSceneManager::Instance().PresentScene()->GetMainCamera()->GetPV() * GetModelMatrix();
-
-    m_wrapper->ReplaceUniformValue<glm::mat4>("projection", PVM);
     using opgs16::component::CSprite2DRenderer;
+
+    const auto PVM = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
+    m_wrapper->ReplaceUniformValue<glm::mat4>("projection", PVM);
     GetComponent<CSprite2DRenderer>()->RenderSprite();
 }
