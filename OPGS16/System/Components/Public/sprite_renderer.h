@@ -44,10 +44,10 @@
 #include <memory>
 
 #include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
+#include "../Internal/renderer_base.h"      /*! ::opgs16::component::_internal::CRendererBase */
 #include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
 #include "../../Headers/Fwd/objectfwd.h"    /*! CSpriteRendererImpl
                                               * ShaderWraper */
-#include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::MObjectManager */
 #include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
 
 namespace opgs16 {
@@ -64,7 +64,7 @@ namespace component {
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move to opgs16::component namespace.
  */
-class CSprite2DRenderer final : public _internal::CComponent {
+class CSprite2DRenderer final : public _internal::CRendererBase {
 private:
     using IndexSize = opgs16::resource::STexture2D::IndexSize;
     using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
@@ -77,30 +77,15 @@ public:
                      const IndexSize& texture_index = {0, 0},
                      const unsigned layer = 0);
 
-	/*! Get ShaderWrapper instance. */
-	ShaderWrapper& Wrapper() const;
-
     void SetTexture(const std::string& texture_name);
 
     void SetTextureIndex(const IndexSize& new_index);
 
-    void SetRenderLayer(const std::string& layer_name);
-
-    void SetRenderLayer(const size_t layer_index);
-
     /*! Get Texture index position. */
     const IndexSize& TextureIndex() const noexcept;
 
-    inline size_t RenderLayerIndexOf() const noexcept {
-        return m_render_layer_index;
-    }
-
-    std::string RenderLayerNameOf() const;
-
-    virtual void Update() override final {
-        opgs16::manager::MObjectManager::Instance().InsertRenderingObject(&GetObject(),
-                                                                         m_render_layer_index);
-    };
+	/*! Get ShaderWrapper instance. */
+	ShaderWrapper& Wrapper() const;
 
 	/**
 	 * @brief Render sprite on screen. Procedure is below.
@@ -114,9 +99,8 @@ public:
 
 private:
     pimpl_type m_impl{};
-    size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
 
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CSprite2DRenderer)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRenderer)
 };
 
 } /*! opgs16::component */

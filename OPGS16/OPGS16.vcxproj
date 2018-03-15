@@ -133,7 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="System\Components\Internal\renderer_base.cc" />
     <ClCompile Include="System\Components\Private\animator.cc" />
+    <ClCompile Include="System\Components\Private\empty_renderer.cc" />
     <ClCompile Include="System\Core\Impl\logger_impl.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
@@ -200,7 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System\Components\Internal\animator_internal.h" />
+    <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
+    <ClInclude Include="System\Components\Public\empty_renderer.h" />
     <ClInclude Include="System\Core\Impl\logger_impl.h" />
     <ClInclude Include="System\Core\Internal\logger_internal.h" />
     <ClInclude Include="System\Core\Public\application.h" />

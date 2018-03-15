@@ -27,56 +27,48 @@
  */
 
 /*!
- * @file System/Components/Private/sprite_renderer.cc
- * @brief Definition file of sprite_renderer.h
+ * @file System/Components/Internal/renderer_base.cc
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-07 Move file to /Component and Add boilerplate comments.
+ * 2018-03-15 Create file
  */
 
-#include "../Public/sprite_renderer.h"              /*! Header file */
-#include "../Impl/sprite_renderer_impl.h"           /*! CSpriteRendererImpl */
+#include "renderer_base.h"                          /*! Header file */
 #include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
+#include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::MSettingManager */
 
 namespace opgs16 {
 namespace component {
+namespace _internal {
 
-CSprite2DRenderer::CSprite2DRenderer(element::CObject& bind_object,
-                                   const std::string& sprite_tag,
-                                   const std::string& shader_tag,
-                                   const opgs16::resource::STexture2D::IndexSize& texture_index,
-                                   const unsigned layer) :
-    CRendererBase{ bind_object, layer },
-    m_impl { new _internal::CSpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
+CRendererBase::CRendererBase(element::CObject& bind_object, const unsigned render_layer) :
+    CComponent{ bind_object }, m_render_layer_index{ render_layer } {};
+
+CRendererBase::~CRendererBase() {};
+
+void CRendererBase::SetRenderLayer(const std::string& layer_name) {
+    auto& layer_list = manager::MSettingManager::Instance().RenderingLayerNameList();
+    decltype(layer_list.size()) i = 0;
+    for (; i < layer_list.size(); ++i) {
+        if (layer_name == layer_list[i]) {
+            m_render_layer_index = i;
+            break;
+        }
+    }
+
+    if (i == layer_list.size()) m_render_layer_index = 0;
 }
 
-ShaderWrapper& CSprite2DRenderer::Wrapper() const {
-    return m_impl->Wrapper();
+void CRendererBase::SetRenderLayer(const size_t layer_index) {
+    const auto list_size = manager::MSettingManager::Instance().RenderingLayerNameList().size();
+    m_render_layer_index = (layer_index >= list_size) ? 0 : layer_index;
 }
 
-void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
-    return m_impl->SetTexture(texture_name);
+std::string CRendererBase::RenderLayerNameOf() const {
+    return manager::MSettingManager::Instance().RenderingLayerName(m_render_layer_index);
 }
 
-const CSprite2DRenderer::IndexSize& CSprite2DRenderer::TextureIndex() const noexcept {
-    return m_impl->TextureIndex();
-}
-
-// ReSharper disable CppMemberFunctionMayBeConst
-void CSprite2DRenderer::SetTextureIndex(const IndexSize& new_index) {
-    // ReSharper restore CppMemberFunctionMayBeConst
-    m_impl->SetTextureIndex(new_index);
-}
-
-// ReSharper disable CppMemberFunctionMayBeConst
-void CSprite2DRenderer::RenderSprite() {
-    // ReSharper restore CppMemberFunctionMayBeConst
-    m_impl->RenderSprite();
-}
-
-CSprite2DRenderer::~CSprite2DRenderer() = default;
-
+} /*! opgs16::component::_internal */
 } /*! opgs16::component */
 } /*! opgs16 */
-
