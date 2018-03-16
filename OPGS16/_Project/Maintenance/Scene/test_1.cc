@@ -16,37 +16,29 @@ void Maintenance::Draw() {
 }
 
 void Maintenance::Initiate() {
-    auto canvas = std::make_unique<GameCanvas>();
-    Instantiate("GameCanvas", canvas);
-
-    auto obj_1 = std::make_unique<MoveableCharacter>(1, 16.f); {
-        obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
-        Instantiate("Character", obj_1);
-
-        auto ptr = GetObject("Character").get();
-        auto main_camera = std::make_unique<MainCameraObject>();
-        ptr->Instantiate("MainCamera", main_camera);
-
+    auto l_set_render_layer = [](opgs16::element::CObject* const obj) {
         using Sprite2DRenderer = opgs16::component::CSprite2DRenderer;
-        Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
-        renderer->SetRenderLayer(3);
+        if (Sprite2DRenderer* renderer = obj->GetComponent<Sprite2DRenderer>(); renderer)
+            renderer->SetRenderLayer(3);
+    };
+
+    Instantiate<GameCanvas>("GameCanvas");
+
+    {
+        auto obj_1 = Instantiate<MoveableCharacter>("Character", 1, 16.f);
+        obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
+        obj_1->Instantiate<MainCameraObject>("MainCamera");
+        l_set_render_layer(obj_1);
     }
 
-    auto obj_test = std::make_unique<TestObject1>(1, 64.f); {
-        obj_test->SetWorldPosition(glm::vec3{ 128, 112, 0 });
-        Instantiate("Object", obj_test);
-
-        using Sprite2DRenderer = opgs16::component::CSprite2DRenderer;
-        auto ptr = GetObject("Object").get(); {
-            Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
-            renderer->SetRenderLayer(3);
-        }
+    {
+        auto obj_1 = Instantiate<TestObject1>("Object", 1, 64.f);
+        obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
+        l_set_render_layer(obj_1);
 
         for (int i = 2; i <= 4; ++i) {
-            ptr->Instantiate<TestObject1>("Object", i, 16.f * (5 - i));
-            ptr = ptr->GetChild("Object");
-            Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
-            renderer->SetRenderLayer(3);
+            obj_1 = obj_1->Instantiate<TestObject1>("Object", i, 16.f * (5 - i));
+            l_set_render_layer(obj_1);
         }
     }
 }

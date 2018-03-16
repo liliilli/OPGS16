@@ -11,15 +11,27 @@
  * @log
  * 2018-02-19 Refactoring
  * 2018-03-11 Correcton of Object to opgs16::element::CObject.
+ * 2018-03-16 Fixed Instantiate to be able to return created instance's pointer.
  */
 
 #include <memory>                           /*! std::unique_ptr<> */
 #include "../Element/Public/object.h"       /*! ::opgs16::elent::CObject */
+#include "../Helper/Public/template.h"
 #include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::CCamera */
 
-/**
+namespace opgs16 {
+namespace element {
+
+} /*! opgs16::element */
+} /*! opgs16 */
+
+/*!
  * @class Scene
  * @brief Base scene interface.
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-03-16 Fixed Instantiate to be able to return created instance's pointer.
  */
 class Scene {
 private:
@@ -51,20 +63,38 @@ public:
 	/**
 	 *
 	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
-		if (m_object_list.find(tag) != m_object_list.end()) return false;
+	template <
+        class _Ty,
+        typename = std::enable_if_t<IsCObjectBase<_Ty> && IsCObjectSmtPtr<_Ty>>
+    >
+    _Ty* Instantiate(const std::string& tag, std::unique_ptr<_Ty>&& obj) {
+        if (DoesObjectExist(tag)) return nullptr;
 		m_object_list[tag] = std::move(obj);
         m_object_list[tag]->SetHash(tag);
-		return true;
+        return static_cast<_Ty*>(m_object_list[tag].get());
 	}
 
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<Object, _Ty>>>
-	bool Instantiate(const std::string& tag, std::unique_ptr<_Ty>& obj) {
-		if (m_object_list.find(tag) != m_object_list.end()) return false;
+	template <
+        class _Ty,
+        typename = std::enable_if_t<IsCObjectBase<_Ty> && IsCObjectSmtPtr<_Ty>>
+    >
+    _Ty* Instantiate(const std::string& tag, std::unique_ptr<_Ty>& obj) {
+        if (DoesObjectExist(tag)) return nullptr;
 		m_object_list[tag] = std::move(obj);
         m_object_list[tag]->SetHash(tag);
-		return true;
+        return static_cast<_Ty*>(m_object_list[tag].get());
+	}
+
+    template <
+        class _Ty,
+        class... _Args,
+        typename = std::enable_if_t<IsCObjectBase<_Ty>>
+    >
+    _Ty* Instantiate(const std::string& tag, _Args&&... args) {
+        if (DoesObjectExist(tag)) return nullptr;
+        m_object_list[tag] = std::make_unique<_Ty>(std::forward<_Args>(args)...);
+        m_object_list[tag]->SetHash(tag);
+        return static_cast<_Ty*>(m_object_list[tag].get());
 	}
 
 	/*!
@@ -89,6 +119,10 @@ public:
      * @brief Get bound main camera. if main camera is not bound, return nullptr.
      */
     inline const _camera* const GetMainCamera();
+
+    inline bool DoesObjectExist(const std::string& name) const {
+        return m_object_list.find(name) != m_object_list.end();
+    }
 
 private:
     object_map m_object_list;

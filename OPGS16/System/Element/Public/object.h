@@ -53,6 +53,9 @@
 #include <memory>			/*! std::unique_ptr */
 #include <unordered_map>	/*! std::unordered_map */
 #include <string>           /*! std::to_string */
+#include "../../Helper/Public/template.h"
+/*! opgs16::component::_internal::CComponent */
+#include "../../System/Components/Internal/component.h"
 #include "../../../Headers/Fwd/objectfwd.h"  /*! helper::CShaderNew
                                               * glm::vec3
                                               * ObjectTree
@@ -60,8 +63,6 @@
                                               * ::opgs16::component::CRigidbody2D
                                               * ::opgs16::element::_internal::ObjectImplDeleter
                                               */
-/*! opgs16::component::_internal::CComponent */
-#include "../../System/Components/Internal/component.h"
 
 namespace opgs16 {
 namespace element {
@@ -239,6 +240,19 @@ public:
 
 	bool GetActive() const;   /*! Get active value. */
 
+    /*! Overloaded function of Instantiate(Varadic...) */
+    template <
+        class _Ty,
+        class = std::enable_if_t<IsCObjectBase<_Ty>>
+    >
+    _Ty* Instantiate(const std::string name, std::unique_ptr<_Ty>& instance) {
+        const auto item_tag = CreateChildTag(name);
+        m_children[item_tag] = std::move(instance);
+        m_children[item_tag]->SetHash(item_tag);
+        m_children[item_tag]->SetParentPosition(GetParentPosition());
+        return static_cast<_Ty*>(m_children[item_tag].get());
+    }
+
 	/**
 	 * @brief This initiate object as a child of base object.
 	 *
@@ -252,21 +266,24 @@ public:
 	 * You have to <> parenthesis to input specific class type to create.
 	 *
 	 * @param[in] object Object instance to make.
-	 * @param[in] tag Object Tag.
-	 * @param[in] _args variadic args to be used c-tor initialize parameters inputs.
+	 * @param[in] name Object Tag.
+	 * @param[in] _Args variadic args to be used c-tor initialize parameters inputs.
 	 * @return Success/Failed flag. If the methods success to make child object, return true.
 	 */
     template <
         class _Ty,
-        class... _Types,
-        class = std::enable_if_t<std::is_base_of_v<CObject, _Ty>>
-    >   bool Instantiate(const std::string name, _Types&&... _args);
+        class... _Args,
+        class = std::enable_if_t<IsCObjectBase<_Ty>>
+    >
+    _Ty* Instantiate(const std::string name, _Args&&... _args) {
+        //static_assert(!std::is_convertible_v <_Args, std::unique_ptr<CObject>>, "");
 
-    /*! Overloaded function of Instantiate(Varadic...) */
-    template <
-        class _Ty,
-        class = std::enable_if_t<std::is_base_of_v<CObject, _Ty>>
-    >   bool Instantiate(const std::string name, std::unique_ptr<_Ty>& instance);
+        const auto item_tag = CreateChildTag(name);
+        m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Args>(_args)...));
+        m_children[item_tag]->SetHash(item_tag);
+        m_children[item_tag]->SetParentPosition(GetParentPosition());
+        return static_cast<_Ty*>(m_children[item_tag].get());
+    }
 
 	/**
 	 * @brief Destroy child object has unique tag key.
@@ -402,23 +419,6 @@ protected:
     virtual void Render() {};
 };
 
-template <class _Ty, class... _Types, typename>
-bool CObject::Instantiate(const std::string tag, _Types&&... _args) {
-    const auto item_tag = CreateChildTag(tag);
-    m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Types>(_args)...));
-    m_children[item_tag]->SetHash(item_tag);
-    m_children[item_tag]->SetParentPosition(GetParentPosition());
-    return true;
-}
-
-template <class _Ty, typename>
-bool CObject::Instantiate(const std::string tag, std::unique_ptr<_Ty>& instance) {
-    const auto item_tag = CreateChildTag(tag);
-    m_children[item_tag] = std::move(instance);
-    m_children[item_tag]->SetHash(item_tag);
-    m_children[item_tag]->SetParentPosition(GetParentPosition());
-    return true;
-}
 
 template<class _Ty, typename... _Params, typename>
 void CObject::AddComponent(_Params&&... params) {

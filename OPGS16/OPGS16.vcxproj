@@ -238,6 +238,7 @@
     <ClInclude Include="System\Helper\Public\fixed_stack.h" />
     <ClInclude Include="System\Helper\Public\hash_function.h" />
     <ClInclude Include="System\Helper\Public\switch.h" />
+    <ClInclude Include="System\Helper\Public\template.h" />
     <ClInclude Include="System\Manager\Internal\font_internal.h" />
     <ClInclude Include="System\Manager\Internal\input_internal.h" />
     <ClInclude Include="System\Manager\Internal\physics_internal.h" />

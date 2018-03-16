@@ -164,6 +164,7 @@
     <ClInclude Include="_Project\Maintenance\Scripts\Test1\test_script_2.h" />
     <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\empty_renderer.h" />
+    <ClInclude Include="System\Helper\Public\template.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
