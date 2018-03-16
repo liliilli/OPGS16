@@ -49,14 +49,14 @@ const glm::vec3 y_direction{ 0, 1, 0 };
 
 /*! Initiate orthographic projection. automatically set it to screen size. */
 void InitiateOrthographicProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
-    view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, y_direction);
-    projection = glm::ortho<float>(0.f, 256.f, 0.f, 224.f);
+    view = glm::lookAt(glm::vec3{ 128, 112, 0 }, glm::vec3{ 128, 112, -1 }, y_direction);
+    projection = glm::ortho<float>(-128.f, 128.f, -112.f, 112.f);
     pv = projection * view;
 }
 
 /*! Initiate perspective projection matrix. automatically set it to screen size ratio. */
 void InitiatePerspectiveProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
-    view = glm::lookAt(glm::vec3{ 0 }, glm::vec3{ 0, 0, -1 }, y_direction);
+    view = glm::lookAt(glm::vec3{ 128, 112, 0 }, glm::vec3{ 128, 112, -1 }, y_direction);
 
 	const auto fovy = glm::radians(50.f);
 	const auto ratio = (256.f / 224.f);
@@ -105,6 +105,7 @@ const glm::mat4& CCamera::PvMatrix() const noexcept {
 void CCamera::Update() {
     if (m_information_changed) {
         m_view = glm::lookAt(m_world, m_world_look, y_direction);
+        m_PV = m_projection * m_view;
         m_information_changed = false;
     }
 }

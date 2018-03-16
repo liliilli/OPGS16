@@ -4,6 +4,7 @@
 
 #include "../Object/Test1/game_canvas.h"         /*! GameCanvas */
 #include "../Object/Test1/test_obj.h"            /*! TestObject1 */
+#include "../Object/Test3/moveable_character.h"
 #include "../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
 #include "../../../System/Element/Public/object.h"
 #include "../../../System/Components/Public/sprite_renderer.h"
@@ -18,17 +19,27 @@ void Maintenance::Initiate() {
     auto canvas = std::make_unique<GameCanvas>();
     Instantiate("GameCanvas", canvas);
 
-    auto obj_1 = std::make_unique<TestObject1>(1, 64.f); {
+    auto obj_1 = std::make_unique<MoveableCharacter>(1, 16.f); {
         obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
-        Instantiate("Object", obj_1);
+        Instantiate("Character", obj_1);
+
+        auto ptr = GetObject("Character").get();
+        auto main_camera = std::make_unique<MainCameraObject>();
+        ptr->Instantiate("MainCamera", main_camera);
+
+        using Sprite2DRenderer = opgs16::component::CSprite2DRenderer;
+        Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
+        renderer->SetRenderLayer(3);
+    }
+
+    auto obj_test = std::make_unique<TestObject1>(1, 64.f); {
+        obj_test->SetWorldPosition(glm::vec3{ 128, 112, 0 });
+        Instantiate("Object", obj_test);
 
         using Sprite2DRenderer = opgs16::component::CSprite2DRenderer;
         auto ptr = GetObject("Object").get(); {
             Sprite2DRenderer* renderer = ptr->GetComponent<Sprite2DRenderer>();
             renderer->SetRenderLayer(3);
-
-            auto main_camera = std::make_unique<MainCameraObject>();
-            ptr->Instantiate("MainCamera", main_camera);
         }
 
         for (int i = 2; i <= 4; ++i) {

@@ -231,6 +231,7 @@ void MApplication::Draw() const {
             m_pp_manager->BindSequence(0);
 
 		/** Actual Rendering */
+        m_scene_manager.PresentScene()->Draw();
         m_object_manager.Render();
 		/** Post-processing */
         m_pp_manager->Render();

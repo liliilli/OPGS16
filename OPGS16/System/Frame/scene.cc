@@ -7,10 +7,6 @@ void Scene::Update() {
 	}
 }
 
-void Scene::Draw() {
-	for (auto& object : m_object_list) { object.second->Draw(); }
-}
-
 Scene::object_map& Scene::GetObjectList() {
 	return m_object_list;
 }

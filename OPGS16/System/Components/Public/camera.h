@@ -102,7 +102,7 @@ private:
     glm::mat4 m_PV{};               /*! Projection * View matrix */
 
     glm::vec3 m_world{};
-    glm::vec3 m_look{};
+    glm::vec3 m_look{0, 0, -1};
     mutable glm::vec3 m_world_look{};
 
 	float m_near, m_far;			/*! Distance sets region of sight. used only for perspective */

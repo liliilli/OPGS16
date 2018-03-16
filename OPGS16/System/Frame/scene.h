@@ -46,7 +46,7 @@ public:
 	 * This method is able to overriding,
 	 * but actual default behavior is just call ->Draw() of m_object_list.
      */
-	virtual void Draw();
+    virtual void Draw() {};
 
 	/**
 	 *
