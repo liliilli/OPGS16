@@ -94,10 +94,22 @@ public:
 
     bool IsTag(const size_t index) const;
 
+    /*! Activate or deactivate physics calculation mode */
+    inline void ActivatePhysics(const bool value) {
+        m_physics = value;
+    }
+
+    /*! Activate or decativate collision calculation mode */
+    inline void ActivateCollsion(const bool value) {
+        m_simulated = value;
+    }
+
 private:
     bool m_stable{ false };             /*! Do not check collision when value is true. */
     bool m_simulated{ true };           /*! If you want to simulate physics/collision wit this,
                                          *  you have to set it on true. */
+    bool m_physics{ false };            /*! If you want to simulate physics motion, turn it on. */
+
     float m_object_mass{ 1.0f };        /*! Define the mass of the Rigidbody2D */
     float m_gravity_scale{ 1.0f };      /*! The degree to which the object affected by gravity */
     float m_gravity{ 9.8f };            /*! Gravity factor */

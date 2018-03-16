@@ -47,7 +47,7 @@ void CRigidbody2D::Update() {
     auto& object = GetObject();
 
     /*! Accelation */
-    if (!m_stable) {
+    if (m_physics && !m_stable) {
         auto delta = manager::MTimeManager::Instance().GetDeltaTime();
         m_accelation.y -= m_gravity * delta;
         m_velocity += m_accelation;
@@ -56,10 +56,12 @@ void CRigidbody2D::Update() {
     }
 
     /*! Collision */
-    auto& physics_manager = manager::MPhysicsManager::Instance();
-    for (auto& collider : m_colliders) {
-        collider->ReflectPosition(object.GetWorldPosition());
-        physics_manager.AddCollider(collider.get(), this);
+    if (m_simulated) {
+        auto& physics_manager = manager::MPhysicsManager::Instance();
+        for (auto& collider : m_colliders) {
+            collider->ReflectPosition(object.GetWorldPosition());
+            physics_manager.AddCollider(collider.get(), this);
+        }
     }
 }
 

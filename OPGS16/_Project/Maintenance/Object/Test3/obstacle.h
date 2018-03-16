@@ -1,9 +1,8 @@
 #pragma once
 #include "../../../../System/Element/Public/object.h"
 
-class MoveableCharacter final : public opgs16::element::CObject {
-public:
-    MoveableCharacter(const float size);
+class ObstacleBlock final : public opgs16::element::CObject {
+public: ObstacleBlock();
 private:
     virtual void Render() override final;
 

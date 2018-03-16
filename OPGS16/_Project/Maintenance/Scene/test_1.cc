@@ -4,10 +4,9 @@
 
 #include "../Object/Test1/game_canvas.h"         /*! GameCanvas */
 #include "../Object/Test1/test_obj.h"            /*! TestObject1 */
-#include "../Object/Test3/moveable_character.h"
-#include "../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
 #include "../../../System/Element/Public/object.h"
 #include "../../../System/Components/Public/sprite_renderer.h"
+#include "../../../GlobalObjects/camera_object.h"
 
 void Maintenance::Draw() {
     glClearColor(.1f, .1f, .1f, 1.f);
@@ -23,13 +22,7 @@ void Maintenance::Initiate() {
     };
 
     Instantiate<GameCanvas>("GameCanvas");
-
-    {
-        auto obj_1 = Instantiate<MoveableCharacter>("Character", 1, 16.f);
-        obj_1->SetWorldPosition(glm::vec3{ 128, 112, 0 });
-        obj_1->Instantiate<MainCameraObject>("MainCamera");
-        l_set_render_layer(obj_1);
-    }
+    Instantiate<MainCameraObject>("MainCamera");
 
     {
         auto obj_1 = Instantiate<TestObject1>("Object", 1, 64.f);

@@ -27,10 +27,10 @@ void McScript::Update() {
         position.x += 2 * input.GetKeyValue("Horizontal");
         position.y += 2 * input.GetKeyValue("Vertical");
         obj.SetWorldPosition(position);
+    }
 
-        if (auto camera = obj.GetChild("MainCamera"); camera) {
-            using opgs16::component::CCamera;
-            camera->GetComponent<CCamera>()->SetWorldPosition(obj.GetWorldPosition());
-        }
+    if (auto camera = obj.GetChild("MainCamera"); camera) {
+        using opgs16::component::CCamera;
+        camera->GetComponent<CCamera>()->SetWorldPosition(obj.GetWorldPosition());
     }
 }

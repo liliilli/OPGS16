@@ -54,9 +54,9 @@ void MSceneManager::PopScene() {
 void MSceneManager::ReleaseAllResources() const {
     MPhysicsManager::Instance().Clear();  /*! precise */
     MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
+    //MSoundManager::Instance().Clear();    /*! Not precise */
+    //ShaderManager::Instance().Clear();   /*! Not implemented */
+    //TextureManager::Instance().Clear();  /*! Not precise? */
     Clear(MObjectManager::Instance());
 }
 
