@@ -75,7 +75,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -415,6 +415,7 @@
     <None Include="_Project\SampleInvaders\_meta\_header.meta" />
     <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
     <None Include="_Project\SampleInvaders\_meta\_set.meta" />
+    <None Include="_Setting\collision.meta" />
     <None Include="_Setting\global_setting.meta" />
     <None Include="_Setting\input.meta" />
     <None Include="_Setting\render_layer.meta" />
@@ -426,4 +427,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties _3Setting_4collision_1meta__JSONSchema="http://json.schemastore.org/appveyor" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

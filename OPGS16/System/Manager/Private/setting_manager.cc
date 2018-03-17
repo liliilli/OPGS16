@@ -40,33 +40,34 @@
 #include <iostream> /*! std::cout */
 #include <fstream>  /*! std::ifstream */
 #include <sstream>  /*! std::stringstream */
+#include <nlohmann/json.hpp> /*! nlohmann::json */
+#include "../../Core/Public/logger.h"   /*! ::opgs16::debug::logger */
+#include "../../Core/Internal/logger_internal.h"
 
 namespace opgs16 {
 namespace manager {
-
 namespace {
 constexpr char s_tag_file[] = R"(_Setting/tag.meta)";
 constexpr char s_render_layer_file[] = R"(_Setting/render_layer.meta)";
-} /*! unnamed namespace */
+constexpr char s_collision_layer_file[] = R"(_Setting/collision.meta)";
 
-MSettingManager::MSettingManager() {
-    InitializeTagList();
-    InitializeRenderLayerList();
-}
-
-void MSettingManager::InitializeTagList() {
+/*!
+ * @brief Initialize tag list using file stream.
+ * This sequence proceed loading synchronously.
+ */
+void InitializeTagList(std::vector<std::string>& tag_list) {
     std::ifstream in_file_stream(s_tag_file, std::ios_base::in);
     in_file_stream.imbue(std::locale(""));
 
     if (in_file_stream.good()) {
         std::string tag;
         while (in_file_stream >> tag) {
-            if (!tag.empty()) m_tag_list.emplace_back(tag);
+            if (!tag.empty()) tag_list.emplace_back(tag);
         }
 
 #ifdef _DEBUG
-        for (auto i = 0u; i < m_tag_list.size(); ++i) {
-            std::cout << i << " : " << m_tag_list[i] << "\n";
+        for (auto i = 0u; i < tag_list.size(); ++i) {
+            std::cout << i << " : " << tag_list[i] << "\n";
         }
 #endif
     }
@@ -75,22 +76,80 @@ void MSettingManager::InitializeTagList() {
     }
 }
 
-void MSettingManager::InitializeRenderLayerList() {
+/*! Initailize layer list using file stream. */
+void InitializeRenderLayerList(std::vector<std::string>& layer_list) {
     std::ifstream file_stream{ s_render_layer_file, std::ios_base::in };
     file_stream.imbue(std::locale(""));
 
     if (file_stream.good()) {
         std::string layer_name;
         while (file_stream >> layer_name) {
-            if (!layer_name.empty()) m_render_layer_list.emplace_back(layer_name);
+            if (!layer_name.empty()) layer_list.emplace_back(layer_name);
         }
 
 #ifdef _DEBUG
-        for (auto i = 0u; i < m_render_layer_list.size(); ++i) {
-            std::cout << i << " : " << m_render_layer_list[i] << "\n";
+        for (auto i = 0u; i < layer_list.size(); ++i) {
+            std::cout << i << " : " << layer_list[i] << "\n";
         }
 #endif
     }
+}
+
+/*! Initialize collision layer list using file stream. */
+void InitializeCollisionLayerList(std::vector<std::string>& layer_list,
+                                  std::vector<std::vector<bool>>& check_list) {
+    std::ifstream file_stream{ s_collision_layer_file, std::ios_base::in };
+    file_stream.imbue(std::locale(""));
+    // COLLISION CHECK TABLE
+    // [ ][0][1][2][3] // [0][ ][x][x][ ] // [1]___[x][x][x] // [2]______[ ][ ] // [3]_________[ ]
+    if (file_stream.good()) {
+        nlohmann::json json; file_stream >> json;
+
+        for (const auto& element : json["list"])
+            layer_list.emplace_back(element.get<std::string>());
+
+        /*! Make table */
+        const auto size = layer_list.size();
+        check_list.resize(size);
+        for (auto i = size; i > 0; --i) check_list[size - i].resize(i);
+
+        /*! Set collision table */
+        {
+            size_t i = 0;
+            for (const auto& element : json["table"]) {
+                auto list = element.get<std::vector<int>>();
+                if (list.empty()) goto l_loop_end;
+
+                for (const auto& index : list) {
+                    check_list[i][size - index - 1] = true;
+                }
+l_loop_end:
+                ++i;
+            }
+        }
+
+#ifdef _DEBUG
+        for (const auto& item : layer_list) {
+            debug::PushLog(debug::_internal::MsgType::INFO, item.c_str());
+        }
+
+        for (const auto& y : check_list) {
+            std::string line{};
+            for (const auto& x : y) {
+                line.append((x == true ? "1 " : "0 "));
+            }
+            debug::PushLog(debug::_internal::MsgType::INFO, line.c_str());
+        }
+#endif
+    }
+}
+
+} /*! unnamed namespace */
+
+MSettingManager::MSettingManager() {
+    InitializeTagList(m_tag_list);
+    InitializeRenderLayerList(m_render_layer_list);
+    InitializeCollisionLayerList(m_collision_layer_list, m_collision_check_list);
 }
 
 std::string MSettingManager::GetTagName(const size_t id) {

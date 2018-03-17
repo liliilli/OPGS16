@@ -18,12 +18,12 @@ ObstacleBlock::ObstacleBlock() {
         m_wrapper->InsertUniformValue<float>("alpha", 1.0f);
     }
 
-    //{
-    //    using opgs16::component::CRigidbody2D;
-    //    AddComponent<CRigidbody2D>(*this);
-    //    auto const rigidbody = GetComponent<CRigidbody2D>();
-    //    rigidbody->AddCollider2D<collision::RectangleCollider2D>(-4.f, 4.f, 4.f, -4.f);
-    //}
+    {
+        using opgs16::component::CRigidbody2D;
+        AddComponent<CRigidbody2D>(*this);
+        auto const rigidbody = GetComponent<CRigidbody2D>();
+        rigidbody->AddCollider2D<collision::RectangleCollider2D>(-4.f, 4.f, 4.f, -4.f);
+    }
 
     //AddComponent<McScript>(*this);
 }
@@ -35,4 +35,15 @@ void ObstacleBlock::Render() {
     m_wrapper->ReplaceUniformValue<glm::mat4>("projection",
         MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix());
     GetComponent<CSprite2DRenderer>()->RenderSprite();
+}
+
+void ObstacleBlock::OnCollisionEnter(opgs16::component::CRigidbody2D& collider) {
+    const auto& pos = GetWorldPosition();
+    char str[50] = { '\0', };
+    char val[32] = { '\0', };
+    strcat(str, "Collide with player ");
+    strcat(str, itoa(static_cast<int>(pos.x), val, 10)); strcat(str, ", ");
+    strcat(str, itoa(static_cast<int>(pos.y), val, 10)); strcat(str, ", ");
+    strcat(str, itoa(static_cast<int>(pos.z), val, 10));
+    opgs16::debug::PushLog(opgs16::debug::_internal::MsgType::INFO, str);
 }

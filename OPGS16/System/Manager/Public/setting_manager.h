@@ -96,24 +96,30 @@ public:
         return m_render_layer_list.size();
     }
 
-private:
-    std::vector<std::string> m_tag_list;    /*! Tag list used in Application. */
-    std::vector<std::string> m_render_layer_list;  /*! Render layer list */
+    /*! */
+    inline std::string CollisionLayerName(const size_t id) const noexcept {
+        if (id >= m_collision_layer_list.size()) return "";
+        else return m_collision_layer_list[id];
+    }
+
+    /*! Return collision layer list */
+    const std::vector<std::string>& CollisionLayerList() const noexcept {
+        return m_collision_layer_list;
+    }
+
+    /*! Get collision check flag of collision layers */
+    bool CollisionCheck(unsigned src, unsigned dst) const noexcept {
+        const auto size = m_collision_check_list.size();
+        if (src > dst)  return m_collision_check_list[dst][size - src - 1];
+        else            return m_collision_check_list[src][size - dst - 1];
+    }
 
 private:
-    /*!
-     * @brief Initialize tag list using file stream.
-     * This sequence proceed loading synchronously.
-     */
-    void InitializeTagList();
+    std::vector<std::string> m_tag_list;                /*! Tag list used in Application. */
+    std::vector<std::string> m_render_layer_list;       /*! Render layer list */
+    std::vector<std::string> m_collision_layer_list;    /*! Collision Layer list */
+    std::vector<std::vector<bool>> m_collision_check_list;
 
-    /*!
-     * @brief Initailize layer list using file stream.
-     * NOT IMPLEMENTED YET.
-     */
-    void InitializeRenderLayerList();
-
-private:
     MSettingManager();
 
 public:

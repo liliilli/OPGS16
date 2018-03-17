@@ -23,7 +23,8 @@ MoveableCharacter::MoveableCharacter(const float size) {
         AddComponent<CRigidbody2D>(*this);
         auto const rigidbody = GetComponent<CRigidbody2D>();
         rigidbody->ActivatePhysics(true);
-        rigidbody->AddCollider2D<collision::RectangleCollider2D>(-8.f, 8.f, 8.f, -8.f);
+        auto& ref = rigidbody->AddCollider2D<collision::RectangleCollider2D>(-8.f, 8.f, 8.f, -8.f);
+        ref->SetCollisionLayerIndex(1);
     }
 
     AddComponent<McScript>(*this);

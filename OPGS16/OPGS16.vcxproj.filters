@@ -283,6 +283,7 @@
     <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
     <None Include="_Setting\global_setting.meta" />
     <None Include="_Project\Maintenance\_meta\_input.meta" />
+    <None Include="_Setting\collision.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

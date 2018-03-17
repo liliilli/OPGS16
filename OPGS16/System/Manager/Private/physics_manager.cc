@@ -41,6 +41,7 @@
 
 #include "../../Components/Public/rigidbody_2d.h"        /*! opgs16::component::CRigidbody2D */
 #include "../../Components/Physics2D/Collider/rectangle.h"  /*! collision::RectangleCollider2D */
+#include "../Public/setting_manager.h"  /*! ::opgs16::manager::MSettingManager */
 
 namespace opgs16 {
 namespace manager {
@@ -90,9 +91,12 @@ void MPhysicsManager::Clear() {
 }
 
 void MPhysicsManager::ProceedCollisionCheck(MPhysicsManager::item_ptr& item) {
+    const auto& manager = MSettingManager::Instance();
     for (auto& active_item : m_active) {
         /*! If rigidbody is same, do not check collision. */
         if (active_item->m_rigidbody == item->m_rigidbody) continue;
+        if (!manager.CollisionCheck(active_item->m_collider->CollisionLayer(),
+                                    item->m_collider->CollisionLayer())) continue;
 
         bool collision_flag = true;
         /*! AABB Collision Checking */
@@ -107,16 +111,16 @@ void MPhysicsManager::ProceedCollisionCheck(MPhysicsManager::item_ptr& item) {
 
         /*! If collide with each other, call specific procedure. */
         if (collision_flag) {
-            const auto s_type = active_item->m_collider->GetCollisionType();
-            const auto d_type = item->m_collider->GetCollisionType();
+            const auto s_type = active_item->m_collider->CollisionType();
+            const auto d_type = item->m_collider->CollisionType();
 
             /*! Call */
-            if (s_type == collision::Collider2D::CollisionType::COLLISION)
+            if (s_type == collision::Collider2D::ECollisionType::COLLISION)
                 active_item->m_rigidbody->OnCollisionEnter(*item->m_rigidbody);
             else
                 active_item->m_rigidbody->OnTriggerEnter(*item->m_rigidbody);
 
-            if (d_type == collision::Collider2D::CollisionType::COLLISION)
+            if (d_type == collision::Collider2D::ECollisionType::COLLISION)
                 item->m_rigidbody->OnCollisionEnter(*active_item->m_rigidbody);
             else
                 item->m_rigidbody->OnTriggerEnter(*active_item->m_rigidbody);

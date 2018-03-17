@@ -56,7 +56,7 @@ void CRigidbody2D::Update() {
     }
 
     /*! Collision */
-    if (m_simulated) {
+    if (m_collidable) {
         auto& physics_manager = manager::MPhysicsManager::Instance();
         for (auto& collider : m_colliders) {
             collider->ReflectPosition(object.GetWorldPosition());

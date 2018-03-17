@@ -37,6 +37,7 @@
  * 2018-02-14 Create file and Make declarations.
  * 2018-03-07 Move file from ::component to ::opgs16::component.
  * 2018-03-12 Add gravity and accelation feature.
+ * 2018-03-16 Add physics, collision activation switch.
  */
 
 #include <list>
@@ -55,6 +56,7 @@ namespace component {
  * @brief There is only one Rigidbody class in each object. or undefined behavior occurs.
  * @log
  * 2018-03-12 Add gravity and accelation feature.
+ * 2018-03-16 Add physics, collision activation switch.
  */
 class CRigidbody2D final : public _internal::CComponent {
 public:
@@ -79,12 +81,14 @@ public:
         class _Ty,
         class... _Params,
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
-    >    void AddCollider2D(_Params&&... args);
+    >
+    decltype(auto) AddCollider2D(_Params&&... args);
 
     template <
         class _Ty,
         typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
-    >    void AddCollider2D(std::unique_ptr<_Ty>&& collider);
+    >
+    decltype(auto) AddCollider2D(std::unique_ptr<_Ty>&& collider);
 
     void OnCollisionEnter(CRigidbody2D& collier);
 
@@ -101,12 +105,12 @@ public:
 
     /*! Activate or decativate collision calculation mode */
     inline void ActivateCollsion(const bool value) {
-        m_simulated = value;
+        m_collidable = value;
     }
 
 private:
     bool m_stable{ false };             /*! Do not check collision when value is true. */
-    bool m_simulated{ true };           /*! If you want to simulate physics/collision wit this,
+    bool m_collidable{ true };          /*! If you want to simulate physics/collision wit this,
                                          *  you have to set it on true. */
     bool m_physics{ false };            /*! If you want to simulate physics motion, turn it on. */
 
@@ -125,13 +129,13 @@ SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbody2D)
 };
 
 template <class _Ty, class... _Params, typename>
- void CRigidbody2D::AddCollider2D(_Params&&... args) {
-    m_colliders.emplace_back(std::make_unique<_Ty>( std::forward<_Params>(args)... ));
+decltype(auto) CRigidbody2D::AddCollider2D(_Params&&... args) {
+    return m_colliders.emplace_back(std::make_unique<_Ty>( std::forward<_Params>(args)... ));
 }
 
 template <class _Ty, typename>
- void CRigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
-    m_colliders.emplace_back(std::move(collider));
+decltype(auto) CRigidbody2D::AddCollider2D(std::unique_ptr<_Ty>&& collider) {
+    return m_colliders.emplace_back(std::move(collider));
 }
 
 } /*! opgs16::component */
