@@ -33,6 +33,7 @@
  * @log
  * 2018-02-26 Removed redundant move special functions.
  * 2018-03-04 Refactoring.
+ * 2018-04-02 std::string to std::wstring in debug log output.
  */
 
 #include "../Public/setting_manager.h"  /*! Header file */
@@ -128,15 +129,16 @@ l_loop_end:
             }
         }
 
-#ifdef _DEBUG
+#if defined(_DEBUG)
         for (const auto& item : layer_list) {
-            debug::PushLog(debug::_internal::MsgType::INFO, item.c_str());
+            std::wstring wstr (item.begin(), item.end());
+            debug::PushLog(debug::_internal::MsgType::INFO, wstr.c_str() );
         }
 
         for (const auto& y : check_list) {
-            std::string line{};
+            std::wstring line{};
             for (const auto& x : y) {
-                line.append((x == true ? "1 " : "0 "));
+                line.append((x == true ? L"1 " : L"0 "));
             }
             debug::PushLog(debug::_internal::MsgType::INFO, line.c_str());
         }

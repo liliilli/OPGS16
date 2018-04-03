@@ -13,8 +13,8 @@ Mesh::Mesh(const std::vector<Vertex>& _vertices,
     vertices{ _vertices },
     indices { indices },
     textures{ textures },
-    VBO_SIZE{ _vertices.size() * sizeof(Vertex) },
-    EBO_SIZE{ indices.size() * sizeof(unsigned) } {
+    VBO_SIZE{ static_cast<size_t>(_vertices.size()) * sizeof(Vertex) },
+    EBO_SIZE{ static_cast<size_t>(indices.size()) * sizeof(size_t) } {
 
     // Setup
     SetupMesh();

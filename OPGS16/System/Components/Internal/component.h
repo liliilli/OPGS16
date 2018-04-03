@@ -66,7 +66,7 @@ public:
      * @param[in] type_value Hashed type value of type which you want to find.
      * @return True/False flag, if you found proper class return true else false.
      */
-    inline virtual bool DoesTypeMatch(const size_t type_value) const noexcept {
+    inline virtual bool DoesTypeMatch(const uint32_t type_value) const noexcept {
         return type == type_value;
     }
 

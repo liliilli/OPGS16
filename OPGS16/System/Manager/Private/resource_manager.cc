@@ -42,13 +42,20 @@
 #include <sstream>      /*! std::stringstream */
 #include <stdexcept>	/*! std::runtime_error */
 #include <utility>		/*! std::pair */
-#include <vector>		/*! std::vector */
-
 #include "../Internal/resource_internal.h"
+
+#if defined(_DEBUG)
+#include "../../Core/Public/logger.h"
+using opgs16::debug::PushLog;
+using opgs16::debug::LOG_TYPE_INFO;
+using opgs16::debug::LOG_TYPE_WARN;
+using opgs16::debug::LOG_TYPE_ERRO;
+#endif
 
 namespace opgs16 {
 
 namespace { /*! Helper free function. */
+
 using resource::_internal::EResourceType;
 using resource::_internal::ESymbolType;
 
@@ -84,53 +91,75 @@ EResourceType GetResourceType(const std::string_view& resource_token) {
     else return EResourceType::NOTHING;
 }
 
-resource::STexture2D MakeTexture2DContainer(std::stringstream& line_stream,
-                                           const std::string& global_path) {
+resource::STexture2D MakeTexture2DContainer(std::stringstream& line_stream, const std::string& global_path) {
     char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
     unsigned x_sep, y_sep;  line_stream >> x_sep >> y_sep;
-
+#if defined(_DEBUG)
+    {
+        std::wstring log{ L"[Texture2D][" };
+        log.append(local_path.cbegin(), local_path.cend());     log.append(L"]");
+        PushLog(LOG_TYPE_INFO, log.c_str());
+    }
+#endif
     return resource::STexture2D{ resource::GetScopeType(type), global_path + local_path, {x_sep, y_sep} };
 };
 
-resource::SSound MakeSoundContainer(std::stringstream& line_stream,
-                                    const std::string& global_path,
+resource::SSound MakeSoundContainer(std::stringstream& line_stream, const std::string& global_path,
                                     bool is_bgm) {
     char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
-
+#if defined(_DEBUG)
+    {
+        std::wstring log{ L"[Sound][" };
+        log.append(local_path.cbegin(), local_path.cend());     log.append(L"]");
+        PushLog(LOG_TYPE_INFO, log.c_str());
+    }
+#endif
     return resource::SSound{ resource::GetScopeType(type), global_path + local_path, is_bgm };
 };
 
-resource::SShader MakeShaderContainer(std::ifstream& stream,
-                                      const std::string& global_path,
+resource::SShader MakeShaderContainer(std::ifstream& stream, const std::string& global_path,
                                       const resource::EScopeType scope_type) {
     resource::SShader::shader_list shader_list;
 
     while (true) {
         std::string token_line;
         std::getline(stream, token_line);
-        if (token_line.empty() || (token_line.at(0) != '-'))
-            break;
+        if (token_line.empty() || (token_line.at(0) != '-')) break;
         else {  /*! token_line is not empty and their is something. */
             std::stringstream line_stream{ token_line };
             std::string not_use, shader_token, local_path;
             line_stream >> not_use >> shader_token >> local_path;
-            //std::string local_path; line_stream >> local_path;
 
-            shader_list.emplace_back(resource::GetShaderType(shader_token),
-                                     global_path + local_path);
+            shader_list.emplace_back(resource::GetShaderType(shader_token), global_path + local_path);
         }
     }
-
+#if defined(_DEBUG)
+    {
+        PushLog(LOG_TYPE_INFO, L"[SHADER]");
+        for (const auto& shader : shader_list) {
+            std::wstring log{ L"[SHADER_ELEMENT][" };
+            log.append(shader.second.cbegin(), shader.second.cend()); log.append( L"]" );
+            PushLog(LOG_TYPE_INFO, log.c_str());
+        }
+    }
+#endif
     return resource::SShader{ scope_type, shader_list };
 };
 
-resource::SFont MakeFontContainer(std::stringstream& line_stream,
-                                  const std::string& global_path) {
-    char type;          line_stream >> type;
-    std::string local_path;   line_stream >> local_path;
-    bool is_default;    line_stream >> is_default;
+resource::SFont MakeFontContainer(std::stringstream& line_stream, const std::string& global_path) {
+    char type;              line_stream >> type;
+    std::string local_path; line_stream >> local_path;
+    bool is_default;        line_stream >> is_default;
+#if defined(_DEBUG)
+    {
+        std::wstring log{ L"[FontGlyph][" };
+        log.append(local_path.cbegin(), local_path.cend());     log.append(L"][");
+        log.append(is_default ? L"DEFAULT" : L"NOT_DEFAULT");   log.append(L"]");
+        PushLog(LOG_TYPE_INFO, log.c_str());
+    }
+#endif
     return resource::SFont{ resource::GetScopeType(type), global_path + local_path, is_default };
 };
 
@@ -138,32 +167,38 @@ resource::SFont MakeFontContainer(std::stringstream& line_stream,
 
 namespace manager {
 
-bool MResourceManager::ReadResourceFile(const std::string& path) {
+bool MResourceManager::ReadResourceFile(const wchar_t* path) {
     std::ifstream file_stream{ path, std::ios_base::in };
     file_stream.imbue(std::locale(""));
 
     if (file_stream.good()) {
-        std::string global_path;
-        std::string file_line;
-
+#if defined(_DEBUG)
+        PushLog(LOG_TYPE_WARN, (std::wstring{ L"Opened resource meta file : " } + path).c_str());
+#endif
+        std::string global_path, file_line;
         while (std::getline(file_stream, file_line)) {
             if (file_line.empty()) continue;
 
             switch (auto[symbol, token] = ReadSymbol(file_line); symbol) {
-            default: /*! Do nothing */ break;
-            case ESymbolType::GLOBAL_PATH: global_path = token; break;
+            default: break;
+            case ESymbolType::GLOBAL_PATH:
+                global_path = token;
+#if defined(_DEBUG)
+                PushLog(LOG_TYPE_WARN, std::wstring(global_path.begin(), global_path.end()).c_str());
+#endif
+                break;
             case ESymbolType::RESOURCE:
-                auto token_type = GetResourceType(token);
-                ReadResource(file_line, file_stream, global_path, token_type);
+                ReadResource(file_line, file_stream, global_path, GetResourceType(token));
                 break;
             }
         }
 
-        if (file_stream.eof()) return true;
-        else return false;
+        return file_stream.eof();
     }
     else {
-        std::cerr << "ERROR::TAG::FILE::CAN::NOT::OPEN\n";
+#if defined(_DEBUG)
+        PushLog(LOG_TYPE_ERRO, (std::wstring{ L"Cannot open the file : " } + path).c_str());
+#endif
         return false;
     }
 }
@@ -180,7 +215,7 @@ void MResourceManager::ReadResource(const std::string& token_line,
     }
 
     switch (type) {
-    default: /*! Do nothing */ break;
+    default: break;
     case EResourceType::TEXTURE_2D: {    /*! Texture 2D information generating sequence */
         std::string tag;    line_stream >> tag;
         PushTexture2D(tag, MakeTexture2DContainer(line_stream, global_path));
@@ -208,7 +243,7 @@ void MResourceManager::ReadResource(const std::string& token_line,
 void MResourceManager::PushShader(const std::string& name_key,
                                  const resource::SShader& list) {
 	if (ExistShaderKey(name_key))
-		throw new std::runtime_error("Shader Key duplicated :: " + name_key);
+		throw std::runtime_error("Shader Key duplicated :: " + name_key);
 
     m_shaders.emplace(name_key, list);
 }

@@ -55,7 +55,7 @@ public:
      * @brief
      * @return
      */
-    glm::vec2 GetTipPosition(PositionType type);
+    glm::vec2 GetTipPosition(PositionType type) const;
 
 private:
 	/**
@@ -69,7 +69,7 @@ private:
 	 */
 	glm::vec2 lu{}, ru{}, ld{}, rd{};
 
-    glm::vec2 final_lu{}, final_ru{}, final_ld{}, final_rd{};
+    mutable glm::vec2 final_lu{}, final_ru{}, final_ld{}, final_rd{};
     glm::vec3 m_position_of_bound_object{};
 
 	/** This values are automatically refreshed by calling method which sets lu ru ld rd.*/
@@ -88,7 +88,7 @@ private:
 	 void UpdateAllCorner(const float left, const float up,
                                       const float right, const float down);
 
-     void UpdateFinalCorner();
+     void UpdateFinalCorner() const;
 };
 
 }

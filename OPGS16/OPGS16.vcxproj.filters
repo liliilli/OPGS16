@@ -2,11 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="entry.cc" />
-    <ClCompile Include="Scenes\path_finding2d.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Frame\scene.cc" />
-    <ClCompile Include="System\Frame\model.cc" />
     <ClCompile Include="System\Frame\constant.h" />
     <ClCompile Include="GlobalObjects\Canvas\image.cc" />
     <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
@@ -69,11 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
-    <ClInclude Include="Scenes\path_finding2d.h" />
     <ClInclude Include="System\Shader\shader.h" />
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="System\Frame\scene.h" />
-    <ClInclude Include="System\Frame\model.h" />
     <ClInclude Include="Headers\scene_common.h" />
     <ClInclude Include="GlobalObjects\Canvas\image.h" />
     <ClInclude Include="GlobalObjects\Canvas\canvas.h" />

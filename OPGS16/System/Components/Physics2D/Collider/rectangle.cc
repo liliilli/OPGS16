@@ -30,7 +30,7 @@ void RectangleCollider2D::ReflectPosition(const glm::vec3& position) {
     UpdateFinalCorner();
 }
 
-glm::vec2 RectangleCollider2D::GetTipPosition(PositionType type) {
+glm::vec2 RectangleCollider2D::GetTipPosition(PositionType type) const {
     if (m_position_changed)
         UpdateFinalCorner();
 
@@ -54,7 +54,7 @@ void RectangleCollider2D::UpdateAllCorner(const float m_left,
     UpdateFinalCorner();
 }
 
-void RectangleCollider2D::UpdateFinalCorner() {
+void RectangleCollider2D:: UpdateFinalCorner() const {
     if (m_position_changed) {
         glm::vec2 pos = m_position_of_bound_object;
         final_lu = lu + pos;

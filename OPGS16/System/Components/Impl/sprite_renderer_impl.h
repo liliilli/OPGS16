@@ -56,8 +56,8 @@ namespace _internal {
  * @log
  * 2018-02-28 Change constructor to use texture_index type. and variable store texture index.
  * Add related boilerplate function.
+ * 2018-04-02 std::string to std::wstring for Unicode
  *
- * @todo Implement rendering layer priority feature.
  */
 class CSpriteRendererImpl final {
 private:
@@ -66,9 +66,9 @@ private:
 public:
     /** Make Sprite2DRenderer instance. (Constructor) */
 	CSpriteRendererImpl(const std::string& sprite_tag,
-                       const std::string& shader_tag,
-                       const opgs16::resource::STexture2D::IndexSize& texture_index,
-                       unsigned layer);
+                        const std::string& shader_tag,
+                        const opgs16::resource::STexture2D::IndexSize& texture_index,
+                        unsigned layer);
 
     inline ShaderWrapper& Wrapper() {
         return m_wrapper;

@@ -32,6 +32,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Refactoring. Move implementations to ::opgs16::component::_internal
+ * 2018-04-02 std::string to std::wstring for UTF-16 characters.
  */
 
 #include "sprite_renderer_impl.h"   /*! Header file */
@@ -44,10 +45,10 @@ namespace opgs16 {
 namespace component {
 namespace _internal {
 
-CSpriteRendererImpl::CSpriteRendererImpl(const std::string & sprite_tag,
-                                       const std::string & shader_tag,
-                                       const opgs16::resource::STexture2D::IndexSize& texture_index,
-                                       unsigned layer) :
+CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag,
+                                         const std::string& shader_tag,
+                                         const opgs16::resource::STexture2D::IndexSize& texture_index,
+                                         unsigned layer) :
     m_sprite{ opgs16::manager::TextureManager::Instance().GetTexture(sprite_tag) },
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },
     m_index { texture_index } {

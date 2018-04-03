@@ -80,8 +80,8 @@ private:
     unsigned VAO, VBO, EBO;
 
     // VBO and EBO byte size to be used in SetupMesh()
-    const unsigned VBO_SIZE;
-    const unsigned EBO_SIZE;
+    const size_t VBO_SIZE;
+    const size_t EBO_SIZE;
 
     // Functions
     void SetupMesh();

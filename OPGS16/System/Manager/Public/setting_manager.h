@@ -108,7 +108,7 @@ public:
     }
 
     /*! Get collision check flag of collision layers */
-    bool CollisionCheck(unsigned src, unsigned dst) const noexcept {
+    bool CollisionLayerCheck(unsigned src, unsigned dst) const noexcept {
         const auto size = m_collision_check_list.size();
         if (src > dst)  return m_collision_check_list[dst][size - src - 1];
         else            return m_collision_check_list[src][size - dst - 1];

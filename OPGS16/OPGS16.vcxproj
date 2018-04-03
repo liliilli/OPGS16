@@ -30,7 +30,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -78,6 +78,10 @@
     <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
+    <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\x64;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\x64;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Debug\x64;$(MSBuildProjectDirectory)\__ThirdParty\glfw\x64;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,7 +106,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -171,9 +180,8 @@
     <ClCompile Include="System\Components\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="System\Element\Private\object.cc" />
     <ClCompile Include="System\Frame\scene.cc" />
-    <ClCompile Include="Scenes\path_finding2d.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <!-- <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild> -->
+    <!-- </ClCompile> -->
     <ClCompile Include="System\Element\Private\ui_object.cc" />
     <ClCompile Include="System\Manager\Private\input_manager.cc" />
     <ClCompile Include="System\Manager\Private\resource_manager.cc" />
@@ -188,7 +196,6 @@
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\constant.h" />
     <ClCompile Include="entry.cc" />
-    <ClCompile Include="System\Frame\model.cc" />
     <ClCompile Include="System\Manager\Private\shader_manager.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
@@ -276,9 +283,8 @@
     <ClInclude Include="System\Element\Public\object.h" />
     <ClInclude Include="Objects\Interface\i_radiant.h" />
     <ClInclude Include="System\Frame\scene.h" />
-    <ClInclude Include="Scenes\path_finding2d.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
+    <!-- <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild> -->
+    <!-- </ClInclude> -->
     <ClInclude Include="System\Element\Public\ui_object.h" />
     <ClInclude Include="System\Manager\Public\input_manager.h" />
     <ClInclude Include="System\Manager\Public\resource_manager.h" />
@@ -292,7 +298,6 @@
     <ClInclude Include="System\Shader\pp_frame.h" />
     <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
     <ClInclude Include="System\Shader\shader.h" />
-    <ClInclude Include="System\Frame\model.h" />
     <ClInclude Include="System\Manager\Public\shader_manager.h" />
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="System\Shader\shader_wrapper.h" />

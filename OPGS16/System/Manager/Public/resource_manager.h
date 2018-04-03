@@ -84,7 +84,7 @@ public:
 	}
 
     /*! Empty already allocated resources and load resource with file path. */
-    bool ReadResourceFile(const std::string& path);
+    bool ReadResourceFile(const wchar_t* path);
 
 	/**
 	 * @brief Get specific shader list.

@@ -38,8 +38,10 @@
  * 2018-03-07 Move file from ::component to ::opgs16::component.
  * 2018-03-12 Add gravity and accelation feature.
  * 2018-03-16 Add physics, collision activation switch.
+ * 2018-03-20 Add frame movement value array. (zero-overhead)
  */
 
+#include <array>    /*! std::array */
 #include <list>
 #include <utility>
 #include <memory>
@@ -108,6 +110,37 @@ public:
         m_collidable = value;
     }
 
+    inline void ActiveSolidification(const bool value) {
+        m_solid = value;
+    }
+
+    inline bool IsSolid() const noexcept {
+        return m_solid;
+    }
+
+    inline void SetStable(const bool value) {
+        if (value) {
+            m_velocity.x = 0; m_velocity.y = 0; m_velocity.z = 0;
+            m_accelation.x = 0; m_accelation.y = 0; m_accelation.z = 0;
+        }
+        m_stable = value;
+    }
+
+    /*! Get movement vector values */
+    inline glm::vec3& Movement() noexcept {
+        return m_movement;
+    }
+
+    /*! Get accelation vector values */
+    inline glm::vec3& Accelation() noexcept {
+        return m_accelation;
+    }
+
+    /*! Get velocit vector values */
+    inline glm::vec3& Velocity() noexcept {
+        return m_velocity;
+    }
+
 private:
     bool m_stable{ false };             /*! Do not check collision when value is true. */
     bool m_collidable{ true };          /*! If you want to simulate physics/collision wit this,
@@ -116,10 +149,15 @@ private:
 
     float m_object_mass{ 1.0f };        /*! Define the mass of the Rigidbody2D */
     float m_gravity_scale{ 1.0f };      /*! The degree to which the object affected by gravity */
-    float m_gravity{ 9.8f };            /*! Gravity factor */
+    float m_gravity{ 98.0f };            /*! Gravity factor */
+    bool  m_solid{ false };             /*! Solid flag whether relocated by obstacle or not */
 
-    glm::vec3 m_velocity;   /*! Velocity variable for moving bound object. */
-    glm::vec3 m_accelation; /*! Accelation variable for moving bound object. */
+    /*! Velocity variable for moving bound object. */
+    glm::vec3 m_velocity;
+    /*! Accelation variable for moving bound object. */
+    glm::vec3 m_accelation;
+    /*! Movement value each frame. */
+    glm::vec3 m_movement;
 
     BodyType m_type{ BodyType::NORMAL };
     std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};

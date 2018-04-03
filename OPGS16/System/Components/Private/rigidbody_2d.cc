@@ -47,12 +47,13 @@ void CRigidbody2D::Update() {
     auto& object = GetObject();
 
     /*! Accelation */
-    if (m_physics && !m_stable) {
-        auto delta = manager::MTimeManager::Instance().GetDeltaTime();
-        m_accelation.y -= m_gravity * delta;
-        m_velocity += m_accelation;
+    if (m_physics) {
+        const auto delta = manager::MTimeManager::Instance().GetDeltaTime();
+        m_accelation[1] = -m_gravity;
+        m_velocity += m_accelation * delta;
+        m_movement = m_velocity * delta;
 
-        object.SetWorldPosition(object.GetWorldPosition() + (m_velocity * delta));
+        object.SetWorldPosition(object.GetWorldPosition() + m_movement);
     }
 
     /*! Collision */

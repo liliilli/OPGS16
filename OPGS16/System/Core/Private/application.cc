@@ -38,7 +38,7 @@ namespace opgs16 {
 namespace {
 using debug::_internal::MsgType;
 using namespace std::string_view_literals;
-constexpr std::string_view g_global_resource_path{ "_resource.meta"sv };
+constexpr std::wstring_view g_global_resource_path{ L"_resource.meta"sv };
 
 /*! Callback method for size check and resizing */
 void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
@@ -70,7 +70,7 @@ GLFWwindow* MApplication::InitApplication(const std::string& app_name) const {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    debug::PushLog(MsgType::INFO, "GLFW CONTEXT VERSION 4.3 Core.");
+    debug::PushLog(MsgType::INFO, L"GLFW CONTEXT VERSION 4.3 Core.");
 
     /*! Set MSAAx4 */
     //glfwWindowHint(GLFW_SAMPLES, 4);
@@ -80,7 +80,7 @@ GLFWwindow* MApplication::InitApplication(const std::string& app_name) const {
                                          app_name.c_str(),
                                          nullptr, nullptr);
     if (!window) {
-        debug::PushLog(MsgType::_ERROR, "Failed to create GLFW window. Application will terminate.");
+        debug::PushLog(MsgType::_ERROR, L"Failed to create GLFW window. Application will terminate.");
         glfwTerminate();
         return nullptr;
     }
@@ -115,7 +115,7 @@ void MApplication::Initiate() {
         glEnable(GL_DEPTH_TEST);
 
 		/** Insert first scene */
-        m_resource_manager.ReadResourceFile(R"(_Project/Maintenance/_meta/_resource.meta)");
+        m_resource_manager.ReadResourceFile(L"_Project/Maintenance/_meta/_resource.meta");
         m_scene_manager.PushScene<Maintenance>();
 		ReplacePresentStatus(GameStatus::PLAYING);
 	}

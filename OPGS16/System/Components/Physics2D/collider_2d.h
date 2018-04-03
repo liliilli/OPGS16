@@ -94,11 +94,9 @@ public:
     std::string CollisionLayerStringOf() const;
 
 private:
-    /*! Collision type. */
-	ECollisionType m_collision_type{ ECollisionType::COLLISION };
+	ECollisionType m_collision_type{ ECollisionType::COLLISION };   /*! Collision type. */
 
-    /*! Collision layer index. */
-    unsigned m_collision_layer_index{ 0 };
+    unsigned m_collision_layer_index{ 0 };      /*! Collision layer index. */
 };
 
 }

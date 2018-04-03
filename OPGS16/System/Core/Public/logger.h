@@ -36,14 +36,20 @@
  * @log
  * 2018-03-06 Add logger frame.
  * 2018-03-11 Attach spdlog logging library.
+ * 2018-04-02 const char* to const wchar_t* for multibyte text.
  */
 
 #include <memory>
 #include "../Internal/logger_internal.h"    /*! ::opgs16::debug::_internal */
 #include "../../../Headers/Fwd/objectfwd.h" /*! Forward declaration */
+typedef int LOG_TYPE;
 
 namespace opgs16 {
 namespace debug {
+
+constexpr int LOG_TYPE_INFO = 0;
+constexpr int LOG_TYPE_WARN = 1;
+constexpr int LOG_TYPE_ERRO = 2;
 
 /**
  * @class CLogger
@@ -58,6 +64,7 @@ public:
     }
 
     /*! Push message into logger */
+    void Push(_internal::MsgType type, const wchar_t* log_message);
     void Push(_internal::MsgType type, const char* log_message);
 
 private:
@@ -71,7 +78,9 @@ public:
 };
 
 /*! Helper function */
-void PushLog(_internal::MsgType type, const char* log_message);
+void PushLog(_internal::MsgType type, const wchar_t* log_message);
+void PushLog(LOG_TYPE type, const wchar_t* log_message);
+void PushLog(LOG_TYPE type, const char* log_message);
 
 } /*! opgs16::debug */
 } /*! opgs16 */
