@@ -46,6 +46,7 @@ namespace shader {
 class SGlobalQuad2D final : public element::CShaderNew {
 public:
     SGlobalQuad2D();
+    static const char* s_shader_name;
 };
 
 

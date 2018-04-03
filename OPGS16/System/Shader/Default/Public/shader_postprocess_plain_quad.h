@@ -46,6 +46,7 @@ namespace shader {
 class SGlobalPostProcessingQuad final : public element::CShaderNew {
 public:
     SGlobalPostProcessingQuad();
+    static const char* s_shader_name;
 };
 
 

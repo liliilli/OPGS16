@@ -100,6 +100,8 @@ namespace opgs16 {
 namespace builtin {
 namespace shader {
 
+const char* SGlobalQuad2D::s_shader_name = "gQuad";
+
 SGlobalQuad2D::SGlobalQuad2D() {
     using resource::EShaderType;
     std::pair<EShaderType, const char* const> shader_list[2] {

@@ -53,12 +53,14 @@ namespace opgs16 {
 namespace manager {
 
 ShaderManager::ShaderManager() {
-    m_shaders["gQuad"] = std::make_unique<builtin::shader::SGlobalQuad2D>();
-    m_shaders["gQuad"]->Link();
-    m_shaders["gCommonFont"] = std::make_unique<builtin::shader::SGlobalFont2D>();
-    m_shaders["gCommonFont"]->Link();
-    m_shaders["ppQuad"] = std::make_unique<builtin::shader::SGlobalPostProcessingQuad>();
-    m_shaders["ppQuad"]->Link();
+    using namespace builtin::shader;
+    m_shaders[SGlobalQuad2D::s_shader_name] = std::make_unique<SGlobalQuad2D>();
+    m_shaders[SGlobalQuad2D::s_shader_name]->Link();
+    m_shaders[SGlobalFont2D::s_shader_name] = std::make_unique<builtin::shader::SGlobalFont2D>();
+    m_shaders[SGlobalFont2D::s_shader_name]->Link();
+    m_shaders[SGlobalPostProcessingQuad::s_shader_name] =
+        std::make_unique<builtin::shader::SGlobalPostProcessingQuad>();
+    m_shaders[SGlobalPostProcessingQuad::s_shader_name]->Link();
 }
 
 

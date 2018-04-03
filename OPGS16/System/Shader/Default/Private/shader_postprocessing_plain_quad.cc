@@ -81,6 +81,8 @@ namespace opgs16 {
 namespace builtin {
 namespace shader {
 
+const char* SGlobalPostProcessingQuad::s_shader_name = "ppQuad";
+
 SGlobalPostProcessingQuad::SGlobalPostProcessingQuad() {
     using resource::EShaderType;
     std::pair<EShaderType, const char* const> shader_list[2] {

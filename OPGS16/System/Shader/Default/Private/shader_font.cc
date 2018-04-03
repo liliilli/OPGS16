@@ -80,6 +80,8 @@ namespace opgs16 {
 namespace builtin {
 namespace shader {
 
+const char* SGlobalFont2D::s_shader_name = "gCommonFont";
+
 SGlobalFont2D::SGlobalFont2D() {
     using resource::EShaderType;
     std::pair<EShaderType, const char* const> shader_list[2] {

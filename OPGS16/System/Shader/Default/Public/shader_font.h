@@ -46,6 +46,7 @@ namespace shader {
 class SGlobalFont2D final : public element::CShaderNew {
 public:
     SGlobalFont2D();
+    static const char* s_shader_name;
 };
 
 } /*! ogps16::builtin::shader */
