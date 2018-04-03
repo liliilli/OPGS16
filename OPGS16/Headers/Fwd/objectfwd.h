@@ -94,6 +94,12 @@ namespace physics {
 
 } /*! opgs16::namespace */
 
+namespace builtin {
+namespace shader {
+class   SGlobalQuad2D;
+} /*! opgs16::builtin::shader */
+} /*! opgs16::builtin */
+
 namespace resource {
 enum class EScopeType;
 enum class EShaderType : int;

@@ -65,7 +65,7 @@ public:
      */
     CShaderNew& SetShader(opgs16::resource::EShaderType shader_type, const GLchar* path);
 
-    ~CShaderNew();
+    virtual ~CShaderNew();
 
     /**
      * @brief
@@ -77,7 +77,9 @@ public:
      */
     void Use();
 
-    /** Utility uniform functions */
+    /**---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+     * Utility uniform functions
+     *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
     /**
      * @brief The method sets boolean value to arbitary uniform variable.
@@ -152,7 +154,7 @@ public:
      */
      void SetStructSpotlight(const std::string& name, const light::Spotlight& container);
 
-private:
+protected:
     mutable GLuint m_program_id{};  /*! Unique id of shader program */
     bool m_linked{ false }; /*! Boolean Flag. This value must be true when call Shader.Use() */
     std::unordered_map<opgs16::resource::EShaderType, unsigned> m_shaders; /*! Compiled Shader list */

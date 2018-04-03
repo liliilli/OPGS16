@@ -33,12 +33,34 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring. Add copyright and comments.
+ * 2018-04-03 Add default quad2d(gQuad) shader in bootstrapping.
  */
 
-#include "../Public/shader_manager.h"   /*! Header file */
+#include "../Public/shader_manager.h"                   /*! Header file */
+#include "../../Shader/Default/Public/shader_quad2d.h"  /*! opgs16::builtin::shader::SGlobalQuad2D */
+#include "../../Shader/Default/Public/shader_font.h"    /*! opgs16::builtin::shader::SGlobalFont */
+#include "../../Shader/Default/Public/shader_postprocess_plain_quad.h"
+
+#if defined(_DEBUG)
+#include "../../Core/Public/logger.h"
+using opgs16::debug::PushLog;
+using opgs16::debug::LOG_TYPE_INFO;
+using opgs16::debug::LOG_TYPE_WARN;
+using opgs16::debug::LOG_TYPE_ERRO;
+#endif
 
 namespace opgs16 {
 namespace manager {
+
+ShaderManager::ShaderManager() {
+    m_shaders["gQuad"] = std::make_unique<builtin::shader::SGlobalQuad2D>();
+    m_shaders["gQuad"]->Link();
+    m_shaders["gCommonFont"] = std::make_unique<builtin::shader::SGlobalFont2D>();
+    m_shaders["gCommonFont"]->Link();
+    m_shaders["ppQuad"] = std::make_unique<builtin::shader::SGlobalPostProcessingQuad>();
+    m_shaders["ppQuad"]->Link();
+}
+
 
 ShaderManager::shader_raw ShaderManager::CreateShader(const std::string& tag,
                                                       const opgs16::resource::SShader& container) {

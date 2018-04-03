@@ -61,12 +61,14 @@ CShaderNew& CShaderNew::SetShader(resource::EShaderType shader_type, const GLcha
     glShaderSource(source, 1, &code_ptr, nullptr);
     glCompileShader(source);
 
+#if defined(_DEBUG)
     /** Log buffer setting to check compilation result of each shader fragment. */
     int success = 0;
     glGetShaderiv(source, GL_COMPILE_STATUS, &success);
-
     char info_log[LOG_SIZE]{};
-    if (!success) ShaderErrorPrint(m_shaders[shader_type], info_log);
+    if (!success)
+        ShaderErrorPrint(m_shaders[shader_type], info_log);
+#endif
 
     /* Return l-value reference of this, to use it as cascade. */
     return *this;

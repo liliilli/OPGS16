@@ -64,6 +64,11 @@
     <ClCompile Include="System\Components\Internal\renderer_base.cc" />
     <ClCompile Include="System\Components\Private\empty_renderer.cc" />
     <ClCompile Include="_Project\Maintenance\Object\Test3\obstacle.cc" />
+    <ClCompile Include="System\Shader\Default\Public\shader_quad2d.h" />
+    <ClCompile Include="System\Shader\Default\Private\shader_quad2d.cc" />
+    <ClCompile Include="System\Shader\Default\Private\shader_font.cc" />
+    <ClCompile Include="System\Shader\Default\Private\shader_postprocessing_plain_quad.cc" />
+    <ClCompile Include="System\Shader\Default\Public\shader_postprocess_plain_quad.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -164,6 +169,7 @@
     <ClInclude Include="System\Helper\Public\template.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test3\empty_object.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test3\obstacle.h" />
+    <ClInclude Include="System\Shader\Default\Public\shader_font.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

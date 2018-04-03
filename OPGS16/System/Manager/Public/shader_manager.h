@@ -124,7 +124,7 @@ private:
 	}
 
 private:
-	ShaderManager() = default;
+	ShaderManager();
 
 public:
 	ShaderManager(const ShaderManager&) = delete;
@@ -139,12 +139,11 @@ public:
  * @return Founded shader pointer, if fails create shader and return late.
  */
 inline ShaderManager::shader_raw ShaderManager::Shader(const std::string& name) {
-	if (m_shaders.find(name) == m_shaders.end()) {
-		// late Initialize
-		auto& list = opgs16::manager::MResourceManager::Instance().GetShader(name);
+	if (!DoesShaderExist(name)) {
+		auto& list = MResourceManager::Instance().GetShader(name);
 		CreateShader(name, list);
 	}
-	return m_shaders.at(name).get();
+	return m_shaders[name].get();
 }
 
 } /*! opgs16::manager */
