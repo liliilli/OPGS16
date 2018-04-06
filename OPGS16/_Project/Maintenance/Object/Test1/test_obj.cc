@@ -13,9 +13,9 @@ TestObject1::TestObject1(const int i, const float size) {
 
     {
         using opgs16::component::CSprite2DRenderer;
-        AddComponent<CSprite2DRenderer>(*this, "128", "gQuad");
+        auto renderer = AddComponent<CSprite2DRenderer>(*this, "128", "gQuad");
 
-        m_wrapper = &GetComponent<CSprite2DRenderer>()->Wrapper();
+        m_wrapper = &renderer->Wrapper();
         m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
         m_wrapper->SetUniformValue<float>("alpha", 1.0f);
 

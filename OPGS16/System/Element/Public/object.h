@@ -420,15 +420,10 @@ protected:
     virtual void Render() {};
 };
 
-
 template<class _Ty, typename... _Params, typename>
 _Ty* CObject::AddComponent(_Params&&... params) {
-#if _MSVC_LANG > 201402
-    return static_cast<_Ty*>(m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...)).get());
-#else
     m_components.emplace_back(std::make_unique<_Ty>(std::forward<_Params>(params)...));
     return GetComponent<_Ty>();
-#endif
 }
 
 template<class _Ty, typename>
