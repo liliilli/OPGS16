@@ -2,21 +2,21 @@
 $ Resources/
 
 # FONTS
-FONT Sans G Fonts/Liberate/LiberationSans-Regular.ttf 1
-FONT Solomon G Fonts/SolomonP.ttf 0
-FONT Menus G Fonts/Menus.ttf 0
-FONT BIOS G Fonts/PxPlus_IBM_BIOS.ttf 0
+FONT Sans Fonts/Liberate/LiberationSans-Regular.ttf 1
+FONT Solomon Fonts/SolomonP.ttf 0
+FONT Menus Fonts/Menus.ttf 0
+FONT BIOS Fonts/PxPlus_IBM_BIOS.ttf 0
 
 # SHADERS
 
-SHADE ppConvex G
+SHADE ppConvex
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/convex.frag
 
-SHADE ppGray G
+SHADE ppGray
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/gray.frag
 
-SHADE ppSineWave G
+SHADE ppSineWave
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/sinewave.frag

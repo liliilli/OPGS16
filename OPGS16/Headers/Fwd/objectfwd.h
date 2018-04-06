@@ -101,7 +101,6 @@ class   SGlobalQuad2D;
 } /*! opgs16::builtin */
 
 namespace resource {
-enum class EScopeType;
 enum class EShaderType : int;
 struct  STexture2D;
 class   SFont;

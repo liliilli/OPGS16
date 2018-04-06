@@ -158,7 +158,6 @@
     <ClCompile Include="Objects\TempDebug\test_start_txt.cc" />
     <ClCompile Include="System\Core\Private\core_setting.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
-    <ClCompile Include="System\Manager\Private\resource_type.cc" />
     <ClCompile Include="System\Manager\Private\timer_manager.cc" />
     <ClCompile Include="System\Shader\Default\Private\shader_font.cc" />
     <ClCompile Include="System\Shader\Default\Private\shader_postprocessing_plain_quad.cc" />

@@ -1,13 +1,10 @@
 # ALL PATH WILL BE ATTACHED WITH $ (path)
 $ _Project/Maintenance/Resource/
 
-# GLOBAL (not release until game end.) = G
-# LOCAL (will be release until game end.) = L
-
 # SOUND EFFECTS
-SEBGM Music1 G sample.wav
+SEBGM Music1 sample.wav
 
 # TEXTURES
-TEX2DATLAS 128 L Sprite/128128.png Sprite/128128Atlas.json
-TEX2DATLAS AnimChar L Sprite/character.png Sprite/characterAtlas.json
-TEX2D 128Plain L Sprite/128128.png
+TEX2DATLAS 128 Sprite/128128.png Sprite/128128Atlas.json
+TEX2DATLAS AnimChar Sprite/character.png Sprite/characterAtlas.json
+TEX2D 128Plain Sprite/128128.png

@@ -43,19 +43,10 @@
 #include <string>       /*! std::string */
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>  /*! glm vector types */
 #include <vector>
 
 namespace opgs16 {
 namespace resource {
-
-/*! Resource scope type */
-enum class EScopeType {
-    GLOBAL,     /*! G */
-    SCENE_LOCAL /*! L */
-};
-
-EScopeType GetScopeType(const char type);
 
 struct STexture2DFragment {
     std::string name;
@@ -82,17 +73,12 @@ struct STexture2DAtlas {
 
 /*! Information structure of Font file */
 class SFont {
-    EScopeType       m_type;
     std::string     m_path;
     bool            m_default_font;
 
 public:
     SFont() {};
-    explicit SFont(EScopeType type, std::string path, bool default_font) :
-        m_type{ type }, m_path{ path }, m_default_font{ default_font } {};
-    inline EScopeType Type() const noexcept {
-        return m_type;
-    }
+    explicit SFont(std::string path, bool default_font) : m_path{ path }, m_default_font{ default_font } {};
     inline std::string Path() const noexcept {
         return m_path;
     }
@@ -102,15 +88,12 @@ public:
 };
 
 class SSound {
-    EScopeType       m_type;
     std::string     m_path;
     bool            m_is_bgm;
 
 public:
     SSound() {};
-    explicit SSound(EScopeType type, std::string path, bool is_bgm) :
-        m_type{ type }, m_path{ path }, m_is_bgm{ is_bgm } {};
-    inline EScopeType Type() const noexcept { return m_type; }
+    explicit SSound(std::string path, bool is_bgm) : m_path{ path }, m_is_bgm{ is_bgm } {};
     inline std::string Path() const noexcept { return m_path; }
     inline bool IsBgm() const noexcept { return m_is_bgm; }
 };
@@ -137,16 +120,12 @@ public:
     using shader_list = std::list<shader_pair>;
 
 private:
-    EScopeType       m_type;
-    shader_list     m_shader_list;
+    shader_list m_shader_list;
+
 
 public:
     SShader() {};
-    explicit SShader(EScopeType type, shader_list list) :
-        m_type{ type }, m_shader_list{ list } {};
-    inline EScopeType Type() const noexcept {
-        return m_type;
-    }
+    explicit SShader(shader_list list) : m_shader_list{ list } {};
     inline const shader_list& List() const noexcept {
         return m_shader_list;
     }

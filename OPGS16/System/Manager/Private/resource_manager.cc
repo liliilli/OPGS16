@@ -107,7 +107,6 @@ EResourceType GetResourceType(const std::string_view& resource_token) {
  * @param[in] global_path
  */
 resource::STexture2DAtlas MakeTexture2DContainerDefault(std::stringstream& line_stream, const std::string& global_path) {
-    char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
 #if defined(_DEBUG)
     std::wstring log{ L"[Texture2D][" };
@@ -209,7 +208,6 @@ resource::STexture2DAtlas MakeTextureAtlasInformation(std::ifstream& file, const
  * @return
  */
 resource::STexture2DAtlas MakeTexture2DAtlasContainer(std::stringstream& line_stream, const std::string& global_path) {
-    char type; line_stream >> type;
     std::string local_texture_path; line_stream >> local_texture_path;
     std::string local_atlas_path; line_stream >> local_atlas_path;
 #if defined(_DEBUG)
@@ -242,7 +240,6 @@ resource::STexture2DAtlas MakeTexture2DAtlasContainer(std::stringstream& line_st
  */
 resource::SSound MakeSoundContainer(std::stringstream& line_stream, const std::string& global_path,
                                     bool is_bgm) {
-    char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
 #if defined(_DEBUG)
     {
@@ -251,7 +248,7 @@ resource::SSound MakeSoundContainer(std::stringstream& line_stream, const std::s
         PushLog(LOG_TYPE_INFO, log.c_str());
     }
 #endif
-    return resource::SSound{ resource::GetScopeType(type), global_path + local_path, is_bgm };
+    return resource::SSound{ global_path + local_path, is_bgm };
 };
 
 /*!
@@ -261,8 +258,7 @@ resource::SSound MakeSoundContainer(std::stringstream& line_stream, const std::s
  * @param[in] scope_type
  * @return
  */
-resource::SShader MakeShaderContainer(std::ifstream& stream, const std::string& global_path,
-                                      const resource::EScopeType scope_type) {
+resource::SShader MakeShaderContainer(std::ifstream& stream, const std::string& global_path) {
     resource::SShader::shader_list shader_list;
 
     while (true) {
@@ -287,7 +283,7 @@ resource::SShader MakeShaderContainer(std::ifstream& stream, const std::string& 
         }
     }
 #endif
-    return resource::SShader{ scope_type, shader_list };
+    return resource::SShader{ shader_list };
 };
 
 /*!
@@ -297,7 +293,6 @@ resource::SShader MakeShaderContainer(std::ifstream& stream, const std::string& 
  * @return
  */
 resource::SFont MakeFontContainer(std::stringstream& line_stream, const std::string& global_path) {
-    char type;              line_stream >> type;
     std::string local_path; line_stream >> local_path;
     bool is_default;        line_stream >> is_default;
 #if defined(_DEBUG)
@@ -308,7 +303,7 @@ resource::SFont MakeFontContainer(std::stringstream& line_stream, const std::str
         PushLog(LOG_TYPE_INFO, log.c_str());
     }
 #endif
-    return resource::SFont{ resource::GetScopeType(type), global_path + local_path, is_default };
+    return resource::SFont{ global_path + local_path, is_default };
 };
 
 } /*! unnamed namespace */
@@ -369,13 +364,12 @@ void MResourceManager::ReadResource(const std::string& token_line,
         PushTexture2D(tag, MakeTexture2DContainerDefault(line_stream, global_path));
     }   break;
     case EResourceType::TEXTURE_2D_ATLAS: {
-        std::string tag; line_stream >> tag;
+        std::string tag;    line_stream >> tag;
         PushTexture2D(tag, MakeTexture2DAtlasContainer(line_stream, global_path));
     }   break;
     case EResourceType::SHADER: {
         std::string tag;    line_stream >> tag;
-        char type;          line_stream >> type;
-        PushShader(tag, MakeShaderContainer(stream, global_path, resource::GetScopeType(type)));
+        PushShader(tag, MakeShaderContainer(stream, global_path));
     }   break;
     case EResourceType::SOUND_EFFECT_BGM: {
         std::string tag;    line_stream >> tag;

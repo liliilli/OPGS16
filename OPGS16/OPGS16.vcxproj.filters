@@ -30,7 +30,6 @@
     <ClCompile Include="_Project\Maintenance\Object\Test2\game_canvas_2.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="System\Core\Private\core_setting.cc" />
-    <ClCompile Include="System\Manager\Private\resource_type.cc" />
     <ClCompile Include="System\Manager\Private\resource_manager.cc" />
     <ClCompile Include="System\Manager\Private\input_manager.cc" />
     <ClCompile Include="System\Manager\Private\font_manager.cc" />
