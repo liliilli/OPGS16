@@ -37,6 +37,8 @@
  * 2018-02-23 m_texture::Texture2D Refactoring
  * 2018-02-28 Add Width, Height inline functions.
  * 2018-03-10 Refactoring.
+ * 2018-04-06 IndexSize to unsigned value because fragmentation mechanism has been changed.
+ * 2018-04-06 Change constructor parameter type STexture2D to STexture2DAtlas.
  */
 
 #include <vector>       /*! std::vector */
@@ -60,22 +62,22 @@ namespace texture {
  * 2018-02-23 m_texture::Texture2D Refactoring
  * 2018-02-28 Add Width, Height inline functions.
  * 2018-03-10 Refactoring.
+ * 2018-04-06 Change constructor parameter type STexture2D to STexture2DAtlas.
  */
 class CTexture2D {
-private:
     using TextureParameter = element::texture::_internal::TextureParameter;
     using cell_size = std::pair<float, float>;
+public:
+    enum class ETexelType { LEFT_DOWN, RIGHT_UP };
 
 public:
     ~CTexture2D();
 
 	/**
 	 * @brief Constructor get path and m_texture mode as arguments, build and set them.
-	 * @param[in] texture_path path to get m_texture data.
-	 * @param[in] bind_mode mode to bind m_texture as what m_texture's color data type is.
-	 * bind_mode is limited in GL_RGB, GL_RGBA, and so on.
+     * @param[in] container Container which stores texture atlas information.
 	 */
-	CTexture2D(const resource::STexture2D& container);
+	CTexture2D(const resource::STexture2DAtlas& container);
 
 	/**
 	 * @brief Create m_texture with no m_texture path, but for later use.
@@ -85,8 +87,7 @@ public:
 	 * @param[in] width texture width size to create.
 	 * @param[in] height texture height size to create.
 	 */
-	CTexture2D(const GLint internal_format, GLenum format, GLenum type,
-              GLsizei width = 256, GLsizei height = 224);
+	CTexture2D(const GLint internal_format, GLenum format, GLenum type, GLsizei width = 256, GLsizei height = 224);
 
 	/**
 	 * @brief Set texture's rendering option. (one item version)
@@ -108,37 +109,47 @@ public:
 	void SetBorderColor(const std::array<GLfloat, 4>& border_color);
 
 	/*! Get Texture id */
-	inline GLuint Id() const {
+	GLuint Id() const noexcept {
         return m_texture;
     }
 
     /*! Get Texture overall width */
-    inline int Width() const noexcept {
+    int Width() const noexcept {
         return m_width;
     }
 
     /*! Get Texture overall height */
-    inline int Height() const noexcept {
+    int Height() const noexcept {
         return m_height;
     }
 
-    /*! Get Texture cell size ranges [0, 1] */
-    inline cell_size CellSize() const noexcept {
-        return m_texture_cell_size;
-    }
+    /*!
+     * @brief Get Texel information from m_texels with given index number.
+     * If given index number is out of bound, return nullptr.
+     * And is_atlas is false so this texture is not concerned with atlas, return nullptr;
+     */
+    const float* GetTexelPtr(const ETexelType texel_type, const unsigned index) const noexcept {
+        if (m_texels && is_atlas && index < m_texels->size()) {
+            switch (texel_type) {
+            case ETexelType::LEFT_DOWN: return (*m_texels)[index].left_down;
+            case ETexelType::RIGHT_UP:  return (*m_texels)[index].right_up;
+            }
+        }
+        return nullptr;
+	}
 
-    inline resource::STexture2D::IndexSize CellWH() const noexcept {
-        return m_cell_number;
+    /*! Return whether this texture handles atlas information or not. */
+    bool DoesHasAtlas() const noexcept {
+        return is_atlas;
 	}
 
 private:
-	mutable GLuint m_texture;           /*! Texture binding id */
+	mutable GLuint m_texture{ 0 };      /*! Texture binding id */
+    int m_width{ 0 };                   /*! Texture width */
+    int m_height{ 0 };                  /*! Texture height */
+    bool is_atlas{ false };
 
-    int m_width;                        /*! Texture width */
-    int m_height;                       /*! Texture height */
-
-    cell_size m_texture_cell_size{};    /*! Texture coordinate cell size */
-    resource::STexture2D::IndexSize m_cell_number{};
+    const std::vector<resource::STexture2DTexelInformation>* m_texels{ nullptr };
 };
 
 } /*! opgs16::texture */

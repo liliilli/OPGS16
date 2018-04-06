@@ -31,6 +31,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Create file.
+ * 2018-04-06 Replace two-index with one-index as ReadFile::index.
  */
 
 #include <fstream>
@@ -58,15 +59,14 @@ void ReadFile(const char* file_path, std::vector<_internal::AnimationCell>& cont
             if (line.empty() || line[0] == '#') continue; /*! Empty line || Continue */
             std::stringstream line_stream{ line };
 
-            std::string texture2d_name; unsigned index_x, index_y, time_milli;
-            line_stream >> texture2d_name >> index_x >> index_y >> time_milli;
+            std::string texture2d_name; unsigned index, time_milli;
+            line_stream >> texture2d_name >> index >> time_milli;
 
             if (auto raw = manager::TextureManager::Instance().GetTexture(texture2d_name); raw) {
-                using IndexSize = opgs16::resource::STexture2D::IndexSize;
-                container.emplace_back(texture2d_name,
-                                       IndexSize{ index_x, index_y },
-                                       time_milli);
-            } else throw new std::runtime_error("there is no texture_2d.");
+                container.emplace_back(texture2d_name, index, time_milli);
+            } else {
+                throw std::runtime_error("there is no texture_2d.");
+            }
         }
     }
 }

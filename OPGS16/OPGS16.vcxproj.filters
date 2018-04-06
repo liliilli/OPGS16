@@ -170,6 +170,8 @@
     <ClInclude Include="_Project\Maintenance\Object\Test3\empty_object.h" />
     <ClInclude Include="_Project\Maintenance\Object\Test3\obstacle.h" />
     <ClInclude Include="System\Shader\Default\Public\shader_font.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Headers\import_logger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -289,5 +291,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />
+    <Image Include="Resources\Sprites\System.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OPGS16.rc" />
   </ItemGroup>
 </Project>

@@ -33,48 +33,63 @@
  * @log
  * 2018-03-10 Refactoring. Move implementations to ::opgs16::component::_internal
  * 2018-04-02 std::string to std::wstring for UTF-16 characters.
+ * 2018-04-06 Support to CTexture2DAtlas information. Revise SetTextureIndex
  */
 
 #include "sprite_renderer_impl.h"   /*! Header file */
 #include "../../Frame/constant.h"   /*! std::array<> quad_info
                                       * std::array<> quad_indice */
-#include "../../../System/Manager/Public/texture_manager.h"    /*! TextureManager */
-#include "../../../System/Manager/Public/shader_manager.h"      /*! ShaderManager */
+#include "../../../System/Manager/Public/texture_manager.h" /*! TextureManager */
+#include "../../../System/Manager/Public/shader_manager.h"  /*! ShaderManager */
+#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
 
 namespace opgs16 {
 namespace component {
 namespace _internal {
 
-CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag,
-                                         const std::string& shader_tag,
-                                         const opgs16::resource::STexture2D::IndexSize& texture_index,
-                                         unsigned layer) :
-    m_sprite{ opgs16::manager::TextureManager::Instance().GetTexture(sprite_tag) },
+CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag,
+                                         const unsigned texture_index) :
+    m_sprite{ manager::TextureManager::Instance().GetTexture(sprite_tag) },
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },
-    m_index { texture_index } {
-    m_wrapper.SetShader(opgs16::manager::ShaderManager::Instance().Shader(shader_tag));
+    m_texture_fragment_index{ texture_index } {
+    /*! Body */
+    m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_tag));
     glGenVertexArrays(1, &empty_vao);
 
-    auto [cell_x, cell_y] = m_sprite->CellSize();
-    m_wrapper.InsertUniformValue("uWHSize", glm::vec2{ cell_x, cell_y });
-    m_wrapper.InsertUniformValue("uTexIndex",
-                                 glm::vec2{
-                                     (float)texture_index.x_sep,
-                                     (float)texture_index.y_sep }
-    );
+    SetTextureIndex(texture_index);
+}
+
+void CSpriteRendererImpl::SetTextureIndex(const unsigned new_index) noexcept {
+    m_texture_fragment_index = new_index;
+
+    auto texel_ptr_ld = m_sprite->GetTexelPtr(texture::CTexture2D::ETexelType::LEFT_DOWN, new_index);
+    auto texel_ptr_ru = m_sprite->GetTexelPtr(texture::CTexture2D::ETexelType::RIGHT_UP, new_index);
+    if (texel_ptr_ld && texel_ptr_ru) {
+        m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
+        m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
+    }
+    else {
+        m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
+        m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
+    }
+}
+
+void CSpriteRendererImpl::SetTexture(const std::string& texture_name) noexcept {
+    m_sprite = manager::TextureManager::Instance().GetTexture(texture_name);
+    SetTextureIndex(0);
 }
 
 void CSpriteRendererImpl::RenderSprite() {
-	m_wrapper.UseShader();  /*! the name is incorrect... */
-	glBindVertexArray(empty_vao);
+    m_wrapper.UseShader();  /*! the name is incorrect... */
+    glBindVertexArray(empty_vao);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
+    glDrawArraysInstancedBaseInstance(GL_TRIANGLES, 0, 6, 1, 0);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
 }
 
 } /*! opgs16::component::_internal */

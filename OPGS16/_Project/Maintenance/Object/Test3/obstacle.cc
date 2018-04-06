@@ -14,8 +14,8 @@ ObstacleBlock::ObstacleBlock() {
     {
         AddComponent<CSprite2DRenderer>(*this, "128_3", "gQuad");
         m_wrapper = &GetComponent<CSprite2DRenderer>()->Wrapper();
-        m_wrapper->InsertUniformValue<glm::mat4>("projection", glm::mat4{});
-        m_wrapper->InsertUniformValue<float>("alpha", 1.0f);
+        m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
+        m_wrapper->SetUniformValue<float>("alpha", 1.0f);
     }
 
     {
@@ -33,7 +33,7 @@ void ObstacleBlock::Render() {
     using opgs16::manager::MSceneManager;
     using opgs16::component::CSprite2DRenderer;
 
-    m_wrapper->ReplaceUniformValue<glm::mat4>("projection",
+    m_wrapper->SetUniformValue<glm::mat4>("projection",
         MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix());
     GetComponent<CSprite2DRenderer>()->RenderSprite();
 }

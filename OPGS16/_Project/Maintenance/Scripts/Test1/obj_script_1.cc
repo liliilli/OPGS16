@@ -92,7 +92,7 @@ void ObjectScript1::StopAllTimers() {
     using opgs16::component::CSprite2DRenderer;
     CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
     auto& wrapper = renderer->Wrapper();
-    wrapper.ReplaceUniformValue("alpha", m_object_alpha);
+    wrapper.SetUniformValue("alpha", m_object_alpha);
 }
 
 void ObjectScript1::Proceed_1NormalLocal() {
@@ -192,7 +192,7 @@ void ObjectScript1::Proceed_4AlphaBlending() {
     using opgs16::component::CSprite2DRenderer;
     CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
     auto& wrapper = renderer->Wrapper();
-    wrapper.ReplaceUniformValue("alpha", m_object_alpha);
+    wrapper.SetUniformValue("alpha", m_object_alpha);
 }
 
 void ObjectScript1::Proceed_5Scaling() {
@@ -205,11 +205,10 @@ void ObjectScript1::Proceed_5Scaling() {
 void ObjectScript1::OnTriggerSwap() {
     using opgs16::component::CSprite2DRenderer;
     CSprite2DRenderer* renderer = GetObject().GetComponent<CSprite2DRenderer>();
-    const auto& index = renderer->TextureIndex();
-    auto value  = index.y_sep * 2 + index.x_sep + 1;
-
-    if (value == 4)
+    const auto index = renderer->TextureIndex();
+    auto value = index + 1;
+    if (value > 15)
         value = 0;
 
-    renderer->SetTextureIndex({ value % 2, value / 2 });
+    renderer->SetTextureIndex(value);
 }

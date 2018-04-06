@@ -1,5 +1,5 @@
-#ifndef SYSTEM_MANAGER_INTERNAL_RESOURCE_INTERNAL_H
-#define SYSTEM_MANAGER_INTERNAL_RESOURCE_INTERNAL_H
+#ifndef SYSTEM_FRAME_DEFAULT_PUBLIC_TEXTURE_BUILTIN_DEFAULT_H
+#define SYSTEM_FRAME_DEFAULT_PUBLIC_TEXTURE_BUILTIN_DEFAULT_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,46 +30,24 @@
  */
 
 /*!
- * @file System/Manager/Internal/resource_internal.h
+ * @file System/Frame/Default/Public/texture_builtin_default.h
+ * @brief Generating textures built-in function.
  * @author Jongmin Yun
+ *
  * @log
- * 2018-03-03 Create file.
+ * 2018-04-04 Create file.
  */
 
-#include <string_view>  /*! std::string_view, operator""sv */
+#include "../../../../Headers/Fwd/objectfwd.h"  /*! Forward Declarations */
 
 namespace opgs16 {
-namespace resource {
-namespace _internal {
+namespace builtin {
+namespace texture {
 
-using namespace std::string_view_literals;
+void GenerateTexture();
 
-constexpr std::string_view TEX2D{ "TEX2D"sv };
-constexpr std::string_view TEX2DATLAS{ "TEX2DATLAS"sv };
-constexpr std::string_view SHADE{ "SHADE"sv };
-constexpr std::string_view SEBGM{ "SEBGM"sv };
-constexpr std::string_view SEEFF{ "SEEFF"sv };
-constexpr std::string_view FONT { "FONT"sv };
-
-enum class ESymbolType {
-    NOTHING,                    /*! Default value of symbol type */
-    RESOURCE,                   /*! Resource symbol. */
-    GLOBAL_PATH,                /*! Global path symbol to read from. */
-    COMMENT,                    /*! Comment symbol. */
-};
-
-enum class EResourceType {
-    NOTHING,                    /*! Error type nothing found from token. */
-    TEXTURE_2D,                 /*! Texture 2d */
-    TEXTURE_2D_ATLAS,           /*! Texture 2d with atlas */
-    SHADER,                     /*! Shader program */
-    SOUND_EFFECT_BGM,           /*! SE background music */
-    SOUND_EFFECT_EFFECT,        /*! SE effect sound */
-    FONT,                       /*! Font file (.ttf) */
-};
-
-} /*! opgs16::resource::_internal */
-} /*! opgs16::resource */
+} /*! opgs16::builtin::texture */
+} /*! opgs16::builtin */
 } /*! opgs16 */
 
-#endif // !SYSTEM_MANAGER_INTERNAL_RESOURCE_INTERNAL_H
+#endif // SYSTEM_FRAME_DEFAULT_PUBLIC_TEXTURE_BUILTIN_DEFAULT_H

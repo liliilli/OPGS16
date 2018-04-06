@@ -12,8 +12,8 @@ Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
 
 	auto& shader = m_sprite_renderer.Wrapper();
-	shader.InsertUniformValue<glm::mat4>("projection", glm::mat4{});
-	shader.InsertUniformValue<float>("alpha", 0.0f);
+	shader.SetUniformValue<glm::mat4>("projection", glm::mat4{});
+	shader.SetUniformValue<float>("alpha", 0.0f);
 }
 
 Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
@@ -49,8 +49,8 @@ void Image::Render() {
 	auto& shader = m_sprite_renderer.Wrapper();
 
 	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
-	shader.ReplaceUniformValue<glm::mat4>("projection", PVM);
-	shader.ReplaceUniformValue("alpha", 1.0f);
+	shader.SetUniformValue<glm::mat4>("projection", PVM);
+	shader.SetUniformValue("alpha", 1.0f);
 	m_sprite_renderer.RenderSprite();
 
 	if (!is_already_enabled) glDisable(GL_BLEND);

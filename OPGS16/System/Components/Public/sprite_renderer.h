@@ -38,6 +38,7 @@
  * 2018-02-26 Componentization of Sprite2DRenderer.
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move file to /Component.
+ * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
  */
 
 #include <string>
@@ -63,26 +64,32 @@ namespace component {
  * 2018-02-26 Componentization of Sprite2DRenderer.
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move to opgs16::component namespace.
+ * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
  */
 class CSprite2DRenderer final : public _internal::CRendererBase {
 private:
-    using IndexSize = opgs16::resource::STexture2D::IndexSize;
     using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
 	CSprite2DRenderer(element::CObject& bind_object,
-                     const std::string& sprite_tag,
-                     const std::string& shader_tag,
-                     const IndexSize& texture_index = {0, 0},
-                     const unsigned layer = 0);
+                      const std::string& sprite_tag, const std::string& shader_tag,
+                      const unsigned texture_index = 0, const unsigned render_layer = 0);
 
+    /*!
+     * @brief Set new texture replacing present bound texture.
+     * @param[in] texture_name Texture tag name.
+     */
     void SetTexture(const std::string& texture_name);
 
-    void SetTextureIndex(const IndexSize& new_index);
+    /*!
+     * @brief Set texture index to display.
+     * @param[in] index_value Texture fragment value.
+     */
+    void SetTextureIndex(const unsigned index_value);
 
     /*! Get Texture index position. */
-    const IndexSize& TextureIndex() const noexcept;
+    const unsigned TextureIndex() const noexcept;
 
 	/*! Get ShaderWrapper instance. */
 	ShaderWrapper& Wrapper() const;

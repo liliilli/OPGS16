@@ -32,6 +32,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file
+ * 2018-04-06 Suppress warning, size_t to unsigned int warning.
  */
 
 #include "renderer_base.h"                          /*! Header file */
@@ -49,7 +50,7 @@ CRendererBase::~CRendererBase() {};
 
 void CRendererBase::SetRenderLayer(const std::string& layer_name) {
     auto& layer_list = manager::MSettingManager::Instance().RenderingLayerNameList();
-    decltype(layer_list.size()) i = 0;
+    unsigned i = 0;
     for (; i < layer_list.size(); ++i) {
         if (layer_name == layer_list[i]) {
             m_render_layer_index = i;
@@ -60,7 +61,7 @@ void CRendererBase::SetRenderLayer(const std::string& layer_name) {
     if (i == layer_list.size()) m_render_layer_index = 0;
 }
 
-void CRendererBase::SetRenderLayer(const size_t layer_index) {
+void CRendererBase::SetRenderLayer(const unsigned layer_index) {
     const auto list_size = manager::MSettingManager::Instance().RenderingLayerNameList().size();
     m_render_layer_index = (layer_index >= list_size) ? 0 : layer_index;
 }

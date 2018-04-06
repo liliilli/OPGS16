@@ -47,66 +47,32 @@ public:
      void UseShader();
 
     /**
-     * @brief
-     */
-     void CheckError() {};
-
-    /**
      * @brief Insert uniform variable value to be used by shader.
      * @param[in] tag The tag to insert value.
      * @param[in] _Ty Type parameter to compare with supported uniform container's type.
      * @param[in] value The value insert.
      */
     template <typename _Ty>
-    void InsertUniformValue(const std::string& tag, const _Ty& value);
+    void SetUniformValue(const std::string& tag, const _Ty& value);
 
     template <>
-    void InsertUniformValue<float>(const std::string& tag, const float& value) {
-        if (!IsValueAlreadyExist(tag, value)) m_parameters.m_floats[tag] = value;
+    void SetUniformValue<float>(const std::string& tag, const float& value) {
+        m_parameters.m_floats[tag] = value;
     }
 
     template <>
-    void InsertUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
-        if (!IsValueAlreadyExist(tag, value)) m_parameters.m_mat4s[tag] = value;
+    void SetUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
+        m_parameters.m_mat4s[tag] = value;
     }
 
     template <>
-    void InsertUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
-        if (!IsValueAlreadyExist(tag, value)) m_parameters.m_vec2[tag] = value;
-    }
-
-    /**
-     * @brief Replace uniform variable's value with new value.
-     * @param[in] tag The tag to insert value.
-     * @param[in] _Ty Type parameter to compare with supported uniform container's type.
-     * @param[in] value The value insert.
-     */
-    template <typename _Ty>
-    void ReplaceUniformValue(const std::string& tag, const _Ty& value);
-
-    template <>
-    void ReplaceUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
-        m_parameters.m_mat4s.at(tag) = value;
-    }
-
-    template <>
-    void ReplaceUniformValue<float>(const std::string& tag, const float& value) {
-        m_parameters.m_floats.at(tag) = value;
-    }
-
-    template <>
-    void ReplaceUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
-        m_parameters.m_vec2.at(tag) = value;
+    void SetUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
+        m_parameters.m_vec2[tag] = value;
     }
 
 private:
     opgs16::element::CShaderNew* m_shader{ nullptr };// Shader pointer retrieved from ShaderManager.
     bool m_is_useable{ false };				// The flag for preventing using of nullptr shader.
-
-    enum class ErrorType {
-        OK,
-        SHADER_IS_NULLPTR,
-    } m_error{ ErrorType::OK };
 
 public:
     /**

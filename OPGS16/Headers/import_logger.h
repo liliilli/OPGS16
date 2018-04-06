@@ -1,3 +1,6 @@
+#ifndef OPGS16_HEADERS_IMPORT_LOGGER_H
+#define OPGS16_HEADERS_IMPORT_LOGGER_H
+
 /*!
  * @license BSD 2-Clause License
  *
@@ -26,40 +29,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @file System/Manager/Private/texture_manager.cc
+/*!
+ * @file Headers/import_logger.h
+ * @brief Logger importer.
  * @author Jongmin Yun
- *
  * @log
- * 2018-03-04 Refactoring.
+ * 2018-04-06 Create file.
  */
 
-#include "../Public/texture_manager.h"  /*! Header file */
+#if defined(_DEBUG) || defined(NDEBUG)
+#include "../System/Core/Public/logger.h"
+using opgs16::debug::PushLog;
+using opgs16::debug::LOG_TYPE_INFO;
+using opgs16::debug::LOG_TYPE_WARN;
+using opgs16::debug::LOG_TYPE_ERRO;
 
-#include "../../Frame/texture.h"
-#include "../../Manager/Public/resource_manager.h"
+#define PUSH_LOG_ERRO(__string__) PushLog(LOG_TYPE_ERRO, __string__)
+#define PUSH_LOG_WARN(__string__) PushLog(LOG_TYPE_WARN, __string__)
+#define PUSH_LOG_INFO(__string__) PushLog(LOG_TYPE_INFO, __string__)
+#else
+#define PUSH_LOG_ERRO(__string__) (void*)0
+#define PUSH_LOG_WARN(__string__) (void*)0
+#define PUSH_LOG_INFO(__string__) (void*)0
+#endif /*! opgs16::debug::PushLog only on _DEBUG */
 
-namespace opgs16 {
-namespace manager {
-
-TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
-	if (!DoesTextureExist(name)) {
-		const auto& container = MResourceManager::Instance().GetTexture2D(name);
-
-        auto [it, good] = m_container.emplace(name, std::make_unique<texture::CTexture2D>(container));
-        if (good) return it->second.get();
-        else return nullptr;
-	}
-    return m_container[name].get();
-}
-
-void TextureManager::Release(const std::string& tag) {
-	if (DoesTextureExist(tag)) m_container.erase(tag);
-}
-
-void TextureManager::Clear() {
-    m_container.clear();
-}
-
-} /*! opgs16::manager */
-} /*! opgs16 */
+#endif // OPGS16_HEADER_IMPORT_LOGGER_H

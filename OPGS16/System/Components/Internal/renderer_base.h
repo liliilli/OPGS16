@@ -35,6 +35,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file.
+ * 2018-04-06 Suppress warning, size_t to unsigned int warning.
  */
 
 #include "component.h"          /*! opgs16::component::_internal::CComponent */
@@ -47,17 +48,25 @@ namespace _internal {
 
 /*!
 * @class CRendererBase
+* @author Jongmin Yun
 */
-class CRendererBase : public _internal::CComponent {
+class CRendererBase : public CComponent {
 public:
     CRendererBase(element::CObject& bind_object, const unsigned render_layer);
     virtual ~CRendererBase() = 0;
 
     void SetRenderLayer(const std::string& layer_name);
-    void SetRenderLayer(const size_t layer_index);
+
+    /*!
+     * @brief Set render layer with value. if render layer is out of bound, set value to 0.
+     * @param[in] layer_index Value;
+     */
+    void SetRenderLayer(const unsigned layer_index);
+
     inline size_t RenderLayerIndexOf() const noexcept {
         return m_render_layer_index;
     }
+
     std::string RenderLayerNameOf() const;
 
     virtual void Update() override final {
@@ -66,7 +75,7 @@ public:
     };
 
 private:
-    size_t m_render_layer_index{ 0 };       /*! Rendering layer index */
+    unsigned m_render_layer_index{ 0 }; /*! Rendering layer index */
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRendererBase)
 };

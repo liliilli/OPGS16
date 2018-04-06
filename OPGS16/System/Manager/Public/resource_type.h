@@ -44,6 +44,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>  /*! glm vector types */
+#include <vector>
 
 namespace opgs16 {
 namespace resource {
@@ -56,13 +57,35 @@ enum class EScopeType {
 
 EScopeType GetScopeType(const char type);
 
-/*! Information structure of Texture2D */
+/*!
+ * @deprecated
+ * Information structure of Texture2D */
 struct STexture2D {
-    struct IndexSize { unsigned x_sep, y_sep; };
-
-    EScopeType       m_type;
+    EScopeType      m_type;
     std::string     m_path;
-    IndexSize       m_nm_size;
+};
+
+struct STexture2DFragment {
+    std::string name;
+    unsigned offset_x, offset_y;
+    unsigned width, height;
+};
+
+struct STexture2DTexelInformation {
+    float left_down[2]{ 0.f, 0.f };
+    float right_up[2]{ 1.f, 1.f };
+};
+
+/*! Information structure of Texture2D with atlas information (if not, fill it with default) */
+struct STexture2DAtlas {
+    bool has_atlas{ false };
+
+    unsigned width, height;
+    unsigned fragment_number;
+    std::vector<STexture2DFragment> fragment;
+    std::vector<STexture2DTexelInformation> texels;
+    std::string path;
+    std::string name;
 };
 
 /*! Information structure of Font file */
@@ -72,6 +95,7 @@ class SFont {
     bool            m_default_font;
 
 public:
+    SFont() {};
     explicit SFont(EScopeType type, std::string path, bool default_font) :
         m_type{ type }, m_path{ path }, m_default_font{ default_font } {};
     inline EScopeType Type() const noexcept {
@@ -91,6 +115,7 @@ class SSound {
     bool            m_is_bgm;
 
 public:
+    SSound() {};
     explicit SSound(EScopeType type, std::string path, bool is_bgm) :
         m_type{ type }, m_path{ path }, m_is_bgm{ is_bgm } {};
     inline EScopeType Type() const noexcept { return m_type; }
@@ -107,11 +132,11 @@ enum class EShaderType : int {
 };
 
 inline EShaderType GetShaderType(const std::string& token) {
-    if (token == "VS")          return EShaderType::VS;
-    else if (token == "GS")     return EShaderType::GS;
-    else if (token == "TCS")    return EShaderType::TCS;
-    else if (token == "TES")    return EShaderType::TES;
-    else if (token == "FS")     return EShaderType::FS;
+    if (token == "VS")     return EShaderType::VS;
+    if (token == "GS")     return EShaderType::GS;
+    if (token == "TCS")    return EShaderType::TCS;
+    if (token == "TES")    return EShaderType::TES;
+    if (token == "FS")     return EShaderType::FS;
 }
 
 class SShader {
@@ -124,6 +149,7 @@ private:
     shader_list     m_shader_list;
 
 public:
+    SShader() {};
     explicit SShader(EScopeType type, shader_list list) :
         m_type{ type }, m_shader_list{ list } {};
     inline EScopeType Type() const noexcept {

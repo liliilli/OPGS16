@@ -34,9 +34,9 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Create file, Add state enum.
+ * 2018-04-06 Change AnimationCell::m_index to AnimationCell::m_fragment_index.
  */
 
-#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
 #include <string>   /*! std::string */
 
 namespace opgs16 {
@@ -52,20 +52,25 @@ enum class AnimatorState {
     SLEEP
 };
 
+/*!
+ * @class AnimationCell
+ * @brief animation cell that stores time, texture_name, texture fragment index.
+ * This is used for animating.
+ * @log
+ * 2018-04-06 Add comment, IndexSize to unsigned of m_fragment_index.
+ */
 class AnimationCell {
-    using IndexSize = resource::STexture2D::IndexSize;
-
-    std::string m_texture_name;
-    IndexSize   m_index;
-    unsigned    m_time_milli;
+    std::string m_texture_name{};
+    unsigned    m_fragment_index{ 0 };
+    unsigned    m_time_milli{ 0 };
 
 public:
     AnimationCell() {};
-    explicit AnimationCell(const std::string& texture_name, IndexSize index, unsigned time_milli) :
-        m_texture_name{ texture_name }, m_index{ index }, m_time_milli{ time_milli } {};
+    explicit AnimationCell(const std::string& texture_name, unsigned index, unsigned time_milli) :
+        m_texture_name{ texture_name }, m_fragment_index{ index }, m_time_milli{ time_milli } {};
 
-    IndexSize Index() const noexcept {
-        return m_index;
+    unsigned Index() const noexcept {
+        return m_fragment_index;
     }
     const std::string& TextureName() const noexcept {
         return m_texture_name;

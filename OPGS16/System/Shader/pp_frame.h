@@ -151,7 +151,7 @@ public:
 	 */
 	template <typename _Ty>
 	 void InsertUniformValue(const std::string tag, const _Ty value) {
-		if (!IsValueAlreadyExist(tag, value)) m_shader_wrapper.InsertUniformValue(tag, value);
+		if (!IsValueAlreadyExist(tag, value)) m_shader_wrapper.SetUniformValue(tag, value);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public:
 	 */
 	template <typename _Ty>
 	 void ReplaceUniformValue(const std::string tag, const _Ty value) {
-        if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.ReplaceUniformValue(tag, value);
+        if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.SetUniformValue(tag, value);
 	}
 
 	/**

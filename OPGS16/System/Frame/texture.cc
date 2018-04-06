@@ -33,19 +33,24 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Move it to opgs16::texture namespace.
+ * 2018-04-06 Change constructor parameter type STexture2D to STexture2DAtlas.
  */
 
-#include "texture.h"
+#include "texture.h"                            /*! Header file */
 
 #include <array>
-#include <iostream>
 #include "../../__ThirdParty/stb/stb_image.h"
-#include "../Manager/Public/resource_type.h"           /*! resource::STexture2D */
+#include "../Manager/Public/resource_type.h"    /*! resource::STexture2D */
+#include "../../Headers/import_logger.h"        /*! import logger */
 
 namespace opgs16 {
 namespace texture {
 namespace {
 
+/*!
+ * @brief Return color format
+ * @param[in] channels Color channels value for being used to get GL_COLOR channels.
+ */
 GLenum ColorFormat(const int channels) noexcept {
     switch (channels) {
     default: return GL_NONE;    /*! else, return Error type */
@@ -55,13 +60,13 @@ GLenum ColorFormat(const int channels) noexcept {
     }
 }
 
-void SetTextureCellInformation(const resource::STexture2D::IndexSize& input,
-                               resource::STexture2D::IndexSize& cell_number,
-                               std::pair<float, float>& cell_size) {
-    cell_number = input;
-    cell_size   = { 1.f / input.x_sep, 1.f / input.y_sep };
-}
-
+/*!
+ * @brief Set texture default parameter setting.
+ * GL_TEXTURE_MIN_FILTER to GL_NEAREST
+ * GL_TEXTURE_MAG_FILTER to GL_NEAREST
+ * GL_TEXTURE_WRAP_S to GL_REPEAT
+ * GL_TEXTURE_WRAP_T to GL_REPEAT
+ */
 void SetDefaultParameterSetting(CTexture2D& texture) {
     using element::texture::_internal::TextureParameter;
     std::vector<TextureParameter> t_p;  /*! Default Texture parameters */
@@ -78,10 +83,10 @@ CTexture2D::~CTexture2D() {
     if (m_texture) glDeleteTextures(1, &m_texture);
 }
 
-CTexture2D::CTexture2D(const resource::STexture2D& container) {
+CTexture2D::CTexture2D(const resource::STexture2DAtlas& container) {
     stbi_set_flip_vertically_on_load(true);
     auto nr_channels = 0;
-    auto data = stbi_load(container.m_path.c_str(), &m_width, &m_height, &nr_channels, 0);
+    auto data = stbi_load(container.path.c_str(), &m_width, &m_height, &nr_channels, 0);
     if (data) {
         /*! Make m_texture */
         glGenTextures(1, &m_texture);
@@ -89,18 +94,21 @@ CTexture2D::CTexture2D(const resource::STexture2D& container) {
         const auto fmt = ColorFormat(nr_channels);
         glTexImage2D(GL_TEXTURE_2D, 0, fmt, m_width, m_height, 0, fmt, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
         SetDefaultParameterSetting(*this);
-        SetTextureCellInformation(container.m_nm_size, m_cell_number, m_texture_cell_size);
+
+        if (container.has_atlas) {
+            is_atlas = true;
+            m_texels = &container.texels;
+        }
     }
-    else
-        std::cerr << "FAILED::LOAD::TEXTURE" + container.m_path << std::endl;
+    else {
+        PUSH_LOG_ERRO(L"Failed load textrue, ");
+    }
 
     stbi_image_free(data);
 }
 
-CTexture2D::CTexture2D(const GLint internal_format,
-                     GLenum format, GLenum type, GLsizei width, GLsizei height) {
+CTexture2D::CTexture2D(const GLint internal_format, GLenum format, GLenum type, GLsizei width, GLsizei height) {
     /*! Temporary */
     m_width = 256;
     m_height = 224;

@@ -139,7 +139,7 @@ std::vector<T> CreateAtlasInformationList(nlohmann::json& atlas_json, const std:
         throw std::runtime_error("Invalid type specifier, offset_x must be array.");
     }
 
-    const auto list = atlas_json[list_name.c_str()].get<std::vector<T>>();
+    const auto list = atlas_json[list_name].get<std::vector<T>>;
     if (list.size() != resource->fragment_number) {
         PushLog(LOG_TYPE_ERRO, L"offset_x list size must be same as fragment_number value.");
         throw std::runtime_error("List size is not same as fragment_number.");
@@ -149,20 +149,13 @@ std::vector<T> CreateAtlasInformationList(nlohmann::json& atlas_json, const std:
 }
 
 void MakeTexelInformation(resource::STexture2DAtlas& container) {
-    const auto texture_width  = container.width;
-    const auto texture_height = container.height;
+    auto texture_width  = container.width;
+    auto texture_height = container.height;
     for (auto i = 0u, size = container.fragment_number; i < size; ++i) {
         auto& texel         = container.texels[i];
         const auto& info    = container.fragment[i];
 
-        const auto start_x  = static_cast<float>(info.offset_x) / texture_width;
-        const auto start_y  = 1.f - (static_cast<float>(info.offset_y) / texture_height);
-        const auto end_x    = static_cast<float>(info.offset_x + info.width) / texture_width;
-        const auto end_y    = 1.f - (static_cast<float>(info.offset_y + info.height) / texture_height);
-        texel.right_up[0]   = end_x;
-        texel.right_up[1]   = start_y;
-        texel.left_down[0]  = start_x;
-        texel.left_down[1]  = end_y;
+        auto start_x = static_cast<float>(info.offset_x) / texture_width;
     }
 }
 
@@ -230,7 +223,7 @@ resource::STexture2DAtlas MakeTexture2DAtlasContainer(std::stringstream& line_st
         throw std::runtime_error("Failed to read resource file.");
     }
 
-    return MakeTextureAtlasInformation(file, global_path + local_texture_path);
+    return MakeTextureAtlasInformation(file, atlas_path);
 }
 
 /*!
@@ -429,8 +422,7 @@ const resource::SShader& MResourceManager::GetShader(const std::string& name_key
         PushLog(LOG_TYPE_ERRO, log.c_str());
         PushLog(LOG_TYPE_ERRO, L"Return dummy shader...");
 #endif /*! Log error message in Debug mode */
-        /*! Temporary */
-        throw std::runtime_error("GetShader error");
+        return;
 	}
 
     return m_shaders[name_key];
@@ -443,8 +435,7 @@ const resource::STexture2DAtlas& MResourceManager::GetTexture2D(const std::strin
         log.append(std::cbegin(name_key), std::cend(name_key));
         PushLog(LOG_TYPE_ERRO, log.c_str());
 #endif /*! Log error message in Debug mode */
-        /*! Temporary */
-        throw std::runtime_error("GetTexture2D error");
+        return;
 	}
 
     return m_textures[name_key];
@@ -457,16 +448,15 @@ const resource::SSound& MResourceManager::GetSound(const std::string& name_key) 
         log.append(std::cbegin(name_key), std::cend(name_key));
         PushLog(LOG_TYPE_ERRO, log.c_str());
 #endif /*! Log error message in Debug mode */
-        /* Temporary */
-        throw std::runtime_error("GetSound error");
+        return;
     }
 
     return m_sounds[name_key];
 }
 
 std::pair<bool, const resource::SFont*> MResourceManager::GetFont(const std::string & name_key) {
-    if (ExistKey(m_fonts, name_key))
-        return { true, &m_fonts[name_key] };
+    if (NOT ExistKey(m_fonts, name_key))
+        return { true, &m_fonts.at(name_key) };
     else
         return { false, nullptr };
 }

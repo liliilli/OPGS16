@@ -60,43 +60,38 @@ namespace _internal {
  *
  */
 class CSpriteRendererImpl final {
-private:
-    using IndexSize = opgs16::resource::STexture2D::IndexSize;
-
 public:
     /** Make Sprite2DRenderer instance. (Constructor) */
-	CSpriteRendererImpl(const std::string& sprite_tag,
-                        const std::string& shader_tag,
-                        const opgs16::resource::STexture2D::IndexSize& texture_index,
-                        unsigned layer);
+	CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag,
+                        const unsigned texture_index);
 
-    inline ShaderWrapper& Wrapper() {
+    ShaderWrapper& Wrapper() {
         return m_wrapper;
     }
 
-    inline const IndexSize& TextureIndex() const noexcept {
-        return m_index;
+    /*! Get texture fragment index. if this does not handle atlas, return 0 */
+    const unsigned TextureIndex() const noexcept {
+        return m_texture_fragment_index;
     }
 
-    inline void SetTextureIndex(const IndexSize& new_index) noexcept {
-        m_index = new_index;
-        m_wrapper.ReplaceUniformValue("uTexIndex", glm::vec2{ m_index.x_sep, m_index.y_sep });
-    }
+    /*!
+     * @brief Set texture fragment index with new_index value.
+     * @param[in] new_index
+     */
+    void SetTextureIndex(const unsigned new_index) noexcept;
 
-    inline void SetTexture(const std::string& texture_name) {
-        m_sprite = manager::TextureManager::Instance().GetTexture(texture_name);
-        auto [cell_x, cell_y] = m_sprite->CellSize();
-        m_wrapper.ReplaceUniformValue("uWHSize", glm::vec2{ cell_x, cell_y });
-    }
+    /*!*/
+    void SetTexture(const std::string& texture_name) noexcept;
 
+    /*!*/
     void RenderSprite();
 
 private:
-	texture::CTexture2D* m_sprite;	/** Sprite 2d texture stores image information. */
-	VertexArrayObject m_vao;	    /** Quad VAO to render sprite on screen. */
-	ShaderWrapper m_wrapper;		/** Shader is in ShaderManager, render sprite. */
+	texture::CTexture2D* m_sprite;	/*! Sprite 2d texture stores image information. */
+	VertexArrayObject m_vao;	    /*! Quad VAO to render sprite on screen. */
+	ShaderWrapper m_wrapper;		/*! Shader is in ShaderManager, render sprite. */
 
-    IndexSize m_index;
+    unsigned m_texture_fragment_index;
     GLuint empty_vao;
 };
 

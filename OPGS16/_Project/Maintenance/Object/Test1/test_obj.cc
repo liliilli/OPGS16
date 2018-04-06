@@ -13,10 +13,10 @@ TestObject1::TestObject1(const int i, const float size) {
 
     {
         using opgs16::component::CSprite2DRenderer;
-        AddComponent<CSprite2DRenderer>(*this, "128_" + std::to_string(i), "gQuad");
+        AddComponent<CSprite2DRenderer>(*this, "128", "gQuad");
         m_wrapper = &GetComponent<CSprite2DRenderer>()->Wrapper();
-        m_wrapper->InsertUniformValue<glm::mat4>("projection", glm::mat4{});
-        m_wrapper->InsertUniformValue<float>("alpha", 1.0f);
+        m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
+        m_wrapper->SetUniformValue<float>("alpha", 1.0f);
 
         using opgs16::component::CAnimator;
         AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), opgs16::Switch::ON);
@@ -29,7 +29,7 @@ void TestObject1::Render() {
     using opgs16::manager::MSceneManager;
     auto PVM = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
 
-    m_wrapper->ReplaceUniformValue<glm::mat4>("projection", PVM);
+    m_wrapper->SetUniformValue<glm::mat4>("projection", PVM);
     using opgs16::component::CSprite2DRenderer;
     GetComponent<CSprite2DRenderer>()->RenderSprite();
 }

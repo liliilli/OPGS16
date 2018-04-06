@@ -33,6 +33,7 @@
  * @author Jongmin Yun
  * @log
  * 2018-03-07 Move file to /Component and Add boilerplate comments.
+ * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
  */
 
 #include "../Public/sprite_renderer.h"              /*! Header file */
@@ -43,12 +44,10 @@ namespace opgs16 {
 namespace component {
 
 CSprite2DRenderer::CSprite2DRenderer(element::CObject& bind_object,
-                                   const std::string& sprite_tag,
-                                   const std::string& shader_tag,
-                                   const opgs16::resource::STexture2D::IndexSize& texture_index,
-                                   const unsigned layer) :
-    CRendererBase{ bind_object, layer },
-    m_impl { new _internal::CSpriteRendererImpl(sprite_tag, shader_tag, texture_index, layer) } {
+                                     const std::string& sprite_tag, const std::string& shader_tag,
+                                     const unsigned texture_index, const unsigned render_layer) :
+    CRendererBase{ bind_object, render_layer },
+    m_impl { new _internal::CSpriteRendererImpl(sprite_tag, shader_tag, texture_index) } {
 }
 
 ShaderWrapper& CSprite2DRenderer::Wrapper() const {
@@ -59,14 +58,14 @@ void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
     return m_impl->SetTexture(texture_name);
 }
 
-const CSprite2DRenderer::IndexSize& CSprite2DRenderer::TextureIndex() const noexcept {
+const unsigned CSprite2DRenderer::TextureIndex() const noexcept {
     return m_impl->TextureIndex();
 }
 
 // ReSharper disable CppMemberFunctionMayBeConst
-void CSprite2DRenderer::SetTextureIndex(const IndexSize& new_index) {
+void CSprite2DRenderer::SetTextureIndex(const unsigned index_value) {
     // ReSharper restore CppMemberFunctionMayBeConst
-    m_impl->SetTextureIndex(new_index);
+    m_impl->SetTextureIndex(index_value);
 }
 
 // ReSharper disable CppMemberFunctionMayBeConst

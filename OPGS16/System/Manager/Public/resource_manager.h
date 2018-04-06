@@ -1,5 +1,5 @@
-#ifndef OPGS16_MANAGER_RESOURCE_MANAGER_H
-#define OPGS16_MANAGER_RESOURCE_MANAGER_H
+#ifndef OPGS16_SYSTEM_MANAGER_PUBLIC_RESOURCE_MANAGER_H
+#define OPGS16_SYSTEM_MANAGER_PUBLIC_RESOURCE_MANAGER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -38,23 +38,22 @@
  * 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
  * 2018-03-02 Move ResourceManager class inside opgs16::manager namespace for uniformation.
  * 2018-03-03 Refactored and removed member functions are not appropriate for class.
+ * 2018-04-06 Support Texture2DAtlas instead of plain Texture2D which not support atlas information.
  */
 
 #include <string>				/** std::string */
-#include <unordered_map>		/** std::unordered_map */
+#include <map>                  /*! std::map */
 
 #include "resource_type.h"      /*! resource:: */
 #include "../../../Headers/Fwd/objectfwd.h"
 
 namespace opgs16 {
-/*! Namespace for manager */
-namespace manager {
+namespace manager { /*! Namespace for manager */
 
 /*!
  * @class MResourceManager
  * @brief This class is singleton and not derivable as derived class.
- * ResourceManager has a rule of managing resource files path, each shader path,
- * , error statement path and so on.
+ * ResourceManager has a rule of managing resource files path, each shader path, error statement path and so on.
  *
  * ResrouceManager has to be called (invoked) when game application is setting up, before
  * actual game update has been begun.
@@ -64,17 +63,15 @@ namespace manager {
  * 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
  * 2018-03-02 Move to opgs16::manager namespace.
  * 2018-03-03 Move private functions which don't match class to non-member function.
- *
- * @todo
- * 2018-02-28 CheckError method must have a procedure to bring error message display call to logger.
+ * 2018-04-06 Support Texture2DAtlas instead of plain Texture2D which not support atlas information.
  */
 class MResourceManager final {
 public:
     /*! Resource map list */
-    using texture_map       = std::unordered_map<std::string, resource::STexture2D>;
-    using sound_map         = std::unordered_map<std::string, resource::SSound>;
-    using shader_map        = std::unordered_map<std::string, resource::SShader>;
-    using font_map          = std::unordered_map<std::string, resource::SFont>;
+    using texture_map       = std::map<std::string, resource::STexture2DAtlas>;
+    using sound_map         = std::map<std::string, resource::SSound>;
+    using shader_map        = std::map<std::string, resource::SShader>;
+    using font_map          = std::map<std::string, resource::SFont>;
 
 public:
 	/*! Return single static instance. This must be called in initiation time once. */
@@ -98,7 +95,7 @@ public:
 	 * @param[in] name_key Wrapping tag name of actual sprite path.
 	 * @return Selected 2D texture path.
 	 */
-	const resource::STexture2D& GetTexture2D(const std::string& name_key);
+	const resource::STexture2DAtlas& GetTexture2D(const std::string& name_key);
 
     /*!
      * @brief Get specified sound path information.
@@ -114,21 +111,11 @@ public:
      */
     std::pair<bool, const resource::SFont*> GetFont(const std::string& name_key);
 
-	/*! Check error caused by processing in this class instance. */
-	void CheckError();
-
 private:
 	texture_map m_textures;         /*! Texture string container */
 	shader_map  m_shaders;          /*! Shader arguments container */
     sound_map   m_sounds;           /*! Sounds path string container */
     font_map    m_fonts;            /*! Font path information container */
-
-	/** Used for checking error invoked when this methods process something. */
-	enum class ErrorType {
-		OK,							/** Default type, everything is ok. */
-		FAILED_INITIALIZE_SHADER,	/** Invoked when failed to input shader information. */
-		FAILED_INITIALIZE_TEXTURE2D,/** Invoked when failed to input texture information. */
-	} m_error{ ErrorType::OK };
 
 private:
     /*! Read resource along with resource_type */
@@ -136,33 +123,24 @@ private:
                       const std::string& global_path, resource::_internal::EResourceType type);
 
 	void PushShader(const std::string& name_key, const resource::SShader& list);
-	void PushTexture2D(const std::string& name_key, const resource::STexture2D& container);
+	void PushTexture2D(const std::string& name_key, const resource::STexture2DAtlas& container);
     void PushSound(const std::string& name_key, const resource::SSound& container);
     void PushFont(const std::string& name_key, const resource::SFont& container);
 
-	inline bool ExistShaderKey(const std::string& name_key) const {
-		return m_shaders.find(name_key) != m_shaders.end();
+    template <typename _Ty>
+	inline bool ExistKey(const std::map<std::string, _Ty>& container, const std::string& name_key) const {
+		return container.find(name_key) != container.end();
 	}
-	inline bool ExistTextureKey(const std::string& name_key) const {
-		return m_textures.find(name_key) != m_textures.end();
-	}
-    inline bool ExistSoundKey(const std::string& name_key) const {
-        return m_sounds.find(name_key) != m_sounds.end();
-    }
-    inline bool ExistFontKey(const std::string& name_key) const {
-        return m_fonts.find(name_key) != m_fonts.end();
-    }
 
 private:
     MResourceManager() = default;
 
 public:
 	MResourceManager(const MResourceManager&) = delete;
-	MResourceManager(const MResourceManager&&) = delete;
+	MResourceManager& operator=(const MResourceManager&) = delete;
 };
 
 } /*! opgs16::manager */
-
 } /*! opgs16 */
 
-#endif /** OPGS16_MANAGER_RESOURCE_MANAGER_H */
+#endif /** OPGS16_SYSTEM_MANAGER_PUBLIC_RESOURCE_MANAGER_H */

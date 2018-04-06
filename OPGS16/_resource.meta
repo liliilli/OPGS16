@@ -9,10 +9,6 @@ FONT BIOS G Fonts/PxPlus_IBM_BIOS.ttf 0
 
 # SHADERS
 
-# SHADE ppQuad G
-# - VS Shader/Global/quad.vert
-# - FS Shader/Global/quad.frag
-
 SHADE ppConvex G
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/convex.frag

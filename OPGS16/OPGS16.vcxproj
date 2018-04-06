@@ -214,6 +214,8 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\import_logger.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="System\Components\Internal\animator_internal.h" />
     <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
@@ -433,7 +435,11 @@
     <None Include="_Setting\tag.meta" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\Sprites\System.png" />
     <Image Include="Resources\_system.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OPGS16.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
