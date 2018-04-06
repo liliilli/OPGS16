@@ -10,3 +10,4 @@ SEBGM Music1 G sample.wav
 # TEXTURES
 TEX2DATLAS 128 L Sprite/128128.png Sprite/128128Atlas.json
 TEX2DATLAS AnimChar L Sprite/character.png Sprite/characterAtlas.json
+TEX2D 128Plain L Sprite/128128.png

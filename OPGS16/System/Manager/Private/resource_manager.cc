@@ -214,7 +214,7 @@ resource::STexture2DAtlas MakeTexture2DAtlasContainer(std::stringstream& line_st
     std::string local_atlas_path; line_stream >> local_atlas_path;
 #if defined(_DEBUG)
     {
-        std::wstring log; log.resize(150); log.append(L"[Texture2DAtlas][");
+        std::wstring log; log.append(L"[Texture2DAtlas][");
         log.append(local_texture_path.cbegin(), local_texture_path.cend()); log.append(L"][");
         log.append(local_atlas_path.cbegin(), local_atlas_path.cend()); log.append(L"]");
         PushLog(LOG_TYPE_INFO, log.c_str());

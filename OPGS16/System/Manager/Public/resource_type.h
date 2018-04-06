@@ -57,14 +57,6 @@ enum class EScopeType {
 
 EScopeType GetScopeType(const char type);
 
-/*!
- * @deprecated
- * Information structure of Texture2D */
-struct STexture2D {
-    EScopeType      m_type;
-    std::string     m_path;
-};
-
 struct STexture2DFragment {
     std::string name;
     unsigned offset_x, offset_y;
