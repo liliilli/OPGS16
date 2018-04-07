@@ -54,7 +54,7 @@ namespace component {
 class CAnimator final : public _internal::CComponent {
 public:
     explicit CAnimator(element::CObject& bind_object, CSprite2DRenderer& bind_renderer,
-                      Switch loop = Switch::OFF);
+                       const std::string& load_name, Switch loop = Switch::OFF);
 
     /*! Update animator each frame. */
     virtual void Update() override final;
@@ -66,7 +66,7 @@ private:
     TimerHandle m_timer;
     _internal::AnimatorState m_state;
 
-    std::vector<_internal::AnimationCell> m_cells;
+    const resource::SAnimation* m_animation{ nullptr };
     size_t m_cell_length;
     size_t m_cell_index{};
 

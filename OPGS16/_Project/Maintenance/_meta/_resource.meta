@@ -8,3 +8,6 @@ SEBGM Music1 sample.wav
 TEX2DATLAS 128 Sprite/128128.png Sprite/128128Atlas.json
 TEX2DATLAS AnimChar Sprite/character.png Sprite/characterAtlas.json
 TEX2D 128Plain Sprite/128128.png
+
+# ANIMATION
+ANIMATION Test Animation/test.anim

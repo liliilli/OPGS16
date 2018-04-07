@@ -103,9 +103,11 @@ class   SGlobalQuad2D;
 namespace resource {
 enum class EShaderType : int;
 struct  STexture2D;
+struct  STexture2DAtlas;
 class   SFont;
 class   SSound;
 class   SShader;
+struct  SAnimation;
 namespace _internal {
 enum class ESymbolType;
 enum class EResourceType;

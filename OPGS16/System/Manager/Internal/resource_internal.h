@@ -50,6 +50,7 @@ constexpr std::string_view SHADE{ "SHADE"sv };
 constexpr std::string_view SEBGM{ "SEBGM"sv };
 constexpr std::string_view SEEFF{ "SEEFF"sv };
 constexpr std::string_view FONT { "FONT"sv };
+constexpr std::string_view ANIMATION{ "ANIMATION"sv };
 
 enum class ESymbolType {
     NOTHING,                    /*! Default value of symbol type */
@@ -66,6 +67,7 @@ enum class EResourceType {
     SOUND_EFFECT_BGM,           /*! SE background music */
     SOUND_EFFECT_EFFECT,        /*! SE effect sound */
     FONT,                       /*! Font file (.ttf) */
+    ANIMATION,                  /*! Animation film */
 };
 
 } /*! opgs16::resource::_internal */

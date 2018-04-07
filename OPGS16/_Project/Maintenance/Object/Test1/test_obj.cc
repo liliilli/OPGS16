@@ -20,7 +20,7 @@ TestObject1::TestObject1(const int i, const float size) {
         m_wrapper->SetUniformValue<float>("alpha", 1.0f);
 
         using opgs16::component::CAnimator;
-        AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), opgs16::Switch::ON);
+        AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), "Test", opgs16::Switch::ON);
     }
 
     AddComponent<ObjectScript1>(*this);

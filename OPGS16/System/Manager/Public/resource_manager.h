@@ -72,6 +72,7 @@ public:
     using sound_map         = std::map<std::string, resource::SSound>;
     using shader_map        = std::map<std::string, resource::SShader>;
     using font_map          = std::map<std::string, resource::SFont>;
+    using animation_map     = std::map<std::string, resource::SAnimation>;
 
 public:
 	/*! Return single static instance. This must be called in initiation time once. */
@@ -111,11 +112,19 @@ public:
      */
     std::pair<bool, const resource::SFont*> GetFont(const std::string& name_key);
 
+    /*!
+     * @brief Return animation information pointer. if doesn't find return nullptr.
+     * @param[in] name_key Name tag of animation resource information you want to find
+     * @return The pointer of animation information otherwise nullptr.
+     */
+    const resource::SAnimation* GetAnimation(const std::string& name_key);
+
 private:
 	texture_map m_textures;         /*! Texture string container */
 	shader_map  m_shaders;          /*! Shader arguments container */
     sound_map   m_sounds;           /*! Sounds path string container */
     font_map    m_fonts;            /*! Font path information container */
+    animation_map m_animations;     /*! Animation films information container */
 
 private:
     /*! Read resource along with resource_type */
@@ -126,6 +135,7 @@ private:
 	void PushTexture2D(const std::string& name_key, const resource::STexture2DAtlas& container);
     void PushSound(const std::string& name_key, const resource::SSound& container);
     void PushFont(const std::string& name_key, const resource::SFont& container);
+    void PushAnimation(const std::string& name_key, const resource::SAnimation& container);
 
     template <typename _Ty>
 	inline bool ExistKey(const std::map<std::string, _Ty>& container, const std::string& name_key) const {

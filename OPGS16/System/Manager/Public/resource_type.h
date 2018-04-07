@@ -122,13 +122,31 @@ public:
 private:
     shader_list m_shader_list;
 
-
 public:
     SShader() {};
     explicit SShader(shader_list list) : m_shader_list{ list } {};
     inline const shader_list& List() const noexcept {
         return m_shader_list;
     }
+};
+
+/*!
+ * @struct SAnimationCell
+ * @brief Stores information of each cell for animation.
+ */
+struct SAnimationCell {
+    std::string m_texture_name{};
+    unsigned    m_fragment_index{ 0 };
+    unsigned    m_time_milli{ 0 };
+};
+
+/*!
+ * @struct SAnimation
+ * @brief Stores information for animation.
+ */
+struct SAnimation {
+    std::string name{};
+    std::vector<SAnimationCell> cells;
 };
 
 } /*! opgs16::resource */

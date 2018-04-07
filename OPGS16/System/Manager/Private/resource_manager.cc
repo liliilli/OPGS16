@@ -45,19 +45,12 @@
 #include <utility>		/*! std::pair */
 
 #include "../../../__ThirdParty/nlohmann/json.hpp"  /*! Third-party json library */
+
 #include "../Internal/resource_internal.h"
+#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
 #define NOT !
 
-#if defined(_DEBUG)
-#include "../../Core/Public/logger.h"
-using opgs16::debug::PushLog;
-using opgs16::debug::LOG_TYPE_INFO;
-using opgs16::debug::LOG_TYPE_WARN;
-using opgs16::debug::LOG_TYPE_ERRO;
-#endif /*! opgs16::debug::PushLog only on _DEBUG */
-
 namespace opgs16 {
-
 namespace { /*! Helper free function. */
 
 using resource::_internal::EResourceType;
@@ -97,6 +90,7 @@ EResourceType GetResourceType(const std::string_view& resource_token) {
     if (resource_token == SEBGM)    return EResourceType::SOUND_EFFECT_BGM;
     if (resource_token == SEEFF)    return EResourceType::SOUND_EFFECT_EFFECT;
     if (resource_token == FONT)     return EResourceType::FONT;
+    if (resource_token == ANIMATION)return EResourceType::ANIMATION;
     return EResourceType::NOTHING;
 }
 
@@ -215,7 +209,7 @@ resource::STexture2DAtlas MakeTexture2DAtlasContainer(std::stringstream& line_st
         std::wstring log; log.append(L"[Texture2DAtlas][");
         log.append(local_texture_path.cbegin(), local_texture_path.cend()); log.append(L"][");
         log.append(local_atlas_path.cbegin(), local_atlas_path.cend()); log.append(L"]");
-        PushLog(LOG_TYPE_INFO, log.c_str());
+        PUSH_LOG_INFO(log.c_str());
     }
 #endif /*! Print local pathes */
 
@@ -306,6 +300,51 @@ resource::SFont MakeFontContainer(std::stringstream& line_stream, const std::str
     return resource::SFont{ global_path + local_path, is_default };
 };
 
+/*!
+ * @brief Make animation film container.
+ * @param[in] line_stream
+ * @param[in] global_path
+ * @return
+ */
+resource::SAnimation MakeAnimationContainer(std::stringstream& line_stream, const std::string& global_path) {
+    std::string path; line_stream >> path; path = global_path + path;
+    std::ifstream animation_file{ path, std::ios_base::in };
+    if (NOT animation_file.good()) {
+#if defined(_DEBUG)
+        {
+            std::wstring log{ L"Failed to load animation file. " };
+            log.append(std::cbegin(path), std::cend(path));
+            PUSH_LOG_ERRO(log.c_str());
+        }
+#endif
+        throw std::runtime_error{ "Failed to read animation file." };
+    }
+
+    resource::SAnimation container;
+    unsigned total_cell{ 0 }, total_time{ 0 };
+    std::string line;
+    while (std::getline(animation_file, line)) {
+        if (line.empty() || line[0] == '#') continue; /*! Empty line || Continue */
+        std::stringstream animation_stream{ line };
+        std::string texture2d_name; unsigned index, time_milli;
+        animation_stream >> texture2d_name >> index >> time_milli;
+        container.cells.emplace_back(resource::SAnimationCell{ texture2d_name, index, time_milli });
+
+        ++total_cell;
+        total_time += time_milli;
+    }
+#if defined(_DEBUG)
+    {
+        std::wstring log{ L"[Animation][" };
+        log.append(std::cbegin(path), std::cend(path)); log += L"][Total:";
+        log += std::to_wstring(total_cell); log += L"][Time:";
+        log += std::to_wstring(total_time); log += L"]";
+        PUSH_LOG_INFO(log.c_str());
+    }
+#endif
+    return container;
+}
+
 } /*! unnamed namespace */
 
 namespace manager {
@@ -315,9 +354,7 @@ bool MResourceManager::ReadResourceFile(const wchar_t* path) {
     file_stream.imbue(std::locale(""));
 
     if (file_stream.good()) {
-#if defined(_DEBUG)
-        PushLog(LOG_TYPE_WARN, (std::wstring{ L"Opened resource meta file : " } + path).c_str());
-#endif
+        PUSH_LOG_WARN((std::wstring{ L"Opened resource meta file : " } + path).c_str());
         std::string global_path, file_line;
         while (std::getline(file_stream, file_line)) {
             if (file_line.empty()) continue;
@@ -326,9 +363,7 @@ bool MResourceManager::ReadResourceFile(const wchar_t* path) {
             default: break;
             case ESymbolType::GLOBAL_PATH:
                 global_path = token;
-#if defined(_DEBUG)
-                PushLog(LOG_TYPE_WARN, std::wstring(global_path.begin(), global_path.end()).c_str());
-#endif
+                PUSH_LOG_WARN(std::wstring(global_path.begin(), global_path.end()).c_str());
                 break;
             case ESymbolType::RESOURCE:
                 ReadResource(file_line, file_stream, global_path, GetResourceType(token));
@@ -339,17 +374,14 @@ bool MResourceManager::ReadResourceFile(const wchar_t* path) {
         return file_stream.eof();
     }
     else {
-#if defined(_DEBUG)
-        PushLog(LOG_TYPE_ERRO, (std::wstring{ L"Cannot open the file : " } + path).c_str());
-#endif
+        PUSH_LOG_ERRO((std::wstring{ L"Cannot open the file : " } + path).c_str());
         return false;
     }
 }
 
 void MResourceManager::ReadResource(const std::string& token_line,
-                                   std::ifstream& stream,
-                                   const std::string& global_path,
-                                   EResourceType type) {
+                                    std::ifstream& stream, const std::string& global_path,
+                                    EResourceType type) {
     std::stringstream line_stream{ token_line };
     /*! Just drop first token */
     {
@@ -383,6 +415,10 @@ void MResourceManager::ReadResource(const std::string& token_line,
         std::string tag;    line_stream >> tag;
         PushFont(tag, MakeFontContainer(line_stream, global_path));
     }   break;
+    case EResourceType::ANIMATION: {
+        std::string tag;    line_stream >> tag;
+        PushAnimation(tag, MakeAnimationContainer(line_stream, global_path));
+    }   break;
     }
 }
 
@@ -413,6 +449,12 @@ void MResourceManager::PushFont(const std::string& name_key, const resource::SFo
     if (ExistKey(m_fonts, name_key))
         throw std::runtime_error("Font Key duplicated :: " + name_key);
     m_fonts.emplace(name_key, container);
+}
+
+void MResourceManager::PushAnimation(const std::string& name_key, const resource::SAnimation& container) {
+    if (ExistKey(m_animations, name_key))
+        throw std::runtime_error("Animation duplicated :: " + name_key);
+    m_animations.emplace(name_key, container);
 }
 
 const resource::SShader& MResourceManager::GetShader(const std::string& name_key) {
@@ -463,6 +505,20 @@ std::pair<bool, const resource::SFont*> MResourceManager::GetFont(const std::str
         return { true, &m_fonts[name_key] };
     else
         return { false, nullptr };
+}
+
+const resource::SAnimation* MResourceManager::GetAnimation(const std::string& name_key) {
+    if (NOT ExistKey(m_animations, name_key)) {
+#if defined(_DEBUG)
+        std::wstring log{ L"Does not found proper sound, " };
+        log.append(std::cbegin(name_key), std::cend(name_key));
+        PUSH_LOG_ERRO(log.c_str());
+#endif /*! Log error message in Debug mode */
+        /* Temporary */
+        throw std::runtime_error("GetSound error");
+    }
+
+    return &m_animations[name_key];
 }
 
 } /*! opgs16::manager */
