@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_MANAGER_SCENE_MANAGER_H
-#define OPGS16_SYSTEM_MANAGER_SCENE_MANAGER_H
+#ifndef OPGS16_SYSTEM_MANAGER_PUBLIC_SCENE_MANAGER_H
+#define OPGS16_SYSTEM_MANAGER_PUBLIC_SCENE_MANAGER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -36,6 +36,7 @@
  * @log
  * 2018-02-14 Create file.
  * 2018-03-04 Refactoring.
+ * 2018-04-08 Add a macro, detach automatic initiation from push scene.
  */
 
 #include <memory>
@@ -64,7 +65,6 @@ public:
     /*!
      * @brief The method that adds scene to scene stack.
      * Add scene to scene stack stores scenes is paused, and move to top scene.
-     *
      * @param[in] _Ty* Type parameter is based on Scene, value must be nullptr to prevent
      * double initiation of scene.
      */
@@ -88,7 +88,7 @@ public:
         >
     >
     void ReplaceScene() {
-        auto& app = opgs16::MApplication::Instance();
+        auto& app = MApplication::Instance();
         app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivateReplaceScene<_Ty>, this));
     }
 
@@ -99,11 +99,20 @@ public:
      */
     void PopScene();
 
-   /*!
+    /*!
+     * @brief Initiate top scene.
+     */
+    void InitiateTopScene() {
+        m_scenes.top()->Initiate();
+    }
+
+    /*!
     * @brief
     * @return
     */
-    inline scene_stack& GetLoadedSceneList() noexcept { return m_scenes; }
+    inline scene_stack& GetLoadedSceneList() noexcept {
+        return m_scenes;
+    }
 
     /*!
      * @brief Get top scene's pointer.
@@ -131,12 +140,19 @@ private:
         >
     >
     void PrivateReplaceScene() {
-         /*! Purify remain resources */
-         ReleaseAllResources();
-         /** Pop present scene */
-         m_scenes.pop();
-         /** Push present scene */
-         PushScene<_Ty>();
+        /*! Purify remain resources */
+        ReleaseAllResources();
+        /** Pop present scene */
+        m_scenes.pop();
+        /** Push present scene */
+        PushScene<_Ty>();
+        InitiateTopScene();
+    }
+
+    void PrivatePopScene() {
+        ReleaseAllResources();
+        if (!m_scenes.empty())      m_scenes.pop();
+        if (m_scenes.size() >= 1)   InitiateTopScene();
     }
 
 private:
@@ -151,7 +167,6 @@ public:
 template <class _Ty, typename>
 void MSceneManager::PushScene() {
     m_scenes.push(std::make_unique<_Ty>());
-    m_scenes.top()->Initiate();
 }
 
 inline Scene* const MSceneManager::PresentScene() {
@@ -167,6 +182,13 @@ inline bool MSceneManager::Empty() const noexcept {
 } /*! opgs16 */
 
 #define M_REPLACE_SCENE(__scene_name__) \
-opgs16::manager::SceneManager::Instance().ReplaceScene<__scene_name__>()
+opgs16::manager::MSceneManager::Instance().ReplaceScene<__scene_name__>()
+
+#define M_PUSH_SCENE(__scene_name__, __automatical_initiate__) \
+opgs16::manager::MSceneManager::Instance().PushScene<__scene_name__>(); \
+if (__automatical_initiate__) opgs16::manager::MSceneManager::Instance().InitiateTopScene()
+
+#define M_POP_SCENE(__scene_name__) \
+opgs16::manager::MSceneManager::Instance().PopScene();
 
 #endif // !OPGS16_SYSTEM_MANAGER_SCENE_MANAGER_H

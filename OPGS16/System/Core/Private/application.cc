@@ -32,6 +32,12 @@
 #include <string_view>                          /*! std::string_view */
 #include "../Public/core_header.h"              /*! Subsequential header files */
 #include "../Public/core_setting.h"
+#include "../../../manifest.h"                  /*! opgs16::manifest */
+#include "../../Boot/Scene/Public/__boot.h"     /*! opgs16::manifest::sample::boot */
+
+#if defined(_INITIAL_SCENE_INCLUDE_PATH)
+#include _INITIAL_SCENE_INCLUDE_PATH
+#endif
 
 namespace opgs16 {
 
@@ -96,7 +102,7 @@ GLFWwindow* MApplication::InitApplication(const std::string& app_name) const {
 }
 
 void MApplication::Initiate() {
-	if (GetPresentStatus() == GameStatus::INIT) {
+    if (GetPresentStatus() == GameStatus::INIT) {
         /*! Initialize Global Setting. */
         m_resource_manager.ReadResourceFile(g_global_resource_path.data());
 
@@ -114,10 +120,34 @@ void MApplication::Initiate() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
 
-		/** Insert first scene */
+#if defined(_CUSTOM_PROJECT)
+#if defined(_RESOURCE_SETTING_FILE_PATH)
         m_resource_manager.ReadResourceFile(L"_Project/Maintenance/_meta/_resource.meta");
-        m_scene_manager.PushScene<Maintenance>();
+#else
+        static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+#endif
+
+#if defined(_RESOURCE_SETTING_FILE_PATH)
+#if defined(_INITIAL_SCENE_FULL_NAME)
+#if !_SHOW_BOOT_SCREEN
+        M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
 		ReplacePresentStatus(GameStatus::PLAYING);
+#else
+        // SHOW BOOT LOGO
+        M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
+        M_PUSH_SCENE(__BOOT, true);
+		ReplacePresentStatus(GameStatus::PLAYING);
+#endif
+#endif
+#else
+        static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+#endif
+#else
+        // SHOW BOOT LOGO
+        // GOTO SAMPLE GAME
+        M_PUSH_SCENE(__BOOT, true);
+		ReplacePresentStatus(GameStatus::PLAYING);
+#endif
 	}
 }
 

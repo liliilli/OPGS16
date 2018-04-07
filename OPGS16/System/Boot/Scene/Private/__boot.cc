@@ -27,40 +27,27 @@
  */
 
 /*!
- * @file System/Manager/Private/scene_manager.cc
+ * @file System/Boot/Scene/__boot.cc
+ * @brief Image object used in Canvas hierarchy.
  * @author Jongmin Yun
- *
  * @log
- * 2018-03-04 Refactoring.
+ * 2018-04-07 Activate file and add comments.
  */
 
-#include "../Public/scene_manager.h"        /*! Header file */
+#include "../Public/__boot.h"   /*! Header file */
+#include <GL/glew.h>            /*! OpenGL functions */
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
+#include "../../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
+#include "../../Object/___1/__b_canv.h" /*! opgs16::builtin::sample::__B_CANV */
 
-namespace opgs16 {
-namespace manager {
-
-void MSceneManager::PopScene() {
-    auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
+void __BOOT::Draw() {
+    glClearColor(0, 0, .8f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	Scene::Draw();
 }
 
-void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
+void __BOOT::Initiate() {
+    auto main_camera = std::make_unique<MainCameraObject>();
+    Instantiate("Camera", main_camera);
+    Instantiate<__B_CANV>("GameCanvas");
 }
-
-MSceneManager::~MSceneManager() = default;
-
-} /*! opgs16::manager */
-} /*! opgs16 */

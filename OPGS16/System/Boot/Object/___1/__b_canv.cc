@@ -26,41 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Manager/Private/scene_manager.cc
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/__b_canv.cc
  * @author Jongmin Yun
- *
  * @log
- * 2018-03-04 Refactoring.
- */
+ * 2018-04-08 Activate file and add comments.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/scene_manager.h"        /*! Header file */
+#include "__b_canv.h"                           /*! Header file */
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
+#include <glm/glm.hpp>
+#include "../../Scripts/Public/__b_scr.h"       /*! __B_SCR */
+#include "../../../../GlobalObjects/Canvas/image.h"/*! canvas::Image */
 
-namespace opgs16 {
-namespace manager {
-
-void MSceneManager::PopScene() {
-    auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
+__B_CANV::__B_CANV() {
+    auto image = Instantiate<canvas::Image>("Logo", "System", this);
+    image->SetWorldPosition({ 0, 160, 0 });
+    AddComponent<__B_SCR>(*this);
 }
-
-void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
-}
-
-MSceneManager::~MSceneManager() = default;
-
-} /*! opgs16::manager */
-} /*! opgs16 */

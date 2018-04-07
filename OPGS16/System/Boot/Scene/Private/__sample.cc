@@ -27,40 +27,30 @@
  */
 
 /*!
- * @file System/Manager/Private/scene_manager.cc
+ * @file System/Boot/Scene/Private/__sample.cc
+ * @brief Sample game scene.
  * @author Jongmin Yun
- *
  * @log
- * 2018-03-04 Refactoring.
+ * 2018-04-07 Create file.
  */
 
-#include "../Public/scene_manager.h"        /*! Header file */
-
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
+#include "../Public/__sample.h" /*! Header file */
+#include <GL/glew.h>            /*! OpenGL functions */
 
 namespace opgs16 {
-namespace manager {
+namespace builtin {
+namespace sample {
 
-void MSceneManager::PopScene() {
-    auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
+void SampleGame::Initiate() {
+    glClearColor(.2f, 0, 0, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	Scene::Draw();
 }
 
-void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
+void SampleGame::Draw() {
+
 }
 
-MSceneManager::~MSceneManager() = default;
-
-} /*! opgs16::manager */
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
 } /*! opgs16 */

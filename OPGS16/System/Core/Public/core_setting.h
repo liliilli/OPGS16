@@ -39,13 +39,13 @@
  */
 
 #include <array>        /*! std::array */
-#include <stack>        /*! std::stack */
 #include <type_traits>  /*! std::underlying_type<> */
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
-#include "../../../Headers/Fwd/objectfwd.h" /*! enum class GameStatus : size_t */
 #include "../../Helper/Public/switch.h"     /*! opgs16::Switch enum class */
+#define _OPGS16_VERSION_MAJOR 0
+#define _OPGS16_VERSION_MINOR 1
+#define _OPGS16_VERSION_FIXED 0
+#define _OPGS16_CODENAME Dragonload
 
 namespace opgs16 {
 

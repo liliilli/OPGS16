@@ -2,11 +2,13 @@
 	"texture_name": "SystemSprite",
 	"texture_width": 256,
 	"texture_height": 256,
-	"item_number": 8,
-	"index": [0, 1, 2, 3, 4, 5, 6, 7],
-	"name": ["BoxGreen1", "BoxYellow2", "BoxBlue3", "BoxRed4", "LogoPlainW", "LogoPlainB", "LogoBoxedB", "LogoBoxedW"],
-	"offset_x": [0, 32, 64, 128, 0, 0, 0, 0],
-	"offset_y": [0, 0, 	0, 	0, 32, 51, 70, 95],
-	"fragment_width": [32, 32, 32, 32, 177, 177, 192, 192],
-	"fragment_height": [32, 32, 32, 32, 19, 19, 25, 25]
+	"item_number": 10,
+	"index": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	"name": ["BoxGreen1", "BoxYellow2", "BoxBlue3", "BoxRed4", 
+		"LogoPlainW", "LogoPlainB", "LogoBoxedB", "LogoBoxedW",
+		"Hand", "CheckerRW"],
+	"offset_x": [0, 32, 64, 128, 0, 0, 0, 0, 144, 160],
+	"offset_y": [0, 0, 	0, 	0, 33, 51, 70, 95, 0, 0],
+	"fragment_width": [32, 32, 32, 32, 177, 177, 192, 192, 16, 32],
+	"fragment_height": [32, 32, 32, 32, 19, 19, 25, 25, 16, 32]
 }

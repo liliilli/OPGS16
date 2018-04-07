@@ -1,3 +1,6 @@
+#ifndef OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H
+#define OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H
+
 /*!
  * @license BSD 2-Clause License
  *
@@ -26,41 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Manager/Private/scene_manager.cc
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-04 Refactoring.
- */
+#include "../../../../System/Frame/scene.h"    /*! Scene */
 
-#include "../Public/scene_manager.h"        /*! Header file */
+class __BOOT final : public Scene {
+    void Initiate() override final;
+    void Draw() override final;
+};
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
-
-namespace opgs16 {
-namespace manager {
-
-void MSceneManager::PopScene() {
-    auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
-}
-
-void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
-}
-
-MSceneManager::~MSceneManager() = default;
-
-} /*! opgs16::manager */
-} /*! opgs16 */
+#endif // OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H

@@ -35,9 +35,8 @@
  * @log
  * 2018-03-10 Create file, Add state enum.
  * 2018-04-06 Change AnimationCell::m_index to AnimationCell::m_fragment_index.
+ * 2018-04-07 Remove _internal::AnimationCell because of it also can be replaced with resource::SAnimationCell.
  */
-
-#include <string>   /*! std::string */
 
 namespace opgs16 {
 namespace component {
@@ -50,34 +49,6 @@ enum class AnimatorState {
     ANIMATION_END,
     END,
     SLEEP
-};
-
-/*!
- * @class AnimationCell
- * @brief animation cell that stores time, texture_name, texture fragment index.
- * This is used for animating.
- * @log
- * 2018-04-06 Add comment, IndexSize to unsigned of m_fragment_index.
- */
-class AnimationCell {
-    std::string m_texture_name{};
-    unsigned    m_fragment_index{ 0 };
-    unsigned    m_time_milli{ 0 };
-
-public:
-    AnimationCell() {};
-    explicit AnimationCell(const std::string& texture_name, unsigned index, unsigned time_milli) :
-        m_texture_name{ texture_name }, m_fragment_index{ index }, m_time_milli{ time_milli } {};
-
-    unsigned Index() const noexcept {
-        return m_fragment_index;
-    }
-    const std::string& TextureName() const noexcept {
-        return m_texture_name;
-    }
-    unsigned TimeMilli() const noexcept {
-        return m_time_milli;
-    }
 };
 
 } /*! opgs16::component::_internal */

@@ -1,3 +1,6 @@
+#ifndef OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
+#define OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
+
 /*!
  * @license BSD 2-Clause License
  *
@@ -26,27 +29,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file entry.cc
- * @brief The file which operates actual application.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/__b_scr.h
  * @author Jongmin Yun
- *
  * @log
- * 2018-03-01 Refactoring.
- */
+ * 2018-04-08 Activate file and add comments.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-/*! This statements are for checking memory leaks. */
-//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
-//_crtBreakAlloc = 180;
-//_CrtDumpMemoryLeaks();
+#include "../../../../Headers/script_common.h"     /*! component::ScriptFrame */
+#include "../../../../System/Frame/timer_handle.h" /*! TimerHandle */
 
-#include "System/Core/Public/application.h"
+class __B_SCR final : public opgs16::component::CScriptFrame {
+public:
+    __B_SCR(opgs16::element::CObject& obj);
+    virtual void Update() override final {};
 
-int main() {
-    using opgs16::MApplication;
-    auto& app = MApplication::Instance();
-    app.Initiate();
-    app.Run();
+private:
+    TimerHandle m_timer;
+    TimerHandle m_timer_2;
 
-    return 0;
-}
+private:
+    virtual void Start() override final;
+
+    void OnTriggerTimerBreak();
+    void PlaySoundEffect();
+    void CreateTextObject();
+    void MoveLogo();
+
+    void OnTriggerNextScene();
+
+    /*! Create members related to type hash value. */
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __B_SCR)
+};
+
+#endif // OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H

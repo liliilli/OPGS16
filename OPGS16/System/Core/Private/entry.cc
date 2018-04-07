@@ -27,40 +27,27 @@
  */
 
 /*!
- * @file System/Manager/Private/scene_manager.cc
+ * @file entry.cc
+ * @brief The file which operates actual application.
  * @author Jongmin Yun
  *
  * @log
- * 2018-03-04 Refactoring.
+ * 2018-03-01 Refactoring.
+ * 2018-04-07 Move file to System/Core/Private directory.
  */
 
-#include "../Public/scene_manager.h"        /*! Header file */
+/*! This statements are for checking memory leaks. */
+//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
+//_crtBreakAlloc = 180;
+//_CrtDumpMemoryLeaks();
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
+#include "../Public/application.h"
 
-namespace opgs16 {
-namespace manager {
-
-void MSceneManager::PopScene() {
+int main() {
+    using opgs16::MApplication;
     auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
+    app.Initiate();
+    app.Run();
+
+    return 0;
 }
-
-void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
-    ShaderManager::Instance().Clear();   /*! Not implemented */
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
-}
-
-MSceneManager::~MSceneManager() = default;
-
-} /*! opgs16::manager */
-} /*! opgs16 */

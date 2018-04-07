@@ -7,8 +7,10 @@ FONT Solomon Fonts/SolomonP.ttf 0
 FONT Menus Fonts/Menus.ttf 0
 FONT BIOS Fonts/PxPlus_IBM_BIOS.ttf 0
 
-# SHADERS
+# TEXTURES
+TEX2DATLAS System Sprites/System.png Sprites/SystemAtlas.json
 
+# SHADERS
 SHADE ppConvex
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/convex.frag

@@ -13,14 +13,14 @@ TestObject1::TestObject1(const int i, const float size) {
 
     {
         using opgs16::component::CSprite2DRenderer;
-        auto renderer = AddComponent<CSprite2DRenderer>(*this, "128", "gQuad");
+        auto renderer = AddComponent<CSprite2DRenderer>(*this, "System", "gQuad");
 
         m_wrapper = &renderer->Wrapper();
         m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
         m_wrapper->SetUniformValue<float>("alpha", 1.0f);
 
-        using opgs16::component::CAnimator;
-        AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), "Test", opgs16::Switch::ON);
+        //using opgs16::component::CAnimator;
+        //AddComponent<CAnimator>(*this, *GetComponent<CSprite2DRenderer>(), "Test", opgs16::Switch::ON);
     }
 
     AddComponent<ObjectScript1>(*this);

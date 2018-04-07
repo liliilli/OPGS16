@@ -142,6 +142,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="manifest.h" />
+    <ClCompile Include="System\Boot\Object\___1\__b_canv.cc" />
+    <ClCompile Include="System\Boot\Scene\Private\__sample.cc" />
+    <ClCompile Include="System\Boot\Scene\Private\__boot.cc" />
+    <ClCompile Include="System\Boot\Scripts\Private\__b_scr.cc" />
     <ClCompile Include="System\Components\Internal\renderer_base.cc" />
     <ClCompile Include="System\Components\Private\animator.cc" />
     <ClCompile Include="System\Components\Private\empty_renderer.cc" />
@@ -199,7 +204,7 @@
     <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\constant.h" />
-    <ClCompile Include="entry.cc" />
+    <ClCompile Include="System\Core\Private\entry.cc" />
     <ClCompile Include="System\Manager\Private\shader_manager.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
@@ -215,6 +220,10 @@
   <ItemGroup>
     <ClInclude Include="Headers\import_logger.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="System\Boot\Object\___1\__b_canv.h" />
+    <ClInclude Include="System\Boot\Scene\Public\__boot.h" />
+    <ClInclude Include="System\Boot\Scene\Public\__sample.h" />
+    <ClInclude Include="System\Boot\Scripts\Public\__b_scr.h" />
     <ClInclude Include="System\Components\Internal\animator_internal.h" />
     <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
@@ -416,6 +425,7 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
+    <None Include="System\Boot\Resource\SE\se_maoudamashii_system49.ogg" />
     <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
     <None Include="_Project\Maintenance\_meta\_input.meta" />
     <None Include="_resource.meta" />
@@ -424,9 +434,6 @@
     <None Include="_Project\Maintenance\_meta\_header.meta" />
     <None Include="_Project\Maintenance\_meta\_resource.meta" />
     <None Include="_Project\Maintenance\_meta\_set.meta" />
-    <None Include="_Project\SampleInvaders\_meta\_header.meta" />
-    <None Include="_Project\SampleInvaders\_meta\_resource.meta" />
-    <None Include="_Project\SampleInvaders\_meta\_set.meta" />
     <None Include="_Setting\collision.meta" />
     <None Include="_Setting\global_setting.meta" />
     <None Include="_Setting\input.meta" />

@@ -171,6 +171,6 @@ void MTimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
 } /*! opgs16 */
 
 #define M_SET_TIMER(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__) \
-opgs16::manager::TimerManager::Instance().SetTimer(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__)
+opgs16::manager::MTimerManager::Instance().SetTimer(__timer_ref__, __milli__, __loop__, __ref__, __func_ptr__)
 
 #endif // !OPGS16_SYSTEM_MANAGER_TIMER_MANAGER_H

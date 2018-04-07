@@ -2,18 +2,17 @@
 
 #include <array>            /*! std::array */
 #include "canvas.h"
-#include "..\..\System\Shader\shader_wrapper.h"        /*! ShaderWrapper */
+#include "../../System/Shader/shader_wrapper.h"        /*! ShaderWrapper */
 #include "../../System/Manager/Public/texture_manager.h"
-#include <glm\gtc\matrix_transform.hpp>
+#include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace canvas {
 Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
-	m_sprite_renderer{ sprite_tag, "gQuad" },
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
-
-	auto& shader = m_sprite_renderer.Wrapper();
-	shader.SetUniformValue<glm::mat4>("projection", glm::mat4{});
-	shader.SetUniformValue<float>("alpha", 0.0f);
+    m_renderer_ptr = AddComponent<opgs16::component::CSprite2DRenderer>(*this, sprite_tag, "gQuad");
+    m_renderer_ptr->SetTextureIndex(4);
+    SetImageSize(178.f, 19.f);
 }
 
 Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
@@ -46,12 +45,12 @@ void Image::Render() {
 	}
 
 	/** Render this */
-	auto& shader = m_sprite_renderer.Wrapper();
+	auto& shader = m_renderer_ptr->Wrapper();
 
 	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
 	shader.SetUniformValue<glm::mat4>("projection", PVM);
 	shader.SetUniformValue("alpha", 1.0f);
-	m_sprite_renderer.RenderSprite();
+	m_renderer_ptr->RenderSprite();
 
 	if (!is_already_enabled) glDisable(GL_BLEND);
 }
