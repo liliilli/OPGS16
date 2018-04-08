@@ -42,13 +42,13 @@ namespace builtin {
 namespace sample {
 
 void SampleGame::Initiate() {
-    glClearColor(.2f, 0, 0, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	Scene::Draw();
+
 }
 
 void SampleGame::Draw() {
-
+    glClearColor(.2f, 0, 0, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	Scene::Draw();
 }
 
 } /*! opgs16::builtin::sample */

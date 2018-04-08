@@ -386,6 +386,8 @@
     <None Include="29_shaders\steep_quad.frag" />
     <None Include="glew32.dll" />
     <None Include="glfw3.dll" />
+    <None Include="Resources\Shader\__b_scr.frag" />
+    <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Shaders\Bloom\bloom.frag" />
     <None Include="Shaders\Bloom\combine.frag" />
     <None Include="Shaders\Bloom\hdr.frag" />

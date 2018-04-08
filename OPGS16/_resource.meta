@@ -22,3 +22,7 @@ SHADE ppGray
 SHADE ppSineWave
 - VS Shader/Global/quad.vert
 - FS Shader/PostProcessing/sinewave.frag
+
+SHADE __b_sliced
+- VS Shader/__b_scr.vert
+- FS Shader/__b_scr.frag

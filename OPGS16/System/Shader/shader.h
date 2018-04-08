@@ -29,16 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file shader.h
- * @brief
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/shader.h
+ * @file System/Element/Public/shader.h
+ * @brief Shader program
  *
  * @author Jongmin Yun
  * @log
  * 2018-02-26 Undefined
  * 2018-02-28 Add SetVec2f();
  * 2018-03-12 Refactoring.
- */
+ * 2018-04-08 Remove old shader class. Add SetVecIntPtr method on CShaderNew
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <unordered_map>
 #include <GL/glew.h>
@@ -94,6 +96,14 @@ public:
      * @param[in] value value to be inputted.
      */
     void SetInt(const std::string& name, int value) const;
+
+    /*!
+     * @brief Set signed-integer value C-array pointer with amount to arbitary uniform variable.
+     * @param[in] name The name of uniform variable to be specified.
+     * @param[in] value Value to be inputted.
+     * @param[in] amount Amount how many values to be inputted.
+     */
+    void SetIntPtr(const std::string& name, int* value, int amount) const;
 
     /**
      * @brief The method sets float value to arbitary uniform variable.
@@ -190,47 +200,5 @@ protected:
 
 } /*! opgs16::element */
 } /*! opgs16 */
-
-namespace helper {
-
-/**
- * @brief Old Shader wrapper class
- * @deprecated
- */
-class Shader {
-public:
-    // Costructor reads vertex shader and fragment shader path, and build them.
-    Shader(const GLchar* vertex_path, bool link = true);
-    Shader(const GLchar* vertex_path, const GLchar* fragment_path, bool link = true);
-    Shader(const GLchar* vertex_path, const GLchar* geometry_path, const GLchar* fragment_path);
-
-    // Use / Activate the shader
-    void Use();
-    // Utility uniform functions
-    void SetBool(const std::string& name, bool value) const;
-    void SetInt(const std::string& name, int value) const;
-    void SetFloat(const std::string& name, float value) const;
-
-    void SetVec3f(const std::string& name, const float, const float, const float);
-    void SetVec3f(const std::string & name, const glm::vec3& vector);
-    void SetVecMatirix4f(const std::string& name, glm::mat4& matrix);
-
-    void SetStructDirLight(const std::string& name, const light::DirectionalLight& container);
-    void SetStructPointLight(const std::string& name, const light::PointLight& container);
-    void SetStructSpotlight(const std::string& name, const light::Spotlight& container);
-
-    const GLuint GetId() const { return kId; }
-
-private:
-    // The program ID
-    mutable unsigned kId;
-    unsigned vertex_shader;
-    unsigned geometry_shader;
-    unsigned fragment_shader;
-
-    void ShaderErrorPrint(GLuint shader, char* info_log);
-};
-
-}
 
 #endif /*! OPGS16_SYSTEM_ELEMENT_PUBLIC_SHADER_H */

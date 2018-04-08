@@ -29,14 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Internal/renderer_base.h
  *
  * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file.
  * 2018-04-06 Suppress warning, size_t to unsigned int warning.
- */
+ * 2018-04-08 Add comment
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "component.h"          /*! opgs16::component::_internal::CComponent */
 #include "component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
@@ -48,6 +49,7 @@ namespace _internal {
 
 /*!
 * @class CRendererBase
+* @brief Base abstract class which is being base class of CRenderer derived classes.
 * @author Jongmin Yun
 */
 class CRendererBase : public CComponent {
@@ -55,22 +57,29 @@ public:
     CRendererBase(element::CObject& bind_object, const unsigned render_layer);
     virtual ~CRendererBase() = 0;
 
+    /*!
+     * @brief Set rendering layer with name.
+     * if render layer is out of bound or not found, set value to 0
+     * @param[in] layer_name Name.
+     */
     void SetRenderLayer(const std::string& layer_name);
 
     /*!
      * @brief Set render layer with value. if render layer is out of bound, set value to 0.
-     * @param[in] layer_index Value;
+     * @param[in] layer_index Value.
      */
     void SetRenderLayer(const unsigned layer_index);
 
-    inline size_t RenderLayerIndexOf() const noexcept {
+    /*! Get Rendering layer index value of this instance. */
+    size_t RenderLayerIndexOf() const noexcept {
         return m_render_layer_index;
     }
 
+    /*! Get Rendering layer name value of this instance. */
     std::string RenderLayerNameOf() const;
 
-    virtual void Update() override final {
-        using opgs16::manager::MObjectManager;
+    void Update() override final {
+        using manager::MObjectManager;
         MObjectManager::Instance().InsertRenderingObject(&GetObject(), m_render_layer_index);
     };
 

@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_COMPONENTS_SPRITE_RENDERER_H
-#define OPGS16_SYSTEM_COMPONENTS_SPRITE_RENDERER_H
+#ifndef OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H
+#define OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System\Object\sprite_renderer.h
  * @brief The file contains sprite renderer class members.
  *
@@ -39,7 +39,8 @@
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move file to /Component.
  * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
- */
+ * 2018-04-08 Supporting change of shader on running.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <string>
 #include <memory>
@@ -65,6 +66,7 @@ namespace component {
  * 2018-02-28 Add Get/SetTextureIndex() member function.
  * 2018-03-07 Move to opgs16::component namespace.
  * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
+ * 2018-04-08 Supporting change of shader on running.
  */
 class CSprite2DRenderer final : public _internal::CRendererBase {
 private:
@@ -94,6 +96,15 @@ public:
 	/*! Get ShaderWrapper instance. */
 	ShaderWrapper& Wrapper() const;
 
+    /*!
+     * @brief Set Shader newly.
+     * @param[in] shader_name Shader name to specify.
+     */
+    void SetShader(const std::string& shader_name);
+
+    /*!*/
+    void SetInstanceCount(unsigned instance_count);
+
 	/**
 	 * @brief Render sprite on screen. Procedure is below.
 	 * 1. m_shader is enable (must be enabled), active shader to use.
@@ -113,4 +124,4 @@ SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRende
 } /*! opgs16::component */
 } /*! opgs16 */
 
-#endif /** OPGS16_SYSTEM_COMPONENTS_SPRITE_RENDERER_H */
+#endif /** OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H */

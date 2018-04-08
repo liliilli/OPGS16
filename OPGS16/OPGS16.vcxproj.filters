@@ -294,6 +294,8 @@
     <None Include="_Project\Maintenance\_meta\_input.meta" />
     <None Include="_Setting\collision.meta" />
     <None Include="System\Boot\Resource\SE\se_maoudamashii_system49.ogg" />
+    <None Include="Resources\Shader\__b_scr.vert" />
+    <None Include="Resources\Shader\__b_scr.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

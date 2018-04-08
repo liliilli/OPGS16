@@ -35,17 +35,34 @@
 
 #include "../Public/__b_scr.h"  /*! Header file */
 
+#include <chrono>
+#include <random>
 #include <sstream>
+
 #include <glm/glm.hpp>
+
+#include "../../../Components/Public/sprite_renderer.h" /*! opgs16::component::CSprite2DRenderer */
+#include "../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::Canvas */
 #include "../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::Text */
 #include "../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::Image */
 #include "../../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
 #include "../../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
 #include "../../../../Headers/import_logger.h" /*! import logger in debug mode */
-
-#include "../../Scene/Public/__sample.h"
+#include "../../../Shader/shader_wrapper.h"
 #include "../../../Core/Public/core_setting.h"
 #include "../../../manifest.h"
+
+#include "../../Scene/Public/__sample.h"
+
+namespace {
+constexpr const char*   shader_sliced{ "__b_sliced" };
+constexpr const int     k_sliced_number{ 32 };
+constexpr const float   k_sliced_y_initial_scale{ 128.f };
+constexpr const float   k_sliced_y_final_scale{ 9.5f };
+
+int y_positions[k_sliced_number << 1]{ 0, };
+int y_initial[k_sliced_number << 1]{ 0, };
+} /*! unnamed namespace */
 
 __B_SCR::__B_SCR(opgs16::element::CObject& obj) : CScriptFrame{ obj } {
     Initiate();
@@ -54,7 +71,8 @@ __B_SCR::__B_SCR(opgs16::element::CObject& obj) : CScriptFrame{ obj } {
 
 void __B_SCR::Start() {
     PlaySoundEffect();
-    M_SET_TIMER(m_timer, 32, true, this, &__B_SCR::MoveLogo);
+
+    M_SET_TIMER(m_timer_2, 1'000, false, this, &__B_SCR::SetLogoImage);
 }
 
 void __B_SCR::OnTriggerTimerBreak() { }
@@ -65,7 +83,33 @@ void __B_SCR::PlaySoundEffect() {
     //sound_manager.PlaySound("__system49");
 }
 
-void __B_SCR::MoveLogo() {
+void __B_SCR::SetLogoImage() {
+    std::default_random_engine rng;
+    rng.seed(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
+
+    logo = GetObject().Instantiate<canvas::Image>("Logo", "System", static_cast<canvas::Canvas*>(&GetObject()));
+    if ((rng() % 1'000) < 500) { // Normal
+        logo->SetWorldPosition({ 0, 160, 0 });
+        M_SET_TIMER(m_timer, 32, true, this, &__B_SCR::MoveLogo1);
+    }
+    else { // Sliced
+        for (int i = 0; i < (k_sliced_number << 1); ++i) {
+            y_positions[i] = (rng() % 400 + 200) + 112;
+            y_initial[i] = y_positions[i];
+        }
+
+        opgs16::component::CSprite2DRenderer* renderer = logo->GetComponent<opgs16::component::CSprite2DRenderer>();
+        renderer->SetShader(shader_sliced);
+        renderer->SetInstanceCount(k_sliced_number << 1);
+        auto& wrapper = renderer->Wrapper();
+        wrapper.SetUniformValueInt("uNumber", k_sliced_number << 1);
+        wrapper.SetUniformValueIntPtr("uPos", y_positions, k_sliced_number << 1);
+        wrapper.SetUniformValue<float>("uYScale", k_sliced_y_initial_scale);
+        M_SET_TIMER(m_timer, 16, true, this, &__B_SCR::MoveLogoSliced);
+    }
+}
+
+void __B_SCR::MoveLogo1() {
     static float elapsed{ 0.f };
     auto logo = GetObject().GetChild("Logo");
     if (!logo) return;
@@ -85,6 +129,36 @@ void __B_SCR::MoveLogo() {
     logo->SetWorldPosition(pos);
 }
 
+void __B_SCR::MoveLogoSliced() {
+    using opgs16::component::CSprite2DRenderer;
+
+    static float elapsed{ 0.f };
+    constexpr float time{ 0.75f };
+    constexpr float time_pow{ 0.5625f };
+    constexpr float offset_scale{ k_sliced_y_initial_scale / time_pow };
+
+    elapsed += 0.016f;
+    const auto sigma = powf(time - elapsed, 2);
+    for (int i = 0; i < (k_sliced_number << 1); ++i)
+        y_positions[i] = static_cast<int>(sigma * (y_initial[i] / time_pow));
+
+    auto* renderer = logo->GetComponent<CSprite2DRenderer>();
+    auto& wrapper  = renderer->Wrapper();
+
+    wrapper.SetUniformValue<float>("uYScale", sigma / offset_scale + k_sliced_y_final_scale);
+
+    //wrapper.SetUniformValue<float>(
+    //    "uYScale", k_sliced_y_initial_scale * (1 - powf(elapsed, 2) / time_pow) + k_sliced_y_final_scale);
+
+    if (elapsed >= time) {
+        PUSH_LOG_INFO(L"Logo soft-randing");
+        renderer->SetShader("gQuad");
+        renderer->SetInstanceCount(1);
+        opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer);
+        M_SET_TIMER(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
+    }
+}
+
 void __B_SCR::CreateTextObject() {
     std::stringstream string_stream;
     string_stream << 'v' << _OPGS16_VERSION_MAJOR << '.' << _OPGS16_VERSION_MINOR << '.' << _OPGS16_VERSION_FIXED;
@@ -93,7 +167,7 @@ void __B_SCR::CreateTextObject() {
     text_string.append("\n\n"
                        "VIDEO RAM:640KiBytes\n"
                        "MAIN RAN:1024KiByes\n\n");
-    text_string.append("DOES NOT FIND ANY ROM.\n"
+    text_string.append("DID NOT FIND ANY ROM.\n"
                        "BOOT SAMPLE GAME...");
         auto text = std::make_unique<canvas::Text>(text_string);
     {
@@ -113,6 +187,6 @@ void __B_SCR::OnTriggerNextScene() {
 #if !defined(_CUSTOM_PROJECT)
     M_REPLACE_SCENE(opgs16::builtin::sample::SampleGame);
 #else
-    M_POP_SCENE()
+    M_POP_SCENE();
 #endif
 }

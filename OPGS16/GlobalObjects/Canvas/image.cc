@@ -44,14 +44,15 @@ void Image::Render() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	/** Render this */
-	auto& shader = m_renderer_ptr->Wrapper();
-
+	auto& wrapper = m_renderer_ptr->Wrapper();
 	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
-	shader.SetUniformValue<glm::mat4>("projection", PVM);
-	shader.SetUniformValue("alpha", 1.0f);
-	m_renderer_ptr->RenderSprite();
+	wrapper.SetUniformValue<glm::mat4>("projection", PVM);
+    /*! Temporary */
+	wrapper.SetUniformValue<glm::mat4>("uPV", m_ref_canvas->GetUiCameraPVMatrix());
+    //wrapper.SetUniformValue<glm::mat4>("uModel", GetModelMatrix());
+	wrapper.SetUniformValue("alpha", 1.0f);
 
+	m_renderer_ptr->RenderSprite();
 	if (!is_already_enabled) glDisable(GL_BLEND);
 }
 

@@ -122,6 +122,7 @@ class   CTexture2D;
 // Derived
 namespace canvas {
 class   Canvas;
+class   Image;
 class   Text;
 class   TextImpl;
 struct  TextImplDeleter { void operator()(TextImpl* p); };

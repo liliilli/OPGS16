@@ -74,6 +74,14 @@ void CSprite2DRenderer::RenderSprite() {
     m_impl->RenderSprite();
 }
 
+void CSprite2DRenderer::SetShader(const std::string& shader_name) {
+    m_impl->SetShader(shader_name);
+}
+
+void CSprite2DRenderer::SetInstanceCount(unsigned instance_count) {
+    m_impl->SetInstanceCount(instance_count);
+}
+
 CSprite2DRenderer::~CSprite2DRenderer() = default;
 
 } /*! opgs16::component */

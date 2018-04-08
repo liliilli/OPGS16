@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Impl/sprite_renderer_impl.h
  * @brief Private implementation file.
  *
@@ -37,7 +37,8 @@
  * @log
  * 2018-02-28 Change constructor to use texture_index type.
  * 2018-03-10 Refactoring.
- */
+ * 2018-04-08 Supporting change of shader on running.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../Frame/vertex_array_object.h"    /*! VertexArrayObject */
 #include "../../Headers/Fwd/objectfwd.h"        /*! texture::CTexture2D */
@@ -57,13 +58,12 @@ namespace _internal {
  * 2018-02-28 Change constructor to use texture_index type. and variable store texture index.
  * Add related boilerplate function.
  * 2018-04-02 std::string to std::wstring for Unicode
- *
+ * 2018-04-08 Supporting change of shader on running.
  */
 class CSpriteRendererImpl final {
 public:
     /** Make Sprite2DRenderer instance. (Constructor) */
-	CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag,
-                        const unsigned texture_index);
+	CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag, unsigned texture_index);
 
     ShaderWrapper& Wrapper() {
         return m_wrapper;
@@ -84,7 +84,15 @@ public:
     void SetTexture(const std::string& texture_name) noexcept;
 
     /*!*/
+    void SetShader(const std::string& shader_name);
+
+    /*!*/
     void RenderSprite();
+
+    /*!*/
+    void SetInstanceCount(unsigned instance_count) {
+        m_instance_count = instance_count;
+    }
 
 private:
 	texture::CTexture2D* m_sprite;	/*! Sprite 2d texture stores image information. */
@@ -93,6 +101,10 @@ private:
 
     unsigned m_texture_fragment_index;
     GLuint empty_vao;
+
+    GLenum      m_primitive_mode{ GL_TRIANGLES };
+    unsigned    m_instance_count{ 1 };
+    unsigned    m_base_instance{ 0 };
 };
 
 } /*! opgs16::component::_internal */

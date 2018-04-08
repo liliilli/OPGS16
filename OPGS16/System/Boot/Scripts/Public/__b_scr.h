@@ -36,8 +36,9 @@
  * 2018-04-08 Activate file and add comments.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Headers/script_common.h"     /*! component::ScriptFrame */
-#include "../../../../System/Frame/timer_handle.h" /*! TimerHandle */
+#include "../../../../Headers/script_common.h"      /*! component::ScriptFrame */
+#include "../../../../System/Frame/timer_handle.h"  /*! TimerHandle */
+#include "../../../../Headers/Fwd/objectfwd.h"      /*! canvas::Image */
 
 class __B_SCR final : public opgs16::component::CScriptFrame {
 public:
@@ -48,13 +49,17 @@ private:
     TimerHandle m_timer;
     TimerHandle m_timer_2;
 
+    canvas::Image* logo;
+
 private:
     virtual void Start() override final;
 
+    void SetLogoImage();
     void OnTriggerTimerBreak();
     void PlaySoundEffect();
     void CreateTextObject();
-    void MoveLogo();
+    void MoveLogo1();
+    void MoveLogoSliced();
 
     void OnTriggerNextScene();
 

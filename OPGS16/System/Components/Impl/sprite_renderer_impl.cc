@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Impl/sprite_renderer_impl.cc
  *
  * @author Jongmin Yun
@@ -34,7 +34,8 @@
  * 2018-03-10 Refactoring. Move implementations to ::opgs16::component::_internal
  * 2018-04-02 std::string to std::wstring for UTF-16 characters.
  * 2018-04-06 Support to CTexture2DAtlas information. Revise SetTextureIndex
- */
+ * 2018-04-08 Supporting change of shader on running.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "sprite_renderer_impl.h"   /*! Header file */
 #include "../../Frame/constant.h"   /*! std::array<> quad_info
@@ -48,7 +49,7 @@ namespace component {
 namespace _internal {
 
 CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag,
-                                         const unsigned texture_index) :
+                                         unsigned texture_index) :
     m_sprite{ manager::TextureManager::Instance().GetTexture(sprite_tag) },
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },
     m_texture_fragment_index{ texture_index } {
@@ -88,13 +89,17 @@ void CSpriteRendererImpl::SetTexture(const std::string& texture_name) noexcept {
     SetTextureIndex(0);
 }
 
+void CSpriteRendererImpl::SetShader(const std::string& shader_name) {
+    m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_name));
+}
+
 void CSpriteRendererImpl::RenderSprite() {
     m_wrapper.UseShader();  /*! the name is incorrect... */
     glBindVertexArray(empty_vao);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
-    glDrawArraysInstancedBaseInstance(GL_TRIANGLES, 0, 6, 1, 0);
+    glDrawArraysInstancedBaseInstance(m_primitive_mode, 0, 6, m_instance_count, m_base_instance);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

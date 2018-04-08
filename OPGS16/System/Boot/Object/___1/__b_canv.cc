@@ -33,14 +33,11 @@
  * 2018-04-08 Activate file and add comments.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "__b_canv.h"                           /*! Header file */
+#include "__b_canv.h"                               /*! Header file */
 
-#include <glm/glm.hpp>
-#include "../../Scripts/Public/__b_scr.h"       /*! __B_SCR */
-#include "../../../../GlobalObjects/Canvas/image.h"/*! canvas::Image */
+#include "../../Scripts/Public/__b_scr.h"           /*! __B_SCR */
+#include "../../../../GlobalObjects/Canvas/image.h" /*! canvas::Image */
 
 __B_CANV::__B_CANV() {
-    auto image = Instantiate<canvas::Image>("Logo", "System", this);
-    image->SetWorldPosition({ 0, 160, 0 });
     AddComponent<__B_SCR>(*this);
 }
