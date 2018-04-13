@@ -34,14 +34,22 @@
  * @author Jongmin Yun
  * @log
  * 2018-04-08 Add verbose comments.
+ * 2018-04-14 Move __B_CANV into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
-
 
 #include "../../GlobalObjects/Canvas/canvas.h"  /*! Canvas::Canvas */
 
-class __B_CANV : public canvas::Canvas {
+namespace opgs16 {
+namespace builtin {
+namespace sample {
+
+class __B_CANV final : public canvas::Canvas {
 public:
 	__B_CANV();
 };
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! ogps16 */
 
 #endif // OPGS16_SYSTEM_BOOT_OBJECT____1___B_CANV_H

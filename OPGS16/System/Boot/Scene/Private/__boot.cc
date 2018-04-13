@@ -26,19 +26,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__boot.cc
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scene/Private/__boot.cc
  * @brief Image object used in Canvas hierarchy.
- * @author Jongmin Yun
  * @log
  * 2018-04-07 Activate file and add comments.
- */
+ * 2018-04-14 Move codes into ::opgs16::builtin::sample namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__boot.h"   /*! Header file */
 #include <GL/glew.h>            /*! OpenGL functions */
 
 #include "../../../../GlobalObjects/camera_object.h"   /*! MainCameraObject */
 #include "../../Object/___1/__b_canv.h" /*! opgs16::builtin::sample::__B_CANV */
+
+namespace opgs16 {
+namespace builtin {
+namespace sample {
 
 void __BOOT::Draw() {
     glClearColor(0, 0, .8f, 1.f);
@@ -47,7 +51,11 @@ void __BOOT::Draw() {
 }
 
 void __BOOT::Initiate() {
-    auto main_camera = std::make_unique<MainCameraObject>();
-    Instantiate("Camera", main_camera);
+    //auto main_camera = std::make_unique<MainCameraObject>();
+    Instantiate<MainCameraObject>("Camera");
     Instantiate<__B_CANV>("GameCanvas");
 }
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! opgs16::sample */

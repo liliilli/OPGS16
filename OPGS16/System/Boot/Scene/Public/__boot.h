@@ -29,11 +29,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scene/Public/__boot.h
+ * @brief Boot scene file.
+ * @log
+ * 2018-04-14 Add file information comments.
+ * 2018-04-14 Move __BOOT class into namespace ::opgs16::builtin::sample.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
 #include "../../../../System/Frame/scene.h"    /*! Scene */
+
+namespace opgs16 {
+namespace builtin {
+namespace sample {
 
 class __BOOT final : public Scene {
     void Initiate() override final;
     void Draw() override final;
 };
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! opgs16 */
 
 #endif // OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H

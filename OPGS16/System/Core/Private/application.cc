@@ -145,7 +145,7 @@ void MApplication::Initiate() {
 #else
         // SHOW BOOT LOGO
         // GOTO SAMPLE GAME
-        M_PUSH_SCENE(__BOOT, true);
+        M_PUSH_SCENE(builtin::sample::__BOOT, true);
 		ReplacePresentStatus(GameStatus::PLAYING);
 #endif
 	}

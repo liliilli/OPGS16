@@ -27,10 +27,11 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Boot/Scripts/__b_scr.cc
+ * @file System/Boot/Scripts/Private/__b_scr.cc
  * @author Jongmin Yun
  * @log
  * 2018-04-07 Activate file and add comments.
+ * 2018-04-14 Move definitions into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__b_scr.h"  /*! Header file */
@@ -64,6 +65,10 @@ int y_positions[k_sliced_number << 1]{ 0, };
 int y_initial[k_sliced_number << 1]{ 0, };
 } /*! unnamed namespace */
 
+namespace opgs16 {
+namespace builtin {
+namespace sample {
+
 __B_SCR::__B_SCR(opgs16::element::CObject& obj) : CScriptFrame{ obj } {
     Initiate();
     Start();
@@ -71,11 +76,8 @@ __B_SCR::__B_SCR(opgs16::element::CObject& obj) : CScriptFrame{ obj } {
 
 void __B_SCR::Start() {
     PlaySoundEffect();
-
     M_SET_TIMER(m_timer_2, 1'000, false, this, &__B_SCR::SetLogoImage);
 }
-
-void __B_SCR::OnTriggerTimerBreak() { }
 
 void __B_SCR::PlaySoundEffect() {
     //auto& sound_manager = SoundManager::GetInstance();
@@ -190,3 +192,7 @@ void __B_SCR::OnTriggerNextScene() {
     M_POP_SCENE();
 #endif
 }
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! opgs16::sample */

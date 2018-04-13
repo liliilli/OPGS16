@@ -31,13 +31,20 @@
  * @author Jongmin Yun
  * @log
  * 2018-04-08 Activate file and add comments.
+ * 2018-04-14 Move file into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "__b_canv.h"                               /*! Header file */
-
 #include "../../Scripts/Public/__b_scr.h"           /*! __B_SCR */
-#include "../../../../GlobalObjects/Canvas/image.h" /*! canvas::Image */
+
+namespace opgs16 {
+namespace builtin {
+namespace sample {
 
 __B_CANV::__B_CANV() {
     AddComponent<__B_SCR>(*this);
 }
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! ogps16 */

@@ -30,15 +30,20 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Boot/Scripts/__b_scr.h
+ * @file System/Boot/Scripts/Public/__b_scr.h
  * @author Jongmin Yun
  * @log
  * 2018-04-08 Activate file and add comments.
+ * 2018-04-14 Move __B_SCR into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../../../Headers/script_common.h"      /*! component::ScriptFrame */
 #include "../../../../System/Frame/timer_handle.h"  /*! TimerHandle */
 #include "../../../../Headers/Fwd/objectfwd.h"      /*! canvas::Image */
+
+namespace opgs16 {
+namespace builtin {
+namespace sample {
 
 class __B_SCR final : public opgs16::component::CScriptFrame {
 public:
@@ -55,7 +60,6 @@ private:
     virtual void Start() override final;
 
     void SetLogoImage();
-    void OnTriggerTimerBreak();
     void PlaySoundEffect();
     void CreateTextObject();
     void MoveLogo1();
@@ -66,5 +70,9 @@ private:
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __B_SCR)
 };
+
+} /*! opgs16::builtin::sample */
+} /*! opgs16::builtin */
+} /*! opgs16::sample */
 
 #endif // OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
