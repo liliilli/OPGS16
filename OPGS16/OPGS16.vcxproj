@@ -427,7 +427,6 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
-    <None Include="System\Boot\Resource\SE\se_maoudamashii_system49.ogg" />
     <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
     <None Include="_Project\Maintenance\_meta\_input.meta" />
     <None Include="_resource.meta" />

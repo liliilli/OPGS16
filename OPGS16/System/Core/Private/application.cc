@@ -26,14 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Core/Private/application.cc
+ * @brief Implementation file of ../Public/application.h
+ * @log
+ * 2018-04-14 Add file information comment and Removed unused <iostream> header file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
 #include "../Public/application.h"              /*! Header file */
 
-#include <iostream>	                            /*! std::cerr, std::endl */
 #include <string_view>                          /*! std::string_view */
 #include "../Public/core_header.h"              /*! Subsequential header files */
 #include "../Public/core_setting.h"
-#include "../../../manifest.h"                  /*! opgs16::manifest */
 #include "../../Boot/Scene/Public/__boot.h"     /*! opgs16::manifest::sample::boot */
+#include "../../../Headers/import_logger.h"     /*! import loggers */
+#include "../../../manifest.h"                  /*! opgs16::manifest */
 
 #if defined(_INITIAL_SCENE_INCLUDE_PATH)
 #include _INITIAL_SCENE_INCLUDE_PATH
@@ -42,19 +49,44 @@
 namespace opgs16 {
 
 namespace {
-using debug::_internal::MsgType;
 using namespace std::string_view_literals;
 constexpr std::wstring_view g_global_resource_path{ L"_resource.meta"sv };
+constexpr float k_fps_count = 60.f;
 
 /*! Callback method for size check and resizing */
 void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
+
 } /*! unnamed namespace */
 
 MApplication::MApplication() :
     m_logger{ debug::CLogger::Instance() },
-    m_window{ InitApplication(u8"OPGS16") },
+#if defined(_OPGS16_DEBUG_OPTION)
+    m_window{ InitApplication("OPGS16 DEBUG MODE") },
+#else
+    #if defined (_CUSTOM_PROJECT)
+        #if !defined (_APPLICATION_PROJECT_NAME)
+            static_assert(false,
+                          "Application project name is not active."
+                          "Please uncomment or make macro _APPLICATION_PROJECT_NAME");
+        #endif
+        #if !(_APPLICATION_PROJECT_NAME + 0)
+            static_assert(false, "Application project name is not valid. Check manifest file.");
+        #endif
+        #if defined (_APPLICATION_WINDOW_NAME)
+            #if !(_APPLICATION_WINDOW_NAME + 0)
+                static_assert(false, "Application window name is not valid, check manifest file.");
+            #else
+                m_window{ InitApplication(_APPLICATION_WINDOW_NAME) },
+            #endif
+        #else
+            m_window{ InitApplication(_APPLICATION_PROJECT_NAME) },
+        #endif
+    #else
+        static_assert(false, "Please turn on _CUSTOM_PROJECT macro to make window properly.");
+    #endif
+#endif
     m_setting_manager{ manager::MSettingManager::Instance() },
     m_input_manager{ manager::MInputManager::Instance() },
     m_object_manager{ manager::MObjectManager::Instance() },
@@ -76,17 +108,14 @@ GLFWwindow* MApplication::InitApplication(const std::string& app_name) const {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    debug::PushLog(MsgType::INFO, L"GLFW CONTEXT VERSION 4.3 Core.");
-
-    /*! Set MSAAx4 */
-    //glfwWindowHint(GLFW_SAMPLES, 4);
+    PUSH_LOG_INFO(L"GLFW CONTEXT VERSION 4.3 Core.");
 
     const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(),
                                          SGlobalSetting::ScreenHeight(),
                                          app_name.c_str(),
                                          nullptr, nullptr);
     if (!window) {
-        debug::PushLog(MsgType::_ERROR, L"Failed to create GLFW window. Application will terminate.");
+        PUSH_LOG_ERRO(L"Failed to create GLFW window. Application will terminate.");
         glfwTerminate();
         return nullptr;
     }
@@ -107,7 +136,7 @@ void MApplication::Initiate() {
         m_resource_manager.ReadResourceFile(g_global_resource_path.data());
 
         /*! Initialize resource list. */
-        m_time_manager.SetFps(60.f);
+        m_time_manager.SetFps(k_fps_count);
         m_input_manager.Initialize(m_window);
         m_sound_manager.ProcessInitialSetting();
 
@@ -120,28 +149,35 @@ void MApplication::Initiate() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
 
-#if defined(_CUSTOM_PROJECT)
-#if defined(_RESOURCE_SETTING_FILE_PATH)
-        m_resource_manager.ReadResourceFile(L"_Project/Maintenance/_meta/_resource.meta");
-#else
-        static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
-#endif
+        static_assert(manifest::k_size <= 3, "manifest k_size must be range from 1 to 3.");
+        static_assert(manifest::k_size > 0,  "manifest k_size must be range from 1 to 3.");
 
-#if defined(_RESOURCE_SETTING_FILE_PATH)
-#if defined(_INITIAL_SCENE_FULL_NAME)
-#if !_SHOW_BOOT_SCREEN
-        M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
-		ReplacePresentStatus(GameStatus::PLAYING);
-#else
-        // SHOW BOOT LOGO
-        M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
-        M_PUSH_SCENE(__BOOT, true);
-		ReplacePresentStatus(GameStatus::PLAYING);
-#endif
-#endif
-#else
-        static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
-#endif
+        if constexpr (manifest::k_size == 1) ChangeScalingOption(EScaleType::X1);
+        else if constexpr (manifest::k_size == 2) ChangeScalingOption(EScaleType::X2);
+        else ChangeScalingOption(EScaleType::X3);
+
+#if defined(_CUSTOM_PROJECT)
+    #if defined(_RESOURCE_SETTING_FILE_PATH)
+            m_resource_manager.ReadResourceFile(L"_Project/Maintenance/_meta/_resource.meta");
+    #else
+            static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+    #endif
+
+    #if defined(_RESOURCE_SETTING_FILE_PATH)
+        #if defined(_INITIAL_SCENE_FULL_NAME)
+            #if !_SHOW_BOOT_SCREEN
+                    M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
+                    ReplacePresentStatus(GameStatus::PLAYING);
+            #else
+                    // SHOW BOOT LOGO
+                    M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
+                    M_PUSH_SCENE(__BOOT, true);
+                    ReplacePresentStatus(GameStatus::PLAYING);
+            #endif
+        #endif
+    #else
+            static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+    #endif
 #else
         // SHOW BOOT LOGO
         // GOTO SAMPLE GAME
@@ -162,7 +198,9 @@ void MApplication::InitiateFonts() const {
 }
 
 void MApplication::InitiateDebugUi() {
+#if defined(_OPGS16_DEBUG_OPTION)
 	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
+#endif
 }
 
 void MApplication::InitiatePostProcessingEffects() {
@@ -217,8 +255,10 @@ void MApplication::Update() {
         break;
     }
 
-	if (IsSwitchOn(m_setting->DebugMode()))
-        m_debug_ui_canvas->Update();
+#if defined(_OPGS16_DEBUG_OPTION)
+	if (IsSwitchOn(m_setting->DebugMode())) m_debug_ui_canvas->Update();
+#endif
+
 	if (IsSwitchOn(m_setting->PostProcessing()))
         m_pp_manager->UpdateSequences(); // Update active effects.
 }
@@ -244,8 +284,11 @@ void MApplication::InputGlobal() {
         	ChangeScalingOption(EScaleType::X3);
     }
 
+#if defined(_OPGS16_DEBUG_OPTION)
     if (m_input_manager.IsKeyPressed("GlobalF9"))
         ToggleFpsDisplay();
+#endif
+
     if (m_input_manager.IsKeyPressed("GlobalF10"))
         TogglePostProcessingEffect();
 }
@@ -267,7 +310,9 @@ void MApplication::Draw() const {
         m_pp_manager->Render();
 	}
 
+#if defined(_OPGS16_DEBUG_OPTION)
 	if (IsSwitchOn(m_setting->DebugMode())) m_debug_ui_canvas->Draw();
+#endif
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();

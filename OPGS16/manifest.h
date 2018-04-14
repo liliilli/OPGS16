@@ -33,15 +33,28 @@ namespace opgs16 {
 namespace manifest {
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * IF YOU USE CUSTOM PROJECT, UNCOMMENT THIS BELOW.
+ * IF YOU USE "YOUR OWN" PROJECT, UNCOMMENT THIS BELOW.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 //#define _CUSTOM_PROJECT
-/*----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#if defined(_CUSTOM_PROJECT)
+// If you want to turn on DEBUG MODE to display console log and special debug display,
+// Remove "//" Commend specifier.
+#define _OPGS16_DEBUG_OPTION
+
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * PROJECT SETTING
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+// INITIAL SCREEN SIZE
+constexpr unsigned k_size{ 2 };
+
+// To use your own application setting, please uncomment #define _CUSTOM_PROJECT.
+#if defined(_CUSTOM_PROJECT)
+
+// Set Application project name.
+#define _APPLICATION_PROJECT_NAME   L"OPGS16 SAMPLE GAME"
+// Set Application window name when operating. If this is not uncommented, just use PROJECT_NAME insteadily.
+//#define _APPLICATION_WINDOW_NAME
 
 // set resource setting file to load your resource on run-time.
 // This must be written as the style of L" ... " or application will not build up.
@@ -56,9 +69,6 @@ namespace manifest {
 // true or false
 #define _SHOW_BOOT_SCREEN           true
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * PROJECT SETTING
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 #endif
 
 } /*! opgs16::manifest */
