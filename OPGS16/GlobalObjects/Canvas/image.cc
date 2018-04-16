@@ -11,8 +11,6 @@ namespace canvas {
 Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
 	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
     m_renderer_ptr = AddComponent<opgs16::component::CSprite2DRenderer>(*this, sprite_tag, "gQuad");
-    m_renderer_ptr->SetTextureIndex(4);
-    SetImageSize(178.f, 19.f);
 }
 
 Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
