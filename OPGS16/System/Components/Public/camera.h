@@ -29,14 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System\Components\camera_object.h
  * @brief Camera component file.
  * @author Jongmin Yun
  * @log
  * 2018-02-14 Create file and implement basic features.
  * 2018-03-11 Corection of ::opgs16::element::CObject class.
- */
+ * 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <glm\glm.hpp>
 #include "../Internal/component.h"          /*! component::Component */
@@ -46,7 +47,7 @@
 namespace opgs16 {
 namespace component {
 
-/**
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @class CameraObject
  * @brief Refined camera object class, different legacy camera object is independent of m_object_list.
  * You can set it up between two types, perspective (view-frustum) and orthographic (view-cube).
@@ -57,41 +58,70 @@ namespace component {
  * @log
  * 2018-02-14 Implemented basic features.
  * 2018-02-14 Move class from ::component to ::opgs16::component.
- */
+ * 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 class CCamera final : public _internal::CComponent {
 public:
-	/** Camera type how to see worlds. */
+	/*! Camera type how to see worlds. */
 	enum class ViewType {
 		PERSPECTIVE, /** This camera uses perspective camera, using view-frustum. */
 		ORTHO		 /** This camera uses orthographic camera, using view-cube. */
 	};
 
-	/** Camera priority type. */
+	/*! Camera priority type. */
 	enum class CameraType {
 		MAIN,	/** Main camera, this must just be only one in one scene. (even hierarchy) */
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
-	CCamera(element::CObject& bound_obj, ViewType view_type,
-            CameraType camera_type, bool _auto = true);
+	CCamera(element::CObject& bound_obj, ViewType view_type, CameraType camera_type, bool _auto = true);
 	virtual ~CCamera();
-    virtual void Update() override;     /*! Inherited via component::CComponent */
 
-    const glm::mat4& ViewMatrix() const noexcept;         /*! Get View matrix */
-	const glm::mat4& ProjectionMatrix() const noexcept;   /*! Get Projection matrix */
-    const glm::mat4& PvMatrix() const noexcept;                 /*! Get PV matrix */
+    /*! Get View matrix */
+    const glm::mat4& ViewMatrix() const noexcept {
+        return m_view;
+    }
 
-    inline void SetWorldPosition(const glm::vec3& position) {
+    /*! Get Projection matrix */
+	const glm::mat4& ProjectionMatrix() const noexcept {
+        return m_projection;
+    }
+
+    /*! Get PV matrix */
+    const glm::mat4& PvMatrix() const noexcept {
+        return m_pv;
+    }
+
+    void SetWorldPosition(const glm::vec3& position) noexcept {
         m_world = position;
         m_world_look = m_look + m_world;
-        m_information_changed = true;
+        m_view_changed = true;
     }
 
-    inline void SetLookDirection(const glm::vec3& look) {
+    void SetLookDirection(const glm::vec3& look) noexcept {
         m_look = look;
         m_world_look = m_look + m_world;
-        m_information_changed = true;
+        m_view_changed = true;
     }
+
+    /*!
+     * @brief Set rear distance value.
+     * If CCamera type is not PERSPECTIVE, ignore it and output warning log in debug mode.
+     */
+    void SetRear(const float value);
+
+    /*!
+     * @brief Set rear distance value.
+     * If CCamera type is not PERSPECTIVE, ignore it and output warning log in debug mode.
+     */
+    void SetFar(const float value);
+
+    /*!
+     * @brief Set field of view value.
+     * If CCamera type is not PERSPECTIVE, ignore it and output warning log in debug mode.
+     * Also, this value is range from 0.f ~ 90.f; otherwise it will output warning log and clamped.
+     */
+    void SetFov(const float value);
 
 private:
 	mutable ViewType m_viewtype;	/** View type variable */
@@ -99,17 +129,21 @@ private:
 
     glm::mat4 m_view{};             /*! View matrix */
 	glm::mat4 m_projection{};		/** Projection matrix world space or ui canvas to screen. */
-    glm::mat4 m_PV{};               /*! Projection * View matrix */
+    glm::mat4 m_pv{};               /*! Projection * View matrix */
 
     glm::vec3 m_world{};
     glm::vec3 m_look{0, 0, -1};
     mutable glm::vec3 m_world_look{};
 
 	float m_near, m_far;			/*! Distance sets region of sight. used only for perspective */
-	float m_perspective_angle;		/*! Angle sets how to see world, used only for perspective */
-    bool  m_information_changed{ false };
+    float m_fov;                    /*! Angle sets how to see world, used only for perspective */
+    bool  m_view_changed{ false };
+    bool  m_proj_changed{ false };
 
     static bool s_main_camera_initiated;/** Check flag if main camera is already initiated */
+
+    /*! Inherited via component::CComponent */
+    void Update() override;
 
 private:
     /*! Create members related to type hash value. */

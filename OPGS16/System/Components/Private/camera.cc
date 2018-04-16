@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Private/camera_object.cc
  * @brief Implementation of Camera component.
  *
@@ -34,53 +34,48 @@
  * @log
  * 2018-02-14 Create file and implement basic features.
  * 2018-03-07 Move class implementation into ::opgs16::component.
- */
+ * 2018-04-16 Implement functions, SetRear(), SetFar(), and SetFov().
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/camera.h"   /*! Header file */
+#include "../Public/camera.h"                   /*! Header file */
 
 #include <glm/gtc/matrix_transform.hpp>         /*! glm::ortho */
 #include "../../Manager/Public/scene_manager.h" /*! MSceneManager */
+#include "../../../Headers/import_logger.h"     /*! import logger in debug mode. */
 
 namespace opgs16 {
 namespace component {
 namespace {
-using Object = element::CObject;
+
 const glm::vec3 y_direction{ 0, 1, 0 };
+constexpr float k_ratio{ 256.f / 224.f };
 
-/*! Initiate orthographic projection. automatically set it to screen size. */
-void InitiateOrthographicProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
-    view = glm::lookAt(glm::vec3{ 128, 112, 0 }, glm::vec3{ 128, 112, -1 }, y_direction);
-    projection = glm::ortho<float>(-128.f, 128.f, -112.f, 112.f);
-    pv = projection * view;
-}
-
-/*! Initiate perspective projection matrix. automatically set it to screen size ratio. */
-void InitiatePerspectiveProjection(glm::mat4& view, glm::mat4& projection, glm::mat4& pv) {
-    view = glm::lookAt(glm::vec3{ 128, 112, 0 }, glm::vec3{ 128, 112, -1 }, y_direction);
-
-	const auto fovy = glm::radians(50.f);
-	const auto ratio = (256.f / 224.f);
-	projection = glm::perspective(fovy, ratio, 0.03f, 100.f);
-    pv = projection * view;
-}
 } /*! unnamed namespace */
 
 bool CCamera::s_main_camera_initiated{ false };
 
-CCamera::CCamera(Object& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
+CCamera::CCamera(element::CObject& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
     CComponent{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
     /*! Body */
+    SetWorldPosition({ 128, 112, 0 });
+    SetLookDirection({ 0, 0, -1 });
+
 	switch (m_viewtype) {
-	case ViewType::ORTHO:       InitiateOrthographicProjection(m_view, m_projection, m_PV); break;
-    case ViewType::PERSPECTIVE: InitiatePerspectiveProjection(m_view, m_projection, m_PV);  break;
+	case ViewType::ORTHO:
+        m_fov = m_near  = m_far = 0.f;
+        break;
+    case ViewType::PERSPECTIVE:
+        m_fov = 50.f; m_near = 0.1f; m_far = 100.f;
+        break;
 	}
+    m_view_changed = true; m_proj_changed = true;
+    Update();
 
     if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
         s_main_camera_initiated = true;
         manager::MSceneManager::Instance().PresentScene()->SetMainCamera(this);
     }
-    else
-        m_cameratype = CameraType::SUB;
+    else m_cameratype = CameraType::SUB;
 }
 
 CCamera::~CCamera() {
@@ -90,23 +85,63 @@ CCamera::~CCamera() {
     }
 }
 
-const glm::mat4& CCamera::ViewMatrix() const noexcept {
-    return m_view;
+void CCamera::SetRear(const float value) {
+    if (this->m_viewtype != ViewType::PERSPECTIVE) {
+        PUSH_LOG_WARN("You are trying to set rear value into CCamera which is not perspective.");
+    }
+    else {
+        m_near = value;
+        m_proj_changed = true;
+    }
 }
 
-const glm::mat4& CCamera::ProjectionMatrix() const noexcept {
-    return m_projection;
+void CCamera::SetFar(const float value) {
+    if (this->m_viewtype != ViewType::PERSPECTIVE) {
+        PUSH_LOG_WARN("You are trying to set rear value into CCamera which is not perspective.");
+    }
+    else {
+        m_far = value;
+        m_proj_changed = true;
+    }
 }
 
-const glm::mat4& CCamera::PvMatrix() const noexcept {
-    return m_PV;
+void CCamera::SetFov(const float value) {
+    if (this->m_viewtype != ViewType::PERSPECTIVE) {
+        PUSH_LOG_WARN("You are trying to set rear value into CCamera which is not perspective.");
+    }
+    else {
+        if (value < 0.f) {
+            PUSH_LOG_WARN("CCamera::SetFov() value is less than 0. Clamped to 0.");
+            m_fov = 0.f;
+        }
+        else if (value > 90.f) {
+            PUSH_LOG_WARN("CCamera::SetFov() value is higher than 90. Clamped to 90.");
+            m_fov = 90.f;
+        }
+
+        m_fov = value;
+        m_proj_changed = true;
+    }
 }
 
 void CCamera::Update() {
-    if (m_information_changed) {
-        m_view = glm::lookAt(m_world, m_world_look, y_direction);
-        m_PV = m_projection * m_view;
-        m_information_changed = false;
+    if (m_view_changed || m_proj_changed) {
+        if (m_view_changed) {
+            m_view = glm::lookAt(m_world, m_world_look, y_direction);
+            m_view_changed = false;
+        }
+        if (m_proj_changed) {
+            switch (m_viewtype) {
+            case ViewType::ORTHO:
+                m_projection = glm::ortho<float>(-128.f, 128.f, -112.f, 112.f);
+                break;
+            case ViewType::PERSPECTIVE:
+                m_projection = glm::perspective(glm::radians(m_fov), k_ratio, m_near, m_far);
+                break;
+            }
+            m_proj_changed = false;
+        }
+        m_pv = m_projection * m_view;
     }
 }
 
