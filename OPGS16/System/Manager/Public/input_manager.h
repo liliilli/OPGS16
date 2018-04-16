@@ -152,4 +152,6 @@ public:
 } /*! opgs16::manager */
 } /*! opgs16 */
 
+#define GET_INPUT_MANAGER opgs16::manager::MInputManager::Instance()
+
 #endif /*! OPGS16_SYSTEM_MANAGER_PUBLIC_INPUT_MANAGER_H */
