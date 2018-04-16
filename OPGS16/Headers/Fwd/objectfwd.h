@@ -71,6 +71,8 @@ class   CLoggerImpl;
 namespace element {
 class   CObject;
 class   CShaderNew;
+class   CScene;
+
 namespace _internal {
 class	CObjectImpl;
 } /*! opgs16::element::_inetrnal */
@@ -127,8 +129,6 @@ class   Text;
 class   TextImpl;
 struct  TextImplDeleter { void operator()(TextImpl* p); };
 }
-
-class   Scene;
 
 class   VertexArrayObject;
 class   ShaderWrapper;
