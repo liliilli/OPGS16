@@ -46,9 +46,9 @@
 #include "../../../../Manager/Public/scene_manager.h"  /*! SceneManager */
 #include "../../../../Manager/Public/timer_manager.h"  /*! TimerManager */
 #include "../../../../Shader/shader_wrapper.h"
-#include "../../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::Canvas */
-#include "../../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::Text */
-#include "../../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::Image */
+#include "../../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::CCanvas */
+#include "../../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::CText */
+#include "../../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::CImage */
 #include "../../../../../Headers/import_logger.h" /*! import logger in debug mode */
 #include "../../../../Core/Public/core_setting.h"
 #include "../../../../../manifest.h"
@@ -89,7 +89,8 @@ void __B_SCR::SetLogoImage() {
     std::default_random_engine rng;
     rng.seed(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 
-    logo = GetObject().Instantiate<canvas::Image>("Logo", "System", static_cast<canvas::Canvas*>(&GetObject()));
+    logo = GetObject().Instantiate<element::canvas::CImage>("Logo", "System",
+                                                            static_cast<element::canvas::CCanvas*>(&GetObject()));
     component::CSprite2DRenderer* renderer = logo->GetComponent<opgs16::component::CSprite2DRenderer>();
     renderer->SetTextureIndex(4);
     logo->SetImageSize(178.f, 19.f);
@@ -174,7 +175,7 @@ void __B_SCR::CreateTextObject() {
                        "MAIN RAN:1024KiByes\n\n");
     text_string.append("DID NOT FIND ANY ROM.\n"
                        "BOOT SAMPLE GAME...");
-    auto text = std::make_unique<canvas::Text>(text_string);
+    auto text = std::make_unique<element::canvas::CText>(text_string);
     {
         text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
         text->SetWorldPosition({ 0, -48, 0 });
@@ -183,7 +184,7 @@ void __B_SCR::CreateTextObject() {
         text->SetFontSize(8u);
         text->SetColor(glm::vec3{ 1, 1, 1 });
     }
-    GetObject().Instantiate<canvas::Text>("Statement", text);
+    GetObject().Instantiate<element::canvas::CText>("Statement", text);
     M_SET_TIMER(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
 }
 

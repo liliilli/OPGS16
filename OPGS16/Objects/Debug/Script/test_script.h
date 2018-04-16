@@ -10,7 +10,7 @@
 /*!
  * SET_UP_HASH_MEMBER_DERIVED()
  * component::CScriptFrame
- * Canvas::Text * CObject * ObjectTree
+ * Canvas::CText * CObject * ObjectTree
  */
 
 #include <iostream>

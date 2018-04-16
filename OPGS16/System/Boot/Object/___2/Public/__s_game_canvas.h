@@ -37,13 +37,13 @@
  * 2018-04-15 Create file.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../../GlobalObjects/Canvas/canvas.h" /*! Canvas::Canvas */
+#include "../../../../../GlobalObjects/Canvas/canvas.h" /*! Canvas::CCanvas */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class __S_GAME_CANVAS final : public canvas::Canvas {
+class __S_GAME_CANVAS final : public element::canvas::CCanvas {
 public:
 	__S_GAME_CANVAS();
 };

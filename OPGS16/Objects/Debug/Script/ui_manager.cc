@@ -3,7 +3,7 @@
 #include <ctime>                                    /*! std::time_t */
 #include <iomanip>                                  /*! std::setprecision */
 #include <sstream>                                  /*! std::ostringstream */
-#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::Text */
+#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::CText */
 #include "../../../System/Manager/Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
 
 /*! Tree */
@@ -12,9 +12,9 @@
 //#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
 
 DebugUiManager::DebugUiManager(opgs16::element::CObject& obj,
-                               canvas::Text* const _m_fps,
-                               canvas::Text* const _m_date,
-                               canvas::Text* const _m_tree) :
+                               opgs16::element::canvas::CText* const _m_fps,
+                               opgs16::element::canvas::CText* const _m_date,
+                               opgs16::element::canvas::CText* const _m_tree) :
     opgs16::component::CScriptFrame(obj),
     m_fps{ _m_fps }, m_date{ _m_date }, m_tree{ _m_tree } {
     Initiate();

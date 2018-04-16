@@ -36,8 +36,8 @@
 #include "../Public/__s_script_game_canvas.h"   /*! Header file */
 
 #include "../../../../Element/Public/object.h"
-#include "../../../../../GlobalObjects/Canvas/text.h"       /*! ::canvas::Text */
-#include "../../../../../GlobalObjects/Canvas/image.h"      /*! ::canvas::Image */
+#include "../../../../../GlobalObjects/Canvas/text.h"       /*! ::canvas::CText */
+#include "../../../../../GlobalObjects/Canvas/image.h"      /*! ::canvas::CImage */
 #include "../../../../Components/Public/empty_renderer.h"   /*!*/
 #include "../../../../Components/Public/sprite_renderer.h"  /*! opgs16::component::CSprite2DRenderer */
 #include "../../../Object/___2/Public/__s_game_canvas.h"
@@ -72,7 +72,7 @@ __S_SCRIPT_GAME_CANVAS::__S_SCRIPT_GAME_CANVAS(opgs16::element::CObject& bind_ob
 
     auto* obj = static_cast<__S_GAME_CANVAS*>(&GetObject());
     for (auto i = 0u; i < 4u; ++i) {
-        auto text_obj = obj->Instantiate<canvas::Text>(text_name_array[i], text_init_array[i]);
+        auto text_obj = obj->Instantiate<element::canvas::CText>(text_name_array[i], text_init_array[i]);
         text_obj->SetOrigin(origin_array[i]);
         text_obj->SetAlignment(alignments[i]);
         text_obj->SetFontName("Solomon");
@@ -84,8 +84,9 @@ __S_SCRIPT_GAME_CANVAS::__S_SCRIPT_GAME_CANVAS(opgs16::element::CObject& bind_ob
             m_score_obj = text_obj;
     }
 
+    using CImage = element::canvas::CImage;
     for (auto i = 0u; i < 3; ++i) {
-        canvas::Image* life = obj->Instantiate<canvas::Image>(k_life_img_name, "System", obj);
+        CImage* life = obj->Instantiate<CImage>(k_life_img_name, "System", obj);
         life->SetImageSize(12.f, 12.f);
         life->SetWorldPosition({ 80 + (14 * i), 84, 0 });
         auto renderer = life->GetComponent<component::CSprite2DRenderer>();

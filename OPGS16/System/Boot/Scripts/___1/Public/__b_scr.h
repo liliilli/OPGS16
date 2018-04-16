@@ -39,7 +39,7 @@
 
 #include "../../../../Frame/timer_handle.h"            /*! TimerHandle */
 #include "../../../../../Headers/script_common.h"      /*! component::ScriptFrame */
-#include "../../../../../Headers/Fwd/objectfwd.h"      /*! canvas::Image */
+#include "../../../../../Headers/Fwd/objectfwd.h"      /*! canvas::CImage */
 
 namespace opgs16 {
 namespace builtin {
@@ -54,7 +54,7 @@ private:
     TimerHandle m_timer;
     TimerHandle m_timer_2;
 
-    canvas::Image* logo;
+    opgs16::element::canvas::CImage* logo;
 
 private:
     void Start() override final;

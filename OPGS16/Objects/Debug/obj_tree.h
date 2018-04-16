@@ -1,12 +1,12 @@
 #ifndef OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_OBJECT_TREE_h
 #define OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_OBJECT_TREE_h
 
-#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
+#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::CText */
 #include "..\..\Headers\Fwd\objectfwd.h"        /*! ObjecTree */
 
-class ObjectObjectTree : public canvas::Text {
+class ObjectObjectTree : public opgs16::element::canvas::CText {
 public:
-    ObjectObjectTree() : canvas::Text{ "", glm::vec3{16, -32, 0} } {
+    ObjectObjectTree() : CText{ "", glm::vec3{16, -32, 0} } {
         SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");

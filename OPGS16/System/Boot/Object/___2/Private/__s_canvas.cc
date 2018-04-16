@@ -34,7 +34,7 @@
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__s_canvas.h"           /*! Header file */
-#include "../../../../../GlobalObjects/Canvas/text.h"   /*! ::canvas::Text */
+#include "../../../../../GlobalObjects/Canvas/text.h"   /*! ::canvas::CText */
 #include "../../../../Components/Public/empty_renderer.h"
 
 constexpr const char* k_text_name = "AngleText";
@@ -44,7 +44,7 @@ namespace builtin {
 namespace sample {
 
 __S_CANVAS::__S_CANVAS() {
-    auto text = Instantiate<canvas::Text>(k_text_name, "360'00''");
+    auto text = Instantiate<element::canvas::CText>(k_text_name, "360'00''");
     text->SetOrigin(IOriginable::Origin::DOWN_CENTER);
     text->SetWorldPosition({ 0, 32, 0 });
     text->SetAlignment(IAlignable::Alignment::CENTER);

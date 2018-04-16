@@ -1,11 +1,11 @@
 #ifndef OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_DATE_h
 #define OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_DATE_h
 
-#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::Text */
+#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::CText */
 
-class ObjectDate : public canvas::Text {
+class ObjectDate : public opgs16::element::canvas::CText {
 public:
-    ObjectDate() : canvas::Text{ "", glm::vec3{16, -24, 0} } {
+    ObjectDate() : CText{ "", glm::vec3{16, -24, 0} } {
         SetColor({ 1, 1, 1 });
 		SetOrigin(IOriginable::Origin::UP_LEFT);
         SetFontName("Solomon");

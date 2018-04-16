@@ -16,7 +16,7 @@ CanvasDebug::CanvasDebug() {
 
     /*! Script binding */
     AddComponent<DebugUiManager>(*this,
-        static_cast<::canvas::Text*>(GetChild("Fps")),
-        static_cast<::canvas::Text*>(GetChild("Date")),
-        static_cast<::canvas::Text*>(GetChild("Hier")));
+        static_cast<opgs16::element::canvas::CText*>(GetChild("Fps")),
+        static_cast<opgs16::element::canvas::CText*>(GetChild("Date")),
+        static_cast<opgs16::element::canvas::CText*>(GetChild("Hier")));
 }

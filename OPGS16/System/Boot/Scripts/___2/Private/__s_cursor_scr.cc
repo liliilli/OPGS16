@@ -58,7 +58,7 @@ void __S_CURSOR_SCR::Update() {
         object.SetRotationLocalAngle(angle_value);
 
         auto canvas = manager::MSceneManager::Instance().PresentScene()->GetObject("Canvas").get();
-        auto text = static_cast<canvas::Text*>(canvas->GetChild("AngleText"));
+        auto text = static_cast<element::canvas::CText*>(canvas->GetChild("AngleText"));
 
         char text_string[10]{};
         sprintf(text_string, "%.1f", object.GetRotationLocalAngle());

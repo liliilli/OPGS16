@@ -48,10 +48,10 @@ public:
     __S_SCRIPT_GAME_CANVAS(opgs16::element::CObject& bind_object);
 
 private:
-    canvas::Text* m_score_obj;
+    element::canvas::CText* m_score_obj;
 
     // Life image objects
-    std::vector<canvas::Image*> m_life_objects;
+    std::vector<opgs16::element::canvas::CImage*> m_life_objects;
 
     void Start() override final;
     void Update() override final;
