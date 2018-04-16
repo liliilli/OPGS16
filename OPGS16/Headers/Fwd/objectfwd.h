@@ -136,11 +136,6 @@ class   ShaderWrapper;
 /** Managers */
 class   TimerHandle;   /*! sub-type of timermanager */
 
-/*! Custom Initiated Objects */
-class   TestImage;      /*! TestImage : public Canvas::Image */
-class   TestStartTxt;   /*! TestImage : public Canvas::Text */
-class   TestStartTCopy; /*! TestStartTCopy : public Canvas::Text */
-
 namespace collision {
 class Collider2D;
 class RectangleCollider2D;

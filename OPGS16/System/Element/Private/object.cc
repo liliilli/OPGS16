@@ -128,21 +128,21 @@ void CObject::SetRotationParentFactor(const glm::vec3& factor) noexcept {
 
 void CObject::SetRotationWorldAngle(const float angle_value) noexcept {
     m_data->SetRotationWorldAngle(angle_value);
-    PropagateWorldAngle();
+    //PropagateWorldAngle();
 }
 
 void CObject::SetRotationWorldFactor(const glm::vec3& factor) noexcept {
     m_data->SetRotationWorldFactor(factor);
 }
-
-void CObject::PropagateWorldAngle() {
-    for (auto& child : m_children) {
-        auto& child_ptr = child.second;
-        /*! If object is not empty and activated and permits succeeding positioning. */
-        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag())
-            child_ptr->SetParentPosition(GetParentPosition());
-    }
-}
+//
+//void CObject::PropagateWorldAngle() {
+//    for (auto& child : m_children) {
+//        auto& child_ptr = child.second;
+//        /*! If object is not empty and activated and permits succeeding positioning. */
+//        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag())
+//            child_ptr->SetParentPosition(GetParentPosition());
+//    }
+//}
 
 // Scaling functions
 
