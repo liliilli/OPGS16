@@ -42,18 +42,18 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../Components/Public/sprite_renderer.h" /*! opgs16::component::CSprite2DRenderer */
-#include "../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::Canvas */
-#include "../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::Text */
-#include "../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::Image */
-#include "../../../../System/Manager/Public/scene_manager.h"  /*! SceneManager */
-#include "../../../../System/Manager/Public/timer_manager.h"  /*! TimerManager */
-#include "../../../../Headers/import_logger.h" /*! import logger in debug mode */
-#include "../../../Shader/shader_wrapper.h"
-#include "../../../Core/Public/core_setting.h"
-#include "../../../manifest.h"
+#include "../../../../Components/Public/sprite_renderer.h" /*! opgs16::component::CSprite2DRenderer */
+#include "../../../../Manager/Public/scene_manager.h"  /*! SceneManager */
+#include "../../../../Manager/Public/timer_manager.h"  /*! TimerManager */
+#include "../../../../Shader/shader_wrapper.h"
+#include "../../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::Canvas */
+#include "../../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::Text */
+#include "../../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::Image */
+#include "../../../../../Headers/import_logger.h" /*! import logger in debug mode */
+#include "../../../../Core/Public/core_setting.h"
+#include "../../../../../manifest.h"
 
-#include "../../Scene/Public/__sample.h"
+#include "../../../Scene/Public/__sample.h"
 
 namespace {
 constexpr const char*   shader_sliced{ "__b_sliced" };
@@ -90,6 +90,10 @@ void __B_SCR::SetLogoImage() {
     rng.seed(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 
     logo = GetObject().Instantiate<canvas::Image>("Logo", "System", static_cast<canvas::Canvas*>(&GetObject()));
+    component::CSprite2DRenderer* renderer = logo->GetComponent<opgs16::component::CSprite2DRenderer>();
+    renderer->SetTextureIndex(4);
+    logo->SetImageSize(178.f, 19.f);
+
     if ((rng() % 1'000) < 500) { // Normal
         logo->SetWorldPosition({ 0, 160, 0 });
         M_SET_TIMER(m_timer, 32, true, this, &__B_SCR::MoveLogo1);
@@ -100,7 +104,6 @@ void __B_SCR::SetLogoImage() {
             y_initial[i] = y_positions[i];
         }
 
-        opgs16::component::CSprite2DRenderer* renderer = logo->GetComponent<opgs16::component::CSprite2DRenderer>();
         renderer->SetShader(shader_sliced);
         renderer->SetInstanceCount(k_sliced_number << 1);
         auto& wrapper = renderer->Wrapper();
@@ -171,7 +174,7 @@ void __B_SCR::CreateTextObject() {
                        "MAIN RAN:1024KiByes\n\n");
     text_string.append("DID NOT FIND ANY ROM.\n"
                        "BOOT SAMPLE GAME...");
-        auto text = std::make_unique<canvas::Text>(text_string);
+    auto text = std::make_unique<canvas::Text>(text_string);
     {
         text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
         text->SetWorldPosition({ 0, -48, 0 });

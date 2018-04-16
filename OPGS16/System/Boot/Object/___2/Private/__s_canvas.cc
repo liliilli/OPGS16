@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/__2/Public/__s_canvas.cc
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_canvas.h"           /*! Header file */
+#include "../../../../../GlobalObjects/Canvas/text.h"   /*! ::canvas::Text */
+#include "../../../../Components/Public/empty_renderer.h"
+
+constexpr const char* k_text_name = "AngleText";
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_CANVAS::__S_CANVAS() {
+    auto text = Instantiate<canvas::Text>(k_text_name, "360'00''");
+    text->SetOrigin(IOriginable::Origin::DOWN_CENTER);
+    text->SetWorldPosition({ 0, 32, 0 });
+    text->SetAlignment(IAlignable::Alignment::CENTER);
+    text->SetFontName("BIOS");
+    text->SetFontSize(16u);
+    text->SetColor(glm::vec3{ .5f, .5f, .5f });
+
+    if (auto renderer = text->GetComponent<component::CEmptyRenderer>(); renderer)
+        renderer->SetRenderLayer(0);
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+} /*! ogps16 */

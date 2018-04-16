@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_PLAYER_BULLET_H
+#define OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_PLAYER_BULLET_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Public/__s_player_bullet.h
+ * @brief Bullet object file for player.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-15 Create file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_PLAYER_BULLET final : public element::CObject {
+public:
+	__S_PLAYER_BULLET(float init_x, float init_y, float init_z);
+
+private:
+    component::CSprite2DRenderer* renderer{ nullptr };
+    void Render() override final;
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
+} /*! ogps16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_PLAYER_BULLET_H

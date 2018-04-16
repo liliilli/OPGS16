@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_SCRIPTS____2_PUBLIC___S_SCRIPT_GAME_CANVAS_H
+#define OPGS16_SYSTEM_BOOT_SCRIPTS____2_PUBLIC___S_SCRIPT_GAME_CANVAS_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Scripts/Public/__s_script_game_canvas.h
+ * @brief Script file of ::opgs16::builtin::sample::__S_GAME_CANVAS object class.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-15 Create file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Components/Public/script_frame.h"
+#include <vector>
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_SCRIPT_GAME_CANVAS final : public component::CScriptFrame {
+public:
+    __S_SCRIPT_GAME_CANVAS(opgs16::element::CObject& bind_object);
+
+private:
+    canvas::Text* m_score_obj;
+
+    // Life image objects
+    std::vector<canvas::Image*> m_life_objects;
+
+    void Start() override final;
+    void Update() override final;
+
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __S_SCRIPT_GAME_CANVAS)
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+
+#endif // OPGS16_SYSTEM_BOOT_SCRIPTS____2_PUBLIC___S_SCRIPT_GAME_CANVAS_H

@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/___2/Private/__s_script_player.cc
+ * @brief Definition file of ../Public/__s_script_player.h
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-15 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_script_player.h"                /*! Header file */
+#include "../../../../Manager/Public/input_manager.h"   /*! ::opgs16::manager::MInputManager */
+#include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
+#include "../../../../Element/Public/object.h"          /*! ::opgs16::element::CObject */
+#include "../../../Object/___2/Public/__s_player_bullet.h"  /*! ::opgs16::builtin::sample::__S_PLAYER_BULLET */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_SCRIPT_PLAYER::__S_SCRIPT_PLAYER(opgs16::element::CObject& bind_object) :
+    CScriptFrame{ bind_object },
+    m_input_manager{ manager::MInputManager::Instance() },
+    m_game_scene{ *manager::MSceneManager::Instance().PresentScene() } {
+}
+
+void __S_SCRIPT_PLAYER::Start() {
+}
+
+void __S_SCRIPT_PLAYER::Update() {
+    if (m_input_manager.IsKeyPressed("KeyD")) {
+        auto pos = GetObject().GetFinalPosition();
+        m_game_scene.Instantiate<__S_PLAYER_BULLET>("PlayerBullet", pos.x, pos.y, pos.z);
+    }
+
+    if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
+    }
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H

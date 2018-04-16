@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Private/__s_manager.cc
+ * @brief Implementation file of ../Public/__s_manager.h
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_manager.h"  /*! Header file */
+#include "../../../Scripts/___2/Public/__s_script_manager.h"
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_MANAGER::__S_MANAGER() {
+    SetWorldPosition({ 128, 112, 0 });
+    AddComponent<__S_SCRIPT_MANAGER>(*this);
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+} /*! ogps16 */

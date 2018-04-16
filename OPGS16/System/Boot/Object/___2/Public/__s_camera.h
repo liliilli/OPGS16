@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
-#define OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
+#ifndef OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CAMERA_H
+#define OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CAMERA_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,49 +30,26 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Boot/Scripts/Public/__b_scr.h
+ * @file System/Boot/Object/___2/Public/__s_camera.h
+ * @brief Perspective camera object class file to used in actual game screen.
  * @author Jongmin Yun
  * @log
- * 2018-04-08 Activate file and add comments.
- * 2018-04-14 Move __B_SCR into ::opgs16::builtin::sample namespace.
+ * 2018-04-15 Create file.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Headers/script_common.h"      /*! component::ScriptFrame */
-#include "../../../../System/Frame/timer_handle.h"  /*! TimerHandle */
-#include "../../../../Headers/Fwd/objectfwd.h"      /*! canvas::Image */
+#include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class __B_SCR final : public opgs16::component::CScriptFrame {
+class __S_PERSPECTIVE_CAMERA final : public element::CObject {
 public:
-    __B_SCR(opgs16::element::CObject& obj);
-    virtual void Update() override final {};
-
-private:
-    TimerHandle m_timer;
-    TimerHandle m_timer_2;
-
-    canvas::Image* logo;
-
-private:
-    virtual void Start() override final;
-
-    void SetLogoImage();
-    void PlaySoundEffect();
-    void CreateTextObject();
-    void MoveLogo1();
-    void MoveLogoSliced();
-
-    void OnTriggerNextScene();
-
-    /*! Create members related to type hash value. */
-SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __B_SCR)
+	__S_PERSPECTIVE_CAMERA();
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16::sample */
+} /*! ogps16 */
 
-#endif // OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
+#endif // OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CAMERA_H

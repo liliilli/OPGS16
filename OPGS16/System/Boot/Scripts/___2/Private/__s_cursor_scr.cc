@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
- * @log
- * 2018-04-07 Create file.
- */
+#include "../Public/__s_cursor_scr.h"
+#include "../../../../Manager/Public/input_manager.h"
+#include "../../../../Manager/Public/scene_manager.h"
+#include "../../../../Element/Public/object.h"
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../../GlobalObjects/Canvas/text.h"
+
+constexpr float k_angle_offset = 3.1725f;
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_CURSOR_SCR::__S_CURSOR_SCR(opgs16::element::CObject& bind_object) :
+    CScriptFrame{ bind_object }, m_input_manager{ GET_INPUT_MANAGER } {
+    Initiate();
+    Start();
+}
+
+void __S_CURSOR_SCR::Start() {
+    GetObject().SetRotationLocalFactor({ 0, 0, 1 });
+}
+
+void __S_CURSOR_SCR::Update() {
+    if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
+        auto& object = GetObject();
+
+        float angle_value = object.GetRotationLocalAngle();
+        angle_value += k_angle_offset * h_val;
+        object.SetRotationLocalAngle(angle_value);
+
+        auto canvas = manager::MSceneManager::Instance().PresentScene()->GetObject("Canvas").get();
+        auto text = static_cast<canvas::Text*>(canvas->GetChild("AngleText"));
+
+        char text_string[10]{};
+        sprintf(text_string, "%.1f", object.GetRotationLocalAngle());
+        strcat(text_string, "'");
+        text->SetText(text_string);
+    }
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H

@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Private/__s_cursor.cc
+ * @brief Sample game cursor object.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_cursor.h"   /*! Header file */
+#include "../../../../Components/Public/sprite_renderer.h"
+#include "../../../../Manager/Public/scene_manager.h"
+#include "../../../Scripts/___2/Public/__s_cursor_scr.h"
+#include "../../../System/Components/Public/camera.h"       /*! ::opgs16::component::Camera */
+#include "../../../System/Shader/shader_wrapper.h"          /*! ShaderWrapper */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_CURSOR::__S_CURSOR() {
+    SetScaleValue(32.f);
+    SetWorldPosition({ 128, 112, 0 });
+
+    renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
+    renderer->SetTextureIndex(14);
+    AddComponent<__S_CURSOR_SCR>(*this);
+}
+
+void __S_CURSOR::Render() {
+    using manager::MSceneManager;
+    using component::CSprite2DRenderer;
+
+    if (renderer) {
+        const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
+        renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
+        GetComponent<CSprite2DRenderer>()->RenderSprite();
+    }
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+} /*! ogps16 */

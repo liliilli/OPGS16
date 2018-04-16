@@ -1,6 +1,3 @@
-#ifndef OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H
-#define OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -30,25 +27,48 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Boot/Scene/Public/__boot.h
- * @brief Boot scene file.
+ * @file System/Boot/Object/___2/Private/__s_player.cc
+ * @brief Definition file of ../Public/__s_player.h
  * @log
- * 2018-04-14 Add file information comments.
- * 2018-04-14 Move __BOOT class into namespace ::opgs16::builtin::sample.
+ * 2018-04-15 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../System/Element/Public/scene.h"    /*! Scene */
+#include "../Public/__s_player.h"
+#include "../../../../Components/Public/camera.h"           /*! ::opgs16::component::Camera */
+#include "../../../../Components/Public/sprite_renderer.h"  /*! ::opgs16::component::CSprite2DRenderer */
+#include "../../../../Manager/Public/scene_manager.h"       /*! ::opgs16::manager::SceneManager */
+#include "../../../../Shader/shader_wrapper.h"
+#include "../../../Scripts/___2/Public/__s_script_player.h" /*! ::opgs16::builtin::sample::__S_SCRIPT_PLAYER */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class __BOOT final : public element::CScene {
-    void Initiate() override final;
-};
+__S_PLAYER::__S_PLAYER() {
+    SetScaleValue(12.f);
+    SetLocalPosition({ 0, -80, 0 });
+    SetRotationLocalAngle(-60.f);
+    SetRotationLocalFactor({ 1, 0, 0 });
+
+    //SetRotationFromParentAngle(45.f);
+    //SetRotationFromParentFactor({ 0, 0, 1 });
+
+    renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
+    renderer->SetTextureIndex(14);
+    AddComponent<__S_SCRIPT_PLAYER>(*this);
+}
+
+void __S_PLAYER::Render() {
+    using manager::MSceneManager;
+    using component::CSprite2DRenderer;
+
+    if (renderer) {
+        const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
+        renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
+        GetComponent<CSprite2DRenderer>()->RenderSprite();
+    }
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
-
-#endif // OPGS16_SYSTEM_BOOT_SCENE_PUBLIC___BOOT_H

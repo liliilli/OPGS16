@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Private/__s_camera.cc
+ * @brief Definition file of ../Public/__s_camera.h.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-15 Create file.
+ * 2018-04-16 Adjust camera initial setting.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_camera.h"                   /*! Header file */
+#include "../../../../Components/Public/camera.h"   /*! component::CCamera */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
-};
+__S_PERSPECTIVE_CAMERA::__S_PERSPECTIVE_CAMERA() {
+    using CCamera = component::CCamera;
+    auto camera = AddComponent<CCamera>(*this, CCamera::ViewType::PERSPECTIVE, CCamera::CameraType::MAIN);
+    camera->SetWorldPosition({ 128, 112, 100 });
+    camera->SetFov(90.f);
+    camera->SetFar(250.f);
+    camera->SetRear(50.f);
+}
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H

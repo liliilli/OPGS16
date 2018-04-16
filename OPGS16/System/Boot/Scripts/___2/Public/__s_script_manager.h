@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_SCRIPTS_PUBLIC___S_SCRIPT_MANAGER_H
+#define OPGS16_SYSTEM_BOOT_SCRIPTS_PUBLIC___S_SCRIPT_MANAGER_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/Public/__s_manager.h
+ * @brief Script file for ::opgs16::builtin::sample::__S_MANAGER
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Components/Public/script_frame.h"    /*! ::opgs16::component::CScriptFrame */
+#include "../../../../Frame/timer_handle.h"         /*! TimerHandle */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_GAME_CANVAS;
+
+class __S_SCRIPT_MANAGER final : public component::CScriptFrame {
+public:
+    __S_SCRIPT_MANAGER(element::CObject& bind_object);
+
+private:
+    element::CScene& m_present_scene;   /*! Grasp element::CScene */
+    __S_GAME_CANVAS* m_ui_object;
+
+    enum class Status {
+        INITIALIZATION, /*! First status */
+        TITLE,          /*! Title status */
+        STARTING,
+        PLAYING,
+        PAUSING,
+        TIME_OFF,
+        GAME_OVER
+    };
+    Status m_status{ Status::INITIALIZATION };
+
+    uint32_t m_score{ 0 };
+    uint32_t m_life{ 0 };
+    uint32_t m_stage{ 0 };
+
+    TimerHandle m_common_timer_1;
+
+    void Start() override final;
+    void Update() override final;
+
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __S_SCRIPT_MANAGER)
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
+} /*! ogps16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // OPGS16_SYSTEM_BOOT_SCRIPTS_PUBLIC___S_SCRIPT_MANAGER_H

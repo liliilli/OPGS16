@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC__S_CANVAS_H
+#define OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC__S_CANVAS_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Public/__s_canvas.h
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../GlobalObjects/Canvas/canvas.h"  /*! Canvas::Canvas */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_CANVAS final : public canvas::Canvas {
+public:
+	__S_CANVAS();
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
+} /*! ogps16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC__S_CANVAS_H

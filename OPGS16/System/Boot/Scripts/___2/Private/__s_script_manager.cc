@@ -1,6 +1,3 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-
 /*!
  * @license BSD 2-Clause License
  *
@@ -29,26 +26,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/Private/__s_script_manager.cc
+ * @brief Implementation of Script file ::opgs16::builtin::sample::__S_SCRIPT_MANAGER
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../Public/__s_script_manager.h"               /*! Header file */
+#include "../../../Object/___2/Public/__s_game_canvas.h"/*! ::opgs16::builtin::sample::__S_GAME_CANVAS */
+#include "../../../Object/___2/Public/__s_player.h"     /*! ::opgs16::builtin::sample::__S_PLAYER */
+#include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+__S_SCRIPT_MANAGER::__S_SCRIPT_MANAGER(element::CObject& bind_object) : CScriptFrame{ bind_object },
+    m_present_scene{ *manager::MSceneManager::Instance().PresentScene() } {
+    Start();
 };
 
-} /*! opgs16::builtin::sample */
+void __S_SCRIPT_MANAGER::Start() {
+    m_ui_object = m_present_scene.Instantiate<__S_GAME_CANVAS>("GameCanvas");
+    GetObject().Instantiate<__S_PLAYER>("Player");
+
+    m_status = Status::TITLE;
+}
+
+void __S_SCRIPT_MANAGER::Update() {
+
+}
+
+} /*! ogps16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
-
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H

@@ -44,14 +44,8 @@ namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-void __BOOT::Draw() {
-    glClearColor(0, 0, .8f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	Scene::Draw();
-}
-
 void __BOOT::Initiate() {
-    //auto main_camera = std::make_unique<MainCameraObject>();
+    BackgroundColor()->b = 0.8f;
     Instantiate<MainCameraObject>("Camera");
     Instantiate<__B_CANV>("GameCanvas");
 }

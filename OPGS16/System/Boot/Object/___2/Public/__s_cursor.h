@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CURSOR_H
+#define OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CURSOR_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Object/___2/Public/__s_cursor.h
+ * @brief Sample game cursor object.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_CURSOR final : public element::CObject {
+public:
+	__S_CURSOR();
+
+private:
+    component::CSprite2DRenderer* renderer{ nullptr };
+
+    void Render() override final;
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
+} /*! ogps16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // OPGS16_SYSTEM_BOOT_OBJECT____2_PUBLIC___S_CURSOR_H

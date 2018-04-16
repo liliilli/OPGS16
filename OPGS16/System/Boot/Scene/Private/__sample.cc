@@ -26,29 +26,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Boot/Scene/Private/__sample.cc
  * @brief Sample game scene.
  * @author Jongmin Yun
  * @log
  * 2018-04-07 Create file.
- */
+ * 2018-04-15 Add Base objects.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__sample.h" /*! Header file */
-#include <GL/glew.h>            /*! OpenGL functions */
+
+#include "../../Object/___2/Public/__s_camera.h"    /*! ::ogps16::builtin::sample::__S_PERSPECTIVE_CAMERA */
+#include "../../Object/___2/Public/__s_manager.h"   /*! ::opgs16::builtin::sample::__S_MANAGER */
+
+constexpr const char* k_main_camera = "Camera";
+constexpr const char* k_cursor_name = "Cursor";
+constexpr const char* k_canvas_name = "Canvas";
+constexpr const char* k_manager_name = "Manager";
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
 void SampleGame::Initiate() {
+    auto bg_color = BackgroundColor();
+    bg_color->r = 0.2f;
 
-}
-
-void SampleGame::Draw() {
-    glClearColor(.2f, 0, 0, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	Scene::Draw();
+    Instantiate<__S_PERSPECTIVE_CAMERA>(k_main_camera);
+    Instantiate<__S_MANAGER>(k_manager_name);
 }
 
 } /*! opgs16::builtin::sample */

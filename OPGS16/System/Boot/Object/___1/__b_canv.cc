@@ -35,7 +35,7 @@
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "__b_canv.h"                               /*! Header file */
-#include "../../Scripts/Public/__b_scr.h"           /*! __B_SCR */
+#include "../../Scripts/___1/Public/__b_scr.h"      /*! __B_SCR */
 
 namespace opgs16 {
 namespace builtin {

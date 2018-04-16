@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
+#define OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Boot/Scripts/Public/__b_scr.h
  * @author Jongmin Yun
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-08 Activate file and add comments.
+ * 2018-04-14 Move __B_SCR into ::opgs16::builtin::sample namespace.
+ *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Frame/timer_handle.h"            /*! TimerHandle */
+#include "../../../../../Headers/script_common.h"      /*! component::ScriptFrame */
+#include "../../../../../Headers/Fwd/objectfwd.h"      /*! canvas::Image */
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __B_SCR final : public component::CScriptFrame {
+public:
+    __B_SCR(opgs16::element::CObject& obj);
+    void Update() override final {};
+
+private:
+    TimerHandle m_timer;
+    TimerHandle m_timer_2;
+
+    canvas::Image* logo;
+
+private:
+    void Start() override final;
+
+    void SetLogoImage();
+    void PlaySoundEffect();
+    void CreateTextObject();
+    void MoveLogo1();
+    void MoveLogoSliced();
+
+    void OnTriggerNextScene();
+
+    /*! Create members related to type hash value. */
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __B_SCR)
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
-} /*! opgs16 */
+} /*! opgs16::sample */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___B_SCR_H

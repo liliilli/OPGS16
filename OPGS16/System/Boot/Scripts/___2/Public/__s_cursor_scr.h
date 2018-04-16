@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
-#define SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#ifndef OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___S_CURSOR_SCR_H
+#define OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___S_CURSOR_SCR_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,26 +29,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Boot/Scene/__sample.h
- * @brief Sample game scene.
- * @author Jongmin Yun
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Scripts/Public/__s_cursor_scr.h
+ * @brief Script file of ::opgs16::builtin::sample::__S_CURSOR object class.
  * @log
- * 2018-04-07 Create file.
- */
+ * 2018-04-14 Create file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../Element/Public/scene.h"
+#include "../../../../Components/Public/script_frame.h"
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-class SampleGame final : public element::CScene{
-    void Initiate() override final;
+class __S_CURSOR_SCR final : public component::CScriptFrame {
+public:
+    __S_CURSOR_SCR(opgs16::element::CObject& bind_object);
+
+private:
+    void Start() override final;
+    void Update() override final;
+
+    const opgs16::manager::MInputManager& m_input_manager;
+
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __S_CURSOR_SCR)
 };
 
 } /*! opgs16::builtin::sample */
 } /*! opgs16::builtin */
 } /*! opgs16 */
 
-#endif // SYSTEM_BOOT_SCENE_PUBLIC___SAMPLE_H
+#endif // !OPGS16_SYSTEM_BOOT_SCRIPT_PUBLIC___S_CURSOR_SCR_H
+
