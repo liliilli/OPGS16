@@ -29,13 +29,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Helper/Public/template.h
  * @brief Template parameter overloading resolution rule test helper file.
  * @author Jongmin Yun
  * @log
  * 2018-03-16 Create file.
- */
+ * 2018-04-14 Add ::IsCSceneBase<_Ty>
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>
 #include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::CCamera */
@@ -47,6 +48,8 @@ template <class _Ty>
 inline constexpr bool IsCObjectSmtPtr = std::is_convertible_v<
     std::unique_ptr<std::decay_t<_Ty>>, std::unique_ptr<opgs16::element::CObject>>;
 
+template <class _Ty>
+inline constexpr bool IsCSceneBase = std::is_base_of_v<opgs16::element::CScene, _Ty>;
 
 #endif // !OPGS16_SYSTEM_HELPER_PUBLIC_TEMPLATE_H
 

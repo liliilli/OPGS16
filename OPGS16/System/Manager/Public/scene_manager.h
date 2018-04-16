@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Manager/Public/scene_manager.h
  * @author Jongmin Yun
  *
@@ -37,12 +37,14 @@
  * 2018-02-14 Create file.
  * 2018-03-04 Refactoring.
  * 2018-04-08 Add a macro, detach automatic initiation from push scene.
- */
+ * 2018-04-14 Collapsed inline function definitions to class body.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>
 #include <stack>
-#include "../../Core/Public/application.h" /*! Application for callback forwarding */
-#include "../../Frame/scene.h"     /*! Scene */
+#include "../../Core/Public/application.h"  /*! Application for callback forwarding */
+#include "../../Element/Public/scene.h"     /*! ::opgs16::element::CScene */
+#include "../../Helper/Public/template.h"   /*! Template SFINAE helper header. */
 
 namespace opgs16 {
 namespace manager {
@@ -53,7 +55,7 @@ namespace manager {
  */
 class MSceneManager final {
 private:
-    using scene_stack = std::stack<std::unique_ptr<Scene>>;
+    using scene_stack = std::stack<std::unique_ptr<element::CScene>>;
 
 public:
     /*! Return singleton instance of SceneManager. */
@@ -70,9 +72,7 @@ public:
      */
     template <
         class _Ty,
-        typename = std::enable_if_t<
-        std::is_base_of_v<Scene, _Ty>
-        >
+        typename = std::enable_if_t<IsCSceneBase<_Ty>>
     >
     void PushScene();
 
@@ -83,9 +83,7 @@ public:
      */
     template <
         class _Ty,
-        typename = std::enable_if_t<
-        std::is_base_of_v<Scene, _Ty>
-        >
+        typename = std::enable_if_t<IsCSceneBase<_Ty>>
     >
     void ReplaceScene() {
         auto& app = MApplication::Instance();
@@ -110,7 +108,7 @@ public:
     * @brief
     * @return
     */
-    inline scene_stack& GetLoadedSceneList() noexcept {
+    scene_stack& GetLoadedSceneList() noexcept {
         return m_scenes;
     }
 
@@ -118,13 +116,18 @@ public:
      * @brief Get top scene's pointer.
      * @return The pointer of top scene, if application has no scene return nullptr
      */
-    inline Scene* const PresentScene();
+    element::CScene* const PresentScene() {
+        if (m_scenes.empty()) return nullptr;
+        else return m_scenes.top().get();
+    }
 
     /*!
      * @brief
      * @return
      */
-    inline bool Empty() const noexcept;
+    bool Empty() const noexcept {
+        return m_scenes.empty();
+    }
 
 private:
     scene_stack m_scenes;	/** Scene stack */
@@ -135,9 +138,7 @@ private:
 
     template <
         class _Ty,
-        typename = std::enable_if_t<
-           std::is_base_of_v<Scene, _Ty>
-        >
+        typename = std::enable_if_t<IsCSceneBase<_Ty>>
     >
     void PrivateReplaceScene() {
         /*! Purify remain resources */
@@ -167,15 +168,6 @@ public:
 template <class _Ty, typename>
 void MSceneManager::PushScene() {
     m_scenes.push(std::make_unique<_Ty>());
-}
-
-inline Scene* const MSceneManager::PresentScene() {
-    if (m_scenes.empty()) return nullptr;
-    else return m_scenes.top().get();
-}
-
-inline bool MSceneManager::Empty() const noexcept {
-    return m_scenes.empty();
 }
 
 } /*! opgs16::manager */

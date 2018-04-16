@@ -7,9 +7,9 @@
 #include "../../../System/Manager/Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
 
 /*! Tree */
-#include "../../../System/Debugs/hierarchy_tree.h"  /*! ObjectTree */
-#include "../../../System/Frame/scene.h"            /*! GetObjectTree() */
-#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
+//#include "../../../System/Debugs/hierarchy_tree.h"  /*! ObjectTree */
+//#include "../../../System/Element/Public/scene.h"          /*! GetObjectTree() */
+//#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
 
 DebugUiManager::DebugUiManager(opgs16::element::CObject& obj,
                                canvas::Text* const _m_fps,
