@@ -10,3 +10,4 @@ glad.c
 Doxyfile
 *.ttf
 *.ktx
+*.TMP
