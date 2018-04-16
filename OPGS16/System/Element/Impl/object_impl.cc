@@ -26,14 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Object/Impl/Private/object_impl.cc
  * @brief Implementation file of object_impl.h
  * @author Jongmin Yun
  * @log
  * 2018-03-05 Add rendering layer member functions.
  * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
- */
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "object_impl.h"                    /*! Header file */
 #include <glm/gtc/matrix_transform.hpp>     /*! glm::rotate */
@@ -53,8 +53,19 @@ void CObjectImpl::RefreshFinalPosition() const {
 }
 
 void CObjectImpl::RefreshRotateMatrix() const {
-	m_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_local_angle), m_rotation_local_factor);
-    m_rotation_deprecated = false;
+	m_local_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_local_angle), m_rotation_local_factor);
+    m_local_rotation_deprecated = false;
+}
+
+void CObjectImpl::RefreshParentRotationMatrix() const {
+    m_parent_rotate_matrix = glm::rotate(glm::mat4{},
+                                         glm::radians(m_rotation_parent_from_angle), m_rotation_parent_from_factor);
+    m_parent_rotation_deprecated = false;
+}
+
+void CObjectImpl::RefreshWorldRotationMatrix() const {
+    m_world_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_world_angle), m_rotation_world_factor);
+    m_world_rotation_deprecated = false;
 }
 
 void CObjectImpl::RefreshScaleVector() const {
@@ -63,25 +74,36 @@ void CObjectImpl::RefreshScaleVector() const {
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
-	if (m_model_matrix_deprecated) {
-        if (m_final_pos_deprecated) RefreshFinalPosition();
-        if (m_rotation_deprecated)  RefreshRotateMatrix();
-        if (m_scale_deprecated)     RefreshScaleVector();
+	if (m_local_model_matrix_deprecated) {
+        if (m_final_pos_deprecated)       RefreshFinalPosition();
+        if (m_local_rotation_deprecated)  RefreshRotateMatrix();
+        if (m_scale_deprecated)           RefreshScaleVector();
 
         /*! Rotation */
-		m_model = m_rotate_matrix;
+		m_local_model = m_local_rotate_matrix;
         /*! Scale */
-        m_model[0] *= m_scale_final_vector[0];
-        m_model[1] *= m_scale_final_vector[1];
-        m_model[2] *= m_scale_final_vector[2];
+        m_local_model[0] *= m_scale_final_vector[0];
+        m_local_model[1] *= m_scale_final_vector[1];
+        m_local_model[2] *= m_scale_final_vector[2];
         /*! Movement */
-        m_model[3][0] = m_final_position.x;
-        m_model[3][1] = m_final_position.y;
-        m_model[3][2] = m_final_position.z;
-		m_model_matrix_deprecated = false;
+        m_local_model[3][0] = m_final_position.x;
+        m_local_model[3][1] = m_final_position.y;
+        m_local_model[3][2] = m_final_position.z;
+		m_local_model_matrix_deprecated = false;
 	}
 
-	return m_model;
+    // Performance...???
+    if (m_offset_model_matrix_deprecated) {
+        if (m_parent_rotation_deprecated) RefreshParentRotationMatrix();
+        if (m_world_rotation_deprecated)  RefreshWorldRotationMatrix();
+        m_offset_model_matrix_deprecated = false;
+    }
+
+    m_final_model = m_world_rotate_matrix * (m_parent_rotate_matrix * m_local_model);
+    m_final_position.x = m_final_model[3][0];
+    m_final_position.y = m_final_model[3][1];
+    m_final_position.z = m_final_model[3][2];
+	return m_final_model;
 }
 
 std::string CObjectImpl::GetTagNameOf() const {

@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_OBJECT_OBJECT_H
-#define OPGS16_SYSTEM_OBJECT_OBJECT_H
+#ifndef OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H
+#define OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H
 
 /*!
  * @license BSD 2-Clause License
@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System\Object\object.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Element/Public/object.h
  * @brief The file consist of basic scene API.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
@@ -44,9 +44,8 @@
  * 2018-02-23 Add hierarchy rotation and scaling option. (mechanism is not implemented yet)
  * 2018-03-05 Add member function related to controlling rendering layer.
  * 2018-03-11 Move contents into ::opgs16::element namespace.
- *
- * @todo Implement hierarchy rotation mechanism.
- */
+ * 2018-04-16 Add rotation (parent, world) get/set functions.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <algorithm>        /*! std::find_if */
 #include <functional>       /*! std::hash */
@@ -63,12 +62,12 @@
                                               * ::opgs16::component::CRigidbody2D
                                               * ::opgs16::element::_internal::ObjectImplDeleter
                                               */
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 namespace opgs16 {
 namespace element {
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @class CObject
  * @brief The class for every object to update and draw.
  *
@@ -84,9 +83,8 @@ namespace element {
  *            adding LocalUpdate() method which replaces Update() override.
  * 2018-03-05 Add member function related to controlling rendering layer.
  * 2018-03-11 Move contents into ::opgs16::element namespace.
- *
- * @todo Implement hierarchy rotation mechanism.
- */
+ * 2018-04-16 Add rotation (parent, world) get/set functions.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 class CObject {
 private:
     using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
@@ -117,7 +115,7 @@ public:
     }
 
 	/*! Calls children to draw or render something it has.  */
-    inline void Draw() {
+    void Draw() {
         Render();
     }
 
@@ -157,14 +155,30 @@ public:
 	 */
 	void SetParentPosition(const glm::vec3& parent_position);
 
-    /*! Get Object's final position. */
+    /*!
+     * @brief Get Object's final position.
+     */
     const glm::vec3& GetFinalPosition() const noexcept;
 
     /**
      * @brief The method gets rotation angle value
      * @return Object's rotation angle value.
      */
-    const float GetRotationAngle() const noexcept;
+    const float GetRotationLocalAngle() const noexcept;
+
+    /**
+     * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
+     * @return Object's rotation vector which has (x, y, z) rotation axis factor.
+     */
+    const glm::vec3& GetRotationLocalFactor() const noexcept;
+
+    const float GetRotationFromParentAngle() const noexcept;
+
+    const glm::vec3& GetRotationFromParentFactor() const noexcept;
+
+    const float GetRotationWorldAngle() const noexcept;
+
+    const glm::vec3& GetRotationWorldFactor() const noexcept;
 
     /**
      * @brief The method sets rotation angle values.
@@ -172,19 +186,21 @@ public:
      * input value is negative and factor is [0, 1], axis rotates counter-clockwise.
      * @param[in] angle_value Angle value to set on.
      */
-    void SetRotationAngle(const float angle_value);
-
-    /**
-     * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
-     * @return Object's rotation vector which has (x, y, z) rotation axis factor.
-     */
-    const glm::vec3& GetRotationFactor() const noexcept;
+    void SetRotationLocalAngle(const float angle_value) noexcept;
 
     /**
      * @brief The method sets rotation factor have values which ranges [-1, 1].
      * @param[in] factor
      */
-    void SetRotationFactor(const glm::vec3& factor);
+    void SetRotationLocalFactor(const glm::vec3& factor) noexcept;
+
+    void SetRotationParentAngle(const float angle_value) noexcept;
+
+    void SetRotationParentFactor(const glm::vec3& factor) noexcept;
+
+    void SetRotationWorldAngle(const float angle_value) noexcept;
+
+    void SetRotationWorldFactor(const glm::vec3& factor) noexcept;
 
     /**
      * @brief The method gets scaling values
@@ -193,22 +209,26 @@ public:
     const float GetScaleValue() const noexcept;
 
     /**
-     * @brief The method sets scaling angle values.
-     * @param[in] scale_value Scaling value to set on.
-     */
-    void SetScaleValue(const float scale_value);
-
-    /**
      * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
      * @return Object's scaling vector which has (x, y, z) axis factors.
      */
     const glm::vec3& GetScaleFactor() const noexcept;
 
     /**
+     * @brief The method sets scaling angle values.
+     * @param[in] scale_value Scaling value to set on.
+     */
+    void SetScaleValue(const float scale_value);
+
+    /**
      * @brief The method sets scaling vector have (x, y, z) scaling factors.
      * @param[in] factor Scaling factor
      */
     void SetScaleFactor(const glm::vec3& factor);
+
+    /*!
+     *
+     */
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -349,10 +369,10 @@ public:
      * in SettingManager. If not exist, do nothing and chagne error flag.
      * @param[in] tag_name Tag name
      */
-     void SetTag(const std::string& tag_name);
+    void SetTag(const std::string& tag_name);
 
      /*! Overloaded version of SetTag(tag_name) */
-     void SetTag(const size_t tag_index);
+    void SetTag(const size_t tag_index);
 
     /*!
      * @brief Get tag index of this object.
@@ -463,4 +483,4 @@ inline const std::string CObject::CreateChildTag(const std::string& tag) noexcep
 } /*! opgs16::element */
 } /*! opgs16 */
 
-#endif /** OPGS16_SYSTEM_OBJECT_OBJECT_H */
+#endif /** OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H */

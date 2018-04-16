@@ -78,15 +78,33 @@ void CObject::PropagateParentPosition() {
     }
 }
 
-const float CObject::GetRotationAngle() const noexcept {
+// Rotation functions.
+
+const float CObject::GetRotationLocalAngle() const noexcept {
     return m_data->GetRotationLocalAngle();
 }
 
-const glm::vec3& CObject::GetRotationFactor() const noexcept {
+const glm::vec3& CObject::GetRotationLocalFactor() const noexcept {
     return m_data->GetRotationLocalFactor();
 }
 
-void CObject::SetRotationAngle(const float angle_value) {
+const float CObject::GetRotationFromParentAngle() const noexcept {
+    return m_data->GetRotationFromParentAngle();
+}
+
+const glm::vec3& CObject::GetRotationFromParentFactor() const noexcept {
+    return m_data->GetRotationFromParentFactor();
+}
+
+const float CObject::GetRotationWorldAngle() const noexcept {
+    return m_data->GetRotationWorldAngle();
+}
+
+const glm::vec3& CObject::GetRotationWorldFactor() const noexcept {
+    return m_data->GetRotationWorldFactor();
+}
+
+void CObject::SetRotationLocalAngle(const float angle_value) noexcept {
 	m_data->SetRotationLocalAngle(angle_value);
 
     //for (auto& child : m_children) {
@@ -96,9 +114,37 @@ void CObject::SetRotationAngle(const float angle_value) {
     //}
 }
 
-void CObject::SetRotationFactor(const glm::vec3& factor) {
+void CObject::SetRotationLocalFactor(const glm::vec3& factor) noexcept {
 	m_data->SetRotationLocalFactor(factor);
 }
+
+void CObject::SetRotationParentAngle(const float angle_value) noexcept {
+    m_data->SetRotationParentAngle(angle_value);
+}
+
+void CObject::SetRotationParentFactor(const glm::vec3& factor) noexcept {
+    m_data->SetRotationParentFactor(factor);
+}
+
+void CObject::SetRotationWorldAngle(const float angle_value) noexcept {
+    m_data->SetRotationWorldAngle(angle_value);
+    PropagateWorldAngle();
+}
+
+void CObject::SetRotationWorldFactor(const glm::vec3& factor) noexcept {
+    m_data->SetRotationWorldFactor(factor);
+}
+
+void CObject::PropagateWorldAngle() {
+    for (auto& child : m_children) {
+        auto& child_ptr = child.second;
+        /*! If object is not empty and activated and permits succeeding positioning. */
+        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag())
+            child_ptr->SetParentPosition(GetParentPosition());
+    }
+}
+
+// Scaling functions
 
 const float CObject::GetScaleValue() const noexcept {
     return m_data->GetScaleLocalValue();
