@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file GlobalObjects/Canvas/text.h
  * @brief Text object used in Canvas hierarchy.
  *
@@ -37,23 +37,28 @@
  * @log
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace Draw() with Render()
  * 2018-03-11 Correction of UiObject namespace hierarchy positioning, and path.
- */
+ * 2018-04-17 Move ::canvas::CText to ::opgs16::element::canvas::CText.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>       /*! std::unique_ptr */
 #include <glm/glm.hpp>  /*! using glm::vec3<float, 0> = glm::tvec3<float, 0> */
 #include "../../GlobalObjects/Interface/i_alignable.h"  /*! IAlignable */
 #include "../../Headers/Fwd/objectfwd.h"    /*! MFontManager
-                                              * Canvas::TextImpl
+                                              * Canvas::CTextImpl
                                               * Canvas::TextImplDeleter
                                               * glm::vec3 */
 #include "../../System/Element/Public/ui_object.h"      /*! ::opgs16::element::UiObject */
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
 /*!
- * @class Text
+ * @class CText
  * @brief This class display text on position aligned with FontManager.
+ * @log
+ * 2018-04-17 Move ::canvas::CText to ::opgs16::element::canvas::CText.
  */
-class Text : public opgs16::element::UiObject, public IAlignable {
+class CText : public opgs16::element::UiObject, public IAlignable {
 public:
     /**
      * @brief Text component (stand-alone) constructor.
@@ -61,13 +66,13 @@ public:
      * position parameter was based on screen or parent's size where component is in hierarchy
      * structrue of parent.
      */
-	Text(const std::string& initial_txt,
-         const glm::vec3& position = glm::vec3{ 0.f, 0.f, 0.f },
-         const glm::vec3& color = glm::vec3{ 1.f, 1.f, 1.f });
+	CText(const std::string& initial_txt,
+          const glm::vec3& position = glm::vec3{ 0.f, 0.f, 0.f },
+          const glm::vec3& color = glm::vec3{ 1.f, 1.f, 1.f });
 
-	virtual ~Text() = default;
+	virtual ~CText() = default;
 
-	virtual void Render() override final;
+	void Render() override final;
 
     /**
      * @brief Set text string to display.
@@ -115,15 +120,18 @@ public:
      * does not alter bit-consistancy of FontManager.
      * @return Const reference of FontManager which this class grasps (must not be a nullptr.)
      */
-    inline const opgs16::manager::MFontManager& GetFontManager() const {
+    const opgs16::manager::MFontManager& GetFontManager() const {
         return *m_font_manager;
     }
 
 private:
     /** private implementation instance */
-    std::unique_ptr<TextImpl, TextImplDeleter> m_text_impl{ nullptr };
+    std::unique_ptr<opgs16::element::canvas::_internal::CTextImpl,
+    opgs16::element::canvas::_internal::TextImplDeleter> m_text_impl{ nullptr };
 	opgs16::manager::MFontManager* const m_font_manager{ nullptr };
 };
-}
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_TEXT_H */

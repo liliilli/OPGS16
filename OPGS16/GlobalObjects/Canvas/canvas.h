@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file GlobalObjects\Canvas\image.h
  * @brief Canvas frame object to display UI components.
  *
@@ -37,17 +37,19 @@
  * @log
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace with Render(), LocalUpdate()
  * 2018-03-11 Refactoring.
- */
+ * 2018-04-16 Move ::canvas::CCanvas to ::opgs16::element::canvas::CCanvas.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../Headers/Fwd/objectfwd.h"    /*! glm::mat4
                                               * helper::CShaderNew;
                                               * camera::CameraObject; */
 #include "../../System/Element/Public/ui_object.h"  /*! ::opgs16::element::UiObject */
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
-
 /**
- * @class Canvas
+ * @class CCanvas
  * @brief Canvas frame object saves and manages UI components and permit accessing from UI m_object_list.
  *
  * This canvas offers several features. (and comming soon features)
@@ -56,19 +58,18 @@ namespace canvas {
  * 3. UI components can access Canvas object (parent), get orthographic projection.
  * 4. when Canvas object is destroyed, children UI components are automatically disorganized.
  *
- * @date 2018-02-19
- *
  * @log
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace with Render(), LocalUpdate()
+ * 2018-04-16 Move ::canvas::CCanvas to ::opgs16::element::canvas::CCanvas.
  */
-class Canvas : public opgs16::element::UiObject {
+class CCanvas : public opgs16::element::UiObject {
 public:
 	/**
 	 * @brief Canvas constructor.
-	 * Canvas has orthographic camera fixed to screen size, this camera will be initialized.
+	 * CCanvas has orthographic camera fixed to screen size, this camera will be initialized.
 	 */
-	Canvas();
-	virtual ~Canvas() = default;
+	CCanvas();
+	virtual ~CCanvas() = default;
 
 	virtual void LocalUpdate() override;
 
@@ -85,6 +86,8 @@ private:
 	bool m_is_size_changed;
 };
 
-}
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H */

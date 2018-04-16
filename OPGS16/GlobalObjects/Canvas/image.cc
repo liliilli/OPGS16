@@ -1,4 +1,18 @@
-#include "image.h"
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file GlobalObjects/Canvas/image.cc
+ * @brief Definition file of ./image.h
+ * @log
+ * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "image.h"          /*! Header file */
 
 #include <array>            /*! std::array */
 #include "canvas.h"
@@ -7,16 +21,19 @@
 #include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
-Image::Image(const std::string& sprite_tag, const Canvas* const ref_canvas) :
-	m_ref_canvas{ const_cast<Canvas*>(ref_canvas) } {
-    m_renderer_ptr = AddComponent<opgs16::component::CSprite2DRenderer>(*this, sprite_tag, "gQuad");
+
+CImage::CImage(const std::string& sprite_tag, const CCanvas* const ref_canvas) :
+	m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
+    m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(*this, sprite_tag, "gQuad");
 }
 
-Image::Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas) :
-	Image{ sprite_tag, ref_canvas.get() } { }
+CImage::CImage(const std::string& sprite_tag, const std::unique_ptr<CCanvas>& ref_canvas) :
+	CImage{ sprite_tag, ref_canvas.get() } { }
 
-void Image::LocalUpdate() {
+void CImage::LocalUpdate() {
 	/** Update my xywh */
 	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
 	const auto xy = GetFinalPosition() - (wh / 2.0f);
@@ -29,12 +46,12 @@ void Image::LocalUpdate() {
 	UiObject::LocalUpdate();
 }
 
-void Image::SetImageSize(const float width, const float height) {
+void CImage::SetImageSize(const float width, const float height) {
 	SetScaleValue(1.0f);
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
 }
 
-void Image::Render() {
+void CImage::Render() {
 	auto is_already_enabled{ false };
 	if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
 	else {
@@ -54,4 +71,6 @@ void Image::Render() {
 	if (!is_already_enabled) glDisable(GL_BLEND);
 }
 
-}
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! opgs16 */

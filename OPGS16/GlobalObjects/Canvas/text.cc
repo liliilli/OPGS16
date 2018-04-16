@@ -26,18 +26,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file GlobalObjects/Canvas/text.cc
+ * @brief Definition file of ./text.h.
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-15
- */
+ * 2018-03-15 Unknown.
+ * 2018-04-17 Move definition function body into ::opgs16::element::canvas namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "text.h"                       /*! Header file */
 #include <iostream>                     /*! std::cerr
                                           * std::endl */
-#include "Impl/text_impl.h"             /*! Canvas::TextImpl */
+#include "Impl/text_impl.h"             /*! Canvas::CTextImpl */
 #include "../../System/Manager/Public/font_manager.h"  /*! MFontManager
                                                   * aliasing font_map_ptr
                                                   * FontManager& Instance()
@@ -47,23 +49,30 @@
 /*! ::opgs16::component::CEmptyRenderer */
 #include "../../System/Components/Public/empty_renderer.h"
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
-using fontMap = opgs16::manager::MFontManager::font_map_ptr;
-void TextImplDeleter::operator()(TextImpl* p) { delete p; }
+namespace _internal {
+void TextImplDeleter::operator()(CTextImpl* p) { delete p; }
 
-Text::Text(const std::string& initial_txt, const glm::vec3& position, const glm::vec3& color) :
-	m_font_manager{ &opgs16::manager::MFontManager::Instance() } {
+} /*! opgs16::element::canvas::_internal */
+
+using fontMap = manager::MFontManager::font_map_ptr;
+using CTextImpl = _internal::CTextImpl;
+
+CText::CText(const std::string& initial_txt, const glm::vec3& position, const glm::vec3& color) :
+	m_font_manager{ &manager::MFontManager::Instance() } {
 	/** Body */
-    std::unique_ptr<TextImpl, TextImplDeleter> impl{ new TextImpl(*this) };
+    std::unique_ptr<CTextImpl, _internal::TextImplDeleter> impl{ new CTextImpl(*this) };
     m_text_impl = std::move(impl);
     m_text_impl->SetText(initial_txt);
     m_text_impl->SetColor(color);
 	SetWorldPosition(position);
 
-    AddComponent<::opgs16::component::CEmptyRenderer>(*this);
+    AddComponent<component::CEmptyRenderer>(*this);
 }
 
-void Text::Render() {
+void CText::Render() {
 	if (m_font_manager) {
 		/** Set font */
         auto font_name = m_text_impl->GetFontName();
@@ -83,23 +92,23 @@ void Text::Render() {
 	else { std::cerr << "ERROR::FONT_MANAGER CAN NOT FIND::CRITICAL" << std::endl; }
 }
 
-void Text::SetText(const std::string& new_text) {
+void CText::SetText(const std::string& new_text) {
     m_text_impl->SetText(new_text);
 }
 
-const std::string Text::GetText() const {
+const std::string CText::GetText() const {
     return m_text_impl->GetText();
 }
 
-void Text::SetFontSize(const unsigned size) {
+void CText::SetFontSize(const unsigned size) {
     m_text_impl->SetFontSize(size);
 }
 
-const unsigned Text::GetFontSize() const {
+const unsigned CText::GetFontSize() const {
     return m_text_impl->GetFontSize();
 }
 
-bool Text::SetFontName(const std::string& font_tag) {
+bool CText::SetFontName(const std::string& font_tag) {
 	if (m_font_manager && m_font_manager->DoesFontExist(font_tag)) {
 		m_text_impl->SetFontName(font_tag);
 		return true;
@@ -111,8 +120,10 @@ bool Text::SetFontName(const std::string& font_tag) {
 	}
 }
 
-void Text::SetColor(const glm::vec3 & color) {
+void CText::SetColor(const glm::vec3 & color) {
     m_text_impl->SetColor(color);
 }
 
-}
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! ogps16 */

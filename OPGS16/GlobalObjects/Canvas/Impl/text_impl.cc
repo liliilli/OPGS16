@@ -1,23 +1,41 @@
-#include "text_impl.h"  /** Header file */
-#include "..\text.h"    /** Canvas::Text
-                          * void SetScaleLocalValue(float)
-                          * const FontManager& GetFontManager() */
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file GlobalObjects/Canvas/Impl/text_impl.cc
+ * @brief Definition functions not inlined of ./text_impl.h
+ * @log
+ * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "text_impl.h"  /*! Header file */
+#include "../text.h"    /*! opgs16::element::canvas::CText */
 #include "../../../System/Manager/Public/font_manager.h"
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
-TextImpl::TextImpl(Text& handle_ref) : m_handle_ref{ handle_ref } {}
+namespace _internal {
+CTextImpl::CTextImpl(CText& handle_ref) : m_handle_ref{ handle_ref } {}
 
-void TextImpl::SetFontSize(const unsigned size) {
+void CTextImpl::SetFontSize(const unsigned size) {
     unsigned def = opgs16::manager::k_default_font_size;
-	m_handle_ref.SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
+    m_handle_ref.SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
 }
 
-void TextImpl::SetColor(const glm::vec3& color) {
+void CTextImpl::SetColor(const glm::vec3& color) {
     m_color = color;
 }
 
-void TextImpl::SetColor(const float r, const float g, const float b) {
+void CTextImpl::SetColor(const float r, const float g, const float b) {
     m_color = glm::vec3{ r, g, b };
 }
 
-}
+} /*! opgs16::element::canvas::_internal */
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! opgs16 */

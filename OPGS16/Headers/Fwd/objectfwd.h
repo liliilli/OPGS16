@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file Header/Fwd/object_fwd.h
  * @brief Forward declaration list of framework.
  *
@@ -37,7 +37,9 @@
  * @log
  * 2018-03-01 Added opgs16 namespace and elements.
  * 2018-03-07 Remove SpriteRenderImplDeleter. (Redundant)
- */
+ * 2018-04-16 Rename canvas::Canvas, Image, Text classes to CCanvas, CImage, CText.
+ * 2018-04-17 Move ::canvas to ::opgs16::element::canvas namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <glm/fwd.hpp>	/** glm matrix forward declaration. */
 
@@ -76,6 +78,18 @@ class   CScene;
 namespace _internal {
 class	CObjectImpl;
 } /*! opgs16::element::_inetrnal */
+
+namespace canvas {
+class   CCanvas;
+class   CImage;
+class   CText;
+
+namespace _internal {
+class   CTextImpl;
+struct  TextImplDeleter { void operator()(CTextImpl* p); };
+
+} /*! opgs16::element::canvas::_internal */
+} /*! opgs16::element::canvas */
 } /*! opgs16::element */
 
 namespace manager {
@@ -120,15 +134,6 @@ namespace texture {
 class   CTexture2D;
 } /*! opgs16::texture */
 } /*! opgs16 */
-
-// Derived
-namespace canvas {
-class   Canvas;
-class   Image;
-class   Text;
-class   TextImpl;
-struct  TextImplDeleter { void operator()(TextImpl* p); };
-}
 
 class   VertexArrayObject;
 class   ShaderWrapper;

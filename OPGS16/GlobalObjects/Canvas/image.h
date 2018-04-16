@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file GlobalObjects\Canvas\image.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file GlobalObjects/Canvas/image.h
  * @brief Image object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
@@ -38,16 +38,18 @@
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method.
  *            Replace Draw(), Update() with Render() and LocalUpdate()
  * 2018-03-11 Correction of UiObject namespace hierarchy positioning, and path.
- */
+ * 2018-04-17 Move canvas::CImage into opgs16::element::canvas::CImage.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../System/Element/Public/ui_object.h"          /*! ::opgs16::element::UiObject */
-#include "../../Headers/Fwd/objectfwd.h"                    /*! Canvas::Canvas */
+#include "../../Headers/Fwd/objectfwd.h"                    /*! Canvas::CCanvas */
 
+namespace opgs16 {
+namespace element {
 namespace canvas {
-
-/**
- * @class Image
- * @brief UI Image to display one patched image.
+/*!
+ * @class CImage
+ * @brief UI CImage to display one patched image.
  *
  * This class are able to have children, but only UiObject. unless, Run-time error will be invoked.
  * Actual display position of children(UiImage) will be constrained by Image's center position and
@@ -58,12 +60,12 @@ namespace canvas {
  * @log
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method.
  */
-class Image : public opgs16::element::UiObject {
+class CImage : public opgs16::element::UiObject {
 public:
-	Image(const std::string& sprite_tag, const Canvas* const ref_canvas);
-	Image(const std::string& sprite_tag, const std::unique_ptr<Canvas>& ref_canvas);
+	CImage(const std::string& sprite_tag, const CCanvas* const ref_canvas);
+	CImage(const std::string& sprite_tag, const std::unique_ptr<CCanvas>& ref_canvas);
 
-	virtual ~Image() = default;
+	virtual ~CImage() = default;
 
 	/**
 	 * @brief Image instance updates x, y, w, h for each frame, referencing with Scale values.
@@ -71,7 +73,7 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	 virtual void LocalUpdate() override final;
+	void LocalUpdate() override final;
 
 	/**
 	 * @brief This calls callee to draw or render something it has.
@@ -79,7 +81,7 @@ public:
 	 *
 	 * This virtual methods can not override any more.
 	 */
-	 virtual void Render() override final;
+	void Render() override final;
 
 	/**
 	 * @brief Set size.
@@ -87,10 +89,12 @@ public:
 	 void SetImageSize(const float width, const float height);
 
 private:
-    opgs16::component::CSprite2DRenderer* m_renderer_ptr;
-	Canvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
-
+    component::CSprite2DRenderer* m_renderer_ptr;
+    CCanvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 };
-}
+
+} /*! opgs16::element::canvas */
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_IMAGE_H */
