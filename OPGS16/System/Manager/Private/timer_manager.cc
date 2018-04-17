@@ -63,7 +63,7 @@ void MTimerManager::Clear() {
     m_timer_container.clear();
 }
 
-bool MTimerManager::PauseTimer(TimerHandle& handle) {
+bool MTimerManager::PauseTimer(element::CTimerHandle& handle) {
     if (const auto key = handle.GetKeyValue();
         DoesTimerExist(handle) && m_timer_container[key].m_status == Status::ACTIVATED) {
 
@@ -73,7 +73,7 @@ bool MTimerManager::PauseTimer(TimerHandle& handle) {
     return false;
 }
 
-bool MTimerManager::ResumeTimer(TimerHandle& handle) {
+bool MTimerManager::ResumeTimer(element::CTimerHandle& handle) {
     if (const auto key = handle.GetKeyValue();
         DoesTimerExist(handle) && m_timer_container[key].m_status == Status::PAUSED) {
 
@@ -83,7 +83,7 @@ bool MTimerManager::ResumeTimer(TimerHandle& handle) {
     return false;
 }
 
-bool MTimerManager::DetachTimer(TimerHandle& handle) {
+bool MTimerManager::DetachTimer(element::CTimerHandle& handle) {
     if (const auto key = handle.GetKeyValue(); DoesTimerExist(handle)) {
 
         m_timer_container[key].m_status = Status::REMOVED;

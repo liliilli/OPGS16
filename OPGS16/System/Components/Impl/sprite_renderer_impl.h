@@ -40,11 +40,11 @@
  * 2018-04-08 Supporting change of shader on running.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../Frame/vertex_array_object.h"    /*! VertexArrayObject */
+#include "../../Frame/vertex_array_object.h"    /*! CVertexArrayObject */
 #include "../../Headers/Fwd/objectfwd.h"        /*! texture::CTexture2D */
 #include "../../Manager/Public/resource_type.h" /*! resource::STexture2D::IndexSize */
 #include "../../Manager/Public/texture_manager.h"
-#include "../../Shader/shader_wrapper.h"        /*! ShaderWrapper */
+#include "../../Shader/shader_wrapper.h"        /*! CShaderWrapper */
 
 namespace opgs16 {
 namespace component {
@@ -65,7 +65,7 @@ public:
     /** Make Sprite2DRenderer instance. (Constructor) */
 	CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag, unsigned texture_index);
 
-    ShaderWrapper& Wrapper() {
+    element::CShaderWrapper& Wrapper() {
         return m_wrapper;
     }
 
@@ -95,9 +95,9 @@ public:
     }
 
 private:
-	texture::CTexture2D* m_sprite;	/*! Sprite 2d texture stores image information. */
-	VertexArrayObject m_vao;	    /*! Quad VAO to render sprite on screen. */
-	ShaderWrapper m_wrapper;		/*! Shader is in ShaderManager, render sprite. */
+	texture::CTexture2D* m_sprite;	    /*! Sprite 2d texture stores image information. */
+    element::CVertexArrayObject m_vao;	/*! Quad VAO to render sprite on screen. */
+    element::CShaderWrapper m_wrapper;		    /*! Shader is in ShaderManager, render sprite. */
 
     unsigned m_texture_fragment_index;
     GLuint empty_vao;

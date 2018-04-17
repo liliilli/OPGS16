@@ -16,8 +16,8 @@
 #include <vector>	/** std::vector<std::shared_ptr> */
 #include "shader.h"	/** helper::CShaderNew */
 #include "..\Frame\texture.h"   /*! texture::CTexture2D */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! VertexArrayObject */
-#include "shader_wrapper.h" /*! ShaderWrapper */
+#include "..\..\Headers\Fwd\objectfwd.h"    /*! CVertexArrayObject */
+#include "shader_wrapper.h" /*! CShaderWrapper */
 
 /**
  * @namespace shading
@@ -185,7 +185,7 @@ private:
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
-    ShaderWrapper m_shader_wrapper;
+    opgs16::element::CShaderWrapper m_shader_wrapper;
 
 	GLuint empty_vao;
 	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
@@ -206,7 +206,7 @@ private:
 	 * @brief This method gets quad vertex attribute object.
 	 * @return Lvalue reference of quad BindingObject shared with all pp frame instance.
 	 */
-	VertexArrayObject& GetCommonQuadVao();
+    opgs16::element::CVertexArrayObject& GetCommonQuadVao();
 
 	/**
 	 * @brief This method checks wherther it already has a value on spot you want.

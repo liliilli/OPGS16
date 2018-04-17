@@ -94,7 +94,7 @@ public:
     const unsigned TextureIndex() const noexcept;
 
 	/*! Get ShaderWrapper instance. */
-	ShaderWrapper& Wrapper() const;
+	element::CShaderWrapper& Wrapper() const;
 
     /*!
      * @brief Set Shader newly.

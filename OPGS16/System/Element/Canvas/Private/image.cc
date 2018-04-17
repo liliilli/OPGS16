@@ -17,7 +17,7 @@
 
 #include <array>                /*! std::array */
 #include "../Public/canvas.h"   /*! ::opgs16::element::canvas::CCanvas */
-#include "../../System/Shader/shader_wrapper.h"        /*! ShaderWrapper */
+#include "../../System/Shader/shader_wrapper.h"        /*! CShaderWrapper */
 #include "../../System/Manager/Public/texture_manager.h"
 #include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */
 #include <glm/gtc/matrix_transform.hpp>

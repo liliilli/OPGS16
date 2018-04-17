@@ -37,7 +37,7 @@
  * 2018-03-04 Create file.
  */
 
-#include "../../Frame/timer_handle.h"   /*! TimerHandle */
+#include "../../Frame/timer_handle.h"   /*! CTimerHandle */
 
 namespace opgs16 {
 namespace manager {
@@ -53,9 +53,9 @@ enum class Status {
 /*! This structure is used to store handler pointer and status of timer handler. */
 struct TimerWrapper {
     Status m_status;
-    TimerHandle* m_handle{ nullptr };
+    element::CTimerHandle* m_handle{ nullptr };
 
-    explicit TimerWrapper(const Status status, TimerHandle* handle) :
+    explicit TimerWrapper(const Status status, element::CTimerHandle* handle) :
         m_status{ status }, m_handle{ handle } {};
     TimerWrapper(): m_status(Status::REMOVED) {} ;
 };

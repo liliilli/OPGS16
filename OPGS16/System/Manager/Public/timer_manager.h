@@ -92,7 +92,7 @@ public:
             std::is_same_v<void, std::result_of_t<_Callable&&(_Ref, _Argument&&...)>>
             >
         >
-    void SetTimer(TimerHandle& handle, long interval, bool is_loop,
+    void SetTimer(element::CTimerHandle& handle, long interval, bool is_loop,
                   _Ref* ref, _Callable&& func, _Argument&&... args);
 
     /*!
@@ -100,7 +100,7 @@ public:
      * If timer handler status is not Activated, do nothing and just return false.
      * @param[in] handle    TimerHandle to pause.
      */
-    bool PauseTimer(TimerHandle& handle);
+    bool PauseTimer(element::CTimerHandle& handle);
 
     /*!
      * @brief Resume paused timer.
@@ -108,13 +108,13 @@ public:
      * @param[in] handle    TimerHandle to resume.
      * @todo Test it
      */
-    bool ResumeTimer(TimerHandle& handle);
+    bool ResumeTimer(element::CTimerHandle& handle);
 
     /*!
      * @brief Deatch timer regardless of the status.
      * @param[in] handle    TimerHandle to resume.
      */
-    bool DetachTimer(TimerHandle& handle);
+    bool DetachTimer(element::CTimerHandle& handle);
 
 private:
     /*! key value for assignment of timer handler, default is 0 */
@@ -126,7 +126,7 @@ private:
 private:
     MTimerManager() = default;
 
-    inline bool DoesTimerExist(const TimerHandle& handle) {
+    inline bool DoesTimerExist(const element::CTimerHandle& handle) {
         return m_timer_container.find(handle.GetKeyValue()) != m_timer_container.end();
     }
 
@@ -141,7 +141,7 @@ template <
     class... _Argument,
     typename
 >
-void MTimerManager::SetTimer(TimerHandle& handle, long interval, bool is_loop,
+void MTimerManager::SetTimer(element::CTimerHandle& handle, long interval, bool is_loop,
                             _Ref* ref, _Callable&& func, _Argument&&... args) {
     /*! Setting */
     handle.SetLoopMode(is_loop);

@@ -50,7 +50,7 @@ CSprite2DRenderer::CSprite2DRenderer(element::CObject& bind_object,
     m_impl { new _internal::CSpriteRendererImpl(sprite_tag, shader_tag, texture_index) } {
 }
 
-ShaderWrapper& CSprite2DRenderer::Wrapper() const {
+element::CShaderWrapper& CSprite2DRenderer::Wrapper() const {
     return m_impl->Wrapper();
 }
 

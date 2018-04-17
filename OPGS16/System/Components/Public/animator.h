@@ -40,7 +40,7 @@
 #include "../Internal/animator_internal.h"  /*! opgs16::component::_internal::AnimatorState*/
 #include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
 #include "../Internal/component_macro.h"    /*! Component macros */
-#include "../../Frame/timer_handle.h"       /*! TimerHandle */
+#include "../../Frame/timer_handle.h"       /*! CTimerHandle */
 #include "../../Helper/Public/switch.h"     /*! opgs16::Switch */
 #include "../../../Headers/Fwd/objectfwd.h" /*! Forward Declaration */
 
@@ -63,7 +63,7 @@ private:
     CSprite2DRenderer& m_renderer;
     Switch m_loop;
 
-    TimerHandle m_timer;
+    element::CTimerHandle m_timer;
     _internal::AnimatorState m_state;
 
     const resource::SAnimation* m_animation{ nullptr };

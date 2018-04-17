@@ -2,7 +2,7 @@
 
 #include <iostream> /*! std::cerr
                       * std::endl */
-#include "../Frame/vertex_array_object.h"       /*! VertexArrayObject */
+#include "../Frame/vertex_array_object.h"       /*! CVertexArrayObject */
 #include "../Manager/Public/shader_manager.h"   /*! opgs16::manager::ShaderManager */
 
 namespace shading {
@@ -100,8 +100,9 @@ void PostProcessingFrame::BindTextureToFrameBuffer(
 	}
 }
 
-VertexArrayObject& PostProcessingFrame::GetCommonQuadVao() {
-    static VertexArrayObject quad_vao{ quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
+opgs16::element::CVertexArrayObject& PostProcessingFrame::GetCommonQuadVao() {
+    static opgs16::element::CVertexArrayObject quad_vao{
+        quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
 	return quad_vao;
 }
 

@@ -38,7 +38,7 @@
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../../../Components/Public/script_frame.h"    /*! ::opgs16::component::CScriptFrame */
-#include "../../../../Frame/timer_handle.h"         /*! TimerHandle */
+#include "../../../../Frame/timer_handle.h"         /*! CTimerHandle */
 
 namespace opgs16 {
 namespace builtin {
@@ -69,7 +69,7 @@ private:
     uint32_t m_life{ 0 };
     uint32_t m_stage{ 0 };
 
-    TimerHandle m_common_timer_1;
+    element::CTimerHandle m_common_timer_1;
 
     void Start() override final;
     void Update() override final;

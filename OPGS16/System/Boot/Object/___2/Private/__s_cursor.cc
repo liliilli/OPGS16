@@ -38,7 +38,7 @@
 #include "../../../../Manager/Public/scene_manager.h"
 #include "../../../Scripts/___2/Public/__s_cursor_scr.h"
 #include "../../../System/Components/Public/camera.h"       /*! ::opgs16::component::Camera */
-#include "../../../System/Shader/shader_wrapper.h"          /*! ShaderWrapper */
+#include "../../../System/Shader/shader_wrapper.h"          /*! CShaderWrapper */
 
 namespace opgs16 {
 namespace builtin {

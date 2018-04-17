@@ -37,7 +37,7 @@
  * 2018-04-14 Move __B_SCR into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Frame/timer_handle.h"            /*! TimerHandle */
+#include "../../../../Frame/timer_handle.h"            /*! CTimerHandle */
 #include "../../../../../Headers/script_common.h"      /*! component::ScriptFrame */
 #include "../../../../../Headers/Fwd/objectfwd.h"      /*! canvas::CImage */
 
@@ -51,8 +51,8 @@ public:
     void Update() override final {};
 
 private:
-    TimerHandle m_timer;
-    TimerHandle m_timer_2;
+    element::CTimerHandle m_timer;
+    element::CTimerHandle m_timer_2;
 
     opgs16::element::canvas::CImage* logo;
 
