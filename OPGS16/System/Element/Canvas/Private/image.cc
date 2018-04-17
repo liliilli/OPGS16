@@ -10,12 +10,13 @@
  * @brief Definition file of ./image.h
  * @log
  * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
+ * 2018-04-17 Rearrange file path of #include macros.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "image.h"          /*! Header file */
+#include "../Public/image.h"    /*! Header file */
 
-#include <array>            /*! std::array */
-#include "canvas.h"
+#include <array>                /*! std::array */
+#include "../Public/canvas.h"   /*! ::opgs16::element::canvas::CCanvas */
 #include "../../System/Shader/shader_wrapper.h"        /*! ShaderWrapper */
 #include "../../System/Manager/Public/texture_manager.h"
 #include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */

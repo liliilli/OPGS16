@@ -1,5 +1,5 @@
-#ifndef OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H
-#define OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H
+#ifndef OPGS16_SYSTEM_ELEMENT_CANVAS_PUBLIC_CANVAS_H
+#define OPGS16_SYSTEM_ELEMENT_CANVAS_PUBLIC_CANVAS_H
 
 /*!
  * @license BSD 2-Clause License
@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects\Canvas\image.h
+ * @file System/Element/Canvas/Public/canvas.h
  * @brief Canvas frame object to display UI components.
  *
  * @author Jongmin Yun
@@ -38,12 +38,11 @@
  * 2018-02-19 Remove Draw(ShaderNew) obsolete method. Replace with Render(), LocalUpdate()
  * 2018-03-11 Refactoring.
  * 2018-04-16 Move ::canvas::CCanvas to ::opgs16::element::canvas::CCanvas.
+ * 2018-04-17 Move file path to System/Element/Canvas/Public.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../Headers/Fwd/objectfwd.h"    /*! glm::mat4
-                                              * helper::CShaderNew;
-                                              * camera::CameraObject; */
-#include "../../System/Element/Public/ui_object.h"  /*! ::opgs16::element::UiObject */
+#include "../../../../Headers/Fwd/objectfwd.h"  /*! glm::mat4, helper::CShaderNew, camera::CameraObject */
+#include "../../../Element/Public/ui_object.h"  /*! ::opgs16::element::UiObject */
 
 namespace opgs16 {
 namespace element {
@@ -81,7 +80,7 @@ public:
 
 private:
 	/** Camera object uses just one orthographic type. */
-    opgs16::component::CCamera* m_camera{ nullptr };
+    component::CCamera* m_camera{ nullptr };
 
 	bool m_is_size_changed;
 };
@@ -90,4 +89,4 @@ private:
 } /*! opgs16::element */
 } /*! opgs16 */
 
-#endif /** OPGS16_GLOBAL_OBJECTS_CANVAS_CANVAS_H */
+#endif // OPGS16_SYSTEM_ELEMENT_CANVAS_PUBLIC_CANVAS_H

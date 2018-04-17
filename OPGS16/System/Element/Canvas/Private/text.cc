@@ -27,8 +27,8 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/text.cc
- * @brief Definition file of ./text.h.
+ * @file System/Element/Canvas/Private/text.cc
+ * @brief Definition file of ../Public/text.h.
  *
  * @author Jongmin Yun
  * @log
@@ -36,18 +36,16 @@
  * 2018-04-17 Move definition function body into ::opgs16::element::canvas namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "text.h"                       /*! Header file */
-#include <iostream>                     /*! std::cerr
-                                          * std::endl */
-#include "Impl/text_impl.h"             /*! Canvas::CTextImpl */
+#include "../Public/text.h"             /*! Header file */
+#include "../../Impl/text_impl.h"       /*! ::ogps16::element::canvas::_internal::CTextImpl */
+#include "../../System/Components/Public/empty_renderer.h" /*! ::opgs16::component::CEmptyRenderer */
 #include "../../System/Manager/Public/font_manager.h"  /*! MFontManager
-                                                  * aliasing font_map_ptr
-                                                  * FontManager& Instance()
-                                                  * bool LoadDefaultFont()
-                                                  * void RenderTextNew(params)
-                                                  * bool DoesFontExist(std::string) */
-/*! ::opgs16::component::CEmptyRenderer */
-#include "../../System/Components/Public/empty_renderer.h"
+                                                      * aliasing font_map_ptr
+                                                      * FontManager& Instance()
+                                                      * bool LoadDefaultFont()
+                                                      * void RenderTextNew(params)
+                                                      * bool DoesFontExist(std::string) */
+#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
 
 namespace opgs16 {
 namespace element {
@@ -89,7 +87,9 @@ void CText::Render() {
                                       GetAlignment(),
                                       GetScaleValue());
 	}
-	else { std::cerr << "ERROR::FONT_MANAGER CAN NOT FIND::CRITICAL" << std::endl; }
+	else {
+        PUSH_LOG_ERRO(L"Could not find font manager.");
+	}
 }
 
 void CText::SetText(const std::string& new_text) {
@@ -114,7 +114,8 @@ bool CText::SetFontName(const std::string& font_tag) {
 		return true;
 	}
 	else {
-		std::cerr << "ERROR::FONT::NOT::FOUND" << font_tag << std::endl;
+        PUSH_LOG_ERRO(L"Font not found.");
+		//std::cerr << "ERROR::FONT::NOT::FOUND" << font_tag << std::endl;
 		m_text_impl->SetFontName("");
 		return false;
 	}

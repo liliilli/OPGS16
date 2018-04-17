@@ -12,8 +12,8 @@
  * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "text_impl.h"  /*! Header file */
-#include "../text.h"    /*! opgs16::element::canvas::CText */
+#include "text_impl.h"                  /*! Header file */
+#include "../Canvas/Public/text.h"      /*! opgs16::element::canvas::CText */
 #include "../../../System/Manager/Public/font_manager.h"
 
 namespace opgs16 {

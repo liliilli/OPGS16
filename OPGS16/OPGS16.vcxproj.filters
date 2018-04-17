@@ -4,15 +4,11 @@
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Frame\constant.h" />
-    <ClCompile Include="GlobalObjects\Canvas\image.cc" />
-    <ClCompile Include="GlobalObjects\Canvas\canvas.cc" />
-    <ClCompile Include="GlobalObjects\Canvas\text.cc" />
     <ClCompile Include="System\Shader\pp_frame.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
     <ClCompile Include="System\Shader\shader_wrapper.cc" />
-    <ClCompile Include="GlobalObjects\Canvas\Impl\text_impl.cc" />
     <ClCompile Include="System\Shader\Impl\pp_frame_impl.cc" />
     <ClCompile Include="Objects\Debug\debug_canvas.cc" />
     <ClCompile Include="Objects\Debug\Script\ui_manager.cc" />
@@ -71,16 +67,17 @@
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_player.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_player_bullet.cc" />
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_player_bullet.cc" />
+    <ClCompile Include="System\Element\Canvas\Private\canvas.cc" />
+    <ClCompile Include="System\Element\Canvas\Private\image.cc" />
+    <ClCompile Include="System\Element\Canvas\Private\text.cc" />
+    <ClCompile Include="System\Element\Impl\text_impl.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
     <ClInclude Include="System\Shader\shader.h" />
     <ClInclude Include="System\Frame\texture.h" />
     <ClInclude Include="Headers\scene_common.h" />
-    <ClInclude Include="GlobalObjects\Canvas\image.h" />
-    <ClInclude Include="GlobalObjects\Canvas\canvas.h" />
     <ClInclude Include="GlobalObjects\Interface\i_originable.h" />
-    <ClInclude Include="GlobalObjects\Canvas\text.h" />
     <ClInclude Include="Headers\canvas_components.h" />
     <ClInclude Include="GlobalObjects\Interface\i_alignable.h" />
     <ClInclude Include="System\Shader\pp_frame.h" />
@@ -93,7 +90,6 @@
     <ClInclude Include="Headers\Fwd\lightfwd.h" />
     <ClInclude Include="Headers\Fwd\componentfwd.h" />
     <ClInclude Include="Headers\Fwd\objectfwd.h" />
-    <ClInclude Include="GlobalObjects\Canvas\Impl\text_impl.h" />
     <ClInclude Include="System\Frame\vertex_array_object.h" />
     <ClInclude Include="System\Shader\Impl\pp_frame_impl.h" />
     <ClInclude Include="Objects\Debug\obj_fps.h" />
@@ -174,6 +170,10 @@
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_player.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_player_bullet.h" />
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_player_bullet.h" />
+    <ClInclude Include="System\Element\Canvas\Public\canvas.h" />
+    <ClInclude Include="System\Element\Canvas\Public\text.h" />
+    <ClInclude Include="System\Element\Canvas\Public\image.h" />
+    <ClInclude Include="System\Element\Impl\text_impl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
