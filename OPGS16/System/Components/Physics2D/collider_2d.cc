@@ -26,23 +26,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Physics2D/collider_2d.cc
  * @author Jongmin Yun
  *
  * @log
  * 2018-03-17 Add CollisionLayer__ functions.
- */
+ * 2018-04-17 Move ::collider::CCollider2D functions to ::opgs16::physics::CCollider2D.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "collider_2d.h"
 
 #include <stdexcept>
 #include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::MSettingManager */
 
-namespace collision {
+namespace opgs16 {
+namespace physics {
 namespace {
-using opgs16::manager::MSettingManager;
-
+using manager::MSettingManager;
 } /*! unnamed namespace */
 
 void CCollider2D::SetCollisionType(ECollisionType type) {
@@ -75,4 +76,5 @@ std::string CCollider2D::CollisionLayerStringOf() const {
     return MSettingManager::Instance().CollisionLayerList()[m_collision_layer_index];
 }
 
-}
+} /*! opgs16::physics */
+} /*! opgs16 */

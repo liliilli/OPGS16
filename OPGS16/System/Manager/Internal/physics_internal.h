@@ -45,7 +45,7 @@ namespace manager {
 namespace _internal {
 
 struct Item {
-    collision::CRectangleCollider2D* const    m_collider;
+    physics::CRectangleCollider2D* const    m_collider;
     component::CRigidbody2D* const   m_rigidbody;
     const glm::vec2 m_position;
 
@@ -54,7 +54,7 @@ struct Item {
         END
     } m_type = { Type::BEGIN };
 
-    explicit Item(collision::CRectangleCollider2D* const collider,
+    explicit Item(physics::CRectangleCollider2D* const collider,
                   component::CRigidbody2D* const rigidbody,
                   const glm::vec2 axis_value,
                   Type type) :

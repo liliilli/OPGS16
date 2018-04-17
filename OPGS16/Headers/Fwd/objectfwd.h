@@ -110,6 +110,8 @@ class   MTimerManager;   /*! Timer */
 } /*! opgs16::manager */
 
 namespace physics {
+class   CCollider2D;
+class   CRectangleCollider2D;
 
 } /*! opgs16::namespace */
 
@@ -138,10 +140,5 @@ namespace texture {
 class   CTexture2D;
 } /*! opgs16::texture */
 } /*! opgs16 */
-
-namespace collision {
-class CCollider2D;
-class RectangleCollider2D;
-}
 
 #endif /** OPGS16_HEADERS_FWD_OBJECT_FWD_H */

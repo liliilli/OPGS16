@@ -1,6 +1,23 @@
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Components/Physics2D/Collider/rectangle.cc
+ * @brief Definition file of ./rectangle.h
+ * @author Jongmin Yun
+ * @log
+ * 2018-04-17 Move ::collision::CRectangleCollider2D to ::opgs16::physics::CRectangleCollider2D.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
 #include "rectangle.h"          /*! Header file */
 
-namespace collision {
+namespace opgs16 {
+namespace physics {
 
 CRectangleCollider2D::CRectangleCollider2D(const float left, const float up,
                                          const float right, const float down) {
@@ -66,4 +83,5 @@ void CRectangleCollider2D:: UpdateFinalCorner() const {
     }
 }
 
-}
+} /*! opgs16::physics */
+} /*! opgs16 */

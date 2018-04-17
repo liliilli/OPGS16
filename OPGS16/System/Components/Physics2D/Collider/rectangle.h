@@ -1,24 +1,27 @@
 #ifndef SYSTEM_2D_PHYSICS_COLLIDER_RECTANGLE_H
 #define SYSTEM_2D_PHYSICS_COLLIDER_RECTANGLE_H
 
-/**
- * @file System\2DPhysics\Collider\rectangle.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Components/Physics2D/Collider/rectangle.h
  * @brief Rectangle collider.
- *
  * This file consists of rectangle collider member API functions, data.
- *
  * @author Jongmin Yun
- * @version 0.0.1
- */
+ * @log
+ * 2018-04-17 Move ::collision::CRectangleCollider2D to ::opgs16::physics::CRectangleCollider2D.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <glm\glm.hpp>
-#include "..\collider_2d.h"
+#include <glm/glm.hpp>
+#include "../collider_2d.h"
 
-/**
- * @namespace collision
- * @brief
- */
-namespace collision {
+namespace opgs16 {
+namespace physics {
 
 /**
  * @class CRectangleCollider2D
@@ -91,6 +94,7 @@ private:
      void UpdateFinalCorner() const;
 };
 
-}
+} /*! opgs16::physics */
+} /*! opgs16 */
 
 #endif /** SYSTEM_2D_PHYSICS_COLLIDER_RECTANGLE_H */

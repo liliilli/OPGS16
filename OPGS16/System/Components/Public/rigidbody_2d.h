@@ -160,7 +160,7 @@ private:
     glm::vec3 m_movement;
 
     BodyType m_type{ BodyType::NORMAL };
-    std::list<std::unique_ptr<collision::CRectangleCollider2D>> m_colliders{};
+    std::list<std::unique_ptr<physics::CRectangleCollider2D>> m_colliders{};
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbody2D)

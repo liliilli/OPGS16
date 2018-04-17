@@ -1,6 +1,5 @@
 #ifndef OPGS16_SYSTEM_2D_PHYSICS_COLLIDER_2D_H
 #define OPGS16_SYSTEM_2D_PHYSICS_COLLIDER_2D_H
-#include <string>
 
 /*!
  * @license BSD 2-Clause License
@@ -30,29 +29,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Physics2D/collider_2d.h
  * @brief Base collider class of all 2d colliders.
  *
  * @author Jongmin Yun
  * @log
- * 2018-03-17 Add boilerplate codes, Add collision layer index,
- * Move it to ::opgs16::element::physics
- */
+ * 2018-03-17 Add boilerplate codes, Add collision layer index, Move it to ::opgs16::element::physics
+ * 2018-04-17 Move ::collision::CCollider2D to ::opgs16::element::physics::CCollider2D.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include <string>
 
 namespace opgs16 {
-namespace element {
 namespace physics {
-
-} /*! opgs16::element::physics */
-} /*! opgs16::element */
-} /*! opgs16 */
-
-/*!
- * @namespace collision
- * @brief
- */
-namespace collision {
 
 /**
  * @class CCollider2D
@@ -99,6 +89,7 @@ private:
     unsigned m_collision_layer_index{ 0 };      /*! Collision layer index. */
 };
 
-}
+} /*! opgs16::physics */
+} /*! opgs16 */
 
 #endif /** OPGS16_SYSTEM_2D_PHYSICS_COLLIDER_2D_H */
