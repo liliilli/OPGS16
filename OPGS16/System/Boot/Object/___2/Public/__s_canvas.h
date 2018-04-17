@@ -36,7 +36,7 @@
  * 2018-04-14 Create file.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../GlobalObjects/Canvas/canvas.h"  /*! Canvas::CCanvas */
+#include "../../../../Element/Canvas/Public/canvas.h"   /*! Canvas::CCanvas */
 
 namespace opgs16 {
 namespace builtin {

@@ -1,7 +1,7 @@
 #ifndef OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_DATE_h
 #define OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_DATE_h
 
-#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::CText */
+#include "../../System/Element/Canvas/Public/text.h" /*! ::opgs16::element:canvas::CText */
 
 class ObjectDate : public opgs16::element::canvas::CText {
 public:

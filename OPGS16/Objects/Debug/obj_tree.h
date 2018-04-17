@@ -1,8 +1,8 @@
 #ifndef OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_OBJECT_TREE_h
 #define OPGS16_OBJECTS_DEBUG_DEFAULT_OBJECT_OBJECT_TREE_h
 
-#include "..\..\GlobalObjects\Canvas\text.h"    /*! Canvas::CText */
-#include "..\..\Headers\Fwd\objectfwd.h"        /*! ObjecTree */
+#include "../../System/Element/Canvas/Public/text.h" /*! ::opgs16::element:canvas::CText */
+#include "../../Headers/Fwd/objectfwd.h"        /*! ObjecTree */
 
 class ObjectObjectTree : public opgs16::element::canvas::CText {
 public:

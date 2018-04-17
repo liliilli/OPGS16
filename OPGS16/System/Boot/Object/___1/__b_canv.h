@@ -37,7 +37,7 @@
  * 2018-04-14 Move __B_CANV into ::opgs16::builtin::sample namespace.
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../GlobalObjects/Canvas/canvas.h"  /*! Canvas::CCanvas */
+#include "../../../Element/Canvas/Public/canvas.h"  /*! ::opgs16::element::canvas::CCanvas */
 
 namespace opgs16 {
 namespace builtin {

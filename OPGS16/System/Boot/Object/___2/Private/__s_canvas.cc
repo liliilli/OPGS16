@@ -34,8 +34,9 @@
  *!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__s_canvas.h"           /*! Header file */
-#include "../../../../../GlobalObjects/Canvas/text.h"   /*! ::canvas::CText */
 #include "../../../../Components/Public/empty_renderer.h"
+#include "../../../../Element/Canvas/Public/text.h" /*! ::opgs16::element::canvas::CText */
+#include "../../../../../GlobalObjects/Interface/i_alignable.h"
 
 constexpr const char* k_text_name = "AngleText";
 

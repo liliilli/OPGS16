@@ -43,12 +43,12 @@
 #include <glm/glm.hpp>
 
 #include "../../../../Components/Public/sprite_renderer.h" /*! opgs16::component::CSprite2DRenderer */
-#include "../../../../Manager/Public/scene_manager.h"  /*! SceneManager */
-#include "../../../../Manager/Public/timer_manager.h"  /*! TimerManager */
+#include "../../../../Manager/Public/scene_manager.h"   /*! SceneManager */
+#include "../../../../Manager/Public/timer_manager.h"   /*! TimerManager */
 #include "../../../../Shader/shader_wrapper.h"
-#include "../../../../../GlobalObjects/Canvas/canvas.h"    /*! Canvas::CCanvas */
-#include "../../../../../GlobalObjects/Canvas/text.h"      /*! Canvas::CText */
-#include "../../../../../GlobalObjects/Canvas/image.h"     /*! Canvas::CImage */
+#include "../../../../Element/Canvas/Public/canvas.h"   /*! ::opgs16::element::canvas::CCanvas */
+#include "../../../../Element/Canvas/Public/text.h"     /*! ::opgs16::element::canvas::CText */
+#include "../../../../Element/Canvas/Public/image.h"    /*! ::opgs16::element::canvas::CImage */
 #include "../../../../../Headers/import_logger.h" /*! import logger in debug mode */
 #include "../../../../Core/Public/core_setting.h"
 #include "../../../../../manifest.h"
@@ -91,7 +91,7 @@ void __B_SCR::SetLogoImage() {
 
     logo = GetObject().Instantiate<element::canvas::CImage>("Logo", "System",
                                                             static_cast<element::canvas::CCanvas*>(&GetObject()));
-    component::CSprite2DRenderer* renderer = logo->GetComponent<opgs16::component::CSprite2DRenderer>();
+    component::CSprite2DRenderer* renderer = logo->GetComponent<component::CSprite2DRenderer>();
     renderer->SetTextureIndex(4);
     logo->SetImageSize(178.f, 19.f);
 

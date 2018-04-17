@@ -41,7 +41,6 @@
 #include <sstream>
 #include <string>
 #include <glm/gtc/type_ptr.hpp>
-#include "../../GlobalObjects/light.h"
 #include "../Manager/Public/resource_type.h"
 
 constexpr unsigned LOG_SIZE = 0x200;
@@ -187,43 +186,43 @@ void CShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix
     auto uniform = glGetUniformLocation(m_program_id, name.c_str());
     glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
 }
-
-void CShaderNew::SetStructDirLight(const std::string & name, const light::DirectionalLight & container) {
-    SetVec3f(name + ".direction", container.GetDirection());
-
-    SetVec3f(name + ".ambient", container.GetAmbient());
-    SetVec3f(name + ".diffuse", container.GetDiffuse());
-    SetVec3f(name + ".specular", container.GetSpecular());
-}
-
-void CShaderNew::SetStructPointLight(const std::string & name, const light::PointLight & container) {
-    SetVec3f(name + ".position", container.GetLocalPosition());
-
-    SetVec3f(name + ".ambient", container.GetAmbient());
-    SetVec3f(name + ".diffuse", container.GetDiffuse());
-    SetVec3f(name + ".specular", container.GetSpecular());
-
-    SetFloat(name + ".constant", container.GetConstant());
-    SetFloat(name + ".linear", container.GetLinear());
-    SetFloat(name + ".quadratic", container.GetQuadratic());
-}
-
-void CShaderNew::SetStructSpotlight(const std::string & name, const light::Spotlight & container) {
-    SetVec3f(name + ".direction", container.direction);
-    SetVec3f(name + ".position", container.position);
-
-    SetVec3f(name + ".ambient", container.ambient);
-    SetVec3f(name + ".diffuse", container.diffuse);
-    SetVec3f(name + ".specular", container.specular);
-
-    SetFloat(name + ".inCutoff", container.inCutOff);
-    SetFloat(name + ".outCutoff", container.outCutOff);
-
-    SetFloat(name + ".constant", container.constant);
-    SetFloat(name + ".linear", container.linear);
-    SetFloat(name + ".quadratic", container.quadratic);
-}
-
+//
+//void CShaderNew::SetStructDirLight(const std::string & name, const light::DirectionalLight & container) {
+//    SetVec3f(name + ".direction", container.GetDirection());
+//
+//    SetVec3f(name + ".ambient", container.GetAmbient());
+//    SetVec3f(name + ".diffuse", container.GetDiffuse());
+//    SetVec3f(name + ".specular", container.GetSpecular());
+//}
+//
+//void CShaderNew::SetStructPointLight(const std::string & name, const light::PointLight & container) {
+//    SetVec3f(name + ".position", container.GetLocalPosition());
+//
+//    SetVec3f(name + ".ambient", container.GetAmbient());
+//    SetVec3f(name + ".diffuse", container.GetDiffuse());
+//    SetVec3f(name + ".specular", container.GetSpecular());
+//
+//    SetFloat(name + ".constant", container.GetConstant());
+//    SetFloat(name + ".linear", container.GetLinear());
+//    SetFloat(name + ".quadratic", container.GetQuadratic());
+//}
+//
+//void CShaderNew::SetStructSpotlight(const std::string & name, const light::Spotlight & container) {
+//    SetVec3f(name + ".direction", container.direction);
+//    SetVec3f(name + ".position", container.position);
+//
+//    SetVec3f(name + ".ambient", container.ambient);
+//    SetVec3f(name + ".diffuse", container.diffuse);
+//    SetVec3f(name + ".specular", container.specular);
+//
+//    SetFloat(name + ".inCutoff", container.inCutOff);
+//    SetFloat(name + ".outCutoff", container.outCutOff);
+//
+//    SetFloat(name + ".constant", container.constant);
+//    SetFloat(name + ".linear", container.linear);
+//    SetFloat(name + ".quadratic", container.quadratic);
+//}
+//
 } /*! opgs16::element */
 } /*! opgs16 */
 

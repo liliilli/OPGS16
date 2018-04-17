@@ -39,7 +39,7 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "../../GlobalObjects/Canvas/canvas.h"
+#include "../../Element/Canvas/Public/canvas.h" /*! ::opgs16::element::canvas::CCanvas */
 #include "../../Objects/Debug/debug_canvas.h"     /*! CanvasDebug */
 //#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
 #include "../../System/Shader/PostProcessing/pp_convex.h"

@@ -3,13 +3,8 @@
 #include <ctime>                                    /*! std::time_t */
 #include <iomanip>                                  /*! std::setprecision */
 #include <sstream>                                  /*! std::ostringstream */
-#include "../../../GlobalObjects/Canvas/text.h"     /*! Canvas::CText */
+#include "../../../System/Element/Canvas/Public/text.h" /*! ::opgs16::element::canvas::CText */
 #include "../../../System/Manager/Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
-
-/*! Tree */
-//#include "../../../System/Debugs/hierarchy_tree.h"  /*! ObjectTree */
-//#include "../../../System/Element/Public/scene.h"          /*! GetObjectTree() */
-//#include "../../../System/Manager/Public/scene_manager.h"  /*! MSceneManager */
 
 DebugUiManager::DebugUiManager(opgs16::element::CObject& obj,
                                opgs16::element::canvas::CText* const _m_fps,
@@ -38,19 +33,3 @@ void DebugUiManager::Update() {
         m_date->SetText(stream.str());
     }
 }
-//
-//void DebugUiManager::SetHierarchyText(const ObjectTree* item,
-//                                      size_t count,
-//                                      std::string* const text) {
-//    if (count == 0) text->append("Scene\n");
-//    else {
-//        std::string space_text{};
-//        for (size_t i = 1; i <= count; ++i) { space_text.push_back(' '); }
-//        text->append(space_text + item->name + '\n');
-//    }
-//
-//    for (const auto& child : item->children) {
-//        SetHierarchyText(&child, count + 1, text);
-//    }
-//}
-

@@ -27,11 +27,10 @@
  */
 
 #include "../Public/__s_cursor_scr.h"
+#include "../../../../Element/Public/object.h"      /*! ::opgs16::element::CObject */
+#include "../../../../Element/Canvas/Public/text.h" /*! ::ogps16::element::canvas::CText */
 #include "../../../../Manager/Public/input_manager.h"
 #include "../../../../Manager/Public/scene_manager.h"
-#include "../../../../Element/Public/object.h"
-
-#include "../../../../../GlobalObjects/Canvas/text.h"
 
 constexpr float k_angle_offset = 3.1725f;
 

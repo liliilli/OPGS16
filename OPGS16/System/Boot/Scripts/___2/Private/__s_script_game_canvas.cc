@@ -33,11 +33,11 @@
  * 2018-04-15 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/__s_script_game_canvas.h"   /*! Header file */
+#include "../Public/__s_script_game_canvas.h"               /*! Header file */
 
 #include "../../../../Element/Public/object.h"
-#include "../../../../../GlobalObjects/Canvas/text.h"       /*! ::canvas::CText */
-#include "../../../../../GlobalObjects/Canvas/image.h"      /*! ::canvas::CImage */
+#include "../../../../Element/Canvas/Public/text.h"         /*! ::opgs16::element::canvas::CText */
+#include "../../../../Element/Canvas/Public/image.h"        /*! ::opgs16::element::canvas::CImage */
 #include "../../../../Components/Public/empty_renderer.h"   /*!*/
 #include "../../../../Components/Public/sprite_renderer.h"  /*! opgs16::component::CSprite2DRenderer */
 #include "../../../Object/___2/Public/__s_game_canvas.h"
