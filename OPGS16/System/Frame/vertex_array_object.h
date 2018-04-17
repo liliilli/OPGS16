@@ -1,20 +1,31 @@
 #ifndef OPGS16_SYSTEM_FRAME_VERTEX_ARRAY_OBJECT_WRAPPER_H
 #define OPGS16_SYSTEM_FRAME_VERTEX_ARRAY_OBJECT_WRAPPER_H
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System\Frame\vertex_array_object.h
  * @brief
- * @date 2018-02-08
- */
+ * @log
+ * 2018-02-08 Create file.
+ * 2018-04-17 Move ::CVertexArrayObject into ::ogps16::element::CVertexArrayObject.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <array>        /*! std::array */
-#include <GL\glew.h>    /*!  */
+#include <GL/glew.h>    /*!  */
 
+namespace opgs16 {
+namespace element {
 /*!
- * @class
+ * @class CVertexArrayObject
  * @brief
  */
-class VertexArrayObject {
+class CVertexArrayObject {
 private:
     struct BindingParameter;    /** Forward Declaration */
     using parameter_list = std::initializer_list<BindingParameter>; /** Aliasing */
@@ -24,14 +35,14 @@ public:
      * @brief
      */
     template <class _Ty, size_t _Amnt>
-    VertexArrayObject(const std::array<_Ty, _Amnt>& data, const size_t stride,
+    CVertexArrayObject(const std::array<_Ty, _Amnt>& data, const size_t stride,
                       const parameter_list& args);
 
     /*!
      * @brief
      */
     template <class _Ty, size_t _Amnt, class _Ty2, size_t _Amnt2>
-    VertexArrayObject(const std::array<_Ty, _Amnt>& data, const size_t stride,
+    CVertexArrayObject(const std::array<_Ty, _Amnt>& data, const size_t stride,
                       const parameter_list& args,
                       const std::array<_Ty2, _Amnt2>& ebo_data);
 
@@ -75,7 +86,7 @@ private:
 };
 
 template<typename _Ty, size_t _Amnt>
-inline VertexArrayObject::VertexArrayObject(const std::array<_Ty, _Amnt>& data,
+inline CVertexArrayObject::CVertexArrayObject(const std::array<_Ty, _Amnt>& data,
                                             const size_t stride,
                                             const parameter_list & args) {
     glGenVertexArrays(1, &m_object.vao);
@@ -98,11 +109,11 @@ inline VertexArrayObject::VertexArrayObject(const std::array<_Ty, _Amnt>& data,
 }
 
 template<class _Ty, size_t _Amnt, class _Ty2, size_t _Amnt2>
-inline VertexArrayObject::VertexArrayObject(const std::array<_Ty, _Amnt>& data,
+inline CVertexArrayObject::CVertexArrayObject(const std::array<_Ty, _Amnt>& data,
                                             const size_t stride,
                                             const parameter_list & args,
                                             const std::array<_Ty2, _Amnt2>& ebo_data) :
-    VertexArrayObject(data, stride, args) {
+    CVertexArrayObject(data, stride, args) {
     glBindVertexArray(m_object.vao);
 
     glGenBuffers(1, &m_object.ebo);
@@ -113,5 +124,8 @@ inline VertexArrayObject::VertexArrayObject(const std::array<_Ty, _Amnt>& data,
 
     glBindVertexArray(0);
 }
+
+} /*! opgs16::element */
+} /*! opgs16*/
 
 #endif // !OPGS16_SYSTEM_FRAME_VERTEX_ARRAY_OBJECT_WRAPPER_H

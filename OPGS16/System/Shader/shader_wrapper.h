@@ -43,6 +43,7 @@
  * @log
  * 2018-02-28 Add vector2 uniform value container and function related to vector2.
  * 2018-04-08 Supporting change of shader on running.
+ * 2018-04-17 Move ::CShaderWrapper to ::opgs16::element::CShaderWrapper.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <string>
@@ -51,7 +52,10 @@
 #include "../../Headers/Fwd/objectfwd.h"    /*! CShaderNew */
 #include <GL/glew.h>
 
-class ShaderWrapper {
+namespace opgs16 {
+namespace element {
+
+class CShaderWrapper {
 private:
     struct Paramters {
         std::map<std::string, float>		m_floats{};
@@ -137,5 +141,8 @@ private:
     /*! Set uniform variables of shader with new values. */
     void RefreshUniformValues();
 };
+
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif /** OPGS16_SYSTEM_SHADER_SHADER_WRAPPER_H */

@@ -74,6 +74,9 @@ namespace element {
 class   CObject;
 class   CShaderNew;
 class   CScene;
+class   CTimerHandle;   /*! sub-type of timermanager */
+class   CVertexArrayObject;
+class   CShaderWrapper;
 
 namespace _internal {
 class	CObjectImpl;
@@ -113,6 +116,7 @@ namespace physics {
 namespace builtin {
 namespace shader {
 class   SGlobalQuad2D;
+
 } /*! opgs16::builtin::shader */
 } /*! opgs16::builtin */
 
@@ -135,11 +139,7 @@ class   CTexture2D;
 } /*! opgs16::texture */
 } /*! opgs16 */
 
-class   VertexArrayObject;
-class   ShaderWrapper;
 
-/** Managers */
-class   TimerHandle;   /*! sub-type of timermanager */
 
 namespace collision {
 class Collider2D;

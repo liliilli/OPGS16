@@ -1,19 +1,37 @@
-#include "shader_wrapper.h"
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/shader_wrapper.cc
+ * @brief Definition file of ./shader_wrapper.h
+ * @log
+ * 2018-04-17 Move definition files to ::opgs16::element.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "shader_wrapper.h" /*! Header file */
 #include "shader.h"
 
-void ShaderWrapper::SetShader(opgs16::element::CShaderNew * const shader) {
+namespace opgs16 {
+namespace element {
+
+void CShaderWrapper::SetShader(CShaderNew * const shader) {
     m_shader = shader;
     m_is_useable = true;
 }
 
-void ShaderWrapper::UseShader() {
+void CShaderWrapper::UseShader() {
     if (m_is_useable) {
         m_shader->Use();
         RefreshUniformValues();
     }
 }
 
-void ShaderWrapper::RefreshUniformValues() {
+void CShaderWrapper::RefreshUniformValues() {
     // Float
     for (const auto& [name, value] : m_parameters.m_floats)
         m_shader->SetFloat(name, value);
@@ -30,3 +48,7 @@ void ShaderWrapper::RefreshUniformValues() {
     for (const auto&[name, value] : m_parameters.m_int_ptr)
         m_shader->SetIntPtr(name, value.first, value.second);
 }
+
+} /*! opgs16::element */
+} /*! opgs16 */
+

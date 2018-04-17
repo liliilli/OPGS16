@@ -1,25 +1,32 @@
 #ifndef OPGS16_SYSTEM_FRAME_TIMER_HANDLE_H
 #define OPGS16_SYSTEM_FRAME_TIMER_HANDLE_H
 
-/*!
- * @file System\Manager\timer_handle.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Element/Public/timer_handle.h
  * @author Jongmin Yun
- * @date 2018-02-22
  *
  * @log
  * 2018-02-22 Implemented fundamental TimerHandle class.
- */
+ * 2018-04-17 Move ::CTimerHandle to ::opgs16::element::CTimerHandle.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <chrono>       /*! std::chrono */
 #include <functional>   /*! std::bind */
-#include <thread>       /*! std::thread */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! CObject */
+
+namespace opgs16 {
+namespace element {
 
 /*!
- * @class TimerHandle
+ * @class CTimerHandle
  * @brief Handle instance manages each timer.
  */
-class TimerHandle final {
+class CTimerHandle final {
 public:
     /*! Try callback execution */
     void Try(const float quantum);
@@ -52,16 +59,19 @@ private:
     std::function<void(void)> m_callback;   /*! Callback function */
 };
 
-inline void TimerHandle::SetLoopMode(bool value) {
+inline void CTimerHandle::SetLoopMode(bool value) {
     m_loop = value;
 }
 
-inline void TimerHandle::SetKeyValue(size_t value) {
+inline void CTimerHandle::SetKeyValue(size_t value) {
     m_key_value = value;
 }
 
-inline size_t TimerHandle::GetKeyValue() const {
+inline size_t CTimerHandle::GetKeyValue() const {
     return m_key_value;
 }
+
+} /*! opgs16::element */
+} /*! opgs16 */
 
 #endif // !OPGS16_SYSTEM_FRAME_TIMER_HANDLE_H
