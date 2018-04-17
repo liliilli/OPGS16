@@ -40,7 +40,7 @@
 #include <algorithm>                    /*! std::sort */
 
 #include "../../Components/Public/rigidbody_2d.h"        /*! opgs16::component::CRigidbody2D */
-#include "../../Components/Physics2D/Collider/rectangle.h"  /*! collision::RectangleCollider2D */
+#include "../../Components/Physics2D/Collider/rectangle.h"  /*! collision::CRectangleCollider2D */
 #include "../Public/setting_manager.h"      /*! ::opgs16::manager::MSettingManager */
 #include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
 
@@ -53,10 +53,10 @@ namespace {
 struct MovementOffset { int x{ 0 }, y{ 0 }; };
 
 /*! Check AABB Collision detection */
-bool DetectCollisionAabbExt(const collision::RectangleCollider2D* s_collider,
-                            const collision::RectangleCollider2D* d_collider,
+bool DetectCollisionAabbExt(const collision::CRectangleCollider2D* s_collider,
+                            const collision::CRectangleCollider2D* d_collider,
                             const MovementOffset offset = {}) {
-    using PositionType = collision::RectangleCollider2D::PositionType;
+    using PositionType = collision::CRectangleCollider2D::PositionType;
     auto s_m = s_collider->GetTipPosition(PositionType::LEFT_DOWN);
     s_m.x += offset.x;
     s_m.y += offset.y;
@@ -79,8 +79,8 @@ struct CollisionFlag {
 
 
 void AdjustPosition(component::CRigidbody2D* src_rgd2d,
-                    collision::RectangleCollider2D* src_col2d,
-                    collision::RectangleCollider2D* dst_col2d) {
+                    collision::CRectangleCollider2D* src_col2d,
+                    collision::CRectangleCollider2D* dst_col2d) {
     CollisionFlag   collision_flag;
     const auto&     original_movement = src_rgd2d->Movement();
     MovementOffset  final_offset;
@@ -134,9 +134,9 @@ void AdjustPosition(component::CRigidbody2D* src_rgd2d,
 
 using _internal::Item;
 
-void MPhysicsManager::AddCollider(collision::RectangleCollider2D* const collider,
+void MPhysicsManager::AddCollider(collision::CRectangleCollider2D* const collider,
                                  component::CRigidbody2D* const rigidbody) {
-    using Type = collision::RectangleCollider2D::PositionType;
+    using Type = collision::CRectangleCollider2D::PositionType;
     auto ld = collider->GetTipPosition(Type::LEFT_DOWN);
     auto ru = collider->GetTipPosition(Type::RIGHT_UP);
 
@@ -196,7 +196,7 @@ void MPhysicsManager::ProceedCollisionCheck(MPhysicsManager::item_ptr& item) {
             }
 
             /*! Call callback member function */
-            using col_type = collision::Collider2D::ECollisionType;
+            using col_type = collision::CCollider2D::ECollisionType;
             if (s_collider->CollisionType() == col_type::COLLISION)
                 s_rigidbody->OnCollisionEnter(*d_rigidbody);
             else

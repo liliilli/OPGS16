@@ -47,7 +47,7 @@
 #include <memory>
 #include "../Internal/component.h"
 #include "../Internal/component_macro.h"
-#include "../Physics2D/Collider/rectangle.h"    /*! collision::RectangleCollider2D */
+#include "../Physics2D/Collider/rectangle.h"    /*! collision::CRectangleCollider2D */
 #include "../../../Headers/Fwd/objectfwd.h"     /*! Object as reference */
 
 namespace opgs16 {
@@ -76,19 +76,19 @@ public:
     /*!
      * @brief Add (insert) 2D collider object. This method could be used as just plain object
      * creation statement, except for noting collider type what you want to bind.
-     * @param[in] _Ty 2D collider object, not just abstract Collider2D class.
+     * @param[in] _Ty 2D collider object, not just abstract CCollider2D class.
      * @param[in] _Params varidic arguments, used to have been forwarding as constructor args.
      */
     template <
         class _Ty,
         class... _Params,
-        typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<collision::CRectangleCollider2D, _Ty>>
     >
     decltype(auto) AddCollider2D(_Params&&... args);
 
     template <
         class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<collision::RectangleCollider2D, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<collision::CRectangleCollider2D, _Ty>>
     >
     decltype(auto) AddCollider2D(std::unique_ptr<_Ty>&& collider);
 
@@ -160,7 +160,7 @@ private:
     glm::vec3 m_movement;
 
     BodyType m_type{ BodyType::NORMAL };
-    std::list<std::unique_ptr<collision::RectangleCollider2D>> m_colliders{};
+    std::list<std::unique_ptr<collision::CRectangleCollider2D>> m_colliders{};
 
     /*! Create members related to type hash value. */
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbody2D)

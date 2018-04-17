@@ -55,10 +55,10 @@ namespace physics {
 namespace collision {
 
 /**
- * @class Collider2D
+ * @class CCollider2D
  * @brief
  */
-class Collider2D {
+class CCollider2D {
 public:
 	/**
 	 * @brief

@@ -139,10 +139,8 @@ class   CTexture2D;
 } /*! opgs16::texture */
 } /*! opgs16 */
 
-
-
 namespace collision {
-class Collider2D;
+class CCollider2D;
 class RectangleCollider2D;
 }
 

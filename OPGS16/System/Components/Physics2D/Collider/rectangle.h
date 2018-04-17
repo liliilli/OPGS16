@@ -21,15 +21,15 @@
 namespace collision {
 
 /**
- * @class RectangleCollider2D
+ * @class CRectangleCollider2D
  * @brief
  */
-class RectangleCollider2D : public Collider2D {
+class CRectangleCollider2D : public CCollider2D {
 public:
 	/**
 	 * @brief Constructor with left, up, right, down. (default)
 	 */
-	RectangleCollider2D(const float left, const float up, const float right, const float down);
+	CRectangleCollider2D(const float left, const float up, const float right, const float down);
 
 	/**
 	 * @brief Set region using with left, up, right, down boundary axis dependent value.

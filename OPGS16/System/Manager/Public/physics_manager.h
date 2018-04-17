@@ -67,7 +67,7 @@ public:
      * @brief
      * @param[in]
      */
-    void AddCollider(collision::RectangleCollider2D* const collider,
+    void AddCollider(collision::CRectangleCollider2D* const collider,
                      component::CRigidbody2D* const rigidbody);
 
     /*! Update and proceed collision routine */

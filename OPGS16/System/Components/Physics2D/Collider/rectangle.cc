@@ -2,12 +2,12 @@
 
 namespace collision {
 
-RectangleCollider2D::RectangleCollider2D(const float left, const float up,
+CRectangleCollider2D::CRectangleCollider2D(const float left, const float up,
                                          const float right, const float down) {
 	SetRegion(left, up, right, down);
 }
 
-void RectangleCollider2D::SetRegion(const float left, const float up,
+void CRectangleCollider2D::SetRegion(const float left, const float up,
                                     const float right, const float down) {
 	/** Body */
 	m_left = left;
@@ -23,14 +23,14 @@ void RectangleCollider2D::SetRegion(const float left, const float up,
 	UpdateAllCorner(m_left, m_up, m_right, m_down);
 }
 
-void RectangleCollider2D::ReflectPosition(const glm::vec3& position) {
+void CRectangleCollider2D::ReflectPosition(const glm::vec3& position) {
     m_position_of_bound_object = position;
 
     m_position_changed = true;
     UpdateFinalCorner();
 }
 
-glm::vec2 RectangleCollider2D::GetTipPosition(PositionType type) const {
+glm::vec2 CRectangleCollider2D::GetTipPosition(PositionType type) const {
     if (m_position_changed)
         UpdateFinalCorner();
 
@@ -42,7 +42,7 @@ glm::vec2 RectangleCollider2D::GetTipPosition(PositionType type) const {
     }
 }
 
-void RectangleCollider2D::UpdateAllCorner(const float m_left,
+void CRectangleCollider2D::UpdateAllCorner(const float m_left,
 	const float m_up, const float m_right, const float m_down) {
 	/** Body */
 	lu = glm::vec2{ m_left, m_up };
@@ -54,7 +54,7 @@ void RectangleCollider2D::UpdateAllCorner(const float m_left,
     UpdateFinalCorner();
 }
 
-void RectangleCollider2D:: UpdateFinalCorner() const {
+void CRectangleCollider2D:: UpdateFinalCorner() const {
     if (m_position_changed) {
         glm::vec2 pos = m_position_of_bound_object;
         final_lu = lu + pos;

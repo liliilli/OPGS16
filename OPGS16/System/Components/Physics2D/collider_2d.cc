@@ -45,17 +45,17 @@ using opgs16::manager::MSettingManager;
 
 } /*! unnamed namespace */
 
-void Collider2D::SetCollisionType(ECollisionType type) {
+void CCollider2D::SetCollisionType(ECollisionType type) {
 	m_collision_type = type;
 }
 
-void Collider2D::SetCollisionLayerIndex(unsigned layer_value) {
+void CCollider2D::SetCollisionLayerIndex(unsigned layer_value) {
     if (layer_value >= MSettingManager::Instance().CollisionLayerList().size())
         throw std::runtime_error("collision layer value is bigger than capacity.");
     m_collision_layer_index = layer_value;
 }
 
-void Collider2D::SetCollisionLayerName(const std::string& layer_name) {
+void CCollider2D::SetCollisionLayerName(const std::string& layer_name) {
     const auto& list = MSettingManager::Instance().CollisionLayerList();
     unsigned layer_value{ 0 };
 
@@ -71,7 +71,7 @@ void Collider2D::SetCollisionLayerName(const std::string& layer_name) {
         throw std::runtime_error("did not find collision layer value mathces string.");
 }
 
-std::string Collider2D::CollisionLayerStringOf() const {
+std::string CCollider2D::CollisionLayerStringOf() const {
     return MSettingManager::Instance().CollisionLayerList()[m_collision_layer_index];
 }
 
