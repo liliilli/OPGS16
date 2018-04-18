@@ -47,49 +47,50 @@ namespace _internal {
 namespace {
 using manager::MSettingManager;
 constexpr float k_2pi{ 2 * glm::pi<float>() };
-constexpr float k_max_degree{ 360.f };
+
 const static glm::vec3 k_vec3_1{ 1.f };
+const static glm::mat4 k_rotation_init{ glm::rotate(glm::mat4{}, k_2pi, k_vec3_1) };
+
+bool IsAllAngleValueZero(const float (&angle)[3]) {
+    unsigned zero_count{ 0 };
+    for (float i : angle)
+        if (std::fabsf(i) <= 0.001f) { ++zero_count; }
+
+    return zero_count >= 3;
+}
+
+glm::mat4 GetRotationMatrix(const float (&angle)[3]) {
+    glm::mat4 matrix;
+    matrix = glm::rotate(matrix, glm::radians(angle[0]), glm::vec3{ 1, 0, 0 });
+    matrix = glm::rotate(matrix, glm::radians(angle[1]), glm::vec3{ 0, 1, 0 });
+    matrix = glm::rotate(matrix, glm::radians(angle[2]), glm::vec3{ 0, 0, 1 });
+    return matrix;
+}
 
 } /*! unnamed namespace */
 
 void CObjectImpl::RefreshFinalPosition() const {
     m_final_position = m_local_position + m_parent_from_position;
 
-    for (auto i = 0u; i < 3u; ++i) {
-        for (auto j = 0u; j < 3u; ++j) {
-            m_final_position[i] += m_wp_rotate_matrix[j][i] * m_world_position[j];
-        }
+    for (auto i = 0u; i < 3u; ++i) { // Loop unrolling
+        m_final_position[i] += m_wp_rotate_matrix[0][i] * m_world_position[0];
+        m_final_position[i] += m_wp_rotate_matrix[1][i] * m_world_position[1];
+        m_final_position[i] += m_wp_rotate_matrix[2][i] * m_world_position[2];
     }
 }
 
 void CObjectImpl::RefreshRotateMatrix() const {
-    unsigned zero_count{ 0 };
-    for (auto i = 0u; i < 3u; ++i)
-        if (std::fabsf(m_rotation_local_angle_n[i]) <= 0.001f) ++zero_count;
-
-    if (zero_count >= 3)    m_local_rotate_matrix = glm::rotate(glm::mat4{}, k_2pi, k_vec3_1);
-    else {
-        glm::mat4 matrix{};
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[0]), glm::vec3{ 1, 0, 0 });
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[1]), glm::vec3{ 0, 1, 0 });
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[2]), glm::vec3{ 0, 0, 1 });
-        m_local_rotate_matrix = matrix;
-    }
+    if (IsAllAngleValueZero(m_rotation_local_angle_n))
+        m_local_rotate_matrix = k_rotation_init;
+    else
+        m_local_rotate_matrix = GetRotationMatrix(m_rotation_local_angle_n);
 }
 
 void CObjectImpl::RefreshWpRotationMatrix() const {
-    unsigned zero_count{ 0 };
-    for (auto i = 0u; i < 3u; ++i)
-        if (std::fabsf(m_rotation_wp_angle_n[i]) <= 0.001f) { ++zero_count; };
-
-    if (zero_count >= 3)    m_wp_rotate_matrix = glm::rotate(glm::mat4{}, k_2pi, k_vec3_1);
-    else {
-        glm::mat4 matrix{};
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[0]), glm::vec3{ 1, 0, 0 });
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[1]), glm::vec3{ 0, 1, 0 });
-        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[2]), glm::vec3{ 0, 0, 1 });
-        m_wp_rotate_matrix = matrix;
-    }
+    if (IsAllAngleValueZero(m_rotation_wp_angle_n))
+        m_wp_rotate_matrix = k_rotation_init;
+    else
+        m_wp_rotate_matrix = GetRotationMatrix(m_rotation_wp_angle_n);
 }
 
 void CObjectImpl::RefreshRotationWorldParentAngle(const EDirection direction) {

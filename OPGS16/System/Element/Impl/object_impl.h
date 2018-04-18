@@ -204,22 +204,6 @@ public:
         return m_scale_local_factor;
     }
 
-    //inline const float GetScaleParentValue() const noexcept {
-
-    //}
-
-    //inline const glm::vec3& GetScaleParentFactor() const noexcept {
-
-    //}
-
-    //inline const float GetScaleFinalValue() const noexcept {
-
-    //}
-
-    //inline const glm::vec3& GetScaleFinalFactor() const noexcept {
-
-    //}
-
     inline void SetScaleLocalValue(const float scale_value) noexcept {
         m_scale_local_value = scale_value;
 
@@ -328,7 +312,6 @@ private:
 
     mutable glm::mat4   m_local_rotate_matrix{};/*! Local rotation matrix */
     mutable glm::mat4   m_wp_rotate_matrix{};   /*! World + Parent rotation matrix */
-    mutable glm::mat4   m_local_model{};        /*! Model matrix */
     mutable glm::mat4   m_final_model{};        /*! Final model matrix also reflected by parent's and world rot. */
 
 	bool m_active{ true };                      /*! Object update activation variable. */
