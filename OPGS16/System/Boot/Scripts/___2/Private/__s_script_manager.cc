@@ -38,12 +38,18 @@
 #include "../../../Object/___2/Public/__s_game_canvas.h"/*! ::opgs16::builtin::sample::__S_GAME_CANVAS */
 #include "../../../Object/___2/Public/__s_player.h"     /*! ::opgs16::builtin::sample::__S_PLAYER */
 #include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
+#include "../../../../Manager/Public/input_manager.h"
+#include "../../../../../Headers/import_logger.h"
+
+constexpr float k_angle_offset = 3.1725f;
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-__S_SCRIPT_MANAGER::__S_SCRIPT_MANAGER(element::CObject& bind_object) : CScriptFrame{ bind_object },
+__S_SCRIPT_MANAGER::__S_SCRIPT_MANAGER(element::CObject& bind_object) :
+    CScriptFrame{ bind_object },
+    m_input_manager{ GET_INPUT_MANAGER },
     m_present_scene{ *manager::MSceneManager::Instance().PresentScene() } {
     Start();
 };
@@ -56,7 +62,13 @@ void __S_SCRIPT_MANAGER::Start() {
 }
 
 void __S_SCRIPT_MANAGER::Update() {
+    if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
+        auto& object = GetObject();
 
+        float angle_value = object.GetRotationWorldAngle(element::_internal::EDirection::Z);
+        angle_value += k_angle_offset * h_val;
+        object.SetRotationWorldAngle(element::_internal::EDirection::Z, angle_value);
+    }
 }
 
 } /*! ogps16::builtin::sample */

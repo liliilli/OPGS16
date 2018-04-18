@@ -45,22 +45,21 @@ __S_CURSOR_SCR::__S_CURSOR_SCR(opgs16::element::CObject& bind_object) :
 }
 
 void __S_CURSOR_SCR::Start() {
-    GetObject().SetRotationLocalFactor({ 0, 0, 1 });
 }
 
 void __S_CURSOR_SCR::Update() {
     if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
         auto& object = GetObject();
 
-        float angle_value = object.GetRotationLocalAngle();
+        float angle_value = object.GetRotationLocalAngle(element::_internal::EDirection::Z);
         angle_value += k_angle_offset * h_val;
-        object.SetRotationLocalAngle(angle_value);
+        object.SetRotationLocalAngle(element::_internal::EDirection::Z, angle_value);
 
         auto canvas = manager::MSceneManager::Instance().PresentScene()->GetObject("Canvas").get();
         auto text = static_cast<element::canvas::CText*>(canvas->GetChild("AngleText"));
 
         char text_string[10]{};
-        sprintf(text_string, "%.1f", object.GetRotationLocalAngle());
+        sprintf(text_string, "%.1f", object.GetRotationLocalAngle(element::_internal::EDirection::Z));
         strcat(text_string, "'");
         text->SetText(text_string);
     }

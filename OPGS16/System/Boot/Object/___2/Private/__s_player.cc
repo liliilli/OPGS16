@@ -31,6 +31,7 @@
  * @brief Definition file of ../Public/__s_player.h
  * @log
  * 2018-04-15 Create file.
+ * 2018-04-18 Change initialization code due to changing of object rotational api.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__s_player.h"
@@ -46,9 +47,8 @@ namespace sample {
 
 __S_PLAYER::__S_PLAYER() {
     SetScaleValue(12.f);
-    SetLocalPosition({ 0, -80, 0 });
-    SetRotationLocalAngle(-60.f);
-    SetRotationLocalFactor({ 1, 0, 0 });
+    SetWorldPosition({ 0, -80, 0 });
+    SetRotationLocalAngle(element::_internal::EDirection::X, -60.f);
 
     //SetRotationFromParentAngle(45.f);
     //SetRotationFromParentFactor({ 0, 0, 1 });

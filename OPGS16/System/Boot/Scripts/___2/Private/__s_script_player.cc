@@ -39,6 +39,7 @@
 #include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
 #include "../../../../Element/Public/object.h"          /*! ::opgs16::element::CObject */
 #include "../../../Object/___2/Public/__s_player_bullet.h"  /*! ::opgs16::builtin::sample::__S_PLAYER_BULLET */
+#include "../../../../../Headers/import_logger.h"
 
 namespace opgs16 {
 namespace builtin {
@@ -46,7 +47,7 @@ namespace sample {
 
 __S_SCRIPT_PLAYER::__S_SCRIPT_PLAYER(opgs16::element::CObject& bind_object) :
     CScriptFrame{ bind_object },
-    m_input_manager{ manager::MInputManager::Instance() },
+    m_input_manager{ GET_INPUT_MANAGER },
     m_game_scene{ *manager::MSceneManager::Instance().PresentScene() } {
 }
 
@@ -57,9 +58,6 @@ void __S_SCRIPT_PLAYER::Update() {
     if (m_input_manager.IsKeyPressed("KeyD")) {
         auto pos = GetObject().GetFinalPosition();
         m_game_scene.Instantiate<__S_PLAYER_BULLET>("PlayerBullet", pos.x, pos.y, pos.z);
-    }
-
-    if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
     }
 }
 
