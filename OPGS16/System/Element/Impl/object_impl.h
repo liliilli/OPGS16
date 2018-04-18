@@ -301,7 +301,7 @@ private:
     float       m_rotation_world_angle{};       /*! Rotation world angle value. Positive CW, Negative CCW. */
     float       m_rotation_parent_to_angle{};   /*! Rotation */
     glm::vec3   m_rotation_local_factor{ 1.f }; /*! Rotation factor is (x, y, z) factor */
-    glm::vec3   m_rotation_parent_from_factor{};/*! Rotation factor from parent's world rotation factor. */
+    glm::vec3   m_rotation_parent_from_factor{ 1.f };/*! Rotation factor from parent's world rotation factor. */
     glm::vec3   m_rotation_world_factor{ 1.f }; /*! Rotation world factor. */
 
     float       m_scale_local_value{ 1.f };     /*! Scale value's default value is 1.0f */
@@ -310,9 +310,9 @@ private:
     glm::vec3   m_scale_parent_factor{ 1.f };   /*! Scale factor from parent */
     mutable glm::vec3   m_scale_final_vector{}; /*! (x, y, z) scale vector to apply to matrix */
 
-    mutable glm::mat4   m_local_rotate_matrix;  /*! Local rotation matrix */
-    mutable glm::mat4   m_parent_rotate_matrix; /*! Parent's World rotation matrix */
-    mutable glm::mat4   m_world_rotate_matrix;  /*! World rotation matrix */
+    mutable glm::mat4   m_local_rotate_matrix{};  /*! Local rotation matrix */
+    mutable glm::mat4   m_parent_rotate_matrix{}; /*! Parent's World rotation matrix */
+    mutable glm::mat4   m_world_rotate_matrix{};  /*! World rotation matrix */
     mutable glm::mat4   m_local_model{};        /*! Model matrix */
     mutable glm::mat4   m_final_model{};        /*! Final model matrix also reflected by parent's and world rot. */
 
