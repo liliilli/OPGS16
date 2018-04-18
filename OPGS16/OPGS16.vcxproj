@@ -224,6 +224,7 @@
     <ClInclude Include="System\Boot\Object\___2\Public\__s_cursor.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_game_canvas.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_manager.h" />
+    <ClInclude Include="System\Boot\Object\___2\Public\__s_object_axis.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_player.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_player_bullet.h" />
     <ClInclude Include="System\Boot\Scene\Public\__boot.h" />

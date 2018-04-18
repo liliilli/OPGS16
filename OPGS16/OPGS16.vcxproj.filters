@@ -175,6 +175,7 @@
     <ClInclude Include="System\Element\Canvas\Public\image.h" />
     <ClInclude Include="System\Element\Impl\text_impl.h" />
     <ClInclude Include="System\Element\Internal\direction_type.h" />
+    <ClInclude Include="System\Boot\Object\___2\Public\__s_object_axis.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
