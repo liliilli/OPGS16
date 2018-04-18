@@ -41,10 +41,12 @@
  * 2018-03-05 Add rendering layer member functions.
  * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
  * 2018-04-14 Change CObjectImpl::SetRotationLocalAngle angle reflection mechanism, restrict bound as (-180.f, 180.f].
+ * 2018-04-18 Change function and mechanism of rotation.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <string>       /*! std::string */
 #include <glm/glm.hpp>  /*! glm::vec_x */
+#include "../Internal/direction_type.h" /*! ::opgs16::element::_internal::EDirection */
 
 namespace opgs16 {
 namespace element {
@@ -103,103 +105,120 @@ public:
 
     /*! Angle */
 
-    inline const float GetRotationLocalAngle() const noexcept {
-        return m_rotation_local_angle;
+    float GetRotationLocalAngle(const EDirection direction) const noexcept {
+        switch (direction) {
+        case EDirection::X: return m_rotation_local_angle_n[0];
+        case EDirection::Y: return m_rotation_local_angle_n[1];
+        case EDirection::Z: return m_rotation_local_angle_n[2];
+        default:
+            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
+            else                    return std::numeric_limits<float>::quiet_NaN();
+        }
     }
 
-    inline const glm::vec3& GetRotationLocalFactor() const noexcept {
-        return m_rotation_local_factor;
+    float GetRotationFromParentAngle(const EDirection direction) const noexcept {
+        switch (direction) {
+        case EDirection::X: return m_rotation_parent_angle_n[0];
+        case EDirection::Y: return m_rotation_parent_angle_n[1];
+        case EDirection::Z: return m_rotation_parent_angle_n[2];
+        default:
+            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
+            else                    return std::numeric_limits<float>::quiet_NaN();
+        }
     }
 
-    inline const float GetRotationFromParentAngle() const noexcept {
-        return m_rotation_parent_from_angle;
+    float GetRotationWorldAngle(const EDirection direction) const noexcept {
+        switch (direction) {
+        case EDirection::X: return m_rotation_world_angle_n[0];
+        case EDirection::Y: return m_rotation_world_angle_n[1];
+        case EDirection::Z: return m_rotation_world_angle_n[2];
+        default:
+            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
+            else                    return std::numeric_limits<float>::quiet_NaN();
+        }
     }
 
-    inline const glm::vec3& GetRotationFromParentFactor() const noexcept {
-        return m_rotation_parent_from_factor;
+    float GetRotationWpAngle(const EDirection direction) const {
+        switch (direction) {
+        case EDirection::X: return m_rotation_wp_angle_n[0];
+        case EDirection::Y: return m_rotation_wp_angle_n[1];
+        case EDirection::Z: return m_rotation_wp_angle_n[2];
+        default:
+            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
+            else                    return std::numeric_limits<float>::quiet_NaN();
+        }
     }
 
-    inline const float GetRotationWorldAngle() const noexcept {
-        return m_rotation_world_angle;
-    }
+    void SetRotationLocalAngle(const EDirection direction, const float angle_value) noexcept {
+        float angle = std::fmodf(angle_value, 360.f);
+        angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
-    inline const glm::vec3& GetRotationWorldFactor() const noexcept {
-        return m_rotation_world_factor;
-    }
-
-    inline void SetRotationLocalAngle(const float angle_value) noexcept {
-        const float angle = std::fmodf(angle_value, 360.f);
-        m_rotation_local_angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
+        switch (direction) {
+        case EDirection::X: m_rotation_local_angle_n[0] = angle; break;
+        case EDirection::Y: m_rotation_local_angle_n[1] = angle; break;
+        case EDirection::Z: m_rotation_local_angle_n[2] = angle; break;
+        default: break;
+        }
 
         m_local_model_matrix_deprecated = true;
         m_local_rotation_deprecated = true;
     }
 
-    inline void SetRotationLocalFactor(const glm::vec3& factor) noexcept {
-        m_rotation_local_factor = factor;
+    void SetRotationParentAngle(const EDirection direction, const float angle_value) noexcept {
+        float angle = std::fmodf(angle_value, 360.f);
+        angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
-        m_local_model_matrix_deprecated = true;
-        m_local_rotation_deprecated = true;
+        switch (direction) {
+        case EDirection::X: m_rotation_parent_angle_n[0] = angle; break;
+        case EDirection::Y: m_rotation_parent_angle_n[1] = angle; break;
+        case EDirection::Z: m_rotation_parent_angle_n[2] = angle; break;
+        default: break;
+        }
+
+        RefreshRotationWorldParentAngle(direction);
+        m_offset_model_matrix_deprecated = true;
     }
 
-    inline void SetRotationParentAngle(const float angle_value) noexcept {
-        m_rotation_parent_from_angle = angle_value;
+    void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
+        float angle = std::fmodf(angle_value, 360.f);
+        angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
+        switch (direction) {
+        case EDirection::X: m_rotation_world_angle_n[0] = angle; break;
+        case EDirection::Y: m_rotation_world_angle_n[1] = angle; break;
+        case EDirection::Z: m_rotation_world_angle_n[2] = angle; break;
+        default: break;
+        }
+
+        RefreshRotationWorldParentAngle(direction);
         m_offset_model_matrix_deprecated = true;
-        m_parent_rotation_deprecated = true;
-    }
-
-    inline void SetRotationParentFactor(const glm::vec3& factor) noexcept {
-        m_rotation_local_factor.x = factor.x;
-        m_rotation_local_factor.y = factor.y;
-        m_rotation_local_factor.z = factor.z;
-
-        m_offset_model_matrix_deprecated = true;
-        m_parent_rotation_deprecated = true;
-    }
-
-    inline void SetRotationWorldAngle(const float angle_value) noexcept {
-        const float angle = std::fmodf(angle_value, 360.f);
-        m_rotation_local_angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
-
-        m_offset_model_matrix_deprecated = true;
-        m_world_rotation_deprecated = true;
-    }
-
-    inline void SetRotationWorldFactor(const glm::vec3& factor) noexcept {
-        m_rotation_world_factor.x = factor.x;
-        m_rotation_world_factor.y = factor.y;
-        m_rotation_world_factor.z = factor.z;
-
-        m_offset_model_matrix_deprecated = true;
-        m_parent_rotation_deprecated = true;
     }
 
     /*! Scale */
 
-    inline const float GetScaleLocalValue() const noexcept {
+    const float GetScaleLocalValue() const noexcept {
         return m_scale_local_value;
     }
 
-    inline const glm::vec3& GetScaleLocalFactor() const noexcept {
+    const glm::vec3& GetScaleLocalFactor() const noexcept {
         return m_scale_local_factor;
     }
 
-    inline const float GetScaleParentValue() const noexcept {
+    //inline const float GetScaleParentValue() const noexcept {
 
-    }
+    //}
 
-    inline const glm::vec3& GetScaleParentFactor() const noexcept {
+    //inline const glm::vec3& GetScaleParentFactor() const noexcept {
 
-    }
+    //}
 
-    inline const float GetScaleFinalValue() const noexcept {
+    //inline const float GetScaleFinalValue() const noexcept {
 
-    }
+    //}
 
-    inline const glm::vec3& GetScaleFinalFactor() const noexcept {
+    //inline const glm::vec3& GetScaleFinalFactor() const noexcept {
 
-    }
+    //}
 
     inline void SetScaleLocalValue(const float scale_value) noexcept {
         m_scale_local_value = scale_value;
@@ -296,13 +315,10 @@ private:
     mutable glm::vec3 m_parent_to_position{};   /*! (x, y, z) parent position to bring child. */
     mutable glm::vec3 m_final_position{};       /*! (x, y, z) final position in hierarchy. */
 
-    float       m_rotation_local_angle{};       /*! Rotation angle. Positive CW, Negative CCW */
-    float       m_rotation_parent_from_angle{}; /*! Rotation angle value from parent's world angle */
-    float       m_rotation_world_angle{};       /*! Rotation world angle value. Positive CW, Negative CCW. */
-    float       m_rotation_parent_to_angle{};   /*! Rotation */
-    glm::vec3   m_rotation_local_factor{ 1.f }; /*! Rotation factor is (x, y, z) factor */
-    glm::vec3   m_rotation_parent_from_factor{ 1.f };/*! Rotation factor from parent's world rotation factor. */
-    glm::vec3   m_rotation_world_factor{ 1.f }; /*! Rotation world factor. */
+    float       m_rotation_local_angle_n[3]{ 0.f, };
+    float       m_rotation_world_angle_n[3]{ 0.f, };
+    float       m_rotation_parent_angle_n[3]{ 0.f, };
+    float       m_rotation_wp_angle_n[3]{ 0.f, };
 
     float       m_scale_local_value{ 1.f };     /*! Scale value's default value is 1.0f */
     float       m_scale_parent_value{ 1.f };    /*! Scale value from parent */
@@ -310,9 +326,8 @@ private:
     glm::vec3   m_scale_parent_factor{ 1.f };   /*! Scale factor from parent */
     mutable glm::vec3   m_scale_final_vector{}; /*! (x, y, z) scale vector to apply to matrix */
 
-    mutable glm::mat4   m_local_rotate_matrix{};  /*! Local rotation matrix */
-    mutable glm::mat4   m_parent_rotate_matrix{}; /*! Parent's World rotation matrix */
-    mutable glm::mat4   m_world_rotate_matrix{};  /*! World rotation matrix */
+    mutable glm::mat4   m_local_rotate_matrix{};/*! Local rotation matrix */
+    mutable glm::mat4   m_wp_rotate_matrix{};   /*! World + Parent rotation matrix */
     mutable glm::mat4   m_local_model{};        /*! Model matrix */
     mutable glm::mat4   m_final_model{};        /*! Final model matrix also reflected by parent's and world rot. */
 
@@ -326,8 +341,6 @@ private:
 
     mutable bool m_final_pos_deprecated{ true };        /*! The flag final pos needs to be updated. */
     mutable bool m_local_rotation_deprecated{ true };   /*! The flag rotation needs to be updated. */
-    mutable bool m_parent_rotation_deprecated{ true };  /*! The flag rotation needs to be updated. */
-    mutable bool m_world_rotation_deprecated{ true };   /*! The flag rotation needs to be updated. */
     mutable bool m_scale_deprecated{ true };            /*! The flag scale vec needs to be updated. */
 
     size_t m_tag_index{ 0 };                /*! Tag index */
@@ -336,8 +349,9 @@ private:
 	void RefreshFinalPosition() const;	/** Refresh Translation matrix */
 	void RefreshRotateMatrix() const;	/** Refresh Rotation matrix */
 	void RefreshScaleVector() const;	/** Refresh Scaling matrix */
-    void RefreshParentRotationMatrix() const;
-    void RefreshWorldRotationMatrix() const;
+    void RefreshWpRotationMatrix() const;
+
+    void RefreshRotationWorldParentAngle(const EDirection direction);
 };
 
 } /*! opgs16::element::_internal */

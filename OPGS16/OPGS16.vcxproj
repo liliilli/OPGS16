@@ -262,6 +262,7 @@
     <ClInclude Include="Objects\Debug\Script\ui_manager.h" />
     <ClInclude Include="System\Core\Public\core_header.h" />
     <ClInclude Include="System\Core\Public\core_setting.h" />
+    <ClInclude Include="System\Element\Internal\direction_type.h" />
     <ClInclude Include="System\Element\Internal\texture_internal.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="System\Helper\Public\access_ptr.h" />

@@ -33,6 +33,7 @@
  * @log
  * 2018-03-05 Add rendering layer member functions.
  * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
+ * 2018-04-18 Change function and mechanism of rotation.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "object_impl.h"                    /*! Header file */
@@ -45,64 +46,113 @@ namespace _internal {
 
 namespace {
 using manager::MSettingManager;
+constexpr float k_2pi{ 2 * glm::pi<float>() };
+constexpr float k_max_degree{ 360.f };
+const static glm::vec3 k_vec3_1{ 1.f };
+
 } /*! unnamed namespace */
 
 void CObjectImpl::RefreshFinalPosition() const {
-    m_final_position = m_local_position + m_parent_from_position + m_world_position;
-    m_final_pos_deprecated = false;
+    m_final_position = m_local_position + m_parent_from_position;
+
+    for (auto i = 0u; i < 3u; ++i) {
+        for (auto j = 0u; j < 3u; ++j) {
+            m_final_position[i] += m_wp_rotate_matrix[j][i] * m_world_position[j];
+        }
+    }
 }
 
 void CObjectImpl::RefreshRotateMatrix() const {
-	m_local_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_local_angle), m_rotation_local_factor);
-    m_local_rotation_deprecated = false;
+    unsigned zero_count{ 0 };
+    for (auto i = 0u; i < 3u; ++i)
+        if (std::fabsf(m_rotation_local_angle_n[i]) <= 0.001f) ++zero_count;
+
+    if (zero_count >= 3)    m_local_rotate_matrix = glm::rotate(glm::mat4{}, k_2pi, k_vec3_1);
+    else {
+        glm::mat4 matrix{};
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[0]), glm::vec3{ 1, 0, 0 });
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[1]), glm::vec3{ 0, 1, 0 });
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_local_angle_n[2]), glm::vec3{ 0, 0, 1 });
+        m_local_rotate_matrix = matrix;
+    }
 }
 
-void CObjectImpl::RefreshParentRotationMatrix() const {
-    m_parent_rotate_matrix = glm::rotate(glm::mat4{},
-                                         glm::radians(m_rotation_parent_from_angle), m_rotation_parent_from_factor);
-    m_parent_rotation_deprecated = false;
+void CObjectImpl::RefreshWpRotationMatrix() const {
+    unsigned zero_count{ 0 };
+    for (auto i = 0u; i < 3u; ++i)
+        if (std::fabsf(m_rotation_wp_angle_n[i]) <= 0.001f) { ++zero_count; };
+
+    if (zero_count >= 3)    m_wp_rotate_matrix = glm::rotate(glm::mat4{}, k_2pi, k_vec3_1);
+    else {
+        glm::mat4 matrix{};
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[0]), glm::vec3{ 1, 0, 0 });
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[1]), glm::vec3{ 0, 1, 0 });
+        matrix = glm::rotate(matrix, glm::radians(m_rotation_wp_angle_n[2]), glm::vec3{ 0, 0, 1 });
+        m_wp_rotate_matrix = matrix;
+    }
 }
 
-void CObjectImpl::RefreshWorldRotationMatrix() const {
-    m_world_rotate_matrix = glm::rotate(glm::mat4{}, glm::radians(m_rotation_world_angle), m_rotation_world_factor);
-    m_world_rotation_deprecated = false;
+void CObjectImpl::RefreshRotationWorldParentAngle(const EDirection direction) {
+    float* wp_target_angle{ nullptr };
+    switch (direction) {
+    case EDirection::X:
+        wp_target_angle = &m_rotation_wp_angle_n[0];
+        *wp_target_angle = m_rotation_parent_angle_n[0] + m_rotation_world_angle_n[0];
+        break;
+    case EDirection::Y:
+        wp_target_angle = &m_rotation_wp_angle_n[1];
+        *wp_target_angle = m_rotation_parent_angle_n[1] + m_rotation_world_angle_n[1];
+        break;
+    case EDirection::Z: wp_target_angle = &m_rotation_wp_angle_n[2];
+        *wp_target_angle = m_rotation_parent_angle_n[2] + m_rotation_world_angle_n[2];
+        break;
+    default: break;
+    }
+
+    if (wp_target_angle) {
+        const float angle = std::fmodf(*wp_target_angle, 360.f);
+        *wp_target_angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
+    }
 }
 
 void CObjectImpl::RefreshScaleVector() const {
     m_scale_final_vector = m_scale_local_factor * m_scale_local_value;
-    m_scale_deprecated = false;
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
-	if (m_local_model_matrix_deprecated) {
-        if (m_final_pos_deprecated)       RefreshFinalPosition();
-        if (m_local_rotation_deprecated)  RefreshRotateMatrix();
-        if (m_scale_deprecated)           RefreshScaleVector();
-
-        /*! Rotation */
-		m_local_model = m_local_rotate_matrix;
-        /*! Scale */
-        m_local_model[0] *= m_scale_final_vector[0];
-        m_local_model[1] *= m_scale_final_vector[1];
-        m_local_model[2] *= m_scale_final_vector[2];
-        /*! Movement */
-        m_local_model[3][0] = m_final_position.x;
-        m_local_model[3][1] = m_final_position.y;
-        m_local_model[3][2] = m_final_position.z;
-		m_local_model_matrix_deprecated = false;
-	}
-
-    // Performance...???
     if (m_offset_model_matrix_deprecated) {
-        if (m_parent_rotation_deprecated) RefreshParentRotationMatrix();
-        if (m_world_rotation_deprecated)  RefreshWorldRotationMatrix();
+        RefreshWpRotationMatrix();
+        RefreshFinalPosition();
         m_offset_model_matrix_deprecated = false;
     }
 
-    m_final_model = m_world_rotate_matrix * (m_parent_rotate_matrix * m_local_model);
-    m_final_position.x = m_final_model[3][0];
-    m_final_position.y = m_final_model[3][1];
-    m_final_position.z = m_final_model[3][2];
+	if (m_local_model_matrix_deprecated) {
+        if (m_final_pos_deprecated) {
+            RefreshFinalPosition();
+            m_final_pos_deprecated = false;
+        }
+
+        if (m_local_rotation_deprecated) {
+            RefreshRotateMatrix();
+            m_local_rotation_deprecated = false;
+        }
+
+        if (m_scale_deprecated) {
+            RefreshScaleVector();
+            m_scale_deprecated = false;
+        }
+
+		m_local_model_matrix_deprecated = false;
+	}
+
+    m_final_model = m_wp_rotate_matrix * m_local_rotate_matrix;
+    m_final_model[0] *= m_scale_final_vector[0];
+    m_final_model[1] *= m_scale_final_vector[1];
+    m_final_model[2] *= m_scale_final_vector[2];
+    m_final_model[3][0] = m_final_position.x;
+    m_final_model[3][1] = m_final_position.y;
+    m_final_model[3][2] = m_final_position.z;
+
 	return m_final_model;
 }
 

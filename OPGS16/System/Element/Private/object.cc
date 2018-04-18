@@ -26,6 +26,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Element/Private/object.cc
+ * @brief Definition file of ../Public/object.h
+ * @author Jongmin Yun
+ *
+ * @log
+ * 2018-04-18 Change function and mechanism of rotation. and Add comments.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
 #include "../Public/object.h"              /*! Header file */
 #include "../Impl/object_impl.h"           /*! CObjectImpl */
 
@@ -80,69 +89,47 @@ void CObject::PropagateParentPosition() {
 
 // Rotation functions.
 
-const float CObject::GetRotationLocalAngle() const noexcept {
-    return m_data->GetRotationLocalAngle();
+const float CObject::GetRotationLocalAngle(_internal::EDirection direction) const noexcept {
+    return m_data->GetRotationLocalAngle(direction);
 }
 
-const glm::vec3& CObject::GetRotationLocalFactor() const noexcept {
-    return m_data->GetRotationLocalFactor();
+const float CObject::GetRotationFromParentAngle(_internal::EDirection direction) const noexcept {
+    return m_data->GetRotationFromParentAngle(direction);
 }
 
-const float CObject::GetRotationFromParentAngle() const noexcept {
-    return m_data->GetRotationFromParentAngle();
+const float CObject::GetRotationWorldAngle(_internal::EDirection direction) const noexcept {
+    return m_data->GetRotationWorldAngle(direction);
 }
 
-const glm::vec3& CObject::GetRotationFromParentFactor() const noexcept {
-    return m_data->GetRotationFromParentFactor();
+const float CObject::GetRotationWpAngle(_internal::EDirection direction) const noexcept {
+    return m_data->GetRotationWpAngle(direction);
 }
 
-const float CObject::GetRotationWorldAngle() const noexcept {
-    return m_data->GetRotationWorldAngle();
+void CObject::SetRotationLocalAngle(_internal::EDirection direction, const float angle_value) noexcept {
+	m_data->SetRotationLocalAngle(direction, angle_value);
 }
 
-const glm::vec3& CObject::GetRotationWorldFactor() const noexcept {
-    return m_data->GetRotationWorldFactor();
+void CObject::SetRotationParentAngle(_internal::EDirection direction, const float angle_value) noexcept {
+    m_data->SetRotationParentAngle(direction, angle_value);
+    PropagateParentRotation();
 }
 
-void CObject::SetRotationLocalAngle(const float angle_value) noexcept {
-	m_data->SetRotationLocalAngle(angle_value);
-
-    //for (auto& child : m_children) {
-    //    auto& obj_ptr = child.second;
-    //    /*! If child.second is not empty and activated and permits succeeding rotation */
-    //    if (obj_ptr && obj_ptr->GetActive() && obj_ptr->GetSucceedingRotationFlag())
-    //}
+void CObject::SetRotationWorldAngle(_internal::EDirection direction, const float angle_value) noexcept {
+    m_data->SetRotationWorldAngle(direction, angle_value);
+    PropagateParentRotation();
 }
 
-void CObject::SetRotationLocalFactor(const glm::vec3& factor) noexcept {
-	m_data->SetRotationLocalFactor(factor);
-}
 
-void CObject::SetRotationParentAngle(const float angle_value) noexcept {
-    m_data->SetRotationParentAngle(angle_value);
+void CObject::PropagateParentRotation() {
+    for (auto& child : m_children) {
+        auto& child_ptr = child.second;
+        /*! If object is not empty and activated and permits succeeding positioning. */
+        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag()) {
+            for (const auto& direction : _internal::k_direction_list)
+                child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
+        }
+    }
 }
-
-void CObject::SetRotationParentFactor(const glm::vec3& factor) noexcept {
-    m_data->SetRotationParentFactor(factor);
-}
-
-void CObject::SetRotationWorldAngle(const float angle_value) noexcept {
-    m_data->SetRotationWorldAngle(angle_value);
-    //PropagateWorldAngle();
-}
-
-void CObject::SetRotationWorldFactor(const glm::vec3& factor) noexcept {
-    m_data->SetRotationWorldFactor(factor);
-}
-//
-//void CObject::PropagateWorldAngle() {
-//    for (auto& child : m_children) {
-//        auto& child_ptr = child.second;
-//        /*! If object is not empty and activated and permits succeeding positioning. */
-//        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag())
-//            child_ptr->SetParentPosition(GetParentPosition());
-//    }
-//}
 
 // Scaling functions
 

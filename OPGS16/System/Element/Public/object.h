@@ -45,6 +45,7 @@
  * 2018-03-05 Add member function related to controlling rendering layer.
  * 2018-03-11 Move contents into ::opgs16::element namespace.
  * 2018-04-16 Add rotation (parent, world) get/set functions.
+ * 2018-04-18 Change function and mechanism of rotation.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <algorithm>        /*! std::find_if */
@@ -52,17 +53,14 @@
 #include <memory>			/*! std::unique_ptr */
 #include <unordered_map>	/*! std::unordered_map */
 #include <string>           /*! std::to_string */
-#include "../../Helper/Public/template.h"
-/*! opgs16::component::_internal::CComponent */
-#include "../../System/Components/Internal/component.h"
-#include "../../../Headers/Fwd/objectfwd.h"  /*! helper::CShaderNew
-                                              * glm::vec3
-                                              * ObjectTree
-                                              * ::opgs16::component::_internal::CComponent
-                                              * ::opgs16::component::CRigidbody2D
-                                              * ::opgs16::element::_internal::ObjectImplDeleter
-                                              */
+
 #include <glm/glm.hpp>
+
+#include "../../System/Components/Internal/component.h" /*! opgs16::component::_internal::CComponent */
+
+#include "../Internal/direction_type.h"     /*! opgs16::element::_internal::EDirection */
+#include "../../Helper/Public/template.h"
+#include "../../../Headers/Fwd/objectfwd.h" /*! forwarding declaration */
 
 namespace opgs16 {
 namespace element {
@@ -84,6 +82,7 @@ namespace element {
  * 2018-03-05 Add member function related to controlling rendering layer.
  * 2018-03-11 Move contents into ::opgs16::element namespace.
  * 2018-04-16 Add rotation (parent, world) get/set functions.
+ * 2018-04-18 Change function and mechanism of rotation.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 class CObject {
 private:
@@ -164,21 +163,13 @@ public:
      * @brief The method gets rotation angle value
      * @return Object's rotation angle value.
      */
-    const float GetRotationLocalAngle() const noexcept;
+    const float GetRotationLocalAngle(_internal::EDirection direction) const noexcept;
 
-    /**
-     * @brief The method gets (x, y, z) glm::vec3 rotation axis factor.
-     * @return Object's rotation vector which has (x, y, z) rotation axis factor.
-     */
-    const glm::vec3& GetRotationLocalFactor() const noexcept;
+    const float GetRotationFromParentAngle(_internal::EDirection direction) const noexcept;
 
-    const float GetRotationFromParentAngle() const noexcept;
+    const float GetRotationWorldAngle(_internal::EDirection direction) const noexcept;
 
-    const glm::vec3& GetRotationFromParentFactor() const noexcept;
-
-    const float GetRotationWorldAngle() const noexcept;
-
-    const glm::vec3& GetRotationWorldFactor() const noexcept;
+    const float GetRotationWpAngle(_internal::EDirection direction) const noexcept;
 
     /**
      * @brief The method sets rotation angle values.
@@ -186,21 +177,11 @@ public:
      * input value is negative and factor is [0, 1], axis rotates counter-clockwise.
      * @param[in] angle_value Angle value to set on.
      */
-    void SetRotationLocalAngle(const float angle_value) noexcept;
+    void SetRotationLocalAngle(_internal::EDirection direction, float angle_value) noexcept;
 
-    /**
-     * @brief The method sets rotation factor have values which ranges [-1, 1].
-     * @param[in] factor
-     */
-    void SetRotationLocalFactor(const glm::vec3& factor) noexcept;
+    void SetRotationParentAngle(_internal::EDirection direction, float angle_value) noexcept;
 
-    void SetRotationParentAngle(const float angle_value) noexcept;
-
-    void SetRotationParentFactor(const glm::vec3& factor) noexcept;
-
-    void SetRotationWorldAngle(const float angle_value) noexcept;
-
-    void SetRotationWorldFactor(const glm::vec3& factor) noexcept;
+    void SetRotationWorldAngle(_internal::EDirection direction, float angle_value) noexcept;
 
     /**
      * @brief The method gets scaling values
@@ -225,10 +206,6 @@ public:
      * @param[in] factor Scaling factor
      */
     void SetScaleFactor(const glm::vec3& factor);
-
-    /*!
-     *
-     */
 
     /**
      * @brief The method returns Model matrix, M = TRS
@@ -342,7 +319,8 @@ public:
         class _Ty,
         typename... _Params,
         typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >   _Ty* AddComponent(_Params&&... params);
+    >
+    _Ty* AddComponent(_Params&&... params);
 
     /*!
      * @brief Return component raw-pointer.
@@ -352,7 +330,8 @@ public:
     template<
         class _Ty,
         typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >   _Ty* const GetComponent();
+    >
+    _Ty* const GetComponent();
 
     /*!
      * @brief Remove component.
@@ -362,7 +341,8 @@ public:
     template <
         class _Ty,
         typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >   bool RemoveComponent();
+    >
+    bool RemoveComponent();
 
     /*!
      * @brief Set tag with tag name. This method will check whether or not exist matched tag name
@@ -371,7 +351,7 @@ public:
      */
     void SetTag(const std::string& tag_name);
 
-     /*! Overloaded version of SetTag(tag_name) */
+    /*! Overloaded version of SetTag(tag_name) */
     void SetTag(const size_t tag_index);
 
     /*!
@@ -431,6 +411,9 @@ private:
 
     /*! Propagate parent position recursively */
     void PropagateParentPosition();
+
+    /*! Propagate parent rotation recursively */
+    void PropagateParentRotation();
 
 protected:
     /*! Local update method for derived object. */
