@@ -73,6 +73,11 @@ public:
     }
 
     inline const glm::vec3& GetFinalPosition() const {
+        if (m_offset_model_matrix_deprecated) {
+            RefreshWpRotationMatrix();
+            m_offset_model_matrix_deprecated = false;
+        }
+
         if (m_final_pos_deprecated) {
             RefreshFinalPosition();
             m_final_pos_deprecated = false;
@@ -177,6 +182,8 @@ public:
 
         RefreshRotationWorldParentAngle(direction);
         m_offset_model_matrix_deprecated = true;
+        m_local_model_matrix_deprecated = true;
+        m_final_pos_deprecated = true;
     }
 
     void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
@@ -192,6 +199,7 @@ public:
 
         RefreshRotationWorldParentAngle(direction);
         m_offset_model_matrix_deprecated = true;
+        m_local_model_matrix_deprecated = true;
     }
 
     /*! Scale */
