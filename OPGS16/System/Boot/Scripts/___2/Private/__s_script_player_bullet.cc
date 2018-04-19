@@ -15,12 +15,13 @@
 #include "../Public/__s_script_player_bullet.h"         /*! Header file */
 #include "../../../../Element/Public/object.h"          /*! ::opgs16::element::CObject */
 #include "../../../../Manager/Public/object_manager.h"  /*! ::opgs16::manager::MObjectManager */
+#include "../../../Object/___2/Public/__s_player_bullet.h"
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-constexpr float center_point[3]{ 128.f, 112.f, -100.f };
+constexpr float center_point[3]{ 0.f, 0.f, -100.f };
 static float diff_speed[3]{ 0.f, 0.f, 0.f };
 
 __S_SCRIPT_PLAYER_BULLET::__S_SCRIPT_PLAYER_BULLET(element::CObject& bind_object) : CScriptFrame{ bind_object } {
@@ -43,12 +44,10 @@ void __S_SCRIPT_PLAYER_BULLET::Start() {
 
 void __S_SCRIPT_PLAYER_BULLET::Update() {
     auto pos = GetObject().GetWorldPosition();
-    pos.x += diff_speed[0];
-    pos.y += diff_speed[1];
     pos.z += diff_speed[2];
 
     if (pos.z <= -100)
-        manager::MObjectManager::Instance().Destroy(GetObject());
+        manager::MObjectManager::Instance().Destroy(*static_cast<__S_PLAYER_BULLET*>(&GetObject())->GetParent());
     else
         GetObject().SetWorldPosition(pos);
 };

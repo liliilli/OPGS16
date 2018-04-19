@@ -31,6 +31,7 @@
  * @brief Definition and Implementation file of ../Public/__s_player_bullet.h
  * @log
  * 2018-04-15 Create file.
+ * 2018-04-19 Change mechanism to bind it with __S_OBJECT_AXIS object.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__s_player_bullet.h"    /*! ::opgs16::builtin::sample::__S_PLAYER_BULLET */
@@ -44,8 +45,10 @@ namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-__S_PLAYER_BULLET::__S_PLAYER_BULLET(float init_x, float init_y, float init_z) {
-    SetScaleValue(8.f);
+__S_PLAYER_BULLET::__S_PLAYER_BULLET(CObject* parent,
+                                     float init_x, float init_y, float init_z,
+                                     float init_angle) : m_parent{ *parent }, m_angle{ init_angle } {
+    SetScaleValue(16.f);
     SetWorldPosition({ init_x, init_y, init_z });
 
     renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
@@ -55,13 +58,19 @@ __S_PLAYER_BULLET::__S_PLAYER_BULLET(float init_x, float init_y, float init_z) {
 }
 
 void __S_PLAYER_BULLET::Render() {
-    using manager::MSceneManager;
-    using component::CSprite2DRenderer;
+    if (!m_flag) {
+        m_parent.SetRotationWorldAngle(element::_internal::EDirection::Z, m_angle);
+        m_flag = true;
+    }
 
     if (renderer) {
+        using manager::MSceneManager;
+        using component::CSprite2DRenderer;
+        const auto model_matrix = GetModelMatrix();
+
         const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
         renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
-        GetComponent<CSprite2DRenderer>()->RenderSprite();
+        renderer->RenderSprite();
     }
 }
 

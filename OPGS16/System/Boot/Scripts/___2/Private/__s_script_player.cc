@@ -38,8 +38,14 @@
 #include "../../../../Manager/Public/input_manager.h"   /*! ::opgs16::manager::MInputManager */
 #include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
 #include "../../../../Element/Public/object.h"          /*! ::opgs16::element::CObject */
-#include "../../../Object/___2/Public/__s_player_bullet.h"  /*! ::opgs16::builtin::sample::__S_PLAYER_BULLET */
+#include "../../../Object/___2/Public/__s_player.h"
+#include "../../../Object/___2/Interface/helper_function.h"
+
 #include "../../../../../Headers/import_logger.h"
+#include <glm/gtc/constants.inl>
+
+constexpr float k_angle_offset = 3.1725f;
+constexpr float k_pi180 = glm::pi<float>();
 
 namespace opgs16 {
 namespace builtin {
@@ -55,9 +61,23 @@ void __S_SCRIPT_PLAYER::Start() {
 }
 
 void __S_SCRIPT_PLAYER::Update() {
+    using element::_internal::EDirection;
+
     if (m_input_manager.IsKeyPressed("KeyD")) {
-        auto pos = GetObject().GetFinalPosition();
-        m_game_scene.Instantiate<__S_PLAYER_BULLET>("PlayerBullet", pos.x, pos.y, pos.z);
+        auto& obj = GetObject();
+        const auto& pos = obj.GetWorldPosition();
+
+        const float z_angle = obj.GetRotationFromParentAngle(EDirection::Z);
+        GenerateCharacterObject(&m_game_scene, "PBullet", ECharacterType::BULLET, pos.x, pos.y, pos.z, z_angle);
+    }
+
+    if (const auto h_val = m_input_manager.GetKeyValue("Horizontal"); h_val) {
+        auto* object = static_cast<__S_PLAYER*>(&GetObject());
+        auto m_parent = object->GetParent();
+
+        float angle_value = m_parent->GetRotationWorldAngle(EDirection::Z);
+        angle_value += k_angle_offset * h_val;
+        m_parent->SetRotationWorldAngle(EDirection::Z, angle_value);
     }
 }
 

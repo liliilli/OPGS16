@@ -45,27 +45,26 @@ namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-__S_PLAYER::__S_PLAYER() {
+__S_PLAYER::__S_PLAYER(CObject* parent) : m_parent{ *parent } {
     SetScaleValue(12.f);
     SetWorldPosition({ 0, -80, 0 });
     SetRotationLocalAngle(element::_internal::EDirection::X, -60.f);
 
-    //SetRotationFromParentAngle(45.f);
-    //SetRotationFromParentFactor({ 0, 0, 1 });
-
-    renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
-    renderer->SetTextureIndex(14);
+    m_renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
+    m_renderer->SetTextureIndex(14);
     AddComponent<__S_SCRIPT_PLAYER>(*this);
 }
 
 void __S_PLAYER::Render() {
-    using manager::MSceneManager;
-    using component::CSprite2DRenderer;
+    if (m_renderer) { // Render bound object.
+        glm::mat4 model_matrix = GetModelMatrix();
+        // Write algorithm.
 
-    if (renderer) {
-        const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
-        renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
-        GetComponent<CSprite2DRenderer>()->RenderSprite();
+
+        // End of algorithm.
+        const auto pvm = manager::MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * model_matrix;
+        m_renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
+        m_renderer->RenderSprite();
     }
 }
 

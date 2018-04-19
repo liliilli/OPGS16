@@ -44,10 +44,17 @@ namespace sample {
 
 class __S_PLAYER_BULLET final : public element::CObject {
 public:
-	__S_PLAYER_BULLET(float init_x, float init_y, float init_z);
+	__S_PLAYER_BULLET(CObject* parent, float init_x, float init_y, float init_z, float init_angle);
+    CObject* GetParent() {
+        return &m_parent;
+    }
 
 private:
+    CObject& m_parent;
     component::CSprite2DRenderer* renderer{ nullptr };
+    float m_angle{ 0.f };
+    bool m_flag{ false };
+
     void Render() override final;
 };
 

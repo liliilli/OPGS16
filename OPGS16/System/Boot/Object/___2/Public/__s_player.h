@@ -37,6 +37,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
+#include "__s_object_axis.h"                    /*! ::opgs16::builtin::sample::CObjectAxis */
 
 namespace opgs16 {
 namespace builtin {
@@ -44,10 +45,15 @@ namespace sample {
 
 class __S_PLAYER final : public element::CObject {
 public:
-	__S_PLAYER();
+	__S_PLAYER(CObject* parent);
+    CObject* GetParent() {
+        return &m_parent;
+    }
 
 private:
-    component::CSprite2DRenderer* renderer{ nullptr };
+    CObject& m_parent;
+    component::CSprite2DRenderer* m_renderer{ nullptr };
+
     void Render() override final;
 };
 

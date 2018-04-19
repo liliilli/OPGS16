@@ -51,8 +51,6 @@ public:
     __S_SCRIPT_MANAGER(element::CObject& bind_object);
 
 private:
-    const manager::MInputManager& m_input_manager;
-
     element::CScene& m_present_scene;   /*! Grasp element::CScene */
     __S_GAME_CANVAS* m_ui_object;
 

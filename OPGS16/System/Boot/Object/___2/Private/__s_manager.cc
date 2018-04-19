@@ -42,7 +42,6 @@ namespace builtin {
 namespace sample {
 
 __S_MANAGER::__S_MANAGER() {
-    SetWorldPosition({ 128, 112, 0 });
     AddComponent<__S_SCRIPT_MANAGER>(*this);
 }
 
