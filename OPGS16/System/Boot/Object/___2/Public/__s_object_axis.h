@@ -15,43 +15,43 @@
  * 2018-04-19 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Components/Public/sprite_renderer.h"  /*! ::opgs16::component::CSprite2DRenderer */
-#include "../../../../Components/Public/camera.h"       /*! ::ogps16::component::CCamera */
-#include "../../../../Element/Public/object.h"          /*! ::ogps16::element::CObject */
-#include "../../../../Element/Public/scene.h"           /*! ::opgs16::element::CScene */
-#include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
-#include "../../../../Shader/shader_wrapper.h"          /*! ::opgs16::element::CShaderWrapper */
-#include "../../../../Helper/Public/template.h"         /*! template SFINAE helper functions */
+#include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
+#include "../Interface/enum_types.h"            /*! ::opgs16::builtin::sample::ECharacterType */
+
+#include "__s_player_bullet.h"
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-template <class _Ty, typename = std::enable_if_t<IsCObjectBase<_Ty>>>
 class __S_OBJECT_AXIS final : public element::CObject {
 public:
-    __S_OBJECT_AXIS() : m_object{ Instantiate<_Ty>("Object") } {
-        m_renderer = m_object->GetComponent<component::CSprite2DRenderer>();
-    }
+    template <typename... _Args>
+    __S_OBJECT_AXIS(ECharacterType type, _Args... args) {
+        static_assert(sizeof...(_Args) > 0, "No parameter pack.");
 
-private:
-    constexpr float k_end{ 100.f };
-    constexpr float k_start{ 0.f };
-
-    component::CSprite2DRenderer* m_renderer{ nullptr };
-    CObject* m_object{ nullptr };
-
-    void Render() override final {
-        if (m_renderer) { // Render bound object.
-            glm::mat4 model_matrix = GetModelMatrix();
-            // Write algorithm.
-
-            // End of algorithm.
-            const auto pvm = manager::MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * model_matrix;
-            m_renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
-            m_renderer->RenderSprite();
+        SetWorldPosition({ k_pos[0], k_pos[1], 0 });
+        switch (type) {
+        case ECharacterType::TAKO: case ECharacterType::BIBIBIK:
+        case ECharacterType::ZANGGU: case ECharacterType::XIOXI:
+            break;
+        case ECharacterType::BULLET:
+            m_object = Instantiate<__S_PLAYER_BULLET>("Object", this, std::forward<_Args>(args)...);
+            break;
+        default: break;
         }
     }
+
+    __S_OBJECT_AXIS(ECharacterType type);
+
+private:
+    inline const static float k_pos[2]{ 128.f, 112.f };
+    inline const static float k_end{ 100.f };
+    inline const static float k_start{ 0.f };
+
+    CObject* m_object{ nullptr };
+
+    void Render() override final {};
 };
 
 } /*! opgs16::builtin::sample */
