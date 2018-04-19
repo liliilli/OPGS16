@@ -74,7 +74,7 @@ public:
 
     inline const glm::vec3& GetFinalPosition() const {
         if (m_final_pos_deprecated) {
-            m_final_position = m_parent_from_position + m_world_position + m_local_position;
+            RefreshFinalPosition();
             m_final_pos_deprecated = false;
         }
 
