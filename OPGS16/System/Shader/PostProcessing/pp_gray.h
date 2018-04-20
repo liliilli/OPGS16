@@ -1,51 +1,40 @@
 #ifndef OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SCALING_H
 #define OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SCALING_H
 
-// @file System/Shader/pp_scaling.h
-// @brief Screen gray screen post-processing effect.
-// Last Updated :: 2018 - 02 - 03
-//
-// @author Jongmin Yun
-// @version 0.0.1
-#include "..\pp_frame.h"
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-// @namespace shading
-// @brief shading namespace is for m_object_list related to shading and shader management.
-namespace shading {
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/PostProcessing/pp_gray.h
+ * @brief Screen gray screen post-processing effect.
+ * @author Jongmin Yun
+ * @log
+ * 2018-02-03 Create file.
+ * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-// @class PpEffectConvex
-// @brief Convex post-processing effect.
-class PpEffectGray : public PostProcessingFrame {
-	/**
-	 * @brief This functions must be called in initiating PostProcessingFrame instance.
-	 * This makes it operable to use in rendering time. Otherwise, this does not render anything.
-	 * If you didn't call this method in creating, Undefined rendering behavior will occur.
-	 *
-	 * This function can be overriden by Derived class.
-	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
-	 */
-	 virtual void Initiate() override final {
-		InsertFrameBuffer(0);
+#include "../pp_frame.h"    /*! ::opgs16::element::CPostProcessingFrame */
 
-		InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+namespace opgs16::builtin::postprocessing {
+
+class PpEffectGray : public element::CPostProcessingFrame {
+	void Initialize() override final {
+		GenerateFrameBuffer(0);
+
+		GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
 		BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-		InitiateDefaultDepthBuffer();
+		InitializeDefaultDepthBuffer();
 		InsertUniformValue("uIntensity", 1.0f);
-		InitiateShader("Gray");
+		SetShader("ppGray");
 
-		PostProcessingFrame::Initiate();
-	}
-
-	/**
-	* @brief Render texture and components.
-	* This must be called after arbitary frame buffer bound.
-	* This methods could be overriden by derived class.
-	*/
-	 virtual void RenderEffect() override final {
-		PostProcessingFrame::RenderEffect();
+		CPostProcessingFrame::Initialize();
 	}
 };
 
-}
+} /*! ::opgs16::builtin::postprocessing */
 
 #endif /** OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SCALING_H */

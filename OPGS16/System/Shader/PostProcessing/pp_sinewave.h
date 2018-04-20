@@ -1,26 +1,30 @@
 #ifndef OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SINEWAVE_H
 #define OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SINEWAVE_H
 
-/**
- * @file System/Shader/pp_convex.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/PostProcessing/pp_convex.h
  * @brief Convex monitor post-processing effects.
  * @author Jongmin Yun
- * @version 0.0.1
- */
+ * @log
+ * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "..\pp_frame.h"
+#include "../pp_frame.h"    /*! ::opgs16::element::CPostProcessingFrame */
 
-/**
- * @namespace shading
- * @brief shading namespace is for m_object_list related to shading and shader management.
- */
-namespace shading {
+namespace opgs16::builtin::postprocessing {
 
 /**
  * @class PpEffectConvex
  * @brief Convex post-processing effect.
  */
-class PpEffectSinewave : public PostProcessingFrame {
+class PpEffectSinewave : public element::CPostProcessingFrame {
 	/**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
 	 * This makes it operable to use in rendering time. Otherwise, this does not render anything.
@@ -29,20 +33,11 @@ class PpEffectSinewave : public PostProcessingFrame {
 	 * This function can be overriden by Derived class.
 	 * Derived class will just use this method to initialize all settings of PostProcessingFrame.
 	 */
-	 virtual void Initiate() override final;
+	void Initialize() override final;
 
-	 virtual void Update() override final;
-
-	/**
-	* @brief Render texture and components.
-	* This must be called after arbitary frame buffer bound.
-	* This methods could be overriden by derived class.
-	*/
-	 virtual void RenderEffect() override final {
-		PostProcessingFrame::RenderEffect();
-	}
+	void Update() override final;
 };
 
-}
+} /*! opgs16::builtin::postprocessing */
 
 #endif /** OPGS16_SYSTEM_SHADER_POST_PROCESSING_PP_SINEWAVE_H */

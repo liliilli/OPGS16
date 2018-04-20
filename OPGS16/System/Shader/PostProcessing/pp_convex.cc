@@ -1,9 +1,27 @@
-#include "pp_convex.h"
 
-void shading::PpEffectConvex::Initiate() {
-	InsertFrameBuffer(0);
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/PostProcessing/pp_convex.cc
+ * @brief Convex monitor post-processing effects.
+ * @author Jongmin Yun
+ * @log
+ * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "pp_convex.h"  /*! Header file */
+
+namespace opgs16::builtin::postprocessing {
+
+void PpEffectConvex::Initialize() {
+	GenerateFrameBuffer(0);
 	/** Color Buffer and texture */
-	InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+	GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
 	auto& texture_0 = GetTexture(0);
 	texture_0->SetTextureParameterI({
 		{ GL_TEXTURE_MIN_FILTER, GL_LINEAR }, { GL_TEXTURE_MAG_FILTER, GL_LINEAR },
@@ -11,10 +29,12 @@ void shading::PpEffectConvex::Initiate() {
 	texture_0->SetBorderColor({ 0, 0, 0, 1 });
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 	/** The rest */
-	InitiateDefaultDepthBuffer();
+	InitializeDefaultDepthBuffer();
 	InsertUniformValue("uIntensity", 0.05f);
-	InitiateShader("Convex");
+	SetShader("ppConvex");
 
 	/** Last */
-	PostProcessingFrame::Initiate();
+	CPostProcessingFrame::Initialize();
 }
+
+} /*! ::opgs16::builtin::postprocessing */

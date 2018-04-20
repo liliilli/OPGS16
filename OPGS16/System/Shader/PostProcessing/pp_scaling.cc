@@ -1,25 +1,40 @@
-#include "pp_scaling.h"             /*! Header file */
-#include "../../Core/Public/application.h" /*! opgs16::Application */
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/PostProcessing/pp_scaling.cc
+ * @author Jongmin Yun
+ * @log
+ * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "pp_scaling.h"                     /*! Header file */
+#include "../../Core/Public/application.h"  /*! opgs16::Application */
 #include "../../Core/Public/core_setting.h"
 
-namespace shading {
+namespace opgs16::builtin::postprocessing {
 
-void PpEffectScaling::Initiate() {
-	InsertFrameBuffer(0);
+void PpEffectScaling::Initialize() {
+	GenerateFrameBuffer(0);
 
-	InsertColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+	GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-	InitiateDefaultDepthBuffer();
-	InitiateShader("Quad");
+	InitializeDefaultDepthBuffer();
+	SetShader("ppQuad");
 
-	PostProcessingFrame::Initiate();
+	CPostProcessingFrame::Initialize();
 }
 
 void PpEffectScaling::RenderEffect() {
-    auto scale_val = opgs16::MApplication::Instance().Setting().ScaleValueIntegerOf();
+    const auto scale_val = MApplication::Instance().Setting().ScaleValueIntegerOf();
 
     glViewport(0, 0, 256 * scale_val, 224 * scale_val);
-    PostProcessingFrame::RenderEffect();
+    CPostProcessingFrame::RenderEffect();
 }
 
-}
+} /*! opgs16::builtin::postprocessing */
