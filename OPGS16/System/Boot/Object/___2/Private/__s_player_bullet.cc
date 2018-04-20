@@ -40,6 +40,7 @@
 #include "../../../../Components/Public/sprite_renderer.h"  /*! ::opgs16::component::CSprite2DRenderer */
 #include "../../../../Shader/shader_wrapper.h"
 #include "../../../Scripts/___2/Public/__s_script_player_bullet.h"
+#include "../Interface/constants.h"
 
 namespace opgs16 {
 namespace builtin {
@@ -48,9 +49,11 @@ namespace sample {
 __S_PLAYER_BULLET::__S_PLAYER_BULLET(CObject* parent,
                                      float init_x, float init_y, float init_z,
                                      float init_angle) : m_parent{ *parent }, m_angle{ init_angle } {
+    // Init setting.
     SetScaleValue(16.f);
     SetWorldPosition({ init_x, init_y, init_z });
 
+    // Add components.
     renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
     renderer->SetTextureIndex(15);
 
@@ -58,7 +61,7 @@ __S_PLAYER_BULLET::__S_PLAYER_BULLET(CObject* parent,
 }
 
 void __S_PLAYER_BULLET::Render() {
-    if (!m_flag) {
+    if (!m_flag) { // Check world angle setting flag.
         m_parent.SetRotationWorldAngle(element::_internal::EDirection::Z, m_angle);
         m_flag = true;
     }
@@ -66,9 +69,20 @@ void __S_PLAYER_BULLET::Render() {
     if (renderer) {
         using manager::MSceneManager;
         using component::CSprite2DRenderer;
-        const auto model_matrix = GetModelMatrix();
 
-        const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix();
+        const float angle = m_parent.GetRotationWorldAngle(element::_internal::EDirection::Z) * k_pi180;
+        const float end_z = (GetFinalPosition().z - k_end) / k_z_length;
+        const float x = (std::sinf(angle) * k_circle_radius) * end_z;
+        const float y = (std::cosf(angle) * -k_circle_radius) * end_z;
+
+        auto model_matrix = GetModelMatrix();
+        model_matrix[0] *= end_z;
+        model_matrix[1] *= end_z;
+        model_matrix[2] *= end_z;
+        model_matrix[3][0] = k_center_pos[0] + x;
+        model_matrix[3][1] = k_center_pos[1] + y;
+
+        const auto pvm = MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * model_matrix;
         renderer->Wrapper().SetUniformValue<glm::mat4>("projection", pvm);
         renderer->RenderSprite();
     }

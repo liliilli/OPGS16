@@ -37,7 +37,6 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
-#include "__s_object_axis.h"                    /*! ::opgs16::builtin::sample::CObjectAxis */
 
 namespace opgs16 {
 namespace builtin {

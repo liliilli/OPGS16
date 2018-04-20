@@ -40,20 +40,16 @@
 #include "../../../../Element/Public/object.h"          /*! ::opgs16::element::CObject */
 #include "../../../Object/___2/Public/__s_player.h"
 #include "../../../Object/___2/Interface/helper_function.h"
+#include "../../../Object/___2/Interface/constants.h"
 
 #include "../../../../../Headers/import_logger.h"
-#include <glm/gtc/constants.inl>
-
-constexpr float k_angle_offset = 3.1725f;
-constexpr float k_pi180 = glm::pi<float>();
 
 namespace opgs16 {
 namespace builtin {
 namespace sample {
 
-__S_SCRIPT_PLAYER::__S_SCRIPT_PLAYER(opgs16::element::CObject& bind_object) :
-    CScriptFrame{ bind_object },
-    m_input_manager{ GET_INPUT_MANAGER },
+__S_SCRIPT_PLAYER::__S_SCRIPT_PLAYER(element::CObject& bind_object) :
+    CScriptFrame{ bind_object }, m_input_manager{ GET_INPUT_MANAGER },
     m_game_scene{ *manager::MSceneManager::Instance().PresentScene() } {
 }
 
@@ -76,7 +72,7 @@ void __S_SCRIPT_PLAYER::Update() {
         auto m_parent = object->GetParent();
 
         float angle_value = m_parent->GetRotationWorldAngle(EDirection::Z);
-        angle_value += k_angle_offset * h_val;
+        angle_value += k_rotation_spd * h_val;
         m_parent->SetRotationWorldAngle(EDirection::Z, angle_value);
     }
 }

@@ -40,6 +40,7 @@
 #include "../../../../Manager/Public/scene_manager.h"       /*! ::opgs16::manager::SceneManager */
 #include "../../../../Shader/shader_wrapper.h"
 #include "../../../Scripts/___2/Public/__s_script_player.h" /*! ::opgs16::builtin::sample::__S_SCRIPT_PLAYER */
+#include "../Interface/constants.h"
 
 namespace opgs16 {
 namespace builtin {
@@ -47,7 +48,7 @@ namespace sample {
 
 __S_PLAYER::__S_PLAYER(CObject* parent) : m_parent{ *parent } {
     SetScaleValue(12.f);
-    SetWorldPosition({ 0, -80, 0 });
+    SetWorldPosition({ k_degree_0_pos[0], k_degree_0_pos[1], k_degree_0_pos[2] });
     SetRotationLocalAngle(element::_internal::EDirection::X, -60.f);
 
     m_renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
@@ -57,9 +58,17 @@ __S_PLAYER::__S_PLAYER(CObject* parent) : m_parent{ *parent } {
 
 void __S_PLAYER::Render() {
     if (m_renderer) { // Render bound object.
-        glm::mat4 model_matrix = GetModelMatrix();
-        // Write algorithm.
+        const float angle = m_parent.GetRotationWorldAngle(element::_internal::EDirection::Z) * k_pi180;
+        const float end_z = (GetFinalPosition().z - k_end) / k_z_length;
+        const float x = (std::sinf(angle) * k_circle_radius) * end_z;
+        const float y = (std::cosf(angle) * -k_circle_radius) * end_z;
 
+        auto model_matrix = GetModelMatrix();
+        model_matrix[0] *= end_z;
+        model_matrix[1] *= end_z;
+        model_matrix[2] *= end_z;
+        model_matrix[3][0] = k_center_pos[0] + x;
+        model_matrix[3][1] = k_center_pos[1] + y;
 
         // End of algorithm.
         const auto pvm = manager::MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * model_matrix;

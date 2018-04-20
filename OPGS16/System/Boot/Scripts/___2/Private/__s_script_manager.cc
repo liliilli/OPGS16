@@ -38,7 +38,6 @@
 #include "../../../Object/___2/Public/__s_game_canvas.h"/*! ::opgs16::builtin::sample::__S_GAME_CANVAS */
 #include "../../../Object/___2/Public/__s_player.h"     /*! ::opgs16::builtin::sample::__S_PLAYER */
 #include "../../../../Manager/Public/scene_manager.h"   /*! ::opgs16::manager::MSceneManager */
-#include "../../../Object/___2/Public/__s_object_axis.h"/*! ::opgs16::builtin::sample::__S_OBJECT_AXIS<_Ty> */
 
 #include "../../../../Element/Public/scene.h"           /*! ::opgs16::element::CScene */
 #include "../../../Object/___2/Interface/enum_types.h"  /*! ::opgs16::builtin::sample::ECharacterType */
@@ -58,6 +57,7 @@ void __S_SCRIPT_MANAGER::Start() {
 
     // Temporary
     GenerateCharacterObject(&m_present_scene, "Player", ECharacterType::PLAYER);
+    GenerateCharacterObject(&m_present_scene, "Enemy", ECharacterType::TAKO);
 
     m_status = Status::TITLE;
 }

@@ -52,7 +52,8 @@ public:
 private:
     CObject& m_parent;
     component::CSprite2DRenderer* renderer{ nullptr };
-    float m_angle{ 0.f };
+
+    const float m_angle;
     bool m_flag{ false };
 
     void Render() override final;

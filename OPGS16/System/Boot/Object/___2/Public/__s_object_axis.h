@@ -17,7 +17,7 @@
 
 #include "../../../../Element/Public/object.h"  /*! ::ogps16::element::CObject */
 #include "../Interface/enum_types.h"            /*! ::opgs16::builtin::sample::ECharacterType */
-
+#include "../Interface/constants.h"
 #include "__s_player_bullet.h"
 
 namespace opgs16 {
@@ -30,12 +30,9 @@ public:
     __S_OBJECT_AXIS(ECharacterType type, _Args... args) {
         static_assert(sizeof...(_Args) > 0, "No parameter pack.");
 
-        SetWorldPosition({ k_pos[0], k_pos[1], 0 });
         switch (type) {
-        case ECharacterType::TAKO: case ECharacterType::BIBIBIK:
-        case ECharacterType::ZANGGU: case ECharacterType::XIOXI:
-            break;
         case ECharacterType::BULLET:
+            SetWorldPosition({ k_center_pos[0], k_center_pos[1], k_start });
             m_object = Instantiate<__S_PLAYER_BULLET>("Object", this, std::forward<_Args>(args)...);
             break;
         default: break;
@@ -45,13 +42,7 @@ public:
     __S_OBJECT_AXIS(ECharacterType type);
 
 private:
-    inline const static float k_pos[2]{ 128.f, 112.f };
-    inline const static float k_end{ 100.f };
-    inline const static float k_start{ 0.f };
-
     CObject* m_object{ nullptr };
-
-    void Render() override final {};
 };
 
 } /*! opgs16::builtin::sample */

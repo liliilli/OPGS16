@@ -48,8 +48,8 @@ public:
     __S_SCRIPT_PLAYER(opgs16::element::CObject& bind_object);
 
 private:
-    const opgs16::manager::MInputManager&   m_input_manager;
-    opgs16::element::CScene& m_game_scene;
+    const manager::MInputManager&   m_input_manager;
+    element::CScene& m_game_scene;
 
     void Start() override final;
     void Update() override final;
