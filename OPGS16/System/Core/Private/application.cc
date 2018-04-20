@@ -206,9 +206,9 @@ void MApplication::InitiateDebugUi() {
 void MApplication::InitiatePostProcessingEffects() {
 	m_pp_manager = &manager::MPostProcessingManager::GetInstance();
 
-	m_pp_manager->InsertEffectInitiate<shading::PpEffectConvex>("Convex");
-	m_pp_manager->InsertEffectInitiate<shading::PpEffectGray>("Gray");
-	m_pp_manager->InsertEffectInitiate<shading::PpEffectSinewave>("SineWave");
+	m_pp_manager->InsertEffectInitiate<builtin::postprocessing::PpEffectConvex>("Convex");
+	m_pp_manager->InsertEffectInitiate<builtin::postprocessing::PpEffectGray>("Gray");
+	m_pp_manager->InsertEffectInitiate<builtin::postprocessing::PpEffectSinewave>("SineWave");
 
 	/** Set sample sequence */
 	auto const result = m_pp_manager->SetSequence(1u, { "Convex" });
