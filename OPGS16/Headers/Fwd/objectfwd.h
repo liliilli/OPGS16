@@ -77,6 +77,7 @@ class   CScene;
 class   CTimerHandle;   /*! sub-type of timermanager */
 class   CVertexArrayObject;
 class   CShaderWrapper;
+class   CPostProcessingFrame;
 
 namespace _internal {
 class	CObjectImpl;
