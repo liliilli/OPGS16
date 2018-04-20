@@ -3,6 +3,7 @@
 
 #include "../../../../../Headers/import_logger.h"   /*! logger in debug mode */
 #include "enum_types.h"
+#include "../Public/__s_object_axis.h"
 
 namespace opgs16::builtin::sample {
 

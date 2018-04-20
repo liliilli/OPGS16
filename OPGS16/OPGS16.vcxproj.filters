@@ -70,6 +70,8 @@
     <ClCompile Include="System\Element\Canvas\Private\text.cc" />
     <ClCompile Include="System\Element\Impl\text_impl.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_object_axis.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Private\__s_enemy.cc" />
+    <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_enemy.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -175,6 +177,9 @@
     <ClInclude Include="System\Boot\Object\___2\Public\__s_object_axis.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\enum_types.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\helper_function.h" />
+    <ClInclude Include="System\Boot\Object\___2\Interface\constants.h" />
+    <ClInclude Include="System\Boot\Object\___2\Public\__s_enemy.h" />
+    <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

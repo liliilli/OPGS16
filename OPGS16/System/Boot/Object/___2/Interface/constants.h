@@ -17,13 +17,20 @@
 
 namespace opgs16::builtin::sample {
 
+constexpr float k_pi180{ 3.1415926535f / 180.f };
 constexpr float k_end{ -100.f };
 constexpr float k_start{ 0.f };
 constexpr float k_z_length{ k_start - k_end };
+
+constexpr float k_circle_radius{ 80.f };
+constexpr float k_enemy_circle_radius{ 120.f };
+
+constexpr float k_degree_0_pos[3]{ 0.f, -k_circle_radius, 0.f };
+
 constexpr float k_center_pos[2]{ 128.f, 112.f };
 constexpr float k_to_parent_pos[3]{ 0.f, 0.f, k_end };
 
-constexpr float k_rotation_spd{ 3.1275f };
+constexpr float k_rotation_spd{ 3.1275f / 2.f };
 constexpr float k_bullet_speed{ 1.f };
 
 }
