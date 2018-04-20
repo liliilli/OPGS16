@@ -1,14 +1,34 @@
-#include "pp_frame.h"
 
-#include <iostream> /*! std::cerr
-                      * std::endl */
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @license BSD 2-Clause License
+ *
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file System/Shader/pp_frame.h
+ * @brief Elementary post-processing frame to manage a thing to be rendered.
+ * This file consists of application operation class and member API functions.
+ *
+ * @author Jongmin Yun
+ * @log
+ * 2018-04-20 Add boilerplate comments.
+ * 2018-04-20 Remove error flags and add log output.
+ * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+
+#include "pp_frame.h"                           /*! Header file */
 #include "../Frame/vertex_array_object.h"       /*! CVertexArrayObject */
 #include "../Manager/Public/shader_manager.h"   /*! opgs16::manager::ShaderManager */
 
-namespace shading {
+#include "../../Headers/import_logger.h"        /*! import logger in debug mode */
 
-constexpr std::array<unsigned, 6> quad_indices = { 0, 1, 2, 2, 3, 0 };
-constexpr std::array<float, 32> quad_info = {
+namespace {
+
+constexpr std::array<GLint, 4>      screen_coord{ 0, 0, 256, 224 };
+constexpr std::array<unsigned, 6>   quad_indices = { 0, 1, 2, 2, 3, 0 };
+constexpr std::array<float, 32>     quad_info = {
 	// Vertex       //Normal        // TexCoord
 	1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 1.f,
 	1.f,-1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 0.f,
@@ -16,59 +36,56 @@ constexpr std::array<float, 32> quad_info = {
 	-1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  0.f, 1.f
 };
 
-void PostProcessingFrame::Initiate() {
+} /*! unnamed namespace */
+
+namespace opgs16::element {
+
+void CPostProcessingFrame::Initialize() {
 	/** Make empty vao for default_screen rendering */
 	glGenVertexArrays(1, &empty_vao);
 	m_is_useable = true;
 }
 
-void PostProcessingFrame::InsertFrameBuffer(const unsigned id) {
-	if (!IsAlreadyGenerated(id, m_frame_buffers)) {
-		glGenFramebuffers(1, &m_frame_buffers.at(id));
-		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(id));
-	}
-	else { /** Set up error flag */
-		m_flag = ErrorFlag::FRAME_BUFFER_ALREADY_GENERATED;
-	}
+void CPostProcessingFrame::GenerateFrameBuffer(const unsigned id) {
+    if (IsAlreadyGenerated(id, m_frame_buffers)) {
+        PUSH_LOG_WARN("Already generated frame buffer.");
+        return;
+    }
+
+    glGenFramebuffers(1, &m_frame_buffers[id]);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[id]);
 }
 
-void PostProcessingFrame::InsertColorBuffer(const unsigned id,
-                                            GLint internal_format, GLenum format,
-                                            GLenum type, GLint width,
-                                            GLint height) {
-	/*! Error checking */
-	if (width < 0 || height < 0) { /** Set up error flag */
-		m_flag = ErrorFlag::SIZE_ARGUMENT_IS_NEGATIVE; return;
-	}
-
+void CPostProcessingFrame::GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format,
+                                               GLenum type, GLint width, GLint height) {
+    /*! Error checking */
 	if (IsAlreadyGenerated(id, m_color_buffers)) {
-		m_flag = ErrorFlag::COLOR_BUFFER_ALREADY_GENERATED; return;
+        PUSH_LOG_ERRO(L"Failed to create color buffer. There is color buffer already.");
+	    return;
 	}
-
-	/*! Body */
-    auto t_width = width;
-    auto t_height = height;
+	if (width < 0 || height < 0) {
+        PUSH_LOG_ERRO(L"Failed to create color buffer. Either width or height is less than 0.");
+	    return;
+	}
 
     /*! Resize size components have zero value. */
-    std::array<GLint, 4> screen_coord{ 0, 0, 256, 224 };
+    int t_width = width, t_height = height;
     if (t_width == 0 || t_height == 0) {
-        //glGetIntegerv(GL_VIEWPORT, &screen_coord[0]);
         if (t_width == 0)   t_width = screen_coord[2];
         if (t_height == 0)  t_height = screen_coord[3];
     }
 
     /*! Insert. */
-	m_color_buffers[id] = std::make_unique<opgs16::texture::CTexture2D>(internal_format,
-                                                               format, type,
-                                                               width, height);
+    using opgs16::texture::CTexture2D;
+	m_color_buffers[id] = std::make_unique<CTexture2D>(internal_format, format, type, t_width, t_height);
 }
 
-void PostProcessingFrame::InitiateShader(const std::string& name) {
+void CPostProcessingFrame::SetShader(const char* name) {
 	/** Check If pp+Name is exist, push created shader */
-    m_shader_wrapper.SetShader(opgs16::manager::ShaderManager::Instance().Shader("pp" + name));
+    m_shader_wrapper.SetShader(manager::ShaderManager::Instance().Shader(name));
 }
 
-void PostProcessingFrame::InitiateDefaultDepthBuffer() {
+void CPostProcessingFrame::InitializeDefaultDepthBuffer() {
 	GLuint& depth_buffer = m_common_buffers[0];
 
 	std::array<GLint, 4> size{};
@@ -80,41 +97,30 @@ void PostProcessingFrame::InitiateDefaultDepthBuffer() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 }
 
-void PostProcessingFrame::BindTextureToFrameBuffer(
-	const size_t texture_id,
-	const size_t framebuffer_id,
-	const GLenum attachment,
-	const GLenum target) {
-	/** Body, Check if both texture and framebuffer are exist. */
-	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) &&
-		IsAlreadyGenerated(texture_id, m_color_buffers)) {
-
-		/** Bind */
-		auto GL_FB = GL_FRAMEBUFFER;
-		glBindFramebuffer(GL_FB, m_frame_buffers[framebuffer_id]);
-		glFramebufferTexture2D(GL_FB, attachment, target, m_color_buffers[texture_id]->Id(), 0);
-		glBindFramebuffer(GL_FB, 0);
+void CPostProcessingFrame::BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
+                                                    const GLenum attachment, const GLenum target) {
+	/*! Check if both texture and framebuffer are exist. */
+	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
+		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_id]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, target, m_color_buffers[texture_id]->Id(), 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	else { /** Error flag */
-		m_flag = ErrorFlag::NOT_FOUND_APPROPRIATE_FB_CB_ID;
+	else {
+        PUSH_LOG_ERRO(L"Failed to bind texture to frame buffer.");
 	}
 }
 
-opgs16::element::CVertexArrayObject& PostProcessingFrame::GetCommonQuadVao() {
-    static opgs16::element::CVertexArrayObject quad_vao{
-        quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
-	return quad_vao;
-}
-
-void PostProcessingFrame::Bind() {
+void CPostProcessingFrame::Bind() {
 	if (m_is_useable) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(0));
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	else { m_flag = ErrorFlag::NOT_INITIATED_YET; }
+	else {
+        PUSH_LOG_ERRO(L"Failed to bind framebuffer, It's not initialized yet.");
+	}
 }
 
-void PostProcessingFrame::RenderEffect() {
+void CPostProcessingFrame::RenderEffect() {
 	if (m_is_useable) {
 		m_shader_wrapper.UseShader();
 		glBindVertexArray(empty_vao);
@@ -126,35 +132,14 @@ void PostProcessingFrame::RenderEffect() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindVertexArray(0);
 	}
-	else { m_flag = ErrorFlag::NOT_INITIATED_YET; }
-}
-
-/**
- * @brief Check if there is error.
- * If there is an error, output message in std::cerr.
- */
-void PostProcessingFrame::CheckError() {
-	switch (m_flag) {
-	case ErrorFlag::SIZE_ARGUMENT_IS_NEGATIVE:
-		std::cerr << "ERROR::PP_FRAME::SIZE_ARGUMENT_WAS_NEGATIVE" << std::endl; break;
-	case ErrorFlag::COLOR_BUFFER_ALREADY_GENERATED:
-		std::cerr << "ERROR::PP_FRAME::COLOR_BUFFER_ALREADY_GENERATED" << std::endl; break;
-	case ErrorFlag::FRAME_BUFFER_ALREADY_GENERATED:
-		std::cerr << "ERROR::PP_FRAME::FRAME_BUFFER_ALREADY_GENERATED" << std::endl; break;
-	case ErrorFlag::NOT_FOUND_APPROPRIATE_FB_CB_ID:
-		std::cerr << "ERROR::PP_FRAME::NOT_FOUND_APPROPRIATE_FB_CB_ID" << std::endl; break;
-	case ErrorFlag::NOT_INITIATED_YET:
-		std::cerr << "ERROR::PP_FRAME::NOT_INITIATED_YET" << std::endl; break;
-	default: break;
+	else {
+        PUSH_LOG_ERRO(L"Failed to bind framebuffer, It's not initialized yet.");
 	}
 }
 
-void PostProcessingFrame::Active() {
-	m_active_count += 1;
+CVertexArrayObject& CPostProcessingFrame::GetCommonQuadVao() {
+    static CVertexArrayObject quad_vao{ quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
+	return quad_vao;
 }
 
-void PostProcessingFrame::Disable() {
-	if (IsActive()) m_active_count -= 1;
-}
-
-}
+} /*! opgs16::element */
