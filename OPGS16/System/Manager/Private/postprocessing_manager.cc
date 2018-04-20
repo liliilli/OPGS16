@@ -55,7 +55,7 @@ constexpr std::string_view scale_effect{ "__df__"sv };
 
 MPostProcessingManager::MPostProcessingManager() {
     /*! Insert display size scaling post processing effect */
-	InsertEffectInitiate<shading::PpEffectScaling>("__df__");
+	InsertEffectInitiate<builtin::postprocessing::PpEffectScaling>("__df__");
     SetSequence(0u, { });
 }
 
@@ -64,12 +64,11 @@ PPManager::pp_effect& MPostProcessingManager::GetEffect(const std::string&& tag)
         return m_effects[tag];
 }
 
-bool MPostProcessingManager::InsertEffect(const std::string& tag) {
-	return InsertEffect<shading::PostProcessingFrame>(tag);
+bool MPostProcessingManager::InsertEffect(const char* tag) {
+	return InsertEffect<element::CPostProcessingFrame>(tag);
 }
 
-const sequence_type* PPManager::SetSequence(const size_t id,
-                                            const std::initializer_list<std::string>& list) {
+const sequence_type* PPManager::SetSequence(const size_t id, const std::initializer_list<std::string>& list) {
 	if (!DoesEffectSequenceExist(id)) {
 		std::list<ppf_ptr>&& effect_list{};
 		for (const auto& tag : list) {

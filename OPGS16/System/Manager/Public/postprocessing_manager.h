@@ -1,35 +1,14 @@
 #ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 #define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @license BSD 2-Clause License
  *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+ * If you want to read full statements, read LICENSE file.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Manager/Public/postprocessing_manager.h
  * @brief Elementary manager class to manage post-processing shaders.
  *
@@ -39,7 +18,8 @@
  * @log
  * 2018-02-18 Create file.
  * 2018-03-04 Refactoring. Move class to /Manager class.
- */
+ * 2018-04-20 Refactoring. CPostProcessingFrame to ::opgs16::element::CPostProcessingFrame.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>
 #include <string>
@@ -57,8 +37,8 @@ namespace manager {
  */
 class MPostProcessingManager final {
 public:
-	using pp_effect = std::unique_ptr<shading::PostProcessingFrame>; // Abbreviation.
-	using ppf_ptr	= shading::PostProcessingFrame*;
+	using pp_effect = std::unique_ptr<element::CPostProcessingFrame>; // Abbreviation.
+	using ppf_ptr	= element::CPostProcessingFrame*;
 	using sequence_type = std::list<ppf_ptr>;
 
 public:
@@ -86,9 +66,8 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty,
-		typename = std::enable_if_t<std::is_base_of_v<shading::PostProcessingFrame, _Ty>>>
-	bool InsertEffect(const std::string& tag) {
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
+	bool InsertEffect(const char* tag) {
 		if (IsEffectExist(tag)) { return false; }
 
 		m_effects[tag] = std::make_unique<_Ty>();
@@ -96,7 +75,7 @@ public:
 	}
 
 	/** Overloading version of InsertEffect<_Ty, ...>(tag) */
-	bool InsertEffect(const std::string& tag);
+	bool InsertEffect(const char* tag);
 
 	/**
 	 * @brief Insert effect and initiate automatically.
@@ -106,11 +85,10 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty,
-		typename = std::enable_if_t<std::is_base_of_v<shading::PostProcessingFrame, _Ty>>>
-	bool InsertEffectInitiate(const std::string& tag) {
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
+	bool InsertEffectInitiate(const char* tag) {
 		if (InsertEffect<_Ty>(tag)) {
-			m_effects[tag]->Initiate();
+			m_effects[tag]->Initialize();
 			return true;
 		}
 		else return false;
@@ -121,7 +99,9 @@ public:
 	 * @param[in] tag The tag to find effect.
 	 * @return If searching effect is successful, return true. else return false.
 	 */
-	inline bool IsEffectExist(const std::string tag);
+	bool IsEffectExist(const std::string& tag) {
+        return m_effects.find(tag) != m_effects.end();
+	}
 
 	/**
 	 * @brief Set continous post-processing sequence to render screen.
@@ -132,30 +112,29 @@ public:
 	 * @return Pointer of initialized effect sequence.
 	 * If this fails to create sequence, return nullptr.
 	 */
-	const sequence_type* SetSequence(const size_t id,
-                                     const std::initializer_list<std::string>& list);
+	const sequence_type* SetSequence(const size_t id, const std::initializer_list<std::string>& list);
 
 	/**
 	 * @brief Updates each effects of each sequences. (each effects of sequence is active)
 	 */
-	 void UpdateSequences();
+	void UpdateSequences();
 
 	/**
 	 * @brief Bind effect sequence with id number.
 	 * @param[in] id Index position of effect sequences container to bind seqeunce.
 	 */
-	 void BindSequence(const size_t id);
+	void BindSequence(const size_t id);
 
 	/**
 	 * @brief
 	 */
-	 void Render();
+	void Render();
 
 	/**
 	 * @brief
 	 * #param[in] list
 	 */
-	 void ReleaseSequence(const size_t id);
+	void ReleaseSequence(const size_t id);
 
 private:
 	/** Container sotres post-processing separated effects. */
@@ -166,9 +145,10 @@ private:
 	const size_t m_reset = 0xffff;				// Just used for reset of m_binded_number
 	mutable size_t m_binded_number{m_reset};	// if not reset, call effect sequence via this
 
-private:
 	/** Return id'th position of effect_sequences is already exist. */
-	inline bool DoesEffectSequenceExist(const size_t id);
+	bool DoesEffectSequenceExist(const size_t id) {
+        return m_effect_sequences.find(id) != m_effect_sequences.end();
+	}
 
 	MPostProcessingManager();
 
@@ -176,14 +156,6 @@ public:
     MPostProcessingManager(const MPostProcessingManager&) = delete;
     MPostProcessingManager& operator=(const MPostProcessingManager&) = delete;
 };
-
-inline bool MPostProcessingManager::IsEffectExist(const std::string tag) {
-    return m_effects.find(tag) != m_effects.end();
-}
-
-inline bool MPostProcessingManager::DoesEffectSequenceExist(const size_t id) {
-	return m_effect_sequences.find(id) != m_effect_sequences.end();
-}
 
 } /*! opgs16::manager */
 } /*! opgs16 */
