@@ -65,7 +65,7 @@ PPManager::pp_effect& MPostProcessingManager::GetEffect(const std::string&& tag)
 }
 
 bool MPostProcessingManager::InsertEffect(const char* tag) {
-	return InsertEffect<element::CFrameBuferFrame>(tag);
+	return InsertEffect<element::CPostProcessingFrame>(tag);
 }
 
 const sequence_type* PPManager::SetSequence(const size_t id, const std::initializer_list<std::string>& list) {

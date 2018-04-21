@@ -15,13 +15,14 @@
  * @log
  * 2018-02-03 Create file.
  * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ * 2018-04-21 Change base class CFrameBufferFrame to CPostProcessingFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../framebuffer.h"    /*! ::opgs16::element::CFrameBuferFrame */
+#include "../../Element/Public/postprocessing_frame.h"  /*! ::opgs16:element::CPostProcessingFrame */
 
 namespace opgs16::builtin::postprocessing {
 
-class PpEffectGray : public element::CFrameBuferFrame {
+class PpEffectGray final : public element::CPostProcessingFrame {
 	void Initialize() override final {
 		GenerateFrameBuffer(0);
 

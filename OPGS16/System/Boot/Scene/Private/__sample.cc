@@ -39,11 +39,17 @@
 
 #include "../../Object/___2/Public/__s_camera.h"    /*! ::ogps16::builtin::sample::__S_PERSPECTIVE_CAMERA */
 #include "../../Object/___2/Public/__s_manager.h"   /*! ::opgs16::builtin::sample::__S_MANAGER */
+#include "../../Object/___2/Public/__s_background.h"/*! ::opgs16::builtin::sample::__S_BACKGROUND */
+
+#include "../../../Manager/Public/prerendering_manager.h"
+#include "../../Object/___2/Effects/__s_starfield.h"
+#include "../../Object/___2/Effects/__s_turnel.h"
 
 constexpr const char* k_main_camera = "Camera";
 constexpr const char* k_cursor_name = "Cursor";
 constexpr const char* k_canvas_name = "Canvas";
 constexpr const char* k_manager_name = "Manager";
+constexpr const char* k_background_pre = "Background";
 
 namespace opgs16 {
 namespace builtin {
@@ -51,10 +57,22 @@ namespace sample {
 
 void SampleGame::Initiate() {
     auto bg_color = BackgroundColor();
-    bg_color->r = 0.2f;
+    //bg_color->r = 0.2f;
+
+    /*! Make background pre-rendering container. */
+    auto pre_back = manager::prerendering::GenerateFrameBuffer(k_background_pre);
+    if (pre_back) {
+        pre_back->InsertFrameBuferFrame<__S_STARFIELD_FRAMEBUFFER>();
+        pre_back->InsertFrameBuferFrame<__S_TURNEL_FRAMEBUFFER>();
+        pre_back->Initialize();
+    }
+    else {
+        assert(false);
+    }
 
     Instantiate<__S_PERSPECTIVE_CAMERA>(k_main_camera);
     Instantiate<__S_MANAGER>(k_manager_name);
+    Instantiate<__S_BACKGROUND>(k_background_pre);
 }
 
 } /*! opgs16::builtin::sample */

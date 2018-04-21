@@ -56,6 +56,8 @@ class   CCamera;
 class   CRigidbody2D;
 class   CScriptFrame;
 class   CSprite2DRenderer;
+class   CPreProcessingGetter;
+class   CPreProcessing2DRenderer;
 
 namespace _internal {
 class   CComponent;
@@ -78,6 +80,9 @@ class   CTimerHandle;   /*! sub-type of timermanager */
 class   CVertexArrayObject;
 class   CShaderWrapper;
 class   CFrameBuferFrame;
+class   CPostProcessingFrame;
+class   CPreRenderingFrame;
+class   CPreRenderingContainer;
 
 namespace _internal {
 class	CObjectImpl;

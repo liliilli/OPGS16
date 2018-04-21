@@ -1,0 +1,9 @@
+$ Resources/
+
+SHADE __s_starfield
+- VS Shader/Global/quad.vert
+- FS ../System/Boot/Resources/__s_starfield.glsl
+
+SHADE __s_turnel 
+- VS Shader/Global/quad.vert
+- FS ../System/Boot/Resources/__s_turnel.glsl

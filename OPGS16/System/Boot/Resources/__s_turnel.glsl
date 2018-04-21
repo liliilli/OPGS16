@@ -23,7 +23,7 @@ void main(void) {
 
 	const float u  = angle_radian / PI2;
 	const float v  = (sqrt2 - pos_length) / sqrt2;
-	const float alpha = pow(clamp(pos_length, 0.f, 1.f), 1.5f);
+	const float alpha = pow(clamp(pos_length, 0.f, 1.f), 1.5f) * 0.5;
 
 	gl_FragColor   = vec4(texture(uTexture0, vec2(u, v)) * vec4(alpha, alpha, alpha, 1));
 }

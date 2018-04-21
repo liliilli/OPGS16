@@ -146,8 +146,8 @@
     <ClCompile Include="System\Boot\Object\___1\__b_canv.cc" />
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_starfield.cc" />
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_turnel.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Private\__s_background.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_camera.cc" />
-    <ClCompile Include="System\Boot\Object\___2\Private\__s_canvas.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_enemy.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_game_canvas.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_manager.cc" />
@@ -165,6 +165,8 @@
     <ClCompile Include="System\Components\Internal\renderer_base.cc" />
     <ClCompile Include="System\Components\Private\animator.cc" />
     <ClCompile Include="System\Components\Private\empty_renderer.cc" />
+    <ClCompile Include="System\Components\Private\preprocessing2d_renderer.cc" />
+    <ClCompile Include="System\Components\Private\preprocessing_getter.cc" />
     <ClCompile Include="System\Core\Impl\logger_impl.cc" />
     <ClCompile Include="System\Core\Private\application.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
@@ -175,7 +177,10 @@
     <ClCompile Include="Objects\Debug\debug_canvas.cc" />
     <ClCompile Include="Objects\Debug\Script\ui_manager.cc" />
     <ClCompile Include="System\Core\Private\core_setting.cc" />
+    <ClCompile Include="System\Element\Private\prerendering_container.cc" />
+    <ClCompile Include="System\Element\Private\prerendering_frame.cc" />
     <ClCompile Include="System\Frame\timer_handle.cc" />
+    <ClCompile Include="System\Manager\Private\prerendering_manager.cc" />
     <ClCompile Include="System\Manager\Private\timer_manager.cc" />
     <ClCompile Include="System\Shader\Default\Private\shader_font.cc" />
     <ClCompile Include="System\Shader\Default\Private\shader_postprocessing_plain_quad.cc" />
@@ -227,8 +232,8 @@
     <ClInclude Include="System\Boot\Object\___2\Interface\constants.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\enum_types.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\helper_function.h" />
+    <ClInclude Include="System\Boot\Object\___2\Public\__s_background.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_camera.h" />
-    <ClInclude Include="System\Boot\Object\___2\Public\__s_canvas.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_enemy.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_game_canvas.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_manager.h" />
@@ -247,6 +252,8 @@
     <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
     <ClInclude Include="System\Components\Public\empty_renderer.h" />
+    <ClInclude Include="System\Components\Public\preprocessing2d_renderer.h" />
+    <ClInclude Include="System\Components\Public\preprocessing_getter.h" />
     <ClInclude Include="System\Core\Impl\logger_impl.h" />
     <ClInclude Include="System\Core\Internal\logger_internal.h" />
     <ClInclude Include="System\Core\Public\application.h" />
@@ -274,6 +281,9 @@
     <ClInclude Include="System\Element\Internal\constant.h" />
     <ClInclude Include="System\Element\Internal\direction_type.h" />
     <ClInclude Include="System\Element\Internal\texture_internal.h" />
+    <ClInclude Include="System\Element\Public\postprocessing_frame.h" />
+    <ClInclude Include="System\Element\Public\prerendering_container.h" />
+    <ClInclude Include="System\Element\Public\prerendering_frame.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
     <ClInclude Include="System\Helper\Public\access_ptr.h" />
     <ClInclude Include="System\Helper\Public\fixed_stack.h" />
@@ -286,6 +296,7 @@
     <ClInclude Include="System\Manager\Internal\resource_internal.h" />
     <ClInclude Include="System\Manager\Internal\sound_internal.h" />
     <ClInclude Include="System\Manager\Internal\timer_internal.h" />
+    <ClInclude Include="System\Manager\Public\prerendering_manager.h" />
     <ClInclude Include="System\Manager\Public\resource_type.h" />
     <ClInclude Include="System\Manager\Public\timer_manager.h" />
     <ClInclude Include="System\Shader\Default\Public\shader_font.h" />

@@ -14,9 +14,10 @@
  * @author Jongmin Yun
  * @log
  * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
+ * 2018-04-21 Change base class CFrameBufferFrame to CPostProcessingFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../framebuffer.h"    /*! ::opgs16::element::CFrameBuferFrame */
+#include "../../Element/Public/postprocessing_frame.h"  /*! ::opgs16:element::CPostProcessingFrame */
 
 namespace opgs16::builtin::postprocessing {
 
@@ -24,7 +25,7 @@ namespace opgs16::builtin::postprocessing {
  * @class PpEffectConvex
  * @brief Convex post-processing effect.
  */
-class PpEffectConvex : public element::CFrameBuferFrame {
+class PpEffectConvex final : public element::CPostProcessingFrame {
 	/**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
 	 * This makes it operable to use in rendering time. Otherwise, this does not render anything.

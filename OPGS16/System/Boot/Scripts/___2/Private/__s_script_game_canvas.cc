@@ -79,7 +79,9 @@ __S_SCRIPT_GAME_CANVAS::__S_SCRIPT_GAME_CANVAS(opgs16::element::CObject& bind_ob
         text_obj->SetFontSize(8u);
         text_obj->SetWorldPosition(position_array[i]);
         text_obj->SetColor(color_array[i]);
-        if (auto renderer = text_obj->GetComponent<component::CEmptyRenderer>(); renderer) renderer->SetRenderLayer(0);
+        if (auto renderer = text_obj->GetComponent<component::CEmptyRenderer>(); renderer) 
+            renderer->SetRenderLayer(4);
+
         if (i == 1)
             m_score_obj = text_obj;
     }

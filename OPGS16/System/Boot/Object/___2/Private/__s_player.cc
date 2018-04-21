@@ -53,6 +53,7 @@ __S_PLAYER::__S_PLAYER(CObject* parent) : m_parent{ *parent } {
 
     m_renderer = AddComponent<component::CSprite2DRenderer>(*this, "System", "gQuad");
     m_renderer->SetTextureIndex(14);
+    m_renderer->SetRenderLayer(2);
     AddComponent<__S_SCRIPT_PLAYER>(*this);
 }
 

@@ -37,6 +37,7 @@
 
 #include <string_view>                          /*! std::string_view */
 #include "../Public/core_header.h"              /*! Subsequential header files */
+#include "../../Manager/Public/prerendering_manager.h"
 #include "../Public/core_setting.h"
 #include "../../Boot/Scene/Public/__boot.h"     /*! opgs16::manifest::sample::boot */
 #include "../../../Headers/import_logger.h"     /*! import loggers */
@@ -181,6 +182,8 @@ void MApplication::Initiate() {
 #else
         // SHOW BOOT LOGO
         // GOTO SAMPLE GAME
+        m_resource_manager.ReadResourceFile(L"System/Boot/Resources/_resource.meta");
+
         M_PUSH_SCENE(builtin::sample::__BOOT, true);
 		ReplacePresentStatus(GameStatus::PLAYING);
 #endif
@@ -240,6 +243,9 @@ void MApplication::Update() {
         m_on_before_update_callback = nullptr;
     }
 
+    /*! Pre-processing (Pre-rendering) update */
+    manager::prerendering::Update();
+
     Input();                            /*! Input */
     switch (GetPresentStatus()) {       /*! Update */
     case GameStatus::PLAYING:
@@ -297,15 +303,18 @@ void MApplication::Draw() const {
     /*! If there is no scene, do not rendering anything. */
 	if (!m_scene_manager.Empty()) {
         glViewport(0, 0, SGlobalSetting::ScreenWidth(), SGlobalSetting::ScreenHeight());
+        /*! Pre-processing (Pre-rendering) render */
+        manager::prerendering::Render();
 
+		/** Actual Rendering */
 		if (IsSwitchOn(m_setting->PostProcessing()))
 			m_pp_manager->BindSequence(1);
         else
             m_pp_manager->BindSequence(0);
 
-		/** Actual Rendering */
         m_scene_manager.PresentScene()->Draw();
         m_object_manager.Render();
+
 		/** Post-processing */
         m_pp_manager->Render();
 	}

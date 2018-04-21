@@ -37,8 +37,8 @@ namespace manager {
  */
 class MPostProcessingManager final {
 public:
-	using pp_effect = std::unique_ptr<element::CFrameBuferFrame>; // Abbreviation.
-	using ppf_ptr	= element::CFrameBuferFrame*;
+	using pp_effect = std::unique_ptr<element::CPostProcessingFrame>; // Abbreviation.
+	using ppf_ptr	= element::CPostProcessingFrame*;
 	using sequence_type = std::list<ppf_ptr>;
 
 public:
@@ -66,7 +66,7 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBuferFrame, _Ty>>>
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
 	bool InsertEffect(const char* tag) {
 		if (IsEffectExist(tag)) { return false; }
 
@@ -85,7 +85,7 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBuferFrame, _Ty>>>
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
 	bool InsertEffectInitiate(const char* tag) {
 		if (InsertEffect<_Ty>(tag)) {
 			m_effects[tag]->Initialize();

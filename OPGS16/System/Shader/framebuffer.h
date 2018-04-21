@@ -172,31 +172,15 @@ public:
         if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.SetUniformValue(tag, value);
 	}
 
-	/** Check this effect is on effect-sequences. */
-    bool IsActive() const noexcept {
-	    return (m_active_count != 0);
-	}
-
-	/** Set this effect will be actived. */
-	void Active() noexcept {
-	    m_active_count += 1;
-	};
-
-	/** Set this effect disabled. */
-	void Disable() noexcept {
-        if (IsActive()) m_active_count -= 1;
-	}
-
 private:
 	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
-    opgs16::element::CShaderWrapper m_shader_wrapper;
+    CShaderWrapper m_shader_wrapper;
 
 	GLuint empty_vao;
 	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
-	unsigned m_active_count{ 0 };
 
 private:
 	/**

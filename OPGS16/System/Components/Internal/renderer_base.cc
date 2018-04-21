@@ -26,18 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Internal/renderer_base.cc
  *
  * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file
  * 2018-04-06 Suppress warning, size_t to unsigned int warning.
- */
+ * 2018-04-29 Implement SetRenderFrameBuffer(const char*), Add GetRenderFrameBufferName()
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "renderer_base.h"                          /*! Header file */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
-#include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::MSettingManager */
+#include "renderer_base.h"                              /*! Header file */
+#include "../../Element/Public/object.h"                /*! ::opgs16::element::CObject */
+#include "../../Manager/Public/setting_manager.h"       /*! ::opgs16::manager::MSettingManager */
+#include "../../Manager/Public/prerendering_manager.h"  /*! ::opgs16::manager::prerendering namespace */
+#include "../../Manager/Public/resource_manager.h"      /*! ::opgs16::manager::MResourceManager */
+#include "../../../Headers/import_logger.h"             /*! import logger in debug mode */
 
 namespace opgs16 {
 namespace component {
@@ -68,6 +72,38 @@ void CRendererBase::SetRenderLayer(const unsigned layer_index) {
 
 std::string CRendererBase::RenderLayerNameOf() const {
     return manager::MSettingManager::Instance().RenderingLayerName(m_render_layer_index);
+}
+
+void CRendererBase::SetRenderFrameBuffer(const char* frame_buffer_name) {
+    /*! If frame_buffer_name is empty, set to default. */
+    if (!std::strlen(frame_buffer_name)) {
+        m_render_frame_buffer_name = "";
+    }
+
+    /*! Find whethere or not find frame buffer has frame_buffer_name already registered. */
+    if (manager::prerendering::IsFrameBufferExist(frame_buffer_name)) {
+        m_render_frame_buffer_name = frame_buffer_name;
+    }
+    else {
+        //auto& resource_manager = manager::MResourceManager::Instance();
+        //if (resource_manager.IsPreProcessingContainer(frame_buffer_name)) {
+        //    auto* ptr = manager::prerendering::GenerateFrameBuffer(
+        //        frame_buffer_name, 
+        //        resource_manager.GetPreProcessingContainer(frame_buffer_name));
+        //    /*! Check FrameBuffer is properly created. */
+        //    if (ptr)
+        //        m_render_frame_buffer_name = frame_buffer_name;
+        //}
+        {
+#if defined(_DEBUG)
+            std::string error_message{ "Failed to invoke pre-processing buffer : " };
+            error_message += frame_buffer_name;
+            PUSH_LOG_ERRO(error_message.c_str());
+            PUSH_LOG_ERRO("Automatically bind to default frame buffer.");
+#endif
+            m_render_frame_buffer_name = "";
+        }
+    }
 }
 
 } /*! opgs16::component::_internal */

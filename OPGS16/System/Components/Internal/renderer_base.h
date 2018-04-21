@@ -32,16 +32,17 @@
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Internal/renderer_base.h
  *
- * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file.
  * 2018-04-06 Suppress warning, size_t to unsigned int warning.
  * 2018-04-08 Add comment
+ * 2018-04-29 Add SetRenderFrameBuffer(const char*), Add GetRenderFrameBufferName();
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "component.h"          /*! opgs16::component::_internal::CComponent */
 #include "component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
 #include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::MObjectManager */
+#include "../../Manager/Public/prerendering_manager.h"
 
 namespace opgs16 {
 namespace component {
@@ -78,13 +79,38 @@ public:
     /*! Get Rendering layer name value of this instance. */
     std::string RenderLayerNameOf() const;
 
+    /*!
+     * @brief Set frame buffer to be rendered in. 
+     * If frame_buffer_name is empty, the object which binds this component will be rendered onto default frame buffer;
+     * Otherwise find whether or not pre-processing frame buffer is exist and target to specific pre-proc buffer.
+     * If not find any matched pre-proc buffer, set target to default frame buffer with warning message.
+     *
+     * @param[in] frame_buffer_name Frame buffer name to target. If empty, set target to default.
+     */
+    void SetRenderFrameBuffer(const char* frame_buffer_name = "");
+
+    /*! Get frame buffer name to which the object is being bound. */
+    const std::string& GetRenderFrameBufferName() const noexcept {
+        return m_render_frame_buffer_name;
+    }
+
     void Update() override final {
-        using manager::MObjectManager;
-        MObjectManager::Instance().InsertRenderingObject(&GetObject(), m_render_layer_index);
+        // If render frame buffer name is empty, regard it as default buffer and bind.
+        if (m_render_frame_buffer_name.empty()) {
+            using manager::MObjectManager;
+            MObjectManager::Instance().InsertRenderingObject(&GetObject(), m_render_layer_index);
+        }
+        else {
+            auto buffer = manager::prerendering::GetFrameBuffer(m_render_frame_buffer_name.c_str());
+            buffer->RegisterDisposableObject(GetObject());
+        }
     };
 
 private:
-    unsigned m_render_layer_index{ 0 }; /*! Rendering layer index */
+    /*! Rendering layer index */
+    unsigned    m_render_layer_index{ 0 }; 
+    /*! Frame buffer name onto which to be rendered */
+    std::string m_render_frame_buffer_name{};
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRendererBase)
 };

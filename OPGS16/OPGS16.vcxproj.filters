@@ -52,7 +52,6 @@
     <ClCompile Include="System\Boot\Scene\Private\__sample.cc" />
     <ClCompile Include="System\Boot\Scene\Private\__boot.cc" />
     <ClCompile Include="System\Boot\Object\___1\__b_canv.cc" />
-    <ClCompile Include="System\Boot\Object\___2\Private\__s_canvas.cc" />
     <ClCompile Include="System\Element\Private\scene.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_manager.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_game_canvas.cc" />
@@ -74,6 +73,12 @@
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_starfield.cc" />
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_turnel.cc" />
     <ClCompile Include="System\Shader\framebuffer.cc" />
+    <ClCompile Include="System\Element\Private\prerendering_frame.cc" />
+    <ClCompile Include="System\Manager\Private\prerendering_manager.cc" />
+    <ClCompile Include="System\Element\Private\prerendering_container.cc" />
+    <ClCompile Include="System\Components\Private\preprocessing_getter.cc" />
+    <ClCompile Include="System\Components\Private\preprocessing2d_renderer.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Private\__s_background.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -158,7 +163,6 @@
     <ClInclude Include="System\Boot\Scene\Public\__sample.h" />
     <ClInclude Include="System\Boot\Scene\Public\__boot.h" />
     <ClInclude Include="System\Boot\Object\___1\__b_canv.h" />
-    <ClInclude Include="System\Boot\Object\___2\Public\__s_canvas.h" />
     <ClInclude Include="System\Element\Public\scene.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_manager.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_game_canvas.h" />
@@ -185,6 +189,13 @@
     <ClInclude Include="System\Boot\Object\___2\Effects\__s_turnel.h" />
     <ClInclude Include="System\Shader\framebuffer.h" />
     <ClInclude Include="System\Element\Internal\constant.h" />
+    <ClInclude Include="System\Element\Public\postprocessing_frame.h" />
+    <ClInclude Include="System\Element\Public\prerendering_frame.h" />
+    <ClInclude Include="System\Manager\Public\prerendering_manager.h" />
+    <ClInclude Include="System\Element\Public\prerendering_container.h" />
+    <ClInclude Include="System\Components\Public\preprocessing_getter.h" />
+    <ClInclude Include="System\Components\Public\preprocessing2d_renderer.h" />
+    <ClInclude Include="System\Boot\Object\___2\Public\__s_background.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
