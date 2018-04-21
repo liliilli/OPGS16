@@ -4,7 +4,6 @@
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\texture.cc" />
     <ClCompile Include="System\Frame\constant.h" />
-    <ClCompile Include="System\Shader\pp_frame.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
     <ClCompile Include="GlobalObjects\camera_object.cc" />
@@ -74,6 +73,7 @@
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_enemy.cc" />
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_starfield.cc" />
     <ClCompile Include="System\Boot\Object\___2\Effects\__s_turnel.cc" />
+    <ClCompile Include="System\Shader\framebuffer.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -83,7 +83,6 @@
     <ClInclude Include="GlobalObjects\Interface\i_originable.h" />
     <ClInclude Include="Headers\canvas_components.h" />
     <ClInclude Include="GlobalObjects\Interface\i_alignable.h" />
-    <ClInclude Include="System\Shader\pp_frame.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_convex.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_sinewave.h" />
     <ClInclude Include="GlobalObjects\camera_object.h" />
@@ -184,6 +183,8 @@
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_enemy.h" />
     <ClInclude Include="System\Boot\Object\___2\Effects\__s_starfield.h" />
     <ClInclude Include="System\Boot\Object\___2\Effects\__s_turnel.h" />
+    <ClInclude Include="System\Shader\framebuffer.h" />
+    <ClInclude Include="System\Element\Internal\constant.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

@@ -18,35 +18,22 @@
  * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "pp_frame.h"                           /*! Header file */
+#include "framebuffer.h"                           /*! Header file */
 #include "../Frame/vertex_array_object.h"       /*! CVertexArrayObject */
 #include "../Manager/Public/shader_manager.h"   /*! opgs16::manager::ShaderManager */
 
 #include "../../Headers/import_logger.h"        /*! import logger in debug mode */
-
-namespace {
-
-constexpr std::array<GLint, 4>      screen_coord{ 0, 0, 256, 224 };
-constexpr std::array<unsigned, 6>   quad_indices = { 0, 1, 2, 2, 3, 0 };
-constexpr std::array<float, 32>     quad_info = {
-	// Vertex       //Normal        // TexCoord
-	1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 1.f,
-	1.f,-1.f, 0.f,  0.f, 0.f, 1.f,  1.f, 0.f,
-	-1.f,-1.f, 0.f,  0.f, 0.f, 1.f,  0.f, 0.f,
-	-1.f, 1.f, 0.f,  0.f, 0.f, 1.f,  0.f, 1.f
-};
-
-} /*! unnamed namespace */
+#include "../Element/Internal/constant.h"       /*! ::opgs16::element::_internal */
 
 namespace opgs16::element {
 
-void CPostProcessingFrame::Initialize() {
+void CFrameBuferFrame::Initialize() {
 	/** Make empty vao for default_screen rendering */
 	glGenVertexArrays(1, &empty_vao);
 	m_is_useable = true;
 }
 
-void CPostProcessingFrame::GenerateFrameBuffer(const unsigned id) {
+void CFrameBuferFrame::GenerateFrameBuffer(const unsigned id) {
     if (IsAlreadyGenerated(id, m_frame_buffers)) {
         PUSH_LOG_WARN("Already generated frame buffer.");
         return;
@@ -56,7 +43,7 @@ void CPostProcessingFrame::GenerateFrameBuffer(const unsigned id) {
     glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[id]);
 }
 
-void CPostProcessingFrame::GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format,
+void CFrameBuferFrame::GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format,
                                                GLenum type, GLint width, GLint height) {
     /*! Error checking */
 	if (IsAlreadyGenerated(id, m_color_buffers)) {
@@ -71,8 +58,8 @@ void CPostProcessingFrame::GenerateColorBuffer(const unsigned id, GLint internal
     /*! Resize size components have zero value. */
     int t_width = width, t_height = height;
     if (t_width == 0 || t_height == 0) {
-        if (t_width == 0)   t_width = screen_coord[2];
-        if (t_height == 0)  t_height = screen_coord[3];
+        if (t_width == 0)   t_width = _internal::screen_coord[2];
+        if (t_height == 0)  t_height = _internal::screen_coord[3];
     }
 
     /*! Insert. */
@@ -80,12 +67,12 @@ void CPostProcessingFrame::GenerateColorBuffer(const unsigned id, GLint internal
 	m_color_buffers[id] = std::make_unique<CTexture2D>(internal_format, format, type, t_width, t_height);
 }
 
-void CPostProcessingFrame::SetShader(const char* name) {
+void CFrameBuferFrame::SetShader(const char* name) {
 	/** Check If pp+Name is exist, push created shader */
     m_shader_wrapper.SetShader(manager::ShaderManager::Instance().Shader(name));
 }
 
-void CPostProcessingFrame::InitializeDefaultDepthBuffer() {
+void CFrameBuferFrame::InitializeDefaultDepthBuffer() {
 	GLuint& depth_buffer = m_common_buffers[0];
 
 	std::array<GLint, 4> size{};
@@ -97,7 +84,7 @@ void CPostProcessingFrame::InitializeDefaultDepthBuffer() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 }
 
-void CPostProcessingFrame::BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
+void CFrameBuferFrame::BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
                                                     const GLenum attachment, const GLenum target) {
 	/*! Check if both texture and framebuffer are exist. */
 	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
@@ -110,7 +97,7 @@ void CPostProcessingFrame::BindTextureToFrameBuffer(const size_t texture_id, con
 	}
 }
 
-void CPostProcessingFrame::Bind() {
+void CFrameBuferFrame::Bind() {
 	if (m_is_useable) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(0));
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -120,7 +107,7 @@ void CPostProcessingFrame::Bind() {
 	}
 }
 
-void CPostProcessingFrame::RenderEffect() {
+void CFrameBuferFrame::RenderEffect() {
 	if (m_is_useable) {
 		m_shader_wrapper.UseShader();
 		glBindVertexArray(empty_vao);
@@ -137,8 +124,8 @@ void CPostProcessingFrame::RenderEffect() {
 	}
 }
 
-CVertexArrayObject& CPostProcessingFrame::GetCommonQuadVao() {
-    static CVertexArrayObject quad_vao{ quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, quad_indices };
+CVertexArrayObject& CFrameBuferFrame::GetCommonQuadVao() {
+    static CVertexArrayObject quad_vao{ _internal::quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, _internal::quad_indices };
 	return quad_vao;
 }
 

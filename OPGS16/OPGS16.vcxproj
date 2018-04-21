@@ -207,7 +207,7 @@
     <ClCompile Include="System\Shader\Impl\pp_frame_impl.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="System\Shader\PostProcessing\pp_sinewave.cc" />
-    <ClCompile Include="System\Shader\pp_frame.cc" />
+    <ClCompile Include="System\Shader\framebuffer.cc" />
     <ClCompile Include="System\Manager\Private\postprocessing_manager.cc" />
     <ClCompile Include="System\Shader\shader.cc" />
     <ClCompile Include="System\Frame\constant.h" />
@@ -271,6 +271,7 @@
     <ClInclude Include="Objects\Debug\Script\ui_manager.h" />
     <ClInclude Include="System\Core\Public\core_header.h" />
     <ClInclude Include="System\Core\Public\core_setting.h" />
+    <ClInclude Include="System\Element\Internal\constant.h" />
     <ClInclude Include="System\Element\Internal\direction_type.h" />
     <ClInclude Include="System\Element\Internal\texture_internal.h" />
     <ClInclude Include="System\Frame\timer_handle.h" />
@@ -321,7 +322,7 @@
     <ClInclude Include="System\Shader\PostProcessing\pp_convex.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_gray.h" />
     <ClInclude Include="System\Shader\PostProcessing\pp_sinewave.h" />
-    <ClInclude Include="System\Shader\pp_frame.h" />
+    <ClInclude Include="System\Shader\framebuffer.h" />
     <ClInclude Include="System\Manager\Public\postprocessing_manager.h" />
     <ClInclude Include="System\Shader\shader.h" />
     <ClInclude Include="System\Manager\Public\shader_manager.h" />
