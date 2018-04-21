@@ -31,7 +31,7 @@ void __S_STARFIELD_FRAMEBUFFER::Initialize() {
 	SetShader("__s_starfield");
 
 	/** Last */
-	CPostProcessingFrame::Initialize();
+	CFrameBuferFrame::Initialize();
 }
 
 void __S_STARFIELD_FRAMEBUFFER::Update() {

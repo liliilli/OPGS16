@@ -27,14 +27,14 @@ void PpEffectScaling::Initialize() {
 	InitializeDefaultDepthBuffer();
 	SetShader("ppQuad");
 
-	CPostProcessingFrame::Initialize();
+	CFrameBuferFrame::Initialize();
 }
 
 void PpEffectScaling::RenderEffect() {
     const auto scale_val = MApplication::Instance().Setting().ScaleValueIntegerOf();
 
     glViewport(0, 0, 256 * scale_val, 224 * scale_val);
-    CPostProcessingFrame::RenderEffect();
+    CFrameBuferFrame::RenderEffect();
 }
 
 } /*! opgs16::builtin::postprocessing */

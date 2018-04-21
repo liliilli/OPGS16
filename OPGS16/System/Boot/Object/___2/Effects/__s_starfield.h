@@ -15,11 +15,11 @@
  * 2018-04-21 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Shader/pp_frame.h"    /*! ::opgs16::element::CPostProcessingFrame */
+#include "../../../../Shader/framebuffer.h"    /*! ::opgs16::element::CFrameBuferFrame */
 
 namespace opgs16::builtin::sample {
 
-class __S_STARFIELD_FRAMEBUFFER final : public element::CPostProcessingFrame {
+class __S_STARFIELD_FRAMEBUFFER final : public element::CFrameBuferFrame {
 	void Initialize() override final;
 	void Update() override final;
 };

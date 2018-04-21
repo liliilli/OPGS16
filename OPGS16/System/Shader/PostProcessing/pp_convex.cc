@@ -34,7 +34,7 @@ void PpEffectConvex::Initialize() {
 	SetShader("ppConvex");
 
 	/** Last */
-	CPostProcessingFrame::Initialize();
+	CFrameBuferFrame::Initialize();
 }
 
 } /*! ::opgs16::builtin::postprocessing */

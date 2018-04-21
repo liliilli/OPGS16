@@ -28,7 +28,7 @@ void __S_TURNEL_FRAMEBUFFER::Initialize() {
 	SetShader("__s_turnel");
 
 	/** Last */
-	CPostProcessingFrame::Initialize();
+	CFrameBuferFrame::Initialize();
 }
 
 } /*! opgs16::builtin::turnel */

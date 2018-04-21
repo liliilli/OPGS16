@@ -17,11 +17,11 @@
  * 2018-04-20 Move class to ::opgs16::builtin::postprocessing, and remove ::shading namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../pp_frame.h"    /*! ::opgs16::element::CPostProcessingFrame */
+#include "../framebuffer.h"    /*! ::opgs16::element::CFrameBuferFrame */
 
 namespace opgs16::builtin::postprocessing {
 
-class PpEffectGray : public element::CPostProcessingFrame {
+class PpEffectGray : public element::CFrameBuferFrame {
 	void Initialize() override final {
 		GenerateFrameBuffer(0);
 
@@ -31,7 +31,7 @@ class PpEffectGray : public element::CPostProcessingFrame {
 		InsertUniformValue("uIntensity", 1.0f);
 		SetShader("ppGray");
 
-		CPostProcessingFrame::Initialize();
+		CFrameBuferFrame::Initialize();
 	}
 };
 

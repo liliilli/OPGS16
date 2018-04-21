@@ -31,7 +31,7 @@ void PpEffectSinewave::Initialize() {
 	SetShader("ppSineWave");
 
 	/** Last */
-	CPostProcessingFrame::Initialize();
+	CFrameBuferFrame::Initialize();
 }
 
 void PpEffectSinewave::Update() {

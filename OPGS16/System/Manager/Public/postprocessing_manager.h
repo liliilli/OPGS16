@@ -18,13 +18,13 @@
  * @log
  * 2018-02-18 Create file.
  * 2018-03-04 Refactoring. Move class to /Manager class.
- * 2018-04-20 Refactoring. CPostProcessingFrame to ::opgs16::element::CPostProcessingFrame.
+ * 2018-04-20 Refactoring. CFrameBuferFrame to ::opgs16::element::CFrameBuferFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "../../Shader/pp_frame.h"
+#include "../../Shader/framebuffer.h"
 
 namespace opgs16 {
 namespace manager {
@@ -37,8 +37,8 @@ namespace manager {
  */
 class MPostProcessingManager final {
 public:
-	using pp_effect = std::unique_ptr<element::CPostProcessingFrame>; // Abbreviation.
-	using ppf_ptr	= element::CPostProcessingFrame*;
+	using pp_effect = std::unique_ptr<element::CFrameBuferFrame>; // Abbreviation.
+	using ppf_ptr	= element::CFrameBuferFrame*;
 	using sequence_type = std::list<ppf_ptr>;
 
 public:
@@ -66,7 +66,7 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBuferFrame, _Ty>>>
 	bool InsertEffect(const char* tag) {
 		if (IsEffectExist(tag)) { return false; }
 
@@ -85,7 +85,7 @@ public:
 	 * @param[in] _Ty Post-processing Effect type parameter to use.
 	 * @return If this method success to create and insert _Ty effect, return True.
 	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
+	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBuferFrame, _Ty>>>
 	bool InsertEffectInitiate(const char* tag) {
 		if (InsertEffect<_Ty>(tag)) {
 			m_effects[tag]->Initialize();
