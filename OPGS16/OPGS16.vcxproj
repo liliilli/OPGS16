@@ -144,6 +144,8 @@
   <ItemGroup>
     <ClCompile Include="manifest.h" />
     <ClCompile Include="System\Boot\Object\___1\__b_canv.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Effects\__s_starfield.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Effects\__s_turnel.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_camera.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_canvas.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_enemy.cc" />
@@ -220,6 +222,8 @@
     <ClInclude Include="Headers\import_logger.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Boot\Object\___1\__b_canv.h" />
+    <ClInclude Include="System\Boot\Object\___2\Effects\__s_starfield.h" />
+    <ClInclude Include="System\Boot\Object\___2\Effects\__s_turnel.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\constants.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\enum_types.h" />
     <ClInclude Include="System\Boot\Object\___2\Interface\helper_function.h" />
@@ -427,6 +431,8 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
+    <None Include="System\Boot\Resources\__s_starfield.glsl" />
+    <None Include="System\Boot\Resources\__s_turnel.glsl" />
     <None Include="_resource.meta" />
     <None Include="_Setting\collision.meta" />
     <None Include="_Setting\global_setting.meta" />

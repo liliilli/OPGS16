@@ -72,6 +72,8 @@
     <ClCompile Include="System\Boot\Object\___2\Private\__s_object_axis.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_enemy.cc" />
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_enemy.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Effects\__s_starfield.cc" />
+    <ClCompile Include="System\Boot\Object\___2\Effects\__s_turnel.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -180,6 +182,8 @@
     <ClInclude Include="System\Boot\Object\___2\Interface\constants.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_enemy.h" />
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_enemy.h" />
+    <ClInclude Include="System\Boot\Object\___2\Effects\__s_starfield.h" />
+    <ClInclude Include="System\Boot\Object\___2\Effects\__s_turnel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -288,6 +292,8 @@
     <None Include="_Setting\collision.meta" />
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
+    <None Include="System\Boot\Resources\__s_starfield.glsl" />
+    <None Include="System\Boot\Resources\__s_turnel.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />
