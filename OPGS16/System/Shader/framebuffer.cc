@@ -16,6 +16,7 @@
  * 2018-04-20 Add boilerplate comments.
  * 2018-04-20 Remove error flags and add log output.
  * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+ * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "framebuffer.h"                           /*! Header file */
@@ -44,7 +45,7 @@ void CFrameBuferFrame::GenerateFrameBuffer(const unsigned id) {
 }
 
 void CFrameBuferFrame::GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format,
-                                               GLenum type, GLint width, GLint height) {
+                                           GLenum type, GLint width, GLint height) {
     /*! Error checking */
 	if (IsAlreadyGenerated(id, m_color_buffers)) {
         PUSH_LOG_ERRO(L"Failed to create color buffer. There is color buffer already.");
@@ -75,17 +76,14 @@ void CFrameBuferFrame::SetShader(const char* name) {
 void CFrameBuferFrame::InitializeDefaultDepthBuffer() {
 	GLuint& depth_buffer = m_common_buffers[0];
 
-	std::array<GLint, 4> size{};
-	glGetIntegerv(GL_VIEWPORT, &size[0]);
-
 	glGenRenderbuffers(1, &depth_buffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size[2], size[3]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _internal::screen_coord[2], _internal::screen_coord[3]);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 }
 
 void CFrameBuferFrame::BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
-                                                    const GLenum attachment, const GLenum target) {
+                                                const GLenum attachment, const GLenum target) {
 	/*! Check if both texture and framebuffer are exist. */
 	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_id]);
@@ -99,7 +97,7 @@ void CFrameBuferFrame::BindTextureToFrameBuffer(const size_t texture_id, const s
 
 void CFrameBuferFrame::Bind() {
 	if (m_is_useable) {
-		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers.at(0));
+		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[0]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	else {
@@ -113,7 +111,7 @@ void CFrameBuferFrame::RenderEffect() {
 		glBindVertexArray(empty_vao);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_color_buffers.at(0)->Id());
+		glBindTexture(GL_TEXTURE_2D, m_color_buffers[0]->Id());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glBindTexture(GL_TEXTURE_2D, 0);

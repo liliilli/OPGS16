@@ -19,11 +19,11 @@
  * 2018-04-20 Change name of Initiate... functions to Generate... and SetShader().
  * 2018-04-20 Remove error flags and add log output.
  * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+ * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <array>	/** std::array */
 #include <memory>	/** std::shared_ptr */
-#include <vector>	/** std::vector<std::shared_ptr> */
 #include "shader.h"	/** helper::CShaderNew */
 #include "../Frame/texture.h"   /*! texture::CTexture2D */
 #include "../../Headers/Fwd/objectfwd.h"    /*! CVertexArrayObject */
@@ -42,6 +42,10 @@ namespace opgs16::element {
  * Each frame is managed by PostProcessingManager, you can call and bind it through Manager.
  * But you should not try to bind this itself, not Calling PostProcessingManager's BindSequence().
  * This will crash application or at least it incurs undefined behavior.
+ *
+ * @log
+ * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+ * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
  */
 class CFrameBuferFrame {
 public:
