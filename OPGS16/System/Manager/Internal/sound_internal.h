@@ -29,14 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Manager/Internal/sound_internal.h
  * @brief
  *
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Create file, move internal structure to it.
- */
+ * 2018-05-13 Add SSoundInfo FMOD::Channel* variable.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <fmod.hpp>
 
@@ -44,14 +45,28 @@ namespace opgs16 {
 namespace manager {
 namespace _internal {
 
-/*! ESoundType is type of each sounds to have been storing. */
+/*! 
+ * @enum ESoundType
+ * @brief
+ * ESoundType is type of each sounds to have been storing. 
+ */
 enum class ESoundType {
     EFFECT,		/** This is for effect sound, once play but not looped normally. */
     BACKGROUND, /** This is for background sound, looped normally. */
-    SURROUND	/** This is for 3D surround ambient sound have distance. */
+    SURROUND,   /** This is for 3D surround ambient sound have distance. */
+    NOTHING     // Default Initailized type.
 };
 
-/*! This class stores sound information. */
+/*! 
+ * @class SSoundInfo
+ * @brief 
+ * This class stores sound information.
+ * Sound pointer instance, sound type, and sound channel which sound will play
+ * through.
+ *
+ * Sound instance and type must be parameterized when creating new SSoundInfo
+ * object. Sound channel will be internally created automatically.
+ */
 class SSoundInfo {
 private:
     FMOD::Sound*        m_sound;        /*! Sound buffer */
@@ -59,12 +74,14 @@ private:
     FMOD::Channel*      m_channel;      /*! Channel */
 
 public:
+    SSoundInfo() : m_type { ESoundType::NOTHING } {};
     explicit SSoundInfo(FMOD::Sound* sound, const ESoundType type) :
         m_sound{ sound }, m_type{ type }, m_channel{ nullptr } {};
 
     FMOD::Sound*    Sound() const { return m_sound; }
     ESoundType      Type() const { return m_type; }
     FMOD::Channel*  Channel() const { return m_channel; }
+    FMOD::Channel** ChannelPtr() { return &m_channel; }
 };
 
 } /*! opgs16::manager::_internal */
