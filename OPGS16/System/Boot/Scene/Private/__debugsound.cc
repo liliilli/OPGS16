@@ -9,11 +9,12 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__debugsound.h" /*! Header file */
+#include "../../Object/___Debug/Public/__s_debugcanvas.h"
 
 namespace opgs16::builtin::sample {
 
 void __DEBUGSOUND::Initiate() {
-    
+    Instantiate<__S_DebugTestCanvas>("DebugTestCanvas");
 };
 
 } /*! opgs16::builtin::sample */

@@ -154,6 +154,7 @@
     <ClCompile Include="System\Boot\Object\___2\Private\__s_object_axis.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_player.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_player_bullet.cc" />
+    <ClCompile Include="System\Boot\Object\___Debug\Private\__s_debugcanvas.cc" />
     <ClCompile Include="System\Boot\Scene\Private\__debugsound.cc" />
     <ClCompile Include="System\Boot\Scene\Private\__sample.cc" />
     <ClCompile Include="System\Boot\Scene\Private\__boot.cc" />
@@ -163,6 +164,7 @@
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_manager.cc" />
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_player.cc" />
     <ClCompile Include="System\Boot\Scripts\___2\Private\__s_script_player_bullet.cc" />
+    <ClCompile Include="System\Boot\Scripts\___3\Private\canvas_script.cc" />
     <ClCompile Include="System\Components\Internal\renderer_base.cc" />
     <ClCompile Include="System\Components\Private\animator.cc" />
     <ClCompile Include="System\Components\Private\empty_renderer.cc" />
@@ -241,6 +243,7 @@
     <ClInclude Include="System\Boot\Object\___2\Public\__s_object_axis.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_player.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_player_bullet.h" />
+    <ClInclude Include="System\Boot\Object\___Debug\Public\__s_debugcanvas.h" />
     <ClInclude Include="System\Boot\Scene\Public\__boot.h" />
     <ClInclude Include="System\Boot\Scene\Public\__debugsound.h" />
     <ClInclude Include="System\Boot\Scene\Public\__sample.h" />
@@ -250,6 +253,7 @@
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_manager.h" />
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_player.h" />
     <ClInclude Include="System\Boot\Scripts\___2\Public\__s_script_player_bullet.h" />
+    <ClInclude Include="System\Boot\Scripts\___3\Public\canvas_script.h" />
     <ClInclude Include="System\Components\Internal\animator_internal.h" />
     <ClInclude Include="System\Components\Internal\renderer_base.h" />
     <ClInclude Include="System\Components\Public\animator.h" />
