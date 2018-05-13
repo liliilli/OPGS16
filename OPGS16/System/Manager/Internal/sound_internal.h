@@ -54,15 +54,17 @@ enum class ESoundType {
 /*! This class stores sound information. */
 class SSoundInfo {
 private:
-    FMOD::Sound*    m_sound;    /*! Sound buffer */
-    const ESoundType m_type;	    /*! The type of sound. */
+    FMOD::Sound*        m_sound;        /*! Sound buffer */
+    const ESoundType    m_type;	        /*! The type of sound. */
+    FMOD::Channel*      m_channel;      /*! Channel */
 
 public:
     explicit SSoundInfo(FMOD::Sound* sound, const ESoundType type) :
-        m_sound{ sound }, m_type{ type } {};
+        m_sound{ sound }, m_type{ type }, m_channel{ nullptr } {};
 
     FMOD::Sound*    Sound() const { return m_sound; }
     ESoundType      Type() const { return m_type; }
+    FMOD::Channel*  Channel() const { return m_channel; }
 };
 
 } /*! opgs16::manager::_internal */
