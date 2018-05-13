@@ -90,50 +90,56 @@ label_success:
 
 bool MSoundManager::CreateSound(const std::string& item_tag) {
     if (DoesSoundExist(item_tag)) {
-        return true;
-    }
-    else {
-        auto& sound_item = MResourceManager::Instance().GetSound(item_tag);
-
-        FMOD::Sound* sound = nullptr;
-        auto result = m_system->createSound(sound_item.Path().c_str(), 
-                                            FMOD_DEFAULT, 0, &sound);
-        if (result != FMOD_OK) {
-            char log[255] = {"ERROR::CANNOT::CREATE::SOUND::"};
-            std::strcat(log, sound_item.Path().c_str());
-            std::strcat(log, "\n");
-
-            PUSH_LOG_ERRO(log);
-            return FAILED;
-        }
-
-        /*! @todo:Temporary */
-        ESoundType sound_type{ ESoundType::BACKGROUND };
-
-        switch (sound_type) {
-        case ESoundType::EFFECT:
-            sound->setMode(FMOD_LOOP_OFF);
-            break;
-        case ESoundType::BACKGROUND:
-        case ESoundType::SURROUND:
-            sound->setMode(FMOD_LOOP_NORMAL);
-            sound->setLoopCount(-1);
-            break;
-        }
-
-        /*! Insert created sound to sound container */
-        m_sounds.emplace(std::make_pair(item_tag, SSoundInfo{ sound, sound_type }));
         return SUCCESS;
     }
+
+    auto& sound_item = MResourceManager::Instance().GetSound(item_tag);
+
+    FMOD::Sound* sound = nullptr;
+    auto result = m_system->createSound(sound_item.Path().c_str(), 
+                                        FMOD_DEFAULT, 0, &sound);
+    if (result != FMOD_OK) {
+        char log[255] = {"ERROR::CANNOT::CREATE::SOUND::"};
+        std::strcat(log, sound_item.Path().c_str());
+        std::strcat(log, "\n");
+
+        PUSH_LOG_ERRO(log);
+        return FAILED;
+    }
+
+    ESoundType sound_type = ESoundType::EFFECT;
+    if (sound_item.IsBgm()) sound_type = ESoundType::BACKGROUND;
+
+    switch (sound_type) {
+    case ESoundType::EFFECT:
+        sound->setMode(FMOD_LOOP_OFF);
+        break;
+    case ESoundType::BACKGROUND:
+    case ESoundType::SURROUND:
+        sound->setMode(FMOD_LOOP_NORMAL);
+        sound->setLoopCount(-1);
+        break;
+    }
+
+    /*! Insert created sound to sound container */
+    m_sounds.emplace(std::make_pair(item_tag, SSoundInfo{ sound, sound_type }));
+    return SUCCESS;
 }
 
 bool MSoundManager::DestroySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 		StopSound(tag);
 
-        //m_sounds.at(tag).m_sound->release();
-        m_sounds.erase(tag);
-		return SUCCESS;
+        auto result = m_sounds[tag].Sound()->release();
+        if (result != FMOD_OK) {
+            /// \TODO: Print Error message.
+            m_sounds.erase(tag);
+            return FAILED;
+        }
+        else {
+            m_sounds.erase(tag);
+            return SUCCESS;
+        }
 	}
 	else
         return FAILED;
@@ -141,7 +147,9 @@ bool MSoundManager::DestroySound(const std::string& tag) {
 
 void MSoundManager::PlaySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
-	    auto result = m_system->playSound(m_sounds.at(tag).Sound(), 0, false, &m_sound_channel);
+	    auto result = m_system->playSound(m_sounds[tag].Sound(), 0, false, 
+                                          m_sounds[tag].ChannelPtr());
+
         if (result != FMOD_OK) {
             char log[255] = {"ERROR::CANNOT::PLAY::SOUND::"};
             std::strcat(log, tag.c_str());
@@ -154,8 +162,7 @@ void MSoundManager::PlaySound(const std::string& tag) {
 
 void MSoundManager::StopSound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
-		auto& sound = m_sounds.at(tag);
-		ProcessStopSound(sound);
+		ProcessStopSound(m_sounds[tag]);
 	}
 }
 
@@ -180,7 +187,7 @@ void MSoundManager::Clear() {
 }
 
 void MSoundManager::ProcessStopSound(const SSoundInfo& sound) {
-    //m_system->getChannel()
+    sound.Channel()->stop();
 }
 
 MSoundManager::~MSoundManager() {

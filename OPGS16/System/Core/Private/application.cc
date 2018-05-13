@@ -40,6 +40,7 @@
 #include "../../Manager/Public/prerendering_manager.h"
 #include "../Public/core_setting.h"
 #include "../../Boot/Scene/Public/__boot.h"     /*! opgs16::manifest::sample::boot */
+#include "../../Boot/Scene/Public/__debugsound.h"   /*! opgs16::manifest::sample::__DEBUGSOUND */
 #include "../../../Headers/import_logger.h"     /*! import loggers */
 #include "../../../manifest.h"                  /*! opgs16::manifest */
 
@@ -184,7 +185,7 @@ void MApplication::Initiate() {
         // GOTO SAMPLE GAME
         m_resource_manager.ReadResourceFile(L"System/Boot/Resources/_resource.meta");
 
-        M_PUSH_SCENE(builtin::sample::__BOOT, true);
+        M_PUSH_SCENE(builtin::sample::__DEBUGSOUND, true);
 		ReplacePresentStatus(GameStatus::PLAYING);
 #endif
 	}

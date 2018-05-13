@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/sound_manager.h
  * @brief Elementary manager class to manage sounds.
  *
@@ -40,7 +40,8 @@
  * @log
  * 2018-02-26 Change sound library from OpenAL & alut to Fmod.
  * 2018-03-04 Refactoring.
- */
+ * 2018-05-13 Remove m_sound_channel variable, and allocate channel to each sound instead of.
+ -*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <unordered_map>    /*! std::unordered_map */
 #include <fmod.hpp>         /*! FMOD */
@@ -50,7 +51,7 @@
 namespace opgs16 {
 namespace manager {
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @class MSoundManager
  * @brief This class manages rich sounds like a background music, effect sounds,
  * anything related to sound from WAV file, OGG file...
@@ -67,7 +68,8 @@ namespace manager {
  * @log
  * 2018-02-26 Replace OpenAL with FMOD.
  * 2018-03-04 Refactoring, Move class in opgs16::manager.
- */
+ * 2018-05-13 Remove m_sound_channel variable, and allocate channel to each sound instead of.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 class MSoundManager final {
 public:
 	/*! Returns unique instance of SoundManager class. */
@@ -137,10 +139,8 @@ public:
 
 private:
     FMOD::System*   m_system{ nullptr };
-    FMOD_RESULT     m_result{ FMOD_OK };
     unsigned        m_version{ 0 };
     int             m_sound_driver_count{ 0 };
-    FMOD::Channel*  m_sound_channel{ nullptr };
 
 	/** Sound container stores all of sound to be played in application. */
 	std::unordered_map<std::string, _internal::SSoundInfo> m_sounds{};

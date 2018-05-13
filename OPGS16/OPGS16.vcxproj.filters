@@ -79,6 +79,7 @@
     <ClCompile Include="System\Components\Private\preprocessing_getter.cc" />
     <ClCompile Include="System\Components\Private\preprocessing2d_renderer.cc" />
     <ClCompile Include="System\Boot\Object\___2\Private\__s_background.cc" />
+    <ClCompile Include="System\Boot\Scene\Private\__debugsound.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Interface\i_radiant.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="System\Components\Public\preprocessing_getter.h" />
     <ClInclude Include="System\Components\Public\preprocessing2d_renderer.h" />
     <ClInclude Include="System\Boot\Object\___2\Public\__s_background.h" />
+    <ClInclude Include="System\Boot\Scene\Public\__debugsound.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
