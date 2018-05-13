@@ -26,22 +26,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Manager/Private/sound_manager.cc
  * @brief Sound manager implementation file.
  *
  * @author Jongmin Yun
  * @log
  * 2018-03-04 Refactoring.
- */
+ * 2018-05-13 Changed std::cerr to PUSH_LOG_ERRO logger routine.
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/sound_manager.h"      /*! Header file */
+#include "../Public/sound_manager.h"        /*! Header file */
 
-#include <iostream>             /*! std::cerr */
-#include <string>               /*! std::string */
+#include <string>                           /*! std::string */
 
-#include "../Public/resource_manager.h"   /*! MResourceManager */
+#include "../Public/resource_manager.h"     /*! MResourceManager */
 #include "../Public/resource_type.h"
+#include "../../../Headers/import_logger.h" /*! import logger in debug mode. */
 
 namespace opgs16 {
 namespace manager {
@@ -58,35 +59,32 @@ using _internal::SSoundInfo;
 
 bool MSoundManager::ProcessInitialSetting() {
     if (FMOD::System_Create(&m_system) != FMOD_OK) {
-        /*! Write to logger if debug mode. in release mode, mute application. */
-        std::cerr << "ERROR::DID::NOT::CREATE::SOUND::SYSTEM\n";
-        m_is_muted = true;
-        return FAILED;
+        PUSH_LOG_ERRO("ERROR::DID::NOT::CREATE::SOUND::SYSTEM\n");
+        goto label_failed;
     }
 
-    m_system->getVersion(&m_version);
-    if (m_version < FMOD_VERSION) {
-        /*! Write to logger if debug mode. if not and after this, mute app. */
-        std::cerr << "ERROR::DOES::NOT::MATCH::FMOD::LIBRARY::VERSION\n";
-        m_is_muted = true;
-        return FAILED;
+    if (m_system->getVersion(&m_version); m_version < FMOD_VERSION) {
+        PUSH_LOG_ERRO("ERROR::DOES::NOT::MATCH::FMOD::LIBRARY::VERSION\n");
+        goto label_failed;
     }
 
-    m_system->getNumDrivers(&m_sound_driver_count);
-    if (m_sound_driver_count <= 0) {
-        /*! Write to logger if debug mode. if not and after this, mute app. */
-        std::cerr << "ERROR::NOT::FOUND::SOUND::DEVICE\n";
-        m_is_muted = true;
-        return FAILED;
+    if (m_system->getNumDrivers(&m_sound_driver_count); m_sound_driver_count <= 0) {
+        PUSH_LOG_ERRO("ERROR::NOT::FOUND::SOUND::DEVICE\n");
+        goto label_failed;
     }
 
     if (m_system->init(32, FMOD_INIT_NORMAL, nullptr) != FMOD_OK) {
-        /*! Write to logger if debug mode. if not and after this, mute app. */
-        std::cerr << "ERROR::COULD::NOT::CREATE::SOUND::CHANNEL\n";
-        m_is_muted = true;
-        return FAILED;
+        PUSH_LOG_ERRO("ERROR::COULD::NOT::CREATE::SOUND::CHANNEL\n");
+        goto label_failed;
     }
 
+    goto label_success;
+
+label_failed:
+    m_is_muted = true;
+    return FAILED;
+
+label_success:
     return SUCCESS;
 }
 
@@ -95,12 +93,17 @@ bool MSoundManager::CreateSound(const std::string& item_tag) {
         return true;
     }
     else {
-        auto& sound_item = opgs16::manager::MResourceManager::Instance().GetSound(item_tag);
+        auto& sound_item = MResourceManager::Instance().GetSound(item_tag);
 
-        FMOD::Sound* sound;
-        if (m_system->createSound(sound_item.Path().c_str(), FMOD_DEFAULT, 0, &sound) != FMOD_OK) {
-            /*! Write to logger if debug mode. if not and after this, mute app. */
-            std::cerr << "ERROR::CAN::NOT::CREATE::SOUND::" << sound_item.Path() << "\n";
+        FMOD::Sound* sound = nullptr;
+        auto result = m_system->createSound(sound_item.Path().c_str(), 
+                                            FMOD_DEFAULT, 0, &sound);
+        if (result != FMOD_OK) {
+            char log[255] = {"ERROR::CANNOT::CREATE::SOUND::"};
+            std::strcat(log, sound_item.Path().c_str());
+            std::strcat(log, "\n");
+
+            PUSH_LOG_ERRO(log);
             return FAILED;
         }
 
@@ -140,8 +143,11 @@ void MSoundManager::PlaySound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 	    auto result = m_system->playSound(m_sounds.at(tag).Sound(), 0, false, &m_sound_channel);
         if (result != FMOD_OK) {
-            /*! Do something */
-            std::cerr << "ERROR::CAN::NOT::PLAY::SOUND::" << tag << "\n";
+            char log[255] = {"ERROR::CANNOT::PLAY::SOUND::"};
+            std::strcat(log, tag.c_str());
+            std::strcat(log, "\n");
+
+            PUSH_LOG_ERRO(log);
         }
 	}
 }
@@ -167,8 +173,7 @@ void MSoundManager::Clear() {
 	for (auto& pair_item : m_sounds) {
 		auto& sound = pair_item.second;
         if (sound.Sound()->release() != FMOD_OK) {
-            /*! Write to logger if debug mode. if not and after this, mute app. */
-            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
+            PUSH_LOG_ERRO("ERROR::SOUND::RELEASE::FAILED\n");
         }
 	}
     m_sounds.clear();
@@ -186,7 +191,7 @@ MSoundManager::~MSoundManager() {
 		auto& sound = pair_item.second;
         if (sound.Sound()->release() != FMOD_OK) {
             /*! Write to logger if debug mode. if not and after this, mute app. */
-            std::cerr << "ERROR::SOUND::RELEASE::FAILED\n";
+            PUSH_LOG_ERRO("ERROR::SOUND::RELEASE::FAILED\n");
         }
 	}
     m_sounds.clear();
