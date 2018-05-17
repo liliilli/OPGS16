@@ -113,6 +113,12 @@ public:
 	 */
 	void StopSound(const std::string& tag);
 
+    /// \brief
+    /// Verity whether speicific sound is playing or not.
+    /// 
+    /// \param[in] tag The tag to verify.
+    bool IsPlaying(const std::string& tag);
+
 	/*! Stop all of sounds which are playing. */
 	void StopAllSounds();
 

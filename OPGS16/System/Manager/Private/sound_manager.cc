@@ -90,6 +90,12 @@ label_success:
 
 bool MSoundManager::CreateSound(const std::string& item_tag) {
     if (DoesSoundExist(item_tag)) {
+#ifdef _DEBUG
+        char log[256] = "Redundant CreateSound call, [tag:";
+        strcat(log, item_tag.c_str());
+        strcat(log, "]\n");
+        PUSH_LOG_WARN(log);
+#endif
         return SUCCESS;
     }
 
@@ -108,7 +114,8 @@ bool MSoundManager::CreateSound(const std::string& item_tag) {
     }
 
     ESoundType sound_type = ESoundType::EFFECT;
-    if (sound_item.IsBgm()) sound_type = ESoundType::BACKGROUND;
+    if (sound_item.IsBgm()) 
+        sound_type = ESoundType::BACKGROUND;
 
     switch (sound_type) {
     case ESoundType::EFFECT:
@@ -164,6 +171,23 @@ void MSoundManager::StopSound(const std::string& tag) {
 	if (DoesSoundExist(tag)) {
 		ProcessStopSound(m_sounds[tag]);
 	}
+}
+
+bool MSoundManager::IsPlaying(const std::string& tag) {
+    if (DoesSoundExist(tag)) {
+        bool is_playing = false;
+        m_sounds[tag].Channel()->isPlaying(&is_playing);
+
+        return is_playing;
+    }
+    else {
+        char log[256] = "Could not find sound, [tag:";
+        strcat(log, tag.c_str());
+        strcat(log, "] in MSoundManager::IsPlaying.\n");
+
+        PUSH_LOG_ERRO(log);
+        return false;
+    }
 }
 
 void MSoundManager::StopAllSounds() {
