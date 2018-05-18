@@ -36,20 +36,21 @@
  * 2018-04-17 Move definition function body into ::opgs16::element::canvas namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/text.h"             /*! Header file */
-#include "../../Impl/text_impl.h"       /*! ::ogps16::element::canvas::_internal::CTextImpl */
-#include "../../System/Components/Public/empty_renderer.h" /*! ::opgs16::component::CEmptyRenderer */
-#include "../../System/Manager/Public/font_manager.h"  /*! MFontManager
-                                                      * aliasing font_map_ptr
-                                                      * FontManager& Instance()
-                                                      * bool LoadDefaultFont()
-                                                      * void RenderTextNew(params)
-                                                      * bool DoesFontExist(std::string) */
-#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
+#include <Element\Canvas\text.h>    /// Header file
+
+/// ::ogps16::element::canvas::_internal::CTextImpl
+#include <Element\Impl\text_impl.h>
+/// ::opgs16::component::CEmptyRenderer
+#include <Component\empty_renderer.h>
+/// ::opgs16::manager::MFontManager
+#include <Manager\font_manager.h>
+
+#include <Headers/import_logger.h> /// import logger in debug mode
 
 namespace opgs16 {
 namespace element {
 namespace canvas {
+
 namespace _internal {
 void TextImplDeleter::operator()(CTextImpl* p) { delete p; }
 

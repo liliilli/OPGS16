@@ -1,33 +1,34 @@
 #ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 #define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
- * If you want to read full statements, read LICENSE file.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Manager/Public/postprocessing_manager.h
- * @brief Elementary manager class to manage post-processing shaders.
- *
- * This file consists of application operation class and member API functions.
- *
- * @author Jongmin Yun
- * @log
- * 2018-02-18 Create file.
- * 2018-03-04 Refactoring. Move class to /Manager class.
- * 2018-04-20 Refactoring. CFrameBuferFrame to ::opgs16::element::CFrameBuferFrame.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @file Manager/postprocessing_manager.h
+/// @brief Elementary manager class to manage post-processing shaders.
+///
+/// This file consists of application operation class and member API functions.
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-02-18 Create file.
+/// 2018-03-04 Refactoring. Move class to /Manager class.
+/// 2018-04-20 Refactoring. CFrameBuferFrame to ::opgs16::element::CFrameBuferFrame.
+///
 
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "../../Shader/framebuffer.h"
 
-namespace opgs16 {
-namespace manager {
+/// ::opgs16::element::CFrameBufferFrame
+#include <Shader\framebuffer.h>
+
+namespace opgs16::manager {
 
 /**
  * @class MPostProcessingManager
@@ -158,6 +159,5 @@ public:
 };
 
 } /*! opgs16::manager */
-} /*! opgs16 */
 
 #endif /** OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H */

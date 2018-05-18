@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Object/Impl/object_impl.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file Object/Impl/object_impl.h
  * @brief Pointer to implementation file of Object.h
  * @author Jongmin Yun
  *
@@ -42,11 +42,14 @@
  * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
  * 2018-04-14 Change CObjectImpl::SetRotationLocalAngle angle reflection mechanism, restrict bound as (-180.f, 180.f].
  * 2018-04-18 Change function and mechanism of rotation.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <string>       /*! std::string */
-#include <glm/glm.hpp>  /*! glm::vec_x */
-#include "../Internal/direction_type.h" /*! ::opgs16::element::_internal::EDirection */
+
+#include <glm\glm.hpp>  /*! glm::vec_x */
+
+/// ::opgs16::element::_internal::EDirection
+#include <Element\Internal\direction_type.h>
 
 namespace opgs16 {
 namespace element {

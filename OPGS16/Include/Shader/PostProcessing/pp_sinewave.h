@@ -17,7 +17,8 @@
  * 2018-04-21 Change base class CFrameBufferFrame to CPostProcessingFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../Element/Public/postprocessing_frame.h"  /*! ::opgs16:element::CPostProcessingFrame */
+/// ::opgs16:element::CPostProcessingFrame
+#include <Element\postprocessing_frame.h>
 
 namespace opgs16::builtin::postprocessing {
 

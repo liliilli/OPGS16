@@ -46,7 +46,8 @@
 #include <unordered_map>    /*! std::unordered_map */
 #include <fmod.hpp>         /*! FMOD */
 
-#include "../Internal/sound_internal.h"
+/// ::opgs16::manager::_internal namespace
+#include <Manager\Internal\sound_internal.h>
 
 namespace opgs16 {
 namespace manager {

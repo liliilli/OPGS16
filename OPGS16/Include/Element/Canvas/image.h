@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/image.h
+ * @file Element\Canvas\image.h
  * @brief Image object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
@@ -41,8 +41,8 @@
  * 2018-04-17 Move canvas::CImage into opgs16::element::canvas::CImage.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../System/Element/Public/ui_object.h"          /*! ::opgs16::element::UiObject */
-#include "../../Headers/Fwd/objectfwd.h"                    /*! Canvas::CCanvas */
+#include <Element\ui_object.h>  /// ::opgs16::element::UiObject
+#include <opgs16fwd.h>          /// Forward declaration
 
 namespace opgs16 {
 namespace element {

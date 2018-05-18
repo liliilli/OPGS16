@@ -14,8 +14,8 @@
  * 2018-04-29 Create framebuffer_list and Implement IsFrameBufferExist(const char*).
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/prerendering_manager.h" /*! Header file */
-#include <vector>
+#include <Manager\prerendering_manager.h>   /// Header file
+
 #include <map>
 
 namespace {

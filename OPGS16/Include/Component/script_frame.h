@@ -29,20 +29,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System\Components\script_frame.h
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file Components\script_frame.h
  * @brief Base script frame file.
  *
  * @author Jongmin Yun
  * @log
  * 2018-02-13 Create file and make basic features.
  * 2018-03-07 Move it from ::component to ::opgs16::component.
- */
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <string>                           /*! std::string as member */
-#include "../Internal/component.h"          /*! Component as base class */
-#include "../Internal/component_macro.h"    /*! SET_UP_HASH_MEMBER_DERIVED() */
-#include "../../../Headers/Fwd/objectfwd.h"    /*! Object as reference */
+#include <string>                           
+
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <Component\Internal\component_macro.h> /// Component macroes
+
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 namespace component {

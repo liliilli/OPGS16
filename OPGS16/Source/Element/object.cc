@@ -35,11 +35,13 @@
  * 2018-04-18 Change function and mechanism of rotation. and Add comments.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/object.h"              /*! Header file */
-#include "../Impl/object_impl.h"           /*! CObjectImpl */
+#include <Element\object.h>             /// Header file
+/// ::opgs16::element::_internal::CObjectImpl
+#include <Element\Impl\object_impl.h>   
 
 namespace opgs16 {
 namespace element {
+
 namespace {
 using _internal::CObjectImpl;
 } /*! unnamed namespace */

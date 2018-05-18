@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/text.h
+ * @file Element\Canvas\text.h
  * @brief Text object used in Canvas hierarchy.
  *
  * @author Jongmin Yun
@@ -42,12 +42,12 @@
 
 #include <memory>       /*! std::unique_ptr */
 #include <glm/glm.hpp>  /*! using glm::vec3<float, 0> = glm::tvec3<float, 0> */
-#include "../../GlobalObjects/Interface/i_alignable.h"  /*! IAlignable */
-#include "../../Headers/Fwd/objectfwd.h"    /*! MFontManager
-                                              * Canvas::CTextImpl
-                                              * Canvas::TextImplDeleter
-                                              * glm::vec3 */
-#include "../../System/Element/Public/ui_object.h"      /*! ::opgs16::element::UiObject */
+
+/// ::opgs16::element::interface::IAlignable
+#include <Element\Interface\i_alignable.h>
+
+#include <Element\ui_object.h>  /// ::opgs16::element::UiObject
+#include <opgs16fwd.h>          /// Forward declaration
 
 namespace opgs16 {
 namespace element {

@@ -29,15 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Manager/Internal/timer_internal.h
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-04 Create file.
- */
+/// @file Manager/Internal/timer_internal.h
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-04 Create file.
 
-#include "../../Frame/timer_handle.h"   /*! CTimerHandle */
+#include <Frame\timer_handle.h>
 
 namespace opgs16 {
 namespace manager {

@@ -14,6 +14,7 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../Public/__s_background.h"   /*! Header file */
+
 #include "../../../../Components/Public/camera.h"           /*! ::opgs16::component::Camera */
 #include "../../../../Components/Public/sprite_renderer.h"  /*! ::opgs16::component::CSprite2DRenderer */
 #include "../../../../Manager/Public/scene_manager.h"       /*! ::opgs16::manager::SceneManager */

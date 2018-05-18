@@ -16,7 +16,7 @@
  * 2018-04-21 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "postprocessing_frame.h"
+#include <Element\postprocessing_frame.h>
 
 namespace opgs16::element {
 

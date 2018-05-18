@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Manager/Public/scene_manager.h
+ * @file Manager\scene_manager.h
  * @author Jongmin Yun
  *
  * @log
@@ -42,9 +42,11 @@
 
 #include <memory>
 #include <stack>
-#include "../../Core/Public/application.h"  /*! Application for callback forwarding */
-#include "../../Element/Public/scene.h"     /*! ::opgs16::element::CScene */
-#include "../../Helper/Public/template.h"   /*! Template SFINAE helper header. */
+
+#include <Core\application.h>   /// ::opgs16::MApplication
+#include <Element\scene.h>      /// ::opgs16::element::CScene
+
+#include <Helper\template.h>    /// Type checking tempaltes
 
 namespace opgs16 {
 namespace manager {

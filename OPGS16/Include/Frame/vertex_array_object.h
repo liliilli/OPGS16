@@ -17,7 +17,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <array>        /*! std::array */
-#include <GL/glew.h>    /*!  */
+#include <GL\glew.h>    /*!  */
 
 namespace opgs16 {
 namespace element {

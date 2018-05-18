@@ -29,23 +29,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Manager/Public/timer_manager.h
- * @author Jongmin Yun
- *
- * @log
- * 2018-02-22 Implemented fundamental TimerManager class.
- * 2018-03-04 Refactoring.
- */
+/// @file 
+/// Manager/timer_manager.h
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-02-22 Implemented fundamental TimerManager class.
+/// 2018-03-04 Refactoring.
 
-#include <algorithm>                        /*! std::hash */
 #include <functional>                       /*! std::functional */
 #include <limits>                           /*! std::limit<size_t> */
 #include <type_traits>
 #include <unordered_map>                    /*! std::unordered_map */
 
-#include "../Internal/timer_internal.h"     /*! _internal:: */
-#include "../../Frame/timer_handle.h"       /*! TimerHandle Definition */
+#include <Manager\Internal\timer_internal.h> /// ::opgs16::manager::_internal::
+#include <Frame\timer_handle.h>              /// ::opgs16::element::CTimerHandle
 
 namespace opgs16 {
 namespace manager {

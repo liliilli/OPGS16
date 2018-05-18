@@ -29,17 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @file System/Manager/Public/font_manager.h
- * @brief Fundamental font renderer to render string, and manages font glyphs.
- *
- * This file consists of application operation class and member API functions.
- *
- * @author Jongmin Yun
- * @log
- * 2018-02-06 Create file.
- * 2018-03-03 Refactoring.
- */
+/// @file Manager/font_manager.h
+/// @brief Fundamental font renderer to render string, and manages font glyphs.
+///
+/// This file consists of application operation class and member API functions.
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-02-06 Create file.
+/// 2018-03-03 Refactoring.
 
 #include <array>
 #include <string>
@@ -48,17 +46,19 @@
 #include <map>
 
 #include <ft2build.h>
-#include <GL/glew.h>
-#include <glm/glm.hpp>
+#include <GL\glew.h>
+#include <glm\glm.hpp>
 #include FT_FREETYPE_H
 
-#include "../Internal/font_internal.h"
-#include "../../Shader/shader.h"
-#include "../../../GlobalObjects/Interface/i_originable.h"
-#include "../../../GlobalObjects/Interface/i_alignable.h"
+/// ::opgs16::manager::_internal::Character
+#include <Manager\Internal\font_internal.h>
+/// ::opgs16::element::CShaderNew
+#include <Shader\shader.h>
 
-namespace opgs16 {
-namespace manager {
+#include <Element\Interface\i_originable.h>
+#include <Element\Interface\i_alignable.h>
+
+namespace opgs16::manager {
 
 /*! Default font size variable */
 constexpr unsigned k_default_font_size = 16u;
@@ -302,6 +302,5 @@ public:
 };
 
 } /*! opgs16::manager */
-} /*! opgs16 */
 
 #endif /*! OPGS16_SYSTEM_FONT_MANAGER_H */

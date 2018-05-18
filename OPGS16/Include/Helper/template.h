@@ -39,7 +39,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>
-#include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::CCamera */
+#include <opgs16fwd.h>  /// Forward declaration
 
 template <class _Ty>
 inline constexpr bool IsCObjectBase = std::is_base_of_v<opgs16::element::CObject, _Ty>;

@@ -41,30 +41,28 @@
  * 2018-04-06 Support Texture2DAtlas instead of plain Texture2D which not support atlas information.
  */
 
-#include <string>				/** std::string */
-#include <map>                  /*! std::map */
+#include <string>		    /** std::string */
+#include <map>              /*! std::map */
 
-#include "resource_type.h"      /*! resource:: */
-#include "../../../Headers/Fwd/objectfwd.h"
+#include <Manager\resource_type.h>
+#include <opgs16fwd.h>      /// Forward declaration
 
 namespace opgs16 {
 namespace manager { /*! Namespace for manager */
 
-/*!
- * @class MResourceManager
- * @brief This class is singleton and not derivable as derived class.
- * ResourceManager has a rule of managing resource files path, each shader path, error statement path and so on.
- *
- * ResrouceManager has to be called (invoked) when game application is setting up, before
- * actual game update has been begun.
- *
- * @log
- * 2018-02-27 Correction of loading mechanism
- * 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
- * 2018-03-02 Move to opgs16::manager namespace.
- * 2018-03-03 Move private functions which don't match class to non-member function.
- * 2018-04-06 Support Texture2DAtlas instead of plain Texture2D which not support atlas information.
- */
+/// @class MResourceManager
+/// @brief This class is singleton and not derivable as derived class.
+/// ResourceManager has a rule of managing resource files path, each shader path, error statement path and so on.
+///
+/// ResrouceManager has to be called (invoked) when game application is setting up, before
+/// actual game update has been begun.
+///
+/// @log
+/// 2018-02-27 Correction of loading mechanism
+/// 2018-02-28 Corrected GetTexture2D return type must be resource::STexture2D structure.
+/// 2018-03-02 Move to opgs16::manager namespace.
+/// 2018-03-03 Move private functions which don't match class to non-member function.
+/// 2018-04-06 Support Texture2DAtlas instead of plain Texture2D which not support atlas information.
 class MResourceManager final {
 public:
     /*! Resource map list */

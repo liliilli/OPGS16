@@ -34,7 +34,7 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "../Public/input_manager.h"  /*! Header file */
+#include <Manager\input_manager.h>  /// Header file
 
 #include <fstream>      /*! std::ifstream */
 #include <iostream>     /*! std::cout */
@@ -44,7 +44,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
-#include "../Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
+#include <Manager\time_manager.h>   /// Header file
 
 namespace opgs16 {
 

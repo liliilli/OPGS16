@@ -10,8 +10,11 @@
 #include <memory>       /*! std::memory */
 #include <unordered_map>/*! std::unordered_map */
 #include <GL\glew.h>    /*! GLuint */
-#include "..\..\Frame\texture.h"            /*! texture::CTexture2D */
-#include "..\..\Headers\Fwd\objectfwd.h"    /*! helper::CShaderNew */
+
+/// ::opgs16::texture::CTexture2D
+#include <Frame\texture.h>
+/// Forward declaration
+#include <opgs16fwd.h>
 
 namespace shading {
 

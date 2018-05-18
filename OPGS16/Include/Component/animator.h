@@ -37,12 +37,14 @@
  * 2018-03-11 Corection of ::opgs16::element::CObject class.
  */
 
-#include "../Internal/animator_internal.h"  /*! opgs16::component::_internal::AnimatorState*/
-#include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
-#include "../Internal/component_macro.h"    /*! Component macros */
-#include "../../Frame/timer_handle.h"       /*! CTimerHandle */
-#include "../../Helper/Public/switch.h"     /*! opgs16::Switch */
-#include "../../../Headers/Fwd/objectfwd.h" /*! Forward Declaration */
+/// ::opgs16::component::_internal::AnimatorState
+#include <Component\Internal\animator_internal.h> 
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <Component\Internal\component_macro.h> /// Component Macroes
+#include <Frame\timer_handle.h> /// ::opgs16::element::CTimerHandle
+#include <Helper\switch.h>      /// ::opgs16::CSwitch
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 namespace component {

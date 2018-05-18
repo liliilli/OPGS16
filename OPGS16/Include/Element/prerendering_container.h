@@ -9,7 +9,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Public/prerendering_container.h
+ * @file Element/prerendering_container.h
  * @brief Container for storing CPreRenderingFrame classes
  *
  * @log
@@ -17,8 +17,10 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <vector>
-#include "../../../Headers/Fwd/objectfwd.h" /*! forward declaration */
-#include "../../Shader/framebuffer.h"       /*! ::opgs16::element::CFrameBuferFrame */
+
+/// ::opgs16::element::CFrameBufferFrame
+#include <Shader\framebuffer.h>
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16::element {
 

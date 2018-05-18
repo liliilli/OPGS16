@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Shader/shader_wrapper.h
+ * @file Shader/shader_wrapper.h
  * @brief Shader wrapper.
  * 쉐이더 매니저에서 가져온 쉐이더의 참조 혹은 포인터를 가지며, 이 쉐이더에 갱신될
  * 유니폼 변수들의 집합 객체를 가진다.
@@ -48,9 +48,11 @@
 
 #include <string>
 #include <map>
-#include <glm/glm.hpp>
-#include "../../Headers/Fwd/objectfwd.h"    /*! CShaderNew */
-#include <GL/glew.h>
+
+#include <glm\glm.hpp>
+#include <GL\glew.h>
+
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 namespace element {

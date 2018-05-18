@@ -27,7 +27,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Impl/sprite_renderer_impl.cc
+ * @file Components/Impl/sprite_renderer_impl.cc
  *
  * @author Jongmin Yun
  * @log
@@ -37,12 +37,13 @@
  * 2018-04-08 Supporting change of shader on running.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "sprite_renderer_impl.h"   /*! Header file */
-#include "../../Frame/constant.h"   /*! std::array<> quad_info
-                                      * std::array<> quad_indice */
-#include "../../../System/Manager/Public/texture_manager.h" /*! TextureManager */
-#include "../../../System/Manager/Public/shader_manager.h"  /*! ShaderManager */
-#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
+#include "sprite_renderer_impl.h"       // Header file    
+
+#include <Frame\constant.h>             // std::array<> quad_info, quad_indice
+
+#include <Manager\texture_manager.h>    // ::opgs16::manager::TextureManager
+#include <Manager\shader_manager.h>     // ::opgs16::manager::ShaderManager
+#include <Headers\import_logger.h>      // logger
 
 namespace opgs16 {
 namespace component {

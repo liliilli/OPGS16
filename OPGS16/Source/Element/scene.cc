@@ -35,7 +35,7 @@
  * 2018-04-14 Move file to /System/Element/Public/ directory.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/scene.h" /*! Header file */
+#include <Element\scene.h>  /// Header file
 
 namespace opgs16 {
 namespace element {

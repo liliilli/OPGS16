@@ -26,22 +26,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Components/Private/sprite_renderer.cc
- * @brief Definition file of sprite_renderer.h
- *
- * @author Jongmin Yun
- * @log
- * 2018-03-07 Move file to /Component and Add boilerplate comments.
- * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
- */
+/// @file Component\sprite_renderer.cc
+/// @brief Definition file of sprite_renderer.h
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-03-07 Move file to /Component and Add boilerplate comments.
+/// 2018-04-06 
+/// Abandon IndexSize structure indicates texture index, 
+/// and replace it with one unsigned value.
 
-#include "../Public/sprite_renderer.h"              /*! Header file */
-#include "../Impl/sprite_renderer_impl.h"           /*! CSpriteRendererImpl */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
+#include <Component\sprite_renderer.h>  /// Header file
 
-namespace opgs16 {
-namespace component {
+/// ::opgs16::component::_internal::CSpriteRendererImpl
+#include <Component\Impl\sprite_renderer_impl.h>
+#include <Element\object.h> /// ::opgs16::element::CObject
+
+namespace opgs16::component {
 
 CSprite2DRenderer::CSprite2DRenderer(element::CObject& bind_object,
                                      const std::string& sprite_tag, const std::string& shader_tag,
@@ -85,5 +86,4 @@ void CSprite2DRenderer::SetInstanceCount(unsigned instance_count) {
 CSprite2DRenderer::~CSprite2DRenderer() = default;
 
 } /*! opgs16::component */
-} /*! opgs16 */
 

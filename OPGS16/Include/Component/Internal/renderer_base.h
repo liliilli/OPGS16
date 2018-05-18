@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Internal/renderer_base.h
+ * @file Components/Internal/renderer_base.h
  *
  * @log
  * 2018-03-15 Create file.
@@ -39,10 +39,12 @@
  * 2018-04-29 Add SetRenderFrameBuffer(const char*), Add GetRenderFrameBufferName();
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "component.h"          /*! opgs16::component::_internal::CComponent */
-#include "component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
-#include "../../Manager/Public/object_manager.h"    /*! opgs16::manager::MObjectManager */
-#include "../../Manager/Public/prerendering_manager.h"
+#include <Manager\object_manager.h>       /// ::opgs16::manager::MObjectManager
+#include <Manager\prerendering_manager.h> /// ::opgs16::manager::MPrerenderingManager
+
+/// opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <Component\Internal\component_macro.h>
 
 namespace opgs16 {
 namespace component {

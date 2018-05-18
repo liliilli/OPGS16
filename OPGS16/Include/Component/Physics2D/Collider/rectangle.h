@@ -18,7 +18,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <glm/glm.hpp>
-#include "../collider_2d.h"
+#include <Component\Physics2D\collider_2d.h>
 
 namespace opgs16 {
 namespace physics {

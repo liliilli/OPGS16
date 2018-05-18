@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Canvas/Public/canvas.h
+ * @file Element\Canvas\canvas.h
  * @brief Canvas frame object to display UI components.
  *
  * @author Jongmin Yun
@@ -41,8 +41,8 @@
  * 2018-04-17 Move file path to System/Element/Canvas/Public.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Headers/Fwd/objectfwd.h"  /*! glm::mat4, helper::CShaderNew, camera::CameraObject */
-#include "../../../Element/Public/ui_object.h"  /*! ::opgs16::element::UiObject */
+#include <Element\ui_object.h>  /// ::opgs16::element::UiObject
+#include <opgs16fwd.h>          /// forward declration
 
 namespace opgs16 {
 namespace element {

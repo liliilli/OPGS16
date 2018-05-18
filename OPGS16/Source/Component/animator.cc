@@ -26,22 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Components/Private/animator.cc
- * @author Jongmin Yun
- * @log
- * 2018-03-10 Create file.
- * 2018-04-06 Replace two-index with one-index as ReadFile::index.
- */
+/// @file Components/Private/animator.cc
+/// @author Jongmin Yun
+/// @log
+/// 2018-03-10 Create file.
+/// 2018-04-06 Replace two-index with one-index as ReadFile::index.
 
 #include <string>
 
-#include "../Public/animator.h"                     /*! Header file */
-#include "../../Components/Public/sprite_renderer.h"/*! opgs16::component::CSprite2DRenderer */
-#include "../../Manager/Public/resource_manager.h"  /*! opgs16::manager::MResourceManager */
-#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
-#include "../../Manager/Public/timer_manager.h"     /*! MTimerManager */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
+#include <Component\animator.h> /// Header file
+
+#include <Component\sprite_renderer.h>  /// opgs16::component::CSprite2DRenderer
+#include <Element\object.h>             /// ::opgs16::element::CObject
+#include <Manager\resource_manager.h>   /// ::opgs16::manager::MResourceManager
+#include <Manager\resource_type.h>      /// resource::STexture2D::IndexSize
+#include <Manager\timer_manager.h>      /// ::opgs16::manager::MTimerManager
 
 namespace opgs16 {
 namespace component {

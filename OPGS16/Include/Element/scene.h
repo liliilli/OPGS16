@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Public/scene.h
+ * @file Element/scene.h
  * @brief The file consist of basic scene API.
  *
  * All derived class based on Scene class can be used parameter of Application::PushScene().
@@ -47,10 +47,13 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <memory>                           /*! std::unique_ptr<> */
+
 #include <GL/glew.h>
-#include "../../Element/Public/object.h"    /*! ::opgs16::elent::CObject */
-#include "../../Headers/Fwd/objectfwd.h"    /*! ::opgs16::component::CCamera */
-#include "../../Helper/Public/template.h"   /*! SFINAE helper hedaer file. */
+
+#include <Element\object.h> /// ::opgs16::element::CObject
+
+#include <Helper\template.h>/// Type checking templates
+#include <opgs16fwd.h>      /// Forward declaration
 
 namespace opgs16 {
 namespace element {

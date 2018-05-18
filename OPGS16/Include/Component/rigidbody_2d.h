@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Components/Public/rigidbody_2d.h
+ * @file Components/rigidbody_2d.h
  *
  * @author Jongmin Yun
  * @log
@@ -45,10 +45,14 @@
 #include <list>
 #include <utility>
 #include <memory>
-#include "../Internal/component.h"
-#include "../Internal/component_macro.h"
-#include "../Physics2D/Collider/rectangle.h"    /*! collision::CRectangleCollider2D */
-#include "../../../Headers/Fwd/objectfwd.h"     /*! Object as reference */
+
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <Component\Internal\component_macro.h> /// Component macroes
+/// ::opgs16::component::collision::CRectangleCollider2D
+#include <Component\Physics2D\Collider\rectangle.h>
+
+#include <opgs16fwd.h>  /// Forward declration.
 
 namespace opgs16 {
 namespace component {

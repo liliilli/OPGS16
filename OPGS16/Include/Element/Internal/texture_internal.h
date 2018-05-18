@@ -38,7 +38,7 @@
  * 2018-03-11 Create file
  */
 
-#include <GL/glew.h>
+#include <GL\glew.h>
 
 namespace opgs16 {
 namespace element {

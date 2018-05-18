@@ -29,21 +29,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Manager/Internal/sound_internal.h
- * @brief
- *
- * @author Jongmin Yun
- * @log
- * 2018-03-04 Create file, move internal structure to it.
- * 2018-05-13 Add SSoundInfo FMOD::Channel* variable.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+/// @file System/Manager/Internal/sound_internal.h
+/// @brief
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-03-04 Create file, move internal structure to it.
+/// 2018-05-13 Add SSoundInfo FMOD::Channel* variable.
 
 #include <fmod.hpp>
 
-namespace opgs16 {
-namespace manager {
-namespace _internal {
+namespace opgs16::manager::_internal {
 
 /*! 
  * @enum ESoundType
@@ -85,8 +81,6 @@ public:
 };
 
 } /*! opgs16::manager::_internal */
-} /*! opgs16::manager */
-} /*! opgs16 */
 
 #endif // !OPGS16_SYSTEM_MANAGER_INTERNAL_SOUND_INTERNAL_H
 

@@ -30,14 +30,14 @@
  */
 
 /*!
- * @file System/Components/Internal/component_macro.h
+ * @file Components/Internal/component_macro.h
  * @brief Preprocessor meta programming impelmentation file.
  * @author Jongmin Yun
  * @log
  * 2018-03-07 Correction.
  */
 
-#include "../../Helper/Public/hash_function.h"  /*! HASH(), HASH_STR() */
+#include <Helper\hash_function.h>   /// HASH(), HASH_STR()
 
 #define TO_STRING(__TYPE__) #__TYPE__   /*! Convert arguement to string literal */
 

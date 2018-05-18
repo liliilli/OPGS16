@@ -14,10 +14,8 @@
  * 2018-04-21 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/prerendering_frame.h"   /*! Header file */
+#include <Element\prerendering_frame.h> /// Header file
 
 namespace opgs16::element {
-
-
 
 } /*! opgs16::element */

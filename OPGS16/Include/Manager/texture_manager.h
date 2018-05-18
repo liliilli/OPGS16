@@ -44,7 +44,8 @@
 #include <string>                   /*! std::string */
 #include <unordered_map>            /*! std::unordered_map */
 
-#include "../../Frame/texture.h"    /*! m_texture::CTexture2D */
+/// ::opgs16::texture::CTexture2D
+#include <Frame\texture.h>
 
 namespace opgs16 {
 namespace manager {

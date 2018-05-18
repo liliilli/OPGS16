@@ -36,21 +36,18 @@
  * 2018-04-03 Add default quad2d(gQuad) shader in bootstrapping.
  */
 
-#include "../Public/shader_manager.h"                   /*! Header file */
-#include "../../Shader/Default/Public/shader_quad2d.h"  /*! opgs16::builtin::shader::SGlobalQuad2D */
-#include "../../Shader/Default/Public/shader_font.h"    /*! opgs16::builtin::shader::SGlobalFont */
-#include "../../Shader/Default/Public/shader_postprocess_plain_quad.h"
+#include <Manager\shader_manager.h> /// Header file
 
-#if defined(_DEBUG)
-#include "../../Core/Public/logger.h"
-using opgs16::debug::PushLog;
-using opgs16::debug::LOG_TYPE_INFO;
-using opgs16::debug::LOG_TYPE_WARN;
-using opgs16::debug::LOG_TYPE_ERRO;
-#endif
+/// opgs16::builtin::shader::SGlobalQuad2D 
+#include <Shader\Default\shader_quad2d.h>
+/// opgs16::builtin::shader::SGlobalFont
+#include <Shader\Default\shader_font.h>
+/// opgs16::builtin::shader::SPostProcessPlainQuad
+#include <Shader\Default\shader_postprocess_plain_quad.h>
 
-namespace opgs16 {
-namespace manager {
+#include <Headers\import_logger.h>  /// import logger
+
+namespace opgs16::manager {
 
 ShaderManager::ShaderManager() {
     using namespace builtin::shader;
@@ -90,5 +87,4 @@ void ShaderManager::ReleaseShader(const std::string& shader_name) {
 }
 
 } /*! opgs16::manager */
-} /*! opgs16 */
 

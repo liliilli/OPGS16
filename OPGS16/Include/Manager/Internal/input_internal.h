@@ -40,9 +40,7 @@
 
 #include <string>   /*! std::string */
 
-namespace opgs16 {
-namespace manager {
-namespace _internal {
+namespace opgs16::manager::_internal {
 
 /*!
  * @struct BindingKeyInfo
@@ -98,7 +96,5 @@ inline BindingKeyInfo::KeyType GetKeyType(const std::string& token) {
 }
 
 } /*! opgs16::manager::_internal */
-} /*! opgs16::manager */
-} /*! opgs16 */
 
 #endif // !SYSTEM_MANAGER_INTERNAL_INPUT_INTERNAL_H

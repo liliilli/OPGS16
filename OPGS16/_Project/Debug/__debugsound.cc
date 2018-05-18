@@ -8,8 +8,8 @@
 * 2018-05-13 Create file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/__debugsound.h" /*! Header file */
-#include "../../Object/___Debug/Public/__s_debugcanvas.h"
+#include "__debugsound.h"   /// Header file
+#include "Object\__s_debugcanvas.h"
 
 namespace opgs16::builtin::sample {
 

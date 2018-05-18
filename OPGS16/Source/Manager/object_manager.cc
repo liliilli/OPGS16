@@ -34,16 +34,20 @@
  * 2018-03-11 Cope with ::element::CObject
  */
 
-#include "../Public/object_manager.h"   /*! Header file */
+#include <Manager\object_manager.h> /// Header file
 
 #include <stack>                        /*! std::stack */
 
-#include "../Public/scene_manager.h"    /*! opgs16::manager::MSceneManager */
-#include "../Public/setting_manager.h"  /*! opgs16::manager::MSettingManager */
-#include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
+/// ::opgs16::element::CObject
+#include <Element\object.h>
+/// ::opgs16::manager::MSceneManager
+#include <Manager\scene_manager.h> 
+/// ::opgs16::manager::MSettingManager
+#include <Manager\setting_manager.h>
 
 namespace opgs16 {
 namespace manager {
+
 namespace {
 using element::CObject;
 } /*! unnamed namespace */

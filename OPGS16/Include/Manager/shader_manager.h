@@ -42,9 +42,12 @@
 #include <memory>
 #include <unordered_map>
 
-#include "resource_manager.h"               /*! ::opgs16::manager::resource_manager */
-#include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
-#include "../../Shader/shader.h"
+/// ::opgs16::manager::resource_manager
+#include <Manager\resource_manager.h>
+/// ::opgs16::element::CObject
+#include <Element\object.h>
+/// ::opgs16::element::CShaderNew
+#include <Shader\shader.h>
 
 namespace opgs16 {
 namespace manager {

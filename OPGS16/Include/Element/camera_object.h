@@ -10,7 +10,8 @@
  * 2018-02-15 Create file and implement basic features.
  * 2018-03-11 Correction of object namespace position and path.
  */
-#include "../System/Element/Public/object.h"    /*! ::opgs16::element::CObject */
+
+#include <Element\object.h> /// ::opgs16::element::CObject
 
 /**
  * @class MainCameraObject

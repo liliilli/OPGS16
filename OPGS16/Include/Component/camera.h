@@ -40,9 +40,10 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <glm\glm.hpp>
-#include "../Internal/component.h"          /*! component::Component */
-#include "../Internal/component_macro.h"    /*! SET_UP_HASH_MEMBER_DERIVED() */
-#include "../../Headers/Fwd/objectfwd.h"    /*! Object as reference */
+
+#include <Component\Internal\component.h>   /// ::opgs16::component::CComponent
+#include <Component\Internal\component_macro.h> /// Component macroes
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 namespace component {

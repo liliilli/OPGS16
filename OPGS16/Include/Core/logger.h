@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Core/Public/logger.h
+ * @file Core\logger.h
  * @brief CLogger class declaration file.
  * @author Jongmin Yun
  * @log
@@ -40,8 +40,10 @@
  */
 
 #include <memory>
-#include "../Internal/logger_internal.h"    /*! ::opgs16::debug::_internal */
-#include "../../../Headers/Fwd/objectfwd.h" /*! Forward declaration */
+
+#include <Core\Internal\logger_internal.h>  /// ::opgs16::debug::_internal
+#include <opgs16fwd.h>  /// Forward declaration
+
 typedef int LOG_TYPE;
 
 namespace opgs16 {

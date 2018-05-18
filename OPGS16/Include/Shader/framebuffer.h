@@ -1,33 +1,35 @@
 #ifndef OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
 #define OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_FRAME_H
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
- * If you want to read full statements, read LICENSE file.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Shader/pp_frame.h
- * @brief Elementary post-processing frame to manage a thing to be rendered.
- * This file consists of application operation class and member API functions.
- *
- * @author Jongmin Yun
- * @log
- * 2018-04-20 Add boilerplate codes. Add virtual desctuctor to CFrameBuferFrame.
- * 2018-04-20 Change name of Initiate... functions to Generate... and SetShader().
- * 2018-04-20 Remove error flags and add log output.
- * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
- * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @file Shader/framebuffer.h
+/// @brief Elementary post-processing frame to manage a thing to be rendered.
+/// This file consists of application operation class and member API functions.
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-04-20 Add boilerplate codes. Add virtual desctuctor to CFrameBuferFrame.
+/// 2018-04-20 Change name of Initiate... functions to Generate... and SetShader().
+/// 2018-04-20 Remove error flags and add log output.
+/// 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+/// 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
+///
 
 #include <array>	/** std::array */
 #include <memory>	/** std::shared_ptr */
-#include "shader.h"	/** helper::CShaderNew */
-#include "../Frame/texture.h"   /*! texture::CTexture2D */
-#include "../../Headers/Fwd/objectfwd.h"    /*! CVertexArrayObject */
-#include "shader_wrapper.h" /*! CShaderWrapper */
+
+#include <Shader\shader.h>          /// ::opgs16::element::CShaderNew
+#include <Shader\shader_wrapper.h>  /// ::opgs16::element::CShaderWrapper
+#include <Frame\texture.h>          /// ::opgs16::texture::CTexture2D
+
+#include <opgs16fwd.h>      /// Forward declaration
 
 namespace opgs16::element {
 

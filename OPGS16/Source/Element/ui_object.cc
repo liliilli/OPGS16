@@ -32,8 +32,10 @@
  * 2018-03-11 Add boilerplate comment, replace it within ::opgs16::element.
  */
 
-#include "../Public/ui_object.h"    /*! Header file */
-#include <array>                    /*! std::array */
+#include <Element\ui_object.h>  /// Header file
+
+#include <array>                /// std::array
+
 #include <glm\glm.hpp>
 
 namespace opgs16 {

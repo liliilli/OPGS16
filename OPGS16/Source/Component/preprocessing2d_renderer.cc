@@ -7,15 +7,17 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-* @file System/Element/Private/preprocessing2d_renderer.cc
+* @file Component/preprocessing2d_renderer.cc
 *
 * @log
 * 2018-04-29 Create file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/preprocessing2d_renderer.h"             /*! Header file */
-#include "../../Manager/Public/shader_manager.h"            /*! ::opgs16::manager::ShaderManager */
-#include "../../Components/Public/preprocessing_getter.h"   /*! ::opgs16::component::CPreProcessingGetter */
+#include <Component\preprocessing2d_renderer.h> /// Header file
+
+#include <Manager\shader_manager.h> /// ::opgs16::manager::MShaderManager
+/// ::opgs16::component::CPreProcessingGetter
+#include <Component\preprocessing_getter.h>
 
 namespace opgs16::component {
 
@@ -46,5 +48,3 @@ void CPreProcessing2DRenderer::Render() {
 }
 
 } /*! opgs16::component */
-
-#include "../Public/preprocessing2d_renderer.h"

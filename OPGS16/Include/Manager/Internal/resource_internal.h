@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Manager/Internal/resource_internal.h
+ * @file Manager/Internal/resource_internal.h
  * @author Jongmin Yun
  * @log
  * 2018-03-03 Create file.
@@ -38,9 +38,7 @@
 
 #include <string_view>  /*! std::string_view, operator""sv */
 
-namespace opgs16 {
-namespace resource {
-namespace _internal {
+namespace opgs16::resource::_internal {
 
 using namespace std::string_view_literals;
 
@@ -71,7 +69,5 @@ enum class EResourceType {
 };
 
 } /*! opgs16::resource::_internal */
-} /*! opgs16::resource */
-} /*! opgs16 */
 
 #endif // !SYSTEM_MANAGER_INTERNAL_RESOURCE_INTERNAL_H

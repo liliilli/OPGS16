@@ -9,14 +9,15 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-* @file System/Element/Public/preprocessing2d_renderer.h
+* @file Component\preprocessing2d_renderer.h
 *
 * @log
 * 2018-04-29 Create file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Internal/renderer_base.h"      /*! ::opgs16::component::_internal::CRendererBase */
-#include "../../../Headers/Fwd/objectfwd.h" /*! forward declaration */
+/// ::opgs16::component::_internal::CRendererBase
+#include <Component\Internal\renderer_base.h>
+#include <opgs16fwd.h> /// Forward declaration
 
 namespace opgs16::component {
 

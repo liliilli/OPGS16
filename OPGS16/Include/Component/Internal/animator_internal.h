@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Components/Internal/animator_internal.h
+ * @file Components/Internal/animator_internal.h
  * @author Jongmin Yun
  * @log
  * 2018-03-10 Create file, Add state enum.

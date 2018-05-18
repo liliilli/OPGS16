@@ -38,8 +38,9 @@
  * 2018-03-15 Create file, Make class.
  */
 
-#include "../Internal/renderer_base.h"      /*! opgs16::component::_internal::CComponent */
-#include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\renderer_base.h>
+#include <Component\Internal\component_macro.h> /// Component macroes
 
 namespace opgs16 {
 namespace component {

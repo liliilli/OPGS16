@@ -35,10 +35,12 @@
  * 2018-03-04 Refactoring.
  */
 
-#include <string_view>                                  /*! std::string_view */
+#include <Manager\postprocessing_manager.h>   /// Header file
 
-#include "../Public/postprocessing_manager.h"                       /*! Header file */
-#include "../../Shader/PostProcessing/pp_scaling.h"
+#include <string_view>  /// std::string_view
+
+/// ::opgs16::builtin::postprocessing::PpEffectScaling
+#include <Shader\PostProcessing\pp_scaling.h>
 
 namespace opgs16 {
 namespace manager {
@@ -47,9 +49,6 @@ namespace {
 
 using PPManager = MPostProcessingManager;
 using sequence_type = MPostProcessingManager::sequence_type;
-
-using namespace std::string_view_literals;
-constexpr std::string_view scale_effect{ "__df__"sv };
 
 } /*! unnamed namespace */
 

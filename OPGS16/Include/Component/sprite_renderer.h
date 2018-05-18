@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System\Object\sprite_renderer.h
+ * @file Component\sprite_renderer.h
  * @brief The file contains sprite renderer class members.
  *
  * @author Jongmin Yun
@@ -45,12 +45,14 @@
 #include <string>
 #include <memory>
 
-#include "../Internal/component.h"          /*! opgs16::component::_internal::CComponent */
-#include "../Internal/renderer_base.h"      /*! ::opgs16::component::_internal::CRendererBase */
-#include "../Internal/component_macro.h"    /*! SET_UP_TYPE_MEMBER() */
-#include "../../Headers/Fwd/objectfwd.h"    /*! CSpriteRendererImpl
-                                              * ShaderWraper */
-#include "../../Manager/Public/resource_type.h"     /*! resource::STexture2D::IndexSize */
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <Component\Internal\component_macro.h> /// Component macroes
+/// ::opgs16::component::_internal::CRendererBase
+#include <Component\Internal\renderer_base.h>
+
+#include <Manager\resource_type.h>
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 namespace component {

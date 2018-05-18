@@ -43,10 +43,11 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include <unordered_map>
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include "../../Headers/Fwd/lightfwd.h"
-#include "../../Headers/Fwd/objectfwd.h"
+
+#include <GL\glew.h>
+#include <glm\glm.hpp>
+
+#include <opgs16fwd.h> /// Forward declaration
 
 namespace opgs16 {
 namespace element {

@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Impl/sprite_renderer_impl.h
+ * @file Components/Impl/sprite_renderer_impl.h
  * @brief Private implementation file.
  *
  * @author Jongmin Yun
@@ -40,11 +40,12 @@
  * 2018-04-08 Supporting change of shader on running.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../Frame/vertex_array_object.h"    /*! CVertexArrayObject */
-#include "../../Headers/Fwd/objectfwd.h"        /*! texture::CTexture2D */
-#include "../../Manager/Public/resource_type.h" /*! resource::STexture2D::IndexSize */
-#include "../../Manager/Public/texture_manager.h"
-#include "../../Shader/shader_wrapper.h"        /*! CShaderWrapper */
+#include <Frame\vertex_array_object.h>  /// CVertexArrayObject
+
+#include <Manager\resource_type.h>      /// resource::STextrue2D::IndexSize
+#include <Manager\texture_manager.h>    /// ::opgs16::manager::MTextureManager
+#include <Shader\shader_wrapper.h>      /// ::opgs16::shader::CShaderWrapper
+#include <opgs16fwd.h>                  /// forward declaration 
 
 namespace opgs16 {
 namespace component {

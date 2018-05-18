@@ -8,8 +8,8 @@
  * @date 2018-02-14
  */
 
-#include "Fwd/objectfwd.h"                      /*! Forward declaration */
-#include "../System/Components/Internal/component_macro.h"  /*! Macros for hash member */
-#include "../System/Components/Public/script_frame.h"  /*! Base script frame */
+#include <opgs16fwd.h>  /// Forward declaration
+#include <Component\Internal\component_macro.h> /// 
+#include <Component\script_frame.h> /// Base script frame.
 
 #endif // !OPGS16_HEADERS_SCRIPT_COMMON_H

@@ -36,14 +36,15 @@
  * 2018-04-02 std::string to std::wstring in debug log output.
  */
 
-#include "../Public/setting_manager.h"  /*! Header file */
+#include <Manager\setting_manager.h>    /// Header file
 
-#include <iostream> /*! std::cout */
-#include <fstream>  /*! std::ifstream */
-#include <sstream>  /*! std::stringstream */
-#include <nlohmann/json.hpp> /*! nlohmann::json */
-#include "../../Core/Public/logger.h"   /*! ::opgs16::debug::logger */
-#include "../../Core/Internal/logger_internal.h"
+#include <iostream> /// std::cout 
+#include <fstream>  /// std::ifstream
+#include <sstream>  /// std::stringstream
+
+#include <nlohmann\json.hpp> /// nlohmann::json library
+
+#include <Headers\import_logger.h>
 
 namespace opgs16 {
 namespace manager {

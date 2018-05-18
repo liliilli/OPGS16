@@ -26,19 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Physics2D/collider_2d.cc
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-17 Add CollisionLayer__ functions.
- * 2018-04-17 Move ::collider::CCollider2D functions to ::opgs16::physics::CCollider2D.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+/// \file Components/Physics2D/collider_2d.cc
+/// \author Jongmin Yun
+///
+/// \log
+/// 2018-03-17 Add CollisionLayer__ functions.
+/// 2018-04-17 Move ::collider::CCollider2D functions to ::opgs16::physics::CCollider2D.
+/// \todo Remove Exception.
 
-#include "collider_2d.h"
+#include <Component\Physics2D\collider_2d.h>    /// Header file
 
-#include <stdexcept>
-#include "../../Manager/Public/setting_manager.h"   /*! ::opgs16::manager::MSettingManager */
+#include <stdexcept>                    /// What???????
+#include <Manager\setting_manager.h>    /// ::opgs16::manager::MSettingManager
 
 namespace opgs16 {
 namespace physics {

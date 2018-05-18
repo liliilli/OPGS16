@@ -30,13 +30,13 @@
  */
 
 /*!
- * @file System/Core/Impl/logger_impl.h
+ * @file Core/Impl/logger_impl.h
  * @author Jongmin Yun
  * @log
  * 2018-03-11 Create file
  */
 
-#include <spdlog/spdlog.h>
+#include <spdlog\spdlog.h>
 
 namespace opgs16 {
 namespace debug {

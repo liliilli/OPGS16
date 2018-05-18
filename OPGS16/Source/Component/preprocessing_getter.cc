@@ -7,14 +7,15 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-* @file System/Element/Private/preprocessing_getter.cc
+* @file Component/preprocessing_getter.cc
 *
 * @log
 * 2018-04-29 Create file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/preprocessing_getter.h"             /*! Header file */
-#include "../../Manager/Public/prerendering_manager.h"  /*! ::opgs16::manager::preprocessing */
+#include <Component\preprocessing_getter.h> /// Header file
+/// ::opgs16::manager::MPreprocessingManager
+#include <Manager\prerendering_manager.h>   
 
 namespace opgs16::component {
 

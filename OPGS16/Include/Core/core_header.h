@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Core/Public/core_header.h
+ * @file Core/core_header.h
  * @brief Header file list to include on application.cc
  *
  * @author Jongmin Yun
@@ -39,23 +39,23 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "../../Element/Canvas/Public/canvas.h" /*! ::opgs16::element::canvas::CCanvas */
+#include <Element\Canvas\canvas.h>
+#include <Manager\font_manager.h>
+#include <Manager\input_manager.h>
+#include <Manager\object_manager.h>
+#include <Manager\physics_manager.h>
+#include <Manager\postprocessing_manager.h>
+#include <Manager\resource_manager.h>
+#include <Manager\scene_manager.h>
+#include <Manager\setting_manager.h>
+#include <Manager\shader_manager.h>
+#include <Manager\sound_manager.h>
+#include <Manager\time_manager.h>
+#include <Manager\timer_manager.h>
+
 #include "../../Objects/Debug/debug_canvas.h"     /*! CanvasDebug */
-//#include "System\Boot\Scene\__boot.h"       /*! __BOOT scene */
 #include "../../System/Shader/PostProcessing/pp_convex.h"
 #include "../../System/Shader/PostProcessing/pp_sinewave.h"
 #include "../../System/Shader/PostProcessing/pp_gray.h"
-#include "../../System/Manager/Public/font_manager.h"    /*! MFontManager */
-#include "../../System/Manager/Public/input_manager.h"   /*! MInputManager */
-#include "../../System/Manager/Public/object_manager.h"  /*! MObjectManager */
-#include "../../System/Manager/Public/physics_manager.h" /*! MPhysicsManager*/
-#include "../../System/Manager/Public/postprocessing_manager.h" /*! opgs16::manager::MPostProcessingManager */
-#include "../../System/Manager/Public/resource_manager.h"/*! MResourceManager */
-#include "../../System/Manager/Public/scene_manager.h"   /*! MSceneManager */
-#include "../../System/Manager/Public/setting_manager.h" /*! MSettingManager */
-#include "../../System/Manager/Public/shader_manager.h"  /*! ShaderManager */
-#include "../../System/Manager/Public/sound_manager.h"   /*! MSoundManager */
-#include "../../System/Manager/Public/time_manager.h"    /*! MTimeManager */
-#include "../../System/Manager/Public/timer_manager.h"   /*! MTimerManager */
 
 #endif

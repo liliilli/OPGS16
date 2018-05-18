@@ -1,28 +1,24 @@
 #ifndef OPGS16_CANVAS_IMPL_TEXT_IMPL_H
 #define OPGS16_CANVAS_IMPL_TEXT_IMPL_H
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
- * If you want to read full statements, read LICENSE file.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/Impl/text_impl.h
- * @brief Poitner to implementation file of ::opgs16::element::canvas::CText.
- * @log
- * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+/// @file Element/Canvas/Impl/text_impl.h
+/// @brief Pointer to implementation file of ::opgs16::element::canvas::CText.
+/// @log
+/// 2018-04-17 Add comments and move definition functions to 
+/// ::opgs16::element::canvas namespace.
 
-#include <string>       /** std::string */
-#include <glm/glm.hpp>  /** glm::vec3 */
-#include "../../../Headers/Fwd/objectfwd.h" /** Canvas::CText */
+#include <string>       /// std::string
 
-namespace opgs16 {
-namespace element {
-namespace canvas {
-namespace _internal {
+#include <glm\glm.hpp>  /// glm::vec3
+#include <opgs16fwd.h>  /// Forward declaration
+
+namespace opgs16::element::canvas::_internal {
+
 class CTextImpl final {
 public:
     explicit CTextImpl(CText&);
@@ -60,9 +56,7 @@ private:
 
     CText& m_handle_ref;         // Reference of Text handle.
 };
+
 } /*! opgs16::element::canvas::_internal */
-} /*! opgs16::element::canvas */
-} /*! opgs16::element */
-} /*! opgs16 */
 
 #endif // !OPGS16_CANVAS_IMPL_TEXT_IMPL_H

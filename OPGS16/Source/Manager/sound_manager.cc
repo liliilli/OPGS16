@@ -36,16 +36,17 @@
  * 2018-05-13 Changed std::cerr to PUSH_LOG_ERRO logger routine.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/sound_manager.h"        /*! Header file */
+#include <Manager\sound_manager.h>  /// Header file
 
-#include <string>                           /*! std::string */
+#include <string>   /// std::string
 
-#include "../Public/resource_manager.h"     /*! MResourceManager */
-#include "../Public/resource_type.h"
-#include "../../../Headers/import_logger.h" /*! import logger in debug mode. */
+/// ::opgs16::manager::MResourceManager
+#include <Manager\resource_manager.h>
+#include <Manager\resource_type.h>
 
-namespace opgs16 {
-namespace manager {
+#include <Headers\import_logger.h>  /// import logger
+
+namespace opgs16::manager {
 
 namespace {
 
@@ -233,5 +234,4 @@ MSoundManager::~MSoundManager() {
 }
 
 } /*! opgs16::manager */
-} /*! opgs16 */
 

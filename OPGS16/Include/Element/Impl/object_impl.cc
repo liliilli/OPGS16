@@ -26,19 +26,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Object/Impl/Private/object_impl.cc
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+ * @file Object/Impl/object_impl.cc
  * @brief Implementation file of object_impl.h
  * @author Jongmin Yun
  * @log
  * 2018-03-05 Add rendering layer member functions.
  * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
  * 2018-04-18 Change function and mechanism of rotation.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "object_impl.h"                    /*! Header file */
-#include <glm/gtc/matrix_transform.hpp>     /*! glm::rotate */
-#include "../../Manager/Public/setting_manager.h"  /*! MSettingManager */
+#include <Element\Impl\object_impl.h>   /// Header file
+
+#include <glm\gtc\matrix_transform.hpp> /// glm::rotate
+#include <Manager\setting_manager.h>    /// ::opgs16::manager::MSettingManager
 
 namespace opgs16 {
 namespace element {

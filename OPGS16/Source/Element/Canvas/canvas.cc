@@ -13,18 +13,17 @@
  * 2018-04-17 Move file path to System/Element/Canvas/Private.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/canvas.h"   /*! Header file */
-#include <array>                /*! std::array */
+#include <Element\Canvas\canvas.h>  /// Header file
 
-#include "../../../Components/Public/camera.h" /*! ::opgs16::component::CCamera */
+#include <array>                    /// std::array
+
+#include <Component\camera.h>       /// ::opgs16::component::CCamera
 
 namespace {
 constexpr std::array<GLint, 4> k_viewport_size{0, 0, 256, 224};
 } /*! unnamed namespace */
 
-namespace opgs16 {
-namespace element {
-namespace canvas {
+namespace opgs16::element::canvas {
 
 CCanvas::CCanvas() : m_is_size_changed{ true } {
     using Camera = component::CCamera;
@@ -55,5 +54,3 @@ const glm::mat4 CCanvas::GetUiCameraPVMatrix() const {
 }
 
 } /*! opgs16::element::canvas */
-} /*! opgs16::element */
-} /*! opgs16 */

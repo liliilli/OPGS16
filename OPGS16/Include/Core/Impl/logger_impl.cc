@@ -27,21 +27,17 @@
  */
 
 /*!
- * @file System/Core/Impl/logger_impl.cc
+ * @file Core/Impl/logger_impl.cc
  * @author Jongmin Yun
  * @log
  * 2018-03-11 Create file
  */
 
-#include "logger_impl.h"    /*! Header file */
+#include <Core\Impl\logger_impl.h>  /// Header file
 
-namespace opgs16 {
-namespace debug {
-namespace _internal {
+namespace opgs16::debug::_internal {
 
 CLoggerImpl::CLoggerImpl() : m_console{ spdlog::stdout_color_mt("OPGS16") } {}
 
 } /*! opgs16::debug::_internal */
-} /*! opgs16::debug */
-} /*! opgs16 */
 

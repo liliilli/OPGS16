@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Core/Public/core_setting.h
+ * @file Core/core_setting.h
  * @brief Have been written about application global setting components and management class.
  * @author Jongmin Yun
  *
@@ -41,7 +41,8 @@
 #include <array>        /*! std::array */
 #include <type_traits>  /*! std::underlying_type<> */
 
-#include "../../Helper/Public/switch.h"     /*! opgs16::Switch enum class */
+#include <Helper\switch.h>  /// ::opgs16::Switch
+
 #define _OPGS16_VERSION_MAJOR 0
 #define _OPGS16_VERSION_MINOR 1
 #define _OPGS16_VERSION_FIXED 0

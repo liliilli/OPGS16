@@ -8,15 +8,15 @@
 * If you want to read full statements, read LICENSE file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 * @file System/Boot/Object/___2/Public/__s_background.h
 *
 * @log
 * 2018-04-29 Create file.
-*----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+*----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Element/Public/object.h"      /*! ::ogps16::element::CObject */
-#include "../../../../../Headers/Fwd/objectfwd.h"   /*! forward declaration */
+#include <Element\object.h> /// ::ogps16::element::CObject
+#include <opgs16fwd.h>      /// Forward declaration
 
 namespace opgs16::builtin::sample {
 

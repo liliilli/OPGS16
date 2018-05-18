@@ -30,7 +30,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Public/object.h
+ * @file Element/object.h
  * @brief The file consist of basic scene API.
  *
  * Object abstract class stores common values and inheritable by derived each object class.
@@ -56,11 +56,13 @@
 
 #include <glm/glm.hpp>
 
-#include "../../System/Components/Internal/component.h" /*! opgs16::component::_internal::CComponent */
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+/// ::opgs16::element::_internal::EDirection
+#include <Element\Internal\direction_type.h>
 
-#include "../Internal/direction_type.h"     /*! opgs16::element::_internal::EDirection */
-#include "../../Helper/Public/template.h"
-#include "../../../Headers/Fwd/objectfwd.h" /*! forwarding declaration */
+#include <Helper\template.h>    /// Type checking template
+#include <opgs16fwd.h>          /// Forward declaration
 
 namespace opgs16 {
 namespace element {

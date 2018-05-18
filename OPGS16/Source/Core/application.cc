@@ -33,16 +33,39 @@
  * 2018-04-14 Add file information comment and Removed unused <iostream> header file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/application.h"              /*! Header file */
+#include <Core\application.h>   /// Header file
 
-#include <string_view>                          /*! std::string_view */
-#include "../Public/core_header.h"              /*! Subsequential header files */
-#include "../../Manager/Public/prerendering_manager.h"
-#include "../Public/core_setting.h"
-#include "../../Boot/Scene/Public/__boot.h"     /*! opgs16::manifest::sample::boot */
-#include "../../Boot/Scene/Public/__debugsound.h"   /*! opgs16::manifest::sample::__DEBUGSOUND */
-#include "../../../Headers/import_logger.h"     /*! import loggers */
-#include "../../../manifest.h"                  /*! opgs16::manifest */
+#include <string_view>          /// std::string_view
+
+#include <Manager\font_manager.h>
+#include <Manager\input_manager.h>
+#include <Manager\object_manager.h>
+#include <Manager\physics_manager.h>
+#include <Manager\postprocessing_manager.h>
+#include <Manager\prerendering_manager.h>
+#include <Manager\resource_manager.h>
+#include <Manager\scene_manager.h>
+#include <Manager\setting_manager.h>
+#include <Manager\shader_manager.h>
+#include <Manager\sound_manager.h>
+#include <Manager\time_manager.h>
+#include <Manager\timer_manager.h>
+
+#include <Shader\PostProcessing\pp_convex.h>
+#include <Shader\PostProcessing\pp_sinewave.h>
+#include <Shader\PostProcessing\pp_gray.h>
+
+#include <Core\core_setting.h>  /// ::opgs16 core setting file
+
+#include <Headers\import_logger.h>  /// import logger
+#include <..\manifest.h>        /// ::opgs16::manifest
+
+#include <Debug\debug_canvas.h>
+/// opgs16::manifest::sample::boot
+#include <Core\Boot\__boot.h>
+
+/// \Todo : Remove this
+#include "..\..\_Project\Debug\__debugsound.h"
 
 #if defined(_INITIAL_SCENE_INCLUDE_PATH)
 #include _INITIAL_SCENE_INCLUDE_PATH

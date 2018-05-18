@@ -42,10 +42,14 @@
  */
 
 #include <vector>       /*! std::vector */
-#include <GL/glew.h>    /*! GL specific types */
-#include "../Element/Internal/texture_internal.h"   /*! ::opgs16::element::texture::_internal */
-#include "../Manager/Public/resource_type.h"        /*! ::opgs16::resource */
-#include "../../Headers/Fwd/objectfwd.h"            /*! ::opgs16::resource::STexture2D structure */
+
+#include <GL\glew.h>    /*! GL specific types */
+
+/// ::opgs16::element::texture::_internal
+#include <Element\Internal\texture_internal.h>
+
+#include <Manager\resource_type.h>
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16 {
 /*!

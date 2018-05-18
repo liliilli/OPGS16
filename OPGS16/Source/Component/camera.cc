@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
  * @file System/Components/Private/camera_object.cc
  * @brief Implementation of Camera component.
  *
@@ -35,13 +35,14 @@
  * 2018-02-14 Create file and implement basic features.
  * 2018-03-07 Move class implementation into ::opgs16::component.
  * 2018-04-16 Implement functions, SetRear(), SetFar(), and SetFov().
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+ *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/camera.h"                   /*! Header file */
+#include <Component\camera.h>       /// Header file
 
-#include <glm/gtc/matrix_transform.hpp>         /*! glm::ortho */
-#include "../../Manager/Public/scene_manager.h" /*! MSceneManager */
-#include "../../../Headers/import_logger.h"     /*! import logger in debug mode. */
+#include <glm\gtc\matrix_transform.hpp>         /*! glm::ortho */
+
+#include <Manager\scene_manager.h>  /// ::opgs16::manager::MSceneManager
+#include <Headers\import_logger.h>  /// import logger
 
 namespace opgs16 {
 namespace component {

@@ -27,7 +27,7 @@
  */
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Internal/renderer_base.cc
+ * @file Components/Internal/renderer_base.cc
  *
  * @author Jongmin Yun
  * @log
@@ -36,12 +36,16 @@
  * 2018-04-29 Implement SetRenderFrameBuffer(const char*), Add GetRenderFrameBufferName()
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "renderer_base.h"                              /*! Header file */
-#include "../../Element/Public/object.h"                /*! ::opgs16::element::CObject */
-#include "../../Manager/Public/setting_manager.h"       /*! ::opgs16::manager::MSettingManager */
-#include "../../Manager/Public/prerendering_manager.h"  /*! ::opgs16::manager::prerendering namespace */
-#include "../../Manager/Public/resource_manager.h"      /*! ::opgs16::manager::MResourceManager */
-#include "../../../Headers/import_logger.h"             /*! import logger in debug mode */
+#include <Component\Internal\renderer_base.h>   /// Header file
+
+/// ::opgs16::element::CObject
+#include <Element\object.h>             
+/// ::opgs16::manager::MSettingManager
+#include <Manager\setting_manager.h>
+/// ::opgs16::manager::prerendering namespace
+#include <Manager\prerendering_manager.h>
+
+#include <Headers\import_logger.h>
 
 namespace opgs16 {
 namespace component {

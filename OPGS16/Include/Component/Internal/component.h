@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System/Components/Internal/component.h
+ * @file Components/Internal/component.h
  * @author Jongmin Yun
  * @log
  * 2018-02-13 Create file and implement fundamental logic.
@@ -38,8 +38,9 @@
  * 2018-03-10 Make components bind Object explicitly.
  */
 
-#include "component_macro.h"                /*! SET_UP_HASH_VALUE(__TYPE__) */
-#include "../../../Headers/Fwd/objectfwd.h" /*! Forward declaration */
+#include <opgs16fwd.h>                      /// Forward declaration
+
+#include <Component\Internal\component_macro.h>
 
 namespace opgs16 {
 /*!

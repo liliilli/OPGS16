@@ -12,9 +12,10 @@
  * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "text_impl.h"                  /*! Header file */
-#include "../Canvas/Public/text.h"      /*! opgs16::element::canvas::CText */
-#include "../../../System/Manager/Public/font_manager.h"
+#include <Element\Impl\text_impl.h> /// Header file
+
+#include <Element\Canvas\text.h>    /// ::opgs16::element::canvas::CText
+#include <Manager\font_manager.h>   /// ::opgs16::manager::MFontManager
 
 namespace opgs16 {
 namespace element {
@@ -23,7 +24,7 @@ namespace _internal {
 CTextImpl::CTextImpl(CText& handle_ref) : m_handle_ref{ handle_ref } {}
 
 void CTextImpl::SetFontSize(const unsigned size) {
-    unsigned def = opgs16::manager::k_default_font_size;
+    unsigned def = manager::k_default_font_size;
     m_handle_ref.SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
 }
 

@@ -35,15 +35,16 @@
  * 2018-03-03 Refactoring.
  */
 
-#include "../Public/font_manager.h"   /*! Header file */
+#include <Manager\font_manager.h>     // Header file.
+
 #include <functional>
 #include <sstream>
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm\gtc\matrix_transform.hpp>
 
-#include "../Public/resource_manager.h"     /*! opgs16::manager::MResourceManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../../Core/Public/core_setting.h"
+#include <Core\core_setting.h>
+#include <Manager\resource_manager.h> // opgs16::manager::MResourceManager
+#include <Manager\shader_manager.h>   // opgs16::manager::ShaderManager
 
 namespace opgs16 {
 namespace manager {

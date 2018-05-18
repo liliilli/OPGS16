@@ -1,5 +1,5 @@
-#include "camera_object.h"                      /*! Header file */
-#include "../System/Components/Public/camera.h" /*! component::CCamera */
+#include "camera_object.h"      /// Header file
+#include <Component\camera.h>   /// ::opgs16::component::CCamera
 
 MainCameraObject::MainCameraObject() {
     using Camera = opgs16::component::CCamera;

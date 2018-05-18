@@ -30,7 +30,7 @@
  */
 
 /*!
- * @file System\Object\ui_object.h
+ * @file Element\ui_object.h
  * @brief Base clase for m_object_list inherit UiObject. (UI component)
  *
  * @author Jongmin Yun
@@ -40,8 +40,8 @@
  */
 
 #include <GL/glew.h>
-#include "object.h"                                     /*! CObject */
-#include "../../GlobalObjects/Interface/i_originable.h" /*! IOriginable */
+#include <Element\object.h> /// ::opgs16::element::CObject
+#include <Element\Interface\i_originable.h> /// IOriginable
 
 namespace opgs16 {
 namespace element {

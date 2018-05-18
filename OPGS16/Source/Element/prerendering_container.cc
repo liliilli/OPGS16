@@ -14,11 +14,15 @@
 * 2018-04-29 Create file. Implement basic mechanisms of CPreRenderingContainer.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/prerendering_container.h"   /*! Header file */
-#include "../../Element/Public/object.h"        /*! ::opgs16::element::CObject */
+#include <Element\prerendering_container.h> /// Header file
+
 #include <utility>
 
+/// ::opgs16::element::CObject
+#include <Element\object.h>
+
 namespace opgs16::element {
+
 void CPreRenderingContainer::Initialize() {
     // Make final output texture.
     std::unique_ptr<CFrameBuferFrame> final_frame_buffer = std::make_unique<CFrameBuferFrame>();

@@ -36,7 +36,7 @@
  * 2018-03-04 Create file, move MFontManager::Character to this file.
  */
 
-#include <glm/vec2.hpp> /*! glm::ivec2 */
+#include <glm\vec2.hpp> /*! glm::ivec2 */
 
 namespace opgs16 {
 namespace manager {

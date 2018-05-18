@@ -34,13 +34,14 @@
  * 2018-03-04 Refactoring.
  */
 
-#include "../Public/texture_manager.h"  /*! Header file */
+#include <Manager\texture_manager.h>    /// Header file
 
-#include "../../Frame/texture.h"
-#include "../../Manager/Public/resource_manager.h"
+/// ::opgs16::texture::CTexture2D
+#include <Frame\texture.h>
+/// ::opgs16::manager::MResourceManager
+#include <Manager\resource_manager.h>
 
-namespace opgs16 {
-namespace manager {
+namespace opgs16::manager {
 
 TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
 	if (!DoesTextureExist(name)) {
@@ -62,4 +63,3 @@ void TextureManager::Clear() {
 }
 
 } /*! opgs16::manager */
-} /*! opgs16 */

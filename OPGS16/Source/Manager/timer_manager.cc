@@ -35,11 +35,10 @@
  * 2018-03-04 Refactoring.
  */
 
-#include "../Public/timer_manager.h"  /*! Header file */
-#include "../Public/time_manager.h"   /*! opgs16::manager::MTimeManager */
+#include <Manager\timer_manager.h>  /// Header file
+#include <Manager\time_manager.h>   /// ::opgs16::manager::MTimeManager
 
-namespace opgs16 {
-namespace manager {
+namespace opgs16::manager {
 
 using _internal::Status;
 
@@ -94,4 +93,3 @@ bool MTimerManager::DetachTimer(element::CTimerHandle& handle) {
 }
 
 } /*! opgs16::manager */
-} /*! opgs16 */

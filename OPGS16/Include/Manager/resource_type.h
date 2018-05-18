@@ -42,7 +42,7 @@
 #include <list>         /*! std::list */
 #include <string>       /*! std::string */
 
-#include <GL/glew.h>
+#include <GL\glew.h>
 #include <vector>
 
 namespace opgs16 {

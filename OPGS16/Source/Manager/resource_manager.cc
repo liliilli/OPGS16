@@ -27,7 +27,7 @@
  */
 
 /*!
- * @file System\Manager\resource_manager.h
+ * @file Manager\resource_manager.cc
  * @author Jongmin Yun
  *
  * @log
@@ -37,20 +37,22 @@
  * 2018-04-05 Get Texture2D to store atlas information in default.
  */
 
-#include "../Public/resource_manager.h"   /*! Header file */
+#include <Manager\resource_manager.h>   /// Header file
 
 #include <fstream>      /*! std::ifstream */
 #include <sstream>      /*! std::stringstream */
 #include <stdexcept>	/*! std::runtime_error */
 #include <utility>		/*! std::pair */
 
-#include "../../../__ThirdParty/nlohmann/json.hpp"  /*! Third-party json library */
+#include "..\..\..\__ThirdParty\nlohmann\json.hpp"  /*! Third-party json library */
 
-#include "../Internal/resource_internal.h"
-#include "../../../Headers/import_logger.h" /*! import logger in debug mode */
-#define NOT !
+/// ::opgs16::resource::_internal namespace
+#include <Manager\Internal\resource_internal.h>
+/// import logger in debug mode
+#include <Headers\import_logger.h> 
 
 namespace opgs16 {
+
 namespace { /*! Helper free function. */
 
 using resource::_internal::EResourceType;
@@ -127,7 +129,7 @@ resource::STexture2DAtlas MakeTexture2DContainerDefault(std::stringstream& line_
 template <typename T>
 std::vector<T> CreateAtlasInformationList(nlohmann::json& atlas_json, const std::string& list_name,
                                           resource::STexture2DAtlas* resource) {
-    if (NOT atlas_json.at(list_name).is_array()) {
+    if (!atlas_json.at(list_name).is_array()) {
         PushLog(LOG_TYPE_ERRO, L"Invalid type specifier, offset_x must be array.");
         throw std::runtime_error("Invalid type specifier, offset_x must be array.");
     }
@@ -309,7 +311,7 @@ resource::SFont MakeFontContainer(std::stringstream& line_stream, const std::str
 resource::SAnimation MakeAnimationContainer(std::stringstream& line_stream, const std::string& global_path) {
     std::string path; line_stream >> path; path = global_path + path;
     std::ifstream animation_file{ path, std::ios_base::in };
-    if (NOT animation_file.good()) {
+    if (!animation_file.good()) {
 #if defined(_DEBUG)
         {
             std::wstring log{ L"Failed to load animation file. " };
@@ -458,7 +460,7 @@ void MResourceManager::PushAnimation(const std::string& name_key, const resource
 }
 
 const resource::SShader& MResourceManager::GetShader(const std::string& name_key) {
-	if (NOT ExistKey(m_shaders, name_key)) {
+	if (!ExistKey(m_shaders, name_key)) {
 #if defined(_DEBUG)
         std::wstring log{ L"Does not found proper shader, " };
         log.append(std::cbegin(name_key), std::cend(name_key));
@@ -473,7 +475,7 @@ const resource::SShader& MResourceManager::GetShader(const std::string& name_key
 }
 
 const resource::STexture2DAtlas& MResourceManager::GetTexture2D(const std::string& name_key) {
-	if (NOT ExistKey(m_textures, name_key)) {
+	if (!ExistKey(m_textures, name_key)) {
 #if defined(_DEBUG)
         std::wstring log{ L"Does not found proper texture2D, " };
         log.append(std::cbegin(name_key), std::cend(name_key));
@@ -487,7 +489,7 @@ const resource::STexture2DAtlas& MResourceManager::GetTexture2D(const std::strin
 }
 
 const resource::SSound& MResourceManager::GetSound(const std::string& name_key) {
-    if (NOT ExistKey(m_sounds, name_key)) {
+    if (!ExistKey(m_sounds, name_key)) {
 #if defined(_DEBUG)
         std::wstring log{ L"Does not found proper sound, " };
         log.append(std::cbegin(name_key), std::cend(name_key));
@@ -508,7 +510,7 @@ std::pair<bool, const resource::SFont*> MResourceManager::GetFont(const std::str
 }
 
 const resource::SAnimation* MResourceManager::GetAnimation(const std::string& name_key) {
-    if (NOT ExistKey(m_animations, name_key)) {
+    if (!ExistKey(m_animations, name_key)) {
 #if defined(_DEBUG)
         std::wstring log{ L"Does not found proper sound, " };
         log.append(std::cbegin(name_key), std::cend(name_key));

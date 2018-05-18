@@ -7,14 +7,14 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Components/Physics2D/Collider/rectangle.cc
+ * @file Components/Physics2D/Collider/rectangle.cc
  * @brief Definition file of ./rectangle.h
  * @author Jongmin Yun
  * @log
  * 2018-04-17 Move ::collision::CRectangleCollider2D to ::opgs16::physics::CRectangleCollider2D.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "rectangle.h"          /*! Header file */
+#include <Component\Physics2D\Collider\rectangle.h> /// Header file
 
 namespace opgs16 {
 namespace physics {

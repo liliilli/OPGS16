@@ -29,16 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file Headers/import_logger.h
- * @brief Logger importer.
- * @author Jongmin Yun
- * @log
- * 2018-04-06 Create file.
- */
+/// @file 
+/// Headers/import_logger.h
+/// @brief Logger importer.
+/// @author Jongmin Yun
+/// @log
+/// 2018-04-06 Create file.
 
 #if defined(_DEBUG) || defined(NDEBUG)
-#include "../System/Core/Public/logger.h"
+#include <Core\logger.h>
 using opgs16::debug::PushLog;
 using opgs16::debug::LOG_TYPE_INFO;
 using opgs16::debug::LOG_TYPE_WARN;

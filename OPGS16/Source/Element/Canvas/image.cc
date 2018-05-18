@@ -13,14 +13,17 @@
  * 2018-04-17 Rearrange file path of #include macros.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Public/image.h"    /*! Header file */
+#include <Element\Canvas\image.h>       /// Header file
 
-#include <array>                /*! std::array */
-#include "../Public/canvas.h"   /*! ::opgs16::element::canvas::CCanvas */
-#include "../../System/Shader/shader_wrapper.h"        /*! CShaderWrapper */
-#include "../../System/Manager/Public/texture_manager.h"
-#include "../../System/Components/Public/sprite_renderer.h" /*! CSprite2DRenderer */
-#include <glm/gtc/matrix_transform.hpp>
+#include <array>                        /// std::array
+
+#include <glm\gtc\matrix_transform.hpp>
+
+#include <Element\Canvas\canvas.h>      /// ::opgs16::element::canvas::CCanvas
+#include <Shader\shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
+#include <Manager\texture_manager.h>    /// ::opgs16::manager::MTextureManager
+/// ::opgs16::component::CSprite2DRenderer
+#include <Component\sprite_renderer.h>  
 
 namespace opgs16 {
 namespace element {

@@ -9,14 +9,15 @@
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-* @file System/Element/Public/preprocessing_getter.h
+* @file Component\preprocessing_getter.h
 *
 * @log
 * 2018-04-29 Create file. 
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../Internal/component.h"          /*! ::opgs16::component::_internal::CComponent */
-#include "../../../Headers/Fwd/objectfwd.h" /*! forward declaration */
+/// ::opgs16::component::_internal::CComponent
+#include <Component\Internal\component.h>
+#include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16::component {
 

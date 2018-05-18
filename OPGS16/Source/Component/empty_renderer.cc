@@ -27,15 +27,15 @@
  */
 
 /*!
- * @file System/Components/Internal/renderer_base.h
+ * @file Components/empty_renderer.cc
  *
  * @author Jongmin Yun
  * @log
  * 2018-03-15 Create file.
  */
 
-#include "../Public/empty_renderer.h"       /*! Header file */
-#include "../../Element/Public/object.h"    /*! ::opgs16::element::CObject */
+#include <Component\empty_renderer.h>   /// Header file
+#include <Element\object.h> /// ::opgs16::element::CObject 
 
 namespace opgs16 {
 namespace component {

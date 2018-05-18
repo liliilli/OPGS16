@@ -26,22 +26,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file System/Components/Private/rigidbody_2d.cc
- * @author Jongmin Yun
- * @log
- * 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
- * 2018-03-11 Corection of ::opgs16::element::CObject class.
- * 2018-03-12 Add gravity and accelation feature.
- */
+/// @file Components/rigidbody_2d.cc
+/// @author Jongmin Yun
+/// @log
+/// 2018-03-07 Move file to /Public, and move namespace to ::opgs16::component.
+/// 2018-03-11 Corection of ::opgs16::element::CObject class.
+/// 2018-03-12 Add gravity and accelation feature.
 
-#include "../Public/rigidbody_2d.h"                 /*! Header file */
-#include "../../Element/Public/object.h"            /*! ::opgs16::element::CObject */
-#include "../../Manager/Public/physics_manager.h"   /*! ::opgs16::manager::MPhysicsManager */
-#include "../../Manager/Public/time_manager.h"      /*! ::opgs16::manager::MTimeManager */
+#include <Component\rigidbody_2d.h>     /// Header file
 
-namespace opgs16 {
-namespace component {
+#include <Element\object.h>             /// ::opgs16::element::CObject
+#include <Manager\physics_manager.h>    /// ::opgs16::manager::MPhysicsManager
+#include <Manager\time_manager.h>       /// ::opgs16::manager::MTimeManager
+
+namespace opgs16::component {
 
 void CRigidbody2D::Update() {
     auto& object = GetObject();
@@ -83,4 +81,3 @@ bool CRigidbody2D::IsTag(const size_t index) const {
 }
 
 } /*! opgs16::component */
-} /*! opgs16 */

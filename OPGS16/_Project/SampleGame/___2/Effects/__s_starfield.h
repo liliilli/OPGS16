@@ -15,7 +15,8 @@
  * 2018-04-21 Create file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "../../../../Shader/framebuffer.h"    /*! ::opgs16::element::CFrameBuferFrame */
+/// ::opgs16::element::CFrameBuferFrame
+#include <Shader\framebuffer.h>
 
 namespace opgs16::builtin::sample {
 

@@ -29,32 +29,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * @file application.h
- * @brief Main file to run application.
- * This file consists of application operation class.
- *
- * @author Jongmin Yun
- * @log
- * 2018-03-01 Done refactoring following "studioN coding style convention".
- * 2018-03-11 Corection of ::opgs16::element::CObject class.
- *
- * @todo
- * 2018-03-01 Instantiate logger and bind it to Application.
- */
+/// \file 
+/// Core\application.h
+///
+/// \brief 
+/// Main file to run application, which consists of application operation class.
+///
+/// \author Jongmin Yun
+/// \log
+/// 2018-03-01 Done refactoring following "studioN coding style convention".
+/// 2018-03-11 Corection of ::opgs16::element::CObject class.
 
 #include <memory>
 #include <stack>
-// ReSharper disable CppUnusedIncludeDirective
-#include <GL/glew.h>
-// ReSharper restore CppUnusedIncludeDirective
-#include <GLFW/glfw3.h>
 
-#include "../../Core/Public/logger.h"   /*! CLogger class running on separate thread. */
-#include "../../Element/Public/object.h"     /*! ::opgs16::element::CObject */
-#include "../../../Headers/Fwd/objectfwd.h"  /*! Many components */
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
 
-/*! Framework overall namespace includes all components. */
+#include <Element\object.h> /// ::opgs16::element::CObject
+#include <opgs16fwd.h>      /// Forward declaration
+
+/// Framework overall namespace includes all components.
 namespace opgs16 {
 
 /*!
@@ -105,7 +100,7 @@ private:
 
     std::unique_ptr<SGlobalSetting> m_setting;
 
-	std::unique_ptr<element::CObject> m_debug_ui_canvas;	/*! Debug UI components container */
+	std::unique_ptr<element::CObject> m_debug_ui_canvas;/*! Debug UI components container */
 	std::unique_ptr<element::CObject> m_menu_ui_canvas;	/*! Global Menu UI components container */
 
     /*! This callback will be called before update routine only once. */

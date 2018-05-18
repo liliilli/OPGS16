@@ -34,17 +34,22 @@
  * 2018-03-04 Refactoring.
  */
 
-#include "../Public/scene_manager.h"        /*! Header file */
+#include <Manager\scene_manager.h>      /// Header file
 
-#include "../Public/physics_manager.h"      /*! opgs16::manager::MPhysicsManager */
-#include "../Public/timer_manager.h"        /*! opgs16::mangaer::MTimerManager */
-#include "../Public/texture_manager.h"      /*! opgs16::manager::TextureManager */
-#include "../Public/object_manager.h"       /*! opgs16::manager::MObjectManager */
-#include "../Public/shader_manager.h"       /*! opgs16::manager::ShaderManager */
-#include "../Public/sound_manager.h"        /*! opgs16::manager::MSoundManager */
+/// ::opgs16::manager::MPhysicsManager
+#include <Manager\physics_manager.h>    
+/// ::opgs16::manager::MTimerManager
+#include <Manager\timer_manager.h>
+/// ::opgs16::manager::MTextureMangaer
+#include <Manager\texture_manager.h>
+/// ::opgs16::manager::MObjectManager
+#include <Manager\object_manager.h>
+/// ::opgs16::manager::MShaderManager
+#include <Manager\shader_manager.h>
+/// ::opgs16::manager::MSoundManager
+#include <Manager\sound_manager.h>
 
-namespace opgs16 {
-namespace manager {
+namespace opgs16::manager {
 
 void MSceneManager::PopScene() {
     auto& app = MApplication::Instance();
@@ -63,4 +68,3 @@ void MSceneManager::ReleaseAllResources() const {
 MSceneManager::~MSceneManager() = default;
 
 } /*! opgs16::manager */
-} /*! opgs16 */
