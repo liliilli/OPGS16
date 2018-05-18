@@ -19,6 +19,8 @@
 #include "../../../../Element/Canvas/Public/text.h"         /*! ::opgs16::element::canvas::CText */
 #include "../../../../Components/Public/empty_renderer.h"   /*!*/
 #include "../../../../Components/Public/sprite_renderer.h"  /*! opgs16::component::CSprite2DRenderer */
+#include "../../../../Manager/Public/sound_manager.h"       /*! ::opgs16::manager::MSoundManager */
+#include "../../../../Manager/Public/input_manager.h"       /*! ::opgs16::manager::MInputManager */
 
 namespace {
 
@@ -58,27 +60,89 @@ DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) :
 
     // Bgm sentence object will display BGM ON/OFF status
     // depending on Background music play status on now.
-    auto bgm_sentence = obj->Instantiate<CText>(k_bgm_sentence_name, "TESTTEST");
-    bgm_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
-    bgm_sentence->SetAlignment(IAlignable::Alignment::CENTER);
-    bgm_sentence->SetFontName("Solomon");
-    bgm_sentence->SetFontSize(8u);
-    bgm_sentence->SetWorldPosition(glm::vec3{ 0, 48, 0 });
+    m_bgm_sentence = obj->Instantiate<CText>(k_bgm_sentence_name, "~BGM OFF~");
+    m_bgm_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
+    m_bgm_sentence->SetAlignment(IAlignable::Alignment::CENTER);
+    m_bgm_sentence->SetFontName("Solomon");
+    m_bgm_sentence->SetFontSize(8u);
+    m_bgm_sentence->SetWorldPosition(glm::vec3{ 0, 48, 0 });
 
     // Information sentence object will display what is playing now
     // depending on Key 2,3,4 mode.
-    auto info_sentence = obj->Instantiate<CText>(k_info_sentence_name, "TESTTEST");
-    info_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
-    info_sentence->SetAlignment(IAlignable::Alignment::CENTER);
-    info_sentence->SetFontName("Solomon");
-    info_sentence->SetFontSize(8u);
-    info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
+    m_info_sentence = obj->Instantiate<CText>(k_info_sentence_name, "");
+    m_info_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
+    m_info_sentence->SetAlignment(IAlignable::Alignment::CENTER);
+    m_info_sentence->SetFontName("Solomon");
+    m_info_sentence->SetFontSize(8u);
+    m_info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
+
+    m_input = &manager::MInputManager::Instance();
+    m_sound = &opgs16::manager::MSoundManager::Instance();
+
+    Start();
 }
 
 void DebugCanvasScript::Start() {
+    m_sound->CreateSound("Drumloop");
+    m_sound->CreateSound("Jaguar");
+    m_sound->CreateSound("c_ogg");
+    m_sound->CreateSound("Beep1");
+    m_sound->CreateSound("Beep2");
+    m_sound->CreateSound("Beep3");
 }
 
 void DebugCanvasScript::Update() {
+    Input();
+
+    switch (m_mode) {
+    case 2:
+        if (!m_sound->IsPlaying("Jaguar")) {
+            m_mode = 0;
+            m_info_sentence->SetText("");
+        }
+        break;
+    case 3:
+        if (!m_sound->IsPlaying("c_ogg")) {
+            m_mode = 0;
+            m_info_sentence->SetText("");
+        }
+        break;
+    case 4:
+        if (!m_sound->IsPlaying("c_ogg")) {
+            m_mode = 0;
+            m_info_sentence->SetText("");
+        }
+        break;
+    default: break;
+    }
+}
+
+void DebugCanvasScript::Input() {
+    if (m_input->IsKeyPressed("Key1")) {
+        if (!m_is_play_bgm) {
+            m_sound->PlaySound("Drumloop");
+            m_bgm_sentence->SetText("~BGM ON~");
+            m_is_play_bgm = true;
+        }
+        else {
+            m_sound->StopSound("Drumloop");
+            m_bgm_sentence->SetText("~BGM OFF~");
+            m_is_play_bgm = false;
+        }
+    }
+    else if (m_input->IsKeyPressed("Key2")) {
+        m_sound->PlaySound("Jaguar");
+        m_info_sentence->SetText("Now playing Key2 Effect.");
+        m_mode = 2;
+    }
+    else if (m_input->IsKeyPressed("Key3")) {
+        m_sound->PlaySound("c_ogg");
+    }
+    else if (m_input->IsKeyPressed("Key4")) {
+        m_sound->PlaySound("Beep1");
+        m_sound->PlaySound("Beep2");
+        m_sound->PlaySound("Beep3");
+    }
 }
 
 } /*! opgs16::builtin::sample */

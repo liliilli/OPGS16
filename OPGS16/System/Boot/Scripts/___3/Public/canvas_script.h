@@ -15,6 +15,7 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 #include "../../../../Components/Public/script_frame.h" /*! ::opgs16::component::CScriptFrame */
+#include "../../../../../Headers/Fwd/objectfwd.h"
 
 namespace opgs16::builtin::sample {
 
@@ -25,6 +26,17 @@ public:
 private:
     void Start() override final;
     void Update() override final;
+
+    void Input();
+
+    manager::MInputManager* m_input = nullptr;
+    manager::MSoundManager* m_sound = nullptr;
+
+    element::canvas::CText* m_bgm_sentence = nullptr;
+    element::canvas::CText* m_info_sentence = nullptr;
+
+    bool    m_is_play_bgm = false;
+    int16_t m_mode = 0;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, DebugCanvasScript)
 };
