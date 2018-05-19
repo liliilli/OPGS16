@@ -39,6 +39,9 @@
 #include <Core\core_setting.h>  
 /// ::opgs16::entry::_internal::EGameStatus
 #include <Core\Internal\application_status.h>
+/// ::opgs16::entry::_internal strong enum boolean flags.
+#include <Core\Internal\application_flag.h>
+
 /// import logger
 #include <Headers\import_logger.h>  
 
@@ -66,6 +69,18 @@ static_assert(opgs16::manifest::k_size > 0,
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
+///
+/// This namespace is integrity check variable container for 
+/// checking runtime caveats of source code.
+///
+namespace {
+using opgs16::entry::_internal::EInitiated;
+using opgs16::entry::_internal::EOperated;
+
+EInitiated m_initiated  = EInitiated::NotInitiated; 
+EOperated m_operated    = EOperated::NotOperated;
+} /// unnamed namespace
 
 namespace {
 
@@ -203,6 +218,11 @@ SGlobalSetting& Setting() noexcept {
 }
 
 void Initiate() {
+  if (m_initiated == EInitiated::Initiated)
+    assert(false);
+  else
+    m_initiated = EInitiated::Initiated;
+
   m_logger = &debug::CLogger::Instance();
 
 #if defined(_OPGS16_DEBUG_OPTION)
@@ -406,6 +426,11 @@ void InitiatePostProcessingEffects() {
 }
 
 void Run() {
+  if (m_operated == EOperated::Operated)
+    assert(false);
+  else
+    m_operated = EOperated::Operated;
+
   while (!glfwWindowShouldClose(m_window)) {
     // Check time ticking following given frame per second.
     m_time_manager->Update();         
