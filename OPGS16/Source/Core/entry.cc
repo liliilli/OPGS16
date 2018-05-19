@@ -5,15 +5,17 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
+/// @file Core/entry.cc
 ///
-/// @file Core\entry.cc
-/// @brief The file which operates actual application.
+/// @brief 
+/// The file has main function that operates actual application.
+///
 /// @author Jongmin Yun
 ///
 /// @log
 /// 2018-03-01 Refactoring.
 /// 2018-04-07 Move file to System/Core/Private directory.
+/// 2018-05-19 Change the way of calling application initiation.
 ///
 
 /*! This statements are for checking memory leaks. */
@@ -23,11 +25,8 @@
 
 #include <Core\application.h>   /// ::opgs16::MApplication
 
-// ReSharper disable CppInconsistentNaming
 int main() {
-    auto& app = opgs16::MApplication::Instance();
-    app.Initiate();
-    app.Run();
-
-    return 0;
+  opgs16::entry::Initiate();
+  opgs16::entry::Run();
+  return 0;
 }

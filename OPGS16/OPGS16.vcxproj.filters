@@ -164,6 +164,7 @@
     <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
+    <ClInclude Include="Include\Core\Internal\application_status.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
