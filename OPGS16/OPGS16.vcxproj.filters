@@ -63,9 +63,9 @@
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Debug\debug_canvas.cc" />
     <ClCompile Include="Source\Debug\ui_manager.cc" />
-    <ClCompile Include="_Project\Debug\__debugsound.cc" />
-    <ClCompile Include="_Project\Debug\Object\__s_debugcanvas.cc" />
-    <ClCompile Include="_Project\Debug\Script\canvas_script.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\debug_sound.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\__s_debugcanvas.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\canvas_script.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -161,9 +161,9 @@
     <ClInclude Include="Include\Debug\debug_canvas.h" />
     <ClInclude Include="Include\Debug\ui_manager.h" />
     <ClInclude Include="Include\Debug\test_script.h" />
-    <ClInclude Include="_Project\Debug\__debugsound.h" />
-    <ClInclude Include="_Project\Debug\Object\__s_debugcanvas.h" />
-    <ClInclude Include="_Project\Debug\Script\canvas_script.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
