@@ -64,9 +64,6 @@
 /// opgs16::manifest::sample::boot
 #include <Core\Boot\__boot.h>
 
-/// \Todo : Remove this
-#include "..\..\_Project\Debug\__debugsound.h"
-
 #if defined(_INITIAL_SCENE_INCLUDE_PATH)
 #include _INITIAL_SCENE_INCLUDE_PATH
 #endif
@@ -174,41 +171,47 @@ void MApplication::Initiate() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
 
-        static_assert(manifest::k_size <= 3, "manifest k_size must be range from 1 to 3.");
-        static_assert(manifest::k_size > 0,  "manifest k_size must be range from 1 to 3.");
+        static_assert(manifest::k_size <= 3, 
+            "manifest k_size must be range from 1 to 3.");
+        static_assert(manifest::k_size > 0,
+            "manifest k_size must be range from 1 to 3.");
 
-        if constexpr (manifest::k_size == 1) ChangeScalingOption(EScaleType::X1);
-        else if constexpr (manifest::k_size == 2) ChangeScalingOption(EScaleType::X2);
-        else ChangeScalingOption(EScaleType::X3);
+        if constexpr (manifest::k_size == 1) 
+            ChangeScalingOption(EScaleType::X1);
+        else if constexpr (manifest::k_size == 2) 
+            ChangeScalingOption(EScaleType::X2);
+        else 
+            ChangeScalingOption(EScaleType::X3);
 
 #if defined(_CUSTOM_PROJECT)
     #if defined(_RESOURCE_SETTING_FILE_PATH)
-            m_resource_manager.ReadResourceFile(L"_Project/Maintenance/_meta/_resource.meta");
+        m_resource_manager.ReadResourceFile(_RESOURCE_SETTING_FILE_PATH);
     #else
-            static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+        static_assert(false, "Set a path for _RESOURCE_SETTING_FILE_PATH);
     #endif
 
     #if defined(_RESOURCE_SETTING_FILE_PATH)
         #if defined(_INITIAL_SCENE_FULL_NAME)
             #if !_SHOW_BOOT_SCREEN
-                    M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
-                    ReplacePresentStatus(GameStatus::PLAYING);
+                M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
+                ReplacePresentStatus(GameStatus::PLAYING);
             #else
-                    // SHOW BOOT LOGO
-                    M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
-                    M_PUSH_SCENE(__BOOT, true);
-                    ReplacePresentStatus(GameStatus::PLAYING);
+                // SHOW BOOT LOGO
+                M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
+                M_PUSH_SCENE(builtin::sample::__BOOT, true);
+                ReplacePresentStatus(GameStatus::PLAYING);
             #endif
         #endif
     #else
-            static_assert(false, "Please set a path for _RESOURCE_SETTING_FILE_PATH);
+        static_assert(false, 
+            "Set a path for _RESOURCE_SETTING_FILE_PATH);
     #endif
 #else
         // SHOW BOOT LOGO
         // GOTO SAMPLE GAME
         m_resource_manager.ReadResourceFile(L"System/Boot/Resources/_resource.meta");
 
-        M_PUSH_SCENE(builtin::sample::__DEBUGSOUND, true);
+        M_PUSH_SCENE(builtin::sample::__BOOT, true);
 		ReplacePresentStatus(GameStatus::PLAYING);
 #endif
 	}
