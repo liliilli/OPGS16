@@ -45,11 +45,21 @@
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 #ifndef NDEBUG
+
 #define NEU_ASSERT(__MAExpr__, __MAMessage__) \
   ::opgs16::debug::__EnhancedAssert(#__MAExpr__, __MAExpr__, __FILE__, __LINE__, __MAMessage__)
+
+#define NEU_NOT_IMPLEMENTED_ASSERT() \
+  ::opgs16::debug::__NotImplementedAssert(__FILE__, __LINE__)
+
 #else
+
 #define NEU_ASSERT(__MAExpr__, __MAMessage__) \
   (void(0));
+
+#define NEU_NOT_IMPLEMENTED_ASSERT() \
+  (void(0));
+
 #endif
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
@@ -65,6 +75,8 @@ namespace opgs16::debug {
 ///
 /// @link 
 /// https://stackoverflow.com/questions/3692954/add-custom-messages-in-assert
+///
+/// @todo Implement third logger library message printing.
 ///
 inline void __EnhancedAssert(
     const char* expression_string, 
@@ -82,6 +94,25 @@ inline void __EnhancedAssert(
 #endif
     abort();
   }
+}
+
+///
+/// @brief
+/// Implement error message on function is defined but not implemented yet.
+///
+/// @link
+/// https://stackoverflow.com/questions/3314314/ways-to-show-your-co-programmers-that-some-methods-are-not-yet-implemented-in-a-c/3316954#3316954
+///
+/// @todo Implement third logger library message printing.
+///
+inline void __NotImplementedAssert(const char* file_path, int line) {
+#ifndef USE_THIRD_PARTY_LOGGER
+  std::cerr << "This function is not implemented yet.\n"
+      << "Source : \t" << file_path << ", line " << line << "\n";
+#else
+  PUSH_LOG_ERRO("");
+#endif
+  abort();
 }
  
 } /// ::opgs16::debug
