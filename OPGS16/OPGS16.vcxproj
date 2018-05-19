@@ -211,8 +211,10 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
+    <ClInclude Include="Include\Helper\assert.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
     <ClInclude Include="Include\Core\Boot\__boot.h" />

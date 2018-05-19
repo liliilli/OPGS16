@@ -165,6 +165,8 @@
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
+    <ClInclude Include="Include\Core\Internal\application_flag.h" />
+    <ClInclude Include="Include\Helper\assert.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
