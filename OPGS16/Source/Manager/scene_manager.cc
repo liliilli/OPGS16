@@ -52,8 +52,8 @@
 namespace opgs16::manager {
 
 void MSceneManager::PopScene() {
-    auto& app = MApplication::Instance();
-    app.SetOnBeforeUpdateCallback(std::bind(&MSceneManager::PrivatePopScene, this));
+    entry::SetOnBeforeUpdateCallback(
+        std::bind(&MSceneManager::PrivatePopScene, this));
 }
 
 void MSceneManager::ReleaseAllResources() const {
