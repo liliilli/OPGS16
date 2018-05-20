@@ -42,7 +42,7 @@
 /// checking runtime caveats of source code.
 ///
 namespace {
-using opgs16::manager::_internal::EInitiated;
+using opgs16::debug::EInitiated;
 
 EInitiated m_initiated = EInitiated::NotInitiated;
   

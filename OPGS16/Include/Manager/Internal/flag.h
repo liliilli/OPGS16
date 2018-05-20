@@ -11,12 +11,14 @@
 ///
 /// @brief
 /// Strong boolean enum aggregation file for runtime check of ::opgs16::manager
+/// This file must not be together with the other flag.h file.
+/// namespace is duplicated, might occur unexpcted behavior or error.
 ///
 /// @log
 /// 2018-05-20 Create file and make enum class for boolean flag.
 ///
 
-namespace opgs16::manager::_internal {
+namespace opgs16::debug {
 
 ///
 /// @enum EInitiated
@@ -29,6 +31,6 @@ enum class EInitiated : bool {
   Initiated = true
 };
 
-} /// ::opgs16::manager::_internal
+} /// ::opgs16::debug
 
 #endif /// MANAGER_INTERNAL_MANAGER_FLAG_H
