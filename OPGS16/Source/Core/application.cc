@@ -93,7 +93,9 @@ opgs16::debug::CLogger* m_logger = nullptr;
 // Window handle pointer
 GLFWwindow* m_window = nullptr;           
 
+#ifdef false
 opgs16::manager::MSettingManager* m_setting_manager = nullptr;
+#endif
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
 opgs16::manager::MInputManager* m_input_manager = nullptr;
 opgs16::manager::MObjectManager* m_object_manager = nullptr;
@@ -254,7 +256,8 @@ void Initiate() {
       "Please turn on _CUSTOM_PROJECT macro to make window properly.");
 #endif
 #endif
-  m_setting_manager = &manager::MSettingManager::Instance();
+  manager::setting::Initiate();
+
   m_input_manager = &manager::MInputManager::Instance();
   m_object_manager = &manager::MObjectManager::Instance();
   m_physics_manager = &manager::MPhysicsManager::Instance();

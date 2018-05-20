@@ -41,22 +41,19 @@
 
 namespace opgs16 {
 namespace physics {
-namespace {
-using manager::MSettingManager;
-} /*! unnamed namespace */
 
 void CCollider2D::SetCollisionType(ECollisionType type) {
 	m_collision_type = type;
 }
 
 void CCollider2D::SetCollisionLayerIndex(unsigned layer_value) {
-    if (layer_value >= MSettingManager::Instance().CollisionLayerList().size())
+    if (layer_value >= manager::setting::GetCollisionLayerList().size())
         throw std::runtime_error("collision layer value is bigger than capacity.");
     m_collision_layer_index = layer_value;
 }
 
 void CCollider2D::SetCollisionLayerName(const std::string& layer_name) {
-    const auto& list = MSettingManager::Instance().CollisionLayerList();
+    const auto& list = manager::setting::GetCollisionLayerList();
     unsigned layer_value{ 0 };
 
     for (const auto& str : list) {
@@ -72,7 +69,7 @@ void CCollider2D::SetCollisionLayerName(const std::string& layer_name) {
 }
 
 std::string CCollider2D::CollisionLayerStringOf() const {
-    return MSettingManager::Instance().CollisionLayerList()[m_collision_layer_index];
+    return manager::setting::GetCollisionLayerList()[m_collision_layer_index];
 }
 
 } /*! opgs16::physics */

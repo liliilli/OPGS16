@@ -134,7 +134,7 @@ void MObjectManager::DestroyObjects() {
 }
 
 MObjectManager::MObjectManager() :
-    m_rendering_list(MSettingManager::Instance().RenderingLayerListSize()) {
+    m_rendering_list(setting::GetRenderingLayerNameListSize()) {
 }
 
 void MObjectManager::InsertRenderingObject(object_raw const object, unsigned layer_index) {

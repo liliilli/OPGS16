@@ -57,7 +57,7 @@ CRendererBase::CRendererBase(element::CObject& bind_object, const unsigned rende
 CRendererBase::~CRendererBase() {};
 
 void CRendererBase::SetRenderLayer(const std::string& layer_name) {
-    auto& layer_list = manager::MSettingManager::Instance().RenderingLayerNameList();
+    auto& layer_list = manager::setting::GetRenderingLayerNameList();
     unsigned i = 0;
     for (; i < layer_list.size(); ++i) {
         if (layer_name == layer_list[i]) {
@@ -70,12 +70,12 @@ void CRendererBase::SetRenderLayer(const std::string& layer_name) {
 }
 
 void CRendererBase::SetRenderLayer(const unsigned layer_index) {
-    const auto list_size = manager::MSettingManager::Instance().RenderingLayerNameList().size();
+    const auto list_size = manager::setting::GetRenderingLayerNameListSize();
     m_render_layer_index = (layer_index >= list_size) ? 0 : layer_index;
 }
 
 std::string CRendererBase::RenderLayerNameOf() const {
-    return manager::MSettingManager::Instance().RenderingLayerName(m_render_layer_index);
+    return manager::setting::GetRenderingLayerName(m_render_layer_index);
 }
 
 void CRendererBase::SetRenderFrameBuffer(const char* frame_buffer_name) {

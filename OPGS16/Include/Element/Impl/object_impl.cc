@@ -46,7 +46,6 @@ namespace element {
 namespace _internal {
 
 namespace {
-using manager::MSettingManager;
 constexpr float k_2pi{ 2 * glm::pi<float>() };
 
 const static glm::vec3 k_vec3_1{ 1.f };
@@ -159,11 +158,11 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
 }
 
 std::string CObjectImpl::GetTagNameOf() const {
-    return MSettingManager::Instance().GetTagName(m_tag_index);
+    return manager::setting::GetTagName(m_tag_index);
 }
 
 void CObjectImpl::SetTag(const std::string& tag_name) {
-    auto& tag_list = MSettingManager::Instance().GetTagNameList();
+    auto& tag_list = manager::setting::GetTagNameList();
 
     decltype(tag_list.size()) i = 0;
     for (; i < tag_list.size(); ++i) {
@@ -177,7 +176,7 @@ void CObjectImpl::SetTag(const std::string& tag_name) {
 }
 
 void CObjectImpl::SetTag(const size_t tag_index) {
-    const auto list_size = MSettingManager::Instance().GetTagNameList().size();
+    const auto list_size = manager::setting::GetTagNameList().size();
 
     if (tag_index >= list_size)
         m_tag_index = 0;

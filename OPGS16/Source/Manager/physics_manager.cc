@@ -159,14 +159,12 @@ void MPhysicsManager::Clear() {
 }
 
 void MPhysicsManager::ProceedCollisionCheck(MPhysicsManager::item_ptr& item) {
-    const auto& manager = MSettingManager::Instance();
-
     for (auto& active_item : m_active) {
         /*! If rigidbody is same, do not check collision. */
         auto const s_rigidbody = active_item->m_rigidbody, d_rigidbody = item->m_rigidbody;
         if (s_rigidbody == d_rigidbody) continue;
         auto const s_collider = active_item->m_collider, d_collider = item->m_collider;
-        if (!manager.CollisionLayerCheck(s_collider->CollisionLayer(), d_collider->CollisionLayer())) continue;
+        if (!setting::CollisionLayerCheck(s_collider->CollisionLayer(), d_collider->CollisionLayer())) continue;
 
         if (DetectCollisionAabbExt(s_collider, d_collider)) {
             /*! Check solidification */
