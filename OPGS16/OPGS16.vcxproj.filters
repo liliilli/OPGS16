@@ -167,6 +167,8 @@
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Helper\assert.h" />
+    <ClInclude Include="Include\Manager\Internal\error_message.h" />
+    <ClInclude Include="Include\Manager\Internal\flag.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
