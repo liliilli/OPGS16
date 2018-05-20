@@ -21,6 +21,10 @@
 
 namespace opgs16::debug {
 
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/// ::opgs16::manager::setting error messages.
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
 constexpr const char err_setting_not_initiated[] = 
     "Setting is not initiated yet.";
 constexpr const char err_setting_duplicated_init[] =
@@ -35,6 +39,16 @@ constexpr const char err_setting_collision_oob[] =
     "Collision layer index is out of bound.";
 constexpr const char err_setting_collision_check_oob[] =
     "Collision check index is out of bound.";
+
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/// ::opgs16::manager::input error messages.
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
+constexpr const char err_input_not_initiated[] =
+    "Input Setting its not initiated yet.";
+constexpr const char err_input_duplicated_init[] =
+    "Duplicated function call of "
+    "::opgs16::manager::input::Initiate(context) is prohibited.";
  
 } /// ::opgs16::manager::_internal
 
