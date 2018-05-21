@@ -76,7 +76,6 @@ DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) :
     m_info_sentence->SetFontSize(8u);
     m_info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
 
-    m_input = &manager::MInputManager::Instance();
     m_sound = &opgs16::manager::MSoundManager::Instance();
 
     Start();
@@ -118,7 +117,8 @@ void DebugCanvasScript::Update() {
 }
 
 void DebugCanvasScript::Input() {
-    if (m_input->IsKeyPressed("Key1")) {
+  using ::opgs16::manager::input::IsKeyPressed;
+    if (IsKeyPressed("Key1")) {
         if (!m_is_play_bgm) {
             m_sound->PlaySound("Drumloop");
             m_bgm_sentence->SetText("~BGM ON~");
@@ -130,15 +130,15 @@ void DebugCanvasScript::Input() {
             m_is_play_bgm = false;
         }
     }
-    else if (m_input->IsKeyPressed("Key2")) {
+    else if (IsKeyPressed("Key2")) {
         m_sound->PlaySound("Jaguar");
         m_info_sentence->SetText("Now playing Key2 Effect.");
         m_mode = 2;
     }
-    else if (m_input->IsKeyPressed("Key3")) {
+    else if (IsKeyPressed("Key3")) {
         m_sound->PlaySound("c_ogg");
     }
-    else if (m_input->IsKeyPressed("Key4")) {
+    else if (IsKeyPressed("Key4")) {
         m_sound->PlaySound("Beep1");
         m_sound->PlaySound("Beep2");
         m_sound->PlaySound("Beep3");

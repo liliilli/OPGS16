@@ -95,9 +95,9 @@ GLFWwindow* m_window = nullptr;
 
 #ifdef false
 opgs16::manager::MSettingManager* m_setting_manager = nullptr;
+opgs16::manager::MInputManager* m_input_manager = nullptr;
 #endif
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-opgs16::manager::MInputManager* m_input_manager = nullptr;
 opgs16::manager::MObjectManager* m_object_manager = nullptr;
 opgs16::manager::MPhysicsManager* m_physics_manager = nullptr;
 opgs16::manager::MResourceManager* m_resource_manager = nullptr;
@@ -256,9 +256,10 @@ void Initiate() {
       "Please turn on _CUSTOM_PROJECT macro to make window properly.");
 #endif
 #endif
-  manager::setting::Initiate();
 
-  m_input_manager = &manager::MInputManager::Instance();
+  manager::setting::Initiate();
+  manager::input::Initiate(m_window);
+
   m_object_manager = &manager::MObjectManager::Instance();
   m_physics_manager = &manager::MPhysicsManager::Instance();
   m_resource_manager = &manager::MResourceManager::Instance();
@@ -275,7 +276,6 @@ void Initiate() {
 
   // Initialize resource list.
   m_time_manager->SetFps(k_fps_count);
-  m_input_manager->Initialize(m_window);
   m_sound_manager->ProcessInitialSetting();
 
   InitiateDefaultFonts();
@@ -489,7 +489,7 @@ void Update() {
 }
 
 void Input() {
-  m_input_manager->Update();
+  manager::input::Update();
 
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING: 
@@ -500,26 +500,27 @@ void Input() {
 }
 
 void InputGlobal() {
-	if (m_input_manager->IsKeyPressed("GlobalCancel"))
+  using manager::input::IsKeyPressed;
+	if (IsKeyPressed("GlobalCancel"))
 		PopStatus();
 
   if (IsSwitchOn(m_setting->SizeScalable())) {
-    if (m_input_manager->IsKeyPressed("GlobalF1"))
+    if (IsKeyPressed("GlobalF1"))
       ChangeScalingOption(EScaleType::X1);
-    else if (m_input_manager->IsKeyPressed("GlobalF2"))
+    else if (IsKeyPressed("GlobalF2"))
       ChangeScalingOption(EScaleType::X2);
-    else if (m_input_manager->IsKeyPressed("GlobalF3"))
+    else if (IsKeyPressed("GlobalF3"))
       ChangeScalingOption(EScaleType::X3);
   }
 
   // @todo : Renovate debug mode input and detach it from release mode.
 
 #if defined(_OPGS16_DEBUG_OPTION)
-  if (m_input_manager->IsKeyPressed("GlobalF9"))
+  if (IsKeyPressed("GlobalF9"))
     ToggleFpsDisplay();
 #endif
 
-  if (m_input_manager->IsKeyPressed("GlobalF10"))
+  if (IsKeyPressed("GlobalF10"))
     TogglePostProcessingEffect();
 }
 
