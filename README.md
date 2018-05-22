@@ -40,10 +40,37 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# To do
+# Todo list
 
-1. InputManager
-   * <del>stick key 구현</del>
-   * 마우스 이동 구현
-2. 각 매니지먼트 시스템의 에러 체킹 메소드 구현 및 로거에 바인딩하기
-3. 각 후처리 프레임의 로컬 텍스쳐를 TextureManager 에서 가져올 수 있도록 바인딩
+Updated 2018.05.23
+
+- [ ] Font manager
+  - [ ] 리팩터링
+  - [ ] 확장 ASCII 이외 유니코드 문자 출력 구현
+  - [ ] 확장 ASCII 이외 유니코드 문자 출력 테스트
+  - [ ] 다량의 텍스트 출력에 의한 퍼포먼스 저하 개선
+- [ ] Input manager
+  - [ ] 마우스 버튼 입력 구현
+  - [ ] 마우스 버튼 입력 테스트
+  - [ ] 인풋 키 디버그 씬 구현 및 테스트
+- [ ] Object manager
+  - [ ] 코드 스타일에 맞춰서 리팩터링
+  - [ ] 씬 내부 오브젝트 Update 처리를 Component 별로 개선
+  - [ ] 에러 핸들링 검증
+- [ ] Mesh
+  - [ ] 3D Mesh obj, fbx 불러오기 구현
+  - [ ] VAO, VBO 등의 지오메트리 버퍼 저장소 구현
+- [ ] Object
+  - [ ] 생명주기 루틴 구현
+  - [ ] 생명주기 Initiate() 루틴 구현
+  - [ ] 생명주기 Start() 루틴 구현
+  - [ ] 생명주기 Disabled() 루틴 구현
+  - [ ] 생명주기 Enabled() 루틴 구현
+  - [ ] 생명주기 Destroy() 루틴 구현
+- [ ] Physical
+  - [ ] AABB 완전 검증
+  - [ ] OOB 구현 및 검증
+  - [ ] Kinetic, Dynamic 및 스위치에 따른 루틴 구현
+- [ ] etc
+  - [ ] 파티클 시스템 구현
+  - [ ] 빛 시스템 구현 및 검증
