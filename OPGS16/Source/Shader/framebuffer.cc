@@ -51,11 +51,11 @@ void CFrameBuferFrame::GenerateColorBuffer(const unsigned id, GLint internal_for
                                            GLenum type, GLint width, GLint height) {
     /*! Error checking */
 	if (IsAlreadyGenerated(id, m_color_buffers)) {
-        PUSH_LOG_ERRO(L"Failed to create color buffer. There is color buffer already.");
+        PUSH_LOG_ERRO("Failed to create color buffer. There is color buffer already.");
 	    return;
 	}
 	if (width < 0 || height < 0) {
-        PUSH_LOG_ERRO(L"Failed to create color buffer. Either width or height is less than 0.");
+        PUSH_LOG_ERRO("Failed to create color buffer. Either width or height is less than 0.");
 	    return;
 	}
 
@@ -94,7 +94,7 @@ void CFrameBuferFrame::BindTextureToFrameBuffer(const size_t texture_id, const s
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	else {
-        PUSH_LOG_ERRO(L"Failed to bind texture to frame buffer.");
+        PUSH_LOG_ERRO("Failed to bind texture to frame buffer.");
 	}
 }
 
@@ -104,7 +104,7 @@ void CFrameBuferFrame::Bind() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	else {
-        PUSH_LOG_ERRO(L"Failed to bind framebuffer, It's not initialized yet.");
+        PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
 	}
 }
 
@@ -121,7 +121,7 @@ void CFrameBuferFrame::RenderEffect() {
 		glBindVertexArray(0);
 	}
 	else {
-        PUSH_LOG_ERRO(L"Failed to bind framebuffer, It's not initialized yet.");
+        PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
 	}
 }
 

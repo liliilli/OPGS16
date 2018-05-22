@@ -143,7 +143,7 @@ public:
  */
 inline ShaderManager::shader_raw ShaderManager::Shader(const std::string& name) {
 	if (!DoesShaderExist(name)) {
-		auto& list = MResourceManager::Instance().GetShader(name);
+		auto& list = manager::resource::GetShader(name);
 		CreateShader(name, list);
 	}
 	return m_shaders[name].get();

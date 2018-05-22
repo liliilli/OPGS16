@@ -100,7 +100,7 @@ bool MSoundManager::CreateSound(const std::string& item_tag) {
         return SUCCESS;
     }
 
-    auto& sound_item = MResourceManager::Instance().GetSound(item_tag);
+    auto& sound_item = manager::resource::GetSound(item_tag);
 
     FMOD::Sound* sound = nullptr;
     auto result = m_system->createSound(sound_item.Path().c_str(), 

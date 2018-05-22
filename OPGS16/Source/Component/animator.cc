@@ -55,7 +55,7 @@ CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer,
     m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
     OnStart();
 
-    const resource::SAnimation* container = manager::MResourceManager::Instance().GetAnimation(load_name);
+    const resource::SAnimation* container = manager::resource::GetAnimation(load_name);
     if (container) {
         m_animation = container;
         OnAnimationStart();

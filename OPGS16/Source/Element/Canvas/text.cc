@@ -89,7 +89,7 @@ void CText::Render() {
                                       GetScaleValue());
 	}
 	else {
-        PUSH_LOG_ERRO(L"Could not find font manager.");
+        PUSH_LOG_ERRO("Could not find font manager.");
 	}
 }
 
@@ -115,7 +115,7 @@ bool CText::SetFontName(const std::string& font_tag) {
 		return true;
 	}
 	else {
-        PUSH_LOG_ERRO(L"Font not found.");
+        PUSH_LOG_ERRO("Font not found.");
 		//std::cerr << "ERROR::FONT::NOT::FOUND" << font_tag << std::endl;
 		m_text_impl->SetFontName("");
 		return false;

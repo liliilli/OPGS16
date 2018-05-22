@@ -37,9 +37,9 @@ L"TEST GAME"
 //#define _APPLICATION_WINDOW_NAME
 
 // set resource setting file to load your resource on run-time.
-// This must be written as the style of L" ... " or application will not build up.
+// This must be written as the style of " ... " or application will not build up.
 #define _RESOURCE_SETTING_FILE_PATH \
-L"_Project/Debug/ProjectSetting/resource.meta"
+"_Project/Debug/ProjectSetting/resource.meta"
 
 //
 #define _INITIAL_SCENE_INCLUDE_PATH \

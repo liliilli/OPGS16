@@ -99,6 +99,7 @@ SGlobalQuad2D::SGlobalQuad2D() {
         glShaderSource(m_shaders[type], 1, &source, nullptr);
         glCompileShader(m_shaders[type]);
 
+#if defined(false)
 #if defined(_DEBUG) /*! Error check and Log */
         int success{ 0 };
         glGetShaderiv(m_shaders[type], GL_COMPILE_STATUS, &success);
@@ -111,13 +112,15 @@ SGlobalQuad2D::SGlobalQuad2D() {
         else {
             wchar_t log[100] = { L"SGlobalQuad2D gQuad " };
             switch (type) {
-            case EShaderType::VS: wcscat(log, L"vertex shader");   break;
+            case EShaderType::VS: 
+              wcscat(log, L"vertex shader");   break;
             case EShaderType::FS: wcscat(log, L"fragment shader");  break;
             default: break;
             }
             wcscat(log, L" compile complete.");
             PushLog(LOG_TYPE_INFO, log);
         }
+#endif
 #endif
     }
 }

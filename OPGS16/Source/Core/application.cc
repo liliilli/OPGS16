@@ -88,19 +88,12 @@ namespace {
 
 constexpr float k_fps_count = 60.f;
 
-opgs16::debug::CLogger* m_logger = nullptr;
-
 // Window handle pointer
 GLFWwindow* m_window = nullptr;           
 
-#ifdef false
-opgs16::manager::MSettingManager* m_setting_manager = nullptr;
-opgs16::manager::MInputManager* m_input_manager = nullptr;
-#endif
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
 opgs16::manager::MObjectManager* m_object_manager = nullptr;
 opgs16::manager::MPhysicsManager* m_physics_manager = nullptr;
-opgs16::manager::MResourceManager* m_resource_manager = nullptr;
 opgs16::manager::MSceneManager* m_scene_manager = nullptr;    
 opgs16::manager::MSoundManager* m_sound_manager = nullptr;
 opgs16::manager::MTimeManager* m_time_manager = nullptr;
@@ -117,9 +110,6 @@ std::function<void(void)> m_on_before_update_callback = nullptr;
 // Debug UI components container
 std::unique_ptr<opgs16::element::CObject> m_debug_ui_canvas = nullptr;
 #endif
-
-// Global Menu UI components container
-std::unique_ptr<opgs16::element::CObject> m_menu_ui_canvas = nullptr;	
 
 ///
 /// @brief
@@ -226,8 +216,6 @@ void Initiate() {
       "Duplicated function call of ::opgs16::entry::Initiate() is prohibited.");
   m_initiated = EInitiated::Initiated;
 
-  m_logger = &debug::CLogger::Instance();
-
 #if defined(_OPGS16_DEBUG_OPTION)
   m_window = InitApplication("OPGS16 DEBUG MODE");
 #else
@@ -259,10 +247,10 @@ void Initiate() {
 
   manager::setting::Initiate();
   manager::input::Initiate(m_window);
+  manager::resource::ReadResourceFile("_resource.meta");
 
   m_object_manager = &manager::MObjectManager::Instance();
   m_physics_manager = &manager::MPhysicsManager::Instance();
-  m_resource_manager = &manager::MResourceManager::Instance();
   m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
   m_time_manager = &manager::MTimeManager::Instance();
@@ -272,7 +260,6 @@ void Initiate() {
   PushStatus(_internal::EGameStatus::INIT);
 
   // Initialize Global Setting.
-  m_resource_manager->ReadResourceFile(L"_resource.meta");
 
   // Initialize resource list.
   m_time_manager->SetFps(k_fps_count);
@@ -298,7 +285,7 @@ void Initiate() {
 
 #if defined(_CUSTOM_PROJECT)
 #if defined(_RESOURCE_SETTING_FILE_PATH)
-  m_resource_manager->ReadResourceFile(_RESOURCE_SETTING_FILE_PATH);
+  manager::resource::ReadResourceFile(_RESOURCE_SETTING_FILE_PATH);
 #else
   static_assert(false, "Set a path for _RESOURCE_SETTING_FILE_PATH);
 #endif
@@ -343,14 +330,14 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  PUSH_LOG_INFO(L"GLFW CONTEXT VERSION 4.3 Core.");
+  PUSH_LOG_DEBUG("GLFW CONTEXT VERSION 4.3 Core.");
 
   const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(), 
                                        SGlobalSetting::ScreenHeight(), 
                                        application_name.c_str(), 
                                        nullptr, nullptr);
   if (!window) {
-    PUSH_LOG_ERRO(L"Failed to create GLFW window. Application will terminate.");
+    PUSH_LOG_ERRO("Failed to create GLFW window. Application will terminate.");
     glfwTerminate();
     return nullptr;
   }

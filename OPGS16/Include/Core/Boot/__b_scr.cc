@@ -54,6 +54,8 @@
 
 #include <..\manifest.h>
 
+#undef GetObject
+
 namespace {
 constexpr const char*   shader_sliced{ "__b_sliced" };
 constexpr const int     k_sliced_number{ 32 };
@@ -90,6 +92,7 @@ void __B_SCR::SetLogoImage() {
 
     logo = GetObject().Instantiate<element::canvas::CImage>("Logo", "System",
                                                             static_cast<element::canvas::CCanvas*>(&GetObject()));
+
     component::CSprite2DRenderer* renderer = logo->GetComponent<component::CSprite2DRenderer>();
     renderer->SetTextureIndex(4);
     logo->SetImageSize(178.f, 19.f);
@@ -125,7 +128,7 @@ void __B_SCR::MoveLogo1() {
     elapsed += 0.032f;
     pos.y = powf(elapsed - total, 2) * mult;
     if (abs(pos.y) < 0.1f) {
-        PUSH_LOG_INFO(L"Logo soft-randing");
+        PUSH_LOG_INFO("Logo soft-randing");
         pos.y = 0;
         opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer);
         M_SET_TIMER(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
@@ -156,7 +159,7 @@ void __B_SCR::MoveLogoSliced() {
     //    "uYScale", k_sliced_y_initial_scale * (1 - powf(elapsed, 2) / time_pow) + k_sliced_y_final_scale);
 
     if (elapsed >= time) {
-        PUSH_LOG_INFO(L"Logo soft-randing");
+        PUSH_LOG_INFO("Logo soft-randing");
         renderer->SetShader("gQuad");
         renderer->SetInstanceCount(1);
         opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer);

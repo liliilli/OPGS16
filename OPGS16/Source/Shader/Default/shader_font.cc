@@ -92,20 +92,24 @@ SGlobalFont2D::SGlobalFont2D() {
         int success{ 0 };
         glGetShaderiv(m_shaders[type], GL_COMPILE_STATUS, &success);
         if (!success) {
-            PushLog(LOG_TYPE_ERRO, L"Shader did not be compiled properly.");
+            PUSH_LOG_ERRO("Shader did not be compiled properly.");
             char info_log[0x200]{};
             glGetShaderInfoLog(m_shaders[type], 0x200, nullptr, info_log);
-            PushLog(LOG_TYPE_ERRO, info_log);
+            PUSH_LOG_ERRO(info_log);
         }
         else {
-            wchar_t log[100] = { L"SGlobalQuad2D gCommonFont " };
+            char log[100] = { "SGlobalQuad2D gCommonFont " };
             switch (type) {
-            case EShaderType::VS: wcscat(log, L"vertex shader");   break;
-            case EShaderType::FS: wcscat(log, L"fragment shader");  break;
+            case EShaderType::VS: 
+              strcat(log, "vertex shader");   
+              break;
+            case EShaderType::FS: 
+              strcat(log, "fragment shader");  
+              break;
             default: break;
             }
-            wcscat(log, L" compile complete.");
-            PushLog(LOG_TYPE_INFO, log);
+            strcat(log, " compile complete.");
+            PUSH_LOG_ERRO(log);
         }
 #endif
     }

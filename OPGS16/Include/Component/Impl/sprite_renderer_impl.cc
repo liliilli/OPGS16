@@ -63,7 +63,7 @@ CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag, const st
 
 void CSpriteRendererImpl::SetTextureIndex(const unsigned new_index) noexcept {
     if (!m_sprite->DoesHasAtlas()) {
-        PUSH_LOG_WARN(L"Bound texture does not have atlas information.\nso failed to assign new_index.");
+        PUSH_LOG_WARN("Bound texture does not have atlas information.\nso failed to assign new_index.");
         m_texture_fragment_index = 0;
         m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
         m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
@@ -78,7 +78,7 @@ void CSpriteRendererImpl::SetTextureIndex(const unsigned new_index) noexcept {
             m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
         }
         else {
-            PUSH_LOG_WARN(L"Any getting texel from resource has been failed.\nTexel is assigned to overall region.");
+            PUSH_LOG_WARN("Any getting texel from resource has been failed.\nTexel is assigned to overall region.");
             m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
             m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
         }

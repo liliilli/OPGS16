@@ -158,14 +158,13 @@ l_loop_end:
 
 #if defined(_DEBUG)
     for (const auto& item : layer_list) {
-      std::wstring wstr(item.begin(), item.end());
-      PUSH_LOG_INFO(wstr.c_str());
+      PUSH_LOG_INFO(item.c_str());
     }
 
     for (const auto& y : check_list) {
-      std::wstring line{};
+      std::string line{};
       for (const auto& x : y) {
-        line.append((x == true ? L"1 " : L"0 "));
+        line.append((x == true ? "1 " : "0 "));
       }
       PUSH_LOG_INFO(line.c_str());
     }

@@ -75,7 +75,7 @@ bool MFontManager::GenerateFont(const std::string& name_tag) {
     if (DoesFontExist(name_tag))
         return false;
 
-    const auto [success, information] = MResourceManager::Instance().GetFont(name_tag);
+    const auto [success, information] = manager::resource::GetFont(name_tag);
     if (success && CheckFreeType() && LoadFreeType(information->Path())) {
 		FT_Set_Pixel_Sizes(m_ft_face, 0, k_default_font_size);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

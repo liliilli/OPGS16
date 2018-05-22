@@ -103,7 +103,7 @@ CTexture2D::CTexture2D(const resource::STexture2DAtlas& container) {
         }
     }
     else {
-        PUSH_LOG_ERRO(L"Failed load textrue, ");
+        PUSH_LOG_ERRO("Failed load textrue, ");
     }
 
     stbi_image_free(data);
