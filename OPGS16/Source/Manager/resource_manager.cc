@@ -18,6 +18,8 @@
 /// 2018-05-22
 /// Remove class singleton and renovate it to namespace for uniformation.
 ///
+/// @todo Change resource file style to json and also mechanism.
+///
 
 #include <Manager\resource_manager.h>   /// Header file
 
@@ -312,25 +314,25 @@ bool ReadResourceFile(const std::string& file_path) {
   file_stream.imbue(std::locale(""));
 
   if (!file_stream.good()) {
-    PUSH_LOG_ERRO((std::wstring{ L"Cannot open the file : " }).c_str());
+    PUSH_LOG_ERROR_EXT("Cannot open the file : {0}", file_path);
     return false;
   }
 
-  PUSH_LOG_WARN((std::wstring{ L"Opened resource meta file : " }).c_str());
+  PUSH_LOG_INFO_EXT("Opened resource meta file : {0}", file_path);
 
   std::string global_path, file_line;
   while (std::getline(file_stream, file_line)) {
     if (file_line.empty()) continue;
 
     switch (auto[symbol, token] = ReadSymbol(file_line); symbol) {
-    default: break;
-    case opgs16::resource::_internal::ESymbolType::GLOBAL_PATH:
+    case ESymbolType::GLOBAL_PATH:
       global_path = token;
-      PUSH_LOG_WARN(std::wstring(global_path.begin(), global_path.end()).c_str());
+      PUSH_LOG_WARN(global_path.c_str());
       break;
-    case opgs16::resource::_internal::ESymbolType::RESOURCE:
+    case ESymbolType::RESOURCE:
       ReadResource(file_line, file_stream, global_path, GetResourceType(token));
       break;
+    default: break;
     }
   }
 
@@ -339,13 +341,8 @@ bool ReadResourceFile(const std::string& file_path) {
 
 const opgs16::resource::SShader& GetShader(const std::string& name_key) {
   if (!ExistKey(m_shaders, name_key)) {
-#if defined(_DEBUG)
-    std::wstring log{ L"Does not found proper shader, " };
-    log.append(std::cbegin(name_key), std::cend(name_key));
-    PushLog(LOG_TYPE_ERRO, log.c_str());
-    PushLog(LOG_TYPE_ERRO, L"Return dummy shader...");
-#endif /*! Log error message in Debug mode */
-        /*! Temporary */
+    PUSH_LOG_ERROR_EXT(
+        "Did not find appropriate shader : [Tag : {0}]", name_key);
     throw std::runtime_error("GetShader error");
   }
 
@@ -354,12 +351,8 @@ const opgs16::resource::SShader& GetShader(const std::string& name_key) {
 
 const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_key) {
   if (!ExistKey(m_textures, name_key)) {
-#if defined(_DEBUG)
-    std::wstring log{ L"Does not found proper texture2D, " };
-    log.append(std::cbegin(name_key), std::cend(name_key));
-    PushLog(LOG_TYPE_ERRO, log.c_str());
-#endif /*! Log error message in Debug mode */
-        /*! Temporary */
+    PUSH_LOG_ERROR_EXT(
+        "Did not find appropriate texture2D : [Tag : {0}]", name_key);
     throw std::runtime_error("GetTexture2D error");
   }
 
@@ -368,12 +361,8 @@ const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_ke
 
 const opgs16::resource::SSound& GetSound(const std::string& name_key) {
   if (!ExistKey(m_sounds, name_key)) {
-#if defined(_DEBUG)
-    std::wstring log{ L"Does not found proper sound, " };
-    log.append(std::cbegin(name_key), std::cend(name_key));
-    PushLog(LOG_TYPE_ERRO, log.c_str());
-#endif /*! Log error message in Debug mode */
-        /* Temporary */
+    PUSH_LOG_ERROR_EXT(
+        "Did not find appropriate texture2D : [Tag : {0}]", name_key);
     throw std::runtime_error("GetSound error");
   }
 
@@ -389,12 +378,8 @@ std::pair<bool, const opgs16::resource::SFont*> GetFont(const std::string & name
 
 const opgs16::resource::SAnimation* GetAnimation(const std::string& name_key) {
   if (!ExistKey(m_animations, name_key)) {
-#if defined(_DEBUG)
-    std::wstring log{ L"Does not found proper sound, " };
-    log.append(std::cbegin(name_key), std::cend(name_key));
-    PUSH_LOG_ERRO(log.c_str());
-#endif /*! Log error message in Debug mode */
-        /* Temporary */
+    PUSH_LOG_ERROR_EXT(
+        "Did not find appropriate proper animation : [Tag : {0}]", name_key);
     throw std::runtime_error("GetSound error");
   }
 
@@ -478,9 +463,7 @@ void ReadResource(const std::string& token_line, std::ifstream& stream,
 void PushShader(const std::string& name_key, 
                 const opgs16::resource::SShader& list) {
   if (ExistKey(m_shaders, name_key)) {
-#if defined(_DEBUG)
-    PushLog(LOG_TYPE_ERRO, L"Shader key duplicated");
-#endif
+    PUSH_LOG_ERROR_EXT("Shader key duplicated : [Tag : {0}]", name_key);
     throw std::runtime_error("Shader Key duplicated :: " + name_key);
   }
 
@@ -489,8 +472,10 @@ void PushShader(const std::string& name_key,
 
 void PushTexture2D(const std::string& name_key, 
                    const opgs16::resource::STexture2DAtlas& container) {
-  if (ExistKey(m_textures, name_key))
+  if (ExistKey(m_textures, name_key)) {
+    PUSH_LOG_ERROR_EXT("Texture2D key duplicated : [Tag : {0}]", name_key);
     throw std::runtime_error("Texture Key duplicated :: " + name_key);
+  }
 
   m_textures.emplace(name_key, container);
 }
@@ -548,9 +533,10 @@ opgs16::resource::STexture2DAtlas MakeTexture2DContainerDefault(
 
   // Print log in _DEBUG mode
 #if defined(_DEBUG)
-  std::wstring log{ L"[Texture2D][" };
-  log.append(local_path.cbegin(), local_path.cend());     log.append(L"]");
-  PushLog(LOG_TYPE_INFO, log.c_str());
+  std::string log{ "[Texture2D][" };
+  log.append(local_path.cbegin(), local_path.cend());
+  log.append("]");
+  PUSH_LOG_ERRO(log.c_str());
 #endif 
 
   opgs16::resource::STexture2DAtlas atlas_resource;
@@ -569,13 +555,13 @@ std::vector<T> CreateAtlasInformationList(
     opgs16::resource::STexture2DAtlas* resource) {
 
   if (!atlas_json.at(list_name).is_array()) {
-    PushLog(LOG_TYPE_ERRO, L"Invalid type specifier, offset_x must be array.");
+    PUSH_LOG_ERRO("Invalid type specifier, offset_x must be array.");
     throw std::runtime_error("Invalid type specifier, offset_x must be array.");
   }
 
   const auto list = atlas_json[list_name.c_str()].get<std::vector<T>>();
   if (list.size() != resource->fragment_number) {
-    PushLog(LOG_TYPE_ERRO, L"offset_x list size must be same as fragment_number value.");
+    PUSH_LOG_ERRO("offset_x list size must be same as fragment_number value.");
     throw std::runtime_error("List size is not same as fragment_number.");
   }
 
@@ -640,9 +626,12 @@ opgs16::resource::STexture2DAtlas MakeTexture2DAtlasContainer(
   std::string local_atlas_path; line_stream >> local_atlas_path;
 #if defined(_DEBUG)
   {
-    std::wstring log; log.append(L"[Texture2DAtlas][");
-    log.append(local_texture_path.cbegin(), local_texture_path.cend()); log.append(L"][");
-    log.append(local_atlas_path.cbegin(), local_atlas_path.cend()); log.append(L"]");
+    std::string log; 
+    log.append("[Texture2DAtlas][");
+    log.append(local_texture_path.cbegin(), local_texture_path.cend()); 
+    log.append("][");
+    log.append(local_atlas_path.cbegin(), local_atlas_path.cend()); 
+    log.append("]");
     PUSH_LOG_INFO(log.c_str());
   }
 #endif /*! Print local pathes */
@@ -650,9 +639,11 @@ opgs16::resource::STexture2DAtlas MakeTexture2DAtlasContainer(
   std::string atlas_path = global_path + local_atlas_path;
   std::ifstream file{ atlas_path.c_str(), std::ios_base::in };
   if (file.bad()) {
-    std::wstring log; log.resize(150); log.append(L"Failed to read ");
-    log.append(atlas_path.cbegin(), atlas_path.cend());
-    PushLog(LOG_TYPE_ERRO, log.c_str());
+    std::string log; 
+    log.resize(150); 
+    log.append("Failed to read ");
+    log.append(atlas_path);
+    PUSH_LOG_ERRO(log.c_str());
     throw std::runtime_error("Failed to read resource file.");
   }
 
@@ -667,9 +658,10 @@ opgs16::resource::SSound MakeSoundContainer(
     std::string local_path; line_stream >> local_path;
 #if defined(_DEBUG)
     {
-        std::wstring log{ L"[Sound][" };
-        log.append(local_path.cbegin(), local_path.cend());     log.append(L"]");
-        PushLog(LOG_TYPE_INFO, log.c_str());
+        std::string log{ "[Sound][" };
+        log.append(local_path);
+        log.append("]");
+        PUSH_LOG_INFO(log.c_str());
     }
 #endif
     return opgs16::resource::SSound{ global_path + local_path, is_bgm };
@@ -695,11 +687,12 @@ opgs16::resource::SShader MakeShaderContainer(
   }
 #if defined(_DEBUG)
   {
-    PushLog(LOG_TYPE_INFO, L"[SHADER]");
+    PUSH_LOG_INFO("[SHADER]");
     for (const auto& shader : shader_list) {
-      std::wstring log{ L"[SHADER_ELEMENT][" };
-      log.append(shader.second.cbegin(), shader.second.cend()); log.append(L"]");
-      PushLog(LOG_TYPE_INFO, log.c_str());
+      std::string log{ "[SHADER_ELEMENT][" };
+      log.append(shader.second); 
+      log.append("]");
+      PUSH_LOG_INFO(log.c_str());
     }
   }
 #endif
@@ -718,10 +711,12 @@ opgs16::resource::SFont MakeFontContainer(
 
 #if defined(_DEBUG)
   {
-    std::wstring log{ L"[FontGlyph][" };
-    log.append(local_path.cbegin(), local_path.cend());     log.append(L"][");
-    log.append(is_default ? L"DEFAULT" : L"NOT_DEFAULT");   log.append(L"]");
-    PushLog(LOG_TYPE_INFO, log.c_str());
+    std::string log{ "[FontGlyph][" };
+    log.append(local_path);
+    log.append("][");
+    log.append(is_default ? "DEFAULT" : "NOT_DEFAULT");
+    log.append("]");
+    PUSH_LOG_INFO(log.c_str());
   }
 #endif
   return opgs16::resource::SFont{ global_path + local_path, is_default };
@@ -736,8 +731,8 @@ opgs16::resource::SAnimation MakeAnimationContainer(
   if (!animation_file.good()) {
 #if defined(_DEBUG)
     {
-      std::wstring log{ L"Failed to load animation file. " };
-      log.append(std::cbegin(path), std::cend(path));
+      std::string log{ "Failed to load animation file. " };
+      log.append(path);
       PUSH_LOG_ERRO(log.c_str());
     }
 #endif
@@ -759,10 +754,13 @@ opgs16::resource::SAnimation MakeAnimationContainer(
   }
 #if defined(_DEBUG)
   {
-    std::wstring log{ L"[Animation][" };
-    log.append(std::cbegin(path), std::cend(path)); log += L"][Total:";
-    log += std::to_wstring(total_cell); log += L"][Time:";
-    log += std::to_wstring(total_time); log += L"]";
+    std::string log{ "[Animation][" };
+    log.append(path); 
+    log += "][Total:";
+    log += std::to_string(total_cell); 
+    log += "][Time:";
+    log += std::to_string(total_time); 
+    log += "]";
     PUSH_LOG_INFO(log.c_str());
   }
 #endif
