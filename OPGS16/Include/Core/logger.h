@@ -1,90 +1,69 @@
-#ifndef OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H
-#define OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H
+#ifndef OPGS16_CORE_LOGGER_H
+#define OPGS16_CORE_LOGGER_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*!
- * @file Core\logger.h
- * @brief CLogger class declaration file.
- * @author Jongmin Yun
- * @log
- * 2018-03-06 Add logger frame.
- * 2018-03-11 Attach spdlog logging library.
- * 2018-04-02 const char* to const wchar_t* for multibyte text.
- */
-
-#include <memory>
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Core\logger.h
+///
+/// @brief 
+/// CLogger class declaration file.
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-06 Add logger frame.
+/// 2018-03-11 Attach spdlog logging library.
+/// 2018-04-02 const char* to const wchar_t* for multibyte text.
+/// 2018-05-22 Refactored deform class structure and recreated to namespace.
+/// 2018-05-23 Removed wchar_t parameter version of function.
+///
 
 #include <Core\Internal\logger_internal.h>  /// ::opgs16::debug::_internal
-#include <opgs16fwd.h>  /// Forward declaration
+#include <memory>
 
-typedef int LOG_TYPE;
+/// Third party logger library
+#include <spdlog\spdlog.h>
 
-namespace opgs16 {
-namespace debug {
+///
+/// @namespace opgs16::debug::log
+///
+/// @brief 
+/// This namespace implements logger components.
+///
+namespace opgs16::debug::log {
 
-constexpr int LOG_TYPE_INFO = 0;
-constexpr int LOG_TYPE_WARN = 1;
-constexpr int LOG_TYPE_ERRO = 2;
+///
+/// @brief
+/// Push message into logger
+///
+/// @param[in] msg_type Message type for logging. 
+/// @param[in] log_message Log message to output on console or log file.
+///
+void Push(_internal::ELogMessageType msg_type, const char* log_message);
 
-/**
- * @class CLogger
- * @brief CLogger static sub-program.
- */
-class CLogger final {
-public:
-    /*! Get static instance of CLogger. */
-    static CLogger& Instance() {
-        static CLogger instance{};
-        return instance;
-    }
+} /// ::opgs16::debug::log
 
-    /*! Push message into logger */
-    void Push(_internal::MsgType type, const wchar_t* log_message);
-    void Push(_internal::MsgType type, const char* log_message);
+///
+/// @namespace opgs16::debug::log::____
+///
+/// @brief
+/// Private namespace of opgs16::debug::log namespace.
+///
+namespace opgs16::debug::log::____ {
 
-private:
-    CLogger();
-    std::unique_ptr<_internal::CLoggerImpl> m_impl; /*! Private implementation instance. */
+///
+/// @brief
+/// Get reference of logger instance inside.
+///
+/// @return Reference of logger instance.
+///
+std::weak_ptr<spdlog::logger> Get();
 
-public:
-    ~CLogger();
-    CLogger(const CLogger&) = delete;
-    CLogger operator=(const CLogger&) = delete;
-};
+} /// ::opgs16::debug::log::____
 
-/*! Helper function */
-void PushLog(_internal::MsgType type, const wchar_t* log_message);
-void PushLog(LOG_TYPE type, const wchar_t* log_message);
-void PushLog(LOG_TYPE type, const char* log_message);
 
-} /*! opgs16::debug */
-} /*! opgs16 */
-
-#endif /** OPGS16_SYSTEM_CORE_PUBLIC_LOGGER_H */
+#endif /// OPGS16_CORE_LOGGER_H

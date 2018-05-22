@@ -1,55 +1,41 @@
-#ifndef OPGS16_SYSTEM_CORE_INTERNAL_LOGGER_INTERNAL_H
-#define OPGS16_SYSTEM_CORE_INTERNAL_LOGGER_INTERNAL_H
+#ifndef OPGS16_CORE_INTERNAL_LOGGER_H
+#define OPGS16_CORE_INTERNAL_LOGGER_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Core/Internal/logger_internal.h
+///
+/// @brief 
+/// Internal Type used to in ::opgs16::debug::log namespace.
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-06 Create file.
+/// 2018-05-22 Refactoring and Add Debug, Critical.
+///
 
-/*!
- * @file System/Core/Internal/logger_internal.h
- * @brief Internal Type used to in CLogger instance.
- * @author Jongmin Yun
- * @log
- * 2018-03-06 Create file.
- */
+namespace opgs16::debug::_internal {
 
-namespace opgs16 {
-namespace debug {
-namespace _internal {
-
-enum class MsgType : int {
-    INFO     = 0x0200,  /*! Info */
-    WARN     = 0x0400,  /*! Warning */
-    _ERROR   = 0xDEAD,   /*! When error occured, message are brought must have this type. */
+///
+/// @enum ELogMessageType
+///
+/// @brief
+/// Represents logger message type.
+///
+enum class ELogMessageType {
+  Info,
+  Debug,
+  Warning,  
+  Critical,
+  Error
 };
 
-} /*! opgs16::debug::_internal */
-} /*! opgs16::debug */
-} /*! opgs16 */
+} /// ::opgs16::debug::_internal
 
-#endif // !OPGS16_SYSTEM_CORE_INTERNAL_LOGGER_INTERNAL_H
+#endif /// OPGS16_CORE_INTERNAL_LOGGER_H
 

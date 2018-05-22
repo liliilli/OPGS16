@@ -1,55 +1,100 @@
 #ifndef OPGS16_HEADERS_IMPORT_LOGGER_H
 #define OPGS16_HEADERS_IMPORT_LOGGER_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/// @file 
-/// Headers/import_logger.h
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Headers/import_logger.h
+///
 /// @brief Logger importer.
+///
 /// @author Jongmin Yun
 /// @log
 /// 2018-04-06 Create file.
+/// 2018-05-22 
+/// Add variant parameter version of logging macroes,
+/// and Add DEBUG and CRITICAL priority log mode.
+///
 
-#if defined(_DEBUG) || defined(NDEBUG)
+/// Enhanced assertion
+#include <Helper\assert.h>
+
+#if defined(_DEBUG)
+
 #include <Core\logger.h>
-using opgs16::debug::PushLog;
-using opgs16::debug::LOG_TYPE_INFO;
-using opgs16::debug::LOG_TYPE_WARN;
-using opgs16::debug::LOG_TYPE_ERRO;
 
-#define PUSH_LOG_ERRO(__string__) PushLog(LOG_TYPE_ERRO, __string__)
-#define PUSH_LOG_WARN(__string__) PushLog(LOG_TYPE_WARN, __string__)
-#define PUSH_LOG_INFO(__string__) PushLog(LOG_TYPE_INFO, __string__)
+#define PUSH_LOG_INFO(__MAString__) \
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Info, \
+                             __MAString__)
+
+#define PUSH_LOG_DEBUG(__MAString__) \
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Debug, \
+                             __MAString__)
+
+#define PUSH_LOG_WARN(__MAString__) \
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Warning, \
+                             __MAString__)
+
+#define PUSH_LOG_CRITICAL(__MAString) \
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Critical, \
+                             __MAString__)
+
+#define PUSH_LOG_ERRO(__MAString__) \
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Error, \
+                             __MAString__)
+
+#define PUSH_LOG_INFO_EXT(__MAString__, ...) \
+  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
+    spt->info(__MAString__, __VA_ARGS__); \
+  } else { \
+    NEU_NOT_IMPLEMENTED_ASSERT(); \
+  }
+
+#define PUSH_LOG_DEBUG_EXT(__MAString__, ...) \
+  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
+    spt->debug(__MAString__, __VA_ARGS__); \
+  } else { \
+    NEU_NOT_IMPLEMENTED_ASSERT(); \
+  }
+
+#define PUSH_LOG_WARN_EXT(__MAString__, ...) \
+  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
+    spt->warn(__MAString__, __VA_ARGS__); \
+  } else { \
+    NEU_NOT_IMPLEMENTED_ASSERT(); \
+  }
+
+#define PUSH_LOG_CRITICAL_EXT(__MAString__, ...) \
+  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
+    spt->critical(__MAString__, __VA_ARGS__); \
+  } else { \
+    NEU_NOT_IMPLEMENTED_ASSERT(); \
+  }
+
+#define PUSH_LOG_ERROR_EXT(__MAString__, ...) \
+  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
+    spt->error(__MAString__, __VA_ARGS__); \
+  } else { \
+    NEU_NOT_IMPLEMENTED_ASSERT(); \
+  }
+
 #else
-#define PUSH_LOG_ERRO(__string__) (void*)0
-#define PUSH_LOG_WARN(__string__) (void*)0
-#define PUSH_LOG_INFO(__string__) (void*)0
-#endif /*! opgs16::debug::PushLog only on _DEBUG */
 
-#endif // OPGS16_HEADER_IMPORT_LOGGER_H
+#define PUSH_LOG_INFO(__string__) ((void*)0)
+#define PUSH_LOG_DEBUG(__string__) ((void*)0)
+#define PUSH_LOG_WARN(__string__) ((void*)0)
+#define PUSH_LOG_CRITICAL(__string__) ((void*)0)
+#define PUSH_LOG_ERRO(__string__) ((void*)0)
+
+#define PUSH_LOG_INFO_EXT(__MAString__, ...)  ((void*)0)
+#define PUSH_LOG_DEBUG_EXT(__MAString__, ...) ((void*)0)
+#define PUSH_LOG_WARN_EXT(__MAString__, ...)  ((void*)0)
+#define PUSH_LOG_CRITICAL_EXT(__MAString__, ...) ((void*)0)
+#define PUSH_LOG_ERROR_EXT(__MAString__, ...) ((void*)0)
+
+#endif /// opgs16::debug::PushLog only on _DEBUG
+
+#endif /// OPGS16_HEADER_IMPORT_LOGGER_H

@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
     <ClCompile Include="manifest.h" />
-    <ClCompile Include="Include\Core\Impl\logger_impl.cc" />
     <ClCompile Include="Include\Element\Impl\object_impl.cc" />
     <ClCompile Include="Include\Element\Impl\text_impl.cc" />
     <ClCompile Include="Include\Frame\constant.h" />
@@ -70,7 +69,6 @@
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Include\Core\Impl\logger_impl.h" />
     <ClInclude Include="Include\Core\Internal\logger_internal.h" />
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
     <ClInclude Include="Include\Element\Impl\text_impl.h" />

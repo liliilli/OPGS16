@@ -151,7 +151,6 @@
     <ClCompile Include="Source\Component\empty_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
-    <ClCompile Include="Include\Core\Impl\logger_impl.cc" />
     <ClCompile Include="Source\Core\application.cc" />
     <ClCompile Include="Include\Element\camera_object.cc" />
     <ClCompile Include="Source\Element\Canvas\canvas.cc" />
@@ -227,7 +226,6 @@
     <ClInclude Include="Include\Component\empty_renderer.h" />
     <ClInclude Include="Include\Component\preprocessing2d_renderer.h" />
     <ClInclude Include="Include\Component\preprocessing_getter.h" />
-    <ClInclude Include="Include\Core\Impl\logger_impl.h" />
     <ClInclude Include="Include\Core\Internal\logger_internal.h" />
     <ClInclude Include="Include\Core\application.h" />
     <ClInclude Include="Include\Element\camera_object.h" />
