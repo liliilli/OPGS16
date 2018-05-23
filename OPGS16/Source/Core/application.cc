@@ -343,7 +343,7 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_FALSE);
   glfwSetFramebufferSizeCallback(window, &OnCallbackFrameBufferSize);
   //glfwSetCursorPosCallback(window, camera::MouseControl);

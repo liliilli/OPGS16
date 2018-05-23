@@ -28,6 +28,11 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
+/// ::opgs16;:core::application
+#include <Core\application.h>
+/// ::opgs16::SGlobalSetting
+#include <Core\core_setting.h>
+
 /// Import logger
 #include <Headers\import_logger.h>
 /// Expanded assertion
@@ -136,6 +141,7 @@ enum class LoadStatus {
 
 // Window handle pointer
 GLFWwindow* m_window;       
+GLFWcursor* m_cursor = nullptr;
 
 key_map m_key_inputs;
 
@@ -143,6 +149,51 @@ key_map m_key_inputs;
 
 EKeyExist IsKeyExist(const std::string& key) {
   return static_cast<EKeyExist>(m_key_inputs.find(key) != m_key_inputs.end());
+}
+
+///
+/// @brief
+/// Polling notification of physical key input.
+/// If key is notified glfw library execute this function as callback.
+///
+/// In this now, just print what key was pressed on console.
+///
+/// @param[in] window GLFW window instance.
+/// @param[in] key Key information.
+/// @param[in] scancode Not be used now.
+/// @param[in] action Key pressed, released, keeping pushed states.
+/// @param[in] mod Not be used now.
+///
+void __InputKeyCallback(GLFWwindow* window, 
+                        int key, int scancode, int action, int mod) {
+  PUSH_LOG_INFO_EXT("Key input : {0}, {1}", key, action);
+#if defined(false)
+  // @bug DEBUG_EXT does not output log message on console even in dbg mode.
+  PUSH_LOG_DEBUG_EXT("Key input : {0}, {1}", key, action);
+#endif
+}
+
+///
+/// @brief
+/// Polling mouse position update.
+///
+/// In this now, just print how much cursor moved on window.
+/// origin is left, down (0, 0). max size is (256, 224).
+/// 
+/// @param[in] window GLFW window instance.
+/// @param[in] xpos x coordinate position value.
+/// @param[in] ypos y coordinate position value.
+///
+void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
+  const auto& setting = opgs16::entry::Setting();
+  const auto scale_value = setting.ScaleValueIntegerOf();
+
+  const auto regulated_xpos = xpos / scale_value;
+  const auto regulated_ypos = ypos / scale_value;
+  
+  PUSH_LOG_INFO_EXT(
+      "Mouse position update : O {0:2}, {1:2}, R {2:2}, {3:2}", 
+      xpos, ypos, regulated_xpos, regulated_ypos);
 }
 
 namespace opgs16::manager::input {
@@ -153,6 +204,18 @@ void Initiate(GLFWwindow* window_context) {
   m_initiated = EInitiated::Initiated;
 
   m_window = window_context;
+  glfwSetKeyCallback(m_window, __InputKeyCallback);
+  glfwSetCursorPosCallback(m_window, __MousePositionCallback);
+
+  unsigned char m_data[16 * 16 * 4];
+  memset(m_data, 0xFF, sizeof(m_data));
+  GLFWimage image;
+  image.height = 16;
+  image.width = 16;
+  image.pixels = m_data;
+  m_cursor = glfwCreateCursor(&image, 0, 0);
+
+  glfwSetCursor(m_window, m_cursor);
 
   ReadInputFile(input_path.data());
 }
