@@ -196,6 +196,28 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
       xpos, ypos, regulated_xpos, regulated_ypos);
 }
 
+///
+/// @brief
+/// Polling mouse input update.
+///
+/// In this now, just print what moust button is pressed or released.
+///
+/// @param[in] window GLFW window instance.
+/// @param[in] button Mouse button
+/// @param[in] action Mouse button action.
+/// @param[in] modes Mouse modifier bits.
+/// 
+void __MouseInputCallback(GLFWwindow* window, 
+                          int button, int action, int modes) {
+  PUSH_LOG_INFO_EXT(
+      "Mouse input update [Button : {0}], [Action : {1}]", button, action);
+#if defined(false)
+  // @bug DEBUG_EXT does not output log message on console even in dbg mode.
+  PUSH_LOG_DEBUG_EXT(
+      "Mouse input update [Button : {0}], [Action : {1}]", button, action);
+#endif
+}
+
 namespace opgs16::manager::input {
 
 void Initiate(GLFWwindow* window_context) {
@@ -206,6 +228,7 @@ void Initiate(GLFWwindow* window_context) {
   m_window = window_context;
   glfwSetKeyCallback(m_window, __InputKeyCallback);
   glfwSetCursorPosCallback(m_window, __MousePositionCallback);
+  glfwSetMouseButtonCallback(m_window, __MouseInputCallback);
 
   unsigned char m_data[16 * 16 * 4];
   memset(m_data, 0xFF, sizeof(m_data));
