@@ -40,10 +40,10 @@
 
 #include <glm/glm.hpp>
 
-/// ::opgs16::component::CScriptFrame
-#include <Component\script_frame.h>
 /// ::opgs16::component::_internal::CComponent
 #include <Component\Internal\component.h>
+/// ::opgs16::component::_internal Component type
+#include <Component\Internal\type.h>
 /// ::opgs16::element::_internal::EDirection
 #include <Element\Internal\direction_type.h>
 /// ::opgs16::manager::_internal::Physics
@@ -58,33 +58,36 @@
 
 #include <opgs16fwd.h>          /// Forward declaration
 
-
 namespace opgs16 {
 namespace element {
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @class CObject
- * @brief The class for every object to update and draw.
- *
- * Object abstract class stores common values and inheritable by derived each object class.
- * When using each m_object_list you have to use this type as a storing type to avoid cracking of
- * polymorphism.
- * Each object can be called using Update and Draw with shader to use.
- *
- * @log
- * 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
- * 2018-02-19 Add GetParentPosition(). Remove virtual property from Draw()
- *            and Render() virtual methods. and Remove virtual property from Update() instead of
- *            adding LocalUpdate() method which replaces Update() override.
- * 2018-03-05 Add member function related to controlling rendering layer.
- * 2018-03-11 Move contents into ::opgs16::element namespace.
- * 2018-04-16 Add rotation (parent, world) get/set functions.
- * 2018-04-18 Change function and mechanism of rotation.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @class CObject
+/// @brief The class for every object to update and draw.
+///
+/// Object abstract class stores common values and inheritable by derived each object class.
+/// When using each m_object_list you have to use this type as a storing type to avoid cracking of
+/// polymorphism.
+/// Each object can be called using Update and Draw with shader to use.
+///
+/// @log
+/// 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
+/// 2018-02-19
+/// Add GetParentPosition(). Remove virtual property from Draw() and Render()
+/// virtual methods. and Remove virtual property from Update() instead of
+/// adding LocalUpdate() method which replaces Update() override.
+/// 2018-03-05 Add member function related to controlling rendering layer.
+/// 2018-03-11 Move contents into ::opgs16::element namespace.
+/// 2018-04-16 Add rotation (parent, world) get/set functions.
+/// 2018-04-18 Change function and mechanism of rotation.
+/// 2018-05-24 Add object cycle implementation for Initiate() calling.
+/// 2018-05-25 Add object cycle for Start() calling.
+///
 class CObject {
 private:
   using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
-  using component_list    = std::vector<component_ptr>;
+  using component_list    = std::vector<
+      std::pair<component_ptr, component::_internal::EComponentType>>;
   using name_counter_map  = std::unordered_map<std::string, unsigned>;
 	using object_raw = CObject*;
 	using object_ptr = std::unique_ptr<CObject>;
@@ -95,20 +98,11 @@ public:
 	CObject();
 	virtual ~CObject();
 
-  /*! Update components of object. */
-  inline void Update() {
-    if (m_data && GetActive()) {
-      LocalUpdate();
-      for (auto& component : m_components)
-        component->Update();
-
-      for (auto& child : m_children) {
-        /*! If child.second is not emtpy and activated. */
-        if (child.second && child.second->GetActive())
-          child.second->Update();
-      }
-    }
-  }
+  ///
+  /// @brief
+  /// Update components of object.
+  ///
+  void Update();
 
   /*! Calls children to draw or render something it has.  */
   void Draw() {
@@ -235,7 +229,10 @@ public:
 
   bool GetActive() const;   /*! Get active value. */
 
-    /*! Overloaded function of Instantiate(Varadic...) */
+  ///
+  /// @brief
+  /// Overloaded function of Instantiate(Varadic...)
+  ///
   template <
     class _Ty,
     class = std::enable_if_t<IsCObjectBase<_Ty>>
@@ -329,67 +326,106 @@ public:
 	 */
 	object_raw const GetChild(const std::string& child_name);
 
-    /*!
-     * @brief Add component and bind to this object instance.
-     * @param[in] _Ty Component type class argument.
-     * @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
-     */
-    using _Component = component::_internal::CComponent;
-    template<
-        class _Ty,
-        typename... _Params,
-        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >
-    _Ty* AddComponent(_Params&&... params);
+  ///
+  /// @brief
+  /// Add component and bind to this object instance.
+  ///
+  /// @param[in] _Ty Component type class argument.
+  /// @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
+  ///
+  using _Component = component::_internal::CComponent;
+  template<
+    class _Ty,
+    typename... _Params,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+  >
+  _Ty* AddComponent(_Params&&... params) {
+    using EComponentType = component::_internal::EComponentType;
 
-    /*!
-     * @brief Return component raw-pointer.
-     * @param[in] _Ty Component type argument.
-     * @return If found, return _Ty* but not found, return nullptr.
-     */
-    template<
-        class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >
-    _Ty* const GetComponent();
+    auto type = EComponentType::Normal;
+    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>)
+      type = EComponentType::Script;
 
-    ///
-    /// @brief
-    ///
-    ///
-    /// @param[in] TType
-    ///
-    /// @return
-    ///
-    ///
-    template <
-      class TType,
-      typename = std::enable_if_t<std::is_base_of_v<_Component, TType>>
-    >
-    std::vector<TType*> GetComponents() {
-      // Component matching process is using recursion of each component
-      // from last derived component class to highest base component class.
-      std::vector<TType*> result_component_list{};
+    m_components.push_back(std::make_pair(
+        std::make_unique<_Ty>(std::forward<_Params>(params)...),
+        type)
+    );
 
-      for (auto& item : m_components) {
-        if (item->DoesTypeMatch(TType::type))
-          result_component_list.push_back(static_cast<TType*>(item.get()));
-      }
+    return GetComponent<_Ty>();
+  }
 
-      // If there is no component to find.
-      return result_component_list;
+  /*!
+   * @brief Return component raw-pointer.
+   * @param[in] _Ty Component type argument.
+   * @return If found, return _Ty* but not found, return nullptr.
+   */
+  template<
+    class _Ty,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+  >
+  _Ty* const GetComponent() {
+    // Component matching process is using recursion of each component
+    // from last derived component class to highest base component class.
+    for (auto& [component, type] : m_components) {
+      if (component->DoesTypeMatch(_Ty::type))
+        return static_cast<_Ty*>(component.get());
     }
 
-    /*!
-     * @brief Remove component.
-     * @param[in] _Ty Component type argument.
-     * @return If found, return true but otherwise false.
-     */
-    template <
-        class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
-    >
-    bool RemoveComponent();
+    // If there is no component to find.
+    return nullptr;
+  }
+
+  ///
+  /// @brief
+  ///
+  ///
+  /// @param[in] TType
+  ///
+  /// @return
+  ///
+  ///
+  template <
+    class TType,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TType>>
+  >
+  std::vector<TType*> GetComponents() {
+    // Component matching process is using recursion of each component
+    // from last derived component class to highest base component class.
+    std::vector<TType*> result_component_list{};
+
+    for (auto& [component, item] : m_components) {
+      if (component->DoesTypeMatch(TType::type))
+        result_component_list.push_back(static_cast<TType*>(component.get()));
+    }
+
+    // If there is no component to find.
+    return result_component_list;
+  }
+
+  /*!
+   * @brief Remove component.
+   * @param[in] _Ty Component type argument.
+   * @return If found, return true but otherwise false.
+   */
+  template <
+    class _Ty,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+  >
+  bool RemoveComponent() {
+    auto it = std::find_if(
+      m_components.cbegin(),
+      m_components.cend(),
+      [](const std::unique_ptr<component::Component>& item) {
+      return item->DoesTypeMatch(_Ty::type);
+    }
+    );
+
+    if (it != m_components.cend()) {
+      m_components.erase(it);    /*! Too much execution time */
+      return true;
+    }
+    else return false;
+  }
 
     /*!
      * @brief Set tag with tag name. This method will check whether or not exist matched tag name
@@ -477,44 +513,6 @@ protected:
     /*! Render method for derived object. */
     virtual void Render() {};
 };
-
-template<class _Ty, typename... _Params, typename>
-_Ty* CObject::AddComponent(_Params&&... params) {
-  m_components.emplace_back(
-      std::make_unique<_Ty>(std::forward<_Params>(params)...));
-
-  return GetComponent<_Ty>();
-}
-
-template<class _Ty, typename>
-_Ty* const CObject::GetComponent() {
-  // Component matching process is using recursion of each component
-  // from last derived component class to highest base component class.
-  for (auto& item : m_components) {
-    if (item->DoesTypeMatch(_Ty::type))
-      return static_cast<_Ty*>(item.get());
-  }
-
-  // If there is no component to find.
-  return nullptr;
-}
-
-template <class _Ty, typename>
-bool CObject::RemoveComponent() {
-    auto it = std::find_if(
-        m_components.cbegin(),
-        m_components.cend(),
-        [](const std::unique_ptr<component::Component>& item) {
-          return item->DoesTypeMatch(_Ty::type);
-        }
-    );
-
-    if (it != m_components.cend()) {
-        m_components.erase(it);    /*! Too much execution time */
-        return true;
-    }
-    else return false;
-}
 
 inline const std::string CObject::CreateChildTag(const std::string& tag) noexcept {
     std::string item_tag{ tag };

@@ -168,6 +168,7 @@
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
+    <ClInclude Include="Include\Component\Internal\type.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

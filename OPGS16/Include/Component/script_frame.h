@@ -27,8 +27,8 @@
 #include <Component\Internal\component_macro.h>
 /// ::opgs16::component::_internal enum flag classes
 #include <Component\Internal\script_frame_flag.h>
-/// Forward declaration
-#include <opgs16fwd.h>
+/// ::opgs16::element::CObject
+#include <Element\object.h>
 
 namespace opgs16::component {
 
@@ -46,6 +46,9 @@ namespace opgs16::component {
 /// and prior to first Update() call.
 ///
 class CScriptFrame : public _internal::CComponent {
+public:
+  friend void element::CObject::Update();
+
 public:
   CScriptFrame(element::CObject& bound_obj) : CComponent{ bound_obj } {}
 
@@ -88,6 +91,8 @@ private:
   mutable _internal::EScriptInitiated m_initiated =
       _internal::EScriptInitiated::NotInitiated;
 #endif
+  mutable _internal::EScriptStarted m_started =
+      _internal::EScriptStarted::NotStarted;
 
   /// Name must be same as ScriptFrame derived.
   const std::string m_script_name;

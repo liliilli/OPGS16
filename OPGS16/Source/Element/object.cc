@@ -1,43 +1,35 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Private/object.cc
- * @brief Definition file of ../Public/object.h
- * @author Jongmin Yun
- *
- * @log
- * 2018-04-18 Change function and mechanism of rotation. and Add comments.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Element/object.cc
+///
+/// @brief
+/// Definition file of ../Public/object.h
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-04-18 Change function and mechanism of rotation. and Add comments.
+/// 2018-05-25
+/// Move inline function Update() to .cc file.
+/// Implement Script file Start().
+///
 
-#include <Element\object.h>             /// Header file
+/// Header file
+#include <Element\object.h>
 /// ::opgs16::element::_internal::CObjectImpl
-#include <Element\Impl\object_impl.h>   
+#include <Element\Impl\object_impl.h>
+
+/// ::opgs16::component::CScriptFrame
+#include <Component\script_frame.h>
+/// import logger in debug mode.
+#include <Headers\import_logger.h>
+
+#undef GetObject
 
 namespace opgs16 {
 namespace element {
@@ -48,36 +40,72 @@ using _internal::CObjectImpl;
 
 CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } { }
 
+void CObject::Update() {
+  if (m_data && GetActive()) {
+    LocalUpdate();
+
+    for (auto&[component, type] : m_components) {
+      using CScriptFrame    = component::CScriptFrame;
+      using EComponentType  = component::_internal::EComponentType;
+      using EScriptStarted  = component::_internal::EScriptStarted;
+
+      // At first, check if component is script type (based on CScriptFrame)
+      // and cast component to base script type.
+      // If Start() function is not called, call and turn on the start flag
+      // not to be callled over twice.
+      if (type == EComponentType::Script) {
+        if (auto script = static_cast<CScriptFrame*>(component.get());
+            script->m_started == EScriptStarted::NotStarted) {
+
+          PUSH_LOG_INFO_EXT(
+              "Object call Start() : [Name : {0}]",
+              script->GetObject().GetObjectName());
+          script->Start();
+          script->m_started = decltype(script->m_started)::Started;
+        }
+      }
+
+      component->Update();
+    }
+
+    for (auto& child : m_children) {
+      // If child.second is not emtpy and activated.
+      if (child.second && child.second->GetActive())
+        child.second->Update();
+    }
+  }
+}
+
 const glm::vec3& CObject::GetLocalPosition() const noexcept {
-    return m_data->GetLocalPosition();
+  return m_data->GetLocalPosition();
 }
 
 const glm::vec3& CObject::GetWorldPosition() const noexcept {
-    return m_data->GetWorldPosition();
+  return m_data->GetWorldPosition();
 }
 
 const glm::vec3& CObject::GetParentPosition() const noexcept {
-    return m_data->GetParentPosition();
+  return m_data->GetParentPosition();
 }
 
 const glm::vec3& CObject::GetFinalPosition() const noexcept {
-    return m_data->GetFinalPosition();
+  return m_data->GetFinalPosition();
 }
 
 // ReSharper disable CppMemberFunctionMayBeConst
 void CObject::SetLocalPosition(const glm::vec3& position) noexcept {
-    // ReSharper restore CppMemberFunctionMayBeConst
-	m_data->SetLocalPosition(position);
+  // ReSharper restore CppMemberFunctionMayBeConst
+  m_data->SetLocalPosition(position);
 }
 
 void CObject::SetWorldPosition(const glm::vec3& world_position) {
-	m_data->SetWorldPosition(world_position);
-    PropagateParentPosition();
+  m_data->SetWorldPosition(world_position);
+  PropagateParentPosition();
 }
 
 void CObject::SetParentPosition(const glm::vec3& parent_position) {
-	m_data->SetParentPosition(parent_position);
-    PropagateParentPosition();
+  m_data->SetParentPosition(parent_position);
+  PropagateParentPosition();
 }
 
 void CObject::PropagateParentPosition() {
