@@ -46,6 +46,8 @@
 #include <Component\Internal\component.h>
 #include <Component\Internal\component_macro.h>
 
+#undef GetObject
+
 namespace opgs16 {
 namespace component {
 namespace _internal {
@@ -82,7 +84,7 @@ public:
     std::string RenderLayerNameOf() const;
 
     /*!
-     * @brief Set frame buffer to be rendered in. 
+     * @brief Set frame buffer to be rendered in.
      * If frame_buffer_name is empty, the object which binds this component will be rendered onto default frame buffer;
      * Otherwise find whether or not pre-processing frame buffer is exist and target to specific pre-proc buffer.
      * If not find any matched pre-proc buffer, set target to default frame buffer with warning message.
@@ -110,7 +112,7 @@ public:
 
 private:
     /*! Rendering layer index */
-    unsigned    m_render_layer_index{ 0 }; 
+    unsigned    m_render_layer_index{ 0 };
     /*! Frame buffer name onto which to be rendered */
     std::string m_render_frame_buffer_name{};
 

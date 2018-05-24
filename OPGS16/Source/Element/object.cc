@@ -180,7 +180,9 @@ bool CObject::GetSucceedingScalingFlag() const noexcept {
 }
 
 std::vector<std::string> CObject::GetChildrenNameList() const {
-	std::vector<std::string> list(m_children.size());
+	std::vector<std::string> list;
+	list.resize(m_children.size());
+
 	for (const auto& object_pair : m_children) {
         /*! emplace_back evades unnecessary temp instance. */
 	    list.emplace_back(object_pair.first);
@@ -218,11 +220,11 @@ void CObject::SetTag(const std::string& tag_name) {
     m_data->SetTag(tag_name);
 }
 
-void CObject::SetTag(const size_t tag_index) {
+void CObject::SetTag(const unsigned tag_index) {
     m_data->SetTag(tag_index);
 }
 
-size_t CObject::GetTagIndexOf() const {
+unsigned CObject::GetTagIndexOf() const {
     return m_data->GetTagIndexOf();
 }
 

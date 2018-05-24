@@ -175,7 +175,7 @@ void CObjectImpl::SetTag(const std::string& tag_name) {
     if (i == tag_list.size()) m_tag_index = 0;
 }
 
-void CObjectImpl::SetTag(const size_t tag_index) {
+void CObjectImpl::SetTag(const unsigned tag_index) {
     const auto list_size = manager::setting::GetTagNameList().size();
 
     if (tag_index >= list_size)

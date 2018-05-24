@@ -44,6 +44,7 @@
  * 2018-04-18 Change function and mechanism of rotation.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
+#include <cmath>
 #include <string>       /*! std::string */
 
 #include <glm\glm.hpp>  /*! glm::vec_x */
@@ -158,7 +159,7 @@ public:
     }
 
     void SetRotationLocalAngle(const EDirection direction, const float angle_value) noexcept {
-        float angle = std::fmodf(angle_value, 360.f);
+        float angle = std::fmod(angle_value, 360.f);
         angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
         switch (direction) {
@@ -173,7 +174,7 @@ public:
     }
 
     void SetRotationParentAngle(const EDirection direction, const float angle_value) noexcept {
-        float angle = std::fmodf(angle_value, 360.f);
+        float angle = std::fmod(angle_value, 360.f);
         angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
         switch (direction) {
@@ -190,7 +191,7 @@ public:
     }
 
     void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
-        float angle = std::fmodf(angle_value, 360.f);
+        float angle = std::fmod(angle_value, 360.f);
         angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
 
         switch (direction) {
@@ -289,10 +290,10 @@ public:
     void SetTag(const std::string& tag_name);
 
     /*! Overloading version of SetTag(tag_name) */
-    void SetTag(const size_t tag_index);
+    void SetTag(const unsigned tag_index);
 
     /*! Return tag index value of this object. */
-    inline size_t GetTagIndexOf() const noexcept {
+    inline unsigned GetTagIndexOf() const noexcept {
         return m_tag_index;
     }
 
@@ -337,7 +338,7 @@ private:
     mutable bool m_local_rotation_deprecated{ true };   /*! The flag rotation needs to be updated. */
     mutable bool m_scale_deprecated{ true };            /*! The flag scale vec needs to be updated. */
 
-    size_t m_tag_index{ 0 };                /*! Tag index */
+    unsigned m_tag_index{ 0 };                /*! Tag index */
 
 private:
 	void RefreshFinalPosition() const;	/** Refresh Translation matrix */

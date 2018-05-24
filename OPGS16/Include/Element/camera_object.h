@@ -20,7 +20,7 @@
  * If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
  * no distortion, 3D world or 2D world with no sight distortion, set ORTHO.
  */
-class MainCameraObject final : public opgs16::element::CObject {
+class MainCameraObject final : public ::opgs16::element::CObject {
 public:
     MainCameraObject();
 };

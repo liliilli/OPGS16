@@ -58,5 +58,17 @@ CScene::object_ptr& CScene::GetObject(const std::string& name) {
 	}
 }
 
+void CScene::ScriptInitiate(object_ptr& object_pointer) {
+  auto list = object_pointer->GetComponents<component::CScriptFrame>();
+  unsigned index = 0;
+  for (const auto script_ptr : list) {
+    script_ptr->Initiate();
+    PUSH_LOG_INFO_EXT(
+        "Object call Initiate() : [Name : {0}] [Id : {1}]",
+        object_pointer->GetObjectName(), index);
+    ++index;
+  }
+}
+
 } /*! opgs16::element */
 } /*! opgs16 */

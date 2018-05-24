@@ -39,6 +39,8 @@
 #include <Manager\physics_manager.h>    /// ::opgs16::manager::MPhysicsManager
 #include <Manager\time_manager.h>       /// ::opgs16::manager::MTimeManager
 
+#undef GetObject
+
 namespace opgs16::component {
 
 void CRigidbody2D::Update() {

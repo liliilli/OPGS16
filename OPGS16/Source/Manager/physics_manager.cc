@@ -28,6 +28,8 @@
 /// ::opgs16::manager::MSettingManager
 #include <Manager\setting_manager.h>
 
+#undef GetObject
+
 namespace opgs16::manager {
 
 namespace {
