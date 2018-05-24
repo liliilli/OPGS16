@@ -210,6 +210,7 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
