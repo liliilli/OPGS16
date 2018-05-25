@@ -47,6 +47,14 @@ public:
         }
     }
 
+    ///
+  /// @brief
+  /// Destroy specified object in present scene.
+    ///
+  /// If the object has script component, object will call Destroy() function
+  /// before deleted permanently.
+    /// @param[in] object Object to be destroyed.
+  ///
     void Destroy(const element::CObject& object);
 
     void InsertRenderingObject(object_raw const object, unsigned layer_index);

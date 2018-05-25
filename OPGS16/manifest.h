@@ -43,17 +43,17 @@ L"TEST GAME"
 
 //
 #define _INITIAL_SCENE_INCLUDE_PATH \
-<../_Project/Debug/Include/Scene/debug_sound.h>
+<../_Project/Debug/Include/Scene/object_lifecycle.h>
 
 // set first scene of your project.
 // This must be written as the style of L" ... " or application will not build up.
 #define _INITIAL_SCENE_FULL_NAME \
-::opgs16::builtin::sample::__DEBUGSOUND
+::debug::scene::ObjectLifeCycle
 
 ///
 /// Decide whether show the boot screen logo when application is executed.
 /// If you want to show the logo, set this true or false.
-/// 
+///
 #define _SHOW_BOOT_SCREEN \
 false
 

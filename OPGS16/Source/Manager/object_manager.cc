@@ -41,7 +41,7 @@
 /// ::opgs16::element::CObject
 #include <Element\object.h>
 /// ::opgs16::manager::MSceneManager
-#include <Manager\scene_manager.h> 
+#include <Manager\scene_manager.h>
 /// ::opgs16::manager::MSettingManager
 #include <Manager\setting_manager.h>
 
@@ -128,6 +128,16 @@ void MObjectManager::DestroyObjects() {
                 tree_list.pop();
             }
         }
+
+      // Get script component list from object which will be destroyed,
+      // call Destroy() function.
+      auto script_list = object->GetComponents<component::CScriptFrame>();
+      for (auto script : script_list) {
+        PUSH_LOG_INFO_EXT(
+            "Object {0} called Destroy() function"
+            "prior to being destroyed actually.", object->GetObjectName());
+        script->Destroy();
+      }
     }
 
     m_destroy_candidates.clear();

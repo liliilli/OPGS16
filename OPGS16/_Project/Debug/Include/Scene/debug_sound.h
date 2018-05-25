@@ -7,8 +7,6 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
-///
 /// @file System/Boot/Scene/Public/__debugsound.h
 /// @log
 /// 2018-05-13 Create file.
