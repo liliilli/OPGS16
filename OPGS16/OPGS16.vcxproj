@@ -204,9 +204,14 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\debug_sound.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\object_lifecycle.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\canvas_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\__s_debugcanvas.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\hopping.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -310,9 +315,15 @@
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\object_lifecycle.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
