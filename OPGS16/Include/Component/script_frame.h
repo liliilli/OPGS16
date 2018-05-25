@@ -85,6 +85,20 @@ public:
   ///
   virtual void Destroy() {};
 
+  ///
+  /// @brief
+  /// This method will be called
+  /// if only bound object is activated from deactivation.
+  ///
+  virtual void OnEnabled() {};
+
+  ///
+  /// @brief
+  /// This method will be called
+  /// If only bound object is desabled from activation.
+  ///
+  virtual void OnDisabled() {};
+
 private:
   /// internal flag for Initiate() funciton.
 #if defined(false)
