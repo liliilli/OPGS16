@@ -102,7 +102,7 @@ void Hopping::Destroy() {
 }
 
 void Hopping::DestroySelf() {
-  opgs16::manager::MObjectManager::Instance().Destroy(GetObject());
+  opgs16::manager::object::Destroy(GetObject());
 }
 
 } /// ::debug::script

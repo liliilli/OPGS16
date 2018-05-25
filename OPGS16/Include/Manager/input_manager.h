@@ -9,7 +9,7 @@
 ///
 /// @file Manager/input.h
 ///
-/// @brief 
+/// @brief
 /// Manages Input polling, etc.
 ///
 /// @author Jongmin Yun
@@ -22,15 +22,15 @@
 #include <string>
 
 /// Forward declaration
-#include <opgs16fwd.h>  
+#include <opgs16fwd.h>
 
 ///
 /// @namespace opgs16::manager::input
 ///
-/// @brief 
+/// @brief
 /// This class is singleton and can not be a base of any derived class instance.
-/// InputManager has a rule of managing input signal like keyboard key pressing, 
-/// releasing and mouse signal or joystick inputs. 
+/// InputManager has a rule of managing input signal like keyboard key pressing,
+/// releasing and mouse signal or joystick inputs.
 ///
 /// @log
 /// 2018-03-03 Move BindingKeyInfo to separate file for readability.
@@ -48,10 +48,10 @@ namespace opgs16::manager::input {
 void Initiate(GLFWwindow* window_context);
 
 ///
-/// @brief 
+/// @brief
 /// Get Key value which is bound to key container.
 /// This returns [-1, 1] floating values of key information instance found.
-/// If the key name you find didn't find in container, 
+/// If the key name you find didn't find in container,
 /// output error flag in debug mode, and return always 0.0.
 ///
 /// @param[in] key The key name which key instance has.
@@ -60,7 +60,7 @@ void Initiate(GLFWwindow* window_context);
 float GetKeyValue(const std::string& key);
 
 ///
-/// @brief 
+/// @brief
 /// Get whether or not specific key was pressed.
 /// @param[in] key The key name which key instance has.
 /// @return boolean value, if specific key was pressed, return true.
@@ -68,16 +68,16 @@ float GetKeyValue(const std::string& key);
 bool IsKeyPressed(const std::string& key);
 
 ///
-/// @brief 
+/// @brief
 /// Get whether or not specific key was released.
 /// @param[in] key The key name which key instance has.
 /// @return boolean value, if specific key was released, return true.
 ///
 bool IsKeyReleased(const std::string& key);
 
-/// 
+///
 /// @brief
-/// Check something has pressed, released. 
+/// Check something has pressed, released.
 /// and updates key values going down neutral.
 ///
 void Update();

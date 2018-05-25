@@ -37,7 +37,7 @@
 #include <Manager\scene_manager.h>      /// Header file
 
 /// ::opgs16::manager::MPhysicsManager
-#include <Manager\physics_manager.h>    
+#include <Manager\physics_manager.h>
 /// ::opgs16::manager::MTimerManager
 #include <Manager\timer_manager.h>
 /// ::opgs16::manager::MTextureMangaer
@@ -62,7 +62,7 @@ void MSceneManager::ReleaseAllResources() const {
     MSoundManager::Instance().Clear();    /*! Not precise */
     ShaderManager::Instance().Clear();   /*! Not implemented */
     TextureManager::Instance().Clear();  /*! Not precise? */
-    Clear(MObjectManager::Instance());
+    manager::object::ClearAll();
 }
 
 MSceneManager::~MSceneManager() = default;

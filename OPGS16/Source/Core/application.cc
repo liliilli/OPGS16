@@ -7,7 +7,7 @@
 ///
 /// @file Core/application.cc
 ///
-/// @brief 
+/// @brief
 /// Implementation file of Core/application.h
 ///
 /// @log
@@ -36,7 +36,7 @@
 #include <Shader\PostProcessing\pp_gray.h>
 
 /// ::opgs16 core setting file
-#include <Core\core_setting.h>  
+#include <Core\core_setting.h>
 /// ::opgs16::entry::_internal::EGameStatus
 #include <Core\Internal\application_status.h>
 /// ::opgs16::entry::_internal strong enum boolean flags.
@@ -45,7 +45,7 @@
 /// expanded assertion
 #include <Helper\assert.h>
 /// import logger
-#include <Headers\import_logger.h>  
+#include <Headers\import_logger.h>
 
 // @todo Adjust each project manifest file path not to write .. chars.
 
@@ -73,14 +73,14 @@ static_assert(opgs16::manifest::k_size > 0,
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 ///
-/// This namespace is integrity check variable container for 
+/// This namespace is integrity check variable container for
 /// checking runtime caveats of source code.
 ///
 namespace {
 using opgs16::entry::_internal::EInitiated;
 using opgs16::entry::_internal::EOperated;
 
-EInitiated m_initiated  = EInitiated::NotInitiated; 
+EInitiated m_initiated  = EInitiated::NotInitiated;
 EOperated m_operated    = EOperated::NotOperated;
 } /// unnamed namespace
 
@@ -89,12 +89,14 @@ namespace {
 constexpr float k_fps_count = 60.f;
 
 // Window handle pointer
-GLFWwindow* m_window = nullptr;           
+GLFWwindow* m_window = nullptr;
 
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
+#if defined(false)
 opgs16::manager::MObjectManager* m_object_manager = nullptr;
+#endif
 opgs16::manager::MPhysicsManager* m_physics_manager = nullptr;
-opgs16::manager::MSceneManager* m_scene_manager = nullptr;    
+opgs16::manager::MSceneManager* m_scene_manager = nullptr;
 opgs16::manager::MSoundManager* m_sound_manager = nullptr;
 opgs16::manager::MTimeManager* m_time_manager = nullptr;
 opgs16::manager::MTimerManager* m_timer_manager = nullptr;
@@ -145,10 +147,10 @@ void InitiateDefaultFonts();
 ///
 /// @brief
 /// Initiate post-processing effects in advance.
-/// 
+///
 void InitiatePostProcessingEffects();
 
-/// 
+///
 /// @brief
 /// The method update components movement, UI refresh, and so on.
 ///
@@ -157,10 +159,10 @@ void Update();
 ///
 /// @deprecated
 /// @todo Remove due to confusion of OPGS16 script input check system.
-/// 
+///
 void Input();
 
-/// 
+///
 /// @brief
 /// The method calls scene to draw all m_object_list.
 ///
@@ -173,17 +175,17 @@ void ChangeScalingOption(EScaleType value);
 void InputGlobal();
 
 ///
-/// @brief 
+/// @brief
 /// Return present status.
-/// @return GameStatus 
+/// @return GameStatus
 /// value on top of stack, m_global_game_status saves game status.
 ///
 _internal::EGameStatus GetPresentStatus();
 
 ///
-/// @brief 
+/// @brief
 /// Replace present status to the other status.
-/// @param[in] 
+/// @param[in]
 /// status New status value to replace present status with.
 ///
 void ReplacePresentStatus(_internal::EGameStatus status);
@@ -226,12 +228,12 @@ void Initiate() {
       "Please uncomment or make macro _APPLICATION_PROJECT_NAME");
 #endif
 #if !(_APPLICATION_PROJECT_NAME + 0)
-  static_assert(false, 
+  static_assert(false,
       "Application project name is not valid. Check manifest file.");
 #endif
 #if defined (_APPLICATION_WINDOW_NAME)
 #if !(_APPLICATION_WINDOW_NAME + 0)
-  static_assert(false, 
+  static_assert(false,
       "Application window name is not valid, check manifest file.");
 #else
   m_window{ InitApplication(_APPLICATION_WINDOW_NAME) },
@@ -240,7 +242,7 @@ void Initiate() {
   m_window{ InitApplication(_APPLICATION_PROJECT_NAME) },
 #endif
 #else
-  static_assert(false, 
+  static_assert(false,
       "Please turn on _CUSTOM_PROJECT macro to make window properly.");
 #endif
 #endif
@@ -248,8 +250,8 @@ void Initiate() {
   manager::setting::Initiate();
   manager::input::Initiate(m_window);
   manager::resource::ReadResourceFile("_resource.meta");
+  manager::object::Initiate();
 
-  m_object_manager = &manager::MObjectManager::Instance();
   m_physics_manager = &manager::MPhysicsManager::Instance();
   m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
@@ -332,9 +334,9 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   PUSH_LOG_DEBUG("GLFW CONTEXT VERSION 4.3 Core.");
 
-  const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(), 
-                                       SGlobalSetting::ScreenHeight(), 
-                                       application_name.c_str(), 
+  const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(),
+                                       SGlobalSetting::ScreenHeight(),
+                                       application_name.c_str(),
                                        nullptr, nullptr);
   if (!window) {
     PUSH_LOG_ERRO("Failed to create GLFW window. Application will terminate.");
@@ -353,7 +355,7 @@ GLFWwindow* InitApplication(const std::string& application_name) {
 }
 
 ///
-/// @brief 
+/// @brief
 /// Pile new status up game status stack.
 /// Every routines refers to game status stack will look up new status.
 ///
@@ -364,7 +366,7 @@ void PushStatus(_internal::EGameStatus status) {
 }
 
 ///
-/// @brief 
+/// @brief
 /// Pop(Halt) present status and return to previous status.
 /// If there is no more status in stack, exit application automatically.
 ///
@@ -423,11 +425,11 @@ void Run() {
 
   while (!glfwWindowShouldClose(m_window)) {
     // Check time ticking following given frame per second.
-    m_time_manager->Update();         
+    m_time_manager->Update();
 
     if (m_time_manager->Ticked()) {
       // Timer alarm event checking.
-      m_timer_manager->Update();    
+      m_timer_manager->Update();
 
       Update();
       Draw();
@@ -439,9 +441,9 @@ void Run() {
 }
 
 void Update() {
-  // If callback is being bound, 
+  // If callback is being bound,
   // call function once and terminate callback function.
-  if (m_on_before_update_callback) {  
+  if (m_on_before_update_callback) {
     m_on_before_update_callback();
     m_on_before_update_callback = nullptr;
   }
@@ -449,14 +451,14 @@ void Update() {
   // Pre-processing (Pre-rendering) update.
   manager::prerendering::Update();
 
-  Input();                            
+  Input();
 
-  switch (GetPresentStatus()) {       
+  switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
   case _internal::EGameStatus::MENU:
     if (!m_scene_manager->Empty()) {
       // pre-work such as Delete object, Replace object etc.
-      m_object_manager->Update();
+      manager::object::Update();
 
       // Update
       m_scene_manager->PresentScene()->Update();
@@ -472,15 +474,15 @@ void Update() {
 
   // Update active effects.
   if (IsSwitchOn(m_setting->PostProcessing()))
-    m_pp_manager->UpdateSequences(); 
+    m_pp_manager->UpdateSequences();
 }
 
 void Input() {
   manager::input::Update();
 
   switch (GetPresentStatus()) {
-  case _internal::EGameStatus::PLAYING: 
-    InputGlobal(); 
+  case _internal::EGameStatus::PLAYING:
+    InputGlobal();
     break;
   default: break;
   }
@@ -514,8 +516,8 @@ void InputGlobal() {
 void Draw() {
   // If there is no scene, do not rendering anything.
   if (!m_scene_manager->Empty()) {
-    glViewport(0, 0, 
-               SGlobalSetting::ScreenWidth(), 
+    glViewport(0, 0,
+               SGlobalSetting::ScreenWidth(),
                SGlobalSetting::ScreenHeight());
 
     // Pre-processing (Pre-rendering) render
@@ -528,14 +530,14 @@ void Draw() {
       m_pp_manager->BindSequence(0);
 
     m_scene_manager->PresentScene()->Draw();
-    m_object_manager->Render();
+    manager::object::Render();
 
     // Postprocessing
     m_pp_manager->Render();
   }
 
 #if defined(_OPGS16_DEBUG_OPTION)
-  if (IsSwitchOn(m_setting->DebugMode())) 
+  if (IsSwitchOn(m_setting->DebugMode()))
     m_debug_ui_canvas->Draw();
 #endif
 
@@ -559,14 +561,14 @@ void ChangeScalingOption(EScaleType value) {
     auto [width, height] = SGlobalSetting::ScreenSize();
 
 		switch (value) {
-		case EScaleType::X1: 
-		  glfwSetWindowSize(m_window, width, height); 
+		case EScaleType::X1:
+		  glfwSetWindowSize(m_window, width, height);
 		  break;
-		case EScaleType::X2: 
-		  glfwSetWindowSize(m_window, width << 1, height << 1); 
+		case EScaleType::X2:
+		  glfwSetWindowSize(m_window, width << 1, height << 1);
 		  break;
-		case EScaleType::X3: 
-		  glfwSetWindowSize(m_window, width * 3, height * 3); 
+		case EScaleType::X3:
+		  glfwSetWindowSize(m_window, width * 3, height * 3);
 		  break;
 		}
 
