@@ -7,94 +7,96 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
+/// @file Manager/object_manager.h
 ///
-/// @file System\Manager\object_manager.h
 /// @brief
+/// This file have management namespace which is related to management of object.
 ///
 /// @author Jongmin Yun
 /// @log
 /// 2018-03-04 Refactoring.
 /// 2018-03-05 Add Render function and rendering layer container.
+/// 2018-05-25 Recode singleton class to namespace structure.
 ///
 
-#include <memory>       /*! std::unique_ptr */
-#include <list>         /*! std::list */
-#include <vector>       /*! std::vector */
+/// Forward declaration
+#include <opgs16fwd.h>
 
-#include <opgs16fwd.h>  /// Forward declaration
+///
+/// @namespace opgs16::manager::object
+/// @brief
+/// Namespace for managing objects in scene.
+/// This namespace has object list, objects in list will be update, render, and
+/// be destroyed by calling provided function.
+///
+namespace opgs16::manager::object {
 
-namespace opgs16 {
-namespace manager {
+///
+/// @brief
+/// Let load and initiate initial setting to be used in application.
+/// This function must be called only once out of entire application.
+///
+void Initiate();
 
-/*!
- * @class MObjectManager
- * @brief
- */
-class MObjectManager final {
-    using object_ptr = std::unique_ptr<element::CObject>;
-    using object_raw = element::CObject * ;
+///
+/// @brief
+/// Destroy candidate objects in destroy list.
+///
+void Update();
 
-public:
-    static MObjectManager& Instance() {
-        static MObjectManager instance{};
-        return instance;
-    }
+///
+/// @brief
+/// Render all specified object which can be rendered on display or framebuffer.
+/// After rendering, all item reference addresses in list are cleared.
+///
+void Render();
 
-    inline void Update() {
-        if (!m_destroy_candidates.empty()) {
-            DestroyObjects();
-        }
-    }
+///
+/// @brief
+/// Destroy specified object in present scene.
+///
+/// If the object has script component, object will call Destroy() function
+/// before deleted permanently.
+///
+/// @param[in] object Object to be destroyed.
+///
+void Destroy(const element::CObject& object);
 
-    ///
-  /// @brief
-  /// Destroy specified object in present scene.
-    ///
-  /// If the object has script component, object will call Destroy() function
-  /// before deleted permanently.
-    /// @param[in] object Object to be destroyed.
-  ///
-    void Destroy(const element::CObject& object);
+///
+/// @brief
+/// Clear all destroy candidates.
+///
+void ClearDestroyCandidates();
 
-    void InsertRenderingObject(object_raw const object, unsigned layer_index);
+///
+/// @brief
+/// Clear all rendering candidates.
+///
+void ClearRenderingList();
 
-    void Render();
-
-    /*! Clear all destroy candidates */
-    void ClearDestroyCandidates() {
-        m_destroy_candidates.clear();
-    }
-
-    void ClearRenderingList() {
-        for (auto& sub_list : m_rendering_list)
-            sub_list.clear();
-    }
-
-private:
-    std::list<object_ptr> m_destroy_candidates;
-    std::vector<std::list<object_raw>> m_rendering_list;
-
-private:
-    inline void AddDestroyObject(object_ptr& ptr) {
-        m_destroy_candidates.emplace_back(std::move(ptr));
-    }
-
-    void DestroyObjects();
-
-    MObjectManager();
-
-public:
-    MObjectManager(const MObjectManager&) = delete;
-    MObjectManager& operator=(const MObjectManager&) = delete;
-};
-
-inline void Clear(MObjectManager& manager) {
-    manager.ClearDestroyCandidates();
-    manager.ClearRenderingList();
+///
+/// @brief
+/// Helper function for deleting all list in candidate lists.
+///
+inline void ClearAll() {
+  ClearDestroyCandidates();
+  ClearRenderingList();
 }
 
-} /*! opgs16::manager */
-} /*! opgs16 */
+///
+/// @brief
+/// Bind object reference which will be rendered with rendering layer index.
+/// Bound obejct reference's Render() function will be called by object::Render()
+///
+/// If layer index is bigger than permitted layer index size,
+/// In debug mode this asserts and halt program,
+/// but undefined behaviour in release mode.
+///
+/// @param[in] object GameObject reference pointer to be rendered.
+/// @param[in] layer_index Rendering layer index.
+///
+void InsertRenderingObject(element::CObject* const object, unsigned layer_index);
 
-#endif // !OPGS16_SYSTEM_MANAGER_OBJECT_MANAGER_H
+} /// ::opgs16::manager::object
+
+#endif /// OPGS16_SYSTEM_MANAGER_OBJECT_MANAGER_H

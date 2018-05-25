@@ -1,164 +1,234 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!
- * @file System/Manager/Private/object_manager.cc
- * @author Jongmin Yun
- * @log
- * 2018-03-04 Refactoring.
- * 2018-03-11 Cope with ::element::CObject
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+///
+/// @file Manager/object_manager.cc
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-04 Refactoring.
+/// 2018-03-11 Cope with ::element::CObject
+/// 2018-05-25 Recode singleton class to namespace structure.
+///
+/// @todo Improve performance object destruction.
+///
 
-#include <Manager\object_manager.h> /// Header file
+/// Header file
+#include <Manager/object_manager.h>
 
-#include <stack>                        /*! std::stack */
+#include <memory>
+#include <list>
+#include <stack>
+#include <vector>
 
 /// ::opgs16::element::CObject
-#include <Element\object.h>
+#include <Element/object.h>
+/// Import logger
+#include <Headers/import_logger.h>
+/// Expanded assertion
+#include <Helper/assert.h>
 /// ::opgs16::manager::MSceneManager
-#include <Manager\scene_manager.h>
+#include <Manager/scene_manager.h>
 /// ::opgs16::manager::MSettingManager
-#include <Manager\setting_manager.h>
+#include <Manager/setting_manager.h>
+/// ::opgs16::debug error messages.
+#include <Manager/Internal/error_message.h>
+/// ::opgs16::manager::_internal boolean enum flags
+#include <Manager/Internal/flag.h>
 
-namespace opgs16 {
-namespace manager {
+using object_ptr = std::unique_ptr<opgs16::element::CObject>;
+using object_raw = opgs16::element::CObject * ;
 
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/// Forward Declaration
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
+///
+/// @brief
+///
+///
+void DestroyObjects();
+
+///
+/// @brief
+///
+///
+/// @param[in] ptr
+///
+///
+void AddDestroyObject(object_ptr& ptr);
+
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/// Member container
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
+///
+/// This namespace is integrity check variable container for
+/// checking runtime caveats of source code.
+///
 namespace {
-using element::CObject;
-} /*! unnamed namespace */
+using opgs16::debug::EInitiated;
 
-void MObjectManager::Destroy(const CObject& object) {
-    const auto hash_value = object.GetHash();
+EInitiated m_initiated = EInitiated::NotInitiated;
 
-    using object_map    = std::unordered_map<std::string, object_ptr>;
-    using it_type       = object_map::iterator;
-    std::stack<object_map*> tree_list;
-    std::stack<it_type> it_list;
+} /// unnamed namespace
 
-    tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
-    it_list.emplace(tree_list.top()->begin());
+///
+/// This namespace stores variables or
+/// constexpr variables to be used by functions.
+///
+namespace {
 
-    auto destroyed = false;
-    while (!(destroyed || tree_list.empty())) {
-        auto& object_list = *tree_list.top();
-        auto it = it_list.top(); it_list.pop();
+std::list<object_ptr> m_destroy_candidates;
 
-        for (; it != object_list.end(); ++it) {
-            if (it->second) {   /*! If it is empty */
-                if (hash_value == it->second->GetHash()) {
-                    AddDestroyObject(it->second);
-                    destroyed = true;
-                    break;
-                }
+std::vector<std::list<object_raw>> m_rendering_list;
 
-                if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
-                    it_list.emplace(++it);
-                    tree_list.emplace(&additional_list);
-                    it_list.emplace(additional_list.begin());
-                    break;
-                }
-            }
-        }
+} /// unnamed namespace
 
-        if (!destroyed && it == object_list.end()) {
-            tree_list.pop();
-        }
-    }
+namespace opgs16::manager::object {
+
+void Initiate() {
+  NEU_ASSERT(m_initiated == EInitiated::NotInitiated,
+      debug::err_object_duplicated_init);
+  m_initiated = EInitiated::Initiated;
+
+  m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
 }
 
-void MObjectManager::DestroyObjects() {
-    for (auto& object : m_destroy_candidates) {
-        auto hash_value = object->GetHash();
+void Update() {
+  if (!m_destroy_candidates.empty())
+    DestroyObjects();
+}
 
-        using object_map    = std::unordered_map<std::string, object_ptr>;
-        using it_type       = object_map::iterator;
-        std::stack<object_map*> tree_list;
-        std::stack<it_type> it_list;
+void Render() {
+  for (auto& list : m_rendering_list) {
+    for (auto& item : list) {
+      item->Draw();
+    }
+    list.clear();
+  }
+}
 
-        tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
-        it_list.emplace(tree_list.top()->begin());
+void Destroy(const element::CObject& object) {
+  const auto hash_value = object.GetHash();
 
-        bool destroyed = false;
-        while (!(destroyed || tree_list.empty())) {
-            auto& object_list = *tree_list.top();
-            auto it = it_list.top();
-            it_list.pop();
+  using object_map = std::unordered_map<std::string, object_ptr>;
+  using it_type = object_map::iterator;
+  std::stack<object_map*> tree_list;
+  std::stack<it_type> it_list;
 
-            for (; it != object_list.end(); ++it) {
-                if (!(it->second)) {
-                    object_list.erase(it);
-                    destroyed = true;
-                    break;
-                }
+  tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
+  it_list.emplace(tree_list.top()->begin());
 
-                if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
-                    it_list.emplace(++it);
-                    tree_list.emplace(&additional_list);
-                    it_list.emplace(additional_list.begin());
-                    break;
-                }
-            }
+  auto destroyed = false;
+  while (!(destroyed || tree_list.empty())) {
+    auto& object_list = *tree_list.top();
+    auto it = it_list.top(); it_list.pop();
 
-            if (!destroyed && it == object_list.end()) {
-                tree_list.pop();
-            }
+    for (; it != object_list.end(); ++it) {
+      if (it->second) {   /*! If it is empty */
+        if (hash_value == it->second->GetHash()) {
+          AddDestroyObject(it->second);
+          destroyed = true;
+          break;
         }
 
-      // Get script component list from object which will be destroyed,
-      // call Destroy() function.
-      auto script_list = object->GetComponents<component::CScriptFrame>();
-      for (auto script : script_list) {
-        PUSH_LOG_INFO_EXT(
-            "Object {0} called Destroy() function"
-            "prior to being destroyed actually.", object->GetObjectName());
-        script->Destroy();
+        if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
+          it_list.emplace(++it);
+          tree_list.emplace(&additional_list);
+          it_list.emplace(additional_list.begin());
+          break;
+        }
       }
     }
 
-    m_destroy_candidates.clear();
-}
-
-MObjectManager::MObjectManager() :
-    m_rendering_list(setting::GetRenderingLayerNameListSize()) {
-}
-
-void MObjectManager::InsertRenderingObject(object_raw const object, unsigned layer_index) {
-    m_rendering_list[layer_index].emplace_back(object);
-}
-
-void MObjectManager::Render() {
-    for (auto& list : m_rendering_list) {
-        for (auto& item : list) {
-            item->Draw();
-        }
-        list.clear();
+    if (!destroyed && it == object_list.end()) {
+      tree_list.pop();
     }
+  }
 }
 
-} /*! opgs16::manager */
-} /*! opgs16 */
+void ClearDestroyCandidates() {
+  m_destroy_candidates.clear();
+}
+
+void ClearRenderingList() {
+  for (auto& sub_list : m_rendering_list)
+    sub_list.clear();
+}
+
+void InsertRenderingObject(element::CObject* const object,
+                           unsigned layer_index) {
+  NEU_ASSERT(layer_index < m_rendering_list.size(),
+      debug::err_object_out_of_bound_rendering_list);
+
+  m_rendering_list[layer_index].emplace_back(object);
+}
+
+} /// ::opgs16::manager::object
+
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+/// Local functions
+/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
+void AddDestroyObject(object_ptr& ptr) {
+  m_destroy_candidates.emplace_back(std::move(ptr));
+}
+
+void DestroyObjects() {
+  for (auto& object : m_destroy_candidates) {
+    auto hash_value = object->GetHash();
+
+    using object_map = std::unordered_map<std::string, object_ptr>;
+    using it_type = object_map::iterator;
+    std::stack<object_map*> tree_list;
+    std::stack<it_type> it_list;
+
+    tree_list.emplace(&opgs16::manager::MSceneManager::Instance().PresentScene()->GetObjectList());
+    it_list.emplace(tree_list.top()->begin());
+
+    bool destroyed = false;
+    while (!(destroyed || tree_list.empty())) {
+      auto& object_list = *tree_list.top();
+      auto it = it_list.top();
+      it_list.pop();
+
+      for (; it != object_list.end(); ++it) {
+        if (!(it->second)) {
+          object_list.erase(it);
+          destroyed = true;
+          break;
+        }
+
+        if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
+          it_list.emplace(++it);
+          tree_list.emplace(&additional_list);
+          it_list.emplace(additional_list.begin());
+          break;
+        }
+      }
+
+      if (!destroyed && it == object_list.end()) {
+        tree_list.pop();
+      }
+    }
+
+    // Get script component list from object which will be destroyed,
+    // call Destroy() function.
+    auto script_list = object->GetComponents<opgs16::component::CScriptFrame>();
+    for (auto script : script_list) {
+      PUSH_LOG_INFO_EXT(
+        "Object {0} called Destroy() function"
+        "prior to being destroyed actually.", object->GetObjectName());
+      script->Destroy();
+    }
+  }
+
+  m_destroy_candidates.clear();
+}
+
