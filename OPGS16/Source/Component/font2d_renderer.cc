@@ -8,7 +8,7 @@
 /// @file Component/font2d_renderer.cc
 ///
 /// @brief
-///
+/// Implementation file of ::opgs16::component::CFont2DRenderer.
 ///
 /// @author Jongmin Yun
 /// @log
@@ -21,8 +21,8 @@
 #include <sstream>
 
 #include <glm/gtc/matrix_transform.hpp>
+/// ::opgs16::core::
 #include <Core/core_setting.h>
-
 /// ::opgs16::manager::MShaderManager
 #include <Manager/shader_manager.h>
 /// ::opgs16::manager::_internal
@@ -35,6 +35,29 @@ std::vector<std::string> SeparateTextToList(const std::string& text);
 void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
             const std::array<float, 24>& vertices);
+
+///
+/// @brief
+/// The method sets VAO, VBO to render string on screen.
+/// This methods called when initiate instance.
+///
+/// @todo Make Geometry manager, set Font2DQuad geometry array, buffer which can
+/// be used by default.
+///
+void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
+  glGenVertexArrays(1, m_vao);
+  glGenBuffers(1, m_vbo);
+  glBindVertexArray(*m_vao);
+
+  glBindBuffer(GL_ARRAY_BUFFER, *m_vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 24, nullptr, GL_DYNAMIC_DRAW);
+
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+  glEnableVertexAttribArray(0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
 
 ///
 /// @brief
@@ -55,15 +78,15 @@ std::vector<std::string> SeparateTextToList(const std::string& text) {
   return result;
 }
 
-/**
- * @brief The method gets text and returns total rendering width size.
- *
- * @param[in] text One line string to measure.
- * @param[in] font_set
- *
- * @return The size
- * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
- */
+///
+/// @brief The method gets text and returns total rendering width size.
+///
+/// @param[in] text One line string to measure.
+/// @param[in] font_set
+///
+/// @return The size
+/// @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+///
 uint32_t CalculateStringRenderWidth(
     const std::string& text,
     opgs16::manager::font::font_type* font_set) {
@@ -76,16 +99,16 @@ uint32_t CalculateStringRenderWidth(
   return result_width;
 }
 
-/**
- * @brief The method gets character quad vertices to be needed for rendering.
- *
- * @param[in] ch_info Specific character glyph information.
- * @param[in] position The position that character which will be rendered.
- * @param[in] scale Scale value to magnify or minify character render size.
- *
- * @return Character glyph render vertices information.
- * @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
- */
+///
+/// @brief The method gets character quad vertices to be needed for rendering.
+///
+/// @param[in] ch_info Specific character glyph information.
+/// @param[in] position The position that character which will be rendered.
+/// @param[in] scale Scale value to magnify or minify character render size.
+///
+/// @return Character glyph render vertices information.
+/// @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
+///
 std::array<float, 24> GetCharacterVertices(
     const opgs16::manager::_internal::Character& ch_info,
     const glm::vec2& position,
@@ -194,13 +217,13 @@ void RenderRightSide(const std::vector<std::string>& container,
   }
 }
 
-/**
- * @brief Actual render method. This method must be called in Render__Side() method.
- *
- * @param[in] ch_info
- * @param[in] m_vbo
- * @param[in] vertices
- */
+///
+/// @brief Actual render method. This method must be called in Render__Side() method.
+///
+/// @param[in] ch_info
+/// @param[in] m_vbo
+/// @param[in] vertices
+///
 void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
             const std::array<float, 24>& vertices) {
@@ -217,26 +240,6 @@ void Render(const opgs16::manager::_internal::Character& ch_info,
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-/**
- * @brief The method sets VAO, VBO to render string on screen.
- *
- * This methods called when initiate instance.
- */
-void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
-  glGenVertexArrays(1, m_vao);
-  glGenBuffers(1, m_vbo);
-  glBindVertexArray(*m_vao);
-
-  glBindBuffer(GL_ARRAY_BUFFER, *m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 24, nullptr, GL_DYNAMIC_DRAW);
-
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-  glEnableVertexAttribArray(0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-}
-
 } /// unname namespace
 
 namespace opgs16::component {
@@ -247,10 +250,10 @@ CFont2DRenderer::CFont2DRenderer(element::CObject& bind_object,
                                  const uint32_t rendering_layer) :
     CRendererBase(bind_object, rendering_layer) {
   /// Function Body
-  m_projection = {
+  SetProjectionMatrix({
       glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
       0.f,
-      static_cast<float>(SGlobalSetting::ScreenHeight())) };
+      static_cast<float>(SGlobalSetting::ScreenHeight())) });
   BindVertexAttributes(&m_vao, &m_vbo);
 
   m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_tag));
@@ -258,19 +261,29 @@ CFont2DRenderer::CFont2DRenderer(element::CObject& bind_object,
   SetFont(font_tag);
 }
 
-void CFont2DRenderer::RenderTextNew(const std::string& text,
-                                    IOriginable::Origin origin,
-                                    const glm::vec2 final_position,
-                                    const glm::vec3 color,
-                                    IAlignable::Alignment alignment,
-                                    const float scale) {
-  if (m_dirty == _internal::EStringCacheFlag::Dirty) {
-    RefreshStringContainers(text);
-    m_dirty = _internal::EStringCacheFlag::Clean;
+void CFont2DRenderer::RenderText(IOriginable::Origin origin,
+                                 const glm::vec2 final_position,
+                                 IAlignable::Alignment alignment,
+                                 const float scale) {
+  /// Ready
+  if (m_string_dirty == _internal::EDirtyFlag::Dirty) {
+    const auto string = std::move(m_text_container[0]);
+    RefreshStringContainers(string);
+    m_string_dirty = _internal::EDirtyFlag::Clean;
+  }
+  if (m_text_container.empty())
+    return;
+
+  if (m_color_dirty == _internal::EDirtyFlag::Dirty) {
+    m_wrapper.SetUniformValue("textColor", m_color);
+    m_color_dirty = _internal::EDirtyFlag::Clean;
+  }
+  if (m_proj_matrix_dirty == _internal::EDirtyFlag::Dirty) {
+    m_wrapper.SetUniformValue("projection", m_projection);
+    m_proj_matrix_dirty = _internal::EDirtyFlag::Clean;
   }
 
-  m_wrapper.SetUniformValue("textColor", color);
-  m_wrapper.SetUniformValue("projection", m_projection);
+  /// Body
   glBindVertexArray(m_vao);
   m_wrapper.UseShader();
 
@@ -304,6 +317,35 @@ void CFont2DRenderer::SetFont(const std::string& font_name) {
   else {
     m_font_set = manager::font::GetDefaultFont();
   }
+}
+
+void CFont2DRenderer::SetText(const std::string& utf8_text) {
+  m_string_dirty = _internal::EDirtyFlag::Dirty;
+
+  m_text_container.clear();
+  m_text_render_width.clear();
+  m_text_container.push_back(utf8_text);
+}
+
+void CFont2DRenderer::SetColor(const glm::vec3& color) {
+  for (uint32_t i = 0; i < 3; ++i) {
+    if (color[i] < 0) {
+      m_color[i] = 0.0f;
+      continue;
+    }
+    if (color[i] > 1) {
+      m_color[i] = 1.0f;
+      continue;
+    }
+
+    m_color[i] = color[i];
+  }
+  m_color_dirty = _internal::EDirtyFlag::Dirty;
+}
+
+void CFont2DRenderer::SetProjectionMatrix(const glm::mat4& projection_matrix) {
+  m_proj_matrix_dirty = _internal::EDirtyFlag::Dirty;
+  m_projection = projection_matrix;
 }
 
 void CFont2DRenderer::RefreshStringContainers(const std::string& text) {

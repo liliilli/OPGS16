@@ -20,11 +20,11 @@
 namespace opgs16::component::_internal {
 
 ///
-/// @enum EStringCacheFlag
+/// @enum EDirtyFlag
 /// @brief
 ///
 ///
-enum class EStringCacheFlag : bool {
+enum class EDirtyFlag : bool {
   Dirty = false,
   Clean = true
 };

@@ -60,11 +60,12 @@ namespace element {
 class CShaderWrapper {
 private:
     struct Paramters {
-        std::map<std::string, float>		m_floats{};
-        std::map<std::string, int>          m_ints{};
-        std::map<std::string, std::pair<int*, int>>         m_int_ptr{};
-        std::map<std::string, glm::vec2>    m_vec2{};
-        std::map<std::string, glm::mat4>	m_mat4s{};
+        std::map<std::string, float> m_floats{};
+        std::map<std::string, int> m_ints{};
+        std::map<std::string, std::pair<int*, int>> m_int_ptr{};
+        std::map<std::string, glm::vec2> m_vec2{};
+        std::map<std::string, glm::vec3> m_vec3{};
+        std::map<std::string, glm::mat4> m_mat4s{};
     } m_parameters;
 
 public:
@@ -103,6 +104,11 @@ public:
     void SetUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
         m_parameters.m_vec2[tag] = value;
     }
+
+  template <>
+  void SetUniformValue<glm::vec3>(const std::string& var_name, const glm::vec3& value) {
+    m_parameters.m_vec3[var_name] = value;
+  }
 
     template <>
     void SetUniformValue<int>(const std::string& tag, const int& value) {

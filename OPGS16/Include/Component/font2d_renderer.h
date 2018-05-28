@@ -10,7 +10,8 @@
 /// @file Component/font2d_renderer.h
 ///
 /// @brief
-///
+/// Component which displays text string on display with designated font glyphs,
+/// projection matrix, 2d position, and color etc.
 ///
 /// @author Jongmin Yun
 /// @log
@@ -46,36 +47,67 @@ public:
   /// This get text rendered with relative position from origin with color by aligning.
   /// If text is multilined, text will be tokenized with '\n' return-carriage character.
   ///
-  /// @param[in] text String text to be rendered.
   /// @param[in] origin Origin position from which text strings rendered.
   /// position bound is [0, screen_size], so DOWN_LEFT has position (0, 0) in Screen space.
   /// In contrast UP_RIGHT will be (width, height) in Screen space.
   ///
-  /// @param[in] relatve_position Relatve position from origin position string will be rendered.
+  /// @param[in] final_position Relatve position from origin position string will be rendered.
   /// Final position string rendered is (x, y) = (origin + relative_position + alignment_offset)
   ///
-  /// @param[in] color The color to be rendered. R, G, B support.
   /// @param[in] alignment String alignment parameter. default value is LEFT. (left-side)
   /// @param[in] scale Scale factor value to apply it. Default value is 1.0f. (not-change)
   ///
   /// @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
   ///
-  void RenderTextNew (const std::string& text,
-                      IOriginable::Origin origin,
-                      const glm::vec2 final_position,
-                      const glm::vec3 color,
-                      IAlignable::Alignment alignment,
-                      const float scale);
+  void RenderText(IOriginable::Origin origin,
+                  const glm::vec2 final_position,
+                  IAlignable::Alignment alignment,
+                  const float scale);
 
   ///
   /// @brief
+  /// Set renderer to display text by using default font.
+  /// If default font is not found, halt and output error.
+  /// OPGS16 must manifested default font; otherwise game will not be executed.
   ///
   void SetDefaultFont();
 
   ///
   /// @brief
+  /// Get CFont2DRenderer displayed by using specific font called by font_name.
+  /// If specified font name is not found in font information container,
+  /// It will replaced with default font by calling SetDefaultFont().
+  ///
+  /// @param[in] font_name Font name to use on this rendering component.
   ///
   void SetFont(const std::string& font_name);
+
+  ///
+  /// @brief
+  /// Update rendering text which is going to be displayed on screen
+  /// next render frame if only component and bound object are activated.
+  ///
+  /// @param[in] utf8_text UTF-8 text string will be displayed next time.
+  ///
+  void SetText(const std::string& utf8_text);
+
+  ///
+  /// @brief
+  /// Update display albedo color which will be displayed on screen next render
+  /// frame if only component and bound object are activated.
+  ///
+  /// @param[in] color Color values range from 0 to 1.
+  /// If color value is out of range, clamped into 0 to 1.
+  ///
+  void SetColor(const glm::vec3& color);
+
+  ///
+  /// @brief
+  ///
+  ///
+  /// @param[in] projection_matrix
+  ///
+  void SetProjectionMatrix(const glm::mat4& projection_matrix);
 
 private:
   ///
@@ -86,19 +118,28 @@ private:
   ///
   void RefreshStringContainers(const std::string& text);
 
+  //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+  //! Member data.
+  //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+
   glm::mat4 m_projection = glm::mat4();
   GLuint m_vao = 0;
   GLuint m_vbo = 0;
-
-  element::CShaderWrapper m_wrapper;
-  manager::font::font_raw	m_font_set = nullptr;
 
   /// Shader is in ShaderManager, render sprite.
   std::vector<std::string> m_text_container;
   /// Default scale is 1.0.
   std::vector<uint32_t> m_text_render_width;
 
-  _internal::EStringCacheFlag m_dirty = _internal::EStringCacheFlag::Dirty;
+  /// Color value range from 0 to 1, RGB support.
+  glm::vec3 m_color;
+
+  element::CShaderWrapper m_wrapper;
+  manager::font::font_raw	m_font_set = nullptr;
+
+  _internal::EDirtyFlag m_string_dirty = _internal::EDirtyFlag::Clean;
+  _internal::EDirtyFlag m_color_dirty = _internal::EDirtyFlag::Dirty;
+  _internal::EDirtyFlag m_proj_matrix_dirty = _internal::EDirtyFlag::Dirty;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CFont2DRenderer)
 };

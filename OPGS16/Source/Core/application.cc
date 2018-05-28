@@ -251,6 +251,7 @@ void Initiate() {
   manager::input::Initiate(m_window);
   manager::resource::ReadResourceFile("_resource.meta");
   manager::object::Initiate();
+  manager::font::Initiate();
 
   m_physics_manager = &manager::MPhysicsManager::Instance();
   m_scene_manager = &manager::MSceneManager::Instance();
@@ -385,13 +386,10 @@ void PopStatus() {
 }
 
 void InitiateDefaultFonts() {
-	auto& font = manager::MFontManager::Instance();
-
-  font.GenerateFont("Sans");
-  font.GenerateFont("Solomon");
-  font.GenerateFont("Menus");
-  font.GenerateFont("BIOS");
-	font.LoadDefaultFont();
+  manager::font::GenerateFont("Sans");
+  manager::font::GenerateFont("Solomon");
+  manager::font::GenerateFont("Menus");
+  manager::font::GenerateFont("BIOS");
 }
 
 #if defined(_OPGS16_DEBUG_OPTION)

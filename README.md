@@ -45,10 +45,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Updated 2018.05.23
 
 - [ ] Font manager (5th)
-    - [ ] 리팩터링
-    - [ ] 확장 ASCII 이외 유니코드 문자 출력 구현
-    - [ ] 확장 ASCII 이외 유니코드 문자 출력 테스트
-    - [ ] 다량의 텍스트 출력에 의한 퍼포먼스 저하 개선
+  - [ ] Resource manager 에서 Default 된 Font 가 없을 경우, 맨 첫번째로 받아온 것을 Default 로 하게 할 것.
+  - [ ] 리팩터링
+  - [ ] 확장 ASCII 이외 유니코드 문자 출력 구현
+    - [ ] utf-8, utf-16 문자열을 저장하는 커스텀 스트링 컨테이너 구현
+      - [ ] utf-8 저장 시, 런타임에 utf-16 문자열로 변환해서 저장하게끔 구현
+      - [ ] 커스텀 스트링 컨테이너의 인덱스 참조, 붙이기, 등 구현.
+  - [ ] 확장 ASCII 이외 유니코드 문자 출력 테스트
+    - [ ] 테스트 씬 구현하기
+  - [ ] 다량의 텍스트 출력에 의한 퍼포먼스 저하 개선
 - [ ] Input manager (1st)
   - [x] 마우스 버튼 입력 구현
     - [x] 가상 마우스 출력
@@ -65,9 +70,11 @@ Updated 2018.05.23
     - [x] 마우스 위치 이동 화면 스케일 보정 및 축 좌표 전환 보정.
     - [ ] 마우스 위치 이동 총 테스트 및 검증.
 - [ ] Object manager (6th)
-  - [ ] 코드 스타일에 맞춰서 리팩터링
+  - [x] 코드 스타일에 맞춰서 리팩터링
   - [ ] 씬 내부 오브젝트 Update 처리를 Component 별로 개선
-  - [ ] 에러 핸들링 검증
+    - [ ] 검증 후에 처리를 해야할 것 같음. (성능 비교 후 처리)
+  - [x] 에러 핸들링 검증
+  - [ ] /// @todo Improve performance object destruction.
 - [ ] Mesh (3rd)
   - [ ] 3D Mesh obj, fbx 불러오기 구현
   - [ ] VAO, VBO 등의 지오메트리 버퍼 저장소 구현

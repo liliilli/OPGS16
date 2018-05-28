@@ -42,6 +42,10 @@ void CShaderWrapper::RefreshUniformValues() {
     // Vector2
     for (const auto&[name, value] : m_parameters.m_vec2)
         m_shader->SetVec2f(name, value);
+    // Vector3
+    for (const auto&[name, value] : m_parameters.m_vec3)
+        m_shader->SetVec3f(name, value);
+    // Int
     // Int
     for (const auto&[name, value] : m_parameters.m_ints)
         m_shader->SetInt(name, value);
