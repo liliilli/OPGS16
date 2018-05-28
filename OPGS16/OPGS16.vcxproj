@@ -146,6 +146,7 @@
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
+    <ClCompile Include="Source\Component\font2d_renderer.cc" />
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
@@ -215,6 +216,8 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Component\font2d_renderer.h" />
+    <ClInclude Include="Include\Component\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />

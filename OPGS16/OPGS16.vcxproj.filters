@@ -70,6 +70,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
+    <ClCompile Include="Source\Component\font2d_renderer.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -180,6 +181,8 @@
     <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
+    <ClInclude Include="Include\Component\font2d_renderer.h" />
+    <ClInclude Include="Include\Component\Internal\flag.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
