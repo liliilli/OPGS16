@@ -1,131 +1,105 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System/Element/Canvas/Private/text.cc
- * @brief Definition file of ../Public/text.h.
- *
- * @author Jongmin Yun
- * @log
- * 2018-03-15 Unknown.
- * 2018-04-17 Move definition function body into ::opgs16::element::canvas namespace.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Element/Canvas/text.cc
+///
+/// @brief
+/// Definition file of ::opgs16::element::canvas::CText.
+///
+/// @author Jongmin Yun
+/// @log
+/// 2018-03-15 Unknown.
+/// 2018-04-17 Move definition function body into ::opgs16::element::canvas namespace.
+/// 2018-05-28 Remove pointer to implementation idiom.
+///
 
-#include <Element\Canvas\text.h>    /// Header file
+#include <Element/Canvas/text.h>    /// Header file
 
-/// ::ogps16::element::canvas::_internal::CTextImpl
-#include <Element\Impl\text_impl.h>
-/// ::opgs16::component::CEmptyRenderer
-#include <Component\empty_renderer.h>
+/// ::opgs16::component::CFont2DRenderer
+#include <Component/font2d_renderer.h>
 /// ::opgs16::manager::MFontManager
-#include <Manager\font_manager.h>
+#include <Manager/font_manager.h>
 
-#include <Headers/import_logger.h> /// import logger in debug mode
+/// import logger in debug mode
+#include <Headers/import_logger.h>
 
-namespace opgs16 {
-namespace element {
-namespace canvas {
+namespace opgs16::element::canvas {
 
-namespace _internal {
-void TextImplDeleter::operator()(CTextImpl* p) { delete p; }
-
-} /*! opgs16::element::canvas::_internal */
-
-using fontMap = manager::MFontManager::font_map_ptr;
 using CTextImpl = _internal::CTextImpl;
 
-CText::CText(const std::string& initial_txt, const glm::vec3& position, const glm::vec3& color) :
-	m_font_manager{ &manager::MFontManager::Instance() } {
-	/** Body */
-    std::unique_ptr<CTextImpl, _internal::TextImplDeleter> impl{ new CTextImpl(*this) };
-    m_text_impl = std::move(impl);
-    m_text_impl->SetText(initial_txt);
-    m_text_impl->SetColor(color);
-	SetWorldPosition(position);
+CText::CText(const std::string& initial_text,
+             const glm::vec3& position,
+  const glm::vec3& color) : m_text{initial_text}, m_color{color} {
+  SetWorldPosition(position);
 
-    AddComponent<component::CEmptyRenderer>(*this);
+  auto renderer =
+      AddComponent<component::CFont2DRenderer>(*this, u8"", u8"gCommonFont", 0);
+  renderer->SetText(m_text);
+  renderer->SetColor(color);
 }
 
 void CText::Render() {
-	if (m_font_manager) {
-		/** Set font */
-        auto font_name = m_text_impl->GetFontName();
-		if (font_name.empty())
-            m_font_manager->LoadDefaultFont();
-		else
-            m_font_manager->LoadFont(font_name);
+  auto renderer = GetComponent<component::CFont2DRenderer>();
 
-		/** Render */
-		m_font_manager->RenderTextNew(m_text_impl->GetText(),
-                                      GetOrigin(),
-                                      glm::vec2{ GetFinalPosition() },
-                                      m_text_impl->GetColor(),
-                                      GetAlignment(),
-                                      GetScaleValue());
-	}
-	else {
-        PUSH_LOG_ERRO("Could not find font manager.");
-	}
+  // Set font
+  auto font_name = GetFontName();
+  if (font_name.empty())
+    renderer->SetDefaultFont();
+  else
+    renderer->SetFont(font_name);
+
+  // Render
+  renderer->SetText(GetText());
+  renderer->SetColor(GetColor());
+  renderer->RenderText(
+      GetOrigin(),
+      glm::vec2{ GetFinalPosition() },
+      GetAlignment(),
+      GetScaleValue());
 }
 
 void CText::SetText(const std::string& new_text) {
-    m_text_impl->SetText(new_text);
+  m_text = new_text;
 }
 
-const std::string CText::GetText() const {
-    return m_text_impl->GetText();
+const std::string& CText::GetText() const {
+  return m_text;
 }
 
-void CText::SetFontSize(const unsigned size) {
-    m_text_impl->SetFontSize(size);
+void CText::SetFontSize(const uint32_t size) {
+  const unsigned def = manager::font::GetDefaultFontSize();
+  SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
 }
 
 const unsigned CText::GetFontSize() const {
-    return m_text_impl->GetFontSize();
+  return m_font_size;
 }
 
 bool CText::SetFontName(const std::string& font_tag) {
-	if (m_font_manager && m_font_manager->DoesFontExist(font_tag)) {
-		m_text_impl->SetFontName(font_tag);
-		return true;
+	if (!manager::font::IsFontExist(font_tag)) {
+    PUSH_LOG_ERROR_EXT("Font did not find. : [Font : {0}]", font_tag);
+    m_font_name = "";
+    return false;
 	}
-	else {
-        PUSH_LOG_ERRO("Font not found.");
-		//std::cerr << "ERROR::FONT::NOT::FOUND" << font_tag << std::endl;
-		m_text_impl->SetFontName("");
-		return false;
-	}
+
+  m_font_name = font_tag;
+  return true;
 }
 
-void CText::SetColor(const glm::vec3 & color) {
-    m_text_impl->SetColor(color);
+const std::string& CText::GetFontName() {
+  return m_font_name;
 }
 
-} /*! opgs16::element::canvas */
-} /*! opgs16::element */
-} /*! ogps16 */
+void CText::SetColor(const glm::vec3& color) {
+  m_color = color;
+}
+
+const glm::vec3& CText::GetColor() {
+  return m_color;
+}
+
+} /// ::opgs16::element::canvas

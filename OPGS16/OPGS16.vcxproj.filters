@@ -4,7 +4,6 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Element\Impl\object_impl.cc" />
-    <ClCompile Include="Include\Element\Impl\text_impl.cc" />
     <ClCompile Include="Include\Frame\constant.h" />
     <ClCompile Include="Include\Component\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
@@ -77,7 +76,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Internal\logger_internal.h" />
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
-    <ClInclude Include="Include\Element\Impl\text_impl.h" />
     <ClInclude Include="Include\Element\Internal\constant.h" />
     <ClInclude Include="Include\Element\Internal\direction_type.h" />
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />

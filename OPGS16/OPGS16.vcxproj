@@ -156,7 +156,6 @@
     <ClCompile Include="Include\Element\camera_object.cc" />
     <ClCompile Include="Source\Element\Canvas\canvas.cc" />
     <ClCompile Include="Source\Element\Canvas\image.cc" />
-    <ClCompile Include="Include\Element\Impl\text_impl.cc" />
     <ClCompile Include="Source\Element\Canvas\text.cc" />
     <ClCompile Include="Source\Debug\debug_canvas.cc" />
     <ClCompile Include="Source\Debug\ui_manager.cc" />
@@ -241,7 +240,6 @@
     <ClInclude Include="Include\Element\camera_object.h" />
     <ClInclude Include="Include\Element\Canvas\canvas.h" />
     <ClInclude Include="Include\Element\Canvas\image.h" />
-    <ClInclude Include="Include\Element\Impl\text_impl.h" />
     <ClInclude Include="Include\Element\Canvas\text.h" />
     <ClInclude Include="Include\Element\Interface\i_alignable.h" />
     <ClInclude Include="Include\Element\Interface\i_originable.h" />
