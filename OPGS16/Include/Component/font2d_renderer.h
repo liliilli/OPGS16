@@ -36,6 +36,9 @@ namespace opgs16::component {
 
 class CFont2DRenderer final : public _internal::CRendererBase {
 public:
+  using Utf16TextContainer = std::vector<std::u16string>;
+
+public:
   CFont2DRenderer(element::CObject& bind_object,
                   const std::string& font_tag,
                   const std::string& shader_tag,
@@ -126,13 +129,8 @@ private:
   GLuint m_vao = 0;
   GLuint m_vbo = 0;
 
-  /// Shader is in ShaderManager, render sprite.
-  std::vector<std::string> m_text_container;
-  /// Default scale is 1.0.
   std::vector<uint32_t> m_text_render_width;
-
-  /// Color value range from 0 to 1, RGB support.
-  glm::vec3 m_color;
+  Utf16TextContainer m_unicode_text_container;
 
   element::CShaderWrapper m_wrapper;
   manager::font::font_raw	m_font_set = nullptr;
@@ -140,6 +138,13 @@ private:
   _internal::EDirtyFlag m_string_dirty = _internal::EDirtyFlag::Clean;
   _internal::EDirtyFlag m_color_dirty = _internal::EDirtyFlag::Dirty;
   _internal::EDirtyFlag m_proj_matrix_dirty = _internal::EDirtyFlag::Dirty;
+
+  /// Color value range from 0 to 1, RGB support.
+  glm::vec3 m_color;
+
+  std::string m_font_name;
+
+  std::string m_temporary_utf8_string;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CFont2DRenderer)
 };

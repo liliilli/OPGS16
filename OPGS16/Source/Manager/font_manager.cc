@@ -61,6 +61,13 @@ bool LoadFreeType(const std::string& font_path) noexcept;
 ///
 opgs16::manager::font::font_map_ptr GetCharTextures();
 
+///
+/// @brief
+///
+/// @return
+///
+opgs16::manager::_internal::Character GetCharTexture(char16_t chr);
+
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
@@ -119,7 +126,32 @@ bool GenerateFont(const std::string& name_tag) {
     m_fonts.emplace(name_tag, GetCharTextures());
     // If caller order this font must be a default, insert raw pointer.
     if (information->IsDefault())
-      m_default_font = m_fonts.at(name_tag).get();
+      m_default_font = m_fonts[name_tag].get();
+
+    FT_Done_Face(m_ft_face);
+    FT_Done_FreeType(m_freetype);
+    return true;
+  }
+
+  return false;
+}
+
+bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) {
+  if (!IsFontExist(font_name))
+    return false;
+
+  const auto&[success, information] = resource::GetFont(font_name);
+
+  if (success && CheckFreeType() && LoadFreeType(information->Path())) {
+    FT_Set_Pixel_Sizes(m_ft_face, 0, k_default_font_size);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // Create font and move it.
+    (*m_fonts[font_name])[utf16_char] = GetCharTexture(utf16_char);
+
+    // If caller order this font must be a default, insert raw pointer.
+    if (information->IsDefault())
+      m_default_font = m_fonts[font_name].get();
 
     FT_Done_Face(m_ft_face);
     FT_Done_FreeType(m_freetype);
@@ -147,7 +179,7 @@ font_type* GetDefaultFont() {
 bool DeleteFont(const std::string& tag) {
   if (IsFontExist(tag)) {
     // Remove pointer reference
-    const auto font = m_fonts.at(tag).get();
+    const auto font = m_fonts[tag].get();
     if (m_default_font == font) m_default_font = nullptr;
     m_fonts.erase(tag);
     return true;
@@ -187,13 +219,13 @@ bool LoadFreeType(const std::string& font_path) noexcept {
 opgs16::manager::font::font_map_ptr GetCharTextures() {
   auto glyphs = std::make_unique<opgs16::manager::font::font_type>();
 
-  for (GLubyte c = 0; c < 128; ++c) {
+  for (char16_t c = 0; c < 128; ++c) {
     if (FT_Load_Char(m_ft_face, c, FT_LOAD_RENDER)) {
       std::cerr << "ERROR::FREETYPE: Failed to load Glyph\n";
       continue;
     }
 
-    /*! Generate Texture */
+    // Generate Textures
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -222,4 +254,39 @@ opgs16::manager::font::font_map_ptr GetCharTextures() {
   }
 
   return glyphs;
+}
+
+opgs16::manager::_internal::Character GetCharTexture(char16_t chr) {
+  if (FT_Load_Char(m_ft_face, chr, FT_LOAD_RENDER)) {
+      std::cerr << "ERROR::FREETYPE: Failed to load Glyph\n";
+      return {};
+    }
+
+  // Generate Textures
+  GLuint texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  const auto width  = m_ft_face->glyph->bitmap.width;
+  const auto height = m_ft_face->glyph->bitmap.rows;
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+      width, height,
+      0, GL_RED, GL_UNSIGNED_BYTE,
+      m_ft_face->glyph->bitmap.buffer);
+
+  // Set Texture Options
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  // Store character for later use
+  return opgs16::manager::_internal::Character{
+      texture,
+      glm::ivec2(width, height),
+      glm::ivec2(m_ft_face->glyph->bitmap_left,
+          m_ft_face->glyph->bitmap_top),
+      static_cast<GLuint>(m_ft_face->glyph->advance.x)
+  };
 }

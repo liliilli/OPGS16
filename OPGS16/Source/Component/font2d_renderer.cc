@@ -20,7 +20,13 @@
 
 #include <sstream>
 
+/// @todo Deprecated since C++17. Replace logic with other alternatives.
+#include <codecvt>
+#include <locale>
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <Phitos/Utf/ustring.h>
+
 /// ::opgs16::core::
 #include <Core/core_setting.h>
 /// ::opgs16::manager::MShaderManager
@@ -28,9 +34,13 @@
 /// ::opgs16::manager::_internal
 #include <Manager/Internal/font_internal.h>
 
+using Utf16TextContainer =
+    opgs16::component::CFont2DRenderer::Utf16TextContainer;
+
 namespace {
 
-std::vector<std::string> SeparateTextToList(const std::string& text);
+std::vector<std::u16string> SeparateUtf8TextToUtf16StringList(
+    const std::string& text);
 
 void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
@@ -61,6 +71,31 @@ void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
 
 ///
 /// @brief
+///
+std::u16string ConvertUtf8ToUtf16(const std::string& string) {
+  const auto utf8_char_array = string.c_str();
+
+  std::u16string result_utf16_line_string;
+  result_utf16_line_string.reserve(
+      phitos::utf::GetUtf16LengthFrom(utf8_char_array));
+
+  uint32_t i = 0;
+  for (auto it = utf8_char_array;
+       *it != '\0';
+       it += phitos::utf::GetByteOfUtf8Char(it)) {
+    result_utf16_line_string.push_back(phitos::utf::GetRawUtf16CharacterFrom(it));
+  }
+
+  return std::move(result_utf16_line_string);
+
+#ifdef false
+  return std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.
+      from_bytes(string);
+#endif
+}
+
+///
+/// @brief
 /// The method separate input to multi-lines strings
 /// detecting line-feed return carriage.
 ///
@@ -68,14 +103,15 @@ void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
 ///
 /// @return string list.
 ///
-std::vector<std::string> SeparateTextToList(const std::string& text) {
-  std::vector<std::string> result;
+std::vector<std::u16string> SeparateUtf8TextToUtf16StringList(
+    const std::string& text) {
+  std::vector<std::u16string> result;
 
   std::stringstream stream{ text };
   for (std::string line; std::getline(stream, line);)
-    result.emplace_back(line);
+    result.emplace_back(ConvertUtf8ToUtf16(line));
 
-  return result;
+  return std::move(result);
 }
 
 ///
@@ -151,23 +187,27 @@ std::array<float, 24> GetCharacterVertices(
 /// @param[in] position Position on which to render.
 /// @param[in] scale Scale factor, it magnify or minify rendered string textures.
 ///
-void RenderLeftSide(const std::vector<std::string>& container,
+void RenderLeftSide(const Utf16TextContainer& container,
+                    const std::string& font_name,
                     opgs16::manager::font::font_type* font_set,
                     const glm::vec2& position,
                     const GLuint m_vbo,
                     const float scale) {
   auto pos = position;
 
-  const uint32_t text_container_length = static_cast<uint32_t>(container.size());
-  for (uint32_t i = 0; i < text_container_length; ++i) {
-    for (const auto& chr : container[i]) {
+  for (const auto& utf16_string : container) {
+    for (const char16_t& chr : utf16_string) {
+      // If character on font is not exist yet, generate new one.
+      if (font_set->find(chr) == font_set->end())
+        opgs16::manager::font::GenerateCharacter(font_name, chr);
+
       const auto& ch_info = (*font_set)[chr];
       Render(ch_info, m_vbo, GetCharacterVertices(ch_info, pos, scale));
       pos.x += (ch_info.advance >> 6) * scale;
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)[0].size.y * 1.5f;
+    pos.y -= (*font_set)['0'].size.y;
   }
 }
 
@@ -190,7 +230,7 @@ void RenderCenterSide(const std::vector<std::string>& container,
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)[0].size.y * 1.5f;
+    pos.y -= (*font_set)['0'].size.y * 1.5f;
   }
 }
 
@@ -213,7 +253,7 @@ void RenderRightSide(const std::vector<std::string>& container,
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)[0].size.y * 1.5f;
+    pos.y -= (*font_set)['0'].size.y * 1.5f;
   }
 }
 
@@ -248,7 +288,7 @@ CFont2DRenderer::CFont2DRenderer(element::CObject& bind_object,
                                  const std::string& font_tag,
                                  const std::string& shader_tag,
                                  const uint32_t rendering_layer) :
-    CRendererBase(bind_object, rendering_layer) {
+    CRendererBase(bind_object, rendering_layer), m_font_name{font_tag} {
   /// Function Body
   SetProjectionMatrix({
       glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
@@ -267,11 +307,11 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                                  const float scale) {
   /// Ready
   if (m_string_dirty == _internal::EDirtyFlag::Dirty) {
-    const auto string = std::move(m_text_container[0]);
-    RefreshStringContainers(string);
+    RefreshStringContainers(m_temporary_utf8_string);
+    m_temporary_utf8_string.clear();
     m_string_dirty = _internal::EDirtyFlag::Clean;
   }
-  if (m_text_container.empty())
+  if (m_unicode_text_container.empty())
     return;
 
   if (m_color_dirty == _internal::EDirtyFlag::Dirty) {
@@ -289,8 +329,9 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
 
   switch (typedef IAlignable::Alignment Align; alignment) {
   case Align::LEFT:
-    RenderLeftSide(m_text_container, m_font_set, final_position, m_vbo, scale);
+    RenderLeftSide(m_unicode_text_container, m_font_name, m_font_set, final_position, m_vbo, scale);
     break;
+#ifdef false
   case Align::CENTER:
     RenderCenterSide(m_text_container, m_text_render_width,
                      m_font_set, final_position, m_vbo, scale);
@@ -298,6 +339,10 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
   case Align::RIGHT:
     RenderRightSide(m_text_container, m_text_render_width,
                     m_font_set, final_position, m_vbo, scale);
+    break;
+#endif
+  default:
+    NEU_NOT_IMPLEMENTED_ASSERT();
     break;
   }
 
@@ -313,6 +358,7 @@ void CFont2DRenderer::SetFont(const std::string& font_name) {
   if (auto font_set = manager::font::GetFontSetPtr(font_name);
       font_set.has_value()) {
     m_font_set = *font_set;
+    m_font_name = font_name;
   }
   else {
     m_font_set = manager::font::GetDefaultFont();
@@ -320,11 +366,8 @@ void CFont2DRenderer::SetFont(const std::string& font_name) {
 }
 
 void CFont2DRenderer::SetText(const std::string& utf8_text) {
+  m_temporary_utf8_string = utf8_text;
   m_string_dirty = _internal::EDirtyFlag::Dirty;
-
-  m_text_container.clear();
-  m_text_render_width.clear();
-  m_text_container.push_back(utf8_text);
 }
 
 void CFont2DRenderer::SetColor(const glm::vec3& color) {
@@ -349,19 +392,19 @@ void CFont2DRenderer::SetProjectionMatrix(const glm::mat4& projection_matrix) {
 }
 
 void CFont2DRenderer::RefreshStringContainers(const std::string& text) {
-  m_text_container.clear();
+  m_unicode_text_container.clear();
   m_text_render_width.clear();
 
   if (std::string::npos == text.find('\n')) {
-    m_text_container.emplace_back(text);
+    m_unicode_text_container.emplace_back(ConvertUtf8ToUtf16(text));
     m_text_render_width.push_back(
-        CalculateStringRenderWidth(m_text_container[0], m_font_set));
+        static_cast<uint32_t>(m_unicode_text_container[0].length()));
   }
   else {
-    m_text_container = SeparateTextToList(text);
-    for (const auto& text_line : m_text_container)
+    m_unicode_text_container = SeparateUtf8TextToUtf16StringList(text);
+    for (const auto& text_line : m_unicode_text_container)
       m_text_render_width.push_back(
-          CalculateStringRenderWidth(text_line, m_font_set));
+          static_cast<uint32_t>(text_line.length()));
   }
 }
 
