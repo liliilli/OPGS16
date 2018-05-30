@@ -153,22 +153,8 @@ std::array<float, 24> GetCharacterVertices(
   const auto y_offset = (ch_info.size.y - ch_info.bearing.y) * scale;
   const glm::vec2 ch_pos = position + glm::vec2{ x_offset, -y_offset };
 
-  auto w = ch_info.size.x;
-  auto h = ch_info.size.y;
-  if (scale != 1.0f) {
-    if (scale == 0.5f) {
-      w >>= 1;
-      h >>= 1;
-    }
-    else if (scale == 2.0f) {
-      w <<= 1;
-      h <<= 1;
-    }
-    else {
-      w *= static_cast<int>(scale);
-      h *= static_cast<int>(scale);
-    }
-  }
+  const auto w = ch_info.size.x * scale;
+  const auto h = ch_info.size.y * scale;
 
   return std::array<float, 24>{
       ch_pos.x, ch_pos.y + h, 0.f, 0.f,
@@ -196,7 +182,7 @@ void RenderLeftSide(const Utf16TextContainer& container,
   auto pos = position;
 
   for (const auto& utf16_string : container) {
-    for (const char16_t& chr : utf16_string) {
+    for (const char16_t chr : utf16_string) {
       // If character on font is not exist yet, generate new one.
       if (font_set->find(chr) == font_set->end())
         opgs16::manager::font::GenerateCharacter(font_name, chr);
@@ -207,7 +193,7 @@ void RenderLeftSide(const Utf16TextContainer& container,
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)['0'].size.y;
+    pos.y -= static_cast<int>((*font_set)['0'].size.y * scale * 1.5f);
   }
 }
 

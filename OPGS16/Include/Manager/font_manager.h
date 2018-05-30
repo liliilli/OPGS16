@@ -58,12 +58,12 @@ void Initiate();
 
 ///
 /// @brief Generate font glyphs with name_tag from ResourceManager.
-/// @param[in] name_tag Name tag to refer to stored font glyphs later,
+/// @param[in] font_name Name tag to refer to stored font glyphs later,
 /// and get information from ResourceManager.
 ///
 /// @return The success flag.
 ///
-bool GenerateFont(const std::string& name_tag);
+bool GenerateFont(const std::string& font_name);
 
 ///
 /// @brief Generate utf16 character font glyph when font_name is already
@@ -90,23 +90,27 @@ font_type* GetDefaultFont();
 ///
 std::optional<font_type*> GetFontSetPtr(const std::string& font_name_tag);
 
-/**
- * @brief Delete font that is specified by tag name. if not found, return false flag.
- * @param[in] tag The tag destroy stored font glyphs.
- * @reutrn The success flag.
- */
-bool DeleteFont(const std::string& tag);
+///
+/// @brief
+/// Delete font that is specified by tag name. if not found, return false flag.
+///
+/// @param[in] font_name The tag destroy stored font glyphs.
+///
+/// @reutrn The success flag.
+///
+bool DeleteFont(const std::string& font_name);
 
 ///
 /// @brief Check font exists.
-/// @param[in] font_tag Font name to find in font container.
+///
+/// @param[in] font_name Font name to find in font container.
+///
 /// @return The success flag. If font is exist, return true.
 ///
-bool IsFontExist(const std::string& font_tag);
+bool IsFontExist(const std::string& font_name);
 
 ///
-/// @brief
-/// Get default font size.
+/// @brief Get default font size.
 ///
 unsigned GetDefaultFontSize();
 
