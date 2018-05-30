@@ -390,6 +390,8 @@ void InitiateDefaultFonts() {
   manager::font::GenerateFont("Solomon");
   manager::font::GenerateFont("Menus");
   manager::font::GenerateFont("BIOS");
+  manager::font::GenerateFont("Sam3");
+  manager::font::GenerateFont("Pixel");
 }
 
 #if defined(_OPGS16_DEBUG_OPTION)

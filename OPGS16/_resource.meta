@@ -6,6 +6,8 @@ FONT Sans Fonts/Liberate/LiberationSans-Regular.ttf 1
 FONT Solomon Fonts/SolomonP.ttf 0
 FONT Menus Fonts/Menus.ttf 0
 FONT BIOS Fonts/PxPlus_IBM_BIOS.ttf 0
+FONT Sam3 Fonts/Sam3KRFont.ttf 0
+FONT Pixel Fonts/PixelMplus12-Regular.ttf 0
 
 # TEXTURES
 TEX2DATLAS System Sprites/System.png Sprites/SystemAtlas.json

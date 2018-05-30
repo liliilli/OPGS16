@@ -43,12 +43,12 @@ L"TEST GAME"
 
 //
 #define _INITIAL_SCENE_INCLUDE_PATH \
-<../_Project/Debug/Include/Scene/object_lifecycle.h>
+<../_Project/Debug/Include/Scene/debug_text.h>
 
 // set first scene of your project.
 // This must be written as the style of L" ... " or application will not build up.
 #define _INITIAL_SCENE_FULL_NAME \
-::debug::scene::ObjectLifeCycle
+::debug::scene::DebugText
 
 ///
 /// Decide whether show the boot screen logo when application is executed.
