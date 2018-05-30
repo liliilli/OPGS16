@@ -8,6 +8,7 @@ FONT Menus Fonts/Menus.ttf 0
 FONT BIOS Fonts/PxPlus_IBM_BIOS.ttf 0
 FONT Sam3 Fonts/Sam3KRFont.ttf 0
 FONT Pixel Fonts/PixelMplus12-Regular.ttf 0
+FONT Arial Fonts/arial.ttf 0
 
 # TEXTURES
 TEX2DATLAS System Sprites/System.png Sprites/SystemAtlas.json

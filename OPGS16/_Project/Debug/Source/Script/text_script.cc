@@ -59,7 +59,7 @@ void TextScript::Start() {
         "Text3", test_text3);
     text3->SetOrigin(IOriginable::Origin::DOWN_LEFT);
     text3->SetFontName("Pixel");
-    text3->SetFontSize(16u);
+    text3->SetFontSize(12u);
     text3->SetWorldPosition({ 0, 48, 0 });
     text3->SetColor(glm::vec3{0.f, 1.f, 1.f});
 

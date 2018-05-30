@@ -15,7 +15,8 @@
 
 namespace debug::script {
 
-OPGS16_CLASS_SCRIPT(TextScript)
+class TextScript final : public ::opgs16::component::CScriptFrame {
+SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, TextScript)
 public:
   TextScript(opgs16::element::CObject& bind_object) :
       CScriptFrame { bind_object } {};
