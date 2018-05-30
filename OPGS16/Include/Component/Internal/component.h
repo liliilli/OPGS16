@@ -76,6 +76,18 @@ public:
         return m_object;
     }
 
+  ///
+  /// @brief
+  /// Get reference of bound object.
+  /// This function will replace previous GetObject member function,
+  /// because GetObject function name is collided with Windows macro GetObjectW.
+  ///
+  /// @return Reference of bound game object.
+  ///
+  element::CObject& GetBindObject() const {
+    return m_object;
+  }
+
 private:
     element::CObject& m_object;   /*! Bound object which script instance refers to */
 
