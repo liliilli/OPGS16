@@ -37,7 +37,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -75,12 +75,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;C:\_libraries\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\assimp\include;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\x64;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\x64;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Debug\x64;$(MSBuildProjectDirectory)\__ThirdParty\glfw\x64;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,7 +94,7 @@
       <Optimization>MinSpace</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -107,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -121,6 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -135,6 +142,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -207,11 +215,13 @@
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\debug_sound.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\debug_text.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\object_lifecycle.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\canvas_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\__s_debugcanvas.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\text_script.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -316,13 +326,16 @@
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\empty_canvas.h" />
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\debug_text.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\object_lifecycle.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\text_script.h" />
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
