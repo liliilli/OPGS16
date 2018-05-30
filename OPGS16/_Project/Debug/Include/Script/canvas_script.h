@@ -15,9 +15,9 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /// ::opgs16::component::CScriptFrame */
-#include <Component\script_frame.h> 
+#include <Component\script_frame.h>
 /// Forward declaration
-#include <opgs16fwd.h>  
+#include <opgs16fwd.h>
 
 namespace opgs16::builtin::sample {
 
@@ -26,6 +26,7 @@ public:
     DebugCanvasScript(opgs16::element::CObject& bind_object);
 
 private:
+    void Initiate() override final;
     void Start() override final;
     void Update() override final;
 

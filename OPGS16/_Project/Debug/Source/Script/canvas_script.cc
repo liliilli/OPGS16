@@ -39,8 +39,10 @@ constexpr const char* k_info_sentence_name = "InfoSentence";
 
 namespace opgs16::builtin::sample {
 
-DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) : 
-    CScriptFrame{ bind_object } {
+DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) :
+    CScriptFrame{ bind_object } { }
+
+void DebugCanvasScript::Initiate() {
     using EOrigin = IOriginable::Origin;
     using EAlignment = IAlignable::Alignment;
 
@@ -49,7 +51,7 @@ DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) :
 
     auto* obj = static_cast<CCanvas*>(&GetObject());
 
-    // Make instruction text object. 
+    // Make instruction text object.
     // This object will display debug test instruction.
     auto instruction = obj->Instantiate<CText>(k_instruction_name, k_instruction_string);
     instruction->SetOrigin(IOriginable::Origin::UP_LEFT);
@@ -77,8 +79,6 @@ DebugCanvasScript::DebugCanvasScript(element::CObject& bind_object) :
     m_info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
 
     m_sound = &opgs16::manager::MSoundManager::Instance();
-
-    Start();
 }
 
 void DebugCanvasScript::Start() {
