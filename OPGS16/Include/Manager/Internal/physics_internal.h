@@ -7,8 +7,6 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
-///
 /// @file Manager/Internal/physics_internal.h
 /// @brief
 ///
@@ -18,26 +16,27 @@
 ///
 
 /// ::opgs16::component::CRigidbody2D
-#include <Component\rigidbody_2d.h> 
+#include <Component/rigidbody_2d.h>
 
 namespace opgs16::manager::_internal {
 
 struct Item {
-    physics::CRectangleCollider2D* const    m_collider;
-    component::CRigidbody2D* const   m_rigidbody;
-    const glm::vec2 m_position;
+  opgs16::physics::CRectangleCollider2D* const m_collider;
+  component::CRigidbody2D* const m_rigidbody;
+  const glm::vec2 m_position;
 
-    enum class Type {
-        BEGIN,
-        END
-    } m_type = { Type::BEGIN };
+  enum class Type {
+    Begin,
+    End
+  };
+  Type m_type = { Type::Begin };
 
-    explicit Item(physics::CRectangleCollider2D* const collider,
-                  component::CRigidbody2D* const rigidbody,
-                  const glm::vec2 axis_value,
-                  Type type) :
-        m_collider{ collider }, m_rigidbody{ rigidbody },
-        m_position{ axis_value }, m_type{ type } {};
+  explicit Item(opgs16::physics::CRectangleCollider2D* const collider,
+                component::CRigidbody2D* const rigidbody,
+                const glm::vec2 axis_value,
+                Type type) :
+    m_collider{ collider }, m_rigidbody{ rigidbody },
+    m_position{ axis_value }, m_type{ type } {};
 };
 
 } /*! opgs16::manager::_internal */

@@ -102,7 +102,7 @@ public:
 
     bool IsTag(const std::string&& tag) const;
 
-    bool IsTag(const size_t index) const;
+    bool IsTag(const uint32_t index) const;
 
     /*! Activate or deactivate physics calculation mode */
     inline void ActivatePhysics(const bool value) {

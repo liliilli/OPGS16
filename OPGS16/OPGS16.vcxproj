@@ -235,6 +235,7 @@
     <ClInclude Include="Include\Helper\assert.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
+    <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
     <ClInclude Include="Include\Core\Boot\__boot.h" />

@@ -1,5 +1,5 @@
-#ifndef OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
-#define OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
+#ifndef OPGS16_MANAGER_PHYSICS_MANAGER_H
+#define OPGS16_MANAGER_PHYSICS_MANAGER_H
 
 ///
 /// @license BSD 2-Clause License
@@ -7,73 +7,49 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
-///
-/// @file System/Manager/Pubilc/physics_manager.h
+/// @file Manager/physics_manager.h
 /// @brief
+/// The file which contains management component that manages physics objects.
+///
 /// @author Jongmin Yun
 ///
 /// @log
 /// 2018-02-15 Create file. Implement fundamental mechanism.
 /// 2018-03-04 Refactoring.
+/// 2018-05-31 Refactoring. Detach singleton to namepsace following that.
 ///
 
-#include <memory>       /*! std::unique_ptr */
-#include <vector>       /*! std::list */
-
-/// ::opgs16::manager::_internal::Item
-#include <Manager\Internal\physics_internal.h>
 /// Forward declaration
 #include <opgs16fwd.h>
 
-namespace opgs16::manager {
+///
+/// @class opgs16::manager::physics
+/// @brief Physics manager manages object collision and rigidbody movement.
+///
+namespace opgs16::manager::physics {
 
-/*!
- * @class MPhysicsManager
- * @brief Physics manager manages object collision and rigidbody movement.
- */
-class MPhysicsManager final {
-    using item_ptr = std::unique_ptr<_internal::Item>;
-    using item_raw = _internal::Item* ;
+///
+/// @brief
+/// Add AABB collider to be performed collision check by physics manager.
+///
+/// @param[in] collider 2D Collider to apply.
+/// @param[in] rigidbody 2D rigidbody to apply.
+///
+void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
+                 component::CRigidbody2D* const rigidbody);
 
-public:
-    /*! Get Instance of PhysicsManager. */
-    static MPhysicsManager& Instance() {
-        static MPhysicsManager instance{};
-        return instance;
-    }
+///
+/// @brief
+/// Update physics manager namespace to calculate physics collision process.
+///
+void Update();
 
-    /*!
-     * @brief
-     * @param[in]
-     */
-    void AddCollider(physics::CRectangleCollider2D* const collider,
-                     component::CRigidbody2D* const rigidbody);
+///
+/// @brief
+/// Release and clean physics object container.
+///
+void Clear();
 
-    /*! Update and proceed collision routine */
-    void Update();
+} /// ::opgs16::manager::physics namespace.
 
-    /*! Release and clean physics object container */
-    void Clear();
-
-private:
-    std::vector<item_ptr> m_potential;
-    std::vector<item_raw> m_active;
-
-private:
-    /*!
-     * @brief
-     * @param[in]
-     */
-     void ProceedCollisionCheck(item_ptr& item);
-
-    /*!
-     * @brief
-     * @param[in]
-     */
-     void EraseItem(item_ptr& item);
-};
-
-} /*! opgs16::manager */
-
-#endif // !OPGS16_SYSTEM_MANAGER_PHYSICS_MANAGER_H
+#endif /// OPGS16_MANAGER_PHYSICS_MANAGER_H
