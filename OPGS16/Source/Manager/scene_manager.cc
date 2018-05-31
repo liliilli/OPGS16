@@ -57,7 +57,7 @@ void MSceneManager::PopScene() {
 }
 
 void MSceneManager::ReleaseAllResources() const {
-    MPhysicsManager::Instance().Clear();  /*! precise */
+    opgs16::manager::physics::Clear();
     MTimerManager::Instance().Clear();    /*! precise */
     MSoundManager::Instance().Clear();    /*! Not precise */
     ShaderManager::Instance().Clear();   /*! Not implemented */

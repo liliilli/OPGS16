@@ -253,7 +253,6 @@ void Initiate() {
   manager::object::Initiate();
   manager::font::Initiate();
 
-  m_physics_manager = &manager::MPhysicsManager::Instance();
   m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
   m_time_manager = &manager::MTimeManager::Instance();
@@ -462,7 +461,7 @@ void Update() {
 
       // Update
       m_scene_manager->PresentScene()->Update();
-      m_physics_manager->Update();
+      manager::physics::Update();
     }
     break;
   default: break;;
