@@ -75,18 +75,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;$(IncludePath)</IncludePath>
-    <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\Release;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\Win32\Release;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Release\Win32;$(MSBuildProjectDirectory)\__ThirdParty\glfw\lib-vc2015;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LLVMInstallDir)\lib\clang\6.0\lib\windows;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;$(IncludePath)</IncludePath>
-    <LibraryPath>$(MSBuildProjectDirectory)\__ThirdParty\assimp\lib\x64;$(MSBuildProjectDirectory)\__ThirdParty\freetype\objs\x64;$(MSBuildProjectDirectory)\__ThirdParty\glew\lib\Debug\x64;$(MSBuildProjectDirectory)\__ThirdParty\glfw\x64;$(MSBuildProjectDirectory)\__ThirdParty\fmod\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -102,7 +104,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>fmodL_vc.lib;freetype.lib;assimp-vc140-mt.lib;glew32.lib;glu32.lib;opengl32.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL_vc.lib;freetype.lib;assimp-vc140-mt.lib;glew32.lib;glu32.lib;opengl32.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
@@ -116,7 +118,7 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,6 +134,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,6 +150,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -214,6 +218,8 @@
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\rotatable_obstacle.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\debug_aabb.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\debug_sound.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\debug_text.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\object_lifecycle.cc" />
@@ -331,6 +337,7 @@
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\debug_aabb.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\debug_text.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\object_lifecycle.h" />
@@ -339,6 +346,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\text_script.h" />
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
