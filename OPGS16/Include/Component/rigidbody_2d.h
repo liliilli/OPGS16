@@ -86,13 +86,13 @@ public:
     template <
         class _Ty,
         class... _Params,
-        typename = std::enable_if_t<std::is_base_of_v<collision::CRectangleCollider2D, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<physics::CRectangleCollider2D, _Ty>>
     >
     decltype(auto) AddCollider2D(_Params&&... args);
 
     template <
         class _Ty,
-        typename = std::enable_if_t<std::is_base_of_v<collision::CRectangleCollider2D, _Ty>>
+        typename = std::enable_if_t<std::is_base_of_v<physics::CRectangleCollider2D, _Ty>>
     >
     decltype(auto) AddCollider2D(std::unique_ptr<_Ty>&& collider);
 

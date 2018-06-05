@@ -311,8 +311,11 @@ void Update() {
     }
   }
 
-  // Remove All potential, and active list
-  Clear();
+  m_active.clear();
+}
+
+void RenderCollisionBox() {
+  NEU_NOT_IMPLEMENTED_ASSERT();
 }
 
 void Clear() {

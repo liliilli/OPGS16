@@ -101,6 +101,9 @@ public:
     inline EScaleType ScaleValue() const noexcept {
         return m_scale_value;
     }
+    inline Switch CollisionAABBBoxDisplay() const noexcept {
+      return m_collision_aabb_box;
+    }
     inline auto ScaleValueIntegerOf() const noexcept {
         return static_cast<std::underlying_type_t<decltype(m_scale_value)>>(m_scale_value);
     }
@@ -120,6 +123,9 @@ public:
     inline void SetScaleValue(EScaleType value) noexcept {
         m_scale_value = value;
     }
+    inline void SetCollisionAABBBoxDisplay(Switch value) noexcept {
+      m_collision_aabb_box = value;
+    }
 
     inline void ToggleAntiAliasing() noexcept {
         SetAntiAliasing(ToggleSwitch(AntiAliasing()));
@@ -133,6 +139,9 @@ public:
     inline void ToggleSizeScalable() {
         SetSizeScalable(ToggleSwitch(SizeScalable()));
     }
+    inline void ToggleCollisionAABBBoxDisplay() noexcept {
+      SetCollisionAABBBoxDisplay(ToggleSwitch(CollisionAABBBoxDisplay()));
+    }
 
 private:
     constexpr static size_type screen_size{ 256, 224 };
@@ -141,6 +150,7 @@ private:
     Switch m_debug_mode{ false };
     Switch m_post_processing{ false };
     Switch m_size_scalable{ true };
+    Switch m_collision_aabb_box = Switch::OFF;
     EScaleType m_scale_value{ EScaleType::X1 };
 
 public:

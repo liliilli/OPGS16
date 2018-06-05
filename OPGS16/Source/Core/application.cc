@@ -192,6 +192,7 @@ void ReplacePresentStatus(_internal::EGameStatus status);
 
 void ToggleFpsDisplay();
 void TogglePostProcessingEffect();
+void ToggleCollisionBoxDisplay();
 
 #if defined(_OPGS16_DEBUG_OPTION)
 ///
@@ -468,7 +469,10 @@ void Update() {
   }
 
 #if defined(_OPGS16_DEBUG_OPTION)
-  if (IsSwitchOn(m_setting->DebugMode())) m_debug_ui_canvas->Update();
+  if (IsSwitchOn(m_setting->DebugMode()))
+    m_debug_ui_canvas->Update();
+  if (IsSwitchOn(m_setting->CollisionAABBBoxDisplay()))
+    manager::physics::RenderCollisionBox();
 #endif
 
   // Update active effects.
@@ -504,6 +508,8 @@ void InputGlobal() {
   // @todo : Renovate debug mode input and detach it from release mode.
 
 #if defined(_OPGS16_DEBUG_OPTION)
+  if (IsKeyPressed("GlobalF7"))
+    ToggleCollisionBoxDisplay();
   if (IsKeyPressed("GlobalF9"))
     ToggleFpsDisplay();
 #endif
@@ -555,7 +561,13 @@ void TogglePostProcessingEffect() {
         static_cast<bool>(m_setting->PostProcessing()) << std::endl;
 }
 
-void ChangeScalingOption(EScaleType value) {
+void ToggleCollisionBoxDisplay() {
+  m_setting->ToggleCollisionAABBBoxDisplay();
+  PUSH_LOG_INFO_EXT("Toggle Collision box display {}",
+      (m_setting->CollisionAABBBoxDisplay() == Switch::ON) ? "ON" : "OFF");
+}
+
+  void ChangeScalingOption(EScaleType value) {
 	if (!IsSameValue(value, m_setting->ScaleValue())) {
     auto [width, height] = SGlobalSetting::ScreenSize();
 

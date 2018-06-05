@@ -46,6 +46,12 @@ void Update();
 
 ///
 /// @brief
+/// Render collision box when _OPGS16_DEBUG_OPTION is defined at manifest.h.
+///
+void RenderCollisionBox();
+
+///
+/// @brief
 /// Release and clean physics object container.
 ///
 void Clear();
