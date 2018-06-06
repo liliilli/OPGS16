@@ -20,6 +20,10 @@
 /// Enhanced assertion
 #include <Phitos/Dbg/assert.h>
 
+/// ::opgs16::component::_internal::CComponent
+#include <Component/Internal/component.h>
+/// Component Macroes
+#include <Component/Internal/component_macro.h>
 /// ::opgs16::element::_internal::CCollisionShapeWrapper
 #include <Element/Internal/physics_collision_shape_wrapper.h>
 /// ::opgs16::EAxis3D
@@ -38,6 +42,21 @@
 namespace opgs16::component::physics {
 
 ///
+/// @struct DVector2
+///
+/// @brief
+///
+struct DVector2 {
+  float x, y;
+
+  explicit operator btVector3() const noexcept {
+    return btVector3{x, y, 0.f};
+  }
+};
+
+///
+/// @struct DVector3
+///
 /// @brief
 /// Helper vector class.
 ///
@@ -55,9 +74,11 @@ struct DVector3 {
 /// @brief
 /// Collision shape object which wraps bullet collision shapes
 ///
-class CColliderGeneral {
+class CColliderGeneral : public _internal::CComponent {
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CColliderGeneral)
 public:
-  CColliderGeneral() {
+  CColliderGeneral(element::CObject& bind_object) :
+      _internal::CComponent(bind_object) {
     m_transform.setIdentity();
   }
 

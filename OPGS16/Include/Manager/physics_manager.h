@@ -31,8 +31,12 @@ class CPhysicsEnvironment;
 class CCollisionShapeList;
 }
 
+//!
+//! Implementation
+//!
+
 ///
-/// @class opgs16::manager::physics
+/// @namespace opgs16::manager::physics
 /// @brief Physics manager manages object collision and rigidbody movement.
 ///
 namespace opgs16::manager::physics {

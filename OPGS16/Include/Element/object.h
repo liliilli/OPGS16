@@ -46,8 +46,6 @@
 #include <Component\Internal\type.h>
 /// ::opgs16::element::_internal::EDirection
 #include <Element\Internal\direction_type.h>
-/// ::opgs16::manager::_internal::Physics
-#include <Manager\Internal\physics_internal.h>
 
 /// import logger debug mode
 #include <Headers\import_logger.h>

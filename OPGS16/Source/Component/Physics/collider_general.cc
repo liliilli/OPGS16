@@ -121,6 +121,17 @@ void CColliderGeneral::SetRestitution(float value) {
 void CColliderGeneral::SetMass(float mass_value) {
   PHITOS_ASSERT(m_rigidbody != nullptr,
       "Rigidbody is not initialized or null.");
+  if (m_object_physics_type == EDynamic::Static) {
+    PUSH_LOG_WARN(
+        "Static collision shape could not set up mass weight.\n"
+        "You have to change collision shape type to Dynamic or Kinetic at first."
+    );
+    return;
+  }
+  if (mass_value <= 0.f) {
+    PUSH_LOG_WARN_EXT("Could not set up mass to {}", mass_value);
+    return;
+  }
 
   m_object_mass = mass_value;
 

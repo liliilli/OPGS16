@@ -47,10 +47,11 @@
 #include <memory>
 
 /// ::opgs16::component::_internal::CComponent
-#include <Component\Internal\component.h>
-#include <Component\Internal\component_macro.h> /// Component macroes
+#include <Component/Internal/component.h>
+#include <Component/Internal/component_macro.h> /// Component macroes
+
 /// ::opgs16::component::collision::CRectangleCollider2D
-#include <Component\Physics2D\Collider\rectangle.h>
+#include <Component/Physics2D/Collider/rectangle.h>
 
 #include <opgs16fwd.h>  /// Forward declration.
 
