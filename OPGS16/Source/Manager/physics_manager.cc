@@ -36,15 +36,23 @@
 #include <Element/object.h>
 /// ::opgs16::manager::MSettingManager
 #include <Manager/setting_manager.h>
+/// ::opgs16::manager::physics::_internal::CCollisionShapeList
+#include <Manager/Internal/physics_collision_shape_list.h>
 /// ::opgs16::manager::physics Strong enum flags.
 #include <Manager/Internal/physics_flag.h>
 /// ::opgs16::manager::_internal::Item
 #include <Manager/Internal/physics_internal.h>
+/// ::opgs16::manager::physics::_internal::CPhysicsEnvironment
+#include <Manager/Internal/physics_environment.h>
+
 
 /// import loggers
 #include <Headers/import_logger.h>
 
 using ECollided = opgs16::manager::physics::ECollided;
+using CCollisionShapeList = opgs16::manager::physics::_internal::CCollisionShapeList;
+using CPhysicsEnvironment = opgs16::manager::physics::_internal::CPhysicsEnvironment;
+using EPhysicsEnvironment = opgs16::manager::physics::_internal::EPhysicsEnvironment;
 
 namespace {
 
@@ -53,6 +61,11 @@ using item_raw = opgs16::manager::_internal::Item* ;
 
 std::vector<item_ptr> m_potential;
 std::vector<item_raw> m_active;
+
+//
+CPhysicsEnvironment management{EPhysicsEnvironment::Default};
+//
+CCollisionShapeList collision_shape_list;
 
 } /// unnamed namespace
 
@@ -284,11 +297,11 @@ void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
 
   // Insert to potential list
   m_potential.emplace_back(
-    std::make_unique<_internal::Item>(collider, rigidbody, ld,
-                                      _internal::Item::Type::Begin));
+    std::make_unique<manager::_internal::Item>(collider, rigidbody, ld,
+                                      manager::_internal::Item::Type::Begin));
   m_potential.emplace_back(
-    std::make_unique<_internal::Item>(collider, rigidbody, ru,
-                                      _internal::Item::Type::End));
+    std::make_unique<manager::_internal::Item>(collider, rigidbody, ru,
+                                      manager::_internal::Item::Type::End));
 }
 
 void Update() {
@@ -301,11 +314,11 @@ void Update() {
   // Processing
   for (auto& item : m_potential) {
     switch (item->m_type) {
-    case _internal::Item::Type::Begin:
+    case manager::_internal::Item::Type::Begin:
       ProceedCollisionCheck(item);
       m_active.emplace_back(item.get());
       break;
-    case _internal::Item::Type::End:
+    case manager::_internal::Item::Type::End:
       EraseItem(item);
       break;
     }
@@ -321,6 +334,14 @@ void RenderCollisionBox() {
 void Clear() {
   m_active.clear();
   m_potential.clear();
+}
+
+CPhysicsEnvironment& GetManagement() {
+  return management;
+}
+
+CCollisionShapeList& GetShapeList() {
+  return collision_shape_list;
 }
 
 } /// ::opgs16::manager::physics namespace

@@ -22,6 +22,15 @@
 /// Forward declaration
 #include <opgs16fwd.h>
 
+//!
+//! Forward declaration
+//!
+
+namespace opgs16::manager::physics::_internal {
+class CPhysicsEnvironment;
+class CCollisionShapeList;
+}
+
 ///
 /// @class opgs16::manager::physics
 /// @brief Physics manager manages object collision and rigidbody movement.
@@ -55,6 +64,22 @@ void RenderCollisionBox();
 /// Release and clean physics object container.
 ///
 void Clear();
+
+///
+/// @brief
+/// Return reference of physics environment managerial instance.
+///
+/// @return Reference of physics environment instance.
+///
+_internal::CPhysicsEnvironment& GetManagement();
+
+///
+/// @brief
+/// Return reference of collision shape list.
+///
+/// @return Reference of collision shape list.
+///
+_internal::CCollisionShapeList& GetShapeList();
 
 } /// ::opgs16::manager::physics namespace.
 

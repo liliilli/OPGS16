@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(Platform)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
@@ -116,6 +116,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -162,6 +163,7 @@
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
+    <ClCompile Include="Source\Component\Physics\collider_general.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
     <ClCompile Include="Source\Core\application.cc" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Source\Element\prerendering_container.cc" />
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
+    <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
     <ClCompile Include="Source\Manager\prerendering_manager.cc" />
     <ClCompile Include="Source\Manager\timer_manager.cc" />
     <ClCompile Include="Source\Shader\Default\shader_font.cc" />
@@ -234,13 +237,19 @@
     <ClInclude Include="Include\Component\font2d_renderer.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
+    <ClInclude Include="Include\Component\Physics\collider_general.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
+    <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
     <ClInclude Include="Include\Helper\assert.h" />
+    <ClInclude Include="Include\Helper\axis.h" />
+    <ClInclude Include="Include\Helper\Physics\enum_types.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
+    <ClInclude Include="Include\Manager\Internal\physics_collision_shape_list.h" />
+    <ClInclude Include="Include\Manager\Internal\physics_environment.h" />
     <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
@@ -347,6 +356,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\initiated.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
