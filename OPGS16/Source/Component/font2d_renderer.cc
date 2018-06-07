@@ -282,7 +282,7 @@ CFont2DRenderer::CFont2DRenderer(element::CObject& bind_object,
       static_cast<float>(SGlobalSetting::ScreenHeight())) });
   BindVertexAttributes(&m_vao, &m_vbo);
 
-  m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_tag));
+  m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
 
   SetFont(font_tag);
 }

@@ -60,7 +60,9 @@ void MSceneManager::ReleaseAllResources() const {
     opgs16::manager::physics::Clear();
     MTimerManager::Instance().Clear();    /*! precise */
     MSoundManager::Instance().Clear();    /*! Not precise */
+#ifdef false
     ShaderManager::Instance().Clear();   /*! Not implemented */
+#endif
     TextureManager::Instance().Clear();  /*! Not precise? */
     manager::object::ClearAll();
 }

@@ -73,7 +73,7 @@ void CFrameBuferFrame::GenerateColorBuffer(const unsigned id, GLint internal_for
 
 void CFrameBuferFrame::SetShader(const char* name) {
 	/** Check If pp+Name is exist, push created shader */
-    m_shader_wrapper.SetShader(manager::ShaderManager::Instance().Shader(name));
+    m_shader_wrapper.SetShader(manager::shader::GetShader(name));
 }
 
 void CFrameBuferFrame::InitializeDefaultDepthBuffer() {

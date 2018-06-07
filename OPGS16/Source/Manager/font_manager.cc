@@ -122,7 +122,7 @@ namespace opgs16::manager::font {
 void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       "Duplicated function call of ::opgs16::manager::font::Initiate() is prohibited.");
-	m_common_shader = ShaderManager::Instance().Shader("gCommonFont");
+	m_common_shader = manager::shader::GetShader("gCommonFont");
 }
 
 bool GenerateFont(const std::string& name_tag) {

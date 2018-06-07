@@ -9,6 +9,8 @@
 /// @author
 ///
 
+#include <LinearMath/btVector3.h>
+
 namespace opgs16 {
 
 ///

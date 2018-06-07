@@ -179,9 +179,11 @@
     <ClCompile Include="Source\Element\prerendering_container.cc" />
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
+    <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
     <ClCompile Include="Source\Manager\prerendering_manager.cc" />
     <ClCompile Include="Source\Manager\timer_manager.cc" />
+    <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
     <ClCompile Include="Source\Shader\Default\shader_font.cc" />
     <ClCompile Include="Source\Shader\Default\shader_postprocessing_plain_quad.cc" />
     <ClCompile Include="Source\Shader\Default\shader_quad2d.cc" />
@@ -247,6 +249,7 @@
     <ClInclude Include="Include\Component\Internal\type.h" />
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
+    <ClInclude Include="Include\Helper\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\assert.h" />
     <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
@@ -256,6 +259,7 @@
     <ClInclude Include="Include\Manager\Internal\physics_collision_shape_list.h" />
     <ClInclude Include="Include\Manager\Internal\physics_environment.h" />
     <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
+    <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
     <ClInclude Include="Include\Core\Boot\__boot.h" />

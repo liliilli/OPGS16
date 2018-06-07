@@ -251,6 +251,7 @@ void Initiate() {
   manager::setting::Initiate();
   manager::input::Initiate(m_window);
   manager::resource::ReadResourceFile("_resource.meta");
+  manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
 

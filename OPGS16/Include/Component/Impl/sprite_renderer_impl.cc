@@ -37,7 +37,7 @@
  * 2018-04-08 Supporting change of shader on running.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "sprite_renderer_impl.h"       // Header file    
+#include "sprite_renderer_impl.h"       // Header file
 
 #include <Frame\constant.h>             // std::array<> quad_info, quad_indice
 
@@ -55,7 +55,7 @@ CSpriteRendererImpl::CSpriteRendererImpl(const std::string& sprite_tag, const st
     m_vao{ quad_info, 8, {{0, 3, 0}, {1, 3, 3}, {2, 2, 6}}, quad_indices },
     m_texture_fragment_index{ texture_index } {
     /*! Body */
-    m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_tag));
+    m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
     glGenVertexArrays(1, &empty_vao);
 
     SetTextureIndex(texture_index);
@@ -91,7 +91,7 @@ void CSpriteRendererImpl::SetTexture(const std::string& texture_name) noexcept {
 }
 
 void CSpriteRendererImpl::SetShader(const std::string& shader_name) {
-    m_wrapper.SetShader(manager::ShaderManager::Instance().Shader(shader_name));
+    m_wrapper.SetShader(manager::shader::GetShader(shader_name));
 }
 
 void CSpriteRendererImpl::RenderSprite() {

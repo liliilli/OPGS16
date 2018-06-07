@@ -78,6 +78,8 @@
     <ClCompile Include="Source\Component\Physics\collider_general.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
     <ClCompile Include="Source\Component\rigidbody2d_compact.cc" />
+    <ClCompile Include="Source\Helper\aabb_infobox.cc" />
+    <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -205,6 +207,8 @@
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\rigidbody2d_compact.h" />
     <ClInclude Include="Include\Helper\vector.h" />
+    <ClInclude Include="Include\Helper\aabb_infobox.h" />
+    <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
