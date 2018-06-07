@@ -17,10 +17,10 @@
 #include <Component/camera.h>
 /// ::opgs16::component::CSprite2DRenderer
 #include <Component/sprite_renderer.h>
-/// ::opgs16::component::CRigidbody2D
-#include <Component/rigidbody_2d.h>
-/// ::opgs16::physics::CRectangleCollider2D
-#include <Component/Physics2D/Collider/rectangle.h>
+/// ::opgs16::component::CRigidbody2DCompact
+#include <Component/rigidbody2d_compact.h>
+
+#include <Helper/vector.h>
 
 namespace debug::object {
 
@@ -29,18 +29,16 @@ RotatableObject::RotatableObject() {
   SetWorldPosition({128, 112, 0});
 
   using opgs16::component::CSprite2DRenderer;
-  using opgs16::component::CRigidbody2D;
-
   auto renderer = AddComponent<CSprite2DRenderer>(*this, "System", "gQuad");
   renderer->SetTextureIndex(8);
-
   m_wrapper = &renderer->Wrapper();
   m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
   m_wrapper->SetUniformValue<float>("alpha", 1.0f);
 
-  using opgs16::physics::CRectangleCollider2D;
-  auto rigidbody2d = AddComponent<CRigidbody2D>(*this);
-  rigidbody2d->AddCollider2D<CRectangleCollider2D>(-32.f, 32.f, 32.f, -32.f);
+  using opgs16::component::CRigidbody2DCompact;
+  auto rigidbody = AddComponent<CRigidbody2DCompact>(*this);
+  rigidbody->AddCollider2D<opgs16::EColliderType::Box2D>(
+      opgs16::DVector3{32, 32, 0});
 }
 
 void RotatableObject::Render() {

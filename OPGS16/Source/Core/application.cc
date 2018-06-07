@@ -537,6 +537,10 @@ void Draw() {
     m_scene_manager->PresentScene()->Draw();
     manager::object::Render();
 
+    if (m_setting->CollisionAABBBoxDisplay() == Switch::ON) {
+      manager::object::RenderAABB();
+    }
+
     // Postprocessing
     m_pp_manager->Render();
   }

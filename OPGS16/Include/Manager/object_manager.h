@@ -21,6 +21,8 @@
 
 /// Forward declaration
 #include <opgs16fwd.h>
+/// ::opgs16::DAABBInfoBox
+#include <Helper/aabb_infobox.h>
 
 ///
 /// @namespace opgs16::manager::object
@@ -50,6 +52,14 @@ void Update();
 /// After rendering, all item reference addresses in list are cleared.
 ///
 void Render();
+
+///
+/// @brief
+/// Render all specified Axis-aligned bounding box information with line.
+///
+/// @todo Write comments
+///
+void RenderAABB();
 
 ///
 /// @brief
@@ -96,6 +106,15 @@ inline void ClearAll() {
 /// @param[in] layer_index Rendering layer index.
 ///
 void InsertRenderingObject(element::CObject* const object, unsigned layer_index);
+
+///
+/// @brief
+///
+///
+/// @param[in] mode
+/// @param[in] aabb_box
+///
+void InsertAABBInformation(EAABBStyle mode, const DAABBInfoBox& aabb_box);
 
 } /// ::opgs16::manager::object
 

@@ -30,8 +30,15 @@
 /// ::opgs16 Enum types for physics
 #include <Helper/Physics/enum_types.h>
 
+//!
+//! Forward declaration.
+//!
+
+namespace opgs16::component {
+class CRigidbody2DCompact;
+}
 namespace opgs16::component::physics {
-  class CColliderGeneral;
+class CColliderGeneral;
 }
 
 //!
@@ -225,6 +232,7 @@ private:
   }
 
   friend class ::opgs16::component::physics::CColliderGeneral;
+  friend class ::opgs16::component::CRigidbody2DCompact;
 
   std::string_view  m_collision_shape_name = "";
   EColliderType     m_type = EColliderType::None;

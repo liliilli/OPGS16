@@ -17,6 +17,7 @@
 /// 2018-06-06 Create file.
 ///
 
+#include <limits>
 #include <string>
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
@@ -51,6 +52,7 @@ SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbody2DCompa
 public:
   CRigidbody2DCompact(element::CObject& bind_object) : CComponent(bind_object) {
     m_transform.setIdentity();
+    UpdateTransform();
   };
 
   ///
@@ -90,11 +92,45 @@ public:
     if (type == EColliderReturnType::Failed)
       PHITOS_UNEXPECTED_BRANCH();
 
+    m_collision_shape_wrapper = it->second;
+    switch (m_object_physics_type) {
+    case EDynamic::Dynamic:
+      if (m_mass == 0.0f)
+        m_mass = std::numeric_limits<float>::min();
+
+      m_collision_shape_wrapper.GetShape()->
+          calculateLocalInertia(m_mass, m_local_interia);
+      break;
+    case EDynamic::Kinetic:
+    case EDynamic::Static:
+      m_mass = 0.0f;
+      break;
+    default: PHITOS_UNEXPECTED_BRANCH(); break;
+    }
+
+    //!
+    //! @todo Renew heap instances if address is not nullptr.
+    //! @todo Check CollisionShape count increment.
+    //!
+    m_motion_state = new btDefaultMotionState(m_transform);
+    m_rigidbody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo{
+        m_mass,
+        m_motion_state,
+        m_collision_shape_wrapper.GetShape(),
+        m_local_interia
+    });
+    it->second.__SetUsed();
     m_is_collider_bound = ERigidbodyBound::Binded;
   }
 
 private:
   void Update() override final;
+
+  ///
+  /// @brief
+  /// Update transform, retriving final position, scale, rotation of bound object.
+  ///
+  void UpdateTransform();
 
   ///
   /// @brief
@@ -104,10 +140,16 @@ private:
   ///
   std::string GetTemporaryColliderName();
 
+  ///
+  /// @brief
+  ///
+
+
   std::string m_collider_hash_name = "";
   uint32_t    m_value = 0;
 
   float m_mass = 0.0f;
+  float m_interia = 0.0f;
   float m_drag = 0.0f;
   float m_angular_drag = 0.0f;
 
@@ -115,9 +157,16 @@ private:
   Switch x_fixed = Switch::OFF;
   Switch y_fixed = Switch::OFF;
 
+  //!
+  //! Not controlable
+  //!
+
+  btVector3 m_local_interia = btVector3{m_interia, m_interia, m_interia};
+
   btRigidBody* m_rigidbody = nullptr;
   btDefaultMotionState* m_motion_state = nullptr;
   btTransform m_transform = btTransform{};
+  element::_internal::CCollisionShapeWrapper m_collision_shape_wrapper;
 
   mutable ERigidbodyBound m_is_collider_bound = ERigidbodyBound::NotBind;
   mutable Switch m_use_gravity = Switch::ON;

@@ -103,9 +103,10 @@ Updated 2018.05.23
     - [x] 파괴 리스트에 담긴 후에, 진짜로 힙 릴리즈가 되기 전에 Destroy() 함수 실행.
 - [ ] Physical (4th)
   - [ ] 리팩터링.
-  - [ ] AABB 완전 검증
-  - [ ] OOB 구현 및 검증
   - [ ] Kinetic, Dynamic 및 스위치에 따른 루틴 구현
+  - [x] bullet library 적용 (x64 Debug)
+  - [ ] 새로운 Rigidbody (bullet library 을 적용하는) 을 만들어서 적용.
+    - [ ] 충돌박스 표시하기
 - [ ] etc (7th)
   - [ ] 파티클 시스템 구현
   - [ ] 빛 시스템 구현 및 검증

@@ -40,6 +40,7 @@
 #include <Manager/Internal/error_message.h>
 /// ::opgs16::manager::_internal boolean enum flags
 #include <Manager/Internal/flag.h>
+#include <Phitos/Dbg/assert.h>
 
 using object_ptr = std::unique_ptr<opgs16::element::CObject>;
 using object_raw = opgs16::element::CObject * ;
@@ -88,6 +89,11 @@ std::list<object_ptr> m_destroy_candidates;
 
 std::vector<std::list<object_raw>> m_rendering_list;
 
+/// AABB rendering containers.
+///
+std::list<opgs16::DAABBInfoBox> m_aabb_2d_list;
+std::list<opgs16::DAABBInfoBox> m_aabb_3d_list;
+
 } /// unnamed namespace
 
 namespace opgs16::manager::object {
@@ -114,7 +120,29 @@ void Render() {
   }
 }
 
-void Destroy(const element::CObject& object) {
+void RenderAABB() {
+  glDisable(GL_DEPTH_TEST);
+
+  if (!m_aabb_2d_list.empty()) {
+    for (const auto& _2d_aabb : m_aabb_2d_list) {
+
+    }
+
+    m_aabb_2d_list.clear();
+  }
+
+  if (!m_aabb_3d_list.empty()) {
+    for (const auto& _3d_aabb : m_aabb_3d_list) {
+
+    }
+
+    m_aabb_3d_list.clear();
+  }
+
+  glEnable(GL_DEPTH_TEST);
+}
+
+  void Destroy(const element::CObject& object) {
   const auto hash_value = object.GetHash();
 
   using object_map = std::unordered_map<std::string, object_ptr>;
@@ -168,6 +196,18 @@ void InsertRenderingObject(element::CObject* const object,
       debug::err_object_out_of_bound_rendering_list);
 
   m_rendering_list[layer_index].emplace_back(object);
+}
+
+void InsertAABBInformation(EAABBStyle mode, const DAABBInfoBox& aabb_box) {
+  switch (mode) {
+  case EAABBStyle::_2D:
+    m_aabb_2d_list.emplace_front(aabb_box);
+    break;
+  case EAABBStyle::_3D:
+    m_aabb_3d_list.emplace_front(aabb_box);
+    break;
+  default: PHITOS_UNEXPECTED_BRANCH(); break;
+  }
 }
 
 } /// ::opgs16::manager::object

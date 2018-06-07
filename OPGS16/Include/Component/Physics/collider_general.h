@@ -32,6 +32,8 @@
 #include <Helper/Physics/enum_types.h>
 /// ::opgs16::ESwitch
 #include <Helper/switch.h>
+/// ::opgs16::DVector types
+#include <Helper/vector.h>
 /// ::opgs16::manager::physics
 #include <Manager/physics_manager.h>
 /// ::opgs16::manager::physics::_internal::CPhysicsEnvironment
@@ -40,33 +42,6 @@
 #include <Manager/Internal/physics_collision_shape_list.h>
 
 namespace opgs16::component::physics {
-
-///
-/// @struct DVector2
-///
-/// @brief
-///
-struct DVector2 {
-  float x, y;
-
-  explicit operator btVector3() const noexcept {
-    return btVector3{x, y, 0.f};
-  }
-};
-
-///
-/// @struct DVector3
-///
-/// @brief
-/// Helper vector class.
-///
-struct DVector3 {
-  float x, y, z;
-
-  explicit operator btVector3() const noexcept {
-    return btVector3(x, y, z);
-  }
-};
 
 ///
 /// @class CColliderGeneral
