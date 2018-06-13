@@ -41,11 +41,16 @@ enum class EModelMeshType {
 /// @brief
 ///
 ///
-class DModelObject final {
+class DModelObject {
 public:
-  phitos::enums::ESucceed GenerateModel(std::string& model_path);
+  explicit DModelObject() = default;
+  explicit DModelObject(std::string& model_path);
 
-private:
+  virtual ~DModelObject() = default;
+
+  virtual std::string GetModelName() const noexcept;
+
+protected:
   ///
   /// @brief
   ///
@@ -54,9 +59,12 @@ private:
   ///
   void ProcessNode(const aiNode& node, const aiScene& scene);
 
-  std::vector<DMeshObject> m_meshes;
+  // Each model directly stores mesh object information (not initiated yet)
+  std::vector<DMeshObject> m_meshes = {};
 
   EModelMeshType m_model_mesh_type = EModelMeshType::Single;
+
+  std::string m_model_name = "";
   std::string m_directory_path = "";
 };
 

@@ -80,6 +80,14 @@
     <ClCompile Include="Source\Component\rigidbody2d_compact.cc" />
     <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
+    <ClCompile Include="Source\Element\Internal\internal_vertex_array_object.cc" />
+    <ClCompile Include="Source\Manager\Internal\vao_management.cc" />
+    <ClCompile Include="Source\Manager\mesh_manager.cc" />
+    <ClCompile Include="Source\Element\Internal\model_object.cc" />
+    <ClCompile Include="Source\Element\Internal\mesh_vector.cc" />
+    <ClCompile Include="Source\Element\Internal\mesh_object.cc" />
+    <ClCompile Include="Include\Element\Internal\mesh_texture_meta.cpp" />
+    <ClCompile Include="Source\Element\Default\model_2dquad.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -91,7 +99,6 @@
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Frame\timer_handle.h" />
-    <ClInclude Include="Include\Frame\vertex_array_object.h" />
     <ClInclude Include="Include\Manager\Internal\font_internal.h" />
     <ClInclude Include="Include\Manager\Internal\input_internal.h" />
     <ClInclude Include="Include\Manager\Internal\physics_internal.h" />
@@ -209,6 +216,19 @@
     <ClInclude Include="Include\Helper\vector.h" />
     <ClInclude Include="Include\Helper\aabb_infobox.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
+    <ClInclude Include="Include\Element\Internal\vertex_array_object.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Types\ptTByte.h" />
+    <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
+    <ClInclude Include="Include\Manager\Internal\vao_management.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\success.h" />
+    <ClInclude Include="Include\Manager\mesh_manager.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_vector.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_texture_id.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_object.h" />
+    <ClInclude Include="Include\Element\Internal\model_object.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
+    <ClInclude Include="Include\Element\Default\model_2dquad.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

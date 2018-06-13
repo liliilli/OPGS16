@@ -19,6 +19,7 @@
 
 #include <Manager\font_manager.h>
 #include <Manager\input_manager.h>
+#include <Manager/mesh_manager.h>
 #include <Manager\object_manager.h>
 #include <Manager\physics_manager.h>
 #include <Manager\postprocessing_manager.h>
@@ -30,6 +31,7 @@
 #include <Manager\sound_manager.h>
 #include <Manager\time_manager.h>
 #include <Manager\timer_manager.h>
+#include <Manager/Internal/vao_management.h>
 
 #include <Shader\PostProcessing\pp_convex.h>
 #include <Shader\PostProcessing\pp_sinewave.h>
@@ -251,9 +253,11 @@ void Initiate() {
   manager::setting::Initiate();
   manager::input::Initiate(m_window);
   manager::resource::ReadResourceFile("_resource.meta");
+  manager::mesh::Initiate();
   manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
+  manager::_internal::vao::Initiate();
 
   m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
@@ -439,6 +443,7 @@ void Run() {
 
   // Must terminate glfw window
   glfwTerminate();
+  manager::_internal::vao::Shutdown();
 }
 
 void Update() {

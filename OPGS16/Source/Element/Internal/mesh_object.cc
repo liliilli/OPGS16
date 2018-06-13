@@ -30,11 +30,15 @@ void DMeshObject::VerticesReserve(uint32_t capacity) noexcept {
 void DMeshObject::PushVertice(const DMeshVector& vector) noexcept {
   PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
       "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_vertices_activated == EActivated::Activated,
+      "MeshObject vertices must be activated.");
 }
 
 void DMeshObject::PushIndice(const uint32_t index) noexcept {
   PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
       "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_indice_activated == EActivated::Activated,
+      "MeshObject indice must be activated.");
 
   m_element_indices.push_back(index);
 }
@@ -78,7 +82,46 @@ void DMeshObject::ActivateMaterials() noexcept {
 }
 
 void DMeshObject::ActivateMeshObject() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "Duplicated activating mesh object is prohibited.");
 
+  m_is_object_initiated = EInitiated::Initiated;
+}
+
+void DMeshObject::ActivatePosition() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_position_activated == EActivated::Disabled,
+      "MeshObject materials are already activated.");
+
+  m_is_position_activated = EActivated::Activated;
+}
+
+void DMeshObject::ActivateNormal() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_normal_activated == EActivated::Disabled,
+      "MeshObject materials are already activated.");
+
+  m_is_normal_activated = EActivated::Activated;
+}
+
+void DMeshObject::ActivateTangent() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_tangent_activated == EActivated::Disabled,
+      "MeshObject materials are already activated.");
+
+  m_is_tangent_activated = EActivated::Activated;
+}
+
+void DMeshObject::ActivateTextureCoords() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "MeshObject is already initiated.");
+  PHITOS_ASSERT(m_is_texcoord_activated == EActivated::Disabled,
+      "MeshObject materials are already activated.");
+
+  m_is_texcoord_activated = EActivated::Activated;
 }
 
 } /// ::opgs16::element namespace

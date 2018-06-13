@@ -75,20 +75,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;C:\TPLibraries\assimp\$(Platform)\include;C:\TPLibraries\assimp\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(Platform)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;C:\TPLibraries\assimp\$(Platform)\include;C:\TPLibraries\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(Platform)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);C:\TPLibraries\assimp\$(Platform)\code\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;C:\TPLibraries\assimp\$(Platform)\include;C:\TPLibraries\assimp\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include;$(MSBuildProjectDirectory)\__ThirdParty\freetype\include;$(MSBuildProjectDirectory)\__ThirdParty\glm;$(MSBuildProjectDirectory)\__ThirdParty\glew\include;$(MSBuildProjectDirectory)\__ThirdParty\glfw\include;$(MSBuildProjectDirectory)\__ThirdParty\spdlog\include;$(MSBuildProjectDirectory)\__ThirdParty\fmod\inc;$(MSBuildProjectDirectory)\__ThirdParty\nlohmann;$(MSBuildProjectDirectory)\__ThirdParty\phitos;C:\TPLibraries\bullet3-2.87\src;C:\TPLibraries\assimp\$(Platform)\include;C:\TPLibraries\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\TPLibraries\bullet3-2.87\msvc_$(PlatformTarget)\lib\$(Configuration);C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(ProjectDir)__ThirdParty\freetype\objs\$(Platform);$(ProjectDir)__ThirdParty\glew\lib\$(Configuration)\$(Platform);$(ProjectDir)__ThirdParty\glfw\$(Platform);C:\TPLibraries\assimp\$(Platform)\code\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,7 +119,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,10 +151,11 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Include\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
@@ -176,11 +177,18 @@
     <ClCompile Include="Source\Debug\debug_canvas.cc" />
     <ClCompile Include="Source\Debug\ui_manager.cc" />
     <ClCompile Include="Source\Core\core_setting.cc" />
+    <ClCompile Include="Source\Element\Default\model_2dquad.cc" />
+    <ClCompile Include="Source\Element\Internal\internal_vertex_array_object.cc" />
+    <ClCompile Include="Source\Element\Internal\mesh_object.cc" />
+    <ClCompile Include="Source\Element\Internal\mesh_vector.cc" />
+    <ClCompile Include="Source\Element\Internal\model_object.cc" />
     <ClCompile Include="Source\Element\prerendering_container.cc" />
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
     <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
+    <ClCompile Include="Source\Manager\Internal\vao_management.cc" />
+    <ClCompile Include="Source\Manager\mesh_manager.cc" />
     <ClCompile Include="Source\Manager\prerendering_manager.cc" />
     <ClCompile Include="Source\Manager\timer_manager.cc" />
     <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
@@ -247,6 +255,12 @@
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
+    <ClInclude Include="Include\Element\Default\model_2dquad.h" />
+    <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_object.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_texture_id.h" />
+    <ClInclude Include="Include\Element\Internal\mesh_vector.h" />
+    <ClInclude Include="Include\Element\Internal\model_object.h" />
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
     <ClInclude Include="Include\Helper\aabb_infobox.h" />
@@ -256,9 +270,11 @@
     <ClInclude Include="Include\Helper\vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
+    <ClInclude Include="Include\Manager\mesh_manager.h" />
     <ClInclude Include="Include\Manager\Internal\physics_collision_shape_list.h" />
     <ClInclude Include="Include\Manager\Internal\physics_environment.h" />
     <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
+    <ClInclude Include="Include\Manager\Internal\vao_management.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
@@ -323,7 +339,7 @@
     <ClInclude Include="Include\Component\script_frame.h" />
     <ClInclude Include="Include\Core\logger.h" />
     <ClInclude Include="Include\Manager\font_manager.h" />
-    <ClInclude Include="Include\Frame\vertex_array_object.h" />
+    <ClInclude Include="Include\Element\Internal\vertex_array_object.h" />
     <ClInclude Include="Include\Manager\object_manager.h" />
     <ClInclude Include="Include\Manager\physics_manager.h" />
     <ClInclude Include="Include\Manager\scene_manager.h" />
@@ -365,7 +381,11 @@
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\initiated.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\success.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Types\ptTByte.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

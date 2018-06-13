@@ -57,7 +57,9 @@ LoadMaterialTextures(const aiMaterial& mat, opgs16::element::EMeshTextureType ty
 
   for (uint32_t i = 0; i < texture_count; ++i) {
     aiString string;
+    // ReSharper disable CppExpressionWithoutSideEffects
     mat.GetTexture(ai_type, i, &string);
+    // ReSharper restore CppExpressionWithoutSideEffects
     textures.emplace_back(string.C_Str(), type);
   }
 
@@ -81,37 +83,23 @@ opgs16::element::DMeshVector GenerateMeshVector(const aiMesh& mesh, uint32_t i) 
   opgs16::DVector2 texcoord = {};
 
   using phitos::enums::EActivated;
-  EActivated m_is_position_activated = EActivated::Disabled;
-  EActivated m_is_normal_activated   = EActivated::Disabled;
-  EActivated m_is_tangent_activated  = EActivated::Disabled;
-  EActivated m_is_texcoord_activated = EActivated::Disabled;
-
   if (mesh.HasPositions()) {
     position = mesh.mVertices[i];
-    m_is_position_activated = EActivated::Activated;
   }
 
   if (mesh.HasNormals()) {
     normal = mesh.mNormals[i];
-    m_is_normal_activated = EActivated::Activated;
   }
 
   if (mesh.HasTangentsAndBitangents()) {
     tangent = mesh.mTangents[i];
-    m_is_tangent_activated = EActivated::Activated;
   }
 
   if (mesh.HasTextureCoords(0)) {
     texcoord = mesh.mTextureCoords[0][i];
-    m_is_texcoord_activated = EActivated::Activated;
   }
 
-  return {
-      {position, m_is_position_activated},
-      {normal, m_is_normal_activated},
-      {tangent, m_is_tangent_activated},
-      {texcoord, m_is_texcoord_activated}
-  };
+  return { position, normal, tangent, texcoord };
 }
 
 ///
@@ -135,6 +123,15 @@ opgs16::element::DMeshObject GenerateMesh(aiMesh& mesh,
       num_vertices > 0) {
     mesh_object.ActivateVertices();
     mesh_object.VerticesReserve(num_vertices);
+
+    if (mesh.HasPositions())
+      mesh_object.ActivatePosition();
+    if (mesh.HasNormals())
+      mesh_object.ActivateNormal();
+    if (mesh.HasTangentsAndBitangents())
+      mesh_object.ActivateTangent();
+    if (mesh.HasTextureCoords(0))
+      mesh_object.ActivateTextureCoords();
 
     for (uint32_t i = 0; i < num_vertices; ++i)
       mesh_object.PushVertice(GenerateMeshVector(mesh, i));
@@ -177,7 +174,7 @@ opgs16::element::DMeshObject GenerateMesh(aiMesh& mesh,
 
 namespace opgs16::element {
 
-phitos::enums::ESucceed DModelObject::GenerateModel(std::string& model_path) {
+DModelObject::DModelObject(std::string& model_path) {
   Assimp::Importer importer;
   const aiScene* scene = importer.ReadFile(
       model_path.c_str(),
@@ -186,7 +183,7 @@ phitos::enums::ESucceed DModelObject::GenerateModel(std::string& model_path) {
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
     PUSH_LOG_ERROR_EXT("Could not load model file : {}, "
         "Change it to alternative builtin model.", model_path);
-    return phitos::enums::ESucceed::Failed;
+    PHITOS_UNEXPECTED_BRANCH();
   }
 
   m_directory_path = model_path.substr(0, model_path.find_last_of('/'));
@@ -198,7 +195,13 @@ phitos::enums::ESucceed DModelObject::GenerateModel(std::string& model_path) {
 
   // Process node
   ProcessNode(*scene->mRootNode, *scene);
-  return phitos::enums::ESucceed::Succeed;
+}
+
+std::string DModelObject::GetModelName() const noexcept {
+  if (m_model_name.empty()) {
+    PUSH_LOG_WARN("Model name is empty from GetModelName()");
+  }
+  return m_model_name;
 }
 
 void DModelObject::ProcessNode(const aiNode& node, const aiScene& scene) {

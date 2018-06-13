@@ -24,15 +24,4 @@ DMeshVector::DMeshVector(const DVector3& position,
   m_tangent { tangent },
   m_texture_coord { texture_coord } {}
 
-DMeshVector::DMeshVector(
-    const std::pair<DVector3, phitos::enums::EActivated>& position,
-    const std::pair<DVector3, phitos::enums::EActivated>& normal,
-    const std::pair<DVector3, phitos::enums::EActivated>& tangent,
-    const std::pair<DVector2, phitos::enums::EActivated>& texture_coord)
-    noexcept :
-    DMeshVector(position.first, normal.first,
-                tangent.first, texture_coord.first) {
-
-}
-
 } /// ::opgs16::element

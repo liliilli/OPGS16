@@ -47,27 +47,11 @@ public:
               const DVector3& tangent,
               const DVector2& texture_coord) noexcept;
 
-  ///
-  ///
-  ///
-  ///
-  DMeshVector(const std::pair<DVector3, phitos::enums::EActivated>& position,
-              const std::pair<DVector3, phitos::enums::EActivated>& normal,
-              const std::pair<DVector3, phitos::enums::EActivated>& tangent,
-              const std::pair<DVector2, phitos::enums::EActivated>& texture_coord)
-      noexcept;
-
 private:
   DVector3 m_position = {};
   DVector3 m_normal = {};
   DVector3 m_tangent = {};
   DVector2 m_texture_coord = {};
-
-  using EActivated = phitos::enums::EActivated;
-  mutable EActivated m_is_position_activated  = EActivated::Disabled;
-  mutable EActivated m_is_normal_activated    = EActivated::Disabled;
-  mutable EActivated m_is_tangent_activated   = EActivated::Disabled;
-  mutable EActivated m_is_texcoord_activated  = EActivated::Disabled;
 };
 
 } /// ::opgs16::element namespace

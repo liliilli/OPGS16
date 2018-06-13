@@ -18,7 +18,7 @@
 /// 2018-06-11 Create file.
 ///
 
-#include <cstdint>
+#include <string>
 
 namespace opgs16::element {
 
@@ -42,7 +42,8 @@ enum class EMeshTextureType {
 ///
 class DMeshTextureMetaInfo final {
 public:
-  DMeshTextureMetaInfo(const std::string& texture_local_path) noexcept;
+  DMeshTextureMetaInfo(const std::string& texture_local_path,
+                       EMeshTextureType type) noexcept;
 
 private:
   std::string m_texture_local_path = "";
