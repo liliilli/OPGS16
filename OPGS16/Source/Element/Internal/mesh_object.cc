@@ -3,7 +3,7 @@
 /// @file Element/Internal/model_object.cc
 ///
 /// @brief
-///
+/// Definition file of mesh_object.h
 ///
 /// @author Jongmin Yun
 ///
@@ -32,6 +32,8 @@ void DMeshObject::PushVertice(const DMeshVector& vector) noexcept {
       "MeshObject is already initiated.");
   PHITOS_ASSERT(m_is_vertices_activated == EActivated::Activated,
       "MeshObject vertices must be activated.");
+
+  m_vertices.push_back(vector);
 }
 
 void DMeshObject::PushIndice(const uint32_t index) noexcept {
@@ -81,13 +83,6 @@ void DMeshObject::ActivateMaterials() noexcept {
   m_is_material_activated = EActivated::Activated;
 }
 
-void DMeshObject::ActivateMeshObject() noexcept {
-  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
-      "Duplicated activating mesh object is prohibited.");
-
-  m_is_object_initiated = EInitiated::Initiated;
-}
-
 void DMeshObject::ActivatePosition() noexcept {
   PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
       "MeshObject is already initiated.");
@@ -122,6 +117,13 @@ void DMeshObject::ActivateTextureCoords() noexcept {
       "MeshObject materials are already activated.");
 
   m_is_texcoord_activated = EActivated::Activated;
+}
+
+void DMeshObject::ActivateMeshObject() noexcept {
+  PHITOS_ASSERT(m_is_object_initiated == EInitiated::NotInitiated,
+      "Duplicated activating mesh object is prohibited.");
+
+  m_is_object_initiated = EInitiated::Initiated;
 }
 
 } /// ::opgs16::element namespace

@@ -26,7 +26,10 @@
 
 /// ::opgs16::element::DModelObject
 #include <Element/Internal/model_object.h>
-#include "Element/Default/model_2dquad.h"
+#include <Element/Default/model_2dquad.h>
+/// ::opgs16::element::DMeshObject
+#include <Element/Internal/mesh_object.h>
+#include <Element/Internal/vao_container.h>
 
 //!
 //! Data and flags
@@ -83,9 +86,67 @@ void Initiate() {
 }
 
 void Shutdown() {
-  PHITOS_ASSERT(b_initiated == EInitiated::NotInitiated,
+  PHITOS_ASSERT(b_initiated == EInitiated::Initiated,
       "Could not release not initiated mesh manager.");
   b_initiated = EInitiated::NotInitiated;
+}
+
+phitos::enums::EFound IsModelExist(const std::string& model_name) {
+  return (m_model_map.find(model_name) != m_model_map.end()) ?
+          phitos::enums::EFound::Found :
+          phitos::enums::EFound::NotFound;
+}
+
+phitos::enums::ESucceed GenerateModel(const std::string& resource_model_name) {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+
+  return phitos::enums::ESucceed::Succeed;
+}
+
+std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
+GenerateVaoItemsFromModel(const std::string& model_name) {
+  using phitos::enums::EActivated;
+  using element::_internal::CInternalVertexArrayObject;
+  using element::_internal::EVboBufferType;
+  using element::_internal::EEboBufferType;
+  using element::_internal::EBufferTarget;
+  using phitos::type::PtTByte;
+
+  const auto& meshes = m_model_map[model_name].GetMeshes();
+
+  std::vector<CInternalVertexArrayObject> vao_list;
+  vao_list.reserve(meshes.size());
+
+  for (const auto& mesh : meshes) {
+    if (mesh.IsVerticeActivated() == EActivated::Disabled)
+      continue;
+
+    const auto vbo_size = PtTByte{mesh.GetByteSizeOfVertices()};
+
+    const auto is_indice_activated = mesh.IsIndiceActivated();
+    const auto ebo_size = PtTByte{mesh.GetByteSizeOfIndices()};
+    if (is_indice_activated == EActivated::Activated) {
+      vao_list.emplace_back(
+          EVboBufferType::StaticDraw, PtTByte{vbo_size},
+          EEboBufferType::StaticDraw, PtTByte{ebo_size});
+    }
+    else {
+      vao_list.emplace_back(
+          EVboBufferType::StaticDraw, PtTByte{vbo_size});
+    }
+
+    auto last_vao_item = vao_list.rbegin();
+    last_vao_item->Map(EBufferTarget::VertexBuffer,
+                       0_pByte, vbo_size, mesh.GetVerticesData());
+
+    if (is_indice_activated == EActivated::Activated) {
+      last_vao_item->Map(EBufferTarget::ElementBuffer,
+                         0_pByte, ebo_size, mesh.GetIndiceData());
+    }
+  }
+
+  return {std::make_unique<element::CVaoContainer>(model_name, std::move(vao_list)),
+          phitos::enums::ESucceed::Succeed};
 }
 
 } /// ::opgs16::manager::mesh namespace

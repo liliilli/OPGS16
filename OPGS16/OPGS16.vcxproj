@@ -182,6 +182,7 @@
     <ClCompile Include="Source\Element\Internal\mesh_object.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_vector.cc" />
     <ClCompile Include="Source\Element\Internal\model_object.cc" />
+    <ClCompile Include="Source\Element\Internal\vao_container.cc" />
     <ClCompile Include="Source\Element\prerendering_container.cc" />
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
@@ -262,6 +263,7 @@
     <ClInclude Include="Include\Element\Internal\mesh_vector.h" />
     <ClInclude Include="Include\Element\Internal\model_object.h" />
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
+    <ClInclude Include="Include\Element\Internal\vao_container.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
     <ClInclude Include="Include\Helper\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\assert.h" />
@@ -382,6 +384,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\initiated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\success.h" />

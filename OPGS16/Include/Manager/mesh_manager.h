@@ -19,6 +19,17 @@
 /// 2018-06-12 Add feature of models.
 ///
 
+#include <string>
+
+/// ::phitos::enums::EFound boolean strong enum type
+#include <Phitos/Enums/found.h>
+#include <Phitos/Enums/success.h>
+
+/// ::opgs16::element::_internal::CInternalVertexArrayObject
+#include <Element/Internal/internal_vertex_array_object.h>
+/// ::opgs16::element::CVaoContainer.
+#include <Element/Internal/vao_container.h>
+
 namespace opgs16::manager::mesh {
 
 ///
@@ -32,6 +43,39 @@ void Initiate();
 ///
 ///
 void Shutdown();
+
+///
+/// @brief
+/// Check if model information object is exist on memory.
+///
+/// @param[in] model_name Model name to find, model_name must be same
+/// on resource model name to have been specified.
+///
+/// @return If found return EFound::Found but EFound::NotFound.
+///
+phitos::enums::EFound IsModelExist(const std::string& model_name);
+
+///
+/// @brief
+///
+///
+/// @param[in] resource_model_name
+///
+/// @return
+///
+phitos::enums::ESucceed GenerateModel(const std::string& resource_model_name);
+
+///
+/// @brief
+///
+///
+/// @param[in] model_name
+///
+/// @return
+///
+///
+std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
+GenerateVaoItemsFromModel(const std::string& model_name);
 
 } /// ::opgs16::manager::mesh namespace
 

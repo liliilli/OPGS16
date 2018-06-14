@@ -1,27 +1,33 @@
 
 ///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
 /// @file Element/Internal/model_object.cc
-///
-/// @brief
-///
 ///
 /// @author Jongmin Yun
 ///
 /// @log
 /// 2018-06-12 Create file
+/// 2018-06-14 Add comments.
 ///
 
 /// Header file
 #include <Element/Internal/model_object.h>
 
+/// 3D mesh loading library.
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-
+/// Phitos library
 #include <Phitos/Dbg/assert.h>
 #include <Phitos/Enums/activated.h>
 
+/// ::opgs16::element::DMeshObject
 #include <Element/Internal/mesh_object.h>
+/// import logger for debug mode.
 #include <Headers/import_logger.h>
 
 //!
@@ -69,12 +75,10 @@ LoadMaterialTextures(const aiMaterial& mat, opgs16::element::EMeshTextureType ty
 ///
 /// @brief
 ///
-///
 /// @param[in] mesh
 /// @param[in] i
 ///
-/// @return
-///
+/// @return Mesh vector
 ///
 opgs16::element::DMeshVector GenerateMeshVector(const aiMesh& mesh, uint32_t i) noexcept {
   opgs16::DVector3 position = {};
@@ -110,8 +114,7 @@ opgs16::element::DMeshVector GenerateMeshVector(const aiMesh& mesh, uint32_t i) 
 /// @param[in] mesh
 /// @param[in] scene
 ///
-/// @return
-///
+/// @return Generated mesh object which has vertex, indice, material information.
 ///
 opgs16::element::DMeshObject GenerateMesh(aiMesh& mesh,
                                           const aiScene& scene) {

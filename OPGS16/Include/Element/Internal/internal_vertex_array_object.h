@@ -9,21 +9,16 @@
 ///
 /// @file Element/Internal/internal_vertex_array_object.h
 ///
-/// @brief
-///
-///
 /// @author Jongmin Yun
 ///
 /// @log
 /// 2018-06-09 Create file.
-///
-/// @todo Need to test.
+/// 2018-06-14 Add comments.
 ///
 
-#include <string_view>
+#include <GL/glew.h>
 /// ::phitos::type::ptTByte byte type.
 #include <Phitos/Types/ptTByte.h>
-#include <GL/glew.h>
 
 namespace opgs16::element::_internal {
 
@@ -71,37 +66,65 @@ class CInternalVertexArrayObject final {
   using PtTByte = phitos::type::PtTByte;
 public:
   CInternalVertexArrayObject(
-      std::string_view buffer_name,
-      EVboBufferType vbo_buffer_type,
-      phitos::type::PtTByte vbo_buffer_size);
+      EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size);
 
   CInternalVertexArrayObject(
-      std::string_view buffer_name,
-      EVboBufferType vbo_buffer_type,
-      phitos::type::PtTByte vbo_buffer_size,
-      EEboBufferType ebo_buffer_type,
-      phitos::type::PtTByte ebo_buffer_size);
+      EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size,
+      EEboBufferType ebo_buffer_type, phitos::type::PtTByte ebo_buffer_size);
+
+  /// We need customized copy constructor for avoiding duplicated resource
+  /// release of VRAM resource.
+
+  CInternalVertexArrayObject(const CInternalVertexArrayObject&);
+  CInternalVertexArrayObject& operator=(const CInternalVertexArrayObject&);
+
+  CInternalVertexArrayObject(CInternalVertexArrayObject&&) = default;
+  CInternalVertexArrayObject& operator=(CInternalVertexArrayObject&&) = default;
 
   ~CInternalVertexArrayObject();
 
   ///
   /// @brief
+  /// Mapping function to arbitary buffer chunk to VRAM buffer target.
   ///
-  ///
-  /// @param[in] buffer_target
-  /// @param[in] byte_offset
-  /// @param[in] byte_length
-  /// @param[in] start_pointer
+  /// @param[in] buffer_target VRAM buffer target to copy buffer chunk.
+  /// @param[in] byte_offset Buffer offset byte to start.
+  /// @param[in] byte_length Buffer length byte to copy from buffer chunk.
+  /// @param[in] start_pointer Start pointer of arbitary buffer chunk.
   ///
   void Map(EBufferTarget buffer_target,
            PtTByte byte_offset, PtTByte byte_length, void* start_pointer);
+
+  ///
+  /// @brief Get vertex array object id. if not initiated, just return 0.
+  /// @return this object's vao id.
+  ///
+  uint32_t GetVaoId() const noexcept {
+    return m_object.vao_id;
+  }
+
+  ///
+  /// @brief Get vertex buffer object id. if not initated, just return 0.
+  /// @return this object's vbo id.
+  ///
+  uint32_t GetVboId() const noexcept {
+    return m_object.vbo_id;
+  }
+
+  ///
+  /// @brief Get element buffer object id. if not initated, just return 0.
+  /// @return this object's ebo id.
+  ///
+  uint32_t GetEboId() const noexcept {
+    return m_object.ebo_id;
+  }
 
 private:
   ///
   /// @brief
   /// Private mapping function for reuseability.
   ///
-  /// @param[in] gl_buffer
+  /// @param[in] gl_buffer OpenGL buffer type
   /// @param[in] byte_offset
   /// @param[in] byte_length
   /// @param[in] start_pointer
@@ -114,7 +137,7 @@ private:
   /// @struct DBindingObject
   ///
   /// @brief
-  /// Data container saves id;
+  /// Data container saves vao, vbo and ebo ID.
   ///
   struct DBindingObject final {
     // Vertex Array Object id.
@@ -125,10 +148,8 @@ private:
     uint32_t ebo_id = 0;
   };
 
-  const std::string_view m_buffer_name = "";
-
-  DBindingObject m_object;
-
+  DBindingObject  m_object;
+  mutable bool    m_is_resource_moved = false;
 };
 
 } /// ::opgs16::element::internal namespace

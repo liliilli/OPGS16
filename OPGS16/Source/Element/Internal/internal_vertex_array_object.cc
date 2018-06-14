@@ -26,9 +26,7 @@
 namespace opgs16::element::_internal {
 
 CInternalVertexArrayObject::CInternalVertexArrayObject(
-    std::string_view buffer_name,
-    EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size) :
-    m_buffer_name{ buffer_name } {
+    EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size) {
   glGenVertexArrays(1, &m_object.vao_id);
   glBindVertexArray(m_object.vao_id);
 
@@ -54,12 +52,11 @@ CInternalVertexArrayObject::CInternalVertexArrayObject(
 }
 
 CInternalVertexArrayObject::CInternalVertexArrayObject(
-    std::string_view buffer_name,
     EVboBufferType vbo_buffer_type,
     phitos::type::PtTByte vbo_buffer_size,
     EEboBufferType ebo_buffer_type,
     phitos::type::PtTByte ebo_buffer_size) :
-    CInternalVertexArrayObject{buffer_name, vbo_buffer_type, vbo_buffer_size} {
+    CInternalVertexArrayObject{vbo_buffer_type, vbo_buffer_size} {
   glBindVertexArray(m_object.vao_id);
   glGenBuffers(1, &m_object.ebo_id);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_object.ebo_id);
@@ -82,17 +79,32 @@ CInternalVertexArrayObject::CInternalVertexArrayObject(
   glBindVertexArray(0);
 }
 
+CInternalVertexArrayObject::CInternalVertexArrayObject(
+    const CInternalVertexArrayObject& rhs) : m_object(rhs.m_object) {
+  rhs.m_is_resource_moved = true;
+}
+
+CInternalVertexArrayObject& CInternalVertexArrayObject::operator=(
+    const CInternalVertexArrayObject& rhs) {
+  this->m_object = rhs.m_object;
+  rhs.m_is_resource_moved = true;
+
+  return *this;
+}
+
 CInternalVertexArrayObject::~CInternalVertexArrayObject() {
-  if (m_object.ebo_id != 0) {
-    glDeleteBuffers(1, &m_object.ebo_id);
-  }
+  if (!m_is_resource_moved) {
+    if (m_object.ebo_id != 0) {
+      glDeleteBuffers(1, &m_object.ebo_id);
+    }
 
-  if (m_object.vbo_id != 0) {
-    glDeleteBuffers(1, &m_object.vbo_id);
-  }
+    if (m_object.vbo_id != 0) {
+      glDeleteBuffers(1, &m_object.vbo_id);
+    }
 
-  if (m_object.vao_id != 0) {
-    glDeleteVertexArrays(1, &m_object.vao_id);
+    if (m_object.vao_id != 0) {
+      glDeleteVertexArrays(1, &m_object.vao_id);
+    }
   }
 }
 
@@ -151,7 +163,7 @@ void CInternalVertexArrayObject::BufferMemcpy(GLenum gl_buffer,
 
   memcpy(ptr, start_pointer, static_cast<uint32_t>(byte_length));
 
-  if (const auto result = glUnmapBuffer(GL_ARRAY_BUFFER);
+  if (const auto result = glUnmapBuffer(gl_buffer);
       result == GL_FALSE) {
     GLenum error = glGetError();
     PHITOS_ASSERT(result != GL_FALSE, "Error unmapping buffer object.");

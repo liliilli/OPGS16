@@ -31,6 +31,8 @@ namespace opgs16::element {
 ///
 /// @brief
 ///
+/// @log
+/// 2018-06-12 Create Type.
 ///
 enum class EBufferBindingType {
   Once,    // GL_STATIC_DRAW
@@ -42,6 +44,8 @@ enum class EBufferBindingType {
 ///
 /// @brief
 ///
+/// @log
+/// 2018-06-12 Create Type.
 ///
 enum class EVertexBufferType : uint8_t {
   VertexArray   = 0b0000, // VAO
@@ -62,7 +66,7 @@ inline EVertexBufferType operator|(EVertexBufferType lhs, EVertexBufferType rhs)
 /// @class CVertexArrayObject
 ///
 /// @brief
-/// Manages mesh object and release resource automatically.
+/// Manages mesh object id and release resource automatically.
 ///
 class CVertexArrayObject {
   struct BindingParameter;    /** Forward Declaration */
