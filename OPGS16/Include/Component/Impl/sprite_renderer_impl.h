@@ -1,115 +1,114 @@
 #ifndef OPGS16_SYSTEM_OBJECT_IMPL_SPRITE_RENDERER_IMPL_H
 #define OPGS16_SYSTEM_OBJECT_IMPL_SPRITE_RENDERER_IMPL_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Component/Internal/sprite_renderer_impl.h
+///
+/// @brief Implementation file of CSprite2DRenderer
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-02-28 Change constructor to use texture_index type.
+/// 2018-03-10 Refactoring.
+/// 2018-04-08 Supporting change of shader on running.
+/// 2018-06-13 Restructure to use vao items from management container.
+///
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file Components/Impl/sprite_renderer_impl.h
- * @brief Private implementation file.
- *
- * @author Jongmin Yun
- * @log
- * 2018-02-28 Change constructor to use texture_index type.
- * 2018-03-10 Refactoring.
- * 2018-04-08 Supporting change of shader on running.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+/// CVertexArrayObject
+#include <Element/Internal/vertex_array_object.h>
 
-#include <Frame\vertex_array_object.h>  /// CVertexArrayObject
+/// ::opgs16::element::_internal::CInternalVertexArrayObject
+#include <Element/Internal/internal_vertex_array_object.h>
+/// ::opgs16::element::CVaoContainer
+#include <Element/Internal/vao_container.h>
+/// ::opgs16::resource::STextrue2D::IndexSize
+#include <Manager/resource_type.h>
+/// ::opgs16::manager::MTextureManager
+#include <Manager/texture_manager.h>
+/// ::opgs16::shader::CShaderWrapper
+#include <Shader/shader_wrapper.h>
 
-#include <Manager\resource_type.h>      /// resource::STextrue2D::IndexSize
-#include <Manager\texture_manager.h>    /// ::opgs16::manager::MTextureManager
-#include <Shader\shader_wrapper.h>      /// ::opgs16::shader::CShaderWrapper
-#include <opgs16fwd.h>                  /// forward declaration 
+/// forward declaration
+#include <opgs16fwd.h>
 
-namespace opgs16 {
-namespace component {
-namespace _internal {
+namespace opgs16::component::_internal {
 
-/*!
- * @class CSpriteRendererImpl
- * @brief Pointer to implementation structure.
- *
- * @log
- * 2018-02-28 Change constructor to use texture_index type. and variable store texture index.
- * Add related boilerplate function.
- * 2018-04-02 std::string to std::wstring for Unicode
- * 2018-04-08 Supporting change of shader on running.
- */
+///
+/// @class CSpriteRendererImpl
+/// @brief Pointer to implementation structure.
+///
+/// @log
+/// 2018-02-28
+/// Change constructor to use texture_index type. and variable store texture index.
+/// Add related boilerplate function.
+/// 2018-04-02 std::string to std::wstring for Unicode
+/// 2018-04-08 Supporting change of shader on running.
+/// 2018-06-13 Restructure to use vao items from management container.
+///
 class CSpriteRendererImpl final {
 public:
-    /** Make Sprite2DRenderer instance. (Constructor) */
-	CSpriteRendererImpl(const std::string& sprite_tag, const std::string& shader_tag, unsigned texture_index);
+  CSpriteRendererImpl(const std::string& sprite_name,
+                      const std::string& shader_name,
+                      uint32_t texture_index);
 
-    element::CShaderWrapper& Wrapper() {
-        return m_wrapper;
-    }
+  ~CSpriteRendererImpl();
 
-    /*! Get texture fragment index. if this does not handle atlas, return 0 */
-    const unsigned TextureIndex() const noexcept {
-        return m_texture_fragment_index;
-    }
+  ///
+  /// @brief
+  /// Get shader wrapper;
+  ///
+  element::CShaderWrapper& Wrapper() {
+    return m_wrapper;
+  }
 
-    /*!
-     * @brief Set texture fragment index with new_index value.
-     * @param[in] new_index
-     */
-    void SetTextureIndex(const unsigned new_index) noexcept;
+  ///
+  /// @brief
+  /// Get texture fragment index. if this does not handle atlas, return 0.
+  ///
+  uint32_t TextureIndex() const noexcept {
+    return m_texture_fragment_index;
+  }
 
-    /*!*/
-    void SetTexture(const std::string& texture_name) noexcept;
+  ///
+  /// @brief Set texture fragment index with new_index value.
+  /// @param[in] new_index
+  ///
+  void SetTextureIndex(const uint32_t new_index) noexcept;
 
-    /*!*/
-    void SetShader(const std::string& shader_name);
+  /*!*/
+  void SetTexture(const std::string& texture_name) noexcept;
 
-    /*!*/
-    void RenderSprite();
+  /*!*/
+  void SetShader(const std::string& shader_name);
 
-    /*!*/
-    void SetInstanceCount(unsigned instance_count) {
-        m_instance_count = instance_count;
-    }
+  /*!*/
+  void RenderSprite();
+
+  /*!*/
+  void SetInstanceCount(unsigned instance_count) {
+    m_instance_count = instance_count;
+  }
 
 private:
-	texture::CTexture2D* m_sprite;	    /*! Sprite 2d texture stores image information. */
-    element::CVertexArrayObject m_vao;	/*! Quad VAO to render sprite on screen. */
-    element::CShaderWrapper m_wrapper;		    /*! Shader is in ShaderManager, render sprite. */
+  // Sprite 2d texture stores image information.
+	texture::CTexture2D* m_sprite;
+  // Shader is in ShaderManager, render sprite.
+  element::CShaderWrapper m_wrapper;
+  // Quad VAO to render sprite on screen.
+  element::CVaoContainer* m_weak_vao_ref = nullptr;
 
-    unsigned m_texture_fragment_index;
-    GLuint empty_vao;
-
-    GLenum      m_primitive_mode{ GL_TRIANGLES };
-    unsigned    m_instance_count{ 1 };
-    unsigned    m_base_instance{ 0 };
+  uint32_t  m_texture_fragment_index;
+  GLenum    m_primitive_mode{ GL_TRIANGLES };
+  uint32_t  m_instance_count{ 1 };
+  uint32_t  m_base_instance{ 0 };
 };
 
-} /*! opgs16::component::_internal */
-} /*! opgs16::component */
-} /*! opgs16 */
+} /// ::opgs16::component::_internal namespace
 
-#endif // !OPGS16_SYSTEM_OBJECT_IMPL_SPRITE_RENDERER_IMPL_H
+#endif /// OPGS16_SYSTEM_OBJECT_IMPL_SPRITE_RENDERER_IMPL_H

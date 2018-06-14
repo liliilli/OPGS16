@@ -26,6 +26,8 @@
 #include <Element/Interface/i_originable.h>
 /// ::opgs16::element::IAlignable::Alignment
 #include <Element/Interface/i_alignable.h>
+/// ::opgs16::element::CVaoContainer
+#include <Element/Internal/vao_container.h>
 /// ::opgs16::manager::font namespace.
 #include <Manager/font_manager.h>
 
@@ -126,8 +128,11 @@ private:
   //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
   glm::mat4 m_projection = glm::mat4();
+#ifdef false
   GLuint m_vao = 0;
   GLuint m_vbo = 0;
+#endif
+  element::CVaoContainer* m_vao_ptr = nullptr;
 
   std::vector<uint32_t> m_text_render_width;
   Utf16TextContainer m_unicode_text_container;

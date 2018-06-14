@@ -15,11 +15,13 @@
 /// @author Jongmin Yun
 ///
 /// @log
-/// 2018-06-12
+/// 2018-06-13 Create file.
 ///
 
 #include <string_view>
 
+/// ::opgs16::builtin builtin vao names.
+#include <Element/Default/builtin_vao_name.h>
 /// ::opgs16::element::DModelObject
 #include <Element/Internal/model_object.h>
 
@@ -41,7 +43,7 @@ public:
   }
 
 public:
-  static constexpr std::string_view m_model_name = "opQuad2D";
+  static constexpr std::string_view m_model_name = g_model_2d_quad;
 };
 
 } /// ::opgs16::builtin::model namespace

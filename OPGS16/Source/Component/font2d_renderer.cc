@@ -13,6 +13,7 @@
 /// @author Jongmin Yun
 /// @log
 /// 2018-05-28 Create file.
+/// 2018-06-14 Replace font temporary vao to DVaoComponent.
 ///
 
 /// Header file
@@ -20,22 +21,23 @@
 
 #include <sstream>
 
-/// @todo Deprecated since C++17. Replace logic with other alternatives.
-#include <codecvt>
-#include <locale>
-
 #include <glm/gtc/matrix_transform.hpp>
+/// Phitos namespace
+#include <Phitos/Dbg/assert.h>
 #include <Phitos/Utf/ustring.h>
 
 /// ::opgs16::core::
 #include <Core/core_setting.h>
+/// ::opgs16::builtin Vao name.
+#include <Element/Default/builtin_vao_name.h>
 /// ::opgs16::manager::MShaderManager
 #include <Manager/shader_manager.h>
 /// ::opgs16::manager::_internal
 #include <Manager/Internal/font_internal.h>
+/// ::opgs16::manager::_internal::vao namespace
+#include <Manager/Internal/vao_management.h>
 
-using Utf16TextContainer =
-    opgs16::component::CFont2DRenderer::Utf16TextContainer;
+using Utf16TextContainer = opgs16::component::CFont2DRenderer::Utf16TextContainer;
 
 namespace {
 
@@ -44,8 +46,9 @@ std::vector<std::u16string> SeparateUtf8TextToUtf16StringList(
 
 void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
-            const std::array<float, 24>& vertices);
+            const std::array<opgs16::DVector3, 4>& vertices);
 
+#ifdef false
 ///
 /// @brief
 /// The method sets VAO, VBO to render string on screen.
@@ -68,6 +71,7 @@ void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
+#endif
 
 ///
 /// @brief
@@ -87,11 +91,6 @@ std::u16string ConvertUtf8ToUtf16(const std::string& string) {
   }
 
   return std::move(result_utf16_line_string);
-
-#ifdef false
-  return std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.
-      from_bytes(string);
-#endif
 }
 
 ///
@@ -145,7 +144,7 @@ uint32_t CalculateStringRenderWidth(
 /// @return Character glyph render vertices information.
 /// @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 ///
-std::array<float, 24> GetCharacterVertices(
+std::array<opgs16::DVector3, 4> GetCharacterVertices(
     const opgs16::manager::_internal::Character& ch_info,
     const glm::vec2& position,
     const float scale) {
@@ -156,13 +155,16 @@ std::array<float, 24> GetCharacterVertices(
   const auto w = ch_info.size.x * scale;
   const auto h = ch_info.size.y * scale;
 
-  return std::array<float, 24>{
-      ch_pos.x, ch_pos.y + h, 0.f, 0.f,
-      ch_pos.x, ch_pos.y, 0.f, 1.f,
-      ch_pos.x + w, ch_pos.y, 1.f, 1.f,
-      ch_pos.x, ch_pos.y + h, 0.f, 0.f,
-      ch_pos.x + w, ch_pos.y, 1.f, 1.f,
-      ch_pos.x + w, ch_pos.y + h, 1.f, 0.f
+  const auto l = ch_pos.x;
+  const auto r = ch_pos.x + w;
+  const auto t = ch_pos.y + h;
+  const auto b = ch_pos.y;
+
+  return {
+      opgs16::DVector3{r, b, 0},
+      opgs16::DVector3{r, t, 0},
+      opgs16::DVector3{l, t, 0},
+      opgs16::DVector3{l, b, 0}
   };
 }
 
@@ -244,7 +246,8 @@ void RenderRightSide(const std::vector<std::string>& container,
 }
 
 ///
-/// @brief Actual render method. This method must be called in Render__Side() method.
+/// @brief Actual render method.
+/// This method must be called in Render__Side() method.
 ///
 /// @param[in] ch_info
 /// @param[in] m_vbo
@@ -252,37 +255,47 @@ void RenderRightSide(const std::vector<std::string>& container,
 ///
 void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
-            const std::array<float, 24>& vertices) {
+            const std::array<opgs16::DVector3, 4>& vertices) {
 	// Render texture glyph
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ch_info.texture_id);
 
 	// Update content of VBO
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0  , 12, vertices[0].Data().data());
+	glBufferSubData(GL_ARRAY_BUFFER, 44 , 12, vertices[1].Data().data());
+	glBufferSubData(GL_ARRAY_BUFFER, 88 , 12, vertices[2].Data().data());
+	glBufferSubData(GL_ARRAY_BUFFER, 132, 12, vertices[3].Data().data());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Render
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 } /// unname namespace
 
 namespace opgs16::component {
 
-CFont2DRenderer::CFont2DRenderer(element::CObject& bind_object,
-                                 const std::string& font_tag,
-                                 const std::string& shader_tag,
-                                 const uint32_t rendering_layer) :
-    CRendererBase(bind_object, rendering_layer), m_font_name{font_tag} {
-  /// Function Body
+CFont2DRenderer::CFont2DRenderer(
+    element::CObject& bind_object, const std::string& font_tag,
+    const std::string& shader_tag, const uint32_t rendering_layer) :
+    CRendererBase(bind_object, rendering_layer),
+    m_font_name{font_tag} {
+  using manager::_internal::vao::FindVaoResource;
+
   SetProjectionMatrix({
       glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
       0.f,
       static_cast<float>(SGlobalSetting::ScreenHeight())) });
-  BindVertexAttributes(&m_vao, &m_vbo);
+
+  phitos::enums::EFound result;
+  std::tie(m_vao_ptr, result) = FindVaoResource(builtin::g_model_2d_quad_dynamic);
+
+  if (result == phitos::enums::EFound::NotFound)
+    PHITOS_UNEXPECTED_BRANCH();
 
   m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
+  m_wrapper.SetAttribute(m_vao_ptr);
 
   SetFont(font_tag);
 }
@@ -291,7 +304,6 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                                  const glm::vec2 final_position,
                                  IAlignable::Alignment alignment,
                                  const float scale) {
-  /// Ready
   if (m_string_dirty == _internal::EDirtyFlag::Dirty) {
     RefreshStringContainers(m_temporary_utf8_string);
     m_temporary_utf8_string.clear();
@@ -310,12 +322,14 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
   }
 
   /// Body
-  glBindVertexArray(m_vao);
+  glBindVertexArray(m_vao_ptr->GetVaoList()[0].GetVaoId());
   m_wrapper.UseShader();
 
   switch (typedef IAlignable::Alignment Align; alignment) {
   case Align::LEFT:
-    RenderLeftSide(m_unicode_text_container, m_font_name, m_font_set, final_position, m_vbo, scale);
+    RenderLeftSide(m_unicode_text_container,
+                   m_font_name, m_font_set, final_position,
+                   m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
 #ifdef false
   case Align::CENTER:
@@ -327,13 +341,12 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                     m_font_set, final_position, m_vbo, scale);
     break;
 #endif
-  default:
-    NEU_NOT_IMPLEMENTED_ASSERT();
-    break;
+  default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
 
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
+  glUseProgram(0);
 }
 
 void CFont2DRenderer::SetDefaultFont() {

@@ -72,55 +72,57 @@ namespace component {
  */
 class CSprite2DRenderer final : public _internal::CRendererBase {
 private:
-    using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
+  using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
 
 public:
 	/*! Make Sprite2DRenderer instance. (Constructor) */
 	CSprite2DRenderer(element::CObject& bind_object,
-                      const std::string& sprite_tag, const std::string& shader_tag,
-                      const unsigned texture_index = 0, const unsigned render_layer = 0);
+                    const std::string& sprite_tag,
+                    const std::string& shader_tag,
+                    const unsigned texture_index = 0,
+                    const unsigned render_layer = 0);
 
-    /*!
-     * @brief Set new texture replacing present bound texture.
-     * @param[in] texture_name Texture tag name.
-     */
-    void SetTexture(const std::string& texture_name);
+  /*!
+   * @brief Set new texture replacing present bound texture.
+   * @param[in] texture_name Texture tag name.
+   */
+  void SetTexture(const std::string& texture_name);
 
-    /*!
-     * @brief Set texture index to display.
-     * @param[in] index_value Texture fragment value.
-     */
-    void SetTextureIndex(const unsigned index_value);
+  /*!
+   * @brief Set texture index to display.
+   * @param[in] index_value Texture fragment value.
+   */
+  void SetTextureIndex(const unsigned index_value);
 
-    /*! Get Texture index position. */
-    const unsigned TextureIndex() const noexcept;
+  /*! Get Texture index position. */
+  const unsigned TextureIndex() const noexcept;
 
 	/*! Get ShaderWrapper instance. */
 	element::CShaderWrapper& Wrapper() const;
 
-    /*!
-     * @brief Set Shader newly.
-     * @param[in] shader_name Shader name to specify.
-     */
-    void SetShader(const std::string& shader_name);
+  /*!
+   * @brief Set Shader newly.
+   * @param[in] shader_name Shader name to specify.
+   */
+  void SetShader(const std::string& shader_name);
 
-    /*!*/
-    void SetInstanceCount(unsigned instance_count);
+  /*!*/
+  void SetInstanceCount(unsigned instance_count);
 
-	/**
-	 * @brief Render sprite on screen. Procedure is below.
-	 * 1. m_shader is enable (must be enabled), active shader to use.
-	 * 2. update shader uniform parameter.
-	 * 3. bind texture, render it with final position(PVM) of bound object.
-	 */
-	void RenderSprite();
+  /**
+   * @brief Render sprite on screen. Procedure is below.
+   * 1. m_shader is enable (must be enabled), active shader to use.
+   * 2. update shader uniform parameter.
+   * 3. bind texture, render it with final position(PVM) of bound object.
+   */
+  void RenderSprite();
 
-    ~CSprite2DRenderer();
+  ~CSprite2DRenderer();
 
 private:
-    pimpl_type m_impl{};
+  pimpl_type m_impl{};
 
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRenderer)
+  SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRenderer)
 };
 
 } /*! opgs16::component */

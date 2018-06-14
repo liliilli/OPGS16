@@ -77,6 +77,21 @@ phitos::enums::ESucceed GenerateModel(const std::string& resource_model_name);
 std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
 GenerateVaoItemsFromModel(const std::string& model_name);
 
+///
+/// @brief
+///
+/// @param[in] model_name
+/// @param[in] vbo_type
+/// @param[in] ebo_type
+///
+/// @return
+///
+std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
+GenerateVaoItemsFromModelExt(
+    const std::string& model_name,
+    element::_internal::EVboBufferType vbo_type,
+    element::_internal::EEboBufferType ebo_type);
+
 } /// ::opgs16::manager::mesh namespace
 
 #endif /// OPGS16_MANAGER_INTERNAL_MESH_MANAGER_H

@@ -256,6 +256,7 @@
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
+    <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
     <ClInclude Include="Include\Element\Internal\mesh_object.h" />

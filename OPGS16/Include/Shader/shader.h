@@ -80,6 +80,14 @@ public:
      */
     void Use();
 
+  ///
+  /// @brief Get shader program id.
+  /// @return Program id.
+  ///
+  uint32_t GetProgramId() const noexcept {
+    return static_cast<uint32_t>(m_program_id);
+  }
+
     /**---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
      * Utility uniform functions
      *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/

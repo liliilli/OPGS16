@@ -74,7 +74,9 @@ inline EFound IsInternalVaoExist(const std::string& vao_name) {
 /// @return The pair of
 ///
 std::pair<opgs16::element::CVaoContainer*, phitos::enums::ESucceed>
-GenerateVaoContainer(const std::string& model_name) {
+GenerateVaoContainer(const std::string& model_name,
+    opgs16::element::_internal::EVboBufferType vbo_type,
+    opgs16::element::_internal::EEboBufferType ebo_type) {
   using phitos::enums::ESucceed;
   using opgs16::builtin::model::BModel2DQuad;
   using namespace opgs16::manager;
@@ -92,7 +94,9 @@ GenerateVaoContainer(const std::string& model_name) {
   }
 
   // Generate CVaoContainer unique_ptr on this.
-  auto [instance_ptr, result] = mesh::GenerateVaoItemsFromModel(model_name);
+  auto [instance_ptr, result] =
+      mesh::GenerateVaoItemsFromModelExt(model_name, vbo_type, ebo_type);
+
   if (result == ESucceed::Failed) {
     PHITOS_ASSERT(result == ESucceed::Succeed,
         "Could not generate vao items from model.");
@@ -113,12 +117,22 @@ GenerateVaoContainer(const std::string& model_name) {
 ///
 void InitiateBuiltinVaoItems() {
   using EVboBufferType = opgs16::element::_internal::EVboBufferType;
+  using EEboBufferType = opgs16::element::_internal::EEboBufferType;
   using EBufferTarget = opgs16::element::_internal::EBufferTarget;
   using CInternalVertexArrayObject =
       opgs16::element::_internal::CInternalVertexArrayObject;
 
+  // 2D Quad (x, y) with element object buffer
   GenerateVaoContainer(
-    opgs16::builtin::model::BModel2DQuad::m_model_name.data()
+    opgs16::builtin::model::BModel2DQuad::m_model_name.data(),
+    EVboBufferType::StaticDraw, EEboBufferType::StaticDraw
+  );
+
+  // 2D Quad (x, y) with element object buffer but only for dynamic like
+  // font rendering.
+  GenerateVaoContainer(
+    opgs16::builtin::g_model_2d_quad_dynamic,
+    EVboBufferType::DynamicDraw, EEboBufferType::StaticDraw
   );
 }
 
@@ -159,17 +173,29 @@ FindVaoResource(const std::string& vao_name) {
   return {m_vao_container[vao_name].get(), EFound::Found};
 }
 
-std::pair<element::CVaoContainer*, phitos::enums::ESucceed>
-GenerateVaoResourceWithModel(const std::string& model_name) {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      "Vao management was not initiated yet.");
-  return GenerateVaoContainer(model_name);
-}
-
 phitos::enums::EFound IsVaoResourceExist(const std::string& vao_name) {
   PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
       "Vao management was not initiated yet.");
   return IsInternalVaoExist(vao_name);
+}
+
+std::pair<element::CVaoContainer*, phitos::enums::ESucceed>
+GenerateVaoResourceWithModel(const std::string& model_name) {
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
+      "Vao management was not initiated yet.");
+  return GenerateVaoContainer(model_name,
+      element::_internal::EVboBufferType::StaticDraw,
+      element::_internal::EEboBufferType::StaticDraw);
+}
+
+std::pair<element::CVaoContainer*, phitos::enums::ESucceed>
+GenerateVaoResourceWithModelExt(
+    const std::string& model_name,
+    element::_internal::EVboBufferType vbo_type,
+    element::_internal::EEboBufferType ebo_type) {
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
+      "Vao management was not initiated yet.");
+  return GenerateVaoContainer(model_name, vbo_type, ebo_type);
 }
 
 } /// ::opgs16::manager::_internal::vao namespace.

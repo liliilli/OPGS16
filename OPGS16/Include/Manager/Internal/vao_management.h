@@ -30,20 +30,6 @@ namespace opgs16::manager::_internal::vao {
 
 ///
 /// @brief
-/// Initiate vao management.
-/// This function must be called only once.
-///
-void Initiate();
-
-///
-/// @brief
-/// Shutdown and release resource of vao.
-/// This function must be called only once.
-///
-void Shutdown();
-
-///
-/// @brief
 /// Get vao resource with success flag.
 ///
 /// @param[in] vao_name Internal VAO resource instance name you find.
@@ -67,11 +53,42 @@ std::pair<element::CVaoContainer*, phitos::enums::ESucceed>
 GenerateVaoResourceWithModel(const std::string& model_name);
 
 ///
+/// @brief Generate CVaoContainer resource model with model_name from
+/// model information container, generate and return with success flag,
+/// with extensional vbo, ebo type for experts.
+///
+/// @param[in] model_name Model name to generate vao object.
+/// @param[in] vbo_type
+/// @param[in] ebo_type
+///
+/// @return If successful, return CVaoContainer pointer and flag.
+///
+std::pair<element::CVaoContainer*, phitos::enums::ESucceed>
+GenerateVaoResourceWithModelExt(
+    const std::string& model_name,
+    element::_internal::EVboBufferType vbo_type,
+    element::_internal::EEboBufferType ebo_type);
+
+///
 /// @brief Just find vao object is exist.
 /// @param[in] vao_name Vao name or mesh name or model name to find bound vao.
 /// @return Found flag.
 ///
 phitos::enums::EFound IsVaoResourceExist(const std::string& vao_name);
+
+///
+/// @brief
+/// Initiate vao management.
+/// This function must be called only once.
+///
+void Initiate();
+
+///
+/// @brief
+/// Shutdown and release resource of vao.
+/// This function must be called only once.
+///
+void Shutdown();
 
 } /// ::opgs16::manager::_internal::vao namespace.
 

@@ -36,23 +36,26 @@
 
 #include <Shader\Default\shader_font.h> /// Header file
 /// ::opgs16::resource::EShaderType
-#include <Manager\resource_type.h>  
-/// import logger 
-#include <Headers\import_logger.h>  
+#include <Manager\resource_type.h>
+/// import logger
+#include <Headers\import_logger.h>
 
 namespace {
 constexpr const char* shader_vertex_shader =
-"#version 430 core\n\
-layout (location = 0) in vec4 info; // vec2 pos, vec2 tex\n\
-\
-out VS_OUT {\
+"#version 430 core\n"
+"\n"
+"layout (location = 0) in vec3 opPosition;\n"
+"layout (location = 1) in vec3 opNormal;\n"
+"layout (location = 2) in vec3 opTangent;\n"
+"layout (location = 3) in vec2 opTexCoord;\n"
+"out VS_OUT {\
 	vec2 texCoord;\
 } vs_out;\
 uniform mat4 projection;\
 \
 void main() {\
-	gl_Position = projection * vec4(info.xy, 0, 1);\
-	vs_out.texCoord = info.zw;\
+	gl_Position = projection * vec4(opPosition.xy, 0, 1);\
+	vs_out.texCoord = opTexCoord.xy;\
 }";
 
 constexpr const char* shader_fragment_shader =
@@ -100,11 +103,11 @@ SGlobalFont2D::SGlobalFont2D() {
         else {
             char log[100] = { "SGlobalQuad2D gCommonFont " };
             switch (type) {
-            case EShaderType::VS: 
-              strcat(log, "vertex shader");   
+            case EShaderType::VS:
+              strcat(log, "vertex shader");
               break;
-            case EShaderType::FS: 
-              strcat(log, "fragment shader");  
+            case EShaderType::FS:
+              strcat(log, "fragment shader");
               break;
             default: break;
             }

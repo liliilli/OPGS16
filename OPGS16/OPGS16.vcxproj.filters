@@ -232,6 +232,7 @@
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\Internal\vao_container.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
+    <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
