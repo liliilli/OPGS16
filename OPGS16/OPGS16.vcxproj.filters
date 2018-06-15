@@ -89,6 +89,7 @@
     <ClCompile Include="Include\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="Source\Element\Default\model_2dquad.cc" />
     <ClCompile Include="Source\Element\Internal\vao_container.cc" />
+    <ClCompile Include="Source\Manager\time_manager.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />

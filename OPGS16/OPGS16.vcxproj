@@ -192,6 +192,7 @@
     <ClCompile Include="Source\Manager\mesh_manager.cc" />
     <ClCompile Include="Source\Manager\prerendering_manager.cc" />
     <ClCompile Include="Source\Manager\timer_manager.cc" />
+    <ClCompile Include="Source\Manager\time_manager.cc" />
     <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
     <ClCompile Include="Source\Shader\Default\shader_font.cc" />
     <ClCompile Include="Source\Shader\Default\shader_postprocessing_plain_quad.cc" />
