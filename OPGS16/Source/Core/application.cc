@@ -445,6 +445,7 @@ void Run() {
   // Must terminate glfw window
   glfwTerminate();
 
+  manager::scene::__::Shutdown();
   manager::_internal::vao::Shutdown();
   manager::mesh::Shutdown();
 }

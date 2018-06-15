@@ -103,4 +103,8 @@ void PrivatePopScene() {
     InitiateTopScene();
 }
 
+void Shutdown() {
+  m_scene_stack.clear();
+}
+
 } /// ::opgs16::manager::scene::__ namespace

@@ -73,6 +73,11 @@ void PrivateReplaceScene();
 ///
 void PrivatePopScene();
 
+///
+/// @brief Release all scene explicitly.
+///
+void Shutdown();
+
 } /// ::opgs16::manager::scene::__ namespace
 
 //!
