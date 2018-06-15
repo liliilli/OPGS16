@@ -7,157 +7,202 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
-///
 /// @file Manager/postprocessing_manager.h
 /// @brief Elementary manager class to manage post-processing shaders.
 ///
 /// This file consists of application operation class and member API functions.
 ///
 /// @author Jongmin Yun
+///
 /// @log
 /// 2018-02-18 Create file.
 /// 2018-03-04 Refactoring. Move class to /Manager class.
 /// 2018-04-20 Refactoring. CFrameBuferFrame to ::opgs16::element::CFrameBuferFrame.
+/// 2018-06-15 Create file.
 ///
 
 #include <memory>
 #include <string>
 #include <unordered_map>
 
+/// ::phitos::enums::EFound.
+#include <Phitos/Enums/found.h>
+/// ::phitos::enums::ESucceed
+#include <Phitos/Enums/success.h>
+/// ::
+#include <Headers/import_logger.h>
 /// ::opgs16::element::CFrameBufferFrame
-#include <Shader\framebuffer.h>
+#include <Shader/framebuffer.h>
 
-namespace opgs16::manager {
+//!
+//! Forward declarations.
+//!
 
-/**
- * @class MPostProcessingManager
- * @brief This class manages post-processing frame (instances) to be used in Application.
- * Each post-processing instance stored in container could be attached, released, destroyed in
- * any time but Strongly recommends it in Initiate time and Update time.
- */
-class MPostProcessingManager final {
-public:
-	using pp_effect = std::unique_ptr<element::CPostProcessingFrame>; // Abbreviation.
-	using ppf_ptr	= element::CPostProcessingFrame*;
-	using sequence_type = std::list<ppf_ptr>;
+namespace opgs16::manager::postprocessing {
 
-public:
-	/**
-	 * @brief Static method gets unique instance of PostProcessingManager class.
-	 * @return Lvalue reference of singleton instance.
-	 */
-	static MPostProcessingManager& GetInstance() {
-		static MPostProcessingManager instance{};
-		return instance;
-	}
+using TPpEffectPtr  = std::unique_ptr<element::CPostProcessingFrame>;
+using TEffectMap    = std::unordered_map<std::string, TPpEffectPtr>;
+using TSequenceType = std::list<element::CPostProcessingFrame*>;
 
-	/**
-	 * @brief Get lvalue reference of effect which is named with tag.
-	 * @param[in] tag
-	 * @return Lvalue reference of effect.
-	 */
-	pp_effect& GetEffect(const std::string&& tag);
+} /// ::opgs16::manager::postprocessing
 
-	/**
-	 * @brief Insert effect (vacant) instance into effect container.
-	 * Type paramter must be written in <> and which must derive PostProcessingFrame base class.
-	 *
-	 * @param[in] tag tag The tag to use.
-	 * @param[in] _Ty Post-processing Effect type parameter to use.
-	 * @return If this method success to create and insert _Ty effect, return True.
-	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
-	bool InsertEffect(const char* tag) {
-		if (IsEffectExist(tag)) { return false; }
+namespace opgs16::manager::postprocessing::__ {
 
-		m_effects[tag] = std::make_unique<_Ty>();
-		return true;
-	}
+///
+/// @brief Initiate function.
+/// This function must not be called twice.
+///
+void Initiate();
 
-	/** Overloading version of InsertEffect<_Ty, ...>(tag) */
-	bool InsertEffect(const char* tag);
+///
+/// @brief Shutdown and release all resource of pp.
+/// This function must not be called twice.
+///
+void Shutdown();
 
-	/**
-	 * @brief Insert effect and initiate automatically.
-	 * Type paramter must be written in <> and which must derive PostProcessingFrame base class.
-	 *
-	 * @param[in] tag tag The tag to use.
-	 * @param[in] _Ty Post-processing Effect type parameter to use.
-	 * @return If this method success to create and insert _Ty effect, return True.
-	 */
-	template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CPostProcessingFrame, _Ty>>>
-	bool InsertEffectInitiate(const char* tag) {
-		if (InsertEffect<_Ty>(tag)) {
-			m_effects[tag]->Initialize();
-			return true;
-		}
-		else return false;
-	}
+///
+/// @brief Get internal reference of effect map container.
+///
+TEffectMap& Get() noexcept;
 
-	/**
-	 * @brief Find whether or not effect named tag is exist.
-	 * @param[in] tag The tag to find effect.
-	 * @return If searching effect is successful, return true. else return false.
-	 */
-	bool IsEffectExist(const std::string& tag) {
-        return m_effects.find(tag) != m_effects.end();
-	}
+} /// ::opgs16::manager::postprocessing::__ namespace
 
-	/**
-	 * @brief Set continous post-processing sequence to render screen.
-	 * If sequence list on id is already set up, This method does nothing.
-	 *
-	 * @param[in] id Id which is position to be set effect sequences.
-	 * @param[in] list Effect tags list
-	 * @return Pointer of initialized effect sequence.
-	 * If this fails to create sequence, return nullptr.
-	 */
-	const sequence_type* SetSequence(const size_t id, const std::initializer_list<std::string>& list);
+///
+/// @namespace postprocessing
+///
+/// @brief
+/// This class manages post-processing frame (instances) to be used in Application.
+/// Each post-processing instance stored in container could be attached, released, destroyed in
+/// any time but Strongly recommends it in Initiate time and Update time.
+///
+namespace opgs16::manager::postprocessing {
 
-	/**
-	 * @brief Updates each effects of each sequences. (each effects of sequence is active)
-	 */
-	void UpdateSequences();
+///
+/// @brief Get lvalue reference of effect which is named with tag.
+/// @param[in] effect_name
+/// @return Lvalue reference of effect.
+///
+std::pair<element::CPostProcessingFrame*, phitos::enums::EFound>
+GetEffect(const std::string& effect_name);
 
-	/**
-	 * @brief Bind effect sequence with id number.
-	 * @param[in] id Index position of effect sequences container to bind seqeunce.
-	 */
-	void BindSequence(const size_t id);
+///
+/// @brief Find whether or not effect named tag is exist.
+/// @param[in] effect_name The name to find effect.
+/// @return If searching effect is successful, return true. else return false.
+///
+phitos::enums::EFound IsEffectExist(const std::string& effect_name);
 
-	/**
-	 * @brief
-	 */
-	void Render();
+///
+/// @brief Insert effect (vacant) instance into effect container.
+/// Type paramter must be written in <> and which must derive PostProcessingFrame base class.
+///
+/// @param[in] effect_name Postprocessing effect name to use later.
+/// @tparam TTy Post-processing Effect type parameter to use.
+///
+/// @return If this method success to create and insert _Ty effect, return True.
+///
+template <
+    class TTy,
+    typename = std::enable_if_t<
+        std::is_base_of_v<element::CPostProcessingFrame,
+                          TTy>
+    >
+>
+phitos::enums::ESucceed InsertEffect(const std::string& effect_name) {
+  using phitos::enums::ESucceed;
 
-	/**
-	 * @brief
-	 * #param[in] list
-	 */
-	void ReleaseSequence(const size_t id);
+  if (IsEffectExist(effect_name) == phitos::enums::EFound::Found) {
+    PUSH_LOG_WARN_EXT("Postprocessing effect is already inserted. [{} : {}]",
+        "Effect name", effect_name);
+    return ESucceed::Failed;
+  }
 
-private:
-	/** Container sotres post-processing separated effects. */
-	std::unordered_map<std::string, pp_effect> m_effects;
-	/** Container stores post-processing sequences combined with effects. */
-	std::unordered_map<size_t, sequence_type> m_effect_sequences;
+  auto [it, result] = __::Get().try_emplace(effect_name, std::make_unique<TTy>());
+  if (!result) {
+    PUSH_LOG_ERROR_EXT("Postprocessing effect is not inserted properly. [{} : {}]",
+        "Effect name", effect_name);
+    return ESucceed::Failed;
+  }
 
-	const size_t m_reset = 0xffff;				// Just used for reset of m_binded_number
-	mutable size_t m_binded_number{m_reset};	// if not reset, call effect sequence via this
+  return ESucceed::Succeed;
+}
 
-	/** Return id'th position of effect_sequences is already exist. */
-	bool DoesEffectSequenceExist(const size_t id) {
-        return m_effect_sequences.find(id) != m_effect_sequences.end();
-	}
+///
+/// @brief Overloading version of InsertEffect<_Ty, ...>(tag)
+/// @param[in] effect_name
+///
+phitos::enums::ESucceed InsertEffect(const std::string& effect_name);
 
-	MPostProcessingManager();
+///
+/// @brief Insert effect and initiate automatically.
+/// Type paramter must be written in <> and which must derive PostProcessingFrame base class.
+///
+/// @param[in] effect_name Postprocessing effect name to use later.
+/// @tparam TTy Post-processing Effect type parameter to use.
+///
+/// @return If this method success to create and insert _Ty effect, return True.
+///
+template <
+    class TTy,
+    typename = std::enable_if_t<
+        std::is_base_of_v<element::CPostProcessingFrame, TTy>
+    >
+>
+phitos::enums::ESucceed InsertEffectInitiate(const std::string& effect_name) {
+  if (InsertEffect<TTy>(effect_name) == phitos::enums::ESucceed::Failed) {
+    PUSH_LOG_ERROR_EXT("Failed to insert post-processing effect. [{} : {}]",
+        "Effect name", effect_name);
+    return phitos::enums::ESucceed::Failed;
+  }
 
-public:
-    MPostProcessingManager(const MPostProcessingManager&) = delete;
-    MPostProcessingManager& operator=(const MPostProcessingManager&) = delete;
-};
+  __::Get()[effect_name]->Initialize();
+  PUSH_LOG_INFO_EXT("Succeed to insert post-processing effect. [{} : {}]",
+      "Effect name", effect_name);
+  return phitos::enums::ESucceed::Succeed;
+}
 
-} /*! opgs16::manager */
+///
+/// @brief Set continous post-processing sequence to render screen.
+/// If sequence list on id is already set up, This method does nothing.
+///
+/// @param[in] sequence_name name which is position to be set effect sequences.
+/// @param[in] list Postprocessing effect tags list
+///
+/// @return Pointer of initialized effect sequence.
+/// If this fails to create sequence, return nullptr and success flag.
+///
+std::pair<TSequenceType*, phitos::enums::ESucceed>
+SetSequence(const std::string& sequence_name,
+            const std::initializer_list<std::string>& list);
 
-#endif /** OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H */
+///
+/// @brief
+/// Updates each effects of each sequences. (each effects of sequence is active)
+///
+void UpdateSequences();
+
+///
+/// @brief Bind effect sequence with id number.
+///
+/// @param[in] sequence_name
+/// Name position of effect sequences container to bind seqeunce.
+///
+/// @return If bind sequence is successful, return ESucceed::Success.
+///
+phitos::enums::ESucceed BindSequence(const std::string& sequence_name);
+
+///
+/// @brief Release only list of post-processing sequence called sequence_name.
+/// @param[in] sequence_name Sequence name to find.
+/// @return If successful, return ESucceed::Success; otherwise ESucceed::Failed.
+///
+phitos::enums::ESucceed ReleaseSequence(const std::string& sequence_name);
+
+///
+/// @brief Render post-processing sequence.
+///
+void Render();
+
+} /// ::opgs16::manager::postprocessing namespace
+
+#endif /// OPGS16_S_SYSTEM_SHADER_POST_PROCESSING_MANAGER_H

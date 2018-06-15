@@ -103,10 +103,7 @@ constexpr float k_fps_count = 60.f;
 // Window handle pointer
 GLFWwindow* m_window = nullptr;
 
-opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-
 std::stack<opgs16::entry::_internal::EGameStatus> m_game_status;
-
 std::unique_ptr<opgs16::SGlobalSetting> m_setting = nullptr;
 
 // This callback will be called before update routine only once.
@@ -262,6 +259,7 @@ void Initiate() {
   manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
+  manager::postprocessing::__::Initiate();
 
   manager::sound::__::Initiate();
   manager::input::Initiate(m_window);
@@ -406,21 +404,20 @@ void InitiateDebugUi() {
 #endif
 
 void InitiatePostProcessingEffects() {
-	m_pp_manager = &manager::MPostProcessingManager::GetInstance();
-
+  using phitos::enums::ESucceed;
   using builtin::postprocessing::PpEffectConvex;
   using builtin::postprocessing::PpEffectGray;
   using builtin::postprocessing::PpEffectSinewave;
-	m_pp_manager->InsertEffectInitiate<PpEffectConvex>("Convex");
-	m_pp_manager->InsertEffectInitiate<PpEffectGray>("Gray");
-	m_pp_manager->InsertEffectInitiate<PpEffectSinewave>("SineWave");
+  using manager::postprocessing::InsertEffectInitiate;
+
+	InsertEffectInitiate<PpEffectConvex>("Convex");
+	InsertEffectInitiate<PpEffectGray>("Gray");
+	InsertEffectInitiate<PpEffectSinewave>("SineWave");
 
 	// Set sample sequence
-  // @todo : Renovate postprocessing manager sequence setting mechanism.
-	auto const result = m_pp_manager->SetSequence(1u, { "Convex" });
-	if (result == nullptr) {
-		std::cerr << "ERROR::CANNOT::CREATED::PP::SEQUENCE" << std::endl;
-	}
+	auto [ptr, result] = manager::postprocessing::SetSequence("opConvex", { "Convex" });
+	if (result == ESucceed::Failed)
+    PUSH_LOG_INFO("Failed to create post-processing sequence.");
 }
 
 void Run() {
@@ -446,6 +443,7 @@ void Shutdown() {
   // Must terminate glfw window
   glfwTerminate();
 
+  manager::postprocessing::__::Shutdown();
   manager::timer::ClearAllTimers();
   manager::sound::ReleaseAllSounds();
   manager::sound::__::Shutdown();
@@ -497,7 +495,7 @@ void Update(float delta_time) {
 
   // Update active effects.
   if (IsSwitchOn(m_setting->PostProcessing()))
-    m_pp_manager->UpdateSequences();
+    manager::postprocessing::UpdateSequences();
 }
 
 void InputGlobal() {
@@ -539,9 +537,9 @@ void Draw() {
 
     // Actual Rendering
     if (IsSwitchOn(m_setting->PostProcessing()))
-      m_pp_manager->BindSequence(1);
+      manager::postprocessing::BindSequence("opConvex");
     else
-      m_pp_manager->BindSequence(0);
+      manager::postprocessing::BindSequence("opDefault");
 
     manager::scene::GetPresentScene()->Draw();
     manager::object::Render();
@@ -550,8 +548,7 @@ void Draw() {
       manager::object::RenderAABB();
     }
 
-    // Postprocessing
-    m_pp_manager->Render();
+    manager::postprocessing::Render();
   }
 
 #if defined(_OPGS16_DEBUG_OPTION)
