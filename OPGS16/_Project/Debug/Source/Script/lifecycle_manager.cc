@@ -35,7 +35,7 @@ void LifecycleManager::Initiate() {
 
 void LifecycleManager::Start() {
   PUSH_LOG_INFO("LifecycleManager Start()");
-  M_SET_TIMER(m_spawn_timer, 250, true, this, &LifecycleManager::SpawnObject);
+  OP16_TIMER_SET(m_spawn_timer, 250, true, this, &LifecycleManager::SpawnObject);
 }
 
 void LifecycleManager::Update(float delta_time) {

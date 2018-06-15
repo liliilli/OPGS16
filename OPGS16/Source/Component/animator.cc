@@ -52,21 +52,20 @@ using _internal::AnimatorState;
 CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer,
                      const std::string& load_name, Switch loop) :
     _internal::CComponent{ bind_object },
-    m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
-    OnStart();
+  m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
+  OnStart();
 
-    const resource::SAnimation* container = manager::resource::GetAnimation(load_name);
-    if (container) {
-        m_animation = container;
-        OnAnimationStart();
-        m_cell_index = 0;
-        m_cell_length = container->cells.size();
+  const resource::SAnimation* container = manager::resource::GetAnimation(load_name);
+  if (container) {
+    m_animation = container;
+    OnAnimationStart();
+    m_cell_index = 0;
+    m_cell_length = container->cells.size();
 
-        using manager::MTimerManager;
-        MTimerManager::Instance().SetTimer(m_timer,
-                                           static_cast<long>(m_animation->cells[m_cell_index].m_time_milli),
-                                           false, this, &CAnimator::OnTriggerTick);
-    }
+    const auto tick = static_cast<long>(
+        m_animation->cells[m_cell_index].m_time_milli);
+    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
+  }
 }
 
 void CAnimator::Update(float) {
@@ -108,25 +107,25 @@ void CAnimator::OnSleep() {
 }
 
 void CAnimator::OnTriggerTick() {
-    if ((++m_cell_index) < m_cell_length) {
-        m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-        m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
+  if ((++m_cell_index) < m_cell_length) {
+    m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
+    m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
 
-        using manager::MTimerManager;
-        MTimerManager::Instance().SetTimer(m_timer,
-                                   static_cast<long>(m_animation->cells[m_cell_index].m_time_milli),
-                                   false, this, &CAnimator::OnTriggerTick);
-    }
-    else if (IsSwitchOn(m_loop)) {
-        m_cell_index = 0;
-        m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-        m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
+    using manager::MTimerManager;
+    const auto tick = static_cast<long>(
+        m_animation->cells[m_cell_index].m_time_milli);
+    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
+  }
+  else if (IsSwitchOn(m_loop)) {
+    m_cell_index = 0;
+    m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
+    m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
 
-        using manager::MTimerManager;
-        MTimerManager::Instance().SetTimer(m_timer,
-                                   static_cast<long>(m_animation->cells[m_cell_index].m_time_milli),
-                                   false, this, &CAnimator::OnTriggerTick);
-    }
+    using manager::MTimerManager;
+    const auto tick = static_cast<long>(
+        m_animation->cells[m_cell_index].m_time_milli);
+    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
+  }
 }
 
 } /*! opgs16::component */

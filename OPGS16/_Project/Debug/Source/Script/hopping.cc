@@ -67,7 +67,7 @@ void Hopping::Initiate() {
 }
 
 void Hopping::Start() {
-  M_SET_TIMER(m_timer_handler,
+  OP16_TIMER_SET(m_timer_handler,
               static_cast<long>(m_delay * 1000),
               false,
               this,

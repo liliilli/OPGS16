@@ -9,7 +9,7 @@
 ///
 /// @file Core/application.h
 ///
-/// @brief 
+/// @brief
 /// Main file to run application, which consists of application operation class.
 ///
 /// @author Jongmin Yun
@@ -21,17 +21,17 @@
 ///
 
 #include <functional>
-  
+
 /// Forward declaration
-#include <opgs16fwd.h> 
+#include <opgs16fwd.h>
 
 ///
 /// @namespace opgs16::entry
-/// @brief 
+/// @brief
 /// core entry namespace which consists of update, draw functions.
 ///
 /// @log
-/// 2018-03-01 
+/// 2018-03-01
 /// Move class inside opgs16 namespace for uniformation.
 /// Refactored and removed member functions are not appropriate for class.
 /// 2018-05-19 Change singleton structure to namespace structure. yay!
@@ -53,9 +53,15 @@ void Run();
 
 ///
 /// @brief
+/// Release and shutdown application.
+///
+void Shutdown();
+
+///
+/// @brief
 /// Set callback function will be called before update frame.
 ///
-/// @param callback 
+/// @param callback
 /// Callback function to execute at next frame.
 ///
 void SetOnBeforeUpdateCallback(std::function<void(void)> callback);

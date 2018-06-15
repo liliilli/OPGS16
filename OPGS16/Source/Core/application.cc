@@ -20,7 +20,7 @@
 
 #include <stack>
 
-#include <gl/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <Manager\font_manager.h>
@@ -104,15 +104,13 @@ constexpr float k_fps_count = 60.f;
 GLFWwindow* m_window = nullptr;
 
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-opgs16::manager::MTimeManager* m_time_manager = nullptr;
-opgs16::manager::MTimerManager* m_timer_manager = nullptr;
 
 std::stack<opgs16::entry::_internal::EGameStatus> m_game_status;
 
 std::unique_ptr<opgs16::SGlobalSetting> m_setting = nullptr;
 
 // This callback will be called before update routine only once.
-std::function<void(void)> m_on_before_update_callback = nullptr;
+std::function<void()> m_on_before_update_callback = nullptr;
 
 #if defined(_OPGS16_DEBUG_OPTION)
 // Debug UI components container
@@ -257,8 +255,6 @@ void Initiate() {
 #endif
 
   manager::setting::Initiate();
-  manager::input::Initiate(m_window);
-
   manager::resource::ReadResourceFile("_resource.meta");
   manager::mesh::Initiate();
   manager::_internal::vao::Initiate();
@@ -266,9 +262,9 @@ void Initiate() {
   manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
-  manager::sound::__::Initiate();
 
-  m_timer_manager = &manager::MTimerManager::Instance();
+  manager::sound::__::Initiate();
+  manager::input::Initiate(m_window);
 
   m_setting = std::make_unique<SGlobalSetting>();
   PushStatus(_internal::EGameStatus::INIT);
@@ -438,16 +434,19 @@ void Run() {
 
     if (manager::time::Ticked()) {
       // Timer alarm event checking.
-      m_timer_manager->Update();
-
-      Update(manager::time::GetDeltaTime());
+      const float dt = manager::time::GetDeltaTime();
+      manager::timer::Update(dt);
+      Update(dt);
       Draw();
     }
   }
+}
 
+void Shutdown() {
   // Must terminate glfw window
   glfwTerminate();
 
+  manager::timer::ClearAllTimers();
   manager::sound::ReleaseAllSounds();
   manager::sound::__::Shutdown();
   manager::scene::__::Shutdown();

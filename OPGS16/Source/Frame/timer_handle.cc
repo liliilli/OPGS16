@@ -37,7 +37,7 @@ void CTimerHandle::Try(const float quantum) {
         if (m_loop)     /*! If it has to loop, reset remain value */
             m_remain = m_interval;
         else {
-            manager::MTimerManager::Instance().DetachTimer(*this);
+            OP16_TIMER_STOP(*this);
         }
     }
 }

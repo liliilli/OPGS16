@@ -7,7 +7,7 @@
 ///
 /// @file Core/entry.cc
 ///
-/// @brief 
+/// @brief
 /// The file has main function that operates actual application.
 ///
 /// @author Jongmin Yun
@@ -28,5 +28,6 @@
 int main() {
   opgs16::entry::Initiate();
   opgs16::entry::Run();
+  opgs16::entry::Shutdown();
   return 0;
 }

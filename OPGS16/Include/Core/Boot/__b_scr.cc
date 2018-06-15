@@ -77,7 +77,7 @@ __B_SCR::__B_SCR(opgs16::element::CObject& obj) : CScriptFrame{ obj } {
 
 void __B_SCR::Start() {
     PlaySoundEffect();
-    M_SET_TIMER(m_timer_2, 1'000, false, this, &__B_SCR::SetLogoImage);
+    OP16_TIMER_SET(m_timer_2, 1'000, false, this, &__B_SCR::SetLogoImage);
 }
 
 void __B_SCR::PlaySoundEffect() {
@@ -99,7 +99,7 @@ void __B_SCR::SetLogoImage() {
 
     if ((rng() % 1'000) < 500) { // Normal
         logo->SetWorldPosition({ 0, 160, 0 });
-        M_SET_TIMER(m_timer, 32, true, this, &__B_SCR::MoveLogo1);
+        OP16_TIMER_SET(m_timer, 32, true, this, &__B_SCR::MoveLogo1);
     }
     else { // Sliced
         for (int i = 0; i < (k_sliced_number << 1); ++i) {
@@ -113,7 +113,7 @@ void __B_SCR::SetLogoImage() {
         wrapper.SetUniformValueInt("uNumber", k_sliced_number << 1);
         wrapper.SetUniformValueIntPtr("uPos", y_positions, k_sliced_number << 1);
         wrapper.SetUniformValue<float>("uYScale", k_sliced_y_initial_scale);
-        M_SET_TIMER(m_timer, 16, true, this, &__B_SCR::MoveLogoSliced);
+        OP16_TIMER_SET(m_timer, 16, true, this, &__B_SCR::MoveLogoSliced);
     }
 }
 
@@ -130,8 +130,8 @@ void __B_SCR::MoveLogo1() {
     if (abs(pos.y) < 0.1f) {
         PUSH_LOG_INFO("Logo soft-randing");
         pos.y = 0;
-        opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer);
-        M_SET_TIMER(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
+        OP16_TIMER_STOP(m_timer);
+        OP16_TIMER_SET(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
     }
 
     logo->SetWorldPosition(pos);
@@ -162,8 +162,8 @@ void __B_SCR::MoveLogoSliced() {
         PUSH_LOG_INFO("Logo soft-randing");
         renderer->SetShader("gQuad");
         renderer->SetInstanceCount(1);
-        opgs16::manager::MTimerManager::Instance().DetachTimer(m_timer);
-        M_SET_TIMER(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
+        OP16_TIMER_STOP(m_timer);
+        OP16_TIMER_SET(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
     }
 }
 
@@ -187,7 +187,7 @@ void __B_SCR::CreateTextObject() {
         text->SetColor(glm::vec3{ 1, 1, 1 });
     }
     GetObject().Instantiate<element::canvas::CText>("Statement", text);
-    M_SET_TIMER(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
+    OP16_TIMER_SET(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
 }
 
 void __B_SCR::OnTriggerNextScene() {

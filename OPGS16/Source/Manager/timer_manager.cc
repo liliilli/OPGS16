@@ -1,95 +1,127 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!
- * @file System/Manager/Private/timer_manager.cc
- * @author Jongmin Yun
- *
- * @log
- * 2018-02-22 Implemented fundamental TimerManager class.
- * 2018-03-04 Refactoring.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Manager/timer_manager.cc
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-02-22 Implemented fundamental TimerManager class.
+/// 2018-03-04 Refactoring.
+/// 2018-06-15 Refactoring.
+///
 
-#include <Manager\timer_manager.h>  /// Header file
-#include <Manager\time_manager.h>   /// ::opgs16::manager::MTimeManager
+/// Header file
+#include <Manager/timer_manager.h>
 
-namespace opgs16::manager {
+#include <limits>
 
-using _internal::Status;
+//!
+//! Data
+//!
 
-void MTimerManager::Update() {
-    /*! Iteration & Checking */
-    const auto time_quantum = manager::time::GetDeltaTime();
-    for (auto& [__, timer] : m_timer_container) {
-        if (timer.m_status == Status::ACTIVATED)
-            timer.m_handle->Try(time_quantum);
-    }
+namespace {
 
-    /*! Deletion */
-    for (const auto& keyval : m_delete_list) {
-        m_timer_container.erase(keyval);
-    }
+// key value for assignment of timer handler, default is 0
+uint32_t s_timer_count = 0;
+
+// Timer container
+opgs16::manager::timer::TTimerContainer m_timer_container;
+
+// Deletion candidates list
+std::list<size_t> m_delete_list;
+
+} /// unnamed namespace
+
+//!
+//! Global functions
+//!
+
+namespace {
+
+///
+/// @brief
+///
+bool IsTimerExist(const opgs16::element::CTimerHandle& handle) {
+  return m_timer_container.find(handle.GetKeyValue()) != m_timer_container.end();
 }
 
-void MTimerManager::Clear() {
-    s_timer_count = 0u;
-    m_delete_list.clear();
-    m_timer_container.clear();
+} /// unnamed namespace
+
+//!
+//! Implementation.
+//!
+
+namespace opgs16::manager::timer {
+
+TTimerContainer& __::Get() noexcept {
+  return m_timer_container;
 }
 
-bool MTimerManager::PauseTimer(element::CTimerHandle& handle) {
-    if (const auto key = handle.GetKeyValue();
-        DoesTimerExist(handle) && m_timer_container[key].m_status == Status::ACTIVATED) {
-
-        m_timer_container.at(key).m_status = Status::PAUSED;
-        return true;
-    }
-    return false;
+uint32_t __::__GetTimerCount() noexcept {
+  return s_timer_count;
 }
 
-bool MTimerManager::ResumeTimer(element::CTimerHandle& handle) {
-    if (const auto key = handle.GetKeyValue();
-        DoesTimerExist(handle) && m_timer_container[key].m_status == Status::PAUSED) {
+void __::__SetTimerCount(uint32_t value) noexcept {
+  s_timer_count = value;
 
-        m_timer_container[key].m_status = Status::ACTIVATED;
-        return true;
-    }
-    return false;
+  // Check s_timer_count is about to being overflowed
+  if (s_timer_count == std::numeric_limits<uint32_t>::max())
+    s_timer_count = std::numeric_limits<uint32_t>::min();
 }
 
-bool MTimerManager::DetachTimer(element::CTimerHandle& handle) {
-    if (const auto key = handle.GetKeyValue(); DoesTimerExist(handle)) {
+  using _internal::Status;
 
-        m_timer_container[key].m_status = Status::REMOVED;
-        m_delete_list.emplace_back(key);
-        return true;
-    }
-    return false;
+void Update(float delta_time) {
+  // Iteration & Timer Check
+  for (auto&[__, timer] : m_timer_container) {
+    if (timer.m_status == Status::ACTIVATED)
+      timer.m_handle->Try(delta_time);
+  }
+
+  // Deletion
+  for (const auto& keyval : m_delete_list) {
+    m_timer_container.erase(keyval);
+  }
 }
 
-} /*! opgs16::manager */
+void ClearAllTimers() {
+  s_timer_count = 0u;
+  m_delete_list.clear();
+  m_timer_container.clear();
+}
+
+bool PauseTimer(element::CTimerHandle& handle) {
+  if (const auto key = handle.GetKeyValue();
+  IsTimerExist(handle) && m_timer_container[key].m_status == Status::ACTIVATED) {
+
+    m_timer_container.at(key).m_status = Status::PAUSED;
+    return true;
+  }
+  return false;
+}
+
+bool ResumeTimer(element::CTimerHandle& handle) {
+  if (const auto key = handle.GetKeyValue();
+  IsTimerExist(handle) && m_timer_container[key].m_status == Status::PAUSED) {
+
+    m_timer_container[key].m_status = Status::ACTIVATED;
+    return true;
+  }
+  return false;
+}
+
+bool DetachTimer(element::CTimerHandle& handle) {
+  if (const auto key = handle.GetKeyValue(); IsTimerExist(handle)) {
+
+    m_timer_container[key].m_status = Status::REMOVED;
+    m_delete_list.emplace_back(key);
+    return true;
+  }
+  return false;
+}
+
+} /// ::opgs16::manager::timer namespace
