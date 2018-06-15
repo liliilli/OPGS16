@@ -16,6 +16,8 @@
 /// Header file
 #include <Manager/scene_manager.h>
 
+/// ::opgs16::component::CCamera
+#include <Component/camera.h>
 /// ::opgs16::manager::MPhysicsManager
 #include <Manager/physics_manager.h>
 /// ::opgs16::manager::MTimerManager
@@ -50,22 +52,26 @@ void PopScene() {
 }
 
 void InitiateTopScene() {
-  return m_scene_stack.rbegin()->Initiate();
+  return (*m_scene_stack.rbegin())->Initiate();
 }
 
 TSceneStack& GetLoadedSceneList() noexcept {
   return m_scene_stack;
 }
 
-element::CScene* PresentScene() {
+element::CScene* GetPresentScene() {
   if (m_scene_stack.empty())
     return nullptr;
 
   return m_scene_stack.rbegin()->get();
 }
 
-bool Empty() noexcept {
+bool IsSceneEmpty() noexcept {
   return m_scene_stack.empty();
+}
+
+const glm::mat4& GetPresentScenePvMatrix() {
+  return (*m_scene_stack.rbegin())->GetMainCamera()->PvMatrix();
 }
 
 } /// ::opgs16::manager::scene namespace
@@ -77,14 +83,14 @@ TSceneStack& Get() {
 }
 
 void ReleaseAllResources() {
-  opgs16::manager::physics::Clear();
-  MTimerManager::Instance().Clear();    /*! precise */
-  MSoundManager::Instance().Clear();    /*! Not precise */
+  physics::Clear();
+  MTimerManager::Instance().Clear();   /*! precise */
+  MSoundManager::Instance().Clear();   /*! Not precise */
 #ifdef false
   ShaderManager::Instance().Clear();   /*! Not implemented */
 #endif
   TextureManager::Instance().Clear();  /*! Not precise? */
-  manager::object::ClearAll();
+  object::ClearAll();
 }
 
 void PrivatePopScene() {

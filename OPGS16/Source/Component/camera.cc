@@ -74,7 +74,7 @@ CCamera::CCamera(element::CObject& bound_obj, ViewType view_type, CameraType cam
 
     if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
         s_main_camera_initiated = true;
-        manager::MSceneManager::Instance().PresentScene()->SetMainCamera(this);
+        manager::scene::GetPresentScene()->SetMainCamera(this);
     }
     else m_cameratype = CameraType::SUB;
 }
@@ -82,7 +82,7 @@ CCamera::CCamera(element::CObject& bound_obj, ViewType view_type, CameraType cam
 CCamera::~CCamera() {
     if (m_cameratype == CameraType::MAIN) {
         s_main_camera_initiated = false;
-        manager::MSceneManager::Instance().PresentScene()->SetMainCamera(nullptr);
+        manager::scene::GetPresentScene()->SetMainCamera(nullptr);
     }
 }
 

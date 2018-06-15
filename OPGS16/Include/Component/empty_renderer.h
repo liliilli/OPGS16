@@ -31,7 +31,7 @@
 
 /*!
  * @file System/Components/Public/empty_renderer.h
- * @brief Empty renderer does nothing but just inherits CRendererBase.
+ * @brief IsSceneEmpty renderer does nothing but just inherits CRendererBase.
  *
  * @author Jongmin Yun
  * @log

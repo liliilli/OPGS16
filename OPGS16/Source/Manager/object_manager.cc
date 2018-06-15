@@ -174,7 +174,7 @@ void RenderAABB() {
   std::stack<object_map*> tree_list;
   std::stack<it_type> it_list;
 
-  tree_list.emplace(&MSceneManager::Instance().PresentScene()->GetObjectList());
+  tree_list.emplace(&manager::scene::GetPresentScene()->GetObjectList());
   it_list.emplace(tree_list.top()->begin());
 
   auto destroyed = false;
@@ -253,7 +253,7 @@ void DestroyObjects() {
     std::stack<object_map*> tree_list;
     std::stack<it_type> it_list;
 
-    tree_list.emplace(&opgs16::manager::MSceneManager::Instance().PresentScene()->GetObjectList());
+    tree_list.emplace(&opgs16::manager::scene::GetPresentScene()->GetObjectList());
     it_list.emplace(tree_list.top()->begin());
 
     bool destroyed = false;

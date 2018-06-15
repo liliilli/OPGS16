@@ -58,7 +58,7 @@ namespace opgs16::manager::resource {
 
 ///
 /// @brief
-/// Empty already allocated resources and load resource with file path.
+/// IsSceneEmpty already allocated resources and load resource with file path.
 /// 
 /// @param[in] file_path File path to load resource metadata.
 /// @return success or failure flag.

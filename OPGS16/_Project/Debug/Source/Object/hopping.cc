@@ -37,10 +37,8 @@ Hopping::Hopping() {
 }
 
 void Hopping::Render() {
-  using opgs16::manager::MSceneManager;
-  auto PVM =
-      MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix()
-      * GetModelMatrix();
+  using opgs16::manager::scene::GetPresentScenePvMatrix;
+  auto PVM = GetPresentScenePvMatrix() * GetModelMatrix();
 
   m_wrapper->SetUniformValue<glm::mat4>("projection", PVM);
   using opgs16::component::CSprite2DRenderer;

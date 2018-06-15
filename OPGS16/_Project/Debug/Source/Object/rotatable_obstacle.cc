@@ -42,11 +42,11 @@ RotatableObject::RotatableObject() {
 }
 
 void RotatableObject::Render() {
-  using opgs16::manager::MSceneManager;
+  using opgs16::manager::scene::GetPresentScenePvMatrix;
   using opgs16::component::CSprite2DRenderer;
 
   m_wrapper->SetUniformValue<glm::mat4>("projection",
-      MSceneManager::Instance().PresentScene()->GetMainCamera()->PvMatrix() * GetModelMatrix());
+    GetPresentScenePvMatrix() * GetModelMatrix());
   GetComponent<CSprite2DRenderer>()->RenderSprite();
 }
 

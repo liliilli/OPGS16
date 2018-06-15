@@ -21,10 +21,20 @@
 
 #include <memory>
 
-#include <Core/application.h>   /// ::opgs16::MApplication
-#include <Element/scene.h>      /// ::opgs16::element::CScene
+#include <glm/fwd.hpp>
+/// ::opgs16::entry namespace
+#include <Core/application.h>
+/// ::opgs16::element::CScene
+#include <Element/scene.h>
+/// Type checking tempaltes
+#include <Helper/template.h>
 
-#include <Helper/template.h>    /// Type checking tempaltes
+namespace opgs16::manager::scene {
+
+/// Types
+using TSceneStack = std::vector<std::unique_ptr<opgs16::element::CScene>>;
+
+} /// ::opgs16::manager::scene namespace
 
 //!
 //! Forward declaration.
@@ -32,13 +42,38 @@
 
 namespace opgs16::manager::scene::__ {
 
+///
+/// @brief
+/// Get internal scene container.
+///
+TSceneStack& Get();
+
+///
+/// @brief
+/// Release all resource used in scene,
+/// prevent runtime error and resource memory leak.
+///
+void ReleaseAllResources();
+
+///
+/// @brief
+/// Replce scene internally. this function must not be called outside but using
+/// using::ReplaceScene().
+///
+/// @tparam TTy Scene type to replace.
+///
 template <
   class TTy,
   typename = std::enable_if_t<IsCSceneBase<TTy>>
 >
 void PrivateReplaceScene();
 
-}
+///
+/// @brief
+///
+void PrivatePopScene();
+
+} /// ::opgs16::manager::scene::__ namespace
 
 //!
 //! Implementation.
@@ -49,9 +84,6 @@ void PrivateReplaceScene();
 /// @brief Manager class manages game scene.
 ///
 namespace opgs16::manager::scene {
-
-/// Types
-using TSceneStack = std::vector<std::unique_ptr<opgs16::element::CScene>>;
 
 ///
 /// @brief
@@ -101,8 +133,8 @@ void PopScene();
 void InitiateTopScene();
 
 ///
-/// @brief
-/// @return
+/// @brief Return loaded scene list.
+/// @return Reference of scene list having been loaded.
 ///
 TSceneStack& GetLoadedSceneList() noexcept;
 
@@ -110,36 +142,27 @@ TSceneStack& GetLoadedSceneList() noexcept;
 /// @brief Get top scene's pointer.
 /// @return The pointer of top scene, if application has no scene return nullptr
 ///
-element::CScene* PresentScene();
+element::CScene* GetPresentScene();
+
+///
+/// @brief Check if scene list is empty.
+/// @return
+///
+bool IsSceneEmpty() noexcept;
 
 ///
 /// @brief
-/// @return
+/// Helper function which gets projection * view matrix from present scene.
+/// If there is no scene, just return undefined behaviour.
 ///
-bool Empty() noexcept;
+/// @retrun Const reference of pv matrix.
+///
+const glm::mat4& GetPresentScenePvMatrix();
 
 } /// ::opgs16::manager::scene namespace
 
 namespace opgs16::manager::scene::__ {
 
-///
-/// @brief
-///
-TSceneStack& Get();
-
-///
-/// @brief
-/// Release all resource used in scene,
-/// prevent runtime error and resource memory leak.
-///
-void ReleaseAllResources();
-
-///
-/// @brief
-///
-/// @tparam TTy
-///
-///
 template <class TTy, typename>
 void PrivateReplaceScene() {
   // Purify remain resources.
@@ -152,11 +175,6 @@ void PrivateReplaceScene() {
   PushScene<TTy>();
   InitiateTopScene();
 }
-
-///
-/// @brief
-///
-void PrivatePopScene();
 
 } /// private internal namespace
 

@@ -15,7 +15,10 @@
 /// 2018-05-19 Change singleton structure to namespace structure.
 ///
 
-#include <Core\application.h>   /// Header file
+/// Header file
+#include <Core/application.h>
+
+#include <stack>
 
 #include <Manager\font_manager.h>
 #include <Manager\input_manager.h>
@@ -98,7 +101,6 @@ constexpr float k_fps_count = 60.f;
 GLFWwindow* m_window = nullptr;
 
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-opgs16::manager::MSceneManager* m_scene_manager = nullptr;
 opgs16::manager::MSoundManager* m_sound_manager = nullptr;
 opgs16::manager::MTimeManager* m_time_manager = nullptr;
 opgs16::manager::MTimerManager* m_timer_manager = nullptr;
@@ -261,7 +263,6 @@ void Initiate() {
   manager::object::Initiate();
   manager::font::Initiate();
 
-  m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
   m_time_manager = &manager::MTimeManager::Instance();
   m_timer_manager = &manager::MTimerManager::Instance();
@@ -470,12 +471,12 @@ void Update() {
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
   case _internal::EGameStatus::MENU:
-    if (!m_scene_manager->Empty()) {
+    if (!manager::scene::IsSceneEmpty()) {
       // pre-work such as Delete object, Replace object etc.
       manager::object::Update();
 
       // Update
-      m_scene_manager->PresentScene()->Update();
+      manager::scene::GetPresentScene()->Update();
       manager::physics::Update();
     }
     break;
@@ -523,7 +524,7 @@ void InputGlobal() {
 
 void Draw() {
   // If there is no scene, do not rendering anything.
-  if (!m_scene_manager->Empty()) {
+  if (!manager::scene::IsSceneEmpty()) {
     glViewport(0, 0,
                SGlobalSetting::ScreenWidth(),
                SGlobalSetting::ScreenHeight());
@@ -537,7 +538,7 @@ void Draw() {
     else
       m_pp_manager->BindSequence(0);
 
-    m_scene_manager->PresentScene()->Draw();
+    manager::scene::GetPresentScene()->Draw();
     manager::object::Render();
 
     if (m_setting->CollisionAABBBoxDisplay() == Switch::ON) {

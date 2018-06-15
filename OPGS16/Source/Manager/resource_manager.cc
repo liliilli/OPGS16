@@ -743,7 +743,7 @@ opgs16::resource::SAnimation MakeAnimationContainer(
   unsigned total_cell{ 0 }, total_time{ 0 };
   std::string line;
   while (std::getline(animation_file, line)) {
-    if (line.empty() || line[0] == '#') continue; /*! Empty line || Continue */
+    if (line.empty() || line[0] == '#') continue; /*! IsSceneEmpty line || Continue */
     std::stringstream animation_stream{ line };
     std::string texture2d_name; unsigned index, time_milli;
     animation_stream >> texture2d_name >> index >> time_milli;
