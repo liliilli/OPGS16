@@ -67,7 +67,7 @@ void TextScript::Start() {
   }
 }
 
-void TextScript::Update() {
+void TextScript::Update(float delta_time) {
 
 }
 

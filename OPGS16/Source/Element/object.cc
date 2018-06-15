@@ -40,7 +40,7 @@ using _internal::CObjectImpl;
 
 CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } { }
 
-void CObject::Update() {
+void CObject::Update(float delta_time) {
   if (m_data && GetActive()) {
     LocalUpdate();
 
@@ -65,13 +65,13 @@ void CObject::Update() {
         }
       }
 
-      component->Update();
+      component->Update(delta_time);
     }
 
     for (auto& child : m_children) {
       // If child.second is not emtpy and activated.
       if (child.second && child.second->GetActive())
-        child.second->Update();
+        child.second->Update(delta_time);
     }
   }
 }

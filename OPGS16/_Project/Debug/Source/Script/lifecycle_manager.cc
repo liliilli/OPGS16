@@ -38,7 +38,7 @@ void LifecycleManager::Start() {
   M_SET_TIMER(m_spawn_timer, 250, true, this, &LifecycleManager::SpawnObject);
 }
 
-void LifecycleManager::Update() {
+void LifecycleManager::Update(float delta_time) {
   // Do nothing.
 }
 

@@ -144,7 +144,7 @@ private:
     static bool s_main_camera_initiated;/** Check flag if main camera is already initiated */
 
     /*! Inherited via component::CComponent */
-    void Update() override;
+    void Update(float delta_time) override;
 
 private:
     /*! Create members related to type hash value. */

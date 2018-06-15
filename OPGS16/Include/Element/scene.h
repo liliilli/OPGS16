@@ -75,7 +75,7 @@ public:
   /// This method is able to overriding,
   /// but actual default behavior is just call ->Update() of m_object_list.
   ///
-  virtual void Update();
+  virtual void Update(float delta_time);
 
   /*! Draw scene */
   void Draw() {

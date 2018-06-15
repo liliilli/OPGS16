@@ -60,7 +60,7 @@ public:
     CComponent(element::CObject& bind_object) : m_object{ bind_object } {};
     virtual ~CComponent() = default;
 
-    virtual void Update() = 0;
+    virtual void Update(float delta_time) = 0;
 
     /*!
      * @brief Return true/false flag whether or not your finding class is this.

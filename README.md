@@ -116,7 +116,6 @@ Updated 2018.05.23
   - [ ] Release mode 동작 테스트+'
   - [ ] VAO, VBO 와 같은 메쉬 버퍼 컨테이너 내부 관리자 만들기. 및 RAII 로 메모리 누수 처리하면서...
     - [ ] 3D 는 아직 하지 말기. 2D 쿼드만 처리하거나, 아니면 2D 형태만 할 수 있도록. 하지만 2D 메쉬도 결국 3D 이기 때문에... 등등.
-  - [ ] Sound 시스템 Mute 시스템 구현하기
 - [ ] Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초

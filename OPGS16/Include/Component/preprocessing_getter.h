@@ -12,7 +12,7 @@
 * @file Component\preprocessing_getter.h
 *
 * @log
-* 2018-04-29 Create file. 
+* 2018-04-29 Create file.
 *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /// ::opgs16::component::_internal::CComponent
@@ -23,13 +23,13 @@ namespace opgs16::component {
 
 /*!
  * @class CPreProcessingGetter
- * @brief 
+ * @brief
  */
 class CPreProcessingGetter final : public _internal::CComponent {
 public:
     explicit CPreProcessingGetter(element::CObject& bind_object, const char* preprocessing_container_name);
 
-    void Update() override final {};
+    void Update(float delta_time) override final {};
 
     unsigned GetOutputTextureId();
 

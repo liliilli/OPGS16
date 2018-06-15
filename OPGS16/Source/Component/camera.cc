@@ -70,7 +70,7 @@ CCamera::CCamera(element::CObject& bound_obj, ViewType view_type, CameraType cam
         break;
 	}
     m_view_changed = true; m_proj_changed = true;
-    Update();
+    Update(0);
 
     if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
         s_main_camera_initiated = true;
@@ -125,7 +125,7 @@ void CCamera::SetFov(const float value) {
     }
 }
 
-void CCamera::Update() {
+void CCamera::Update(float) {
     if (m_view_changed || m_proj_changed) {
         if (m_view_changed) {
             m_view = glm::lookAt(m_world, m_world_look, y_direction);

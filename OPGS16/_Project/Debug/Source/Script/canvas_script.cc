@@ -91,7 +91,7 @@ void DebugCanvasScript::Start() {
   GenerateSound("Beep3");
 }
 
-void DebugCanvasScript::Update() {
+void DebugCanvasScript::Update(float delta_time) {
   using manager::sound::IsSoundPlaying;
   using phitos::enums::EActivated;
   Input();

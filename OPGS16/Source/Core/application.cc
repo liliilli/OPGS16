@@ -20,6 +20,9 @@
 
 #include <stack>
 
+#include <gl/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <Manager\font_manager.h>
 #include <Manager\input_manager.h>
 #include <Manager/mesh_manager.h>
@@ -160,7 +163,9 @@ void InitiatePostProcessingEffects();
 /// @brief
 /// The method update components movement, UI refresh, and so on.
 ///
-void Update();
+/// @param[in] delta_time Delta time of each frame.
+///
+void Update(float delta_time);
 
 ///
 /// @brief
@@ -263,15 +268,15 @@ void Initiate() {
   manager::font::Initiate();
   manager::sound::__::Initiate();
 
-  m_time_manager = &manager::MTimeManager::Instance();
   m_timer_manager = &manager::MTimerManager::Instance();
 
   m_setting = std::make_unique<SGlobalSetting>();
   PushStatus(_internal::EGameStatus::INIT);
 
-  // Initialize resource list.
-  m_time_manager->SetFps(k_fps_count);
+  manager::time::SetFps(k_fps_count);
+  manager::time::SetVsync(phitos::enums::ESwitch::Off);
 
+  // Initialize resource list.
   InitiateDefaultFonts();
   InitiatePostProcessingEffects();
 #if defined(_OPGS16_DEBUG_OPTION)
@@ -429,13 +434,13 @@ void Run() {
 
   while (!glfwWindowShouldClose(m_window)) {
     // Check time ticking following given frame per second.
-    m_time_manager->Update();
+    manager::time::Update();
 
-    if (m_time_manager->Ticked()) {
+    if (manager::time::Ticked()) {
       // Timer alarm event checking.
       m_timer_manager->Update();
 
-      Update();
+      Update(manager::time::GetDeltaTime());
       Draw();
     }
   }
@@ -450,7 +455,7 @@ void Run() {
   manager::mesh::Shutdown();
 }
 
-void Update() {
+void Update(float delta_time) {
   // If callback is being bound,
   // call function once and terminate callback function.
   if (m_on_before_update_callback) {
@@ -477,7 +482,7 @@ void Update() {
       manager::object::Update();
 
       // Update
-      manager::scene::GetPresentScene()->Update();
+      manager::scene::GetPresentScene()->Update(delta_time);
       manager::physics::Update();
     }
     break;
@@ -486,7 +491,7 @@ void Update() {
 
 #if defined(_OPGS16_DEBUG_OPTION)
   if (IsSwitchOn(m_setting->DebugMode()))
-    m_debug_ui_canvas->Update();
+    m_debug_ui_canvas->Update(delta_time);
   if (IsSwitchOn(m_setting->CollisionAABBBoxDisplay()))
     manager::physics::RenderCollisionBox();
 #endif

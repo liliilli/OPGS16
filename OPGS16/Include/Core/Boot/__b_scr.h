@@ -48,7 +48,7 @@ namespace sample {
 class __B_SCR final : public component::CScriptFrame {
 public:
     __B_SCR(opgs16::element::CObject& obj);
-    void Update() override final {};
+    void Update(float delta_time) override final {};
 
 private:
     element::CTimerHandle m_timer;

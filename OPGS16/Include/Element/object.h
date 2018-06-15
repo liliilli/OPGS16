@@ -100,7 +100,9 @@ public:
   /// @brief
   /// Update components of object.
   ///
-  void Update();
+  /// @param[in] delta_time Elapsed delta time of this update frame.
+  ///
+  void Update(float delta_time);
 
   /*! Calls children to draw or render something it has.  */
   void Draw() {

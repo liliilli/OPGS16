@@ -20,10 +20,10 @@
 
 #include <Manager\input_manager.h>  /// Header file
 
-#include <fstream> 
+#include <fstream>
 #include <sstream>
-#include <string_view>  
-#include <unordered_map>	
+#include <string_view>
+#include <unordered_map>
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
@@ -61,16 +61,16 @@ enum class EKeyExist : bool {
 
 ///
 /// @brief
-/// 
+///
 void ReadInputFile(const char* file_path);
 
 ///
-/// @brief 
-/// Let each key value where key status is KeyInputStatus::RELEASED 
-/// falling down into dead_zone and change status into KeyInputStatus::NEUTRAL 
+/// @brief
+/// Let each key value where key status is KeyInputStatus::RELEASED
+/// falling down into dead_zone and change status into KeyInputStatus::NEUTRAL
 /// along with neutral_gravity.
 ///
-/// This methods gets delta time from Application time data, 
+/// This methods gets delta time from Application time data,
 /// multiply it with gravity and fall it down to 0 (neutral value).
 ///
 /// @param[in] key_info Key information to apply.
@@ -85,7 +85,7 @@ void ProceedGravity(opgs16::manager::_internal::BindingKeyInfo& key_info);
 ///
 /// @param[in] info
 ///
-bool ProceedKeyInit(std::stringstream& stream, 
+bool ProceedKeyInit(std::stringstream& stream,
                     opgs16::manager::_internal::BindingKeyInfo& info);
 
 ///
@@ -96,14 +96,14 @@ bool ProceedKeyInit(std::stringstream& stream,
 ///
 /// @param[in] info
 ///
-bool ProceedKeyInput(std::stringstream& stream, 
+bool ProceedKeyInput(std::stringstream& stream,
                      opgs16::manager::_internal::BindingKeyInfo& info);
 
 ///
 /// @brief
-/// 
-/// @param[in] key 
-/// 
+///
+/// @param[in] key
+///
 EKeyExist IsKeyExist(const std::string& key);
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
@@ -111,18 +111,18 @@ EKeyExist IsKeyExist(const std::string& key);
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 ///
-/// This namespace is integrity check variable container for 
+/// This namespace is integrity check variable container for
 /// checking runtime caveats of source code.
 ///
 namespace {
 using opgs16::debug::EInitiated;
 
 EInitiated m_initiated = EInitiated::NotInitiated;
-  
+
 } /// unnamed namespace
 
 ///
-/// This namespace stores variables or 
+/// This namespace stores variables or
 /// constexpr variables to be used by functions.
 ///
 namespace {
@@ -140,7 +140,7 @@ enum class LoadStatus {
 };
 
 // Window handle pointer
-GLFWwindow* m_window;       
+GLFWwindow* m_window;
 GLFWcursor* m_cursor = nullptr;
 
 key_map m_key_inputs;
@@ -164,7 +164,7 @@ EKeyExist IsKeyExist(const std::string& key) {
 /// @param[in] action Key pressed, released, keeping pushed states.
 /// @param[in] mod Not be used now.
 ///
-void __InputKeyCallback(GLFWwindow* window, 
+void __InputKeyCallback(GLFWwindow* window,
                         int key, int scancode, int action, int mod) {
   PUSH_LOG_INFO_EXT("Key input : {0}, {1}", key, action);
 #if defined(false)
@@ -179,7 +179,7 @@ void __InputKeyCallback(GLFWwindow* window,
 ///
 /// In this now, just print how much cursor moved on window.
 /// origin is left, down (0, 0). max size is (256, 224).
-/// 
+///
 /// @param[in] window GLFW window instance.
 /// @param[in] xpos x coordinate position value.
 /// @param[in] ypos y coordinate position value.
@@ -190,9 +190,9 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
 
   const auto regulated_xpos = xpos / scale_value;
   const auto regulated_ypos = ypos / scale_value;
-  
+
   PUSH_LOG_INFO_EXT(
-      "Mouse position update : O {0:2}, {1:2}, R {2:2}, {3:2}", 
+      "Mouse position update : O {0:2}, {1:2}, R {2:2}, {3:2}",
       xpos, ypos, regulated_xpos, regulated_ypos);
 }
 
@@ -206,8 +206,8 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
 /// @param[in] button Mouse button
 /// @param[in] action Mouse button action.
 /// @param[in] modes Mouse modifier bits.
-/// 
-void __MouseInputCallback(GLFWwindow* window, 
+///
+void __MouseInputCallback(GLFWwindow* window,
                           int button, int action, int modes) {
   PUSH_LOG_INFO_EXT(
       "Mouse input update [Button : {0}], [Action : {1}]", button, action);
@@ -273,7 +273,7 @@ bool IsKeyPressed(const std::string& key) {
   switch (key_info.key_status) {
   case BindingKeyInfo::KeyInputStatus::NEG_PRESSED:
   case BindingKeyInfo::KeyInputStatus::POS_PRESSED:
-    if (!key_info.stick_key) 
+    if (!key_info.stick_key)
       return true;
 
     // Key has stick key property.
@@ -281,9 +281,9 @@ bool IsKeyPressed(const std::string& key) {
       key_info.send_signal = true;
       return true;
     }
-    else 
+    else
       return false;
-  default: 
+  default:
     return false;
   }
 }
@@ -301,7 +301,7 @@ bool IsKeyReleased(const std::string& key) {
   case BindingKeyInfo::KeyInputStatus::NEUTRAL:
   case BindingKeyInfo::KeyInputStatus::RELEASED:
     return true;
-  default: 
+  default:
     return false;
   }
 }
@@ -409,16 +409,16 @@ void ReadInputFile(const char* file_path) {
 
 bool ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& info) {
   // Check input style (KB, MS, JS)
-  std::string input_style; 
+  std::string input_style;
   stream >> input_style;
 
   if (!(input_style == "KB" || input_style == "MS" || input_style == "JS"))
     assert(false);
-  else 
+  else
     info.key_type = opgs16::manager::_internal::GetKeyType(input_style);
 
   // Check token name already exist in m_key_inputs
-  std::string key; 
+  std::string key;
   stream >> key;
 
   if (IsKeyExist(key) == EKeyExist::Exist)
@@ -430,23 +430,23 @@ bool ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& info) {
 }
 
 bool ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& info) {
-  std::string token; 
+  std::string token;
   stream >> token;
 
   if (token == "+" || token == "-") {
     int* bind_pos;
-    if (token == "+") 
+    if (token == "+")
       bind_pos = &info.pos;
-    else 
+    else
       bind_pos = &info.neg;
 
-    int key_token; 
+    int key_token;
     stream >> key_token;
     *bind_pos = key_token;
     return true;
   }
   else if (token == "g") {
-    float gravity; 
+    float gravity;
     stream >> gravity;
     info.neutral_gravity = gravity;
     return true;
@@ -457,7 +457,7 @@ bool ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& info) {
 
 
 void ProceedGravity(BindingKeyInfo & key_info) {
-	const auto dt = opgs16::manager::MTimeManager::Instance().GetDeltaTime();
+	const auto dt = opgs16::manager::time::GetDeltaTime();
 	auto value = key_info.value;
 	key_info.send_signal = false;
 

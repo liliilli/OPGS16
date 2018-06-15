@@ -35,7 +35,7 @@ void CRigidbody2D::Update() {
 
   // Accelation
   if (m_physics) {
-    const auto delta = manager::MTimeManager::Instance().GetDeltaTime();
+    const auto delta = manager::time::GetDeltaTime();
     m_accelation[1] = -m_gravity;
     m_velocity += m_accelation * delta;
     m_movement = m_velocity * delta;

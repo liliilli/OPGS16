@@ -124,7 +124,7 @@ public:
   }
 
 private:
-  void Update() override final;
+  void Update(float delta_time) override final;
 
   ///
   /// @brief

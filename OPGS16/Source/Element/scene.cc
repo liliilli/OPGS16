@@ -40,10 +40,10 @@
 namespace opgs16 {
 namespace element {
 
-void CScene::Update() {
+void CScene::Update(float delta_time) {
 	for (auto& object : m_object_list) {
 		if (object.second->GetActive())
-			object.second->Update();
+			object.second->Update(delta_time);
 	}
 }
 

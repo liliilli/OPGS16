@@ -69,7 +69,7 @@ CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer,
     }
 }
 
-void CAnimator::Update() {
+void CAnimator::Update(float) {
     switch (m_state) {
     default: /*! Do nothing */ break;;
     case AnimatorState::ANIMATION_START: break;

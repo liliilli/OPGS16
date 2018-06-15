@@ -44,7 +44,7 @@ CRigidbody2DCompact::~CRigidbody2DCompact() {
   }
 }
 
-void CRigidbody2DCompact::Update() {
+void CRigidbody2DCompact::Update(float) {
   if (m_rigidbody) {
     btVector3 _min, _max;
     m_rigidbody->getAabb(_min, _max);

@@ -25,7 +25,7 @@ public:
 private:
   void Initiate() override final;
   void Start() override final;
-  void Update() override final;
+  void Update(float delta_time) override final;
   void Destroy() override final;
 
   void SpawnObject();

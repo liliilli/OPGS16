@@ -38,7 +38,7 @@
  */
 
 /// ::opgs16::component::_internal::AnimatorState
-#include <Component\Internal\animator_internal.h> 
+#include <Component\Internal\animator_internal.h>
 /// ::opgs16::component::_internal::CComponent
 #include <Component\Internal\component.h>
 #include <Component\Internal\component_macro.h> /// Component Macroes
@@ -59,7 +59,7 @@ public:
                        const std::string& load_name, Switch loop = Switch::OFF);
 
     /*! Update animator each frame. */
-    virtual void Update() override final;
+    void Update(float delta_time) override final;
 
 private:
     CSprite2DRenderer& m_renderer;

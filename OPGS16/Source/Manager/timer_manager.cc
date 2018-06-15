@@ -44,7 +44,7 @@ using _internal::Status;
 
 void MTimerManager::Update() {
     /*! Iteration & Checking */
-    const auto time_quantum = MTimeManager::Instance().GetDeltaTime();
+    const auto time_quantum = manager::time::GetDeltaTime();
     for (auto& [__, timer] : m_timer_container) {
         if (timer.m_status == Status::ACTIVATED)
             timer.m_handle->Try(time_quantum);

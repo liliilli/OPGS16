@@ -74,7 +74,7 @@ void Hopping::Start() {
               &Hopping::DestroySelf);
 }
 
-void Hopping::Update() {
+void Hopping::Update(float delta_time) {
   using EDirection = opgs16::element::_internal::EDirection;
   auto& object = GetObject();
 

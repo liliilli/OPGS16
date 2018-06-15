@@ -47,7 +47,7 @@ namespace opgs16::component {
 ///
 class CScriptFrame : public _internal::CComponent {
 public:
-  friend void element::CObject::Update();
+  friend void element::CObject::Update(float delta_time);
 
 public:
   CScriptFrame(element::CObject& bound_obj) : CComponent{ bound_obj } {}

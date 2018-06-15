@@ -32,18 +32,18 @@ DebugUiManager::DebugUiManager(opgs16::element::CObject& obj,
 
 void DebugUiManager::Start() {}
 
-void DebugUiManager::Update() {
-    if (m_fps) {
-        std::ostringstream str;
-        str << std::setprecision(4) << opgs16::manager::MTimeManager::Instance().GetFpsSeconds();
-        m_fps->SetText("Fps : " + str.str());
-    }
+void DebugUiManager::Update(float) {
+  if (m_fps) {
+    std::ostringstream str;
+    str << std::setprecision(4) << opgs16::manager::time::GetPresentFps();
+    m_fps->SetText("Fps : " + str.str());
+  }
 
-    if (m_date) {
-        auto timepoint = std::chrono::system_clock::now();
-        std::time_t time_struct = std::chrono::system_clock::to_time_t(timepoint);
-        std::ostringstream stream;
-        stream << std::put_time(std::localtime(&time_struct), "%F %T");
-        m_date->SetText(stream.str());
-    }
+  if (m_date) {
+    auto timepoint = std::chrono::system_clock::now();
+    std::time_t time_struct = std::chrono::system_clock::to_time_t(timepoint);
+    std::ostringstream stream;
+    stream << std::put_time(std::localtime(&time_struct), "%F %T");
+    m_date->SetText(stream.str());
+  }
 }

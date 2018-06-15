@@ -22,10 +22,10 @@ public:
                    opgs16::element::canvas::CText* const,
                    opgs16::element::canvas::CText* const);
 
-    virtual void Update() override final;
+    void Update(float delta_time) override final;
 
 private:
-    virtual void Start() override final;
+    void Start() override final;
 
     /*! This components must not be a dangling pointer! */
     opgs16::element::canvas::CText* m_fps;
