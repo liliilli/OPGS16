@@ -1,72 +1,100 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!
- * @file System/Manager/Private/scene_manager.cc
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-04 Refactoring.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Manager/scene_manager.cc
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-04 Refactoring.
+///
 
-#include <Manager\scene_manager.h>      /// Header file
+/// Header file
+#include <Manager/scene_manager.h>
 
 /// ::opgs16::manager::MPhysicsManager
-#include <Manager\physics_manager.h>
+#include <Manager/physics_manager.h>
 /// ::opgs16::manager::MTimerManager
-#include <Manager\timer_manager.h>
+#include <Manager/timer_manager.h>
 /// ::opgs16::manager::MTextureMangaer
-#include <Manager\texture_manager.h>
+#include <Manager/texture_manager.h>
 /// ::opgs16::manager::MObjectManager
-#include <Manager\object_manager.h>
+#include <Manager/object_manager.h>
 /// ::opgs16::manager::MShaderManager
-#include <Manager\shader_manager.h>
+#include <Manager/shader_manager.h>
 /// ::opgs16::manager::MSoundManager
-#include <Manager\sound_manager.h>
+#include <Manager/sound_manager.h>
 
-namespace opgs16::manager {
+//!
+//! Datas
+//!
 
-void MSceneManager::PopScene() {
-    entry::SetOnBeforeUpdateCallback(
-        std::bind(&MSceneManager::PrivatePopScene, this));
+namespace {
+
+opgs16::manager::scene::TSceneStack m_scene_stack = {};
+
+} /// unnamed namespace
+
+//!
+//! Implemenation
+//!
+
+namespace opgs16::manager::scene {
+
+void PopScene() {
+  entry::SetOnBeforeUpdateCallback(std::bind(&__::PrivatePopScene));
 }
 
-void MSceneManager::ReleaseAllResources() const {
-    opgs16::manager::physics::Clear();
-    MTimerManager::Instance().Clear();    /*! precise */
-    MSoundManager::Instance().Clear();    /*! Not precise */
+void InitiateTopScene() {
+  return m_scene_stack.rbegin()->Initiate();
+}
+
+TSceneStack& GetLoadedSceneList() noexcept {
+  return m_scene_stack;
+}
+
+element::CScene* PresentScene() {
+  if (m_scene_stack.empty())
+    return nullptr;
+
+  return m_scene_stack.rbegin()->get();
+}
+
+bool Empty() noexcept {
+  return m_scene_stack.empty();
+}
+
+} /// ::opgs16::manager::scene namespace
+
+namespace opgs16::manager::scene::__ {
+
+TSceneStack& Get() {
+  return m_scene_stack;
+}
+
+void ReleaseAllResources() {
+  opgs16::manager::physics::Clear();
+  MTimerManager::Instance().Clear();    /*! precise */
+  MSoundManager::Instance().Clear();    /*! Not precise */
 #ifdef false
-    ShaderManager::Instance().Clear();   /*! Not implemented */
+  ShaderManager::Instance().Clear();   /*! Not implemented */
 #endif
-    TextureManager::Instance().Clear();  /*! Not precise? */
-    manager::object::ClearAll();
+  TextureManager::Instance().Clear();  /*! Not precise? */
+  manager::object::ClearAll();
 }
 
-MSceneManager::~MSceneManager() = default;
+void PrivatePopScene() {
+  ReleaseAllResources();
 
-} /*! opgs16::manager */
+  if (!m_scene_stack.empty())
+    m_scene_stack.pop_back();
+
+  if (m_scene_stack.size() >= 1)
+    InitiateTopScene();
+}
+
+} /// ::opgs16::manager::scene::__ namespace
