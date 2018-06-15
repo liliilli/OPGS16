@@ -326,7 +326,7 @@
     <ClInclude Include="Include\Manager\Internal\input_internal.h" />
     <ClInclude Include="Include\Manager\Internal\physics_internal.h" />
     <ClInclude Include="Include\Manager\Internal\resource_internal.h" />
-    <ClInclude Include="Include\Manager\Internal\sound_internal.h" />
+    <ClInclude Include="Include\Manager\Internal\sound_info.h" />
     <ClInclude Include="Include\Manager\Internal\timer_internal.h" />
     <ClInclude Include="Include\Manager\prerendering_manager.h" />
     <ClInclude Include="Include\Manager\resource_type.h" />
@@ -389,6 +389,7 @@
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\initiated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\success.h" />
+    <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\switch.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Types\ptTByte.h" />
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
   </ItemGroup>

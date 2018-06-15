@@ -101,7 +101,6 @@ constexpr float k_fps_count = 60.f;
 GLFWwindow* m_window = nullptr;
 
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-opgs16::manager::MSoundManager* m_sound_manager = nullptr;
 opgs16::manager::MTimeManager* m_time_manager = nullptr;
 opgs16::manager::MTimerManager* m_timer_manager = nullptr;
 
@@ -262,8 +261,8 @@ void Initiate() {
   manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
+  manager::sound::__::Initiate();
 
-  m_sound_manager = &manager::MSoundManager::Instance();
   m_time_manager = &manager::MTimeManager::Instance();
   m_timer_manager = &manager::MTimerManager::Instance();
 
@@ -272,7 +271,6 @@ void Initiate() {
 
   // Initialize resource list.
   m_time_manager->SetFps(k_fps_count);
-  m_sound_manager->ProcessInitialSetting();
 
   InitiateDefaultFonts();
   InitiatePostProcessingEffects();
@@ -445,6 +443,8 @@ void Run() {
   // Must terminate glfw window
   glfwTerminate();
 
+  manager::sound::ReleaseAllSounds();
+  manager::sound::__::Shutdown();
   manager::scene::__::Shutdown();
   manager::_internal::vao::Shutdown();
   manager::mesh::Shutdown();
