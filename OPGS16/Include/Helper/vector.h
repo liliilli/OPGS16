@@ -9,6 +9,9 @@
 /// @author
 ///
 
+#include <array>
+
+#include <assimp/vector3.h>
 #include <LinearMath/btVector3.h>
 
 namespace opgs16 {
@@ -19,10 +22,26 @@ namespace opgs16 {
 /// @brief
 ///
 struct DVector2 {
-  float x, y;
+  float x = 0.f;
+  float y = 0.f;
+
+  DVector2() noexcept {};
+
+  DVector2(float x, float y) :
+      x{x}, y{y} {};
 
   operator btVector3() const noexcept {
     return btVector3{x, y, 0.f};
+  }
+
+  DVector2(const aiVector3D& value) noexcept :
+    x{value.x}, y{value.y} {};
+
+  DVector2& operator=(const aiVector3D& value) noexcept {
+    x = value.x;
+    y = value.y;
+
+    return *this;
   }
 };
 
@@ -33,7 +52,32 @@ struct DVector2 {
 /// Helper vector class.
 ///
 struct DVector3 {
-  float x, y, z;
+  float x = 0.f;
+  float y = 0.f;
+  float z = 0.f;
+
+  DVector3() noexcept {};
+
+  DVector3(float x, float y, float z) noexcept : x(x), y(y), z(z) {};
+
+  DVector3(const aiVector3D& value) noexcept :
+      x{value.x}, y{value.y}, z{value.z} {}
+
+  ///
+  /// @brief
+  /// Return sequence data of this instance.
+  ///
+  std::array<float, 3> Data() const noexcept {
+    return {x, y, z};
+  }
+
+  DVector3& operator=(const aiVector3D& value) noexcept {
+    x = value.x;
+    y = value.y;
+    z = value.z;
+
+    return *this;
+  }
 
   operator btVector3() const noexcept {
     return btVector3(x, y, z);

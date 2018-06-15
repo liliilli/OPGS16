@@ -62,7 +62,8 @@ void InitiateBuiltinModelMeshes() {
       "Duplicated built-in model initiation must be called only once.");
 
   using opgs16::builtin::model::BModel2DQuad;
-  m_model_map.try_emplace(BModel2DQuad::m_model_name.data(), BModel2DQuad{});
+  m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad, BModel2DQuad{});
+  m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad_dynamic, BModel2DQuad{});
 
   b_builtin_initiated = EInitiated::Initiated;
 }
@@ -80,7 +81,6 @@ void Initiate() {
       "Duplicated mesh manager initiation is prohibited.");
 
   InitiateBuiltinModelMeshes();
-
   // Do not change the order.
   b_initiated = EInitiated::Initiated;
 }
@@ -105,6 +105,20 @@ phitos::enums::ESucceed GenerateModel(const std::string& resource_model_name) {
 
 std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
 GenerateVaoItemsFromModel(const std::string& model_name) {
+  using element::_internal::EVboBufferType;
+  using element::_internal::EEboBufferType;
+
+  return GenerateVaoItemsFromModelExt(model_name,
+                                      EVboBufferType::StaticDraw,
+                                      EEboBufferType::StaticDraw);
+}
+
+
+std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
+GenerateVaoItemsFromModelExt(
+    const std::string& model_name,
+    element::_internal::EVboBufferType vbo_type,
+    element::_internal::EEboBufferType ebo_type) {
   using phitos::enums::EActivated;
   using element::_internal::CInternalVertexArrayObject;
   using element::_internal::EVboBufferType;
@@ -126,13 +140,10 @@ GenerateVaoItemsFromModel(const std::string& model_name) {
     const auto is_indice_activated = mesh.IsIndiceActivated();
     const auto ebo_size = PtTByte{mesh.GetByteSizeOfIndices()};
     if (is_indice_activated == EActivated::Activated) {
-      vao_list.emplace_back(
-          EVboBufferType::StaticDraw, PtTByte{vbo_size},
-          EEboBufferType::StaticDraw, PtTByte{ebo_size});
+      vao_list.emplace_back(vbo_type, PtTByte{vbo_size}, ebo_type, PtTByte{ebo_size});
     }
     else {
-      vao_list.emplace_back(
-          EVboBufferType::StaticDraw, PtTByte{vbo_size});
+      vao_list.emplace_back(vbo_type, PtTByte{vbo_size});
     }
 
     auto last_vao_item = vao_list.rbegin();

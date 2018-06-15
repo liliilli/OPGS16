@@ -16,6 +16,7 @@
 /// 2018-05-25 Recode singleton class to namespace structure.
 ///
 /// @todo Improve performance object destruction.
+/// @todo Implement AABB 3D rendering sequence.
 ///
 
 /// Header file
@@ -26,6 +27,8 @@
 #include <stack>
 #include <vector>
 
+#include <Phitos/Dbg/assert.h>
+
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// Import logger
@@ -34,13 +37,18 @@
 #include <Helper/assert.h>
 /// ::opgs16::manager::MSceneManager
 #include <Manager/scene_manager.h>
-/// ::opgs16::manager::MSettingManager
+/// ::opgs16::manager::setting
 #include <Manager/setting_manager.h>
+/// ::opgs16::manager::shader namespace
+#include <Manager/shader_manager.h>
 /// ::opgs16::debug error messages.
 #include <Manager/Internal/error_message.h>
 /// ::opgs16::manager::_internal boolean enum flags
 #include <Manager/Internal/flag.h>
-#include <Phitos/Dbg/assert.h>
+///
+#include <Shader/shader_wrapper.h>
+/// ::opgs16::builtin::SAABB2DShader
+#include <Shader/Default/aabb_2d_line.h>
 
 using object_ptr = std::unique_ptr<opgs16::element::CObject>;
 using object_raw = opgs16::element::CObject * ;
@@ -94,6 +102,10 @@ std::vector<std::list<object_raw>> m_rendering_list;
 std::list<opgs16::DAABBInfoBox> m_aabb_2d_list;
 std::list<opgs16::DAABBInfoBox> m_aabb_3d_list;
 
+/// AABB Wrapper
+opgs16::element::CShaderWrapper m_aabb_2d_wrapper;
+opgs16::element::CShaderWrapper m_aabb_3d_wrapper;
+
 } /// unnamed namespace
 
 namespace opgs16::manager::object {
@@ -104,6 +116,9 @@ void Initiate() {
   m_initiated = EInitiated::Initiated;
 
   m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
+
+  m_aabb_2d_wrapper.SetShader(
+      shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
 }
 
 void Update() {
@@ -124,16 +139,25 @@ void RenderAABB() {
   glDisable(GL_DEPTH_TEST);
 
   if (!m_aabb_2d_list.empty()) {
+    glLineWidth(2.f);
+    m_aabb_2d_wrapper.SetUniformValue("uColor", glm::vec3{0, 1, 0});
+    m_aabb_2d_wrapper.UseShader();
     for (const auto& _2d_aabb : m_aabb_2d_list) {
-
+#ifdef false
+      const auto rectangle_vectors = _2d_aabb.GetVertexPoints();
+      m_vao.Map(rectangle_vectors);
+      glBindVertexArray(m_vao.GetVao());
+      glDrawArrays(GL_LINE_LOOP, 0, 4);
+#endif
     }
 
+    glBindVertexArray(0);
     m_aabb_2d_list.clear();
   }
 
   if (!m_aabb_3d_list.empty()) {
     for (const auto& _3d_aabb : m_aabb_3d_list) {
-
+      PHITOS_NOT_IMPLEMENTED_ASSERT();
     }
 
     m_aabb_3d_list.clear();

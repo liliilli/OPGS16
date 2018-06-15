@@ -21,7 +21,7 @@
 
 #include <Shader\framebuffer.h> /// Header file
 /// ::opgs16::element::CVertexArrayObject
-#include <Frame\vertex_array_object.h>
+#include <Element/Internal/vertex_array_object.h>
 /// ::opgs16::manager::ShaderManager
 #include <Manager\shader_manager.h>
 /// ::opgs16::element::_internal namespace

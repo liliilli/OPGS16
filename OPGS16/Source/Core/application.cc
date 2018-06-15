@@ -51,11 +51,11 @@
 
 // @todo Adjust each project manifest file path not to write .. chars.
 
-#include <..\manifest.h>        /// ::opgs16::manifest
+#include <../manifest.h>        /// ::opgs16::manifest
 
-#include <Debug\debug_canvas.h>
+#include <Debug/debug_canvas.h>
 /// opgs16::manifest::sample::boot
-#include <Core\Boot\__boot.h>
+#include <Core/Boot/__boot.h>
 
 #if defined(_INITIAL_SCENE_INCLUDE_PATH)
 #include _INITIAL_SCENE_INCLUDE_PATH
@@ -86,6 +86,10 @@ EInitiated m_initiated  = EInitiated::NotInitiated;
 EOperated m_operated    = EOperated::NotOperated;
 } /// unnamed namespace
 
+//!
+//! Data
+//!
+
 namespace {
 
 constexpr float k_fps_count = 60.f;
@@ -94,10 +98,6 @@ constexpr float k_fps_count = 60.f;
 GLFWwindow* m_window = nullptr;
 
 opgs16::manager::MPostProcessingManager* m_pp_manager = nullptr;
-#if defined(false)
-opgs16::manager::MObjectManager* m_object_manager = nullptr;
-#endif
-opgs16::manager::MPhysicsManager* m_physics_manager = nullptr;
 opgs16::manager::MSceneManager* m_scene_manager = nullptr;
 opgs16::manager::MSoundManager* m_sound_manager = nullptr;
 opgs16::manager::MTimeManager* m_time_manager = nullptr;
@@ -131,13 +131,16 @@ namespace opgs16::entry {
 /// Forward declaration part
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
-
+///
+///
 GLFWwindow* InitApplication(const std::string& application_name);
 
-
+///
+///
 void PushStatus(_internal::EGameStatus status);
 
-
+///
+///
 void PopStatus();
 
 ///
@@ -159,12 +162,6 @@ void InitiatePostProcessingEffects();
 void Update();
 
 ///
-/// @deprecated
-/// @todo Remove due to confusion of OPGS16 script input check system.
-///
-void Input();
-
-///
 /// @brief
 /// The method calls scene to draw all m_object_list.
 ///
@@ -174,6 +171,9 @@ void Draw();
 ///
 void ChangeScalingOption(EScaleType value);
 
+///
+///
+///
 void InputGlobal();
 
 ///
@@ -252,12 +252,14 @@ void Initiate() {
 
   manager::setting::Initiate();
   manager::input::Initiate(m_window);
+
   manager::resource::ReadResourceFile("_resource.meta");
   manager::mesh::Initiate();
+  manager::_internal::vao::Initiate();
+
   manager::shader::Initiate();
   manager::object::Initiate();
   manager::font::Initiate();
-  manager::_internal::vao::Initiate();
 
   m_scene_manager = &manager::MSceneManager::Instance();
   m_sound_manager = &manager::MSoundManager::Instance();
@@ -266,8 +268,6 @@ void Initiate() {
 
   m_setting = std::make_unique<SGlobalSetting>();
   PushStatus(_internal::EGameStatus::INIT);
-
-  // Initialize Global Setting.
 
   // Initialize resource list.
   m_time_manager->SetFps(k_fps_count);
@@ -279,7 +279,7 @@ void Initiate() {
   InitiateDebugUi();
 #endif
 
-  /*! Set gl rendering options. */
+  // Set gl rendering options.
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
@@ -443,7 +443,9 @@ void Run() {
 
   // Must terminate glfw window
   glfwTerminate();
+
   manager::_internal::vao::Shutdown();
+  manager::mesh::Shutdown();
 }
 
 void Update() {
@@ -457,7 +459,13 @@ void Update() {
   // Pre-processing (Pre-rendering) update.
   manager::prerendering::Update();
 
-  Input();
+  manager::input::Update();
+  switch (GetPresentStatus()) {
+  case _internal::EGameStatus::PLAYING:
+    InputGlobal();
+    break;
+  default: break;
+  }
 
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
@@ -484,17 +492,6 @@ void Update() {
   // Update active effects.
   if (IsSwitchOn(m_setting->PostProcessing()))
     m_pp_manager->UpdateSequences();
-}
-
-void Input() {
-  manager::input::Update();
-
-  switch (GetPresentStatus()) {
-  case _internal::EGameStatus::PLAYING:
-    InputGlobal();
-    break;
-  default: break;
-  }
 }
 
 void InputGlobal() {

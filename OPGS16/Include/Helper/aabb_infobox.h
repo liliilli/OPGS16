@@ -10,6 +10,8 @@
 /// @file Helper/aabb_infobox.h
 ///
 
+#include <array>
+
 #include <Helper/vector.h>
 
 //!
@@ -33,6 +35,20 @@ class DAABBInfoBox {
 public:
   DAABBInfoBox(const btVector3& min, const btVector3& max);
   DAABBInfoBox(const opgs16::DVector3& min, const DVector3& max);
+
+  ///
+  /// @brief
+  ///
+  ///
+  /// @return
+  ///
+  std::array<DVector2, 4> GetVertexPoints() const noexcept {
+    const DVector2 ld = DVector2{m_min.x, m_min.y};
+    const DVector2 rd = DVector2{m_max.x, m_min.y};
+    const DVector2 ru = DVector2{m_max.x, m_max.y};
+    const DVector2 lu = DVector2{m_min.x, m_max.y};
+    return {ld, rd, ru, lu};
+  }
 
 private:
   DVector3 m_min = DVector3{};
