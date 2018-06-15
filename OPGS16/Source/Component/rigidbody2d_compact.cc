@@ -49,10 +49,12 @@ void CRigidbody2DCompact::Update() {
     btVector3 _min, _max;
     m_rigidbody->getAabb(_min, _max);
 
+#ifdef false
     PUSH_LOG_INFO_EXT("Test AABB Min position : {} {} {}",
                       _min.getX(), _min.getY(), _min.getZ());
     PUSH_LOG_INFO_EXT("Test AABB Max position : {} {} {}",
                       _max.getX(), _max.getY(), _max.getZ());
+#endif
   }
 
   if (m_rigidbody && entry::Setting().CollisionAABBBoxDisplay() == Switch::ON) {

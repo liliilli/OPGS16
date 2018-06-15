@@ -85,7 +85,7 @@ TSceneStack& Get() {
 void ReleaseAllResources() {
   physics::Clear();
   MTimerManager::Instance().Clear();   /*! precise */
-  MSoundManager::Instance().Clear();   /*! Not precise */
+  sound::ReleaseAllSounds();
 #ifdef false
   ShaderManager::Instance().Clear();   /*! Not implemented */
 #endif

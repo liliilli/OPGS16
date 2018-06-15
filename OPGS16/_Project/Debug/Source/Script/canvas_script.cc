@@ -78,70 +78,76 @@ void DebugCanvasScript::Initiate() {
     m_info_sentence->SetFontSize(8u);
     m_info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
 
-    m_sound = &opgs16::manager::MSoundManager::Instance();
 }
 
 void DebugCanvasScript::Start() {
-    m_sound->CreateSound("Drumloop");
-    m_sound->CreateSound("Jaguar");
-    m_sound->CreateSound("c_ogg");
-    m_sound->CreateSound("Beep1");
-    m_sound->CreateSound("Beep2");
-    m_sound->CreateSound("Beep3");
+  using manager::sound::GenerateSound;
+
+  GenerateSound("Drumloop");
+  GenerateSound("Jaguar");
+  GenerateSound("c_ogg");
+  GenerateSound("Beep1");
+  GenerateSound("Beep2");
+  GenerateSound("Beep3");
 }
 
 void DebugCanvasScript::Update() {
-    Input();
+  using manager::sound::IsSoundPlaying;
+  using phitos::enums::EActivated;
+  Input();
 
-    switch (m_mode) {
-    case 2:
-        if (!m_sound->IsPlaying("Jaguar")) {
-            m_mode = 0;
-            m_info_sentence->SetText("");
-        }
-        break;
-    case 3:
-        if (!m_sound->IsPlaying("c_ogg")) {
-            m_mode = 0;
-            m_info_sentence->SetText("");
-        }
-        break;
-    case 4:
-        if (!m_sound->IsPlaying("c_ogg")) {
-            m_mode = 0;
-            m_info_sentence->SetText("");
-        }
-        break;
-    default: break;
+  switch (m_mode) {
+  case 2:
+    if (IsSoundPlaying("Jaguar") == EActivated::Disabled) {
+      m_mode = 0;
+      m_info_sentence->SetText("");
     }
+    break;
+  case 3:
+    if (IsSoundPlaying("c_ogg") == EActivated::Disabled) {
+      m_mode = 0;
+      m_info_sentence->SetText("");
+    }
+    break;
+  case 4:
+    if (IsSoundPlaying("c_ogg") == EActivated::Disabled) {
+      m_mode = 0;
+      m_info_sentence->SetText("");
+    }
+    break;
+  default: break;
+  }
 }
 
 void DebugCanvasScript::Input() {
-  using ::opgs16::manager::input::IsKeyPressed;
+  using manager::input::IsKeyPressed;
+  using manager::sound::PlaySound;
+  using manager::sound::StopSound;
+
     if (IsKeyPressed("Key1")) {
         if (!m_is_play_bgm) {
-            m_sound->PlaySound("Drumloop");
+            PlaySound("Drumloop");
             m_bgm_sentence->SetText("~BGM ON~");
             m_is_play_bgm = true;
         }
         else {
-            m_sound->StopSound("Drumloop");
+            StopSound("Drumloop");
             m_bgm_sentence->SetText("~BGM OFF~");
             m_is_play_bgm = false;
         }
     }
     else if (IsKeyPressed("Key2")) {
-        m_sound->PlaySound("Jaguar");
+        PlaySound("Jaguar");
         m_info_sentence->SetText("Now playing Key2 Effect.");
         m_mode = 2;
     }
     else if (IsKeyPressed("Key3")) {
-        m_sound->PlaySound("c_ogg");
+        PlaySound("c_ogg");
     }
     else if (IsKeyPressed("Key4")) {
-        m_sound->PlaySound("Beep1");
-        m_sound->PlaySound("Beep2");
-        m_sound->PlaySound("Beep3");
+        PlaySound("Beep1");
+        PlaySound("Beep2");
+        PlaySound("Beep3");
     }
 }
 

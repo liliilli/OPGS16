@@ -33,7 +33,6 @@ private:
     void Input();
 
     manager::MInputManager* m_input = nullptr;
-    manager::MSoundManager* m_sound = nullptr;
 
     element::canvas::CText* m_bgm_sentence = nullptr;
     element::canvas::CText* m_info_sentence = nullptr;
