@@ -19,6 +19,9 @@
 
 #include <limits>
 
+/// import logger for debug mode.
+#include <Headers/import_logger.h>
+
 //!
 //! Data
 //!
@@ -28,11 +31,14 @@ namespace {
 // key value for assignment of timer handler, default is 0
 uint32_t s_timer_count = 0;
 
+constexpr uint32_t s_rehash_init_value = 100;
+uint32_t s_rehash_count = s_rehash_init_value;
+
 // Timer container
 opgs16::manager::timer::TTimerContainer m_timer_container;
 
 // Deletion candidates list
-std::list<size_t> m_delete_list;
+std::list<uint32_t> m_delete_list;
 
 } /// unnamed namespace
 
@@ -85,6 +91,14 @@ void Update(float delta_time) {
   // Deletion
   for (const auto& keyval : m_delete_list) {
     m_timer_container.erase(keyval);
+    --s_rehash_count;
+  }
+  m_delete_list.clear();
+
+  if (s_rehash_count <= 0) {
+    s_rehash_count = s_rehash_init_value;
+    m_timer_container.rehash(m_timer_container.size());
+    PUSH_LOG_CRITICAL("Timer table rehashing");
   }
 }
 

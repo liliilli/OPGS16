@@ -24,23 +24,23 @@
 namespace debug::object {
 
 Hopping::Hopping() {
-  SetScaleValue(16.0f);
+  SetScaleValue(8.0f);
 
   using opgs16::component::CSprite2DRenderer;
   auto renderer = AddComponent<CSprite2DRenderer>(*this, "System", "gQuad");
 
   m_wrapper = &renderer->Wrapper();
-  m_wrapper->SetUniformValue<glm::mat4>("projection", glm::mat4{});
-  m_wrapper->SetUniformValue<float>("alpha", 1.0f);
+  m_wrapper->SetUniformValue<glm::mat4>("opProj", glm::mat4{});
+  m_wrapper->SetUniformValue<glm::mat4>("opModel", glm::mat4{});
+  m_wrapper->SetUniformValue<float>("opAlpha", 0.75f);
 
   AddComponent<script::Hopping>(*this);
 }
 
 void Hopping::Render() {
   using opgs16::manager::scene::GetPresentScenePvMatrix;
-  auto PVM = GetPresentScenePvMatrix() * GetModelMatrix();
-
-  m_wrapper->SetUniformValue<glm::mat4>("projection", PVM);
+  m_wrapper->SetUniformValue<glm::mat4>("opProj", GetPresentScenePvMatrix());
+  m_wrapper->SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
   using opgs16::component::CSprite2DRenderer;
   GetComponent<CSprite2DRenderer>()->RenderSprite();
 }

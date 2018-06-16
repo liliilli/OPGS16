@@ -48,31 +48,6 @@ void Render(const opgs16::manager::_internal::Character& ch_info,
             GLuint m_vbo,
             const std::array<opgs16::DVector3, 4>& vertices);
 
-#ifdef false
-///
-/// @brief
-/// The method sets VAO, VBO to render string on screen.
-/// This methods called when initiate instance.
-///
-/// @todo Make Geometry manager, set Font2DQuad geometry array, buffer which can
-/// be used by default.
-///
-void BindVertexAttributes(GLuint* m_vao, GLuint* m_vbo) {
-  glGenVertexArrays(1, m_vao);
-  glGenBuffers(1, m_vbo);
-  glBindVertexArray(*m_vao);
-
-  glBindBuffer(GL_ARRAY_BUFFER, *m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 24, nullptr, GL_DYNAMIC_DRAW);
-
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-  glEnableVertexAttribArray(0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-}
-#endif
-
 ///
 /// @brief
 ///
@@ -199,7 +174,7 @@ void RenderLeftSide(const Utf16TextContainer& container,
   }
 }
 
-void RenderCenterSide(const std::vector<std::string>& container,
+void RenderCenterSide(const Utf16TextContainer& container,
                       const std::vector<uint32_t>& text_render_width,
                       opgs16::manager::font::font_type* font_set,
                       const glm::vec2& position,
@@ -211,14 +186,14 @@ void RenderCenterSide(const std::vector<std::string>& container,
   for (uint32_t i = 0; i < text_container_length; ++i) {
     pos.x -= static_cast<uint32_t>(text_render_width[i] * scale) >> 1;
 
-    for (const auto& chr : container[i]) {
+    for (const char16_t chr : container[i]) {
       const auto& ch_info = (*font_set)[chr];
       Render(ch_info, m_vbo, GetCharacterVertices(ch_info, pos, scale));
       pos.x += (ch_info.advance >> 6) * scale;
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)['0'].size.y * 1.5f;
+    pos.y -= static_cast<int>((*font_set)['0'].size.y * scale * 1.5f);
   }
 }
 
@@ -331,11 +306,12 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                    m_font_name, m_font_set, final_position,
                    m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
-#ifdef false
   case Align::CENTER:
-    RenderCenterSide(m_text_container, m_text_render_width,
-                     m_font_set, final_position, m_vbo, scale);
+    RenderCenterSide(m_unicode_text_container, m_text_render_width,
+                     m_font_set, final_position,
+                     m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
+#ifdef false
   case Align::RIGHT:
     RenderRightSide(m_text_container, m_text_render_width,
                     m_font_set, final_position, m_vbo, scale);
@@ -406,6 +382,5 @@ void CFont2DRenderer::RefreshStringContainers(const std::string& text) {
           static_cast<uint32_t>(text_line.length()));
   }
 }
-
 
 } /// ::opgs16::component namespace

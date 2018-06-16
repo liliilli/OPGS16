@@ -11,11 +11,15 @@
 /// Header file
 #include "../../Include/Scene/object_lifecycle.h"
 
+#include "../../Include/Object/empty_canvas.h"
 #include "../../Include/Object/empty_object.h"
 #include "../../Include/Object/lifecycle_manager.h"
 
+#include <Element/Canvas/text.h>
+
 /// ::opgs16::component::CCamera
 #include <Component/camera.h>
+#include "Component/font2d_renderer.h"
 
 namespace debug::scene {
 
@@ -31,6 +35,13 @@ void ObjectLifeCycle::Initiate() {
   cam->SetFov(90.f);
   cam->SetFar(250.f);
   cam->SetRear(1.f);
+
+  auto canvas = Instantiate<object::EmptyCanvas>("Canvas");
+  auto text = canvas->Instantiate<opgs16::element::canvas::CText>("Object", "Hello world!");
+  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderLayer("Interface");
+  text->SetFontName("Solomon");
+  text->SetFontSize(24);
+  text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
 }
 
 } /// ::debug::scene

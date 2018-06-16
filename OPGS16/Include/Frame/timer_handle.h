@@ -35,10 +35,10 @@ public:
     inline void SetLoopMode(bool value);
 
     /*! Set hash_key value for TimerManager */
-    inline void SetKeyValue(size_t key);
+    inline void SetKeyValue(uint32_t key);
 
     /*! Get hash_key value for TimerManager container */
-    inline size_t GetKeyValue() const;
+    inline uint32_t GetKeyValue() const;
 
     /*!
      * @brief Set start, end time point have interval between them.
@@ -51,7 +51,7 @@ public:
 
 private:
     bool m_loop{ false };       /*! If this value is false, call callback once and destroy self. */
-    size_t m_key_value;         /*! Key value for accessing timer_manager container */
+    uint32_t m_key_value;         /*! Key value for accessing timer_manager container */
 
     float m_remain;             /*! Remained time count */
     float m_interval;           /*! Timer interval */
@@ -63,11 +63,11 @@ inline void CTimerHandle::SetLoopMode(bool value) {
     m_loop = value;
 }
 
-inline void CTimerHandle::SetKeyValue(size_t value) {
+inline void CTimerHandle::SetKeyValue(uint32_t value) {
     m_key_value = value;
 }
 
-inline size_t CTimerHandle::GetKeyValue() const {
+inline uint32_t CTimerHandle::GetKeyValue() const {
     return m_key_value;
 }
 

@@ -196,7 +196,7 @@ public:
 	/*!
 	 * @brief Get specific object with tag.
 	 */
-	object_ptr& GetObject(const std::string& tag);
+	object_ptr& GetGameObject(const std::string& tag);
 
   /*!
    * @brief Set main camera of this scene, to display game scene.

@@ -14,7 +14,7 @@
 /// @author Jongmin Yun
 /// @log
 /// 2018-04-06 Create file.
-/// 2018-05-22 
+/// 2018-05-22
 /// Add variant parameter version of logging macroes,
 /// and Add DEBUG and CRITICAL priority log mode.
 ///
@@ -38,7 +38,7 @@
   ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Warning, \
                              __MAString__)
 
-#define PUSH_LOG_CRITICAL(__MAString) \
+#define PUSH_LOG_CRITICAL(__MAString__) \
   ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Critical, \
                              __MAString__)
 

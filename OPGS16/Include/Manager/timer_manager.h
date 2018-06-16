@@ -33,7 +33,7 @@
 namespace opgs16::manager::timer {
 
 using TTimerContainer =
-    std::unordered_map<size_t, opgs16::manager::_internal::TimerWrapper>;
+    std::unordered_map<uint32_t, opgs16::manager::_internal::TimerWrapper>;
 
 } /// ::opgs16::manager::timer namespace
 

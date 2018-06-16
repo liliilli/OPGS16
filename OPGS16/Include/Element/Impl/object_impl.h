@@ -115,47 +115,59 @@ public:
     /*! Angle */
 
     float GetRotationLocalAngle(const EDirection direction) const noexcept {
-        switch (direction) {
-        case EDirection::X: return m_rotation_local_angle_n[0];
-        case EDirection::Y: return m_rotation_local_angle_n[1];
-        case EDirection::Z: return m_rotation_local_angle_n[2];
-        default:
-            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
-            else                    return std::numeric_limits<float>::quiet_NaN();
-        }
+      switch (direction) {
+      case EDirection::X: return m_rotation_local_angle_n[0];
+      case EDirection::Y: return m_rotation_local_angle_n[1];
+      case EDirection::Z: return m_rotation_local_angle_n[2];
+      default:
+#ifdef _DEBUG
+        return std::numeric_limits<float>::signaling_NaN();
+#else
+        return std::numeric_limits<float>::quiet_NaN();
+#endif
+      }
     }
 
     float GetRotationFromParentAngle(const EDirection direction) const noexcept {
-        switch (direction) {
-        case EDirection::X: return m_rotation_parent_angle_n[0];
-        case EDirection::Y: return m_rotation_parent_angle_n[1];
-        case EDirection::Z: return m_rotation_parent_angle_n[2];
-        default:
-            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
-            else                    return std::numeric_limits<float>::quiet_NaN();
-        }
+      switch (direction) {
+      case EDirection::X: return m_rotation_parent_angle_n[0];
+      case EDirection::Y: return m_rotation_parent_angle_n[1];
+      case EDirection::Z: return m_rotation_parent_angle_n[2];
+      default:
+#ifdef _DEBUG
+        return std::numeric_limits<float>::signaling_NaN();
+#else
+        return std::numeric_limits<float>::quiet_NaN();
+#endif
+      }
     }
 
     float GetRotationWorldAngle(const EDirection direction) const noexcept {
-        switch (direction) {
-        case EDirection::X: return m_rotation_world_angle_n[0];
-        case EDirection::Y: return m_rotation_world_angle_n[1];
-        case EDirection::Z: return m_rotation_world_angle_n[2];
-        default:
-            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
-            else                    return std::numeric_limits<float>::quiet_NaN();
-        }
+      switch (direction) {
+      case EDirection::X: return m_rotation_world_angle_n[0];
+      case EDirection::Y: return m_rotation_world_angle_n[1];
+      case EDirection::Z: return m_rotation_world_angle_n[2];
+      default:
+#ifdef _DEBUG
+        return std::numeric_limits<float>::signaling_NaN();
+#else
+        return std::numeric_limits<float>::quiet_NaN();
+#endif
+      }
     }
 
     float GetRotationWpAngle(const EDirection direction) const {
-        switch (direction) {
-        case EDirection::X: return m_rotation_wp_angle_n[0];
-        case EDirection::Y: return m_rotation_wp_angle_n[1];
-        case EDirection::Z: return m_rotation_wp_angle_n[2];
-        default:
-            if constexpr (_DEBUG)   return std::numeric_limits<float>::signaling_NaN();
-            else                    return std::numeric_limits<float>::quiet_NaN();
-        }
+      switch (direction) {
+      case EDirection::X: return m_rotation_wp_angle_n[0];
+      case EDirection::Y: return m_rotation_wp_angle_n[1];
+      case EDirection::Z: return m_rotation_wp_angle_n[2];
+      default:
+#ifdef _DEBUG
+        return std::numeric_limits<float>::signaling_NaN();
+#else
+        return std::numeric_limits<float>::quiet_NaN();
+#endif
+      }
     }
 
     void SetRotationLocalAngle(const EDirection direction, const float angle_value) noexcept {

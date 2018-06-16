@@ -37,10 +37,11 @@ out VS_OUT {\
 	vec2 texCoord;\
 } vs_out;\
 \
-uniform mat4 projection;\
+uniform mat4 opProj;\
+uniform mat4 opModel;\
 \
 void main() {\
-	gl_Position		  = projection * vec4(opPosition.xy, 0, 1);\
+	gl_Position		  = opProj * opModel * vec4(opPosition.xy, 0, 1);\
 	vs_out.texCoord = opTexCoord;\
 }";
 
@@ -56,10 +57,10 @@ in VS_OUT {\
 } fs_in;\
 \
 layout (binding = 0) uniform sampler2D uTexture1;\
-uniform float alpha;\
+uniform float opAlpha;\
 \
 void main() {\
-	color = texture(uTexture1, uTexelLD + (fs_in.texCoord * (uTexelRU - uTexelLD))) * vec4(1, 1, 1, alpha);\
+	color = texture(uTexture1, uTexelLD + (fs_in.texCoord * (uTexelRU - uTexelLD))) * vec4(1, 1, 1, opAlpha);\
 }";
 
 } /*! unnamed namespace */

@@ -16,6 +16,8 @@
 
 namespace debug::script {
 
+class LifecycleManager;
+
 class Hopping final : public opgs16::component::CScriptFrame {
 public:
   Hopping(opgs16::element::CObject& bind_object) :
@@ -37,6 +39,8 @@ private:
   float m_elapsed = 0.0f;
   float m_init_z = 0.0f;
   float m_intensity = 0.0f;
+
+  LifecycleManager* m_manager = nullptr;
 
   opgs16::element::CTimerHandle m_timer_handler;
 

@@ -60,11 +60,13 @@ bool IsAllAngleValueZero(const float (&angle)[3]) {
 }
 
 glm::mat4 GetRotationMatrix(const float (&angle)[3]) {
-    glm::mat4 matrix;
-    matrix = glm::rotate(matrix, glm::radians(angle[0]), glm::vec3{ 1, 0, 0 });
-    matrix = glm::rotate(matrix, glm::radians(angle[1]), glm::vec3{ 0, 1, 0 });
-    matrix = glm::rotate(matrix, glm::radians(angle[2]), glm::vec3{ 0, 0, 1 });
-    return matrix;
+  const auto [min, max] = std::minmax_element(std::begin(angle), std::end(angle));
+  float max_deg = *max;
+  if (std::abs(*min) > max_deg)
+    max_deg = *min;
+
+  return glm::rotate(glm::mat4{}, glm::radians(max_deg),
+           glm::vec3{ angle[0] / max_deg, angle[1] / max_deg, angle[2] / max_deg });
 }
 
 } /*! unnamed namespace */

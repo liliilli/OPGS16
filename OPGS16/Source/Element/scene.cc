@@ -51,7 +51,7 @@ CScene::object_map& CScene::GetObjectList() {
 	return m_object_list;
 }
 
-CScene::object_ptr& CScene::GetObject(const std::string& name) {
+CScene::object_ptr& CScene::GetGameObject(const std::string& name) {
 	auto it = m_object_list.find(name);
 	if (it != m_object_list.end()) {
 		return (*it).second;

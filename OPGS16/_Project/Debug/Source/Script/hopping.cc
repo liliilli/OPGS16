@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <random>
+#include <memory>
 
 /// ::opgs16::component::CSprite2DRenderer
 #include <Component/sprite_renderer.h>
@@ -20,6 +21,12 @@
 #include <Manager/object_manager.h>
 /// ::opgs16::manager::MTimerManager
 #include <Manager/timer_manager.h>
+#include <Manager/scene_manager.h>
+
+#include <Element/scene.h>
+#include <Element/object.h>
+
+#include "../../Include/Script/lifecycle_manager.h"
 
 #undef GetObject
 
@@ -72,6 +79,9 @@ void Hopping::Start() {
               false,
               this,
               &Hopping::DestroySelf);
+
+  m_manager = opgs16::manager::scene::GetPresentScene()->
+      GetGameObject("Manager")->GetComponent<LifecycleManager>();
 }
 
 void Hopping::Update(float delta_time) {
@@ -82,7 +92,7 @@ void Hopping::Update(float delta_time) {
   angle_value += k_angle_offset;
   object.SetRotationLocalAngle(EDirection::Z, angle_value);
 
-  m_elapsed += 0.016f;
+  m_elapsed += delta_time;
   const auto pos = object.GetWorldPosition();
   const auto new_z =
       m_intensity * std::sin(3.14159f / m_delay * m_elapsed) + m_init_z;
@@ -98,7 +108,8 @@ void Hopping::OnDisabled() {
 }
 
 void Hopping::Destroy() {
-
+  if (m_manager)
+    m_manager->DecreaseObjectCount();
 }
 
 void Hopping::DestroySelf() {
