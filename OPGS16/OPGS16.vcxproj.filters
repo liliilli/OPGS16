@@ -90,6 +90,7 @@
     <ClCompile Include="Source\Element\Default\model_2dquad.cc" />
     <ClCompile Include="Source\Element\Internal\vao_container.cc" />
     <ClCompile Include="Source\Manager\time_manager.cc" />
+    <ClCompile Include="Source\Helper\Json\json_header.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\switch.h" />
     <ClInclude Include="Include\Manager\Internal\sound_info.h" />
+    <ClInclude Include="Include\Helper\Json\json_helper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -342,8 +344,8 @@
     <None Include="_Setting\collision.meta" />
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
-    <None Include="_Project\Debug\Setting\input.meta" />
     <None Include="Legacy\input.meta" />
+    <None Include="_Project\Debug\Setting\rendering_layer.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

@@ -46,6 +46,8 @@
 #include <Headers\import_logger.h>
 /// Expanded assertion
 #include <Helper\assert.h>
+/// ::opgs16::helper::json
+#include <Helper/Json/json_helper.h>
 /// Header file
 #include <Manager\time_manager.h>
 /// ::opgs16::debug error messages.
@@ -159,11 +161,7 @@ EKeyExist IsKeyExist(const std::string& key) {
 ///
 void __InputKeyCallback(GLFWwindow* window,
                         int key, int scancode, int action, int mod) {
-  PUSH_LOG_INFO_EXT("Key input : {0}, {1}", key, action);
-#if defined(false)
-  // @bug DEBUG_EXT does not output log message on console even in dbg mode.
   PUSH_LOG_DEBUG_EXT("Key input : {0}, {1}", key, action);
-#endif
 }
 
 ///
@@ -184,7 +182,7 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
   const auto regulated_xpos = xpos / scale_value;
   const auto regulated_ypos = ypos / scale_value;
 
-  PUSH_LOG_INFO_EXT(
+  PUSH_LOG_DEBUG_EXT(
       "Mouse position update : O {0:2}, {1:2}, R {2:2}, {3:2}",
       xpos, ypos, regulated_xpos, regulated_ypos);
 }
@@ -202,13 +200,8 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
 ///
 void __MouseInputCallback(GLFWwindow* window,
                           int button, int action, int modes) {
-  PUSH_LOG_INFO_EXT(
-      "Mouse input update [Button : {0}], [Action : {1}]", button, action);
-#if defined(false)
-  // @bug DEBUG_EXT does not output log message on console even in dbg mode.
   PUSH_LOG_DEBUG_EXT(
       "Mouse input update [Button : {0}], [Action : {1}]", button, action);
-#endif
 }
 
 void SetMouseCursorTemporary() {
@@ -382,10 +375,103 @@ void Update() {
 ///
 void ModeVerifyKey(const nlohmann::json& json,
                    const std::string& key,
+                   const std::string& file_path, phitos::enums::ESwitch& swt);
+
+///
+/// @brief
+///
+/// @param[in] key
+/// @param[in] key_value
+///
+phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
+                                          const nlohmann::json& key_value);
+
+///
+/// @brief
+///
+/// @param[in] atlas_json
+///
+/// @return
+///
+phitos::enums::ESucceed BindKeyboardKeyInformation(const nlohmann::json& atlas_json);
+
+///
+/// @brief
+///
+/// @param[in] it
+///
+/// @return
+///
+phitos::enums::ESucceed KeyboardBindKey(
+    const nlohmann::basic_json<>::const_iterator& it);
+
+void ReadInputFile(const std::string& file_path) {
+  std::ifstream stream { file_path, std::ios_base::in };
+  if (!stream.good()) {
+    PUSH_LOG_CRITICAL_EXT(
+        "Failed to find project input setting file. [{} : {}]", "Path", file_path);
+    PUSH_LOG_ERRO("Input feature will be disabled.");
+    stream.close();
+
+    // @todo Do something before everything is going to be mess.
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    return;
+  }
+
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using phitos::enums::ESwitch;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  nlohmann::json atlas_json;
+  stream >> atlas_json;
+  stream.close();
+
+  if (IsJsonKeyExist(atlas_json, "mode") == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
+        "mode", "Path", file_path);
+    PUSH_LOG_ERRO("Input feature will be disabled.");
+
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    return;
+  }
+
+  const auto input_mode = atlas_json["mode"];
+
+  ESwitch keyboard_activated = ESwitch::On;
+  ESwitch mouse_activated    = ESwitch::On;
+  ESwitch joystick_activated = ESwitch::Off;
+
+  // Joystick verification did not held, because not supported yet.
+  ModeVerifyKey(input_mode, "keyboard", file_path, keyboard_activated);
+  ModeVerifyKey(input_mode, "mouse", file_path, mouse_activated);
+
+  if (keyboard_activated == ESwitch::On) {
+    if (BindKeyboardKeyInformation(atlas_json) == ESucceed::Failed) {
+      PUSH_LOG_WARN("Failed some operation on binding keyboard key.");
+    }
+  }
+
+  if (mouse_activated == ESwitch::On) {
+    if (atlas_json.find("mouse") == atlas_json.end()) {
+      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
+          "mouse", "Path", file_path);
+      PUSH_LOG_ERRO("Input feature will be disabled.");
+      PHITOS_NOT_IMPLEMENTED_ASSERT();
+      return;
+    }
+    const auto mouse = atlas_json["mouse"];
+  }
+}
+
+void ModeVerifyKey(const nlohmann::json& json,
+                   const std::string& key,
                    const std::string& file_path, phitos::enums::ESwitch& swt) {
   using phitos::enums::ESwitch;
+  using phitos::enums::EFound;
+  using opgs16::helper::json::IsJsonKeyExist;
 
-  if (json.find("keyboard") == json.end()) {
+  if (IsJsonKeyExist(json, "keyboard") == EFound::NotFound) {
     PUSH_LOG_CRITICAL_EXT("Key {} is not found in mode object. [{} : {}]",
                           key, "Path", file_path);
     PUSH_LOG_ERROR_EXT("{} input feature will be disabled.", "keyboard");
@@ -402,28 +488,24 @@ void ModeVerifyKey(const nlohmann::json& json,
   PUSH_LOG_DEBUG_EXT("Mode key {} is {}", key, swt == ESwitch::On ? "ON": "OFF");
 }
 
-///
-/// @brief
-///
-/// @param[in] key
-/// @param[in] key_value
-///
 phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
                                           const nlohmann::json& key_value) {
   using phitos::enums::ESucceed;
+  using phitos::enums::EFound;
+  using opgs16::helper::json::IsJsonKeyExist;
 
-  if (key_value.find("+") == key_value.end() &&
-      key_value.find("-") == key_value.end()) {
+  if (IsJsonKeyExist(key_value, "+") == EFound::NotFound &&
+      IsJsonKeyExist(key_value, "-") == EFound::NotFound) {
     PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have any key binding.", key);
     return ESucceed::Failed;
   }
 
-  if (key_value.find("gravity") == key_value.end()) {
+  if (IsJsonKeyExist(key_value, "gravity") == EFound::NotFound) {
     PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have gravity.", key);
     return ESucceed::Failed;
   }
 
-  if (key_value.find("stick") == key_value.end()) {
+  if (IsJsonKeyExist(key_value, "stick") == EFound::NotFound) {
     PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have stick.", key);
     return ESucceed::Failed;
   }
@@ -431,8 +513,49 @@ phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
   return ESucceed::Succeed;
 }
 
-phitos::enums::ESucceed KeyboardBindKey(
-    const nlohmann::basic_json<>::const_iterator& it) {
+phitos::enums::ESucceed BindKeyboardKeyInformation(const nlohmann::json& atlas_json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(atlas_json, "keyboard") == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file.", "keyboard");
+    PUSH_LOG_ERRO("Input feature will be disabled.");
+
+    // @todo fix this.
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    return ESucceed::Failed;
+  }
+  const auto keyboard = atlas_json["keyboard"];
+
+  for (auto it = keyboard.begin(); it != keyboard.end(); ++it) {
+    const std::string key = it.key();
+    const auto& value = it.value();
+
+    if (IsKeyExist(key) == EKeyExist::Exist) {
+      PUSH_LOG_ERROR_EXT(
+          "Keyboard key {} is duplicated. "
+          "key {} will not be performed properly.", key);
+      continue;
+    }
+
+    if (KeyboardVerifyKey(key, value) == ESucceed::Failed) {
+      PUSH_LOG_ERROR_EXT(
+          "Failed to verify keyboard key {0}. "
+          "Keyboard key {0} will not bind to input system.", key);
+      continue;
+    }
+
+    if (KeyboardBindKey(it) == ESucceed::Failed) {
+      PUSH_LOG_ERROR_EXT("Failed to bind keyboard key {}.", key);
+      return ESucceed::Failed;
+    }
+  }
+
+  return ESucceed::Succeed;
+}
+
+phitos::enums::ESucceed KeyboardBindKey(const nlohmann::basic_json<>::const_iterator& it) {
   using phitos::enums::ESucceed;
 
   const auto key    = it.key();
@@ -443,7 +566,7 @@ phitos::enums::ESucceed KeyboardBindKey(
     const auto& pos_it_value = pos_it.value();
 
     if (!pos_it_value.is_number_unsigned()) {
-      PUSH_LOG_ERROR_EXT("Keyboard key {} positive value is not number.", key);
+      PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "positive");
       return ESucceed::Failed;
     }
     key_information.pos = pos_it_value.get<unsigned>();
@@ -453,7 +576,7 @@ phitos::enums::ESucceed KeyboardBindKey(
     const auto& neg_it_value = neg_it.value();
 
     if (!neg_it_value.is_number_unsigned()) {
-      PUSH_LOG_ERROR_EXT("Keyboard key {} positive value is not number.", key);
+      PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "negative");
       return ESucceed::Failed;
     }
     key_information.neg= neg_it_value.get<unsigned>();
@@ -461,7 +584,7 @@ phitos::enums::ESucceed KeyboardBindKey(
 
   const auto& gravity_it_value = value.find("gravity");
   if (!gravity_it_value->is_number_unsigned()) {
-    PUSH_LOG_ERROR_EXT("Keyboard key {} gravity value is not number.", key);
+    PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "gravity");
     return ESucceed::Failed;
   }
   key_information.neutral_gravity =
@@ -474,87 +597,6 @@ phitos::enums::ESucceed KeyboardBindKey(
 
   m_key_inputs.try_emplace(key, std::move(key_information));
   return ESucceed::Succeed;
-}
-
-void ReadInputFile(const std::string& file_path) {
-  std::ifstream stream { file_path, std::ios_base::in };
-  if (!stream.good()) {
-    PUSH_LOG_CRITICAL_EXT(
-        "Failed to find project input setting file. [{} : {}]",
-        "Path", file_path);
-    PUSH_LOG_ERRO("Input feature will be disabled.");
-    stream.close();
-    // @todo Do something before everything is going to be mess.
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
-    return;
-  }
-
-  nlohmann::json atlas_json;
-  stream >> atlas_json;
-  stream.close();
-
-  if (atlas_json.find("mode") == atlas_json.end()) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
-        "mode", "Path", file_path);
-    PUSH_LOG_ERRO("Input feature will be disabled.");
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
-    return;
-  }
-
-  const auto input_mode = atlas_json["mode"];
-  using phitos::enums::ESwitch;
-  ESwitch keyboard_activated = ESwitch::On;
-  ESwitch mouse_activated    = ESwitch::On;
-  ESwitch joystick_activated = ESwitch::Off;
-
-  // Joystick verification did not held, because not supported yet.
-  ModeVerifyKey(input_mode, "keyboard", file_path, keyboard_activated);
-  ModeVerifyKey(input_mode, "mouse", file_path, mouse_activated);
-
-  if (keyboard_activated == ESwitch::On) {
-    if (atlas_json.find("keyboard") == atlas_json.end()) {
-      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
-          "keyboard", "Path", file_path);
-      PUSH_LOG_ERRO("Input feature will be disabled.");
-      PHITOS_NOT_IMPLEMENTED_ASSERT();
-      return;
-    }
-    const auto keyboard = atlas_json["keyboard"];
-
-    for (auto it = keyboard.begin(); it != keyboard.end(); ++it) {
-      const std::string key = it.key();
-      const auto& value = it.value();
-
-      if (m_key_inputs.find(key) != m_key_inputs.end()) {
-        PUSH_LOG_ERROR_EXT(
-            "Keyboard key {} is duplicated. "
-            "key {} will not be performed properly.", key);
-        continue;
-      }
-
-      using phitos::enums::ESucceed;
-      if (KeyboardVerifyKey(key, value) == ESucceed::Failed) {
-        PUSH_LOG_ERROR_EXT(
-            "Failed to verify keyboard key {0}. "
-            "Keyboard key {0} will not bind to input system.", key);
-        continue;
-      }
-
-      if (KeyboardBindKey(it) == ESucceed::Failed)
-        PUSH_LOG_ERROR_EXT("Failed to bind keyboard key {}.", key);
-    }
-  }
-
-  if (mouse_activated == ESwitch::On) {
-    if (atlas_json.find("mouse") == atlas_json.end()) {
-      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
-          "mouse", "Path", file_path);
-      PUSH_LOG_ERRO("Input feature will be disabled.");
-      PHITOS_NOT_IMPLEMENTED_ASSERT();
-      return;
-    }
-    const auto mouse = atlas_json["mouse"];
-  }
 }
 
 void ProceedGravity(BindingKeyInfo& key_info) {
