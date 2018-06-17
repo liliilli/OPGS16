@@ -335,7 +335,6 @@
     <None Include="Shaders\Global\sinewave.frag" />
     <None Include="Shaders\Global\quad.frag" />
     <None Include="Shaders\pp\gray.frag" />
-    <None Include="_Setting\input.meta" />
     <None Include="_Setting\tag.meta" />
     <None Include="_resource.meta" />
     <None Include="_Setting\render_layer.meta" />
@@ -343,6 +342,8 @@
     <None Include="_Setting\collision.meta" />
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
+    <None Include="_Project\Debug\Setting\input.meta" />
+    <None Include="Legacy\input.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

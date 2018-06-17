@@ -7,26 +7,35 @@
 ///
 /// @file Manager/input.cc
 ///
-/// @brief
-///
 /// @author Jongmin Yun
 ///
 /// @log
 /// 2018-03-03 Refactoring.
 /// 2018-05-20 Get rid of singleton pattern and rebuild it to namespace.
+/// 2018-06-17 Revise own format input file to json.
 ///
-/// @todo Replace own input data style to json.
+/// @todo implement mouse click
+/// @todo implement stick key , stick mouse
+/// @todo implement mouse cursor graphics
+/// @todo refactoring
 ///
 
-#include <Manager\input_manager.h>  /// Header file
+/// Header file
+#include <Manager/input_manager.h>
 
 #include <fstream>
-#include <sstream>
 #include <string_view>
 #include <unordered_map>
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+
+/// nlohmann::json reading library
+#include <json.hpp>
+/// Enhanced assertion
+#include <Phitos/Dbg/assert.h>
+/// phitos::enums::ESuccess
+#include <Phitos/Enums/success.h>
 
 /// ::opgs16;:core::application
 #include <Core\application.h>
@@ -46,6 +55,9 @@
 /// ::opgs16::manager::_internal::BindingKeyInfo
 #include <Manager\Internal\input_internal.h>
 
+/// ::manifest
+#include <../manifest.h>
+
 ///
 /// @enum EKeyExist
 /// @brief
@@ -62,7 +74,7 @@ enum class EKeyExist : bool {
 ///
 /// @brief
 ///
-void ReadInputFile(const char* file_path);
+void ReadInputFile(const std::string& file_path);
 
 ///
 /// @brief
@@ -76,28 +88,6 @@ void ReadInputFile(const char* file_path);
 /// @param[in] key_info Key information to apply.
 ///
 void ProceedGravity(opgs16::manager::_internal::BindingKeyInfo& key_info);
-
-///
-/// @brief
-/// Initiate subroutine.
-///
-/// @param[in] stream
-///
-/// @param[in] info
-///
-bool ProceedKeyInit(std::stringstream& stream,
-                    opgs16::manager::_internal::BindingKeyInfo& info);
-
-///
-/// @brief
-/// Initiate subroutine.
-///
-/// @param[in] stream
-///
-/// @param[in] info
-///
-bool ProceedKeyInput(std::stringstream& stream,
-                     opgs16::manager::_internal::BindingKeyInfo& info);
 
 ///
 /// @brief
@@ -129,7 +119,6 @@ namespace {
 
 using opgs16::manager::_internal::BindingKeyInfo;
 using namespace std::string_view_literals;
-constexpr std::string_view input_path{ "_Setting/input.meta"sv };
 
 using key_map = std::unordered_map<std::string, BindingKeyInfo>;
 
@@ -146,6 +135,10 @@ GLFWcursor* m_cursor = nullptr;
 key_map m_key_inputs;
 
 } /// unnamed namespace
+
+//!
+//! Global function definition
+//!
 
 EKeyExist IsKeyExist(const std::string& key) {
   return static_cast<EKeyExist>(m_key_inputs.find(key) != m_key_inputs.end());
@@ -218,18 +211,7 @@ void __MouseInputCallback(GLFWwindow* window,
 #endif
 }
 
-namespace opgs16::manager::input {
-
-void Initiate(GLFWwindow* window_context) {
-  NEU_ASSERT(m_initiated == EInitiated::NotInitiated,
-      debug::err_input_duplicated_init);
-  m_initiated = EInitiated::Initiated;
-
-  m_window = window_context;
-  glfwSetKeyCallback(m_window, __InputKeyCallback);
-  glfwSetCursorPosCallback(m_window, __MousePositionCallback);
-  glfwSetMouseButtonCallback(m_window, __MouseInputCallback);
-
+void SetMouseCursorTemporary() {
   unsigned char m_data[16 * 16 * 4];
   memset(m_data, 0xFF, sizeof(m_data));
   GLFWimage image;
@@ -239,12 +221,36 @@ void Initiate(GLFWwindow* window_context) {
   m_cursor = glfwCreateCursor(&image, 0, 0);
 
   glfwSetCursor(m_window, m_cursor);
+}
 
-  ReadInputFile(input_path.data());
+//!
+//! Implementation
+//!
+
+namespace opgs16::manager::input {
+
+void Initiate(GLFWwindow* window_context) {
+  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
+      debug::err_input_duplicated_init);
+
+  m_window = window_context;
+  glfwSetKeyCallback(m_window, __InputKeyCallback);
+  glfwSetCursorPosCallback(m_window, __MousePositionCallback);
+  glfwSetMouseButtonCallback(m_window, __MouseInputCallback);
+  SetMouseCursorTemporary();
+
+  std::string path = {_APPLICATION_PROJECT_PATH};
+  if (path.find_last_of('/') == (path.length() - 1))
+    path.append("Setting/input.meta");
+  else
+    path.append("/""Setting/input.meta");
+
+  ReadInputFile(path);
+  m_initiated = EInitiated::Initiated;
 }
 
 float GetKeyValue(const std::string& key) {
-  NEU_ASSERT(m_initiated == EInitiated::Initiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
       debug::err_input_not_initiated);
 
   if (IsKeyExist(key) == EKeyExist::NotExist) {
@@ -258,7 +264,7 @@ float GetKeyValue(const std::string& key) {
 }
 
 bool IsKeyPressed(const std::string& key) {
-  NEU_ASSERT(m_initiated == EInitiated::Initiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
       debug::err_input_not_initiated);
 
   if (m_key_inputs.find(key) == m_key_inputs.end()) {
@@ -289,7 +295,7 @@ bool IsKeyPressed(const std::string& key) {
 }
 
 bool IsKeyReleased(const std::string& key) {
-  NEU_ASSERT(m_initiated == EInitiated::Initiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
       debug::err_input_not_initiated);
 
   if (IsKeyExist(key) == EKeyExist::NotExist) {
@@ -307,7 +313,7 @@ bool IsKeyReleased(const std::string& key) {
 }
 
 void Update() {
-  NEU_ASSERT(m_initiated == EInitiated::Initiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
       debug::err_input_not_initiated);
 
 	for (auto& key_info : m_key_inputs) {
@@ -318,31 +324,37 @@ void Update() {
 
 		switch (key.key_status) {
 		case Status::NEUTRAL:
-			if (key.neg != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
+			if (key.neg != GLFW_KEY_UNKNOWN &&
+          glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
 				key.value = -1.0f;
 				key.key_status = Status::NEG_PRESSED;
 			}
-			else if (key.pos != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
+			else if (key.pos != GLFW_KEY_UNKNOWN &&
+               glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
 				key.value = 1.0f;
 				key.key_status = Status::POS_PRESSED;
 			}
 			break;
 		case Status::NEG_PRESSED:
-			if (key.pos != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
+			if (key.pos != GLFW_KEY_UNKNOWN &&
+          glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
 				key.value = 1.0f;
 				key.key_status = Status::POS_PRESSED;
 			}
-			else if (key.neg != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.neg) == GLFW_RELEASE) {
+			else if (key.neg != GLFW_KEY_UNKNOWN &&
+               glfwGetKey(m_window, key.neg) == GLFW_RELEASE) {
 				key.key_status = Status::RELEASED;
 				ProceedGravity(key);
 			}
 			break;
 		case Status::POS_PRESSED:
-			if (key.neg != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
+			if (key.neg != GLFW_KEY_UNKNOWN &&
+          glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
 				key.value = -1.0f;
 				key.key_status = Status::NEG_PRESSED;
 			}
-			else if (key.pos != GLFW_KEY_UNKNOWN && glfwGetKey(m_window, key.pos) == GLFW_RELEASE) {
+			else if (key.pos != GLFW_KEY_UNKNOWN &&
+               glfwGetKey(m_window, key.pos) == GLFW_RELEASE) {
 				key.key_status = Status::RELEASED;
 				ProceedGravity(key);
 			}
@@ -356,107 +368,196 @@ void Update() {
 
 } /// opgs16::manager::input
 
-void ReadInputFile(const char* file_path) {
-  std::ifstream file_stream(file_path, std::ios_base::in);
-  file_stream.imbue(std::locale(""));
+//!
+//! Global function definition
+//!
 
-  if (file_stream.good()) {
-    BindingKeyInfo key{};
-    std::string error_string{};
+///
+/// @brief verify and automatically log present status.
+///
+/// @param[in] json Json loading library instance
+/// @param[in] key Keyword to find.
+/// @param[in] file_path File path of json library.
+/// @param[in] swt Switch of keyword.
+///
+void ModeVerifyKey(const nlohmann::json& json,
+                   const std::string& key,
+                   const std::string& file_path, phitos::enums::ESwitch& swt) {
+  using phitos::enums::ESwitch;
 
-    auto status{ LoadStatus::KEY_INIT };
-    auto error{ false };
+  if (json.find("keyboard") == json.end()) {
+    PUSH_LOG_CRITICAL_EXT("Key {} is not found in mode object. [{} : {}]",
+                          key, "Path", file_path);
+    PUSH_LOG_ERROR_EXT("{} input feature will be disabled.", "keyboard");
+    swt= ESwitch::Off;
+  }
 
-    std::string line_token;
-    while (std::getline(file_stream, line_token) && (!error)) {
-      // Pass comment and line feed
-      if (line_token.empty()) {
-        if (status == LoadStatus::KEY_INPUT) {
-          m_key_inputs.emplace(std::string{ key.name }, std::move(key));
-          status = LoadStatus::KEY_INIT;
-          key = BindingKeyInfo();
-        }
+  if (json.count("keyboard") != 1) {
+    PUSH_LOG_CRITICAL_EXT("Duplicated {} is found. [{} : {}]",
+                          key, "Path", file_path);
+    PUSH_LOG_ERROR_EXT("{} input feature will be disabled.", "keyboard");
+    swt = ESwitch::Off;
+  }
+
+  PUSH_LOG_DEBUG_EXT("Mode key {} is {}", key, swt == ESwitch::On ? "ON": "OFF");
+}
+
+///
+/// @brief
+///
+/// @param[in] key
+/// @param[in] key_value
+///
+phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
+                                          const nlohmann::json& key_value) {
+  using phitos::enums::ESucceed;
+
+  if (key_value.find("+") == key_value.end() &&
+      key_value.find("-") == key_value.end()) {
+    PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have any key binding.", key);
+    return ESucceed::Failed;
+  }
+
+  if (key_value.find("gravity") == key_value.end()) {
+    PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have gravity.", key);
+    return ESucceed::Failed;
+  }
+
+  if (key_value.find("stick") == key_value.end()) {
+    PUSH_LOG_CRITICAL_EXT("Keyboard key {} does not have stick.", key);
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+phitos::enums::ESucceed KeyboardBindKey(
+    const nlohmann::basic_json<>::const_iterator& it) {
+  using phitos::enums::ESucceed;
+
+  const auto key    = it.key();
+  const auto& value = it.value();
+  BindingKeyInfo key_information;
+
+  if (auto pos_it = value.find("+"); pos_it != value.end()) {
+    const auto& pos_it_value = pos_it.value();
+
+    if (!pos_it_value.is_number_unsigned()) {
+      PUSH_LOG_ERROR_EXT("Keyboard key {} positive value is not number.", key);
+      return ESucceed::Failed;
+    }
+    key_information.pos = pos_it_value.get<unsigned>();
+  }
+
+  if (auto neg_it = value.find("-"); neg_it != value.end()) {
+    const auto& neg_it_value = neg_it.value();
+
+    if (!neg_it_value.is_number_unsigned()) {
+      PUSH_LOG_ERROR_EXT("Keyboard key {} positive value is not number.", key);
+      return ESucceed::Failed;
+    }
+    key_information.neg= neg_it_value.get<unsigned>();
+  }
+
+  const auto& gravity_it_value = value.find("gravity");
+  if (!gravity_it_value->is_number_unsigned()) {
+    PUSH_LOG_ERROR_EXT("Keyboard key {} gravity value is not number.", key);
+    return ESucceed::Failed;
+  }
+  key_information.neutral_gravity =
+      static_cast<float>(gravity_it_value->get<unsigned>());
+
+  const auto& stick_it_value = value.find("stick");
+  if (stick_it_value->is_boolean()) {
+    PUSH_LOG_WARN("Stick key feature is not implemented yet.");
+  }
+
+  m_key_inputs.try_emplace(key, std::move(key_information));
+  return ESucceed::Succeed;
+}
+
+void ReadInputFile(const std::string& file_path) {
+  std::ifstream stream { file_path, std::ios_base::in };
+  if (!stream.good()) {
+    PUSH_LOG_CRITICAL_EXT(
+        "Failed to find project input setting file. [{} : {}]",
+        "Path", file_path);
+    PUSH_LOG_ERRO("Input feature will be disabled.");
+    stream.close();
+    // @todo Do something before everything is going to be mess.
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    return;
+  }
+
+  nlohmann::json atlas_json;
+  stream >> atlas_json;
+  stream.close();
+
+  if (atlas_json.find("mode") == atlas_json.end()) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
+        "mode", "Path", file_path);
+    PUSH_LOG_ERRO("Input feature will be disabled.");
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    return;
+  }
+
+  const auto input_mode = atlas_json["mode"];
+  using phitos::enums::ESwitch;
+  ESwitch keyboard_activated = ESwitch::On;
+  ESwitch mouse_activated    = ESwitch::On;
+  ESwitch joystick_activated = ESwitch::Off;
+
+  // Joystick verification did not held, because not supported yet.
+  ModeVerifyKey(input_mode, "keyboard", file_path, keyboard_activated);
+  ModeVerifyKey(input_mode, "mouse", file_path, mouse_activated);
+
+  if (keyboard_activated == ESwitch::On) {
+    if (atlas_json.find("keyboard") == atlas_json.end()) {
+      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
+          "keyboard", "Path", file_path);
+      PUSH_LOG_ERRO("Input feature will be disabled.");
+      PHITOS_NOT_IMPLEMENTED_ASSERT();
+      return;
+    }
+    const auto keyboard = atlas_json["keyboard"];
+
+    for (auto it = keyboard.begin(); it != keyboard.end(); ++it) {
+      const std::string key = it.key();
+      const auto& value = it.value();
+
+      if (m_key_inputs.find(key) != m_key_inputs.end()) {
+        PUSH_LOG_ERROR_EXT(
+            "Keyboard key {} is duplicated. "
+            "key {} will not be performed properly.", key);
         continue;
       }
-      else if (line_token.at(0) == '#') continue;
 
-      switch (std::stringstream line_stream{ line_token }; status) {
-      case LoadStatus::KEY_INIT: {
-        if (!ProceedKeyInit(line_stream, key)) {
-          error = true;
-          line_stream.seekg(0);
-          line_stream >> std::noskipws >> error_string;
-        }
-        else {
-          status = LoadStatus::KEY_INPUT;
-        }
-      } break;
-      case LoadStatus::KEY_INPUT: {
-        if (!ProceedKeyInput(line_stream, key)) {
-          error = true;
-          line_stream.seekg(0);
-          line_stream >> std::noskipws >> error_string;
-        }
-      } break;
+      using phitos::enums::ESucceed;
+      if (KeyboardVerifyKey(key, value) == ESucceed::Failed) {
+        PUSH_LOG_ERROR_EXT(
+            "Failed to verify keyboard key {0}. "
+            "Keyboard key {0} will not bind to input system.", key);
+        continue;
       }
+
+      if (KeyboardBindKey(it) == ESucceed::Failed)
+        PUSH_LOG_ERROR_EXT("Failed to bind keyboard key {}.", key);
     }
+  }
 
-    if (error) {    /*! If an error occured , display */
-      std::cerr << "ERROR::OCCURED::" << error_string << "\n";
+  if (mouse_activated == ESwitch::On) {
+    if (atlas_json.find("mouse") == atlas_json.end()) {
+      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
+          "mouse", "Path", file_path);
+      PUSH_LOG_ERRO("Input feature will be disabled.");
+      PHITOS_NOT_IMPLEMENTED_ASSERT();
+      return;
     }
+    const auto mouse = atlas_json["mouse"];
   }
 }
 
-bool ProceedKeyInit(std::stringstream& stream, BindingKeyInfo& info) {
-  // Check input style (KB, MS, JS)
-  std::string input_style;
-  stream >> input_style;
-
-  if (!(input_style == "KB" || input_style == "MS" || input_style == "JS"))
-    assert(false);
-  else
-    info.key_type = opgs16::manager::_internal::GetKeyType(input_style);
-
-  // Check token name already exist in m_key_inputs
-  std::string key;
-  stream >> key;
-
-  if (IsKeyExist(key) == EKeyExist::Exist)
-    return false;
-  else {
-    info.name = key;
-    return true;
-  }
-}
-
-bool ProceedKeyInput(std::stringstream& stream, BindingKeyInfo& info) {
-  std::string token;
-  stream >> token;
-
-  if (token == "+" || token == "-") {
-    int* bind_pos;
-    if (token == "+")
-      bind_pos = &info.pos;
-    else
-      bind_pos = &info.neg;
-
-    int key_token;
-    stream >> key_token;
-    *bind_pos = key_token;
-    return true;
-  }
-  else if (token == "g") {
-    float gravity;
-    stream >> gravity;
-    info.neutral_gravity = gravity;
-    return true;
-  }
-
-  return false;
-}
-
-
-void ProceedGravity(BindingKeyInfo & key_info) {
+void ProceedGravity(BindingKeyInfo& key_info) {
 	const auto dt = opgs16::manager::time::GetDeltaTime();
 	auto value = key_info.value;
 	key_info.send_signal = false;

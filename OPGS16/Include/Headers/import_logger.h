@@ -53,9 +53,13 @@
     NEU_NOT_IMPLEMENTED_ASSERT(); \
   }
 
+///
+/// @todo Change info to debug.
+///
+
 #define PUSH_LOG_DEBUG_EXT(__MAString__, ...) \
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->debug(__MAString__, __VA_ARGS__); \
+    spt->info(__MAString__, __VA_ARGS__); \
   } else { \
     NEU_NOT_IMPLEMENTED_ASSERT(); \
   }

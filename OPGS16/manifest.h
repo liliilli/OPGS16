@@ -33,13 +33,17 @@ constexpr unsigned k_size{ 2 };
 #define _APPLICATION_PROJECT_NAME \
 L"TEST GAME"
 
+// Set Project path
+#define _APPLICATION_PROJECT_PATH \
+"D:/Development/OPGS16/OPGS16/_Project/Debug"
+
 // Set Application window name when operating. If this is not uncommented, just use PROJECT_NAME insteadily.
 //#define _APPLICATION_WINDOW_NAME
 
 // set resource setting file to load your resource on run-time.
 // This must be written as the style of " ... " or application will not build up.
 #define _RESOURCE_SETTING_FILE_PATH \
-"_Project/Debug/ProjectSetting/resource.meta"
+"_Project/Debug/Setting/resource.meta"
 
 //
 #define _INITIAL_SCENE_INCLUDE_PATH \
