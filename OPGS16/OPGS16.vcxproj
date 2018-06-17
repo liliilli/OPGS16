@@ -190,6 +190,7 @@
     <ClCompile Include="Source\Frame\timer_handle.cc" />
     <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
+    <ClCompile Include="Source\Helper\string_helper.cc" />
     <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
     <ClCompile Include="Source\Manager\Internal\vao_management.cc" />
     <ClCompile Include="Source\Manager\mesh_manager.cc" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
+    <ClInclude Include="Include\Helper\string_helper.h" />
     <ClInclude Include="Include\Helper\vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
@@ -499,13 +501,13 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
-    <None Include="_Project\Debug\Setting\rendering_layer.meta" />
+    <None Include="_Project\Debug\Setting\input.meta" />
+    <None Include="_Project\Debug\Setting\setting.meta" />
     <None Include="_resource.meta" />
-    <None Include="_Setting\collision.meta" />
-    <None Include="_Setting\global_setting.meta" />
+    <None Include="Legacy\collision.meta" />
     <None Include="Legacy\input.meta" />
-    <None Include="_Setting\render_layer.meta" />
-    <None Include="_Setting\tag.meta" />
+    <None Include="Legacy\render_layer.meta" />
+    <None Include="Legacy\tag.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Sprites\System.png" />
@@ -519,7 +521,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties _3Setting_4collision_1meta__JSONSchema="http://json.schemastore.org/appveyor" />
+      <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

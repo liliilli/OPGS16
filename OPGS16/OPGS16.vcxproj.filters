@@ -91,6 +91,7 @@
     <ClCompile Include="Source\Element\Internal\vao_container.cc" />
     <ClCompile Include="Source\Manager\time_manager.cc" />
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
+    <ClCompile Include="Source\Helper\string_helper.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\switch.h" />
     <ClInclude Include="Include\Manager\Internal\sound_info.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
+    <ClInclude Include="Include\Helper\string_helper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -337,15 +339,15 @@
     <None Include="Shaders\Global\sinewave.frag" />
     <None Include="Shaders\Global\quad.frag" />
     <None Include="Shaders\pp\gray.frag" />
-    <None Include="_Setting\tag.meta" />
     <None Include="_resource.meta" />
-    <None Include="_Setting\render_layer.meta" />
-    <None Include="_Setting\global_setting.meta" />
-    <None Include="_Setting\collision.meta" />
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
     <None Include="Legacy\input.meta" />
-    <None Include="_Project\Debug\Setting\rendering_layer.meta" />
+    <None Include="_Project\Debug\Setting\input.meta" />
+    <None Include="Legacy\render_layer.meta" />
+    <None Include="_Project\Debug\Setting\setting.meta" />
+    <None Include="Legacy\tag.meta" />
+    <None Include="Legacy\collision.meta" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

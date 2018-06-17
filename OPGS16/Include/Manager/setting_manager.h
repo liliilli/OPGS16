@@ -49,14 +49,14 @@ using CollisionLayerLIst = std::vector<std::string>;
 void Initiate();
 
 ///
-/// @brief 
+/// @brief
 /// Return tag name of specified index.
 /// If input id exceeds the size of tag list, return "ERROR::TAG::OOB"
 ///
 /// @param[in] i index number to find in tag list.
 /// @return Tag name of index.
 ///
-const std::string& GetTagName(size_t i);
+const std::string& GetTagName(uint32_t i);
 
 ///
 /// @brief
@@ -67,10 +67,10 @@ const std::string& GetTagName(size_t i);
 /// @param[in] i index number to find in rendering layer list.
 /// @return Rendering layer name of index.
 ///
-const std::string& GetRenderingLayerName(size_t i);
+const std::string& GetRenderingLayerName(uint32_t i);
 
 ///
-/// @brief 
+/// @brief
 /// Return tag name list.
 /// This function call takes a lot of time, you have been recommended to use
 /// it only in debug mode.
@@ -80,7 +80,7 @@ const std::string& GetRenderingLayerName(size_t i);
 const TagList& GetTagNameList();
 
 ///
-/// @brief 
+/// @brief
 /// Return rendering layer name list.
 /// This function call takes a lot of time, you have been recommended to use
 /// it only in debug mode.
@@ -94,22 +94,22 @@ const RenderingLayerList& GetRenderingLayerNameList();
 /// Return rendering layer name list size.
 ///
 /// @return The size of rendering layer name list.
-/// 
-size_t GetRenderingLayerNameListSize();
+///
+uint32_t GetRenderingLayerNameListSize();
 
 ///
 /// @brief
-/// 
+///
 /// @param[in] i index number to find in collision layer list.
 /// @return Collision layer name of index.
 ///
-const std::string& GetCollisionLayerName(size_t i);
+const std::string& GetCollisionLayerName(uint32_t i);
 
-/// @brief 
+/// @brief
 /// Return collision layer list.
 /// This function call takes a lot of time, you have been recommended to use
 /// it only in debug mode.
-/// 
+///
 /// @return Rendering layer name list.
 ///
 const CollisionLayerLIst& GetCollisionLayerList();
