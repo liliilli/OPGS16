@@ -23,6 +23,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <Phitos/Dbg/assert.h>
+
 #include <Manager\font_manager.h>
 #include <Manager\input_manager.h>
 #include <Manager/mesh_manager.h>
@@ -126,9 +128,9 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 
 namespace opgs16::entry {
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Forward declaration part
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+//!
+//! Forward declaration list
+//!
 
 ///
 ///
@@ -252,7 +254,8 @@ void Initiate() {
 #endif
 
   manager::setting::Initiate();
-  manager::resource::ReadResourceFile("_resource.meta");
+  manager::resource::__::Initiate();
+  //manager::resource::ReadResourceFile("_resource.meta");
   manager::mesh::Initiate();
   manager::_internal::vao::Initiate();
 
@@ -291,12 +294,6 @@ void Initiate() {
 
 #if defined(_CUSTOM_PROJECT)
 #if defined(_RESOURCE_SETTING_FILE_PATH)
-  manager::resource::ReadResourceFile(_RESOURCE_SETTING_FILE_PATH);
-#else
-  static_assert(false, "Set a path for _RESOURCE_SETTING_FILE_PATH);
-#endif
-
-#if defined(_RESOURCE_SETTING_FILE_PATH)
 #if defined(_INITIAL_SCENE_FULL_NAME)
 #if !_SHOW_BOOT_SCREEN
   M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
@@ -331,6 +328,7 @@ void Initiate() {
 ///
 GLFWwindow* InitApplication(const std::string& application_name) {
   glfwInit();
+  PHITOS_SET_RELEASE_FUNCTION(&opgs16::entry::Shutdown);
 
   // OpenGL Setting
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -450,6 +448,7 @@ void Shutdown() {
   manager::scene::__::Shutdown();
   manager::_internal::vao::Shutdown();
   manager::mesh::Shutdown();
+  manager::resource::__::Shutdown();
 }
 
 void Update(float delta_time) {

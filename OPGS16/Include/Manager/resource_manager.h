@@ -16,14 +16,14 @@
 ///
 /// @log
 /// 2018-02-27 Correction of loading mechanism
-/// 2018-02-28 
+/// 2018-02-28
 /// Corrected GetTexture2D return type must be resource::STexture2D structure.
-/// 2018-03-02 
+/// 2018-03-02
 /// Move ResourceManager class inside opgs16::manager for uniformation.
-/// 2018-03-03 
+/// 2018-03-03
 /// Refactored and removed member functions are not appropriate for class.
-/// 2018-04-06 
-/// Support Texture2DAtlas instead of plain Texture2D 
+/// 2018-04-06
+/// Support Texture2DAtlas instead of plain Texture2D
 /// which not support atlas information.
 /// 2018-05-22
 /// Remove class singleton and renovate it to namespace for uniformation.
@@ -38,18 +38,18 @@
 ///
 /// @namespace opgs16::manager::resource
 /// @brief This class is singleton and not derivable as derived class.
-/// resource namespace has a rule of managing resource files path, 
+/// resource namespace has a rule of managing resource files path,
 /// each shader path, error statement path and so on.
 ///
 /// @log
 /// 2018-02-27 Correction of loading mechanism
-/// 2018-02-28 
+/// 2018-02-28
 /// Corrected GetTexture2D return type must be resource::STexture2D structure.
 /// 2018-03-02 Move to opgs16::manager namespace.
-/// 2018-03-03 
+/// 2018-03-03
 /// Move private functions which don't match class to non-member function.
-/// 2018-04-06 
-/// Support Texture2DAtlas instead of plain Texture2D 
+/// 2018-04-06
+/// Support Texture2DAtlas instead of plain Texture2D
 /// which not support atlas information.
 /// 2018-05-22
 /// Remove class singleton and renovate it to namespace for uniformation.
@@ -58,15 +58,6 @@ namespace opgs16::manager::resource {
 
 ///
 /// @brief
-/// IsSceneEmpty already allocated resources and load resource with file path.
-/// 
-/// @param[in] file_path File path to load resource metadata.
-/// @return success or failure flag.
-///
-bool ReadResourceFile(const std::string& file_path);
-
-///
-/// @brief 
 /// Get specific shader list.
 ///
 /// @param[in] name_key shader program aliasing name.
@@ -75,7 +66,7 @@ bool ReadResourceFile(const std::string& file_path);
 const opgs16::resource::SShader& GetShader(const std::string& name_key);
 
 ///
-/// @brief 
+/// @brief
 /// Get specific texture path.
 ///
 /// @param[in] name_key Wrapping tag name of actual sprite path.
@@ -84,7 +75,7 @@ const opgs16::resource::SShader& GetShader(const std::string& name_key);
 const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_key);
 
 ///
-/// @brief 
+/// @brief
 /// Get specified sound path information.
 ///
 /// @param[in] name_key Wrapping tag name of actual sound path.
@@ -93,7 +84,7 @@ const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_ke
 const opgs16::resource::SSound& GetSound(const std::string& name_key);
 
 ///
-/// @brief 
+/// @brief
 /// Return font information with success flag.
 ///
 /// @param[in] name_key Name tag of font information you want to find
@@ -102,13 +93,32 @@ const opgs16::resource::SSound& GetSound(const std::string& name_key);
 std::pair<bool, const opgs16::resource::SFont*> GetFont(const std::string& name_key);
 
 ///
-/// @brief 
+/// @brief
 /// Return animation information pointer. if doesn't find return nullptr.
 ///
 /// @param[in] name_key Name tag of animation resource information you want to find
 /// @return The pointer of animation information otherwise nullptr.
 ///
 const opgs16::resource::SAnimation* GetAnimation(const std::string& name_key);
+
+/// Internal namespace
+namespace __ {
+
+///
+/// @brief
+/// Initiate resource management and read appropriate files.
+/// builtin.meta
+/// resource.meta
+///
+void Initiate();
+
+///
+/// @brief
+/// Clean up and release all heap resources.
+///
+void Shutdown();
+
+} /// ::opgs16::manager::resource::__ namespace
 
 } /// ::opgs16::manager::resource
 

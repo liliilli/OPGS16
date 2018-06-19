@@ -25,7 +25,19 @@
 
 #include <Core\application.h>   /// ::opgs16::MApplication
 
-int main() {
+#if defined(_WIN32)
+#include <Windows.h>
+#endif
+
+int main(int argc, char** argv) {
+#if defined(_WIN32)
+#if defined(_DEBUG)
+  ShowWindow(GetConsoleWindow(), SW_SHOW);
+#else
+  ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
+#endif
+
   opgs16::entry::Initiate();
   opgs16::entry::Run();
   opgs16::entry::Shutdown();

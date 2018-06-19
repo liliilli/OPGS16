@@ -339,7 +339,6 @@
     <None Include="Shaders\Global\sinewave.frag" />
     <None Include="Shaders\Global\quad.frag" />
     <None Include="Shaders\pp\gray.frag" />
-    <None Include="_resource.meta" />
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
     <None Include="Legacy\input.meta" />
@@ -348,6 +347,10 @@
     <None Include="_Project\Debug\Setting\setting.meta" />
     <None Include="Legacy\tag.meta" />
     <None Include="Legacy\collision.meta" />
+    <None Include="_Project\_Template\Setting\input.meta" />
+    <None Include="_Project\_Template\Setting\setting.meta" />
+    <None Include="Legacy\_resource.meta" />
+    <None Include="_Project\Debug\Resource\Builtin\Sprite\atlas.atlas" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

@@ -10,7 +10,7 @@
 /// @author Jongmin Yun
 ///
 /// @log
-/// 2018-03-02 
+/// 2018-03-02
 /// Move ResourceManager class inside opgs16::manager namespace for uniformation.
 /// Refactored and removed member functions are not appropriate for class.
 /// 2018-03-03 Move member function to free funtion.
@@ -21,26 +21,34 @@
 /// @todo Change resource file style to json and also mechanism.
 ///
 
-#include <Manager\resource_manager.h>   /// Header file
+/// Header file
+#include <Manager/resource_manager.h>
 
 #include <fstream>
+#include <optional>
 #include <sstream>
-#include <stdexcept>	
+#include <stdexcept>
 #include <utility>
 
 /// Third-party json library
-#include "..\..\..\__ThirdParty\nlohmann\json.hpp"  
+#include <json.hpp>
+/// Enhanced assertion.
+#include <Phitos/Dbg/assert.h>
 
 /// import logger in debug mode
-#include <Headers\import_logger.h> 
-/// Expanded assertion
-#include <Helper\assert.h>
+#include <Headers/import_logger.h>
+/// ::opgs16::helper:: string helper function.
+#include <Helper/string_helper.h>
+/// ::opgs16::helper::json json helper function.
+#include <Helper/Json/json_helper.h>
+
 /// ::opgs16::debug error messages.
 #include <Manager\Internal\error_message.h>
 /// ::opgs16::manager::_internal flags
 #include <Manager\Internal\flag.h>
-/// ::opgs16::resource::_internal namespace
-#include <Manager\Internal\resource_internal.h>
+
+/// @todo remove this
+#include <../manifest.h>
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Forward Declaration
@@ -48,198 +56,168 @@
 
 using opgs16::resource::_internal::EResourceType;
 using opgs16::resource::_internal::ESymbolType;
+using phitos::enums::EFound;
+using phitos::enums::ESucceed;
 
 ///
 /// @brief
-/// Read resource along with resource_type
+/// IsSceneEmpty already allocated resources and load resource with file path.
 ///
-/// @param[in] token_line
-/// @param[in] stream
-/// @param[in] global_path
-/// @param[in] type
+/// @param[in] file_path File path to load resource metadata.
+/// @return success or failure flag.
 ///
-void ReadResource(const std::string& token_line, 
-                  std::ifstream& stream,
-                  const std::string& global_path, 
-                  EResourceType type);
+ESucceed ReadResourceFile(const std::string& file_path);
 
 ///
-/// @brief 
-/// Read symbol and return with token string.
+/// @brief
 ///
-/// @param[in] line_token
+/// @param[in] json
+/// @param[in] file_path
 ///
 /// @return
 ///
-std::pair<ESymbolType, std::string> ReadSymbol(const std::string& line_token);
-
-
-///
-/// @brief
-/// Get resource type from token.
-///
-/// @param[in] resource_token
-///
-/// @return EResourceType
-///
-EResourceType GetResourceType(const std::string_view& resource_token);
+ESucceed VerifyResourceFile(const nlohmann::json& json,
+                                           const std::string& file_path);
 
 ///
 /// @brief
 ///
-/// @param[in] name_key
-/// @param[in] list
+/// @param[in] json
 ///
-void PushShader(const std::string& name_key, 
-                const opgs16::resource::SShader& list);
+void InitializeFont(const nlohmann::json& json);
 
 ///
 /// @brief
 ///
-/// @param[in] name_key
-/// @param[in] container 
+/// @param[in] json
 ///
-void PushTexture2D(const std::string& name_key, 
-                   const opgs16::resource::STexture2DAtlas& container);
+void InitializeTexture(const nlohmann::json& json);
 
 ///
 /// @brief
 ///
-/// @param[in] name_key
-/// @param[in] container 
+/// @param[in] json
 ///
-void PushSound(const std::string& name_key, 
-               const opgs16::resource::SSound& container);
+/// @return Success flag
+///
+ESucceed VerifyTextureInternalStructure(const nlohmann::json& json);
 
 ///
 /// @brief
 ///
-/// @param[in] name_key
-/// @param[in] container 
+/// @param[in] json
 ///
-void PushFont(const std::string& name_key, 
-              const opgs16::resource::SFont& container);
+/// @return Sucess flag
+///
+ESucceed VerifyTextureInsertion(const nlohmann::json::const_iterator& json);
 
 ///
 /// @brief
 ///
-/// @param[in] name_key
-/// @param[in] container 
+/// @param[in] json
 ///
-void PushAnimation(const std::string& name_key, 
-                   const opgs16::resource::SAnimation& container);
-
+/// @return
 ///
-/// @brief 
-/// Make Texture2D without any atlas information.
-/// Atlas information will be filled with default information.
-///
-/// @param[in] line_stream
-/// @param[in] global_path
-///
-/// @return 
-///
-opgs16::resource::STexture2DAtlas MakeTexture2DContainerDefault(
-    std::stringstream& line_stream, 
-    const std::string& global_path);
+opgs16::resource::STexture2DAtlas
+MakeTexture2D(const nlohmann::json::const_iterator& json);
 
 ///
 /// @brief
-/// Create atlas information from json stream.
 ///
-/// @param[in] atlas_json
-/// @param[in] list_name
-/// @param[in] resource
+/// @param[in] texture_instance
+/// @param[in] atlas_path
 ///
-/// @throw std::runtime_error
+/// @return Success flag
 ///
-template <typename T>
-std::vector<T> CreateAtlasInformationList(
-    nlohmann::json& atlas_json,
-    const std::string& list_name,
-    opgs16::resource::STexture2DAtlas* resource);
+ESucceed
+MakeTextureAtlasInformation(opgs16::resource::STexture2DAtlas& texture_instance,
+                            const std::string& atlas_path);
 
 ///
 /// @brief
-/// 
+///
+/// @param[in] json
+///
+void InitializeMesh(const nlohmann::json& json);
+
+///
+/// @brief
+///
 /// @param[in] container
 ///
 ///
 void MakeTexelInformation(opgs16::resource::STexture2DAtlas& container);
 
 ///
-/// @brief 
-/// Make Texture2D atlas information.
-/// if something is wrong, generate runtime_error.
+/// @brief
 ///
-/// @param[in] file
-/// @param[in] path
+/// @param[in] json
 ///
-/// @return
-///
-opgs16::resource::STexture2DAtlas MakeTextureAtlasInformation(
-    std::ifstream& file,
-    const std::string& path);
-
-///
-/// @brief 
-/// Make Texture2D with specific atlas information
-///
-/// @param[in] line_stream
-/// @param[in] global_path
-///
-/// @return
-///
-/// @throw std::runtime_error
-///
-opgs16::resource::STexture2DAtlas MakeTexture2DAtlasContainer(
-    std::stringstream& line_stream,
-    const std::string& global_path);
+void InitializeSound(const nlohmann::json& json);
 
 ///
 /// @brief
-/// Make Sound as background music
 ///
-/// @param[in] line_stream
-/// @param[in] global_path
-/// @param[in] is_bgm
+/// @param[in] json
 ///
 /// @return
 ///
-opgs16::resource::SSound MakeSoundContainer(
-    std::stringstream& line_stream,
-    const std::string& global_path,
-    bool is_bgm);
+opgs16::resource::SShader MakeShader(const nlohmann::json& json);
 
 ///
-/// @brief 
-/// Make shader container
+/// @brief
 ///
-/// @param[in] stream
-/// @param[in] global_path
-/// @param[in] scope_type
+/// @param[in] json
+///
+void InitializeShader(const nlohmann::json& json);
+
+///
+/// @brief
+///
+/// @param[in]
 ///
 /// @return
 ///
-opgs16::resource::SShader MakeShaderContainer(
-    std::ifstream& stream,
-    const std::string& global_path);
+ESucceed VerifySoundStructure(const nlohmann::json& json);
 
 ///
-/// @brief 
-/// Make font container
+/// @brief
 ///
-/// @param[in] line_stream
-/// @param[in] global_path
+/// @param[in]
 ///
 /// @return
 ///
-opgs16::resource::SFont MakeFontContainer(
-    std::stringstream& line_stream,
-    const std::string& global_path);
+ESucceed VerifySoundInsertion(const nlohmann::json::const_iterator& json);
 
 ///
-/// @brief 
+/// @brief
+///
+/// @param[in]
+///
+/// @return
+///
+opgs16::resource::SSound MakeSound(const nlohmann::json& json);
+
+///
+/// @brief
+///
+/// @param[in] json
+///
+/// @return
+///
+ESucceed VerifyShaderStructure(const nlohmann::json& json);
+
+///
+/// @brief
+///
+/// @param[in] json
+///
+/// @return
+///
+ESucceed VerifyShaderInsertion(const nlohmann::json& json);
+
+///
+/// @brief
 /// Make animation film container.
 ///
 /// @param[in] line_stream
@@ -250,7 +228,7 @@ opgs16::resource::SFont MakeFontContainer(
 opgs16::resource::SAnimation MakeAnimationContainer(
     std::stringstream& line_stream,
     const std::string& global_path);
-  
+
 ///
 /// @brief
 ///
@@ -264,25 +242,54 @@ template <typename _Ty>
 bool ExistKey(const std::map<std::string, _Ty>& container,
               const std::string& name_key);
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Member container
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+//!
+//! Datas
+//!
 
 ///
-/// This namespace is integrity check variable container for 
+/// This namespace is integrity check variable container for
 /// checking runtime caveats of source code.
 ///
 namespace {
 using opgs16::debug::EInitiated;
 
-EInitiated m_initiated = EInitiated::NotInitiated;
+const char* s_builtin   = "Setting/builtin.meta";
+const char* s_resource  = "Setting/resource.meta";
+
+constexpr const char* s_json_meta = "meta";
+
+constexpr const char* s_json_font = "font";
+constexpr const char* s_json_texture = "texture";
+constexpr const char* s_json_mesh = "mesh";
+constexpr const char* s_json_shader = "shader";
+constexpr const char* s_json_sound = "sound";
+constexpr const char* s_json_list = "list";
+
+constexpr const char* s_json_path = "path";
+constexpr const char* s_json_type = "type";
+constexpr const char* s_json_atlas = "atlas";
+constexpr const char* s_json_vs = "vs";
+constexpr const char* s_json_fs = "fs";
+
+constexpr const char* s_json_texture_width = "texture_width";
+constexpr const char* s_json_texture_height = "texture_height";
+constexpr const char* s_json_offset_x = "offset_x";
+constexpr const char* s_json_offset_y = "offset_y";
+constexpr const char* s_json_width = "width";
+constexpr const char* s_json_height = "height";
+
+constexpr const char* s_json_st_effect = "effect";
+constexpr const char* s_json_st_back = "back";
+
+EInitiated m_initiated  = EInitiated::NotInitiated;
+EInitiated m_shutdowned = EInitiated::NotInitiated;
 } /// unnamed namespace
 
 ///
-/// This namespace stores variables or 
+/// This namespace stores variables or
 /// constexpr variables to be used by functions.
 ///
-namespace { 
+namespace {
 
 using texture_map       = std::map<std::string, opgs16::resource::STexture2DAtlas>;
 using sound_map         = std::map<std::string, opgs16::resource::SSound>;
@@ -303,41 +310,39 @@ animation_map m_animations;
 
 } /// unnamed namespace
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Definition part
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+//!
+//! Implementation part
+//!
+
+namespace opgs16::manager::resource::__ {
+
+void Initiate() {
+  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
+      "Duplicated resource initiation is prohibited.");
+  PHITOS_ASSERT(m_shutdowned == EInitiated::NotInitiated,
+      "Reinitiation after shutdown is prohibited.");
+
+  ReadResourceFile(
+      helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, s_builtin));
+  ReadResourceFile(
+      helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, s_resource));
+
+  m_initiated = EInitiated::Initiated;
+}
+
+void Shutdown() {
+  m_animations.clear();
+  m_textures.clear();
+  m_shaders.clear();
+  m_sounds.clear();
+  m_fonts.clear();
+
+  m_shutdowned = EInitiated::Initiated;
+}
+
+} /// ::opgs16::manager::resource::__ namespace
 
 namespace opgs16::manager::resource {
-
-bool ReadResourceFile(const std::string& file_path) {
-  std::ifstream file_stream{ file_path, std::ios_base::in };
-  file_stream.imbue(std::locale(""));
-
-  if (!file_stream.good()) {
-    PUSH_LOG_ERROR_EXT("Cannot open the file : {0}", file_path);
-    return false;
-  }
-
-  PUSH_LOG_INFO_EXT("Opened resource meta file : {0}", file_path);
-
-  std::string global_path, file_line;
-  while (std::getline(file_stream, file_line)) {
-    if (file_line.empty()) continue;
-
-    switch (auto[symbol, token] = ReadSymbol(file_line); symbol) {
-    case ESymbolType::GLOBAL_PATH:
-      global_path = token;
-      PUSH_LOG_WARN(global_path.c_str());
-      break;
-    case ESymbolType::RESOURCE:
-      ReadResource(file_line, file_stream, global_path, GetResourceType(token));
-      break;
-    default: break;
-    }
-  }
-
-  return file_stream.eof();
-}
 
 const opgs16::resource::SShader& GetShader(const std::string& name_key) {
   if (!ExistKey(m_shaders, name_key)) {
@@ -388,184 +393,375 @@ const opgs16::resource::SAnimation* GetAnimation(const std::string& name_key) {
 
 } /// ::opgs16::manager::resource
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Free function definition part
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+//!
+//! Free funciton definition part
+//!
 
 template <typename _Ty>
-bool ExistKey(const std::map<std::string, _Ty>& container, 
+bool ExistKey(const std::map<std::string, _Ty>& container,
               const std::string& name_key) {
   return container.find(name_key) != container.end();
 }
 
-std::pair<ESymbolType, std::string> ReadSymbol(const std::string& line_token) {
-    ESymbolType symbol{ ESymbolType::NOTHING };
+///
+/// @brief Load json file safely.
+/// If return value doesn't have a value, it specifies error in function.
+///
+/// @param[in] file_path Json file path to load.
+///
+/// @return Nullable nlohmann::json instance.
+///
+std::optional<nlohmann::json> LoadJsonFile(const std::string& file_path) {
+  std::ifstream file_stream{ file_path, std::ios_base::in };
+  file_stream.imbue(std::locale(""));
+   if (!file_stream.good()) {
+    PUSH_LOG_CRITICAL_EXT(
+        "Failed to find project resource metafile. [{} : {}]", "Path", file_path);
+    file_stream.close();
+    return std::nullopt;
+  }
 
-    std::stringstream line_stream{ line_token };
-    std::string token; line_stream >> token;
+  nlohmann::json atlas_json;
+  file_stream >> atlas_json;
+  file_stream.close();
+  return atlas_json;
+}
 
-    switch (*token.cbegin()) {
-    default: symbol = ESymbolType::RESOURCE; break;
-    case '$':   /*! This statements is defualt resource path. */
-        symbol = ESymbolType::GLOBAL_PATH;
-        line_stream >> token;
-        break;
-    case '#':   /*! This statements is comment line. */
-        symbol = ESymbolType::COMMENT;
-        break;
+ESucceed ReadResourceFile(const std::string& file_path) {
+  using phitos::enums::ESucceed;
+
+  auto json_instance = LoadJsonFile(file_path);
+  if (!json_instance.has_value()) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  const auto& atlas_json = json_instance.value();
+  PUSH_LOG_INFO_EXT("Opened resource meta file. [Path : {}]", file_path);
+  if (VerifyResourceFile(atlas_json, file_path) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  InitializeFont(atlas_json[s_json_font]);
+  InitializeTexture(atlas_json[s_json_texture]);
+  InitializeMesh(atlas_json[s_json_mesh]);
+  InitializeShader(atlas_json[s_json_shader]);
+  InitializeSound(atlas_json[s_json_sound]);
+  return ESucceed::Succeed;
+}
+
+///
+/// @brief
+///
+///
+ESucceed VerifyResourceFile(const nlohmann::json& json, const std::string& file_path) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  const auto CheckKeyAssert = [&](const char* key) {
+    if (IsJsonKeyExist(json, key) == EFound::NotFound) {
+      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]", key, "Path", file_path);
+      PHITOS_UNEXPECTED_BRANCH();
+      return ESucceed::Failed;
+    }
+    return ESucceed::Succeed;
+  };
+
+  if (CheckKeyAssert(s_json_meta) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_font) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_texture) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_mesh) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_shader) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_sound) == ESucceed::Failed) return ESucceed::Failed;
+
+  return ESucceed::Succeed;
+}
+
+//!
+//! Font
+//!
+
+///
+/// @brief
+///
+///
+ESucceed VerifyFontInternalStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_font);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_list, s_json_font);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+///
+/// @brief
+///
+///
+ESucceed VerifyFontInsertion(const nlohmann::json::const_iterator& it) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  const auto& font_key = it.key();
+  if (ExistKey(m_fonts, font_key)) {
+    PUSH_LOG_ERROR_EXT("{0} key is duplicated. [{0} : {1}]", "Font", font_key);
+    return ESucceed::Failed;
+  }
+  const auto& font_object = it.value();
+  if (IsJsonKeyExist(font_object, s_json_path) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT("{0} is not found in {1} {2}. This {2} will be passed.",
+        s_json_path, s_json_font, font_key);
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+///
+/// @brief
+///
+void InitializeFont(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+
+  if (VerifyFontInternalStructure(json) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
+  }
+
+  // @todo Intentionally neglect font::meta header.
+  // If meta information of font header is needed later, implement this.
+
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    if (VerifyFontInsertion(it) == ESucceed::Failed) {
+      continue;
     }
 
-    return { symbol, token };
-}
+    using opgs16::resource::SFont;
+    using opgs16::helper::ConcatDirectoryWithFile;
+    auto [_, result] = m_fonts.try_emplace(it.key(), SFont(
+        ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, it.value()[s_json_path].get<std::string>()),
+        false
+    ));
 
-void ReadResource(const std::string& token_line, std::ifstream& stream,
-                  const std::string& global_path, EResourceType type) {
-  std::stringstream line_stream{ token_line };
-  /*! Just drop first token */
-  {
-    std::string __;
-    line_stream >> __;
-  }
-
-  switch (type) {
-  default: break;
-  case EResourceType::TEXTURE_2D: {    /*! Texture 2D information generating sequence */
-    std::string tag;    line_stream >> tag;
-    PushTexture2D(tag, MakeTexture2DContainerDefault(line_stream, global_path));
-  }   break;
-  case EResourceType::TEXTURE_2D_ATLAS: {
-    std::string tag;    line_stream >> tag;
-    PushTexture2D(tag, MakeTexture2DAtlasContainer(line_stream, global_path));
-  }   break;
-  case EResourceType::SHADER: {
-    std::string tag;    line_stream >> tag;
-    PushShader(tag, MakeShaderContainer(stream, global_path));
-  }   break;
-  case EResourceType::SOUND_EFFECT_BGM: {
-    std::string tag;    line_stream >> tag;
-    PushSound(tag, MakeSoundContainer(line_stream, global_path, true));
-  }   break;
-  case EResourceType::SOUND_EFFECT_EFFECT: {
-    std::string tag;    line_stream >> tag;
-    PushSound(tag, MakeSoundContainer(line_stream, global_path, false));
-  }   break;
-  case EResourceType::FONT: {
-    std::string tag;    line_stream >> tag;
-    PushFont(tag, MakeFontContainer(line_stream, global_path));
-  }   break;
-  case EResourceType::ANIMATION: {
-    std::string tag;    line_stream >> tag;
-    PushAnimation(tag, MakeAnimationContainer(line_stream, global_path));
-  }   break;
+    if (result) {
+      PUSH_LOG_DEBUG_EXT("Font {} is inserted as {} successfully.", it.key(), _->second.Path());
+    }
+    else {
+      PUSH_LOG_ERROR_EXT("Failed to insert font {}.", it.key());
+    }
   }
 }
 
-void PushShader(const std::string& name_key, 
-                const opgs16::resource::SShader& list) {
-  if (ExistKey(m_shaders, name_key)) {
-    PUSH_LOG_ERROR_EXT("Shader key duplicated : [Tag : {0}]", name_key);
-    throw std::runtime_error("Shader Key duplicated :: " + name_key);
+//!
+//! Texture
+//!
+
+void InitializeTexture(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+
+  if (VerifyTextureInternalStructure(json) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
   }
 
-  m_shaders.emplace(name_key, list);
+  // @todo Intentionally neglect font::meta header.
+  // If meta information of font header is needed later, implement this.
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    if (VerifyTextureInsertion(it) == ESucceed::Failed)
+      continue;
+
+    using opgs16::resource::STexture2DAtlas;
+    using opgs16::helper::ConcatDirectoryWithFile;
+
+    // Insert texture information.
+    auto [_, result] = m_textures.try_emplace(it.key(), MakeTexture2D(it));
+
+    if (result) {
+      PUSH_LOG_DEBUG_EXT(
+          "Font {} is inserted as {} successfully.",
+          it.key(), _->second.path);
+    }
+    else {
+      PUSH_LOG_ERROR_EXT("Failed to insert font {}.", it.key());
+    }
+  }
 }
 
-void PushTexture2D(const std::string& name_key, 
-                   const opgs16::resource::STexture2DAtlas& container) {
-  if (ExistKey(m_textures, name_key)) {
-    PUSH_LOG_ERROR_EXT("Texture2D key duplicated : [Tag : {0}]", name_key);
-    throw std::runtime_error("Texture Key duplicated :: " + name_key);
+ESucceed VerifyTextureInternalStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_texture);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
   }
 
-  m_textures.emplace(name_key, container);
-}
-
-void PushSound(const std::string& name_key, 
-               const opgs16::resource::SSound& container) {
-  if (ExistKey(m_sounds, name_key))
-    throw std::runtime_error("Sound Key duplicated :: " + name_key);
-
-  m_sounds.emplace(name_key, container);
-}
-
-void PushFont(const std::string& name_key, 
-              const opgs16::resource::SFont& container) {
-  if (ExistKey(m_fonts, name_key))
-    throw std::runtime_error("Font Key duplicated :: " + name_key);
-
-  m_fonts.emplace(name_key, container);
-}
-
-void PushAnimation(const std::string& name_key, 
-                   const opgs16::resource::SAnimation& container) {
-  if (ExistKey(m_animations, name_key))
-    throw std::runtime_error("Animation duplicated :: " + name_key);
-
-  m_animations.emplace(name_key, container);
-}
-
-EResourceType GetResourceType(const std::string_view& resource_token) {
-    using namespace opgs16::resource::_internal;
-
-    if (resource_token == TEX2D)
-      return EResourceType::TEXTURE_2D;
-    if (resource_token == TEX2DATLAS)
-      return EResourceType::TEXTURE_2D_ATLAS;
-    if (resource_token == SHADE)
-      return EResourceType::SHADER;
-    if (resource_token == SEBGM)
-      return EResourceType::SOUND_EFFECT_BGM;
-    if (resource_token == SEEFF)
-      return EResourceType::SOUND_EFFECT_EFFECT;
-    if (resource_token == FONT)
-      return EResourceType::FONT;
-    if (resource_token == ANIMATION)
-      return EResourceType::ANIMATION;
-
-    return EResourceType::NOTHING;
-}
-
-opgs16::resource::STexture2DAtlas MakeTexture2DContainerDefault(
-    std::stringstream& line_stream, 
-    const std::string& global_path) {
-  std::string local_path; 
-  line_stream >> local_path;
-
-  // Print log in _DEBUG mode
-#if defined(_DEBUG)
-  std::string log{ "[Texture2D][" };
-  log.append(local_path.cbegin(), local_path.cend());
-  log.append("]");
-  PUSH_LOG_ERRO(log.c_str());
-#endif 
-
-  opgs16::resource::STexture2DAtlas atlas_resource;
-  atlas_resource.path = global_path + local_path;
-  atlas_resource.fragment_number = 1;
-  atlas_resource.height = 0;
-  atlas_resource.width = 0;
-
-  return atlas_resource;
-};
-
-template <typename T>
-std::vector<T> CreateAtlasInformationList(
-    nlohmann::json& atlas_json, 
-    const std::string& list_name,
-    opgs16::resource::STexture2DAtlas* resource) {
-
-  if (!atlas_json.at(list_name).is_array()) {
-    PUSH_LOG_ERRO("Invalid type specifier, offset_x must be array.");
-    throw std::runtime_error("Invalid type specifier, offset_x must be array.");
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_texture);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
   }
 
-  const auto list = atlas_json[list_name.c_str()].get<std::vector<T>>();
-  if (list.size() != resource->fragment_number) {
-    PUSH_LOG_ERRO("offset_x list size must be same as fragment_number value.");
-    throw std::runtime_error("List size is not same as fragment_number.");
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifyTextureInsertion(const nlohmann::json::const_iterator& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  const auto& texture_key = json.key();
+  if (ExistKey(m_textures, texture_key)) {
+    PUSH_LOG_ERROR_EXT(
+        "{0} key is duplicated. [{0} : {1}]",
+        s_json_texture, texture_key);
+    return ESucceed::Failed;
   }
 
-  return list;
+  if (IsJsonKeyExist(json.value(), s_json_path) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT(
+        "{0} is not found in {1} {2}. This {2} will be passed.",
+        s_json_path, s_json_texture, texture_key);
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+opgs16::resource::STexture2DAtlas
+MakeTexture2D(const nlohmann::json::const_iterator& json) {
+  using opgs16::helper::json::IsJsonKeyExist;
+  using opgs16::helper::ConcatDirectoryWithFile;
+  using opgs16::resource::STexture2DAtlas;
+
+  static const auto MakeTexture2DSimple = [](STexture2DAtlas& atlas,
+                                             const std::string& path) {
+    atlas.path = path;
+    atlas.fragment_number = 1;
+    atlas.height = 0;
+    atlas.width = 0;
+  };
+
+  STexture2DAtlas atlas;
+  const std::string texture_path = ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json.value()[s_json_path]);
+
+  if (IsJsonKeyExist(json.value(), s_json_atlas) == EFound::NotFound) {
+    MakeTexture2DSimple(atlas, texture_path);
+  }
+  else {
+    const std::string atlas_path = ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json.value()[s_json_atlas]);
+    atlas.path = texture_path;
+
+    if (MakeTextureAtlasInformation(atlas, atlas_path) == ESucceed::Failed) {
+      atlas = STexture2DAtlas{};
+      MakeTexture2DSimple(atlas, texture_path);
+    }
+  }
+
+  return atlas;
+}
+
+ESucceed VerifyAtlasInformationStructure(const nlohmann::json& json) {
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header. Atlas will be passed.", s_json_meta, s_json_texture);
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header. Atlas will be passed.", s_json_meta, s_json_texture);
+    return ESucceed::Failed;
+  }
+
+  if (json[s_json_list].empty()) {
+    PUSH_LOG_ERROR_EXT("Texture atlas fragment must have at leat one item.");
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifyAtlasItemStructure(const nlohmann::json& json) {
+  using opgs16::helper::json::IsJsonKeyExist;
+  static const auto CheckKeyExist = [](const nlohmann::json& json, const char* key) {
+    if (IsJsonKeyExist(json, key) == EFound::NotFound) {
+      PUSH_LOG_CRITICAL_EXT(
+          "Header {} is not found in {} header. This atlas item will be passed.",
+          key, s_json_list);
+      return ESucceed::Failed;
+    }
+      return ESucceed::Succeed;
+  };
+
+  if (CheckKeyExist(json, s_json_offset_x) == ESucceed::Failed)
+    return ESucceed::Failed;
+  if (CheckKeyExist(json, s_json_offset_y) == ESucceed::Failed)
+    return ESucceed::Failed;
+  if (CheckKeyExist(json, s_json_width) == ESucceed::Failed)
+    return ESucceed::Failed;
+  if (CheckKeyExist(json, s_json_height) == ESucceed::Failed)
+    return ESucceed::Failed;
+
+  return ESucceed::Succeed;
+}
+
+ESucceed
+MakeTextureAtlasInformation(opgs16::resource::STexture2DAtlas& texture_instance,
+                            const std::string& atlas_path) {
+  const auto json_atlas_optional = LoadJsonFile(atlas_path);
+  if (!json_atlas_optional.has_value()) {
+    return ESucceed::Failed;
+  }
+  const auto& atlas_json = json_atlas_optional.value();
+  if (VerifyAtlasInformationStructure(atlas_json) == ESucceed::Failed) {
+    return ESucceed::Failed;
+  }
+
+  texture_instance.has_atlas = true;
+  texture_instance.width  = atlas_json[s_json_texture_width];
+  texture_instance.height = atlas_json[s_json_texture_height];
+  texture_instance.fragment_number = atlas_json[s_json_list].size();
+  texture_instance.fragment.reserve(texture_instance.fragment_number);
+  texture_instance.texels.reserve(texture_instance.fragment_number);
+
+  //
+  const auto& list = atlas_json[s_json_list];
+  for (auto it = list.begin(); it == list.end(); ++it) {
+    const auto& key = it.key();
+    const auto& value = it.value();
+    if (VerifyAtlasItemStructure(value) == ESucceed::Failed)
+      continue;
+
+    opgs16::resource::STexture2DFragment fragment;
+    fragment.name     = key;
+    fragment.offset_x = value[s_json_offset_x].get<unsigned>();
+    fragment.offset_y = value[s_json_offset_y].get<unsigned>();
+    fragment.width    = value[s_json_width].get<unsigned>();
+    fragment.height   = value[s_json_height].get<unsigned>();
+    texture_instance.fragment.emplace_back(std::move(fragment));
+  }
+
+  MakeTexelInformation(texture_instance);
+  return ESucceed::Succeed;
 }
 
 void MakeTexelInformation(opgs16::resource::STexture2DAtlas& container) {
@@ -573,7 +769,7 @@ void MakeTexelInformation(opgs16::resource::STexture2DAtlas& container) {
   const auto texture_height = container.height;
 
   for (auto i = 0u, size = container.fragment_number; i < size; ++i) {
-    auto& texel = container.texels[i];
+    opgs16::resource::STexture2DTexelInformation texel;
     const auto& info = container.fragment[i];
 
     const auto start_x = static_cast<float>(info.offset_x) / texture_width;
@@ -584,146 +780,228 @@ void MakeTexelInformation(opgs16::resource::STexture2DAtlas& container) {
     texel.right_up[1] = start_y;
     texel.left_down[0] = start_x;
     texel.left_down[1] = end_y;
+
+    container.texels.emplace_back(texel);
   }
 }
 
-opgs16::resource::STexture2DAtlas MakeTextureAtlasInformation(
-    std::ifstream& file, 
-    const std::string& path) {
-  nlohmann::json atlas_json;
-  file >> atlas_json;
+//!
+//! Mesh
+//!
 
-  auto atlas_resource = opgs16::resource::STexture2DAtlas{};
-  atlas_resource.has_atlas = true;
-  atlas_resource.width = atlas_json.at("texture_width").get<unsigned>();
-  atlas_resource.height = atlas_json.at("texture_height").get<unsigned>();
-  atlas_resource.fragment_number = atlas_json.at("item_number").get<unsigned>();
-  atlas_resource.fragment.resize(atlas_resource.fragment_number);
-  atlas_resource.texels.resize(atlas_resource.fragment_number);
-  atlas_resource.path = path;
-
-  auto offset_x_list = CreateAtlasInformationList<unsigned>(atlas_json, "offset_x", &atlas_resource);
-  auto offset_y_list = CreateAtlasInformationList<unsigned>(atlas_json, "offset_y", &atlas_resource);
-  auto width_list = CreateAtlasInformationList<unsigned>(atlas_json, "fragment_width", &atlas_resource);
-  auto height_list = CreateAtlasInformationList<unsigned>(atlas_json, "fragment_height", &atlas_resource);
-  auto name_list = CreateAtlasInformationList<std::string>(atlas_json, "name", &atlas_resource);
-  for (auto i = 0u; i < atlas_resource.fragment_number; ++i) {
-    atlas_resource.fragment[i].offset_x = offset_x_list[i];
-    atlas_resource.fragment[i].offset_y = offset_y_list[i];
-    atlas_resource.fragment[i].width = width_list[i];
-    atlas_resource.fragment[i].height = height_list[i];
-    atlas_resource.fragment[i].name = name_list[i];
-  }
-  MakeTexelInformation(atlas_resource);
-  return atlas_resource;
+void InitializeMesh(const nlohmann::json& json) {
+  PUSH_LOG_CRITICAL("Mesh importing is not supported yet.");
 }
 
-opgs16::resource::STexture2DAtlas MakeTexture2DAtlasContainer(
-    std::stringstream& line_stream, 
-    const std::string& global_path) {
+//!
+//! Sound
+//!
 
-  std::string local_texture_path; line_stream >> local_texture_path;
-  std::string local_atlas_path; line_stream >> local_atlas_path;
-#if defined(_DEBUG)
-  {
-    std::string log; 
-    log.append("[Texture2DAtlas][");
-    log.append(local_texture_path.cbegin(), local_texture_path.cend()); 
-    log.append("][");
-    log.append(local_atlas_path.cbegin(), local_atlas_path.cend()); 
-    log.append("]");
-    PUSH_LOG_INFO(log.c_str());
-  }
-#endif /*! Print local pathes */
+void InitializeSound(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
 
-  std::string atlas_path = global_path + local_atlas_path;
-  std::ifstream file{ atlas_path.c_str(), std::ios_base::in };
-  if (file.bad()) {
-    std::string log; 
-    log.resize(150); 
-    log.append("Failed to read ");
-    log.append(atlas_path);
-    PUSH_LOG_ERRO(log.c_str());
-    throw std::runtime_error("Failed to read resource file.");
+  if (VerifyTextureInternalStructure(json) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
   }
 
-  return MakeTextureAtlasInformation(file, global_path + local_texture_path);
-}
+  // @todo Intentionally neglect font::meta header.
+  // If meta information of sound header is needed later, implement this.
 
-opgs16::resource::SSound MakeSoundContainer(
-    std::stringstream& line_stream, 
-    const std::string& global_path,
-    bool is_bgm) {
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    if (VerifyTextureInsertion(it) == ESucceed::Failed)
+      continue;
 
-    std::string local_path; line_stream >> local_path;
-#if defined(_DEBUG)
-    {
-        std::string log{ "[Sound][" };
-        log.append(local_path);
-        log.append("]");
-        PUSH_LOG_INFO(log.c_str());
+    using opgs16::resource::SSound;
+    using opgs16::helper::ConcatDirectoryWithFile;
+
+    // Insert texture information.
+
+    auto [_, result] = m_sounds.try_emplace(it.key(), MakeSound(it.value()));
+
+    if (result) {
+      PUSH_LOG_DEBUG_EXT("{} {} is inserted as {} successfully.", "Sound", it.key(), _->second.Path());
     }
-#endif
-    return opgs16::resource::SSound{ global_path + local_path, is_bgm };
-};
+    else {
+      PUSH_LOG_ERROR_EXT("Failed to insert sound {}.", it.key());
+    }
+  }
+}
 
-opgs16::resource::SShader MakeShaderContainer(
-    std::ifstream& stream, 
-    const std::string& global_path) {
+ESucceed VerifySoundStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_sound);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_sound);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifySoundInsertion(const nlohmann::json::const_iterator& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  const auto& key = json.key();
+  if (ExistKey(m_sounds, key)) {
+    PUSH_LOG_ERROR_EXT("{0} key is duplicated. [{0} : {1}]", s_json_sound, key);
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json.value(), s_json_path) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT(
+        "{0} is not found in {1} {2}. This {2} will be passed.",
+        s_json_path, s_json_sound, key);
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json.value(), s_json_type) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT(
+        "{0} is not found in {1} {2}. This {2} will be passed.",
+        s_json_type, s_json_sound, key);
+    return ESucceed::Failed;
+  }
+
+  const auto type = json.value().get<std::string>();
+  if (type != s_json_st_effect && type != s_json_st_back) {
+    PUSH_LOG_ERROR_EXT("Sound item type is must be 'effect' or 'back'");
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+opgs16::resource::SSound MakeSound(const nlohmann::json& json) {
+  using opgs16::helper::ConcatDirectoryWithFile;
+
+  const auto local_path = json[s_json_path].get<std::string>();
+  const auto type = json[s_json_type].get<std::string>();
+
+  bool is_bgm = false;
+  if (type == s_json_st_effect) {
+    is_bgm = false;
+  }
+  else if (type == s_json_st_back) {
+    is_bgm = true;
+  }
+
+  return opgs16::resource::SSound{
+      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, local_path),
+      is_bgm
+  };
+}
+
+//!
+//! Shader
+//!
+
+void InitializeShader(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+
+  if (VerifyShaderStructure(json) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
+  }
+
+  // @todo Intentionally neglect font::meta header.
+  // If meta information of sound header is needed later, implement this.
+
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    if (VerifyShaderInsertion(it.value()) == ESucceed::Failed)
+      continue;
+
+    using opgs16::resource::SSound;
+    using opgs16::helper::ConcatDirectoryWithFile;
+
+    // Insert texture information.
+
+    auto [_, result] = m_shaders.try_emplace(it.key(), MakeShader(it.value()));
+
+    if (result) {
+      PUSH_LOG_DEBUG_EXT("{} {} is inserted as successfully.", "Shader", it.key());
+    }
+    else {
+      PUSH_LOG_ERROR_EXT("Failed to insert sound {}.", it.key());
+    }
+  }
+}
+
+ESucceed VerifyShaderStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_shader);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_shader);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifyShaderInsertion(const nlohmann::json& json) {
+  static const auto CheckKeyExist = [](const nlohmann::json& json, const char* key) {
+    using opgs16::helper::json::IsJsonKeyExist;
+    if (IsJsonKeyExist(json, key) == EFound::NotFound) {
+      PUSH_LOG_CRITICAL_EXT(
+          "Header {} is not found in {} header. This {} item will be passed.",
+          key, s_json_list, "Shader");
+      return ESucceed::Failed;
+    }
+      return ESucceed::Succeed;
+  };
+
+  if (CheckKeyExist(json, s_json_vs) == ESucceed::Failed) {
+    PUSH_LOG_CRITICAL_EXT("Shader must have vertex shader.");
+    return ESucceed::Failed;
+  }
+  if (CheckKeyExist(json, s_json_fs) == ESucceed::Failed) {
+    PUSH_LOG_CRITICAL_EXT("Shader must have vertex shader.");
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+opgs16::resource::SShader MakeShader(const nlohmann::json& json) {
+  using opgs16::helper::ConcatDirectoryWithFile;
+  using opgs16::resource::EShaderType;
 
   opgs16::resource::SShader::shader_list shader_list;
+  shader_list.emplace_back(EShaderType::VS,
+      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_vs]));
+  shader_list.emplace_back(EShaderType::FS,
+      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_fs]));
 
-  while (true) {
-    std::string token_line;
-    std::getline(stream, token_line);
-    if (token_line.empty() || (token_line.at(0) != '-')) break;
-    else {  /*! token_line is not empty and their is something. */
-      std::stringstream line_stream{ token_line };
-      std::string not_use, shader_token, local_path;
-      line_stream >> not_use >> shader_token >> local_path;
-
-      shader_list.emplace_back(opgs16::resource::GetShaderType(shader_token), global_path + local_path);
-    }
-  }
-#if defined(_DEBUG)
-  {
-    PUSH_LOG_INFO("[SHADER]");
-    for (const auto& shader : shader_list) {
-      std::string log{ "[SHADER_ELEMENT][" };
-      log.append(shader.second); 
-      log.append("]");
-      PUSH_LOG_INFO(log.c_str());
-    }
-  }
-#endif
   return opgs16::resource::SShader{ shader_list };
-};
+}
 
-opgs16::resource::SFont MakeFontContainer(
-    std::stringstream& line_stream, 
-    const std::string& global_path) {
-
-  std::string local_path; 
-  line_stream >> local_path;
-
-  bool is_default;
-  line_stream >> is_default;
-
-#if defined(_DEBUG)
-  {
-    std::string log{ "[FontGlyph][" };
-    log.append(local_path);
-    log.append("][");
-    log.append(is_default ? "DEFAULT" : "NOT_DEFAULT");
-    log.append("]");
-    PUSH_LOG_INFO(log.c_str());
-  }
-#endif
-  return opgs16::resource::SFont{ global_path + local_path, is_default };
-};
+//!
+//! Animation
+//!
 
 opgs16::resource::SAnimation MakeAnimationContainer(
-    std::stringstream& line_stream, 
+    std::stringstream& line_stream,
     const std::string& global_path) {
 
   std::string path; line_stream >> path; path = global_path + path;
@@ -755,11 +1033,11 @@ opgs16::resource::SAnimation MakeAnimationContainer(
 #if defined(_DEBUG)
   {
     std::string log{ "[Animation][" };
-    log.append(path); 
+    log.append(path);
     log += "][Total:";
-    log += std::to_string(total_cell); 
+    log += std::to_string(total_cell);
     log += "][Time:";
-    log += std::to_string(total_time); 
+    log += std::to_string(total_time);
     log += "]";
     PUSH_LOG_INFO(log.c_str());
   }

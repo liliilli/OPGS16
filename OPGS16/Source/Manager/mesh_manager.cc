@@ -86,8 +86,8 @@ void Initiate() {
 }
 
 void Shutdown() {
-  PHITOS_ASSERT(b_initiated == EInitiated::Initiated,
-      "Could not release not initiated mesh manager.");
+  m_model_map.clear();
+
   b_initiated = EInitiated::NotInitiated;
 }
 

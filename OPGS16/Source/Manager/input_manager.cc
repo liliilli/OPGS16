@@ -43,13 +43,14 @@
 #include <Core\core_setting.h>
 
 /// Import logger
-#include <Headers\import_logger.h>
-/// Expanded assertion
-#include <Helper\assert.h>
+#include <Headers/import_logger.h>
 /// ::opgs16::helper::json
 #include <Helper/Json/json_helper.h>
+/// ::opgs16::helper string helper function.
+#include <Helper/string_helper.h>
+
 /// Header file
-#include <Manager\time_manager.h>
+#include <Manager/time_manager.h>
 /// ::opgs16::debug error messages.
 #include <Manager\Internal\error_message.h>
 /// ::opgs16::manager::_internal flags
@@ -69,9 +70,9 @@ enum class EKeyExist : bool {
   Exist = true
 };
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Forward Declaration
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+//!
+//! Forward declaration
+//!
 
 ///
 /// @brief
@@ -98,9 +99,49 @@ void ProceedGravity(opgs16::manager::_internal::BindingKeyInfo& key_info);
 ///
 EKeyExist IsKeyExist(const std::string& key);
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-/// Member container
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+///
+/// @brief verify and automatically log present status.
+///
+/// @param[in] json Json loading library instance
+/// @param[in] key Keyword to find.
+/// @param[in] file_path File path of json library.
+/// @param[in] swt Switch of keyword.
+///
+void ModeVerifyKey(const nlohmann::json& json,
+                   const std::string& key,
+                   const std::string& file_path, phitos::enums::ESwitch& swt);
+
+///
+/// @brief
+///
+/// @param[in] key
+/// @param[in] key_value
+///
+phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
+                                          const nlohmann::json& key_value);
+
+///
+/// @brief
+///
+/// @param[in] atlas_json
+///
+/// @return
+///
+phitos::enums::ESucceed BindKeyboardKeyInformation(const nlohmann::json& atlas_json);
+
+///
+/// @brief
+///
+/// @param[in] it
+///
+/// @return
+///
+phitos::enums::ESucceed KeyboardBindKey(
+    const nlohmann::basic_json<>::const_iterator& it);
+
+//!
+//! Data
+//!
 
 ///
 /// This namespace is integrity check variable container for
@@ -139,7 +180,7 @@ key_map m_key_inputs;
 } /// unnamed namespace
 
 //!
-//! Global function definition
+//! Global function declaration
 //!
 
 EKeyExist IsKeyExist(const std::string& key) {
@@ -232,13 +273,8 @@ void Initiate(GLFWwindow* window_context) {
   glfwSetMouseButtonCallback(m_window, __MouseInputCallback);
   SetMouseCursorTemporary();
 
-  std::string path = {_APPLICATION_PROJECT_PATH};
-  if (path.find_last_of('/') == (path.length() - 1))
-    path.append("Setting/input.meta");
-  else
-    path.append("/""Setting/input.meta");
-
-  ReadInputFile(path);
+  ReadInputFile(helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH,
+                                                "Setting/input.meta"));
   m_initiated = EInitiated::Initiated;
 }
 
@@ -364,46 +400,6 @@ void Update() {
 //!
 //! Global function definition
 //!
-
-///
-/// @brief verify and automatically log present status.
-///
-/// @param[in] json Json loading library instance
-/// @param[in] key Keyword to find.
-/// @param[in] file_path File path of json library.
-/// @param[in] swt Switch of keyword.
-///
-void ModeVerifyKey(const nlohmann::json& json,
-                   const std::string& key,
-                   const std::string& file_path, phitos::enums::ESwitch& swt);
-
-///
-/// @brief
-///
-/// @param[in] key
-/// @param[in] key_value
-///
-phitos::enums::ESucceed KeyboardVerifyKey(const std::string& key,
-                                          const nlohmann::json& key_value);
-
-///
-/// @brief
-///
-/// @param[in] atlas_json
-///
-/// @return
-///
-phitos::enums::ESucceed BindKeyboardKeyInformation(const nlohmann::json& atlas_json);
-
-///
-/// @brief
-///
-/// @param[in] it
-///
-/// @return
-///
-phitos::enums::ESucceed KeyboardBindKey(
-    const nlohmann::basic_json<>::const_iterator& it);
 
 void ReadInputFile(const std::string& file_path) {
   std::ifstream stream { file_path, std::ios_base::in };

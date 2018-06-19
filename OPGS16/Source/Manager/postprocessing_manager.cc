@@ -85,11 +85,6 @@ void Initiate() {
 }
 
 void Shutdown() {
-  PHITOS_ASSERT(is_management_initiated == EInitiated::Initiated,
-      "PostProcessing management is not initited yet.");
-  PHITOS_ASSERT(is_management_shutdowned == EInitiated::NotInitiated,
-      "Duplicated management shutdown is prohibited.");
-
   // Release...
   m_present_sequence = nullptr;
   m_effect_sequences.clear();

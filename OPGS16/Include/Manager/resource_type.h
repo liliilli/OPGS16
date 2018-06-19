@@ -106,14 +106,6 @@ enum class EShaderType : int {
     FS  = GL_FRAGMENT_SHADER
 };
 
-inline EShaderType GetShaderType(const std::string& token) {
-    if (token == "VS")     return EShaderType::VS;
-    if (token == "GS")     return EShaderType::GS;
-    if (token == "TCS")    return EShaderType::TCS;
-    if (token == "TES")    return EShaderType::TES;
-    if (token == "FS")     return EShaderType::FS;
-}
-
 class SShader {
 public:
     using shader_pair = std::pair<EShaderType, std::string>;

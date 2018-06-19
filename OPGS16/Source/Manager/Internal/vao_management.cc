@@ -154,9 +154,6 @@ void Initiate() {
 }
 
 void Shutdown() {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      "Can not deactivate resource without calling Initiated() function.");
-
   m_vao_container.clear();
   m_initiated = EInitiated::NotInitiated;
 }
