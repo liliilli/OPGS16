@@ -1,0 +1,40 @@
+{
+  "tag":
+  {
+    "gameobject":
+    [
+    "Untagged",
+    "MainCamera",
+    "Player",
+    "Enemy",
+    "GameController"
+    ]
+  },
+  "rendering":
+  {
+    "list":
+    [
+      "opBackground",
+      "opObject",
+      "opInterface",
+      "opForemost"
+    ]
+  },
+  "collision":
+  {
+    "list":
+    {
+      "0": "Block",
+      "1": "Object",
+      "2": "Bullet",
+      "3": "Foreground"
+    },
+    "table":
+    {
+      "0": [ 1, 2, 3 ],
+      "1": [ 1, 2, 3 ],
+      "2": [],
+      "3": []
+    }
+  }
+}

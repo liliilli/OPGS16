@@ -1,0 +1,49 @@
+{
+  "meta":
+  {
+
+  },
+  "font":
+  {
+	"meta": { },
+	"list":
+	{
+	  "Bios":
+	  {
+	    "path": "Resource/Fonts/PxPlus_IBM_BIOS.ttf"
+	  }
+	}
+  },
+  "texture":
+  {
+	"meta": { },
+	"list": { }
+  },
+  "mesh":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "shader":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "sound":
+  {
+    "meta": { },
+    "list":
+	{
+	  "Drumloop":
+	  {
+	    "path": "Resource/Audio/drumloop.wav",
+		"type": "back"
+	  },
+	  "Jaguar":
+	  {
+		"path": "Resource/Audio/jaguar.wav",
+		"type": "effect"
+	  }
+	}
+  }
+}
