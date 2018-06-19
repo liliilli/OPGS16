@@ -1,0 +1,22 @@
+{
+  "mode" : {
+    "keyboard" : true,
+    "mouse" : true,
+    "joystick" : false
+  },
+  "keyboard" : {
+    "YAxis" : {
+      "+" : "Arrow-Up",
+      "-" : "Arrow-Down",
+      "gravity" : 1000,
+      "stick" : true
+    }
+  },
+  "mouse" : {
+    "Click" : {
+      "key" : "Mouse-Left",
+      "gravity" : 300,
+      "stick" : false
+    }
+  }
+}
