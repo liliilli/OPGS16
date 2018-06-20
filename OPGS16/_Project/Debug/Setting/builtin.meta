@@ -4,7 +4,7 @@
   {
     "meta": { },
     "list": {
-      "opSystem": { "path": "Resource/Builtin/Fonts/SolomonP.ttf" }
+      "opSystem": { "path": "Resource/Builtin/Font/SolomonP.ttf" }
     }
   },
   "texture":

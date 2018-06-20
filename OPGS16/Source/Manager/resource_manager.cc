@@ -271,6 +271,7 @@ constexpr const char* s_json_atlas = "atlas";
 constexpr const char* s_json_vs = "vs";
 constexpr const char* s_json_fs = "fs";
 
+constexpr const char* s_json_index = "index";
 constexpr const char* s_json_texture_width = "texture_width";
 constexpr const char* s_json_texture_height = "texture_height";
 constexpr const char* s_json_offset_x = "offset_x";
@@ -739,8 +740,8 @@ MakeTextureAtlasInformation(opgs16::resource::STexture2DAtlas& texture_instance,
   texture_instance.has_atlas = true;
   texture_instance.width  = atlas_json[s_json_meta][s_json_texture_width];
   texture_instance.height = atlas_json[s_json_meta][s_json_texture_height];
-  texture_instance.fragment_number = atlas_json[s_json_list].size();
-  texture_instance.fragment.reserve(texture_instance.fragment_number);
+  texture_instance.fragment_number = static_cast<uint32_t>(atlas_json[s_json_list].size());
+  texture_instance.fragment.resize(texture_instance.fragment_number);
   texture_instance.texels.reserve(texture_instance.fragment_number);
 
   //
@@ -757,7 +758,9 @@ MakeTextureAtlasInformation(opgs16::resource::STexture2DAtlas& texture_instance,
     fragment.offset_y = value[s_json_offset_y].get<unsigned>();
     fragment.width    = value[s_json_width].get<unsigned>();
     fragment.height   = value[s_json_height].get<unsigned>();
-    texture_instance.fragment.emplace_back(std::move(fragment));
+
+    const auto index = value[s_json_index];
+    texture_instance.fragment[index] = std::move(fragment);
   }
 
   MakeTexelInformation(texture_instance);

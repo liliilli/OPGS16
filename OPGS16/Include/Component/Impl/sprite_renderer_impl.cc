@@ -70,24 +70,25 @@ void CSpriteRendererImpl::SetTextureIndex(const uint32_t new_index) noexcept {
     m_texture_fragment_index = 0;
     m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
     m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
+    return;
+  }
+
+  m_texture_fragment_index = new_index;
+
+  using ETexelType = texture::CTexture2D::ETexelType;
+  const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LEFT_DOWN, new_index);
+  const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RIGHT_UP, new_index);
+
+  if (texel_ptr_ld && texel_ptr_ru) {
+    m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
+    m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
   }
   else {
-    m_texture_fragment_index = new_index;
-
-    using ETexelType = texture::CTexture2D::ETexelType;
-    const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LEFT_DOWN, new_index);
-    const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RIGHT_UP, new_index);
-    if (texel_ptr_ld && texel_ptr_ru) {
-      m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
-      m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
-    }
-    else {
-      PUSH_LOG_WARN(
-          "Any getting texel from resource has been failed.\n"
-          "Texel is assigned to overall region.");
-      m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
-      m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
-    }
+    PUSH_LOG_WARN(
+        "Any getting texel from resource has been failed.\n"
+        "Texel is assigned to overall region.");
+    m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
+    m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
   }
 }
 
