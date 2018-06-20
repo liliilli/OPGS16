@@ -1,49 +1,49 @@
 {
-  "meta":
-  {
+  "meta": {
 
   },
-  "font":
-  {
-	"meta": { },
-	"list":
-	{
-	  "Bios":
-	  {
-	    "path": "Resource/Font/PxPlus_IBM_BIOS.ttf"
-	  }
-	}
+  "font": {
+    "meta": {},
+    "list": {
+      "Bios": {
+        "path": "Resource/Font/PxPlus_IBM_BIOS.ttf"
+      }
+    }
   },
-  "texture":
-  {
-	"meta": { },
-	"list": { }
+  "texture": {
+    "meta": {},
+    "list": {
+      "AnimChar": {
+        "path": "Resource/Sprite/character.png",
+        "atlas": "Resource/Sprite/character.atlas"
+      }
+    }
   },
-  "mesh":
-  {
+  "mesh": {
+    "meta": {},
+    "list": {}
+  },
+  "shader": {
+    "meta": {},
+    "list": {}
+  },
+  "sound": {
+    "meta": {},
+    "list": {
+      "Drumloop": {
+        "path": "Resource/Audio/drumloop.wav",
+        "type": "back"
+      },
+      "Jaguar": {
+        "path": "Resource/Audio/jaguar.wav",
+        "type": "effect"
+      }
+    }
+  },
+  "animation": {
     "meta": { },
-    "list": { }
-  },
-  "shader":
-  {
-    "meta": { },
-    "list": { }
-  },
-  "sound":
-  {
-    "meta": { },
-    "list":
-	{
-	  "Drumloop":
-	  {
-	    "path": "Resource/Audio/drumloop.wav",
-		"type": "back"
-	  },
-	  "Jaguar":
-	  {
-		"path": "Resource/Audio/jaguar.wav",
-		"type": "effect"
-	  }
-	}
+    "list": {
+      "Test": { "path": "Resource/Animation/char_mov.anim" }
+    }
   }
 }

@@ -48,5 +48,9 @@
   "sound": {
     "meta": { },
     "list": { }
+  },
+  "animation": {
+    "meta": { },
+    "list": { }
   }
 }

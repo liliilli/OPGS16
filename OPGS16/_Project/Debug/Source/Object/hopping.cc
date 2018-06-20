@@ -24,10 +24,11 @@
 namespace debug::object {
 
 Hopping::Hopping() {
-  SetScaleValue(8.0f);
+  SetScaleValue(16.0f);
 
   using opgs16::component::CSprite2DRenderer;
-  auto renderer = AddComponent<CSprite2DRenderer>(*this, "System", "gQuad");
+  auto renderer = AddComponent<CSprite2DRenderer>(*this, "opSystem", "gQuad");
+  renderer->SetTextureIndex(0);
 
   m_wrapper = &renderer->Wrapper();
   m_wrapper->SetUniformValue<glm::mat4>("opProj", glm::mat4{});

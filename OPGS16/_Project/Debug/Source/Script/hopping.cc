@@ -28,9 +28,7 @@
 
 #include "../../Include/Script/lifecycle_manager.h"
 
-#undef GetObject
-
-constexpr float k_angle_offset = 3.1725f;
+constexpr float k_angle_offset = 90.f;
 
 namespace {
 
@@ -86,10 +84,10 @@ void Hopping::Start() {
 
 void Hopping::Update(float delta_time) {
   using EDirection = opgs16::element::_internal::EDirection;
-  auto& object = GetObject();
+  auto& object = GetBindObject();
 
   float angle_value = object.GetRotationLocalAngle(EDirection::Z);
-  angle_value += k_angle_offset;
+  angle_value += k_angle_offset * delta_time;
   object.SetRotationLocalAngle(EDirection::Z, angle_value);
 
   m_elapsed += delta_time;
