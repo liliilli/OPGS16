@@ -509,10 +509,10 @@
     <None Include="Shaders\spring_render.frag" />
     <None Include="Shaders\spring_render.vert" />
     <None Include="Shaders\Starfield\point.vert" />
+    <None Include="_Project\Debug\Resource\Animation\char_mov.anim" />
     <None Include="_Project\Debug\Resource\Builtin\Sprite\System.atlas" />
     <None Include="_Project\Debug\Setting\input.meta" />
     <None Include="_Project\Debug\Setting\setting.meta" />
-    <None Include="_Project\Maintenance\Resource\Animation\test.anim" />
     <None Include="_Project\_Template\Setting\input.meta" />
     <None Include="_Project\_Template\Setting\setting.meta" />
     <None Include="Legacy\_resource.meta" />

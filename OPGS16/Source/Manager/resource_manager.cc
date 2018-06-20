@@ -17,8 +17,7 @@
 /// 2018-04-05 Get Texture2D to store atlas information in default.
 /// 2018-05-22
 /// Remove class singleton and renovate it to namespace for uniformation.
-///
-/// @todo Change resource file style to json and also mechanism.
+/// 2018-06-20 Change resource file style to json and also mechanism.
 ///
 
 /// Header file
@@ -26,7 +25,6 @@
 
 #include <fstream>
 #include <optional>
-#include <sstream>
 #include <stdexcept>
 #include <utility>
 
@@ -85,6 +83,16 @@ ESucceed VerifyResourceFile(const nlohmann::json& json,
 /// @param[in] json
 ///
 void InitializeFont(const nlohmann::json& json);
+
+///
+/// @brief
+///
+ESucceed VerifyFontInternalStructure(const nlohmann::json& json);
+
+///
+/// @brief
+///
+ESucceed VerifyFontInsertion(const nlohmann::json::const_iterator& it);
 
 ///
 /// @brief
@@ -218,16 +226,32 @@ ESucceed VerifyShaderInsertion(const nlohmann::json& json);
 
 ///
 /// @brief
-/// Make animation film container.
 ///
-/// @param[in] line_stream
-/// @param[in] global_path
+/// @param[in] json
 ///
-/// @return
+void InitializeAnimation(const nlohmann::json& json);
+
 ///
-opgs16::resource::SAnimation MakeAnimationContainer(
-    std::stringstream& line_stream,
-    const std::string& global_path);
+///
+///
+ESucceed VerifyAnimationStructure(const nlohmann::json& json);
+
+///
+///
+///
+ESucceed VerifyAnimationInsertion(const nlohmann::json& json);
+
+///
+/// @brief
+///
+opgs16::resource::SAnimationCell MakeAnimationCell(const nlohmann::json& json);
+
+///
+/// @brief
+///
+///
+std::optional<opgs16::resource::SAnimation>
+MakeAnimationContainer(const nlohmann::json& json);
 
 ///
 /// @brief
@@ -264,6 +288,7 @@ constexpr const char* s_json_mesh = "mesh";
 constexpr const char* s_json_shader = "shader";
 constexpr const char* s_json_sound = "sound";
 constexpr const char* s_json_list = "list";
+constexpr const char* s_json_animation = "animation";
 
 constexpr const char* s_json_path = "path";
 constexpr const char* s_json_type = "type";
@@ -281,6 +306,9 @@ constexpr const char* s_json_height = "height";
 
 constexpr const char* s_json_st_effect = "effect";
 constexpr const char* s_json_st_back = "back";
+
+constexpr const char* s_json_texture_name = "texture_name";
+constexpr const char* s_json_interval = "interval";
 
 EInitiated m_initiated  = EInitiated::NotInitiated;
 EInitiated m_shutdowned = EInitiated::NotInitiated;
@@ -449,13 +477,10 @@ ESucceed ReadResourceFile(const std::string& file_path) {
   InitializeMesh(atlas_json[s_json_mesh]);
   InitializeShader(atlas_json[s_json_shader]);
   InitializeSound(atlas_json[s_json_sound]);
+  InitializeAnimation(atlas_json[s_json_animation]);
   return ESucceed::Succeed;
 }
 
-///
-/// @brief
-///
-///
 ESucceed VerifyResourceFile(const nlohmann::json& json, const std::string& file_path) {
   using phitos::enums::EFound;
   using phitos::enums::ESucceed;
@@ -476,6 +501,7 @@ ESucceed VerifyResourceFile(const nlohmann::json& json, const std::string& file_
   if (CheckKeyAssert(s_json_mesh) == ESucceed::Failed) return ESucceed::Failed;
   if (CheckKeyAssert(s_json_shader) == ESucceed::Failed) return ESucceed::Failed;
   if (CheckKeyAssert(s_json_sound) == ESucceed::Failed) return ESucceed::Failed;
+  if (CheckKeyAssert(s_json_animation) == ESucceed::Failed) return ESucceed::Failed;
 
   return ESucceed::Succeed;
 }
@@ -484,57 +510,6 @@ ESucceed VerifyResourceFile(const nlohmann::json& json, const std::string& file_
 //! Font
 //!
 
-///
-/// @brief
-///
-///
-ESucceed VerifyFontInternalStructure(const nlohmann::json& json) {
-  using phitos::enums::EFound;
-  using phitos::enums::ESucceed;
-  using opgs16::helper::json::IsJsonKeyExist;
-
-  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_font);
-    PHITOS_UNEXPECTED_BRANCH();
-    return ESucceed::Failed;
-  }
-
-  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_list, s_json_font);
-    PHITOS_UNEXPECTED_BRANCH();
-    return ESucceed::Failed;
-  }
-
-  return ESucceed::Succeed;
-}
-
-///
-/// @brief
-///
-///
-ESucceed VerifyFontInsertion(const nlohmann::json::const_iterator& it) {
-  using phitos::enums::EFound;
-  using phitos::enums::ESucceed;
-  using opgs16::helper::json::IsJsonKeyExist;
-
-  const auto& font_key = it.key();
-  if (ExistKey(m_fonts, font_key)) {
-    PUSH_LOG_ERROR_EXT("{0} key is duplicated. [{0} : {1}]", "Font", font_key);
-    return ESucceed::Failed;
-  }
-  const auto& font_object = it.value();
-  if (IsJsonKeyExist(font_object, s_json_path) == EFound::NotFound) {
-    PUSH_LOG_ERROR_EXT("{0} is not found in {1} {2}. This {2} will be passed.",
-        s_json_path, s_json_font, font_key);
-    return ESucceed::Failed;
-  }
-
-  return ESucceed::Succeed;
-}
-
-///
-/// @brief
-///
 void InitializeFont(const nlohmann::json& json) {
   using phitos::enums::EFound;
   using phitos::enums::ESucceed;
@@ -566,6 +541,46 @@ void InitializeFont(const nlohmann::json& json) {
       PUSH_LOG_ERROR_EXT("Failed to insert font {}.", it.key());
     }
   }
+}
+
+ESucceed VerifyFontInternalStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_font);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_list, s_json_font);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifyFontInsertion(const nlohmann::json::const_iterator& it) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  const auto& font_key = it.key();
+  if (ExistKey(m_fonts, font_key)) {
+    PUSH_LOG_ERROR_EXT("{0} key is duplicated. [{0} : {1}]", "Font", font_key);
+    return ESucceed::Failed;
+  }
+  const auto& font_object = it.value();
+  if (IsJsonKeyExist(font_object, s_json_path) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT("{0} is not found in {1} {2}. This {2} will be passed.",
+        s_json_path, s_json_font, font_key);
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
 }
 
 //!
@@ -979,7 +994,7 @@ ESucceed VerifyShaderInsertion(const nlohmann::json& json) {
     return ESucceed::Failed;
   }
   if (CheckKeyExist(json, s_json_fs) == ESucceed::Failed) {
-    PUSH_LOG_CRITICAL_EXT("Shader must have vertex shader.");
+    PUSH_LOG_CRITICAL_EXT("Shader must have fragment shader.");
     return ESucceed::Failed;
   }
 
@@ -1003,47 +1018,123 @@ opgs16::resource::SShader MakeShader(const nlohmann::json& json) {
 //! Animation
 //!
 
-opgs16::resource::SAnimation MakeAnimationContainer(
-    std::stringstream& line_stream,
-    const std::string& global_path) {
+void InitializeAnimation(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
 
-  std::string path; line_stream >> path; path = global_path + path;
-  std::ifstream animation_file{ path, std::ios_base::in };
-  if (!animation_file.good()) {
-#if defined(_DEBUG)
-    {
-      std::string log{ "Failed to load animation file. " };
-      log.append(path);
-      PUSH_LOG_ERRO(log.c_str());
+  if (VerifyAnimationStructure(json) == ESucceed::Failed) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
+  }
+
+  // @todo Intentionally neglect font::meta header.
+  // If meta information of font header is needed later, implement this.
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    // @todo Integrity check
+    auto container = MakeAnimationContainer(it.value());
+    if (container.has_value()) {
+      auto [_, result] = m_animations.try_emplace(it.key(), container.value());
+
+      if (result) {
+        PUSH_LOG_DEBUG_EXT("Animation {} is inserted successfully.", it.key());
+      }
+      else {
+        PUSH_LOG_ERROR_EXT("Failed to insert animation {}.", it.key());
+      }
     }
-#endif
-    throw std::runtime_error{ "Failed to read animation file." };
+  }
+}
+
+ESucceed VerifyAnimationStructure(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_animation);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
   }
 
-  opgs16::resource::SAnimation container;
-  unsigned total_cell{ 0 }, total_time{ 0 };
-  std::string line;
-  while (std::getline(animation_file, line)) {
-    if (line.empty() || line[0] == '#') continue; /*! IsSceneEmpty line || Continue */
-    std::stringstream animation_stream{ line };
-    std::string texture2d_name; unsigned index, time_milli;
-    animation_stream >> texture2d_name >> index >> time_milli;
-    container.cells.emplace_back(opgs16::resource::SAnimationCell{ texture2d_name, index, time_milli });
+  if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_animation);
+    PHITOS_UNEXPECTED_BRANCH();
+    return ESucceed::Failed;
+  }
 
-    ++total_cell;
-    total_time += time_milli;
+  const auto& list = json[s_json_list];
+  for (auto it = list.begin(); it != list.end(); ++it) {
+    if (!it.value().is_object()) {
+      PUSH_LOG_CRITICAL_EXT("Animation cell item in list must be a object type.");
+      return ESucceed::Failed;
+    }
   }
-#if defined(_DEBUG)
-  {
-    std::string log{ "[Animation][" };
-    log.append(path);
-    log += "][Total:";
-    log += std::to_string(total_cell);
-    log += "][Time:";
-    log += std::to_string(total_time);
-    log += "]";
-    PUSH_LOG_INFO(log.c_str());
+
+  return ESucceed::Succeed;
+}
+
+ESucceed VerifyAnimationInsertion(const nlohmann::json& json) {
+  using phitos::enums::EFound;
+  using phitos::enums::ESucceed;
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  if (IsJsonKeyExist(json, s_json_texture_name) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT(
+      "Header {} is not found in cell object. This {} item will be passed.",
+      s_json_texture_name, "animation cell");
+    return ESucceed::Failed;
   }
-#endif
-  return container;
+
+  if (!json[s_json_texture_name].is_string()) {
+    PUSH_LOG_CRITICAL_EXT("Header {} value must be a string.", s_json_texture_name);
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_index) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT(
+      "Header {} is not found in cell object. This {} item will be passed.",
+      s_json_index, "animation cell");
+    return ESucceed::Failed;
+  }
+
+  if (!json[s_json_index].is_number_unsigned()) {
+    PUSH_LOG_CRITICAL_EXT("Header {} value must be a unsigned integer.", s_json_index);
+    return ESucceed::Failed;
+  }
+
+  if (IsJsonKeyExist(json, s_json_interval) == EFound::NotFound) {
+    PUSH_LOG_CRITICAL_EXT(
+      "Header {} is not found in cell object. This {} item will be passed.",
+      s_json_interval, "animation cell");
+    return ESucceed::Failed;
+  }
+
+  if (!json[s_json_interval].is_number_unsigned()) {
+    PUSH_LOG_CRITICAL_EXT("Header {} value must be a unsigned integer.", s_json_interval);
+    return ESucceed::Failed;
+  }
+
+  return ESucceed::Succeed;
+}
+
+std::optional<opgs16::resource::SAnimation>
+MakeAnimationContainer(const nlohmann::json& json) {
+  auto json_atlas = LoadJsonFile(json[s_json_path]);
+  if (!json_atlas.has_value()) {
+    return std::nullopt;
+  }
+
+  opgs16::resource::SAnimation animation;
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
+    if (VerifyAnimationInsertion(it.value()) == ESucceed::Failed)
+      continue;
+
+    animation.cells.emplace_back(MakeAnimationCell(it.value()));
+  }
+
+  return animation;
+}
+
+opgs16::resource::SAnimationCell MakeAnimationCell(const nlohmann::json& json) {
+  return { json[s_json_texture_name], json[s_json_index], json[s_json_interval] };
 }
