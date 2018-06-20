@@ -66,14 +66,14 @@ bool LoadFreeType(const std::string& font_path) noexcept;
 ///
 /// @return Created font glyph container unique_ptr (moved)
 ///
-opgs16::manager::font::font_map_ptr GetAsciiCharTextures();
+opgs16::manager::font::TFontMapPtr GetAsciiCharTextures();
 
 ///
 /// @brief
 ///
 /// @return
 ///
-opgs16::manager::_internal::Character GetCharTexture(char16_t chr);
+opgs16::manager::_internal::DCharacter GetCharTexture(char16_t chr);
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
@@ -94,7 +94,7 @@ EInitiated m_initiated = EInitiated::NotInitiated;
 ///
 namespace {
 /// Default font size variable
-constexpr unsigned k_default_font_size = 64u;
+constexpr uint32_t k_default_font_size = 64;
 
 //!
 //! Freetype pointer
@@ -110,20 +110,38 @@ FT_Face		  m_ft_face = nullptr;
 //!
 
 opgs16::element::CShaderNew* m_common_shader = nullptr;
-opgs16::manager::font::font_raw	m_default_font = nullptr;
+opgs16::manager::font::TFontType* m_default_font = nullptr;
 
 /// Container which stores fonts.
-std::unordered_map<std::string, opgs16::manager::font::font_map_ptr> m_fonts{};
+opgs16::manager::font::TFontMap m_fonts = {};
 
 } /// unnamed namespace
 
-namespace opgs16::manager::font {
+//!
+//! Implementation
+//!
+
+namespace opgs16::manager::font::__ {
 
 void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       "Duplicated function call of ::opgs16::manager::font::Initiate() is prohibited.");
-	m_common_shader = manager::shader::GetShader("gCommonFont");
+
+	m_common_shader = shader::GetShader("gCommonFont");
+
+  GenerateFont("opSystem");
+  m_default_font = m_fonts["opSystem"].get();
 }
+
+void Shutdown() {
+  m_common_shader = nullptr;
+  m_default_font = nullptr;
+  m_fonts.clear();
+}
+
+} /// ::opgs16::manager::font::__ namespace
+
+namespace opgs16::manager::font {
 
 bool GenerateFont(const std::string& name_tag) {
   if (IsFontExist(name_tag)) {
@@ -163,6 +181,7 @@ bool GenerateFont(const std::string& name_tag) {
 
 bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) {
   if (!IsFontExist(font_name)) {
+    GenerateFont(font_name);
     PHITOS_ASSERT(IsFontExist(font_name), "Font is not exist on runtime.");
     return false;
   }
@@ -197,7 +216,7 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) 
   return false;
 }
 
-font_type* GetDefaultFont() {
+TFontType* GetDefaultFont() {
   if (!m_default_font) {
     NEU_NOT_IMPLEMENTED_ASSERT();
   }
@@ -205,7 +224,7 @@ font_type* GetDefaultFont() {
   return m_default_font;
 }
 
-std::optional<font_type*> GetFontSetPtr(const std::string& font_name_tag) {
+std::optional<TFontType*> GetFontSetPtr(const std::string& font_name_tag) {
   if (!IsFontExist(font_name_tag))
     return std::nullopt;
 
@@ -238,6 +257,10 @@ unsigned GetDefaultFontSize() {
 
 } /// ::opgs16::manager::font
 
+//!
+//! Global function definition.
+//!
+
 bool CheckFreeType() noexcept {
   // Check Freetype is well.
   if (FT_Init_FreeType(&m_freetype)) {
@@ -258,18 +281,17 @@ bool LoadFreeType(const std::string& font_path) noexcept {
   return true;
 }
 
-opgs16::manager::font::font_map_ptr GetAsciiCharTextures() {
-  auto glyphs = std::make_unique<opgs16::manager::font::font_type>();
+opgs16::manager::font::TFontMapPtr GetAsciiCharTextures() {
+  auto glyphs = std::make_unique<opgs16::manager::font::TFontType>();
 
   for (char16_t c = 0; c < 128; ++c) {
-    const auto character = GetCharTexture(c);
-    glyphs->emplace(c, character);
+    glyphs->emplace(c, GetCharTexture(c));
   }
 
   return glyphs;
 }
 
-opgs16::manager::_internal::Character GetCharTexture(char16_t chr) {
+opgs16::manager::_internal::DCharacter GetCharTexture(char16_t chr) {
   if (FT_Load_Char(m_ft_face, chr, FT_LOAD_RENDER)) {
     PUSH_LOG_ERROR_EXT(
         "Failed to load character glyph. : [character : {0}]",
@@ -297,7 +319,7 @@ opgs16::manager::_internal::Character GetCharTexture(char16_t chr) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Store character for later use
-  return opgs16::manager::_internal::Character{
+  return opgs16::manager::_internal::DCharacter{
       texture,
       glm::ivec2(width, height),
       glm::ivec2(m_ft_face->glyph->bitmap_left,

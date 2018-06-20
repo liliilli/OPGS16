@@ -146,12 +146,6 @@ void PopStatus();
 
 ///
 /// @brief
-/// Initiate and Make font informations.
-///
-void InitiateDefaultFonts();
-
-///
-/// @brief
 /// Initiate post-processing effects in advance.
 ///
 void InitiatePostProcessingEffects();
@@ -255,13 +249,12 @@ void Initiate() {
 
   manager::setting::Initiate();
   manager::resource::__::Initiate();
-  //manager::resource::ReadResourceFile("_resource.meta");
   manager::mesh::Initiate();
   manager::_internal::vao::Initiate();
 
   manager::shader::Initiate();
   manager::object::Initiate();
-  manager::font::Initiate();
+  manager::font::__::Initiate();
   manager::postprocessing::__::Initiate();
 
   manager::sound::__::Initiate();
@@ -274,7 +267,6 @@ void Initiate() {
   manager::time::SetVsync(phitos::enums::ESwitch::Off);
 
   // Initialize resource list.
-  InitiateDefaultFonts();
   InitiatePostProcessingEffects();
 #if defined(_OPGS16_DEBUG_OPTION)
   InitiateDebugUi();
@@ -386,15 +378,6 @@ void PopStatus() {
   }
 }
 
-void InitiateDefaultFonts() {
-  manager::font::GenerateFont("Sans");
-  manager::font::GenerateFont("Solomon");
-  manager::font::GenerateFont("Menus");
-  manager::font::GenerateFont("BIOS");
-  manager::font::GenerateFont("Sam3");
-  manager::font::GenerateFont("Pixel");
-}
-
 #if defined(_OPGS16_DEBUG_OPTION)
 void InitiateDebugUi() {
 	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
@@ -446,6 +429,7 @@ void Shutdown() {
   manager::sound::ReleaseAllSounds();
   manager::sound::__::Shutdown();
   manager::scene::__::Shutdown();
+  manager::font::__::Shutdown();
   manager::_internal::vao::Shutdown();
   manager::mesh::Shutdown();
   manager::resource::__::Shutdown();

@@ -128,17 +128,13 @@ private:
   //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
   glm::mat4 m_projection = glm::mat4();
-#ifdef false
-  GLuint m_vao = 0;
-  GLuint m_vbo = 0;
-#endif
   element::CVaoContainer* m_vao_ptr = nullptr;
 
   std::vector<uint32_t> m_text_render_width;
   Utf16TextContainer m_unicode_text_container;
 
   element::CShaderWrapper m_wrapper;
-  manager::font::font_raw	m_font_set = nullptr;
+  manager::font::TFontType* m_font_set = nullptr;
 
   _internal::EDirtyFlag m_string_dirty = _internal::EDirtyFlag::Clean;
   _internal::EDirtyFlag m_color_dirty = _internal::EDirtyFlag::Dirty;

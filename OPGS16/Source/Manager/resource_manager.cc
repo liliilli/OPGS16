@@ -737,15 +737,15 @@ MakeTextureAtlasInformation(opgs16::resource::STexture2DAtlas& texture_instance,
   }
 
   texture_instance.has_atlas = true;
-  texture_instance.width  = atlas_json[s_json_texture_width];
-  texture_instance.height = atlas_json[s_json_texture_height];
+  texture_instance.width  = atlas_json[s_json_meta][s_json_texture_width];
+  texture_instance.height = atlas_json[s_json_meta][s_json_texture_height];
   texture_instance.fragment_number = atlas_json[s_json_list].size();
   texture_instance.fragment.reserve(texture_instance.fragment_number);
   texture_instance.texels.reserve(texture_instance.fragment_number);
 
   //
   const auto& list = atlas_json[s_json_list];
-  for (auto it = list.begin(); it == list.end(); ++it) {
+  for (auto it = list.begin(); it != list.end(); ++it) {
     const auto& key = it.key();
     const auto& value = it.value();
     if (VerifyAtlasItemStructure(value) == ESucceed::Failed)

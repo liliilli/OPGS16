@@ -44,7 +44,7 @@ namespace {
 std::vector<std::u16string> SeparateUtf8TextToUtf16StringList(
     const std::string& text);
 
-void Render(const opgs16::manager::_internal::Character& ch_info,
+void Render(const opgs16::manager::_internal::DCharacter& ch_info,
             GLuint m_vbo,
             const std::array<opgs16::DVector3, 4>& vertices);
 
@@ -99,7 +99,7 @@ std::vector<std::u16string> SeparateUtf8TextToUtf16StringList(
 ///
 uint32_t CalculateStringRenderWidth(
     const std::string& text,
-    opgs16::manager::font::font_type* font_set) {
+    opgs16::manager::font::TFontType* font_set) {
   uint32_t result_width = 0;
   for (const char chr : text) {
     const auto& ch_info = (*font_set)[chr];
@@ -120,7 +120,7 @@ uint32_t CalculateStringRenderWidth(
 /// @see https://www.freetype.org/freetype2/docs/tutorial/step2.html
 ///
 std::array<opgs16::DVector3, 4> GetCharacterVertices(
-    const opgs16::manager::_internal::Character& ch_info,
+    const opgs16::manager::_internal::DCharacter& ch_info,
     const glm::vec2& position,
     const float scale) {
   const auto x_offset = ch_info.bearing.x * scale;
@@ -152,7 +152,7 @@ std::array<opgs16::DVector3, 4> GetCharacterVertices(
 ///
 void RenderLeftSide(const Utf16TextContainer& container,
                     const std::string& font_name,
-                    opgs16::manager::font::font_type* font_set,
+                    opgs16::manager::font::TFontType* font_set,
                     const glm::vec2& position,
                     const GLuint m_vbo,
                     const float scale) {
@@ -176,7 +176,7 @@ void RenderLeftSide(const Utf16TextContainer& container,
 
 void RenderCenterSide(const Utf16TextContainer& container,
                       const std::vector<uint32_t>& text_render_width,
-                      opgs16::manager::font::font_type* font_set,
+                      opgs16::manager::font::TFontType* font_set,
                       const glm::vec2& position,
                       const GLuint m_vbo,
                       const float scale) {
@@ -199,7 +199,7 @@ void RenderCenterSide(const Utf16TextContainer& container,
 
 void RenderRightSide(const std::vector<std::string>& container,
                      const std::vector<uint32_t>& text_render_width,
-                     opgs16::manager::font::font_type* font_set,
+                     opgs16::manager::font::TFontType* font_set,
                      const glm::vec2& position,
                      const GLuint m_vbo,
                      const float scale) {
@@ -228,7 +228,7 @@ void RenderRightSide(const std::vector<std::string>& container,
 /// @param[in] m_vbo
 /// @param[in] vertices
 ///
-void Render(const opgs16::manager::_internal::Character& ch_info,
+void Render(const opgs16::manager::_internal::DCharacter& ch_info,
             GLuint m_vbo,
             const std::array<opgs16::DVector3, 4>& vertices) {
 	// Render texture glyph

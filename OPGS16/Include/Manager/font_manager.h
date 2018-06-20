@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include <optional>
 
-/// ::opgs16::manager::_internal::Character
+/// ::opgs16::manager::_internal::DCharacter
 #include <Manager/Internal/font_internal.h>
 
 ///
@@ -46,15 +46,9 @@ namespace opgs16::manager::font {
 /// Internal type aliasing
 ///
 
-using font_type	    = std::unordered_map<char16_t, _internal::Character>;
-using font_map_ptr  = std::unique_ptr<font_type>;
-using font_raw      = font_type*;
-
-///
-/// @brief
-/// Initialize Font renderer instance with font path.
-///
-void Initiate();
+using TFontType	    = std::unordered_map<char16_t, _internal::DCharacter>;
+using TFontMapPtr  = std::unique_ptr<TFontType>;
+using TFontMap = std::unordered_map<std::string, TFontMapPtr>;
 
 ///
 /// @brief Generate font glyphs with name_tag from ResourceManager.
@@ -78,7 +72,7 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char);
 /// @brief Loads default font. If default is not specified, return false flag.
 /// @return The success flag.
 ///
-font_type* GetDefaultFont();
+TFontType* GetDefaultFont();
 
 ///
 /// @brief
@@ -88,7 +82,7 @@ font_type* GetDefaultFont();
 ///
 /// @return
 ///
-std::optional<font_type*> GetFontSetPtr(const std::string& font_name_tag);
+std::optional<TFontType*> GetFontSetPtr(const std::string& font_name_tag);
 
 ///
 /// @brief
@@ -115,5 +109,22 @@ bool IsFontExist(const std::string& font_name);
 unsigned GetDefaultFontSize();
 
 } /// ::opgs16::manager::font
+
+// Internal namespace
+namespace opgs16::manager::font::__ {
+
+///
+/// @brief
+/// Initialize Font renderer instance with font path.
+///
+void Initiate();
+
+///
+/// @brief
+/// Shutdown and release all binding resources.
+///
+void Shutdown();
+
+}
 
 #endif /// OPGS16_SYSTEM_FONT_MANAGER_H
