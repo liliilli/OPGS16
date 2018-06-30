@@ -10,7 +10,8 @@
 
 namespace opgs16 {
 
-bool __ApproximateEqual(float lhs, float rhs, const float precision) {
+inline constexpr bool __ApproximateEqual(float lhs, float rhs,
+                                         const float precision) noexcept {
   const auto diff = lhs - rhs;
 
   if (diff > precision) return false;
