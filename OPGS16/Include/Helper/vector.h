@@ -27,6 +27,8 @@
 #include <glm/glm.hpp>
 #include <LinearMath/btVector3.h>
 
+#include <Phitos/Dbg/assert.h>
+
 #include <Headers/import_logger.h>
 
 namespace opgs16 {
@@ -224,10 +226,52 @@ struct DVector2 {
     return *this;
   }
 
+  friend bool operator<(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return lhs.GetSquareLength() < rhs.GetSquareLength();
+  }
+
+  friend bool operator>(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return rhs < lhs;
+  }
+
+  friend bool operator<=(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return !(rhs < lhs);
+  }
+
+  friend bool operator>=(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return !(lhs < rhs);
+  }
+
+  friend bool operator==(const DVector2& lhs, const DVector2& rhs) noexcept {
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+  }
+
   //!
   //! Static functions
   //!
 
+  ///
+  /// @brief
+  ///
+  static float Dot(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return lhs.x * rhs.x + lhs.y * rhs.y;
+  }
+
+  ///
+  /// @brief
+  /// @param[in]
+  ///
+  static DVector2 Lerp(const DVector2& lhs, const DVector2& rhs, float value) noexcept {
+    return lhs * (1.0f - value) + rhs * value;
+  }
+
+  static DVector2 CompMaxLength(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return (lhs >= rhs) ? lhs : rhs;
+  }
+
+  static DVector2 CompMinLength(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return (lhs < rhs) ? lhs : rhs;
+  }
 };
 
 ///
