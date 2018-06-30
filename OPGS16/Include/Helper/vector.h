@@ -2,47 +2,232 @@
 #define OPGS16_HELPER_VECTOR_H
 
 ///
-/// @file
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Helper/vector.h
 ///
 /// @brief
+/// Introduce opgs16 dependent vector series classes.
 ///
-/// @author
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-06-30 Implement file.
 ///
 
 #include <array>
 
+/// External libraries which have dependency on DVector series.
+///
+#include <assimp/vector2.h>
 #include <assimp/vector3.h>
+#include <glm/glm.hpp>
 #include <LinearMath/btVector3.h>
+
+#include <Headers/import_logger.h>
 
 namespace opgs16 {
 
 ///
 /// @struct DVector2
-///
-/// @brief
+/// @brief Float type 2-element vector struct.
 ///
 struct DVector2 {
   float x = 0.f;
   float y = 0.f;
 
-  DVector2() noexcept {};
+  DVector2() = default;
+  ~DVector2() = default;
 
-  DVector2(float x, float y) :
+  DVector2(const float x, const float y) noexcept :
       x{x}, y{y} {};
 
-  operator btVector3() const noexcept {
+  explicit DVector2(const float value) noexcept :
+      x{value}, y{value} { }
+
+  DVector2(const DVector2&) = default;
+  DVector2& operator=(const DVector2& value) = default;
+
+  DVector2(DVector2&&) = default;
+  DVector2& operator=(DVector2&&) = default;
+
+  //!
+  //! Constructor and assign operator for dependencies.
+  //!
+
+  explicit DVector2(const aiVector2D& value) noexcept :
+      x{value.x}, y{value.y} {};
+
+  DVector2& operator=(const aiVector2D& value) noexcept {
+    x = value.x;
+    y = value.y;
+    return *this;
+  }
+
+  explicit DVector2(const glm::vec2& value) noexcept :
+      x{value.x}, y{value.y} {};
+
+  DVector2& operator=(const glm::vec2& value) noexcept {
+    x = value.x;
+    y = value.y;
+    return *this;
+  }
+
+  //!
+  //! Conversion operators for dependencies.
+  //!
+
+  explicit operator btVector3() const noexcept {
     return btVector3{x, y, 0.f};
   }
 
-  DVector2(const aiVector3D& value) noexcept :
-    x{value.x}, y{value.y} {};
+  //!
+  //! Methods
+  //!
 
-  DVector2& operator=(const aiVector3D& value) noexcept {
-    x = value.x;
-    y = value.y;
+  ///
+  /// @brief Returns the length of this vector.
+  /// @return Length of this DVector2.
+  ///
+  float GetLength() const noexcept {
+    return std::sqrtf(x * x + y * y);
+  }
+
+  ///
+  /// @brief Return squared length of this vector.
+  /// @return Squared length of this DVector2.
+  ///
+  float GetSquareLength() const noexcept {
+    return x * x + y * y;
+  }
+
+  ///
+  /// @brief Return new DVector2 instance of normalized input vector.
+  /// @return Normalized DVector2 vector.
+  ///
+  DVector2 Normalize() const noexcept {
+    const auto length = this->GetLength();
+    return {x / length, y / length};
+  }
+
+  //!
+  //! Operators
+  //!
+
+  friend DVector2 operator+(DVector2 lhs, const DVector2& rhs) noexcept {
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
+  }
+
+  friend DVector2 operator-(DVector2 lhs, const DVector2& rhs) noexcept {
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
+  }
+
+  ///
+  /// DVector2 $$ v = (x, y) $$ and value $$ a $$
+  /// $$ av $$.
+  ///
+  friend DVector2 operator*(DVector2 lhs, const float rhs) noexcept {
+    lhs.x *= rhs;
+    lhs.y *= rhs;
+    return lhs;
+  }
+
+  ///
+  /// If lhs and rhs are DVector2, element multiplication happens.
+  ///
+  friend DVector2 operator*(DVector2 lhs, const DVector2& rhs) noexcept {
+    lhs.x *= rhs.x;
+    lhs.y *= rhs.y;
+    return lhs;
+  }
+
+  friend DVector2 operator/(DVector2 lhs, const float rhs) noexcept {
+    if (rhs == 0.0f) {
+      PUSH_LOG_CRITICAL_EXT("DVector2 could not be divided by {0}.", rhs);
+    }
+    else {
+      lhs.x /= rhs;
+      lhs.y /= rhs;
+    }
+
+    return lhs;
+  }
+
+  friend DVector2 operator/(DVector2 lhs, const DVector2& rhs) noexcept {
+    if (rhs.x == 0.0f || rhs.y == 0.0f) {
+      PUSH_LOG_CRITICAL_EXT(
+          "DVector2 could not be devided by 0 included DVector2, ({0}, {1})",
+          rhs.x, rhs.y);
+    }
+    else {
+      lhs.x /= rhs.x;
+      lhs.y /= rhs.y;
+    }
+
+    return lhs;
+  }
+
+  DVector2& operator+=(const DVector2& value) noexcept {
+    this->x += value.x;
+    this->y += value.y;
+    return *this;
+  }
+
+  DVector2& operator-=(const DVector2& value) noexcept {
+    this->x -= value.x;
+    this->y -= value.y;
+    return *this;
+  }
+
+  DVector2& operator*=(const float value) noexcept {
+    this->x *= value;
+    this->y *= value;
+    return *this;
+  }
+
+  DVector2& operator*=(const DVector2& value) noexcept {
+    this->x *= value.x;
+    this->y *= value.y;
+    return *this;
+  }
+
+  DVector2& operator/=(const float value) noexcept {
+    if (value == 0.0f) {
+      PUSH_LOG_CRITICAL_EXT("DVector2 could not be divided by {0}.", value);
+    }
+    else {
+      this->x /= value;
+      this->y /= value;
+    }
 
     return *this;
   }
+
+  DVector2& operator/=(const DVector2& value) noexcept {
+    if (value.x == 0.0f || value.y == 0.0f) {
+      PUSH_LOG_CRITICAL_EXT(
+          "DVector2 could not be devided by 0 included DVector2, ({0}, {1})",
+          value.x, value.y);
+    }
+    else {
+      this->x /= value.x;
+      this->y /= value.y;
+    }
+
+    return *this;
+  }
+
+  //!
+  //! Static functions
+  //!
+
 };
 
 ///

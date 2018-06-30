@@ -12,6 +12,8 @@ You can see what third-party libraries are used, and be able to check what licen
 
 ![raining](Docs/Media/opgs16_exam1.gif)
 
+![raining](Docs/Media/OPGS16_LocalRotationTest.gif)
+
 # [License](./LICENSE)
 
 BSD 2-Clause License
@@ -118,8 +120,16 @@ Updated 2018.05.23
     - [x] 3D 는 아직 하지 말기. 2D 쿼드만 처리하거나, 아니면 2D 형태만 할 수 있도록. 하지만 2D 메쉬도 결국 3D 이기 때문에... 등등.
   - [ ] TimerManager 1프레임 일시정지, 재개 테스트
   - [x] 리소스 파일 구조 바꾸기
+  - [ ] *Bug* : Rendering layer 가 제대로 정렬되지 않는 것 같음.
 - [ ] Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초
     - [ ] 전파
   - [ ] Component 부분
+- [ ] OPGS16 내부 통용 타입 만들기
+  - [ ] Vector2, Vector3, Vector4
+  - [ ] 1차원 메모리 공간을 갖는 2차원 배열 Matrix, 혹은 Dim2Vector
+  - [ ] `<random>` 및 `<chrono>`  을 정의하지 않고도 바로 랜덤을 쓸 수 있도록 제공하는 `SRandom` 네임스페이스.
+  - [ ] 회전 값을 담고 있는 `Quaternion` 클래스
+  - [ ] `DClamp` 클래스
+- [ ] 샘플 게임으로 테트리스 만들어보기. (GAME BOY)
