@@ -20,5 +20,7 @@
 
 #include <Helper/Type/vector2.h>
 #include <Helper/Type/vector3.h>
+#include <Helper/Type/vectori2.h>
+#include <Helper/Type/vectori3.h>
 
 #endif /// OPGS16_HELPER_VECTOR_H

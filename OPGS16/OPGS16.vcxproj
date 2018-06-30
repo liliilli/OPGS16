@@ -288,6 +288,8 @@
     <ClInclude Include="Include\Helper\string_helper.h" />
     <ClInclude Include="Include\Helper\Type\vector2.h" />
     <ClInclude Include="Include\Helper\Type\vector3.h" />
+    <ClInclude Include="Include\Helper\Type\vectori2.h" />
+    <ClInclude Include="Include\Helper\Type\vectori3.h" />
     <ClInclude Include="Include\Helper\vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />

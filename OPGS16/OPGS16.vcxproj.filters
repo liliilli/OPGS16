@@ -242,6 +242,8 @@
     <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\Type\vector2.h" />
     <ClInclude Include="Include\Helper\Type\vector3.h" />
+    <ClInclude Include="Include\Helper\Type\vectori2.h" />
+    <ClInclude Include="Include\Helper\Type\vectori3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
