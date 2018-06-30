@@ -239,6 +239,7 @@
     <ClInclude Include="Include\Manager\Internal\sound_info.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
     <ClInclude Include="Include\Helper\string_helper.h" />
+    <ClInclude Include="Include\Helper\float.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

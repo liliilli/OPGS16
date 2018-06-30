@@ -27,9 +27,8 @@
 #include <glm/glm.hpp>
 #include <LinearMath/btVector3.h>
 
-#include <Phitos/Dbg/assert.h>
-
 #include <Headers/import_logger.h>
+#include <Helper/float.h>
 
 namespace opgs16 {
 
@@ -64,6 +63,15 @@ struct DVector2 {
       x{value.x}, y{value.y} {};
 
   DVector2& operator=(const aiVector2D& value) noexcept {
+    x = value.x;
+    y = value.y;
+    return *this;
+  }
+
+  explicit DVector2(const aiVector3D& value) noexcept :
+      x{value.x}, y{value.y} {};
+
+  DVector2& operator=(const aiVector3D& value) noexcept {
     x = value.x;
     y = value.y;
     return *this;
@@ -150,6 +158,9 @@ struct DVector2 {
     return lhs;
   }
 
+  ///
+  /// If rhs has 0 value, this function just do nothing.
+  ///
   friend DVector2 operator/(DVector2 lhs, const float rhs) noexcept {
     if (rhs == 0.0f) {
       PUSH_LOG_CRITICAL_EXT("DVector2 could not be divided by {0}.", rhs);
@@ -162,6 +173,9 @@ struct DVector2 {
     return lhs;
   }
 
+  ///
+  /// If rhs vector has any 0 value, this function just do nothing.
+  ///
   friend DVector2 operator/(DVector2 lhs, const DVector2& rhs) noexcept {
     if (rhs.x == 0.0f || rhs.y == 0.0f) {
       PUSH_LOG_CRITICAL_EXT(
@@ -200,6 +214,9 @@ struct DVector2 {
     return *this;
   }
 
+  ///
+  /// If lhs and rhs are DVector2, element multiplication happens.
+  ///
   DVector2& operator/=(const float value) noexcept {
     if (value == 0.0f) {
       PUSH_LOG_CRITICAL_EXT("DVector2 could not be divided by {0}.", value);
@@ -212,6 +229,9 @@ struct DVector2 {
     return *this;
   }
 
+  ///
+  /// If rhs vector has any 0 value, this function just do nothing.
+  ///
   DVector2& operator/=(const DVector2& value) noexcept {
     if (value.x == 0.0f || value.y == 0.0f) {
       PUSH_LOG_CRITICAL_EXT(
@@ -226,6 +246,17 @@ struct DVector2 {
     return *this;
   }
 
+  ///
+  /// @brief Compare length of two vectors and return if they are same length.
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @return Equal flag.
+  ///
+  friend bool operator==(const DVector2& lhs, const DVector2& rhs) noexcept {
+    return __ApproximateEqual(lhs.GetSquareLength(), rhs.GetSquareLength(), 0.01f);
+  }
+
+private:
   friend bool operator<(const DVector2& lhs, const DVector2& rhs) noexcept {
     return lhs.GetSquareLength() < rhs.GetSquareLength();
   }
@@ -242,16 +273,14 @@ struct DVector2 {
     return !(lhs < rhs);
   }
 
-  friend bool operator==(const DVector2& lhs, const DVector2& rhs) noexcept {
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
-  }
-
   //!
   //! Static functions
   //!
+public:
 
   ///
-  /// @brief
+  /// @brief Do dot product of (x, y) R^2 vector.
+  /// @return Dot product float value.
   ///
   static float Dot(const DVector2& lhs, const DVector2& rhs) noexcept {
     return lhs.x * rhs.x + lhs.y * rhs.y;
@@ -259,35 +288,97 @@ struct DVector2 {
 
   ///
   /// @brief
-  /// @param[in]
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @param[in] value
+  /// @return
   ///
   static DVector2 Lerp(const DVector2& lhs, const DVector2& rhs, float value) noexcept {
     return lhs * (1.0f - value) + rhs * value;
   }
 
+  ///
+  /// @brief
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @return
+  ///
   static DVector2 CompMaxLength(const DVector2& lhs, const DVector2& rhs) noexcept {
     return (lhs >= rhs) ? lhs : rhs;
   }
 
+  ///
+  /// @brief
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @return
+  ///
   static DVector2 CompMinLength(const DVector2& lhs, const DVector2& rhs) noexcept {
     return (lhs < rhs) ? lhs : rhs;
+  }
+
+  ///
+  /// @brief
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @param[in] normalized
+  /// @return
+  ///
+  static float AngleRad(const DVector2& lhs, const DVector2& rhs,
+                        bool normalized = true) noexcept {
+    auto nlhs = lhs;
+    auto nrhs = rhs;
+    if (!normalized) {
+      nlhs = lhs.Normalize();
+      nrhs = rhs.Normalize();
+    }
+
+    const auto cos = nrhs.x * nlhs.x + nrhs.y * nlhs.y;
+    const auto sin = nrhs.y * nlhs.x - nrhs.x * nlhs.y;
+    const auto degree = std::acosf(cos);
+
+    return (sin < 0.0f) ? -degree : degree;
+  }
+
+  ///
+  /// @brief
+  /// @param[in] lhs
+  /// @param[in] rhs
+  /// @param[in] normalized
+  /// @return
+  ///
+  static float AngleDeg(const DVector2& lhs, const DVector2& rhs,
+                        bool normalized = true) noexcept {
+    return AngleRad(lhs, rhs, normalized) * 180.f / 3.1415926535f;
   }
 };
 
 ///
 /// @struct DVector3
-///
-/// @brief
-/// Helper vector class.
+/// @brief Float type 3-element vector struct.
 ///
 struct DVector3 {
   float x = 0.f;
   float y = 0.f;
   float z = 0.f;
 
-  DVector3() noexcept {};
+  DVector3() = default;
+  ~DVector3() = default;
 
-  DVector3(float x, float y, float z) noexcept : x(x), y(y), z(z) {};
+  DVector3(const float x) noexcept :
+      x{x} {};
+  DVector3(const float x, const float y, const float z) noexcept :
+      x(x), y(y), z(z) {};
+
+  DVector3(const DVector3&) = default;
+  DVector3& operator=(const DVector3&) = default;
+
+  DVector3(DVector3&&) = default;
+  DVector3& operator=(DVector3&&) = default;
+
+  //!
+  //! Constructor and assign operator for dependencies.
+  //!
 
   DVector3(const aiVector3D& value) noexcept :
       x{value.x}, y{value.y}, z{value.z} {}
@@ -308,9 +399,19 @@ struct DVector3 {
     return *this;
   }
 
+  //!
+  //! Conversion operators for dependencies.
+  //!
+
   operator btVector3() const noexcept {
     return btVector3(x, y, z);
   }
+
+  //!
+  //! Operators
+  //!
+
+
 };
 
 }

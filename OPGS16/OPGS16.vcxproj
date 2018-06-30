@@ -282,6 +282,7 @@
     <ClInclude Include="Include\Helper\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\assert.h" />
     <ClInclude Include="Include\Helper\axis.h" />
+    <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
     <ClInclude Include="Include\Helper\string_helper.h" />

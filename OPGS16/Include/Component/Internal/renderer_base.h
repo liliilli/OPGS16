@@ -101,11 +101,11 @@ public:
     void Update(float delta_time) override final {
         // If render frame buffer name is empty, regard it as default buffer and bind.
         if (m_render_frame_buffer_name.empty()) {
-            manager::object::InsertRenderingObject(&GetObject(), m_render_layer_index);
+            manager::object::InsertRenderingObject(&GetBindObject(), m_render_layer_index);
         }
         else {
             auto buffer = manager::prerendering::GetFrameBuffer(m_render_frame_buffer_name.c_str());
-            buffer->RegisterDisposableObject(GetObject());
+            buffer->RegisterDisposableObject(GetBindObject());
         }
     };
 
