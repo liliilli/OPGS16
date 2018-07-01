@@ -198,6 +198,7 @@
     <ClCompile Include="Source\Frame\timer_handle.cc" />
     <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
+    <ClCompile Include="Source\Helper\Math\random.cc" />
     <ClCompile Include="Source\Helper\string_helper.cc" />
     <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
     <ClCompile Include="Source\Manager\Internal\vao_management.cc" />
@@ -284,8 +285,10 @@
     <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
+    <ClInclude Include="Include\Helper\Math\random.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
     <ClInclude Include="Include\Helper\string_helper.h" />
+    <ClInclude Include="Include\Helper\Type\stripedvector.h" />
     <ClInclude Include="Include\Helper\Type\vector2.h" />
     <ClInclude Include="Include\Helper\Type\vector3.h" />
     <ClInclude Include="Include\Helper\Type\vectori2.h" />
