@@ -77,6 +77,7 @@ Updated 2018.05.23
   - [ ] TimerManager 1프레임 일시정지, 재개 테스트
   - [x] 리소스 파일 구조 바꾸기
   - [ ] *Bug* : Rendering layer 가 제대로 정렬되지 않는 것 같음.
+  - [ ] Phitos 가 아닌 Assertion 파일 및 의존성 지우기
 - [ ] Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초
@@ -85,12 +86,13 @@ Updated 2018.05.23
 - [ ] OPGS16 내부 통용 타입 만들기
   - [ ] Vector2, Vector3, Vector4
     - [x] Vector2
-    - [ ] VectorI2
+    - [x] VectorI2
     - [x] Vector3
-    - [ ] VectorI3
+    - [x] VectorI3
     - [ ] Vector4
   - [ ] 1차원 메모리 공간을 갖는 2차원 배열 Matrix, 혹은 Dim2Vector
-    - [ ] Dim2Vector 을 사용해서 Matrix 을 쓰면 되지 않을까?
+    - Dim2Vector 을 사용해서 Matrix 을 쓰면 되지 않을까?
+    - 구현하지 말 것. 고정형 2차원 벡터를 쓰게 되면 부딪히는 부분이 너무 많다.
   - [ ] `<random>` 및 `<chrono>`  을 정의하지 않고도 바로 랜덤을 쓸 수 있도록 제공하는 `SRandom` 네임스페이스.
   - [ ] 회전 값을 담고 있는 `Quaternion` 클래스
   - [ ] `DClamp` 클래스
