@@ -523,20 +523,20 @@ private:
     return item_tag;
   }
 
-  /*! Propagate parent position recursively */
+  /// Propagate parent position recursively.
   void PropagateParentPosition();
 
-  /*! Propagate parent rotation recursively */
+  /// Propagate parent rotation recursively.
   void PropagateParentRotation();
 
 protected:
-  /*! Local update method for derived object. */
+  /// Local update method for derived object.
   virtual void LocalUpdate() {};
 
-  /*! Render method for derived object. */
+  /// Render method for derived object.
   virtual void Render() {};
 };
 
 } /// ::opgs16::element namespace
 
-#endif /** OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H */
+#endif /// OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H

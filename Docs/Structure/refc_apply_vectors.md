@@ -1,6 +1,7 @@
 * `Physics` 부분은 건드리질 못하겠음. 나중에 하는 것으로 하자.
 
-  * `rigidbody_2d.h` 도 나중에.
+  * `rigidbody_2d.h` 도 나중에. 지금은 DVector3 가 적용되는 부분만 적용하기로.
+  * `physics_manager.h` 등등...
 
 * `animator.h` 의 `size_t` 수정 필요
 
@@ -37,3 +38,12 @@
   * [ ] `sprite_renderer_impl.cc` 리팩터링
 
 * [ ] `Element/object.h` 의 `CreateChildTag` 을 `Scene` 에서도 사용할 수 있게 할 것. (현재 Scene 에서는 같은 이름의 오브젝트를 생성하면 생성이 안되거나 오류가 발생함.)
+
+* [ ] `object.h` 의 `OnCollisionEnter` 및 `OnTriggerEnter` 은 스크립트에서 불러올 수 있도록 해야함. `Object` 는 단지 인형에 불과함...
+
+  * 그렇게 된다면, `Transform` 을 할 수 있는 것도 다 컴포넌트로 옮겨야함. 또 컴포넌트로 옮기면 `Object` 의 `CollisionEnter` `TriggerEnter` 역시 다르게 해야함.
+  * 해쉬 태깅 등등도 리팩터링 추가로 해야함.
+  * [x] `glm::vector` 을 `DVector` 로 변환 성공
+  * [ ] LocalUpdate 삭제, 및 Render 삭제 후 Renderer 로 넘기기?
+
+  
