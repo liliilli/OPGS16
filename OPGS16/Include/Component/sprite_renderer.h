@@ -1,46 +1,25 @@
 #ifndef OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H
 #define OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file Component\sprite_renderer.h
- * @brief The file contains sprite renderer class members.
- *
- * @author Jongmin Yun
- * @log
- * 2018-02-26 Componentization of Sprite2DRenderer.
- * 2018-02-28 Add Get/SetTextureIndex() member function.
- * 2018-03-07 Move file to /Component.
- * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
- * 2018-04-08 Supporting change of shader on running.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Component/sprite_renderer.h
+///
+/// @brief The file contains sprite renderer class members.
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-02-26 Componentization of Sprite2DRenderer.
+/// 2018-02-28 Add Get/SetTextureIndex() member function.
+/// 2018-03-07 Move file to /Component.
+/// 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
+/// 2018-04-08 Supporting change of shader on running.
+///
 
 #include <string>
 #include <memory>
@@ -54,22 +33,21 @@
 #include <Manager\resource_type.h>
 #include <opgs16fwd.h>  /// Forward declaration
 
-namespace opgs16 {
-namespace component {
+namespace opgs16::component {
 
-/*!
- * @class CSprite2DRenderer
- * @brief The class for object has to render 2d rendering sprite.
- * SpriteRender class has sprite to render on object position,
- * and has at least one more shader to display to screen.
- *
- * @log
- * 2018-02-26 Componentization of Sprite2DRenderer.
- * 2018-02-28 Add Get/SetTextureIndex() member function.
- * 2018-03-07 Move to opgs16::component namespace.
- * 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
- * 2018-04-08 Supporting change of shader on running.
- */
+///
+/// @class CSprite2DRenderer
+/// @brief The class for object has to render 2d rendering sprite.
+/// SpriteRender class has sprite to render on object position,
+/// and has at least one more shader to display to screen.
+///
+/// @log
+/// 2018-02-26 Componentization of Sprite2DRenderer.
+/// 2018-02-28 Add Get/SetTextureIndex() member function.
+/// 2018-03-07 Move to opgs16::component namespace.
+/// 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
+/// 2018-04-08 Supporting change of shader on running.
+///
 class CSprite2DRenderer final : public _internal::CRendererBase {
 private:
   using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
@@ -125,7 +103,6 @@ private:
   SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRenderer)
 };
 
-} /*! opgs16::component */
-} /*! opgs16 */
+} /// ::opgs16::component namespace
 
 #endif /** OPGS16_SYSTEM_COMPONENTS_PUBLIC_SPRITE_RENDERER_H */

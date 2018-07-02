@@ -288,7 +288,8 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
     return;
 
   if (m_color_dirty == _internal::EDirtyFlag::Dirty) {
-    m_wrapper.SetUniformValue("textColor", m_color);
+    m_wrapper.SetUniformValue("textColor",
+      static_cast<glm::vec3>(static_cast<DVector3>(m_color)));
     m_color_dirty = _internal::EDirtyFlag::Clean;
   }
   if (m_proj_matrix_dirty == _internal::EDirtyFlag::Dirty) {
@@ -345,19 +346,8 @@ void CFont2DRenderer::SetText(const std::string& utf8_text) {
   m_string_dirty = _internal::EDirtyFlag::Dirty;
 }
 
-void CFont2DRenderer::SetColor(const glm::vec3& color) {
-  for (uint32_t i = 0; i < 3; ++i) {
-    if (color[i] < 0) {
-      m_color[i] = 0.0f;
-      continue;
-    }
-    if (color[i] > 1) {
-      m_color[i] = 1.0f;
-      continue;
-    }
-
-    m_color[i] = color[i];
-  }
+void CFont2DRenderer::SetColor(const DColor& color) {
+  m_color = color;
   m_color_dirty = _internal::EDirtyFlag::Dirty;
 }
 

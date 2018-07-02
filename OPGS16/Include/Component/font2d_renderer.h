@@ -14,10 +14,14 @@
 /// projection matrix, 2d position, and color etc.
 ///
 /// @author Jongmin Yun
+///
 /// @log
 /// 2018-05-28 Create file.
+/// 2018-07-02 Remove glm::vec3.
 ///
 
+/// Component macroes
+#include <Component/Internal/component_macro.h>
 /// ::opgs16::component::_internal::CRendererBase
 #include <Component/Internal/renderer_base.h>
 /// ::opgs16::component::_internal enum flags.
@@ -30,9 +34,8 @@
 #include <Element/Internal/vao_container.h>
 /// ::opgs16::manager::font namespace.
 #include <Manager/font_manager.h>
-
-/// Component macroes
-#include <Component/Internal/component_macro.h>
+/// ::opgs16::DColor (float)
+#include <Helper/Type/color.h>
 
 namespace opgs16::component {
 
@@ -104,7 +107,7 @@ public:
   /// @param[in] color Color values range from 0 to 1.
   /// If color value is out of range, clamped into 0 to 1.
   ///
-  void SetColor(const glm::vec3& color);
+  void SetColor(const DColor& color);
 
   ///
   /// @brief
@@ -140,8 +143,8 @@ private:
   _internal::EDirtyFlag m_color_dirty = _internal::EDirtyFlag::Dirty;
   _internal::EDirtyFlag m_proj_matrix_dirty = _internal::EDirtyFlag::Dirty;
 
-  /// Color value range from 0 to 1, RGB support.
-  glm::vec3 m_color;
+  /// Color value range from 0 to 1, RGBA support.
+  DColor m_color = {};
 
   std::string m_font_name;
 

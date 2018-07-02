@@ -20,19 +20,16 @@
 ///
 
 /// Header file
-#include <Element\object.h>
+#include <Element/object.h>
 /// ::opgs16::element::_internal::CObjectImpl
-#include <Element\Impl\object_impl.h>
+#include <Element/Impl/object_impl.h>
 
 /// ::opgs16::component::CScriptFrame
-#include <Component\script_frame.h>
+#include <Component/script_frame.h>
 /// import logger in debug mode.
-#include <Headers\import_logger.h>
+#include <Headers/import_logger.h>
 
-#undef GetObject
-
-namespace opgs16 {
-namespace element {
+namespace opgs16::element {
 
 namespace {
 using _internal::CObjectImpl;
@@ -59,7 +56,7 @@ void CObject::Update(float delta_time) {
 
           PUSH_LOG_INFO_EXT(
               "Object call Start() : [Name : {0}]",
-              script->GetObject().GetObjectName());
+              script->GetBindObject().GetObjectName());
           script->Start();
           script->m_started = decltype(script->m_started)::Started;
         }
@@ -262,6 +259,5 @@ std::string CObject::GetTagNameOf() const {
 
 CObject::~CObject() = default;
 
-} /*! opgs16::element */
-} /*! opgs16 */
+} /// ::opgs16::element namespace
 

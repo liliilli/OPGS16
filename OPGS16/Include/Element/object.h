@@ -30,6 +30,7 @@
 /// 2018-04-16 Add rotation (parent, world) get/set functions.
 /// 2018-04-18 Change function and mechanism of rotation.
 /// 2018-05-24 Add object cycle implementation for Initiate() calling.
+/// 2018-07-02 Refactoring glm::vec3 to DVector3
 ///
 
 #include <algorithm>
@@ -56,8 +57,7 @@
 
 #include <opgs16fwd.h>          /// Forward declaration
 
-namespace opgs16 {
-namespace element {
+namespace opgs16::element {
 
 ///
 /// @class CObject
@@ -80,6 +80,7 @@ namespace element {
 /// 2018-04-18 Change function and mechanism of rotation.
 /// 2018-05-24 Add object cycle implementation for Initiate() calling.
 /// 2018-05-25 Add object cycle for Start() calling.
+/// 2018-07-02 Refactoring glm::vec3 to DVector3
 ///
 class CObject {
 private:
@@ -280,8 +281,6 @@ public:
     class = std::enable_if_t<IsCObjectBase<_Ty>>
   >
   _Ty* Instantiate(const std::string name, _Args&&... _args) {
-    //static_assert(!std::is_convertible_v <_Args, std::unique_ptr<CObject>>, "");
-
     const auto item_tag = CreateChildTag(name);
     m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Args>(_args)...));
     m_children[item_tag]->SetHash(item_tag);
@@ -527,7 +526,6 @@ inline const std::string CObject::CreateChildTag(const std::string& tag) noexcep
     return item_tag;
 }
 
-} /*! opgs16::element */
-} /*! opgs16 */
+} /// ::opgs16::element namespace
 
 #endif /** OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H */

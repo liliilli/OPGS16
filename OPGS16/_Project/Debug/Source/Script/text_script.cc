@@ -45,7 +45,7 @@ void TextScript::Start() {
     text1->SetFontName("Solomon");
     text1->SetFontSize(8u);
     text1->SetWorldPosition({ 0, -16, 0 });
-    text1->SetColor(glm::vec3{1.f, 1.f, 0.f });
+    text1->SetColor(opgs16::DColor{1.f, 1.f, 0.f });
 
     auto text2 = obj.Instantiate<opgs16::element::canvas::CText>(
         "Text2", test_text2);
@@ -53,7 +53,7 @@ void TextScript::Start() {
     text2->SetFontName("Sam3");
     text2->SetFontSize(16u);
     text2->SetWorldPosition({ 0, 0, 0 });
-    text2->SetColor(glm::vec3{1.f, 0.f, 1.f});
+    text2->SetColor(opgs16::DColor{1.f, 0.f, 1.f});
 
     auto text3 = obj.Instantiate<opgs16::element::canvas::CText>(
         "Text3", test_text3);
@@ -61,7 +61,7 @@ void TextScript::Start() {
     text3->SetFontName("Pixel");
     text3->SetFontSize(12u);
     text3->SetWorldPosition({ 0, 48, 0 });
-    text3->SetColor(glm::vec3{0.f, 1.f, 1.f});
+    text3->SetColor(opgs16::DColor{0.f, 1.f, 1.f});
 
     is_created = true;
   }

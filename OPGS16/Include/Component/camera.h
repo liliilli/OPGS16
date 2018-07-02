@@ -1,66 +1,50 @@
-#ifndef OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
-#define OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
+#ifndef OPGS16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
+#define OPGS16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
 
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Component/camera.h
+///
+/// @brief Camera component file.
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-02-14 Create file and implement basic features.
+/// 2018-03-11 Corection of ::opgs16::element::CObject class.
+/// 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
+/// 2018-07-01 Refactoring glm::vec3 to DVector3.
+///
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file System\Components\camera_object.h
- * @brief Camera component file.
- * @author Jongmin Yun
- * @log
- * 2018-02-14 Create file and implement basic features.
- * 2018-03-11 Corection of ::opgs16::element::CObject class.
- * 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
-
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 #include <Component\Internal\component.h>   /// ::opgs16::component::CComponent
 #include <Component\Internal\component_macro.h> /// Component macroes
 #include <opgs16fwd.h>  /// Forward declaration
 
-namespace opgs16 {
-namespace component {
+/// ::opgs16::DVector3
+#include <Helper/Type/vector3.h>
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @class CameraObject
- * @brief Refined camera object class, different legacy camera object is independent of m_object_list.
- * You can set it up between two types, perspective (view-frustum) and orthographic (view-cube).
- *
- * If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
- * no distortion, 3D world or 2D world with no sight distortion, set ORTHO.
- *
- * @log
- * 2018-02-14 Implemented basic features.
- * 2018-02-14 Move class from ::component to ::opgs16::component.
- * 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+namespace opgs16::component {
+
+///
+/// @class CCamera
+/// @brief Refined camera object class, different legacy camera object is independent of m_object_list.
+/// You can set it up between two types, perspective (view-frustum) and orthographic (view-cube).
+///
+/// If you see 3D world more realistic, set PERSPECTIVE. Otherwise if you set UI components with
+/// no distortion, 3D world or 2D world with no sight distortion, set ORTHO.
+///
+/// @log
+/// 2018-02-14 Implemented basic features.
+/// 2018-02-14 Move class from ::component to ::opgs16::component.
+/// 2018-04-16 Add capability of controlling rear, far distance, and fov when Camera is Perspective.
+/// 2018-07-01 Refactoring glm::vec3 to DVector3.
+///
 class CCamera final : public _internal::CComponent {
 public:
 	/*! Camera type how to see worlds. */
@@ -132,9 +116,9 @@ private:
 	glm::mat4 m_projection{};		/** Projection matrix world space or ui canvas to screen. */
     glm::mat4 m_pv{};               /*! Projection * View matrix */
 
-    glm::vec3 m_world{};
-    glm::vec3 m_look{0, 0, -1};
-    mutable glm::vec3 m_world_look{};
+  DVector3 m_world = {};
+  DVector3 m_look = DVector3{0.f, 0.f, -1.f};
+  mutable DVector3 m_world_look = {};
 
 	float m_near, m_far;			/*! Distance sets region of sight. used only for perspective */
     float m_fov;                    /*! Angle sets how to see world, used only for perspective */
@@ -151,8 +135,7 @@ private:
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CCamera)
 };
 
-} /*! opgs16::component */
-} /*! opgs16 */
+} /// ::opgs16::component namespace
 
-#endif /** OPGL16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H */
+#endif /// OPGS16_SYSTEM_COMPONENTS_PUBLIC_CAMERA_H
 

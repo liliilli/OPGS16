@@ -33,7 +33,8 @@ using CTextImpl = _internal::CTextImpl;
 
 CText::CText(const std::string& initial_text,
              const glm::vec3& position,
-  const glm::vec3& color) : m_text{initial_text}, m_color{color} {
+             const DColor& color) :
+    m_text{initial_text}, m_color{color} {
   SetWorldPosition(position);
 
   auto renderer =
@@ -94,11 +95,11 @@ const std::string& CText::GetFontName() {
   return m_font_name;
 }
 
-void CText::SetColor(const glm::vec3& color) {
+void CText::SetColor(const DColor& color) {
   m_color = color;
 }
 
-const glm::vec3& CText::GetColor() {
+const DColor& CText::GetColor() {
   return m_color;
 }
 

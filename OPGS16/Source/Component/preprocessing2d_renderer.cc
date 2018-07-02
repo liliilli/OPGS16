@@ -30,6 +30,10 @@ CPreProcessing2DRenderer::CPreProcessing2DRenderer(
     glGenVertexArrays(1, &m_empty_vao);
 }
 
+CPreProcessing2DRenderer::~CPreProcessing2DRenderer() {
+  //glDeleteVertexArrays(1, &m_empty_vao);
+}
+
 void CPreProcessing2DRenderer::SetShader(const std::string & shader_name) {
     m_wrapper.SetShader(manager::shader::GetShader(shader_name));
 }

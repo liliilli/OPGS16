@@ -28,6 +28,8 @@
 
 /// Forward declaration
 #include <opgs16fwd.h>
+/// ::opgs16::DColor (float)
+#include <Helper/Type/color.h>
 
 namespace opgs16::element::canvas {
 ///
@@ -47,7 +49,7 @@ public:
   ///
 	CText(const std::string& initial_txt,
         const glm::vec3& position = glm::vec3{ 0.f, 0.f, 0.f },
-        const glm::vec3& color = glm::vec3{ 1.f, 1.f, 1.f });
+        const DColor& color = DColor{ 1.f, 1.f, 1.f });
 
 	virtual ~CText() = default;
 
@@ -105,14 +107,14 @@ public:
   /// @param[in] color New color value with consists of {r, g, b} glm::vec3 vector.
   /// each value must be in range of [0, 1], otherwise clamped to 0 or 1.
   ///
-  void SetColor(const glm::vec3& color);
+  void SetColor(const DColor& color);
 
   ///
   /// @brief
   ///
   /// @return
   ///
-  const glm::vec3& GetColor();
+  const DColor& GetColor();
 
 private:
 
@@ -126,7 +128,7 @@ private:
   /// Font name to display what shapes has to be.
 	std::string m_font_name{};
   /// Font color what color to be displayed.
-	glm::vec3 m_color{};
+	DColor m_color{};
   /// Font size how display size big is.
   uint32_t m_font_size{};
 };

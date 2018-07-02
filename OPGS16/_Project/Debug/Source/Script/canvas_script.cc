@@ -58,7 +58,7 @@ void DebugCanvasScript::Initiate() {
     instruction->SetFontName("Solomon");
     instruction->SetFontSize(8u);
     instruction->SetWorldPosition(glm::vec3{ 16, -24, 0 });
-    instruction->SetColor(glm::vec3{ 1.f, 1.f, 1.f });
+    instruction->SetColor(DColor{ 1.f, 1.f, 1.f });
 
     // Bgm sentence object will display BGM ON/OFF status
     // depending on Background music play status on now.

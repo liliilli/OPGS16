@@ -184,7 +184,7 @@ void __B_SCR::CreateTextObject() {
         text->SetAlignment(IAlignable::Alignment::CENTER);
         text->SetFontName("Solomon");
         text->SetFontSize(8u);
-        text->SetColor(glm::vec3{ 1, 1, 1 });
+        text->SetColor(DColor{ 1, 1, 1 });
     }
     GetObject().Instantiate<element::canvas::CText>("Statement", text);
     OP16_TIMER_SET(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);

@@ -31,7 +31,8 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
-#include <opgs16fwd.h>  /// Forward declaration
+/// Forward declaration
+#include <opgs16fwd.h>
 
 namespace opgs16::element {
   class CVaoContainer;
