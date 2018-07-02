@@ -159,23 +159,15 @@ EInitiated m_initiated = EInitiated::NotInitiated;
 /// constexpr variables to be used by functions.
 ///
 namespace {
-
 using opgs16::manager::_internal::BindingKeyInfo;
 using namespace std::string_view_literals;
-
-using key_map = std::unordered_map<std::string, BindingKeyInfo>;
-
-// Status when input setting file loading
-enum class LoadStatus {
-  KEY_INIT,
-  KEY_INPUT
-};
+using TKeyMap = std::unordered_map<std::string, BindingKeyInfo>;
 
 // Window handle pointer
 GLFWwindow* m_window;
 GLFWcursor* m_cursor = nullptr;
 
-key_map m_key_inputs;
+TKeyMap m_key_inputs;
 
 } /// unnamed namespace
 
@@ -279,13 +271,10 @@ void Initiate(GLFWwindow* window_context) {
 }
 
 float GetKeyValue(const std::string& key) {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
 
   if (IsKeyExist(key) == EKeyExist::NotExist) {
-#if defined(_DEBUG)
-    PUSH_LOG_ERRO("fuck");
-#endif
+    PUSH_LOG_ERROR_EXT(debug::err_input_key_not_exist, key);
 		return 0.f;
 	}
 
@@ -293,13 +282,10 @@ float GetKeyValue(const std::string& key) {
 }
 
 bool IsKeyPressed(const std::string& key) {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
 
   if (m_key_inputs.find(key) == m_key_inputs.end()) {
-#if defined(_DEBUG)
-    PUSH_LOG_ERRO("fuck");
-#endif
+    PUSH_LOG_ERROR_EXT(debug::err_input_key_not_exist, key);
 		return false;
   }
 
@@ -324,11 +310,10 @@ bool IsKeyPressed(const std::string& key) {
 }
 
 bool IsKeyReleased(const std::string& key) {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
 
   if (IsKeyExist(key) == EKeyExist::NotExist) {
-
+    PUSH_LOG_ERROR_EXT(debug::err_input_key_not_exist, key);
     return false;
   }
 
@@ -404,8 +389,7 @@ void Update() {
 void ReadInputFile(const std::string& file_path) {
   std::ifstream stream { file_path, std::ios_base::in };
   if (!stream.good()) {
-    PUSH_LOG_CRITICAL_EXT(
-        "Failed to find project input setting file. [{} : {}]", "Path", file_path);
+    PUSH_LOG_CRITICAL_EXT(opgs16::debug::err_input_failed_load_file, file_path);
     PUSH_LOG_ERRO("Input feature will be disabled.");
     stream.close();
 
@@ -424,10 +408,8 @@ void ReadInputFile(const std::string& file_path) {
   stream.close();
 
   if (IsJsonKeyExist(atlas_json, "mode") == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
-        "mode", "Path", file_path);
+    PUSH_LOG_CRITICAL_EXT(opgs16::debug::err_input_failed_json_file, "mode", file_path);
     PUSH_LOG_ERRO("Input feature will be disabled.");
-
     PHITOS_NOT_IMPLEMENTED_ASSERT();
     return;
   }
@@ -444,14 +426,13 @@ void ReadInputFile(const std::string& file_path) {
 
   if (keyboard_activated == ESwitch::On) {
     if (BindKeyboardKeyInformation(atlas_json) == ESucceed::Failed) {
-      PUSH_LOG_WARN("Failed some operation on binding keyboard key.");
+      PUSH_LOG_WARN(opgs16::debug::err_input_failed_failed_bind_key);
     }
   }
 
   if (mouse_activated == ESwitch::On) {
     if (atlas_json.find("mouse") == atlas_json.end()) {
-      PUSH_LOG_CRITICAL_EXT("Header {} is not found in json file. [{} : {}]",
-          "mouse", "Path", file_path);
+      PUSH_LOG_CRITICAL_EXT(opgs16::debug::err_input_failed_json_file, "mouse", file_path);
       PUSH_LOG_ERRO("Input feature will be disabled.");
       PHITOS_NOT_IMPLEMENTED_ASSERT();
       return;
@@ -468,16 +449,15 @@ void ModeVerifyKey(const nlohmann::json& json,
   using opgs16::helper::json::IsJsonKeyExist;
 
   if (IsJsonKeyExist(json, "keyboard") == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Key {} is not found in mode object. [{} : {}]",
-                          key, "Path", file_path);
-    PUSH_LOG_ERROR_EXT("{} input feature will be disabled.", "keyboard");
+    PUSH_LOG_CRITICAL_EXT(opgs16::debug::err_input_keyboard_not_exist, key, file_path);
+    PUSH_LOG_ERROR_EXT(opgs16::debug::err_input_disable_msg, "keyboard");
     swt= ESwitch::Off;
   }
 
   if (json.count("keyboard") != 1) {
     PUSH_LOG_CRITICAL_EXT("Duplicated {} is found. [{} : {}]",
                           key, "Path", file_path);
-    PUSH_LOG_ERROR_EXT("{} input feature will be disabled.", "keyboard");
+    PUSH_LOG_ERROR_EXT(opgs16::debug::err_input_disable_msg, "keyboard");
     swt = ESwitch::Off;
   }
 

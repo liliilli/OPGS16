@@ -39,8 +39,3 @@
 * [ ] `Element/object.h` 의 `CreateChildTag` 을 `Scene` 에서도 사용할 수 있게 할 것. (현재 Scene 에서는 같은 이름의 오브젝트를 생성하면 생성이 안되거나 오류가 발생함.)
 
 * [ ] `Switch` 없애기.
-
-* [ ] 매니저 쪽
-
-  * [ ] `Errormessage` 통합하기
-  * [ ] `flag` 없애고 Phitos 로 통합하기

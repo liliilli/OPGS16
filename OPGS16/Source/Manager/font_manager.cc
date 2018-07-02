@@ -40,6 +40,8 @@
 
 /// import logger header file
 #include <Headers/import_logger.h>
+///
+#include <Manager/Internal/error_message.h>
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Forward Declaration
@@ -125,7 +127,7 @@ namespace opgs16::manager::font::__ {
 
 void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
-      "Duplicated function call of ::opgs16::manager::font::Initiate() is prohibited.");
+                debug::err_font_duplicated_init);
 
 	m_common_shader = shader::GetShader("gCommonFont");
 
@@ -145,7 +147,7 @@ namespace opgs16::manager::font {
 
 bool GenerateFont(const std::string& name_tag) {
   if (IsFontExist(name_tag)) {
-    PUSH_LOG_WARN_EXT("Font already has been. : [font : {}]", name_tag);
+    PUSH_LOG_WARN_EXT(debug::err_font_font_already, name_tag);
     return false;
   }
 
@@ -182,7 +184,7 @@ bool GenerateFont(const std::string& name_tag) {
 bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) {
   if (!IsFontExist(font_name)) {
     GenerateFont(font_name);
-    PHITOS_ASSERT(IsFontExist(font_name), "Font is not exist on runtime.");
+    PHITOS_ASSERT(IsFontExist(font_name), debug::err_font_not_exist);
     return false;
   }
 
@@ -195,9 +197,7 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) 
     auto [it, is_created] =
         (*m_fonts[font_name]).emplace(utf16_char, GetCharTexture(utf16_char));
     if (!is_created) {
-      PUSH_LOG_WARN_EXT(
-          "Character {0} of font {1} has not been created successfully."
-          "There is already a glyph or not.",
+      PUSH_LOG_WARN_EXT(debug::err_font_gen_not_successful,
           static_cast<int>(utf16_char), font_name);
     }
 
@@ -210,9 +210,7 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) 
     return true;
   }
 
-  PUSH_LOG_ERROR_EXT(
-      "GenerateCharacter({}, {}) was not succeeded properly.",
-      font_name, static_cast<int>(utf16_char));
+  PUSH_LOG_WARN_EXT(debug::err_font_font_already, font_name);
   return false;
 }
 
@@ -243,7 +241,7 @@ bool DeleteFont(const std::string& font_name) {
     return true;
   }
 
-  PUSH_LOG_WARN_EXT("Font {0} is not exist.", font_name);
+  PUSH_LOG_WARN_EXT(debug::err_font_font_already, font_name);;
   return false;
 }
 
@@ -264,7 +262,7 @@ unsigned GetDefaultFontSize() {
 bool CheckFreeType() noexcept {
   // Check Freetype is well.
   if (FT_Init_FreeType(&m_freetype)) {
-    PUSH_LOG_ERRO("Could not initiate Freetype font library.");
+    PUSH_LOG_ERRO(opgs16::debug::err_font_freetype_failed);
     return false;
   }
 
@@ -273,8 +271,7 @@ bool CheckFreeType() noexcept {
 
 bool LoadFreeType(const std::string& font_path) noexcept {
   if (FT_New_Face(m_freetype, font_path.c_str(), 0, &m_ft_face)) {
-    PUSH_LOG_ERROR_EXT(
-        "Coult not load font information : [path : {}]", font_path);
+    PUSH_LOG_ERROR_EXT(opgs16::debug::err_font_failed_load_font, font_path);
     return false;
   }
 
@@ -293,9 +290,7 @@ opgs16::manager::font::TFontMapPtr GetAsciiCharTextures() {
 
 opgs16::manager::_internal::DCharacter GetCharTexture(char16_t chr) {
   if (FT_Load_Char(m_ft_face, chr, FT_LOAD_RENDER)) {
-    PUSH_LOG_ERROR_EXT(
-        "Failed to load character glyph. : [character : {0}]",
-        static_cast<int>(chr));
+    PUSH_LOG_ERROR_EXT(opgs16::debug::err_font_failed_load_glyph, static_cast<int>(chr));
     return {};
   }
 
