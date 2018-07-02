@@ -73,34 +73,34 @@ void CObject::Update(float delta_time) {
   }
 }
 
-const glm::vec3& CObject::GetLocalPosition() const noexcept {
+const DVector3& CObject::GetLocalPosition() const noexcept {
   return m_data->GetLocalPosition();
 }
 
-const glm::vec3& CObject::GetWorldPosition() const noexcept {
+const DVector3& CObject::GetWorldPosition() const noexcept {
   return m_data->GetWorldPosition();
 }
 
-const glm::vec3& CObject::GetParentPosition() const noexcept {
+const DVector3& CObject::GetParentPosition() const noexcept {
   return m_data->GetParentPosition();
 }
 
-const glm::vec3& CObject::GetFinalPosition() const noexcept {
+const DVector3& CObject::GetFinalPosition() const noexcept {
   return m_data->GetFinalPosition();
 }
 
 // ReSharper disable CppMemberFunctionMayBeConst
-void CObject::SetLocalPosition(const glm::vec3& position) noexcept {
+void CObject::SetLocalPosition(const DVector3& position) noexcept {
   // ReSharper restore CppMemberFunctionMayBeConst
   m_data->SetLocalPosition(position);
 }
 
-void CObject::SetWorldPosition(const glm::vec3& world_position) {
+void CObject::SetWorldPosition(const DVector3& world_position) {
   m_data->SetWorldPosition(world_position);
   PropagateParentPosition();
 }
 
-void CObject::SetParentPosition(const glm::vec3& parent_position) {
+void CObject::SetParentPosition(const DVector3& parent_position) {
   m_data->SetParentPosition(parent_position);
   PropagateParentPosition();
 }
@@ -164,7 +164,7 @@ const float CObject::GetScaleValue() const noexcept {
     return m_data->GetScaleLocalValue();
 }
 
-const glm::vec3& CObject::GetScaleFactor() const noexcept {
+const DVector3& CObject::GetScaleFactor() const noexcept {
     return m_data->GetScaleLocalFactor();
 }
 
@@ -172,7 +172,7 @@ void CObject::SetScaleValue(const float scale_value) {
 	m_data->SetScaleLocalValue(scale_value);
 }
 
-void CObject::SetScaleFactor(const glm::vec3& factor) {
+void CObject::SetScaleFactor(const DVector3& factor) {
 	m_data->SetScaleLocalFactor(factor);
 }
 

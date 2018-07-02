@@ -1,49 +1,29 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file Object/Impl/object_impl.cc
- * @brief Implementation file of object_impl.h
- * @author Jongmin Yun
- * @log
- * 2018-03-05 Add rendering layer member functions.
- * 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
- * 2018-04-18 Change function and mechanism of rotation.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Element/Impl/object_impl.cc
+///
+/// @brief Implementation file of object_impl.h
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-05 Add rendering layer member functions.
+/// 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
+/// 2018-04-18 Change function and mechanism of rotation.
+///
 
-#include <Element\Impl\object_impl.h>   /// Header file
+/// Header file
+#include <Element/Impl/object_impl.h>
 
-#include <glm\gtc\matrix_transform.hpp> /// glm::rotate
-#include <Manager\setting_manager.h>    /// ::opgs16::manager::MSettingManager
+#include <glm/gtc/matrix_transform.hpp>
 
-namespace opgs16 {
-namespace element {
-namespace _internal {
+/// ::opgs16::manager::MSettingManager
+#include <Manager/setting_manager.h>
 
 namespace {
 constexpr float k_2pi{ 2 * glm::pi<float>() };
@@ -69,16 +49,28 @@ glm::mat4 GetRotationMatrix(const float (&angle)[3]) {
            glm::vec3{ angle[0] / max_deg, angle[1] / max_deg, angle[2] / max_deg });
 }
 
-} /*! unnamed namespace */
+} /// unnamed namespace
+
+//!
+//! Implementation
+//!
+
+namespace opgs16::element::_internal {
 
 void CObjectImpl::RefreshFinalPosition() const {
     m_final_position = m_local_position + m_parent_from_position;
 
-    for (auto i = 0u; i < 3u; ++i) { // Loop unrolling
-        m_final_position[i] += m_wp_rotate_matrix[0][i] * m_world_position[0];
-        m_final_position[i] += m_wp_rotate_matrix[1][i] * m_world_position[1];
-        m_final_position[i] += m_wp_rotate_matrix[2][i] * m_world_position[2];
-    }
+  m_final_position.x += m_wp_rotate_matrix[0][0] * m_world_position.x;
+  m_final_position.x += m_wp_rotate_matrix[1][0] * m_world_position.y;
+  m_final_position.x += m_wp_rotate_matrix[2][0] * m_world_position.z;
+
+  m_final_position.y += m_wp_rotate_matrix[0][1] * m_world_position.x;
+  m_final_position.y += m_wp_rotate_matrix[1][1] * m_world_position.y;
+  m_final_position.y += m_wp_rotate_matrix[2][1] * m_world_position.z;
+
+  m_final_position.z += m_wp_rotate_matrix[0][2] * m_world_position.x;
+  m_final_position.z += m_wp_rotate_matrix[1][2] * m_world_position.y;
+  m_final_position.z += m_wp_rotate_matrix[2][2] * m_world_position.z;
 }
 
 void CObjectImpl::RefreshRotateMatrix() const {
@@ -123,40 +115,40 @@ void CObjectImpl::RefreshScaleVector() const {
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
-    if (m_offset_model_matrix_deprecated) {
-        RefreshWpRotationMatrix();
-        RefreshFinalPosition();
-        m_offset_model_matrix_deprecated = false;
-    }
+  if (m_offset_model_matrix_deprecated) {
+    RefreshWpRotationMatrix();
+    RefreshFinalPosition();
+    m_offset_model_matrix_deprecated = false;
+  }
 
 	if (m_local_model_matrix_deprecated) {
-        if (m_final_pos_deprecated) {
-            RefreshFinalPosition();
-            m_final_pos_deprecated = false;
-        }
+    if (m_final_pos_deprecated) {
+      RefreshFinalPosition();
+      m_final_pos_deprecated = false;
+    }
 
-        if (m_local_rotation_deprecated) {
-            RefreshRotateMatrix();
-            m_local_rotation_deprecated = false;
-        }
+    if (m_local_rotation_deprecated) {
+      RefreshRotateMatrix();
+      m_local_rotation_deprecated = false;
+    }
 
-        if (m_scale_deprecated) {
-            RefreshScaleVector();
-            m_scale_deprecated = false;
-        }
+    if (m_scale_deprecated) {
+      RefreshScaleVector();
+      m_scale_deprecated = false;
+    }
 
-		m_local_model_matrix_deprecated = false;
-	}
+    m_local_model_matrix_deprecated = false;
+  }
 
-    m_final_model = m_wp_rotate_matrix * m_local_rotate_matrix;
-    m_final_model[0] *= m_scale_final_vector[0];
-    m_final_model[1] *= m_scale_final_vector[1];
-    m_final_model[2] *= m_scale_final_vector[2];
-    m_final_model[3][0] = m_final_position.x;
-    m_final_model[3][1] = m_final_position.y;
-    m_final_model[3][2] = m_final_position.z;
+  m_final_model = m_wp_rotate_matrix * m_local_rotate_matrix;
+  m_final_model[0] *= m_scale_final_vector.x;
+  m_final_model[1] *= m_scale_final_vector.y;
+  m_final_model[2] *= m_scale_final_vector.z;
+  m_final_model[3][0] = m_final_position.x;
+  m_final_model[3][1] = m_final_position.y;
+  m_final_model[3][2] = m_final_position.z;
 
-	return m_final_model;
+  return m_final_model;
 }
 
 std::string CObjectImpl::GetTagNameOf() const {
@@ -186,7 +178,5 @@ void CObjectImpl::SetTag(const unsigned tag_index) {
         m_tag_index = tag_index;
 }
 
-} /*! opgs16::element::_internal */
-} /*! opgs16::element */
-} /*! opgs16 */
+} /// ::opgs16::element::_internal namespace
 

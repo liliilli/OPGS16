@@ -57,7 +57,7 @@ void DebugCanvasScript::Initiate() {
     instruction->SetOrigin(IOriginable::Origin::UP_LEFT);
     instruction->SetFontName("Solomon");
     instruction->SetFontSize(8u);
-    instruction->SetWorldPosition(glm::vec3{ 16, -24, 0 });
+    instruction->SetWorldPosition(DVector3{ 16, -24, 0 });
     instruction->SetColor(DColor{ 1.f, 1.f, 1.f });
 
     // Bgm sentence object will display BGM ON/OFF status
@@ -67,7 +67,7 @@ void DebugCanvasScript::Initiate() {
     m_bgm_sentence->SetAlignment(IAlignable::Alignment::CENTER);
     m_bgm_sentence->SetFontName("Solomon");
     m_bgm_sentence->SetFontSize(8u);
-    m_bgm_sentence->SetWorldPosition(glm::vec3{ 0, 48, 0 });
+    m_bgm_sentence->SetWorldPosition(DVector3{ 0, 48, 0 });
 
     // Information sentence object will display what is playing now
     // depending on Key 2,3,4 mode.
@@ -76,8 +76,7 @@ void DebugCanvasScript::Initiate() {
     m_info_sentence->SetAlignment(IAlignable::Alignment::CENTER);
     m_info_sentence->SetFontName("Solomon");
     m_info_sentence->SetFontSize(8u);
-    m_info_sentence->SetWorldPosition(glm::vec3{ 0, 32, 0 });
-
+    m_info_sentence->SetWorldPosition(DVector3{ 0, 32, 0 });
 }
 
 void DebugCanvasScript::Start() {

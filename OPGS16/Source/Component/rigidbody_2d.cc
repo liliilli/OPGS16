@@ -40,13 +40,13 @@ void CRigidbody2D::Update() {
     m_velocity += m_accelation * delta;
     m_movement = m_velocity * delta;
 
-    object.SetWorldPosition(object.GetWorldPosition() + m_movement);
+    object.SetWorldPosition(object.GetWorldPosition() + DVector3{m_movement});
   }
 
   // Collision
   if (m_collidable) {
     for (auto& collider : m_colliders) {
-      collider->ReflectPosition(object.GetWorldPosition());
+      collider->ReflectPosition(static_cast<glm::vec3>(object.GetWorldPosition()));
       manager::physics::AddCollider(collider.get(), this);
     }
   }

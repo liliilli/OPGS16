@@ -42,23 +42,25 @@
 #include <glm/glm.hpp>
 
 /// ::opgs16::component::_internal::CComponent
-#include <Component\Internal\component.h>
+#include <Component/Internal/component.h>
 /// ::opgs16::component::_internal Component type
-#include <Component\Internal\type.h>
+#include <Component/Internal/type.h>
 /// ::opgs16::element::_internal::EDirection
-#include <Element\Internal\direction_type.h>
+#include <Element/Internal/direction_type.h>
 
 /// import logger debug mode
-#include <Headers\import_logger.h>
+#include <Headers/import_logger.h>
 /// Type checking template
-#include <Helper\template.h>
+#include <Helper/template.h>
 /// Enforced assert macroes.
-#include <Helper\assert.h>
+#include <Helper/assert.h>
 
-#include <opgs16fwd.h>          /// Forward declaration
+/// Forward declaration
+#include <opgs16fwd.h>
+/// ::opgs16::DVector3
+#include <Helper/Type/vector3.h>
 
 namespace opgs16::element {
-
 ///
 /// @class CObject
 /// @brief The class for every object to update and draw.
@@ -83,7 +85,6 @@ namespace opgs16::element {
 /// 2018-07-02 Refactoring glm::vec3 to DVector3
 ///
 class CObject {
-private:
   using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
   using component_list    = std::vector<
       std::pair<component_ptr, component::_internal::EComponentType>>;
@@ -105,56 +106,53 @@ public:
   ///
   void Update(float delta_time);
 
-  /*! Calls children to draw or render something it has.  */
-  void Draw() {
-    Render();
-  }
+  void Draw() { Render(); }
 
-  /*! This method will be called when Collision. */
+  /// This method will be called when Collision.
   virtual void OnCollisionEnter(component::CRigidbody2D& collider) {};
 
-  /*! This method will be called when Trigger entered. */
+  /// This method will be called when Trigger entered.
   virtual void OnTriggerEnter(component::CRigidbody2D& collider) {};
 
-  /*!
-   * @brief Return local position.
-   * @return Object's local position.
-   */
-  const glm::vec3& GetLocalPosition() const noexcept;
+  ///
+  /// @brief Return local position.
+  /// @return Object's local position.
+  ///
+  const DVector3& GetLocalPosition() const noexcept;
 
-  /*!
-   * @brief Sets local position.
-   * @param[in] position local position Position to set on.
-   */
-  void SetLocalPosition(const glm::vec3& position) noexcept;
+  ///
+  /// @brief Sets local position.
+  /// @param[in] position local position Position to set on.
+  ///
+  void SetLocalPosition(const DVector3& position) noexcept;
 
-	/*!
-	 * @brief Return world position.
-	 * @return Object's world position from parent object's position.
-	 */
-	const glm::vec3& GetWorldPosition() const noexcept;
+	///
+	/// @brief Return world position.
+	/// @return Object's world position from parent object's position.
+	///
+	const DVector3& GetWorldPosition() const noexcept;
 
-	/**
-	 * @brief Set world position.
-	 * @param[in] world_position Winal position in Screen space and from parent' object.
-	 */
-	void SetWorldPosition(const glm::vec3& world_position);
+	///
+	/// @brief Set world position.
+	/// @param[in] world_position Winal position in Screen space and from parent' object.
+	///
+	void SetWorldPosition(const DVector3& world_position);
 
-	/**
-	 * @brief The method refresh parent position.
-	 * @param[in] parent_position Position to apply for.
-	 */
-	void SetParentPosition(const glm::vec3& parent_position);
+	///
+	/// @brief The method refresh parent position.
+	/// @param[in] parent_position Position to apply for.
+	///
+	void SetParentPosition(const DVector3& parent_position);
 
-  /*!
-   * @brief Get Object's final position.
-   */
-  const glm::vec3& GetFinalPosition() const noexcept;
+  ///
+  /// @brief Get Object's final position.
+  ///
+  const DVector3& GetFinalPosition() const noexcept;
 
-  /**
-   * @brief The method gets rotation angle value
-   * @return Object's rotation angle value.
-   */
+  ///
+  /// @brief The method gets rotation angle value
+  /// @return Object's rotation angle value.
+  ///
   const float GetRotationLocalAngle(_internal::EDirection direction) const noexcept;
 
   const float GetRotationFromParentAngle(_internal::EDirection direction) const noexcept;
@@ -163,50 +161,50 @@ public:
 
   const float GetRotationWpAngle(_internal::EDirection direction) const noexcept;
 
-  /**
-   * @brief The method sets rotation angle values.
-   * When input value is positive and factor is [0, 1], axis rotates clockwise.
-   * input value is negative and factor is [0, 1], axis rotates counter-clockwise.
-   * @param[in] angle_value Angle value to set on.
-   */
+  ///
+  /// @brief The method sets rotation angle values.
+  /// When input value is positive and factor is [0, 1], axis rotates clockwise.
+  /// input value is negative and factor is [0, 1], axis rotates counter-clockwise.
+  /// @param[in] angle_value Angle value to set on.
+  ///
   void SetRotationLocalAngle(_internal::EDirection direction, float angle_value) noexcept;
 
   void SetRotationParentAngle(_internal::EDirection direction, float angle_value) noexcept;
 
   void SetRotationWorldAngle(_internal::EDirection direction, float angle_value) noexcept;
 
-  /**
-   * @brief The method gets scaling values
-   * @return Object's scaling value.
-   */
+  ///
+  /// @brief The method gets scaling values
+  /// @return Object's scaling value.
+  ///
   const float GetScaleValue() const noexcept;
 
-  /**
-   * @brief The method gets (x, y, z) glm::vec3 scaling axis factor.
-   * @return Object's scaling vector which has (x, y, z) axis factors.
-   */
-  const glm::vec3& GetScaleFactor() const noexcept;
+  ///
+  /// @brief The method gets (x, y, z) DVector3 scaling axis factor.
+  /// @return Object's scaling vector which has (x, y, z) axis factors.
+  ///
+  const DVector3& GetScaleFactor() const noexcept;
 
-  /**
-   * @brief The method sets scaling angle values.
-   * @param[in] scale_value Scaling value to set on.
-   */
+  ///
+  /// @brief The method sets scaling angle values.
+  /// @param[in] scale_value Scaling value to set on.
+  ///
   void SetScaleValue(const float scale_value);
 
-  /**
-   * @brief The method sets scaling vector have (x, y, z) scaling factors.
-   * @param[in] factor Scaling factor
-   */
-  void SetScaleFactor(const glm::vec3& factor);
+  ///
+  /// @brief The method sets scaling vector have (x, y, z) scaling factors.
+  /// @param[in] factor Scaling factor
+  ///
+  void SetScaleFactor(const DVector3& factor);
 
-  /**
-   * @brief The method returns Model matrix, M = TRS
-   *
-   * If any value which related to Translate, Rotation, Scaling has been changed,
-   * model matrix would be calculated newly and returned.
-   *
-   * @return Model matrix (M = TRS)
-   */
+  ///
+  /// @brief The method returns Model matrix, M = TRS
+  ///
+  /// If any value which related to Translate, Rotation, Scaling has been changed,
+  /// model matrix would be calculated newly and returned.
+  ///
+  /// @return Model matrix (M = TRS)
+  ///
   const glm::mat4& GetModelMatrix() const;
 
   void SetSucceedingPositionFlag(bool value) noexcept;
@@ -221,14 +219,14 @@ public:
 
   bool GetSucceedingScalingFlag() const noexcept;
 
-  /**
-   * @brief Set active option of object.
-   * If m_active is false, this object cannot update until m_active return to true.
-   * @param[in] value Active option value.
-   */
+  ///
+  /// @brief Set active option of object.
+  /// If m_active is false, this object cannot update until m_active return to true.
+  /// @param[in] value Active option value.
+  ///
   void SetActive(const bool value);
 
-  bool GetActive() const;   /*! Get active value. */
+  bool GetActive() const;
 
   ///
   /// @brief
@@ -258,23 +256,23 @@ public:
     return static_cast<_Ty*>(m_children[item_tag].get());
   }
 
-	/**
-	 * @brief This initiate object as a child of base object.
-	 *
-	 * This method create & initiate object as a child, make a leaf of object hierarchy tree.
-	 * Created type instance is implicitly converted (up-cast) to Object class type.
-	 *
-	 * If you must initiate specific derived class with initialization parameters,
-	 * you can type them _args parameter. This method gets variadic inputs initialized with
-	 * appropriate c-tor.
-	 *
-	 * You have to <> parenthesis to input specific class type to create.
-	 *
-	 * @param[in] object Object instance to make.
-	 * @param[in] name Object Tag.
-	 * @param[in] _Args variadic args to be used c-tor initialize parameters inputs.
-	 * @return Success/Failed flag. If the methods success to make child object, return true.
-	 */
+	///
+	/// @brief This initiate object as a child of base object.
+	///
+	/// This method create & initiate object as a child, make a leaf of object hierarchy tree.
+	/// Created type instance is implicitly converted (up-cast) to Object class type.
+	///
+	/// If you must initiate specific derived class with initialization parameters,
+	/// you can type them _args parameter. This method gets variadic inputs initialized with
+	/// appropriate c-tor.
+	///
+	/// You have to <> parenthesis to input specific class type to create.
+	///
+	/// @param[in] object Object instance to make.
+	/// @param[in] name Object Tag.
+	/// @tparam _Args variadic args to be used c-tor initialize parameters inputs.
+	/// @return Success/Failed flag. If the methods success to make child object, return true.
+	///
   template <
     class _Ty,
     class... _Args,
@@ -299,30 +297,31 @@ public:
     return static_cast<_Ty*>(m_children[item_tag].get());
   }
 
-	/**
-	 * @brief Destroy child object has unique tag key.
-	 * @param[in] name Object name.
-	 * @return Success/Failed tag. If arbitary m_object_list has been destroied, return ture.
-	 */
+	///
+	/// @brief Destroy child object has unique tag key.
+	/// @param[in] name Object name.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroied, return ture.
+	///
 	bool DestroyChild(const std::string& name);
 
-	/**
-	 * @brief Get children tag list.
-	 * @return Children's tags container of object.
-	 */
+	///
+	/// @brief Get children tag list.
+	/// @return Children's tags container of object.
+	///
 	std::vector<std::string> GetChildrenNameList() const;
 
-	/**
-	 * @brief Get children reference.
-	 * @return Children m_object_list component list.
-	 */
+	///
+	/// @brief Get children reference.
+	/// @return Children m_object_list component list.
+	///
 	object_map& GetChildList();
 
-	/**
-	 * @brief Get arbitary child object.
-	 * @param[in] child_name The name of object to find.
-	 * @return Object's raw-pointer instance. this cannot removeable.
-	 */
+	///
+	/// @brief Get arbitary child object.
+	/// @param[in] child_name The name of object to find.
+	/// @return Object's raw-pointer instance. this cannot removeable.
+	///
 	object_raw const GetChild(const std::string& child_name);
 
   ///
@@ -353,21 +352,21 @@ public:
     return GetComponent<_Ty>();
   }
 
-  /*!
-   * @brief Return component raw-pointer.
-   * @param[in] _Ty Component type argument.
-   * @return If found, return _Ty* but not found, return nullptr.
-   */
+  ///
+  /// @brief Return component raw-pointer.
+  /// @tparam TTy Component type argument.
+  /// @return If found, return _Ty* but not found, return nullptr.
+  ///
   template<
-    class _Ty,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+    class TTy,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TTy>>
   >
-  _Ty* const GetComponent() {
+  TTy* GetComponent() {
     // Component matching process is using recursion of each component
     // from last derived component class to highest base component class.
     for (auto& [component, type] : m_components) {
-      if (component->DoesTypeMatch(_Ty::type))
-        return static_cast<_Ty*>(component.get());
+      if (component->DoesTypeMatch(TTy::type))
+        return static_cast<TTy*>(component.get());
     }
 
     // If there is no component to find.
@@ -401,11 +400,11 @@ public:
     return result_component_list;
   }
 
-  /*!
-   * @brief Remove component.
-   * @param[in] _Ty Component type argument.
-   * @return If found, return true but otherwise false.
-   */
+  ///
+  /// @brief Remove component.
+  /// @param[in] _Ty Component type argument.
+  /// @return If found, return true but otherwise false.
+  ///
   template <
     class _Ty,
     typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
@@ -426,105 +425,117 @@ public:
     else return false;
   }
 
-    /*!
-     * @brief Set tag with tag name. This method will check whether or not exist matched tag name
-     * in SettingManager. If not exist, do nothing and chagne error flag.
-     * @param[in] tag_name Tag name
-     */
-    void SetTag(const std::string& tag_name);
+  ///
+  /// @brief Set tag with tag name. This method will check whether or not exist matched tag name
+  /// in SettingManager. If not exist, do nothing and chagne error flag.
+  /// @param[in] tag_name Tag name
+  ///
+  void SetTag(const std::string& tag_name);
 
-    /*! Overloaded version of SetTag(tag_name) */
-    void SetTag(const unsigned tag_index);
+  ///
+  /// @brief Overloaded version of SetTag(tag_name)
+  ///
+  void SetTag(const unsigned tag_index);
 
-    /*!
-     * @brief Get tag index of this object.
-     * @return Tag index value.
-     */
-    unsigned GetTagIndexOf() const;
+  ///
+  /// @brief Get tag index of this object.
+  /// @return Tag index value.
+  ///
+  unsigned GetTagIndexOf() const;
 
-    /*!
-     * @brief Get Tag Name of this object. (different with name of object)
-     * This methods return tag name by referencing SettingManager in body.
-     * @return Tag name string.
-     */
-    std::string GetTagNameOf() const;
+  ///
+  /// @brief Get Tag Name of this object. (different with name of object)
+  /// This methods return tag name by referencing SettingManager in body.
+  /// @return Tag name string.
+  ///
+  std::string GetTagNameOf() const;
 
-    /*! Return hash value of this object. */
-    inline unsigned GetHash() const {
-        return m_hash_value;
+  ///
+  /// @brief Return hash value of this object.
+  ///
+  inline unsigned GetHash() const {
+    return m_hash_value;
+  }
+
+  ///
+  /// @brief Set hash value
+  ///
+  inline void SetHash(const std::string& name) const {
+    NEU_ASSERT(m_hash_initialized == false,
+      "Hash value of object is already defined.");
+
+    if (!m_hash_initialized) {
+      m_object_name = name;
+      m_hash_value = static_cast<int32_t>(std::hash<std::string>{}(name));
+      m_hash_initialized = true;
+
+      PUSH_LOG_INFO_EXT(
+        "Create hash value for object, [Name : {0}] [Hash : {1:x}]",
+        name,
+        m_hash_value);
     }
+  }
 
-    /*! Set hash value */
-    inline void SetHash(const std::string& name) const {
-      NEU_ASSERT(m_hash_initialized == false,
-          "Hash value of object is already defined.");
+  ///
+  /// @brief Return object name
+  ///
+  inline const std::string& GetObjectName() const {
+    return m_object_name;
+  }
 
-      if (!m_hash_initialized) {
-        m_object_name = name;
-        m_hash_value = static_cast<int32_t>(std::hash<std::string>{}(name));
-        m_hash_initialized = true;
-
-        PUSH_LOG_INFO_EXT(
-            "Create hash value for object, [Name : {0}] [Hash : {1:x}]",
-            name,
-            m_hash_value);
-      }
-    }
-
-    /*! Return object name */
-    inline const std::string& GetObjectName() const {
-        return m_object_name;
-    }
-
-    /*! Return object final position not included local position. */
-    const glm::vec3& GetParentPosition() const noexcept;
+  ///
+  /// @brief Return object final position not included local position.
+  ///
+  const DVector3& GetParentPosition() const noexcept;
 
 private:
-    name_counter_map m_name_counter;    /*! Object name counter to avoid duplicated object name */
+  /// Object name counter to avoid duplicated object name
+  name_counter_map m_name_counter;
 
-    mutable std::string m_object_name{};        /*! this object name */
-    mutable int32_t m_hash_value{};             /*! Hash value to verify object number */
-    mutable bool m_hash_initialized{ false };   /*! Flag */
+  /// this object name
+  mutable std::string m_object_name{};
+  /// Hash value to verify object number
+  mutable int32_t m_hash_value{};
+  /// Flag
+  mutable bool m_hash_initialized{ false };
 
 protected:
-	pimpl_ptr   m_data{ nullptr };              /*! Pointer implementation heap instance. */
-	object_map  m_children;                     /*! The container stores child object. */
-    component_list m_components{};              /*! CComponent list of thie object. */
+	pimpl_ptr   m_data{ nullptr }; /*! Pointer implementation heap instance. */
+	object_map  m_children;        /*! The container stores child object. */
+  component_list m_components{}; /*! CComponent list of thie object. */
 
 private:
-    /*!
-     * @brief Create child object name.
-     * @param[in] name
-     * @return
-     */
-    inline const std::string CreateChildTag(const std::string& name) noexcept;
+  ///
+  /// @brief Create child object name.
+  /// @param[in] name
+  /// @return
+  ///
+  inline std::string CreateChildTag(const std::string& name) noexcept {
+    std::string item_tag = name;
 
-    /*! Propagate parent position recursively */
-    void PropagateParentPosition();
-
-    /*! Propagate parent rotation recursively */
-    void PropagateParentRotation();
-
-protected:
-    /*! Local update method for derived object. */
-    virtual void LocalUpdate() {};
-
-    /*! Render method for derived object. */
-    virtual void Render() {};
-};
-
-inline const std::string CObject::CreateChildTag(const std::string& tag) noexcept {
-    std::string item_tag{ tag };
-
-    if (m_name_counter.find(tag) != m_name_counter.end()) {
-        auto& count = m_name_counter[tag];
-        count += 1;
-        item_tag.append('_' + std::to_string(count));
+    if (m_name_counter.find(name) != m_name_counter.end()) {
+      auto& count = m_name_counter[name];
+      count += 1;
+      item_tag.append('_' + std::to_string(count));
     }
-    else { m_name_counter[tag] = 0; }
+    else { m_name_counter[name] = 0; }
 
     return item_tag;
-}
+  }
+
+  /*! Propagate parent position recursively */
+  void PropagateParentPosition();
+
+  /*! Propagate parent rotation recursively */
+  void PropagateParentRotation();
+
+protected:
+  /*! Local update method for derived object. */
+  virtual void LocalUpdate() {};
+
+  /*! Render method for derived object. */
+  virtual void Render() {};
+};
 
 } /// ::opgs16::element namespace
 

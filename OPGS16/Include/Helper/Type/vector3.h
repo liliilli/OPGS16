@@ -43,8 +43,8 @@ struct DVector3 {
   DVector3() = default;
   ~DVector3() = default;
 
-  explicit DVector3(const float x) noexcept :
-      x{x} {};
+  explicit DVector3(const float value) noexcept :
+      x{value}, y{value}, z{value} {};
 
   explicit DVector3(const DVector2& value) noexcept :
       x{value.x}, y{value.y}, z{0.0f} {};

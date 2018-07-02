@@ -32,7 +32,7 @@ namespace opgs16::element::canvas {
 using CTextImpl = _internal::CTextImpl;
 
 CText::CText(const std::string& initial_text,
-             const glm::vec3& position,
+             const DVector3& position,
              const DColor& color) :
     m_text{initial_text}, m_color{color} {
   SetWorldPosition(position);
@@ -56,9 +56,10 @@ void CText::Render() {
   // Render
   renderer->SetText(GetText());
   renderer->SetColor(GetColor());
+  const auto& fp = GetFinalPosition();
   renderer->RenderText(
       GetOrigin(),
-      glm::vec2{ GetFinalPosition() },
+      glm::vec2{ fp.x, fp.y },
       GetAlignment(),
       GetScaleValue());
 }

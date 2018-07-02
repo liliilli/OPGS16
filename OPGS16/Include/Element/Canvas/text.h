@@ -48,7 +48,7 @@ public:
   /// is in hierarchy structrue of parent.
   ///
 	CText(const std::string& initial_txt,
-        const glm::vec3& position = glm::vec3{ 0.f, 0.f, 0.f },
+        const DVector3& position = DVector3{ 0.f },
         const DColor& color = DColor{ 1.f, 1.f, 1.f });
 
 	virtual ~CText() = default;

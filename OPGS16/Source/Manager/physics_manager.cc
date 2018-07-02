@@ -206,11 +206,13 @@ void AdjustPosition(opgs16::component::CRigidbody2D* source,
       collision_flag.y_top == ECollided::Collided ||
       collision_flag.y_bottom == ECollided::Collided) {
     auto& position =
-        const_cast<glm::vec3&>(source->GetBindObject().GetWorldPosition());
-    position += glm::vec3{ final_offset.x, final_offset.y, 0 };
+        const_cast<opgs16::DVector3&>(source->GetBindObject().GetWorldPosition());
+    position += opgs16::DVector3{
+        static_cast<float>(final_offset.x),
+        static_cast<float>(final_offset.y), 0.0f };
     position.x = std::floor(position.x);
     position.y = std::floor(position.y);
-    source_collider->ReflectPosition(position);
+    source_collider->ReflectPosition(static_cast<glm::vec3>(position));
 
     if (collision_flag.y_top == ECollided::Collided ||
         collision_flag.y_bottom == ECollided::Collided)

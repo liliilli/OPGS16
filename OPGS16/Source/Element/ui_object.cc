@@ -59,7 +59,11 @@ void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
 	GLint source_x = static_cast<GLint>(parent_x + (parent_width / 2) * x);
 	GLint source_y = static_cast<GLint>(parent_y + (parent_height / 2) * y);
 
-    SetParentPosition(glm::vec3{ source_x, source_y, 0 });
+  SetParentPosition( DVector3{
+      static_cast<float>(source_x),
+      static_cast<float>(source_y),
+      0.f }
+  );
 	for (auto& child : GetChildList()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());

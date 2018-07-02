@@ -6,7 +6,7 @@
 
 class ObjectDate : public opgs16::element::canvas::CText {
 public:
-    ObjectDate() : CText{ "", glm::vec3{16, -24, 0} } {
+    ObjectDate() : CText{ "", opgs16::DVector3{16, -24, 0} } {
       SetColor(opgs16::DColor{ 1, 1, 1 });
       SetOrigin(IOriginable::Origin::UP_LEFT);
           SetFontName("Solomon");
