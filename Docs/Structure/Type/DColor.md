@@ -21,9 +21,9 @@
 
 - [ ] 일반 멤버 함수 구현
 
-  - [ ] `IsOpaque()` `a` 가 $$ 1.0 $$ 이면 opaque, 아니면 transparent 을 뱉는다.
-  - [ ] `SetOpaque()` `a` 을 $$ 1.0 $$ 으로 설정해서 opaque 함을 설정한다.
-  - [ ] `GetGrayScale()`  $$ (r, g, b) $$ 의 값을 그레이스케일화 시켜서 $$ [0, 1] $$ 사이의 값으로 반환한다.
+  - [x] `IsOpaque()` `a` 가 $$ 1.0 $$ 이면 opaque, 아니면 transparent 을 뱉는다.
+  - [x] `SetOpaque()` `a` 을 $$ 1.0 $$ 으로 설정해서 opaque 함을 설정한다.
+  - [x] `GetGrayScale()`  $$ (r, g, b) $$ 의 값을 그레이스케일화 시켜서 $$ [0, 1] $$ 사이의 값으로 반환한다.
     - ![{\displaystyle Y_{\mathrm {linear} }=0.2126R_{\mathrm {linear} }+0.7152G_{\mathrm {linear} }+0.0722B_{\mathrm {linear} }}](https://wikimedia.org/api/rest_v1/media/math/render/svg/f84d67895d0594a852efb4a5ac421bf45b7ed7a8) 
 
 - [ ] `Static` 함수 구현

@@ -247,6 +247,7 @@
     <ClInclude Include="Include\Helper\Type\vectori3.h" />
     <ClInclude Include="Include\Helper\Type\stripedvector.h" />
     <ClInclude Include="Include\Helper\Math\random.h" />
+    <ClInclude Include="Include\Helper\Type\color.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

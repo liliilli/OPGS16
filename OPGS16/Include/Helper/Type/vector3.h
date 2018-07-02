@@ -100,6 +100,10 @@ struct DVector3 {
     return btVector3(x, y, z);
   }
 
+  explicit operator glm::vec3() const noexcept {
+    return {x, y, z};
+  }
+
   //!
   //! Methods
   //!

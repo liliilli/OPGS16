@@ -17,6 +17,9 @@
 /// 2018-07-02 Create file.
 ///
 
+/// ::opgs16::DVector3
+#include <Helper/Type/vector3.h>
+
 namespace opgs16 {
 
 ///
@@ -83,13 +86,16 @@ struct DColor final {
   //!
 
 
-
   //!
   //! Conversion operators
   //!
 
-
-
+  ///
+  /// @brief Can be convert DVector3 explicitly, but alpha information passed.
+  ///
+  explicit operator DVector3() const noexcept {
+    return DVector3{r, g, b};
+  }
 };
 
 } /// ::opgs16 namespace
