@@ -30,6 +30,9 @@ private:
   void Start() override final;
   void Update(float delta_time) override final;
 
+  void ExecuteLifecycleTest();
+  void ExecuteRandomFeatureTest();
+
   object::ChoiceList* m_list = nullptr;
   bool m_is_pressed = false;
 };

@@ -73,6 +73,16 @@ public:
   ///
   void MoveCursor(EDirection direction);
 
+  ///
+  ///
+  ///
+  void SetFunction(int32_t index, std::function<void(void)> callback_function);
+
+  ///
+  ///
+  ///
+  void SelectCommand();
+
 private:
   opgs16::element::canvas::CImage* m_selection_ref = nullptr;
 
@@ -89,6 +99,7 @@ private:
 
   void UpdateListItemPosition();
   void UpdateCursorItemPosition(int32_t i);
+  void UpdateItemColors();
 
   void LocalUpdate() override final;
 };

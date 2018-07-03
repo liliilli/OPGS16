@@ -37,6 +37,7 @@ ChoiceList::ChoiceList(
   m_command_list_size = static_cast<int32_t>(std::distance(m_commands.begin(), it));
   UpdateListItemPosition();
   UpdateCursorItemPosition(m_cursor_index);
+  UpdateItemColors();
 }
 
 void ChoiceList::SetFontSize(const int32_t size) {
@@ -68,10 +69,12 @@ void ChoiceList::SetCursorSize(const opgs16::DVectorInt2& value) {
 
 void ChoiceList::SetSelectedColor(const opgs16::DColor& color_value) {
   m_selected_color = color_value;
+  UpdateItemColors();
 }
 
 void ChoiceList::SetNormalColor(const opgs16::DColor& color_value) {
   m_normal_color = color_value;
+  UpdateItemColors();
 }
 
 void ChoiceList::MoveCursor(EDirection direction) {
@@ -80,13 +83,34 @@ void ChoiceList::MoveCursor(EDirection direction) {
     if (m_cursor_index == 0) break;
     m_cursor_index -= 1;
     UpdateCursorItemPosition(m_cursor_index);
+    UpdateItemColors();
     break;
   case EDirection::Down:
     if (m_cursor_index == m_command_list_size - 1) break;
     m_cursor_index += 1;
     UpdateCursorItemPosition(m_cursor_index);
+    UpdateItemColors();
     break;
   }
+}
+
+void ChoiceList::SetFunction(int32_t index,
+                             std::function<void()> callback_function) {
+  if (index >= m_command_list_size) {
+    PUSH_LOG_ERRO("Index is out of bound of list command list size.");
+    return;
+  }
+
+  m_commands[index].second = callback_function;
+}
+
+void ChoiceList::SelectCommand() {
+  if (m_commands[m_cursor_index].second == nullptr) {
+    PUSH_LOG_ERRO("Command callback execution function is not bind.");
+    return;
+  }
+
+  m_commands[m_cursor_index].second();
 }
 
 void ChoiceList::UpdateListItemPosition() {
@@ -106,6 +130,17 @@ void ChoiceList::UpdateCursorItemPosition(int32_t i) {
 
   const auto y_pos = y_start - static_cast<float>(m_item_size) * i;
   m_selection_ref->SetWorldPosition({ -scale.x - 8.f, y_pos, 0.f});
+}
+
+void ChoiceList::UpdateItemColors() {
+  for (int32_t i = 0; i < m_command_list_size; ++i) {
+    const opgs16::DColor* color = &m_normal_color;
+
+    if (i == m_cursor_index)
+      color = &m_selected_color;
+
+    m_commands[i].first->SetColor(*color);
+  }
 }
 
 void ChoiceList::LocalUpdate() {
