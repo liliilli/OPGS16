@@ -9,9 +9,9 @@
 /// Header file
 #include "../../../Include/Object/SceneSelect/choice_list.h"
 
+#include <Phitos/Dbg/assert.h>
 #include <Element/Canvas/image.h>
 #include <Element/Canvas/text.h>
-
 #include <Helper/Type/vectori2.h>
 
 namespace debug::object {
@@ -58,6 +58,11 @@ void ChoiceList::SetItemSize(const int32_t size) {
   m_item_size = size;
   UpdateListItemPosition();
   UpdateCursorItemPosition(m_cursor_index);
+}
+
+void ChoiceList::SetTextureIndex(const int32_t index) {
+  PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
+  m_selection_ref->SetTextureIndex(index);
 }
 
 void ChoiceList::SetCursorSize(const opgs16::DVectorInt2& value) {

@@ -32,8 +32,10 @@ private:
 
   void ExecuteLifecycleTest();
   void ExecuteRandomFeatureTest();
+  void ExecuteSoundTest();
 
   object::ChoiceList* m_list = nullptr;
+  opgs16::element::canvas::CText* m_description = nullptr;
   bool m_is_pressed = false;
 };
 

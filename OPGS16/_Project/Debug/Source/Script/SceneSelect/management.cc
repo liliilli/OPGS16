@@ -13,10 +13,28 @@
 #include <Element/Canvas/text.h>
 #include <Helper/Type/vectori2.h>
 #include <Manager/input_manager.h>
+#include <Manager/scene_manager.h>
 #include <Phitos/Dbg/assert.h>
 
 #include "../../../Include/Object/SceneSelect/choice_list.h"
 #include "../../../Include/Object/SceneSelect/select_manager.h"
+
+#include "../../../Include/Scene/object_lifecycle.h"
+
+namespace {
+
+std::vector<std::string_view> description_container = {
+  u8"이 테스트는\n오브젝트 생명주기를\n테스트합니다.",
+  u8"랜덤 값 기능을\n테스트합니다.",
+  u8"BGM, Effect 등의\n사운드를 테스트합니다.",
+  u8"키보드, 마우스 등의\n인풋 기능을 테스트합니다.",
+  u8"There is nothing!",
+  u8"There is nothing!",
+  u8"There is nothing!",
+  u8"There is nothing!"
+};
+
+} /// unnamed namespace
 
 namespace debug::script {
 
@@ -26,9 +44,9 @@ void Management::Initiate() {
 
   auto& obj = GetBindObject();
 
-  auto subject = obj.Instantiate<CText>("Subject", "Debug Test");
-  subject->SetFontName("opSystem");
-  subject->SetWorldPosition({32.f, -32.f, 0.f});
+  auto subject = obj.Instantiate<CText>("Subject", "OPGS16 Test");
+  subject->SetFontName("Bios");
+  subject->SetWorldPosition({0.f, -32.f, 0.f});
   subject->SetFontSize(16);
   subject->SetOrigin(IOriginable::Origin::UP_CENTER);
   subject->SetAlignment(IAlignable::Alignment::CENTER);
@@ -37,39 +55,41 @@ void Management::Initiate() {
       object::SelectManager::list_name, "opSystem",
       static_cast<opgs16::element::canvas::CCanvas*>(&GetBindObject()),
       std::vector<std::string>{
-      "Object lifecycle test", "Random feature test",
-      "Nothing.", "Nothing.", "Nothing.", "Nothing.", "Nothing.", "Nothing."});
+          "Object lifecycle test", "Random feature test",
+          "Sound test",
+          "Input test", "Nothing.", "Nothing.", "Nothing.", "Nothing."
+      }
+  );
   list->SetItemSize(12);
   list->SetFontSize(8);
   list->SetCursorSize(opgs16::DVectorInt2{16, 16});
+  list->SetTextureIndex(8);
   list->SetSelectedColor(opgs16::DColor{0.0f, 1.0f, 1.0f});
   list->SetNormalColor(opgs16::DColor{.5f, .5f, .5f});
   list->SetOrigin(IOriginable::Origin::DOWN_LEFT);
   list->SetWorldPosition({48.f, 96.f, 0.f});
   list->SetFunction(0, std::bind(&Management::ExecuteLifecycleTest, this));
   list->SetFunction(1, std::bind(&Management::ExecuteRandomFeatureTest, this));
-  m_list = list;
 
   auto copyright = obj.Instantiate<CText>("Copyright", "2018 Jongmin Yun(Neu.)");
   copyright->SetFontName("opSystem");
   copyright->SetFontSize(8);
   copyright->SetColor(opgs16::DColor{0.5f, 0.5f, 0.5f});
-#ifdef false
-  copyright->SetOrigin(Origin::DOWN_RIGHT);
+  copyright->SetOrigin(IOriginable::Origin::DOWN_RIGHT);
   copyright->SetAlignment(IAlignable::Alignment::RIGHT);
   copyright->SetWorldPosition({-8.f, 8.f, 0.f});
-#endif
-  copyright->SetOrigin(IOriginable::Origin::DOWN_LEFT);
-  copyright->SetAlignment(IAlignable::Alignment::LEFT);
-  copyright->SetWorldPosition({8.f, 8.f, 0.f});
 
   auto description = obj.Instantiate<CText>("Description", "This is description.");
-  description->SetFontName("opSystem");
-  description->SetFontSize(8);
+  description->SetFontName("Hangul");
+  description->SetFontSize(16);
   description->SetColor(opgs16::DColor{1.f, 1.f, 1.f});
   description->SetOrigin(IOriginable::Origin::DOWN_CENTER);
   description->SetAlignment(IAlignable::Alignment::CENTER);
   description->SetWorldPosition({0.f, 48.f, 0.f});
+
+  m_list = list;
+  m_description = description;
+  m_description->SetText(description_container[m_list->GetCursorIndex()].data());
 }
 
 void Management::Start() {
@@ -88,11 +108,21 @@ void Management::Update(float delta_time) {
 
   auto key_val = GetKeyValue("Vertical");
   if (key_val == 1.0f) {
+    const auto idx = m_list->GetCursorIndex();
     m_list->MoveCursor(object::EDirection::Up);
+
+    if (const auto new_idx = m_list->GetCursorIndex(); new_idx != idx) {
+      m_description->SetText(description_container[new_idx].data());
+    }
     m_is_pressed = true;
   }
   else if (key_val == -1.0f) {
+    const auto idx = m_list->GetCursorIndex();
     m_list->MoveCursor(object::EDirection::Down);
+
+    if (const auto new_idx = m_list->GetCursorIndex(); new_idx != idx) {
+      m_description->SetText(description_container[new_idx].data());
+    }
     m_is_pressed = true;
   }
 
@@ -101,13 +131,16 @@ void Management::Update(float delta_time) {
   }
 }
 
-  void Management::ExecuteLifecycleTest()
-  {
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
-  }
+void Management::ExecuteLifecycleTest() {
+  M_REPLACE_SCENE(scene::ObjectLifeCycle);
+}
 
-  void Management::ExecuteRandomFeatureTest()
-  {
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
-  }
+void Management::ExecuteRandomFeatureTest() {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+}
+
+void Management::ExecuteSoundTest() {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+}
+
 } /// ::debug::script namespace

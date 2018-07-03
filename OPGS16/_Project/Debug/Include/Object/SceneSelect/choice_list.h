@@ -56,6 +56,11 @@ public:
   ///
   ///
   ///
+  void SetTextureIndex(const int32_t index);
+
+  ///
+  ///
+  ///
   void SetCursorSize(const opgs16::DVectorInt2& value);
 
   ///
@@ -79,9 +84,17 @@ public:
   void SetFunction(int32_t index, std::function<void(void)> callback_function);
 
   ///
-  ///
+  /// @brief Execute selected command callback. If command does not have callback,
+  /// Print warning message and do nothing.
   ///
   void SelectCommand();
+
+  ///
+  /// @brief
+  ///
+  inline int32_t GetCursorIndex() const noexcept {
+    return m_cursor_index;
+  }
 
 private:
   opgs16::element::canvas::CImage* m_selection_ref = nullptr;

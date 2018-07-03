@@ -5,9 +5,8 @@
   "font": {
     "meta": {},
     "list": {
-      "Bios": {
-        "path": "Resource/Font/PxPlus_IBM_BIOS.ttf"
-      }
+      "Bios": { "path": "Resource/Font/PxPlus_IBM_BIOS.ttf" },
+      "Hangul": { "path": "Resource/Font/Sam3KRFont.ttf" }
     }
   },
   "texture": {
