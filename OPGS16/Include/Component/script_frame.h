@@ -27,8 +27,10 @@
 #include <Component\Internal\component_macro.h>
 /// ::opgs16::component::_internal enum flag classes
 #include <Component\Internal\script_frame_flag.h>
-/// ::opgs16::element::CObject
-#include <Element\object.h>
+
+namespace opgs16::element {
+  class CObject;
+}
 
 namespace opgs16::component {
 
@@ -47,7 +49,7 @@ namespace opgs16::component {
 ///
 class CScriptFrame : public _internal::CComponent {
 public:
-  friend void element::CObject::Update(float delta_time);
+  friend class element::CObject;
 
 public:
   CScriptFrame(element::CObject& bound_obj) : CComponent{ bound_obj } {}
@@ -116,5 +118,9 @@ SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CScriptFrame)
 };
 
 } /// ::opgs16::component
+
+#define OP16_SCRIPT_GENERATE(__MAClassName__) \
+  __MAClassName__(opgs16::element::CObject& bind_object) : \
+      CScriptFrame{bind_object} {}
 
 #endif /// OPGS16_SYSTEM_COMPONENTS_SCRIPT_FRAME_H

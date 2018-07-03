@@ -93,6 +93,10 @@
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
     <ClCompile Include="Source\Helper\string_helper.cc" />
     <ClCompile Include="Source\Helper\Math\random.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\select_scene.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\SceneSelect\select_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\SceneSelect\choice_list.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\SceneSelect\management.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -248,6 +252,10 @@
     <ClInclude Include="Include\Helper\Type\stripedvector.h" />
     <ClInclude Include="Include\Helper\Math\random.h" />
     <ClInclude Include="Include\Helper\Type\color.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\select_scene.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\select_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\choice_list.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\SceneSelect\management.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -351,9 +359,7 @@
     <None Include="Resources\Shader\__b_scr.vert" />
     <None Include="Resources\Shader\__b_scr.frag" />
     <None Include="Legacy\input.meta" />
-    <None Include="_Project\Debug\Setting\input.meta" />
     <None Include="Legacy\render_layer.meta" />
-    <None Include="_Project\Debug\Setting\setting.meta" />
     <None Include="Legacy\tag.meta" />
     <None Include="Legacy\collision.meta" />
     <None Include="_Project\_Template\Setting\input.meta" />

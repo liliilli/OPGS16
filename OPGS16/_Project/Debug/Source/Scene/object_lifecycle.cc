@@ -40,7 +40,7 @@ void ObjectLifeCycle::Initiate() {
   auto text = canvas->Instantiate<opgs16::element::canvas::CText>("Object", "Hello world!");
   text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderLayer("Interface");
   text->SetFontName("Solomon");
-  text->SetFontSize(24);
+  text->SetFontSize(16);
   text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
 }
 

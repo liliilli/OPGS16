@@ -13,29 +13,31 @@
  * 2018-04-17 Rearrange file path of #include macros.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <Element\Canvas\image.h>       /// Header file
+#include <Element/Canvas/image.h>       /// Header file
 
 #include <array>                        /// std::array
+#include <glm/gtc/matrix_transform.hpp>
 
-#include <glm\gtc\matrix_transform.hpp>
-
-#include <Element\Canvas\canvas.h>      /// ::opgs16::element::canvas::CCanvas
-#include <Shader\shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
-#include <Manager\texture_manager.h>    /// ::opgs16::manager::MTextureManager
 /// ::opgs16::component::CSprite2DRenderer
-#include <Component\sprite_renderer.h>  
+#include <Component/sprite_renderer.h>
+#include <Element/Canvas/canvas.h>      /// ::opgs16::element::canvas::CCanvas
+#include <Manager/texture_manager.h>    /// ::opgs16::manager::MTextureManager
+#include <Shader/shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
+#include <Shader/Default/shader_quad2d.h>
 
-namespace opgs16 {
-namespace element {
-namespace canvas {
+namespace opgs16::element::canvas {
 
-CImage::CImage(const std::string& sprite_tag, const CCanvas* const ref_canvas) :
-	m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
-    m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(*this, sprite_tag, "gQuad");
+CImage::CImage(const std::string& sprite_tag,
+               const CCanvas* const ref_canvas) :
+    m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
+  m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(
+      *this, sprite_tag, builtin::shader::SGlobalQuad2D::s_shader_name);
 }
 
-CImage::CImage(const std::string& sprite_tag, const std::unique_ptr<CCanvas>& ref_canvas) :
-	CImage{ sprite_tag, ref_canvas.get() } { }
+CImage::CImage(const std::string& sprite_tag,
+               const std::unique_ptr<CCanvas>& ref_canvas) :
+    CImage{ sprite_tag, ref_canvas.get() } {
+}
 
 void CImage::LocalUpdate() {
 	/** Update my xywh */
@@ -64,17 +66,15 @@ void CImage::Render() {
 	}
 
 	auto& wrapper = m_renderer_ptr->Wrapper();
-	auto PVM = m_ref_canvas->GetUiCameraPVMatrix() * GetModelMatrix();
-	wrapper.SetUniformValue<glm::mat4>("projection", PVM);
-    /*! Temporary */
-	wrapper.SetUniformValue<glm::mat4>("uPV", m_ref_canvas->GetUiCameraPVMatrix());
-    //wrapper.SetUniformValue<glm::mat4>("uModel", GetModelMatrix());
-	wrapper.SetUniformValue("alpha", 1.0f);
+	wrapper.SetUniformValue<glm::mat4>("opProj", m_ref_canvas->GetUiCameraPVMatrix());
+	wrapper.SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
+	wrapper.SetUniformValue("opAlpha", 1.0f);
 
 	m_renderer_ptr->RenderSprite();
-	if (!is_already_enabled) glDisable(GL_BLEND);
+
+	if (!is_already_enabled) {
+    glDisable(GL_BLEND);
+	}
 }
 
-} /*! opgs16::element::canvas */
-} /*! opgs16::element */
-} /*! opgs16 */
+} /// ::opgs16::element::canvas namespace

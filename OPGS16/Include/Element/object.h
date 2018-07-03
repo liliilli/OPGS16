@@ -47,6 +47,8 @@
 #include <Component/Internal/type.h>
 /// ::opgs16::element::_internal::EDirection
 #include <Element/Internal/direction_type.h>
+/// ::opgs16::element::CScriptFrame
+#include <Component/script_frame.h>
 
 /// import logger debug mode
 #include <Headers/import_logger.h>

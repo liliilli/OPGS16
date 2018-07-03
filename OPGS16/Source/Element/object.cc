@@ -106,12 +106,12 @@ void CObject::SetParentPosition(const DVector3& parent_position) {
 }
 
 void CObject::PropagateParentPosition() {
-    for (auto& child : m_children) {
-        auto& child_ptr = child.second;
-        /*! If object is not empty and activated and permits succeeding positioning. */
-        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingPositionFlag())
-            child_ptr->SetParentPosition(GetParentPosition());
-    }
+  for (auto& child : m_children) {
+    auto& child_ptr = child.second;
+    /*! If object is not empty and activated and permits succeeding positioning. */
+    if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingPositionFlag())
+      child_ptr->SetParentPosition(GetParentPosition());
+  }
 }
 
 // Rotation functions.
