@@ -248,6 +248,7 @@
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RandomTest\manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\rotatable_obstacle.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\SceneSelect\choice_list.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\SceneSelect\select_manager.cc" />
@@ -256,10 +257,12 @@
     <ClCompile Include="_Project\Debug\Source\Scene\debug_text.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\object_lifecycle.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\select_scene.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\Test\random.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\canvas_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\__s_debugcanvas.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\SceneSelect\management.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\text_script.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
@@ -402,6 +405,7 @@
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RandomTest\manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\choice_list.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\select_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\debug_aabb.h" />
@@ -409,8 +413,10 @@
     <ClInclude Include="_Project\Debug\Include\Scene\debug_sound.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\object_lifecycle.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\select_scene.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\Test\random.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\manager.h" />
     <ClInclude Include="_Project\Debug\Include\Script\SceneSelect\management.h" />
     <ClInclude Include="_Project\Debug\Include\Script\text_script.h" />
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />

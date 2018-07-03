@@ -88,9 +88,14 @@ public:
 	 */
 	 void SetImageSize(const float width, const float height);
 
+  ///
+  /// @brief
+  ///
+  void SetTextureIndex(const int32_t index);
+
 private:
-    component::CSprite2DRenderer* m_renderer_ptr;
-    CCanvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
+  component::CSprite2DRenderer* m_renderer_ptr;
+  CCanvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */
 };
 
 } /*! opgs16::element::canvas */

@@ -333,7 +333,7 @@ shader_map  m_shaders;
 /// Sounds path string container
 sound_map   m_sounds;
 /// Font path information container
-font_map    m_fonts;
+static font_map    m_fonts;
 /// Animation films information container
 animation_map m_animations;
 
@@ -478,6 +478,7 @@ ESucceed ReadResourceFile(const std::string& file_path) {
   InitializeShader(atlas_json[s_json_shader]);
   InitializeSound(atlas_json[s_json_sound]);
   InitializeAnimation(atlas_json[s_json_animation]);
+
   return ESucceed::Succeed;
 }
 

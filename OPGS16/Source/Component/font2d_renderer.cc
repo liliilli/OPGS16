@@ -197,7 +197,7 @@ void RenderCenterSide(const Utf16TextContainer& container,
   }
 }
 
-void RenderRightSide(const std::vector<std::string>& container,
+void RenderRightSide(const Utf16TextContainer& container,
                      const std::vector<uint32_t>& text_render_width,
                      opgs16::manager::font::TFontType* font_set,
                      const glm::vec2& position,
@@ -216,7 +216,7 @@ void RenderRightSide(const std::vector<std::string>& container,
     }
 
     pos.x = position.x;
-    pos.y -= (*font_set)['0'].size.y * 1.5f;
+    pos.y -= static_cast<int>((*font_set)['0'].size.y * scale * 1.5f);
   }
 }
 
@@ -256,7 +256,6 @@ CFont2DRenderer::CFont2DRenderer(
     const std::string& shader_tag, const uint32_t rendering_layer) :
     CRendererBase(bind_object, rendering_layer),
     m_font_name{font_tag} {
-  using manager::_internal::vao::FindVaoResource;
 
   SetProjectionMatrix({
       glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
@@ -264,6 +263,7 @@ CFont2DRenderer::CFont2DRenderer(
       static_cast<float>(SGlobalSetting::ScreenHeight())) });
 
   phitos::enums::EFound result;
+  using manager::_internal::vao::FindVaoResource;
   std::tie(m_vao_ptr, result) = FindVaoResource(builtin::g_model_2d_quad_dynamic);
 
   if (result == phitos::enums::EFound::NotFound)
@@ -281,7 +281,6 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                                  const float scale) {
   if (m_string_dirty == _internal::EDirtyFlag::Dirty) {
     RefreshStringContainers(m_temporary_utf8_string);
-    m_temporary_utf8_string.clear();
     m_string_dirty = _internal::EDirtyFlag::Clean;
   }
   if (m_unicode_text_container.empty())
@@ -312,12 +311,11 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                      m_font_set, final_position,
                      m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
-#ifdef false
   case Align::RIGHT:
-    RenderRightSide(m_text_container, m_text_render_width,
-                    m_font_set, final_position, m_vbo, scale);
+    RenderRightSide(m_unicode_text_container, m_text_render_width,
+                    m_font_set, final_position,
+                    m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
-#endif
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
 
@@ -339,6 +337,8 @@ void CFont2DRenderer::SetFont(const std::string& font_name) {
   else {
     m_font_set = manager::font::GetDefaultFont();
   }
+
+  m_string_dirty = _internal::EDirtyFlag::Dirty;
 }
 
 void CFont2DRenderer::SetText(const std::string& utf8_text) {
@@ -362,14 +362,33 @@ void CFont2DRenderer::RefreshStringContainers(const std::string& text) {
 
   if (std::string::npos == text.find('\n')) {
     m_unicode_text_container.emplace_back(ConvertUtf8ToUtf16(text));
-    m_text_render_width.push_back(
-        static_cast<uint32_t>(m_unicode_text_container[0].length()));
-  }
+
+    uint32_t length = 0;
+    for (const char16_t chr : m_unicode_text_container[0]) {
+      if (m_font_set->find(chr) == m_font_set->end()) {
+        manager::font::GenerateCharacter(m_font_name, chr);
+      }
+
+      length += (*m_font_set)[chr].advance >> 6;
+    }
+
+    m_text_render_width.push_back(length);
+}
   else {
     m_unicode_text_container = SeparateUtf8TextToUtf16StringList(text);
-    for (const auto& text_line : m_unicode_text_container)
-      m_text_render_width.push_back(
-          static_cast<uint32_t>(text_line.length()));
+    for (const auto& text_line : m_unicode_text_container) {
+      uint32_t length = 0;
+
+      for (const char16_t chr : text_line) {
+        if (m_font_set->find(chr) == m_font_set->end()) {
+          manager::font::GenerateCharacter(m_font_name, chr);
+        }
+
+        length += (*m_font_set)[chr].advance >> 6;
+      }
+
+      m_text_render_width.push_back(length);
+    }
   }
 }
 

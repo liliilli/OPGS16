@@ -24,6 +24,7 @@
 #include <Manager/texture_manager.h>    /// ::opgs16::manager::MTextureManager
 #include <Shader/shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
 #include <Shader/Default/shader_quad2d.h>
+#include <Phitos/Dbg/assert.h>
 
 namespace opgs16::element::canvas {
 
@@ -55,6 +56,11 @@ void CImage::LocalUpdate() {
 void CImage::SetImageSize(const float width, const float height) {
 	SetScaleValue(1.0f);
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
+}
+
+void CImage::SetTextureIndex(const int32_t index) {
+  PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
+  m_renderer_ptr->SetTextureIndex(index);
 }
 
 void CImage::Render() {

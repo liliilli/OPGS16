@@ -84,8 +84,11 @@ const unsigned CText::GetFontSize() const {
 bool CText::SetFontName(const std::string& font_tag) {
 	if (!manager::font::IsFontExist(font_tag)) {
     PUSH_LOG_ERROR_EXT("Font did not find. : [Font : {0}]", font_tag);
-    m_font_name = "";
-    return false;
+    if (!manager::font::GenerateFont(font_tag)) {
+      PUSH_LOG_ERROR_EXT("Could not create specified font. [Font : {}]", font_tag);
+      m_font_name = "";
+      return false;
+    }
 	}
 
   m_font_name = font_tag;
