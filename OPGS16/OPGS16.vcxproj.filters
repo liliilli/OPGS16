@@ -100,6 +100,7 @@
     <ClCompile Include="_Project\Debug\Source\Scene\Test\random.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\manager.cc" />
+    <ClCompile Include="Source\Helper\Type\color.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />

@@ -33,17 +33,17 @@ struct DColor final {
   float b = 0.0f;
   float a = 0.0f;
 
-  DColor() = default;
+  constexpr DColor() = default;
   ~DColor() = default;
 
-  explicit DColor(float r, float g, float b) noexcept :
+  constexpr explicit DColor(float r, float g, float b) noexcept :
       r{r}, g{g}, b{b}, a{1.0f} {
     if (this->r < 0.0f) this->r = 0.0f; else if (this->r > 1.0f) this->r = 1.0f;
     if (this->g < 0.0f) this->g = 0.0f; else if (this->g > 1.0f) this->g = 1.0f;
     if (this->b < 0.0f) this->b = 0.0f; else if (this->b > 1.0f) this->b = 1.0f;
   };
 
-  explicit DColor(float r, float g, float b, float a) noexcept :
+  constexpr explicit DColor(float r, float g, float b, float a) noexcept :
       r{r}, g{g}, b{b}, a{a} {
     if (this->r < 0.0f) this->r = 0.0f; else if (this->r > 1.0f) this->r = 1.0f;
     if (this->g < 0.0f) this->g = 0.0f; else if (this->g > 1.0f) this->g = 1.0f;
@@ -51,8 +51,8 @@ struct DColor final {
     if (this->a < 0.0f) this->a = 0.0f; else if (this->a > 1.0f) this->a = 1.0f;
   };
 
-  DColor(const DColor&) = default;
-  DColor& operator=(const DColor&) = default;
+  constexpr DColor(const DColor&) = default;
+  constexpr DColor& operator=(const DColor&) = default;
   DColor(DColor&&) = default;
   DColor& operator=(DColor&&) = default;
 
@@ -63,21 +63,21 @@ struct DColor final {
   ///
   /// @brief Check it is opaque (a == 1.0f) or not (otherwise).
   ///
-  bool IsOpaque() const noexcept {
+  constexpr bool IsOpaque() const noexcept {
     return this->a == 1.0f;
   }
 
   ///
   /// @brief Set this color to be opaque.
   ///
-  void SetOpaque() noexcept {
+  constexpr void SetOpaque() noexcept {
     this->a = 1.0f;
   }
 
   ///
   /// @brief Get color's grayscale value following sRGB.
   ///
-  float GetGrayScale() const noexcept {
+  constexpr float GetGrayScale() const noexcept {
     return 0.2126f * this->r + 0.7152f * this->g + 0.0722f * this->b;
   }
 
@@ -96,6 +96,19 @@ struct DColor final {
   explicit operator DVector3() const noexcept {
     return DVector3{r, g, b};
   }
+
+  //!
+  //! Statics
+  //!
+
+  static const DColor Aqua;
+  static const DColor Blue;
+  static const DColor Gray;
+  static const DColor Green;
+  static const DColor Magenta;
+  static const DColor Red;
+  static const DColor White;
+  static const DColor Yellow;
 };
 
 } /// ::opgs16 namespace
