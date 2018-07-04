@@ -80,6 +80,7 @@ Updated 2018.05.23
   - [ ] *Bug* : Rendering layer 가 제대로 정렬되지 않는 것 같음.
   - [ ] Phitos 가 아닌 Assertion 파일 및 의존성 지우기
   - [ ] `Component/Internal/flag.h` 의존성을 `Phitos` 로 옮기기
+  - [ ] `Input` 에서, `Stick` 과 `non-stick` 이 아직 구분이 되지 않아서 계속 쭈욱 이동함.
 - [ ] Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초

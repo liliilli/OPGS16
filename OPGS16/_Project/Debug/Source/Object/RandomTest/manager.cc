@@ -8,11 +8,12 @@
 
 /// Header file
 #include "../../../Include/Object/RandomTest/manager.h"
+#include "../../../Include/Script/RandomTest/manager.h"
 
 namespace debug::object {
 
 RandomManager::RandomManager() {
-
+  AddComponent<script::RandomTestManager>(*this);
 }
 
 } /// ::debug::object namespace

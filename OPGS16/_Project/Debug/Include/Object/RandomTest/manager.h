@@ -16,6 +16,7 @@ namespace debug::object {
 class RandomManager final : public opgs16::element::canvas::CCanvas {
 public:
   RandomManager();
+
 };
 
 } /// ::debug::object

@@ -247,6 +247,9 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\copyright.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\description.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\gotoback.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\manager.cc" />
@@ -402,6 +405,9 @@
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\copyright.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\description.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\gotoback.h" />
     <ClInclude Include="_Project\Debug\Include\Object\empty_canvas.h" />
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />

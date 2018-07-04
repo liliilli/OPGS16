@@ -9,10 +9,12 @@
 /// Header file
 #include "../../../Include/Scene/Test/random.h"
 
+#include "../../../Include/Object/RandomTest/manager.h"
+
 namespace debug::scene {
 
 void RandomTestScene::Initiate() {
-
+  Instantiate<object::RandomManager>("Canvas");
 }
 
 } /// ::debug::scene namespace

@@ -16,10 +16,12 @@
 #include <Manager/scene_manager.h>
 #include <Phitos/Dbg/assert.h>
 
+#include "../../../Include/Object/Common/description.h"
 #include "../../../Include/Object/SceneSelect/choice_list.h"
 #include "../../../Include/Object/SceneSelect/select_manager.h"
 
 #include "../../../Include/Scene/object_lifecycle.h"
+#include "../../../Include/Scene/Test/random.h"
 
 namespace {
 
@@ -64,30 +66,23 @@ void Management::Initiate() {
   list->SetFontSize(8);
   list->SetCursorSize(opgs16::DVectorInt2{16, 16});
   list->SetTextureIndex(8);
-  list->SetSelectedColor(opgs16::DColor{0.0f, 1.0f, 1.0f});
-  list->SetNormalColor(opgs16::DColor{.5f, .5f, .5f});
+  list->SetSelectedColor(opgs16::DColor::Aqua);
+  list->SetNormalColor(opgs16::DColor::Gray);
   list->SetOrigin(IOriginable::Origin::DOWN_LEFT);
   list->SetWorldPosition({48.f, 96.f, 0.f});
   list->SetFunction(0, std::bind(&Management::ExecuteLifecycleTest, this));
   list->SetFunction(1, std::bind(&Management::ExecuteRandomFeatureTest, this));
+  m_list = list;
 
   auto copyright = obj.Instantiate<CText>("Copyright", "2018 Jongmin Yun(Neu.)");
   copyright->SetFontName("opSystem");
   copyright->SetFontSize(8);
-  copyright->SetColor(opgs16::DColor{0.5f, 0.5f, 0.5f});
+  copyright->SetColor(opgs16::DColor::Gray);
   copyright->SetOrigin(IOriginable::Origin::DOWN_RIGHT);
   copyright->SetAlignment(IAlignable::Alignment::RIGHT);
   copyright->SetWorldPosition({-8.f, 8.f, 0.f});
 
-  auto description = obj.Instantiate<CText>("Description", "This is description.");
-  description->SetFontName("Hangul");
-  description->SetFontSize(16);
-  description->SetColor(opgs16::DColor{1.f, 1.f, 1.f});
-  description->SetOrigin(IOriginable::Origin::DOWN_CENTER);
-  description->SetAlignment(IAlignable::Alignment::CENTER);
-  description->SetWorldPosition({0.f, 48.f, 0.f});
-
-  m_list = list;
+  auto description = obj.Instantiate<object::Description>("Description");
   m_description = description;
   m_description->SetText(description_container[m_list->GetCursorIndex()].data());
 }
@@ -136,7 +131,7 @@ void Management::ExecuteLifecycleTest() {
 }
 
 void Management::ExecuteRandomFeatureTest() {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
+  M_REPLACE_SCENE(scene::RandomTestScene);
 }
 
 void Management::ExecuteSoundTest() {
