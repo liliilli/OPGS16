@@ -81,6 +81,10 @@ Updated 2018.05.23
   - [ ] Phitos 가 아닌 Assertion 파일 및 의존성 지우기
   - [ ] `Component/Internal/flag.h` 의존성을 `Phitos` 로 옮기기
   - [ ] `Input` 에서, `Stick` 과 `non-stick` 이 아직 구분이 되지 않아서 계속 쭈욱 이동함.
+  - [ ] `Scene` 에서 같은 이름을 가졌으나 여러 개의 오브젝트가 트리에 각기 분포한 경우,  `Hash` 값으로만 조회하기 때문에 망할 위험이 있음. 어차피 `unique_ptr` 로 포인터의 어드레스를 가지기 때문에, 이를 같이 조회해서 없애면 될 것 같다.
+  - [ ] 만약 서브트리를 가지는 루트 노드가 삭제될 때 트리 하위의 자식 노드들 역시 삭제되는 가를 확인해야 함. 안 할듯 싶음.
+  - [x] `Fix` :: 오브젝트가 제대로 삭제되지 않고 런타임 에러를 뿜어내는 문제 해결.
+  - [x] `Fix` :: `CObject::DestroyChild` 와 `manager::object::Destroy` 가 메커니즘이 다르며 `DestroyChild` 는 메모리 누수의 위험이 있는 것을 해결.
 - [ ] Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초

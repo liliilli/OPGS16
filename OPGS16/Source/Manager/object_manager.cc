@@ -166,7 +166,7 @@ void RenderAABB() {
   glEnable(GL_DEPTH_TEST);
 }
 
-  void Destroy(const element::CObject& object) {
+void Destroy(const element::CObject& object) {
   const auto hash_value = object.GetHash();
 
   using object_map = std::unordered_map<std::string, object_ptr>;
@@ -177,30 +177,33 @@ void RenderAABB() {
   tree_list.emplace(&manager::scene::GetPresentScene()->GetObjectList());
   it_list.emplace(tree_list.top()->begin());
 
-  auto destroyed = false;
-  while (!(destroyed || tree_list.empty())) {
+  bool destroyed = false;
+  while (!destroyed && !tree_list.empty()) {
     auto& object_list = *tree_list.top();
-    auto it = it_list.top(); it_list.pop();
+    auto it = it_list.top();
 
     for (; it != object_list.end(); ++it) {
-      if (it->second) {   /*! If it is empty */
-        if (hash_value == it->second->GetHash()) {
-          AddDestroyObject(it->second);
-          destroyed = true;
-          break;
-        }
+      if (!it->second) continue;
 
-        if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
-          it_list.emplace(++it);
-          tree_list.emplace(&additional_list);
-          it_list.emplace(additional_list.begin());
-          break;
-        }
+      if (hash_value == it->second->GetHash()) {
+        AddDestroyObject(it->second);
+        destroyed = true;
+        break;
+      }
+
+      if (auto& additional_list = it->second->GetChildList();
+          !additional_list.empty()) {
+        it_list.pop();
+        it_list.emplace(++it);
+        it_list.emplace(additional_list.begin());
+        tree_list.emplace(&additional_list);
+        break;
       }
     }
 
-    if (!destroyed && it == object_list.end()) {
+    if (it == object_list.end() && &object_list == tree_list.top()) {
       tree_list.pop();
+      it_list.pop();
     }
   }
 }
@@ -245,9 +248,8 @@ void AddDestroyObject(object_ptr& ptr) {
 }
 
 void DestroyObjects() {
-  for (auto& object : m_destroy_candidates) {
-    auto hash_value = object->GetHash();
-
+  const int32_t size = static_cast<int32_t>(m_destroy_candidates.size());
+  for (int32_t i = 0; i < size; ++i) {
     using object_map = std::unordered_map<std::string, object_ptr>;
     using it_type = object_map::iterator;
     std::stack<object_map*> tree_list;
@@ -257,31 +259,35 @@ void DestroyObjects() {
     it_list.emplace(tree_list.top()->begin());
 
     bool destroyed = false;
-    while (!(destroyed || tree_list.empty())) {
+    while (!destroyed && !tree_list.empty()) {
       auto& object_list = *tree_list.top();
       auto it = it_list.top();
-      it_list.pop();
 
       for (; it != object_list.end(); ++it) {
-        if (!(it->second)) {
+        if (!it->second) {
           object_list.erase(it);
           destroyed = true;
           break;
-        }
+        };
 
-        if (auto& additional_list = it->second->GetChildList(); !additional_list.empty()) {
+        if (auto& additional_list = it->second->GetChildList();
+            !additional_list.empty()) {
+          it_list.pop();
           it_list.emplace(++it);
-          tree_list.emplace(&additional_list);
           it_list.emplace(additional_list.begin());
+          tree_list.emplace(&additional_list);
           break;
         }
       }
 
-      if (!destroyed && it == object_list.end()) {
+      if (!destroyed && &object_list == tree_list.top()) {
         tree_list.pop();
+        it_list.pop();
       }
     }
+  }
 
+  for (auto& object : m_destroy_candidates) {
     // Get script component list from object which will be destroyed,
     // call Destroy() function.
     auto script_list = object->GetComponents<opgs16::component::CScriptFrame>();
@@ -292,7 +298,6 @@ void DestroyObjects() {
       script->Destroy();
     }
   }
-
   m_destroy_candidates.clear();
 }
 

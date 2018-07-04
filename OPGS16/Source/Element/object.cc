@@ -29,6 +29,8 @@
 /// import logger in debug mode.
 #include <Headers/import_logger.h>
 
+#include <Manager/object_manager.h>
+
 namespace opgs16::element {
 
 namespace {
@@ -226,11 +228,14 @@ CObject::object_raw const CObject::GetChild(const std::string& tag) {
 }
 
 bool CObject::DestroyChild(const std::string& child_name) {
-    if (m_children.find(child_name) == m_children.end())
-	    return false;
-
-    m_children.erase(child_name);
+  if (const auto it = m_children.find(child_name); it == m_children.end()) {
+    PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]", child_name);
+    return false;
+  }
+  else {
+    manager::object::Destroy(*(it->second.get()));
     return true;
+  }
 }
 
 bool CObject::GetActive() const {
