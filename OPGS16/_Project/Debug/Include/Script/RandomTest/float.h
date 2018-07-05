@@ -40,6 +40,7 @@ private:
 
   opgs16::DColor m_success = opgs16::DColor::Blue;
   opgs16::DColor m_failure = opgs16::DColor::Red;
+  bool m_is_color_changed = false;
 
   void Tick();
   void ExecuteSuccess();

@@ -61,12 +61,25 @@ void FloatTest::Tick() {
 }
 
 void FloatTest::ExecuteSuccess() {
+  if (m_is_color_changed)
+    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_success);
+  else
+    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
+
+  m_is_color_changed = !m_is_color_changed;
+
   PUSH_LOG_CRITICAL("Float test success!");
 }
 
 void FloatTest::ExecuteFailure() {
+  if (m_is_color_changed)
+    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_failure);
+  else
+    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
+
+  m_is_color_changed = !m_is_color_changed;
+
   PUSH_LOG_CRITICAL("Float test failure!");
-  PHITOS_UNEXPECTED_BRANCH();
 }
 
 } /// ::debug::script namespace

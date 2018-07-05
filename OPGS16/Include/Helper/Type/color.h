@@ -103,6 +103,7 @@ struct DColor final {
 
   static const DColor Aqua;
   static const DColor Blue;
+  static const DColor Black;
   static const DColor Gray;
   static const DColor Green;
   static const DColor Magenta;
