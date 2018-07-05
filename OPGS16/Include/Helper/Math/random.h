@@ -25,10 +25,10 @@
 
 namespace opgs16 {
 
-class DVector2;
-class DVector3;
-class DVectorInt2;
-class DVectorInt3;
+struct DVector2;
+struct DVector3;
+struct DVectorInt2;
+struct DVectorInt3;
 
 } /// ::opgs16 namespace
 
@@ -49,62 +49,62 @@ enum class ERandomPolicy {
 ///
 /// @brief Get random integer (32bit) uniformly.
 ///
-static int32_t RandomInteger();
+int32_t RandomInteger();
 
 ///
 /// @brief Get random float (single-precision) uniformly.
 ///
-static float RandomFloat();
+float RandomFloat();
 
 ///
 /// @brief Get random integer (32bit) but positive uniformly.
 ///
-static int32_t RandomPositiveInteger();
+int32_t RandomPositiveInteger();
 
 ///
 /// @brief Get random negative integer (32bit) uniformly.
 ///
-static int32_t RandomNegativeInteger();
+int32_t RandomNegativeInteger();
 
 ///
 /// @brief Get random positive float (single-presicion) uniformly.
 ///
-static float RandomPositiveFloat();
+float RandomPositiveFloat();
 
 ///
 /// @brief Get random negative float (single-precision) uniformly.
 ///
-static float RandomNegativeFloat();
+float RandomNegativeFloat();
 
 ///
 /// @brief Get integer from 'from' to 'inclusive_to' integer uniformly.
 ///
-static int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to);
+int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to);
 
 ///
 /// @brief Get float from 'from' to 'prior_to' not included prior_to uniformly.
 ///
-static float RandomFloatRange(const float from, const float prior_to);
+float RandomFloatRange(const float from, const float prior_to);
 
 ///
 /// @brief Get DVector2 (x, y) instance have length 'length'.
 ///
-static DVector2 RandomVector2Length(float length);
+DVector2 RandomVector2Length(float length);
 
 ///
 /// @brief Get DVector3 (x, y, z) instance have length 'length'.
 ///
-static DVector3 RandomVector3Length(float length);
+DVector3 RandomVector3Length(float length);
 
 ///
 /// @brief
 ///
-static DVector2 RandomVector2Range(ERandomPolicy policy, float from, float prior_to);
+DVector2 RandomVector2Range(ERandomPolicy policy, float from, float prior_to);
 
 ///
 /// @brief
 ///
-static DVector3 RandomVector3Range(ERandomPolicy policy, float from, float prior_to);
+DVector3 RandomVector3Range(ERandomPolicy policy, float from, float prior_to);
 
 } /// ::opgs16::math namespace
 
