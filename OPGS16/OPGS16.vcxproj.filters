@@ -273,6 +273,9 @@
     <ClInclude Include="_Project\Debug\Include\Object\Common\gotoback.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\simplelog.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\float.h" />
+    <ClInclude Include="Include\Helper\Type\clamp.h" />
+    <ClInclude Include="Include\Helper\Math\math.h" />
+    <ClInclude Include="Include\Helper\Type\rangedata.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

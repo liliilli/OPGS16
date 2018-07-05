@@ -298,10 +298,13 @@
     <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
+    <ClInclude Include="Include\Helper\Math\math.h" />
     <ClInclude Include="Include\Helper\Math\random.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
     <ClInclude Include="Include\Helper\string_helper.h" />
+    <ClInclude Include="Include\Helper\Type\clamp.h" />
     <ClInclude Include="Include\Helper\Type\color.h" />
+    <ClInclude Include="Include\Helper\Type\rangedata.h" />
     <ClInclude Include="Include\Helper\Type\stripedvector.h" />
     <ClInclude Include="Include\Helper\Type\vector2.h" />
     <ClInclude Include="Include\Helper\Type\vector3.h" />
