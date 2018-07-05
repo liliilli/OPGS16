@@ -34,17 +34,17 @@
 #include <GL/glew.h>
 
 /// ::opgs16::component::CScriptFrame
-#include <Component\script_frame.h>
+#include <Component/script_frame.h>
 /// ::opgs16::element::CObject
-#include <Element\object.h>
+#include <Element/object.h>
 
 /// Type checking templates
-#include <Helper\template.h>
+#include <Helper/template.h>
 /// Forward declaration
 #include <opgs16fwd.h>
+#include "Helper/Type/color.h"
 
-namespace opgs16 {
-namespace element {
+namespace opgs16::element {
 
 ///
 /// @class CScene
@@ -77,9 +77,11 @@ public:
   ///
   virtual void Update(float delta_time);
 
-  /*! Draw scene */
   void Draw() {
-    glClearColor(m_background_color.r, m_background_color.g, m_background_color.b, m_background_color.a);
+    glClearColor(m_background_color.r,
+                 m_background_color.g,
+                 m_background_color.b,
+                 m_background_color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   };
 
@@ -184,28 +186,31 @@ public:
     return static_cast<_Ty*>(object_ref.get());
 	}
 
-	/*!
-	 * @brief Get object list loaded in scene.
-	 * @return The reference of object list with hash_map.
-	 */
+	///
+	/// @brief Get object list loaded in scene.
+	/// @return The reference of object list with hash_map.
+	///
 	object_map& GetObjectList();
 
-	/*!
-	 * @brief Get specific object with tag.
-	 */
+	///
+	/// @brief Get specific object with tag.
+	///
 	object_ptr& GetGameObject(const std::string& tag);
 
-  /*!
-   * @brief Set main camera of this scene, to display game scene.
-   * All object except for Canvas m_object_list (UI object) uses to main_camera to display.
-   * If main_camera value is nullptr, this means main_camera is detached.
-   */
+  ///
+  /// @brief Set main camera of this scene, to display game scene.
+  /// All object except for Canvas m_object_list (UI object) uses to main_camera to display.
+  /// If main_camera value is nullptr, this means main_camera is detached.
+  ///
   void SetMainCamera(_camera* const main_camera) {
     m_main_camera = main_camera;
   }
 
-  /*! Get bound main camera. if main camera is not bound, return nullptr. */
-  const _camera* const GetMainCamera() {
+  ///
+  /// @brief Get bound main camera.
+  /// if main camera is not bound, return nullptr.
+  ///
+  const _camera* GetMainCamera() {
     return m_main_camera;
   }
 
@@ -213,26 +218,30 @@ public:
     return m_object_list.find(name) != m_object_list.end();
   }
 
-  /*!
-   * @brief Get pointer of background color.
-   * @return Pointer of background color.
-   */
-  glm::vec4* BackgroundColor() noexcept {
+  ///
+  /// @brief Get pointer of background color.
+  /// @return Pointer of background color.
+  ///
+  DColor* BackgroundColor() noexcept {
     return &m_background_color;
+  }
+
+  ///
+  /// @brief Set background color of present scene.
+  ///
+  void SetBackgroundColor(const DColor& color) noexcept {
+    m_background_color = color;
   }
 
 private:
   void ScriptInitiate(object_ptr& object_pointer);
 
-private:
   _camera* m_main_camera{ nullptr };
-  glm::vec4   m_background_color{ 0, 0, 0, 1 };
+  DColor m_background_color = DColor::Black;
   object_map  m_object_list;
 };
 
-} /// ::opgs16::element
-
-}
+} /// ::opgs16::element namespace
 
 #endif /// OPGS16_ELEMENT_SCENE_H
 
