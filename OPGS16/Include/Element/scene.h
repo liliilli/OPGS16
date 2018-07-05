@@ -114,7 +114,6 @@ public:
 
     object_ptr& object_ref = (result_pair.first)->second;
     object_ref->SetHash(object_name);
-    ScriptInitiate(object_ref);
     return static_cast<_Ty*>(object_ref.get());
 	}
 
@@ -146,7 +145,6 @@ public:
 
     object_ptr& object_ref = (result_pair.first)->second;
     object_ref->SetHash(object_name);
-    ScriptInitiate(object_ref);
     return static_cast<_Ty*>(object_ref.get());
 	}
 
@@ -183,7 +181,6 @@ public:
 
     object_ptr& object_ref = (result_pair.first)->second;
     object_ref->SetHash(object_name);
-    ScriptInitiate(object_ref);
     return static_cast<_Ty*>(object_ref.get());
 	}
 

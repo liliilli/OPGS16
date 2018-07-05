@@ -244,17 +244,6 @@ public:
     m_children[item_tag]->SetHash(item_tag);
     m_children[item_tag]->SetParentPosition(GetParentPosition());
 
-    auto list = m_children[item_tag]->GetComponents<component::CScriptFrame>();
-
-    unsigned index = 0;
-    for (const auto script_ptr : list) {
-      script_ptr->Initiate();
-      PUSH_LOG_INFO_EXT(
-          "Object call Initiate() : [Name : {0}] [Id : {1}]",
-          item_tag, index);
-      ++index;
-    }
-
     return static_cast<_Ty*>(m_children[item_tag].get());
   }
 
@@ -285,16 +274,6 @@ public:
     m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Args>(_args)...));
     m_children[item_tag]->SetHash(item_tag);
     m_children[item_tag]->SetParentPosition(GetParentPosition());
-
-    auto list = m_children[item_tag]->GetComponents<component::CScriptFrame>();
-    unsigned index = 0;
-    for (const auto script_ptr : list) {
-      script_ptr->Initiate();
-      PUSH_LOG_INFO_EXT(
-          "Object call Initiate() : [Name : {0}] [Id : {1}]",
-          item_tag, index);
-      ++index;
-    }
 
     return static_cast<_Ty*>(m_children[item_tag].get());
   }
@@ -347,9 +326,13 @@ public:
       type = EComponentType::Script;
 
     m_components.push_back(std::make_pair(
-        std::make_unique<_Ty>(std::forward<_Params>(params)...),
-        type)
+        std::make_unique<_Ty>(std::forward<_Params>(params)...), type)
     );
+
+    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>) {
+      static_cast<component::CScriptFrame*>(m_components.rbegin()->first.get())
+          ->Initiate();
+    }
 
     return GetComponent<_Ty>();
   }
