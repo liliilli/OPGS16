@@ -39,14 +39,24 @@ public:
   ///
   void Clear();
 
+  ///
+  /// @brief Set height.
+  ///
+  void SetHeight(const int32_t size);
+
 private:
   std::list<std::string> m_log_list;
   int32_t m_count = 0;
   int32_t m_index = 0;
+  int32_t m_height = 16;
 
   using TListItemType = std::pair<std::string, opgs16::element::canvas::CText*>;
   std::deque<TListItemType> m_list;
   inline static constexpr std::string_view s_child_name = "_";
+
+  void UpdateListItemPosition();
+
+  void LocalUpdate() override final;
 };
 
 } /// ::debug::object namespace

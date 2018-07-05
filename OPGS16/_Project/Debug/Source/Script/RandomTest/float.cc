@@ -10,40 +10,63 @@
 #include "../../../Include/Script/RandomTest/float.h"
 
 #include <limits>
+#include <Phitos/Dbg/assert.h>
+
 /// Random library
 #include <Helper/Math/random.h>
-#include <Phitos/Dbg/assert.h>
+#include <Manager/timer_manager.h>
+#include <Manager/scene_manager.h>
 
 #include "../../../Include/Object/Common/simplelog.h"
 
 namespace debug::script {
 
 void FloatTest::Initiate() {
-  m_log = GetBindObject().Instantiate<object::SimpleLog>("Log", 8);
+  m_log = GetBindObject().Instantiate<object::SimpleLog>("Log", 5);
+  m_log->SetOrigin(IOriginable::Origin::UP_LEFT);
+  m_log->SetWorldPosition({16.f, -32.f, 0.f});
+
+  OP16_TIMER_SET(m_timer, 20, true, this, &FloatTest::Tick);
 }
 
-void FloatTest::Update(float delta_time) {
-  int32_t set_count = 0;
-
-  for (int32_t i = 0; i < m_test_count; ++i) {
-    const auto test = opgs16::random::RandomFloat();
-    if (test <= std::numeric_limits<float>::max() &&
-        test > std::numeric_limits<float>::lowest()) {
-      // Success!
-      set_count += 1;
-
-      if (set_count == m_set)
-        m_log->PushLog("Float test Set.. " + std::to_string(set_count));
-    }
-    else {
-      // Failure!
-      PHITOS_UNEXPECTED_BRANCH();
-    }
-  }
-}
+void FloatTest::Update(float delta_time) { }
 
 void FloatTest::Destroy() {
   GetBindObject().DestroyChild("Log");
+}
+
+void FloatTest::Tick() {
+  if (m_count > m_test_count) {
+    OP16_TIMER_STOP(m_timer);
+    OP16_TIMER_SET(m_timer, 1'000, true, this, &FloatTest::ExecuteSuccess);
+    return;
+  }
+
+  const auto test = opgs16::random::RandomFloat();
+  if (test <= std::numeric_limits<float>::max() &&
+      test > std::numeric_limits<float>::lowest()) {
+    // Success!
+
+    if (m_count % m_set == 0) {
+      m_log->PushLog("Float test Set.. " + std::to_string(m_count / m_set));
+    }
+
+    m_count += 1;
+  }
+  else {
+    // Failure!
+    OP16_TIMER_STOP(m_timer);
+    OP16_TIMER_SET(m_timer, 1'000, true, this, &FloatTest::ExecuteFailure);
+  }
+}
+
+void FloatTest::ExecuteSuccess() {
+  PUSH_LOG_CRITICAL("Float test success!");
+}
+
+void FloatTest::ExecuteFailure() {
+  PUSH_LOG_CRITICAL("Float test failure!");
+  PHITOS_UNEXPECTED_BRANCH();
 }
 
 } /// ::debug::script namespace

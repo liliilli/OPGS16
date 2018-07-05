@@ -10,6 +10,7 @@
 #include "../../../Include/Object/Common/simplelog.h"
 
 #include <Element/Canvas/text.h>
+#include <Phitos/Dbg/assert.h>
 
 namespace debug::object {
 
@@ -20,14 +21,15 @@ SimpleLog::SimpleLog(int32_t size_value) : m_count{size_value} {
     std::string name = s_child_name.data() + std::to_string(i);
 
     const auto address = this->Instantiate<CText>(name, "");
-    address->SetFontName("Bios");
+    address->SetFontName("opSystem");
     address->SetFontSize(8);
     address->SetOrigin(Origin::UP_LEFT);
     address->SetAlignment(IAlignable::Alignment::LEFT);
 
     m_list.emplace_back(name, address);
-    m_list.rbegin()->second->SetFontName("Bios");
   }
+
+  UpdateListItemPosition();
 }
 
 void SimpleLog::SetCount(int32_t count_value) {
@@ -42,25 +44,26 @@ void SimpleLog::SetCount(int32_t count_value) {
 
   m_count = count_value;
   m_index = 0;
+
+  UpdateListItemPosition();
 }
 
 void SimpleLog::PushLog(const std::string& log) {
-  if (m_index + 1 >= m_count) {
+  if (m_index >= m_count) {
     m_log_list.pop_front();
     m_log_list.emplace_back(log);
 
     const auto log_item = std::move(m_list.front());
     m_list.pop_front();
     m_list.emplace_back(log_item);
+    m_list.rbegin()->second->SetText(*m_log_list.rbegin());
 
-    m_list.rbegin()->second->SetText(*m_log_list.rend());
+    UpdateListItemPosition();
   }
   else {
-    // m_list 을 표현할 때, 일일히 다 갱신하게 하지 말고, CText* 를 뒤로 moving해서
-    // 하나만 갱신하게 하면 되잖아..
-    // 물론 그러면 리스트 좌표의 재갱신이 필요하긴 함. 근데 이건 불가피함.
     m_log_list.emplace_back(log);
-    m_list[m_index].second->SetText(*m_log_list.rend());
+    m_list[m_index].second->SetText(*m_log_list.rbegin());
+
     m_index += 1;
   }
 }
@@ -69,6 +72,31 @@ void SimpleLog::Clear() {
   for (const auto& [_, address] : m_list) {
     address->SetText("");
   }
+}
+
+void SimpleLog::SetHeight(const int32_t size) {
+  PHITOS_ASSERT(size > 0, "Log size must be higher than 0.");
+  UpdateListItemPosition();
+}
+
+void SimpleLog::UpdateListItemPosition() {
+  int32_t count = 1;
+  for (auto& [name, element] : m_list) {
+    element->SetWorldPosition({0.f, static_cast<float>(-m_height * count), 0.f});
+    ++count;
+  }
+}
+
+void SimpleLog::LocalUpdate() {
+	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
+	const auto xy = GetFinalPosition() - (wh / 2.0f);
+
+	std::array<GLint, 4>&& xywh = {
+		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
+		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
+	UpdateScreenXYWH(xywh);
+
+	UiObject::LocalUpdate();
 }
 
 }
