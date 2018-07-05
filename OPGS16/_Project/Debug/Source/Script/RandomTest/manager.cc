@@ -19,7 +19,10 @@
 #include "../../../Include/Object/Common/copyright.h"
 #include "../../../Include/Object/Common/description.h"
 #include "../../../Include/Object/Common/gotoback.h"
+#include "../../../Include/Object/Common/simplelog.h"
+
 #include "../../../Include/Object/SceneSelect/choice_list.h"
+#include "../../../Include/Script/RandomTest/float.h"
 
 namespace {
 
@@ -73,7 +76,7 @@ void RandomTestManager::InitializeLobbyA() {
   subject->SetOrigin(IOriginable::Origin::UP_CENTER);
   subject->SetAlignment(IAlignable::Alignment::CENTER);
   subject->SetFontSize(16);
-  subject->SetWorldPosition({0.f, -32.f, 0.f});
+  subject->SetWorldPosition({0.f, -24.f, 0.f});
 
   m_list = m_obj->Instantiate<ChoiceList>(
       "CommandList", "opSystem", m_obj,
@@ -96,18 +99,6 @@ void RandomTestManager::InitializeLobbyA() {
 
   m_description = m_obj->Instantiate<object::Description>("Desc");
   m_description->SetText(command_list[m_list->GetCursorIndex()].second);
-}
-
-void RandomTestManager::InitializeFloatTestA() {
-  using opgs16::element::canvas::CText;
-  using object::ChoiceList;
-
-  auto log = m_obj->Instantiate<CText>("Log", "Log");
-  log->SetFontName("Bios");
-  log->SetFontSize(8);
-  log->SetOrigin(IOriginable::Origin::UP_LEFT);
-  log->SetAlignment(IAlignable::Alignment::LEFT);
-  log->SetWorldPosition({32.f, -48.f, 0.f});
 }
 
 void RandomTestManager::InputLobbyA() {
@@ -143,6 +134,14 @@ void RandomTestManager::InputLobbyA() {
   if (IsKeyPressed("Horizontal")) {
     m_list->SelectCommand();
   }
+}
+
+void RandomTestManager::InitializeFloatTestA() {
+  using opgs16::element::canvas::CText;
+  using object::ChoiceList;
+
+  m_obj->AddComponent<script::FloatTest>(*m_obj);
+  //m_obj->Instantiate<object::SimpleLog>("Log", 8);
 }
 
 void RandomTestManager::CleanLobbyAToFloatTestA() {

@@ -48,7 +48,7 @@ void Management::Initiate() {
 
   auto subject = obj.Instantiate<CText>("Subject", "OPGS16 Test");
   subject->SetFontName("Bios");
-  subject->SetWorldPosition({0.f, -32.f, 0.f});
+  subject->SetWorldPosition({0.f, -24.f, 0.f});
   subject->SetFontSize(16);
   subject->SetOrigin(IOriginable::Origin::UP_CENTER);
   subject->SetAlignment(IAlignable::Alignment::CENTER);

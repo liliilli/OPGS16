@@ -121,6 +121,7 @@ SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CScriptFrame)
 
 #define OP16_SCRIPT_GENERATE(__MAClassName__) \
   __MAClassName__(opgs16::element::CObject& bind_object) : \
-      CScriptFrame{bind_object} {}
+      CScriptFrame{bind_object} {}; \
+  SET_UP_TYPE_MEMBER(::opgs16::component::CScriptFrame, __MAClassName__)
 
 #endif /// OPGS16_SYSTEM_COMPONENTS_SCRIPT_FRAME_H

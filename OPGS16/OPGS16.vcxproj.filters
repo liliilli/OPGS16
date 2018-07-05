@@ -104,6 +104,8 @@
     <ClCompile Include="_Project\Debug\Source\Object\Common\copyright.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\description.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\gotoback.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\simplelog.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\float.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -269,6 +271,8 @@
     <ClInclude Include="_Project\Debug\Include\Object\Common\copyright.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\description.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\gotoback.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\simplelog.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\float.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

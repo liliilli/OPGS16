@@ -250,6 +250,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\Common\copyright.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\description.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\gotoback.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\simplelog.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\manager.cc" />
@@ -266,6 +267,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\__s_debugcanvas.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\float.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\SceneSelect\management.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\text_script.cc" />
@@ -412,6 +414,7 @@
     <ClInclude Include="_Project\Debug\Include\Object\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\float.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\choice_list.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SceneSelect\select_manager.h" />
@@ -429,6 +432,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\simplelog.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
