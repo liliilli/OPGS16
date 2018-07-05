@@ -28,7 +28,12 @@ struct DRangeData {
       from{from}, inclusive_to{inclusive_to} {
     if (this->from > this->inclusive_to) throw 0;
   }
-  constexpr ~DRangeData() = default;
+
+  constexpr explicit DRangeData() noexcept :
+      from{std::numeric_limits<TType>::lowest()},
+      inclusive_to{std::numeric_limits<TType>::max()} {};
+
+  ~DRangeData() = default;
   constexpr DRangeData(const DRangeData&) = default;
   constexpr DRangeData& operator=(const DRangeData&) = default;
 };

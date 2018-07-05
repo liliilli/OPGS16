@@ -38,7 +38,7 @@ void FloatTest::Destroy() {
 void FloatTest::Tick() {
   if (m_count > m_test_count) {
     OP16_TIMER_STOP(m_timer);
-    OP16_TIMER_SET(m_timer, 1'000, true, this, &FloatTest::ExecuteSuccess);
+    OP16_TIMER_SET(m_timer, 500, true, this, &FloatTest::ExecuteSuccess);
     return;
   }
 
@@ -61,25 +61,21 @@ void FloatTest::Tick() {
 }
 
 void FloatTest::ExecuteSuccess() {
-  if (m_is_color_changed)
+  if (!m_is_color_changed)
     opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_success);
   else
     opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 
   m_is_color_changed = !m_is_color_changed;
-
-  PUSH_LOG_CRITICAL("Float test success!");
 }
 
 void FloatTest::ExecuteFailure() {
-  if (m_is_color_changed)
+  if (!m_is_color_changed)
     opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_failure);
   else
     opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 
   m_is_color_changed = !m_is_color_changed;
-
-  PUSH_LOG_CRITICAL("Float test failure!");
 }
 
 } /// ::debug::script namespace

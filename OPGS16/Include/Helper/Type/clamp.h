@@ -19,6 +19,7 @@
 
 #include <Helper/Math/math.h>
 #include <Helper/Type/rangedata.h>
+#include <spdlog/fmt/fmt.h>
 
 namespace opgs16 {
 
@@ -44,7 +45,10 @@ public:
   constexpr explicit DClamp(const DRangeData<TType>& range) noexcept :
       DClamp{range.from, range.from, range.inclusive_to} {};
 
-  constexpr ~DClamp() = default;
+  constexpr DClamp() :
+      DClamp{std::numeric_limits<TType>::lowest(),
+             std::numeric_limits<TType>::max()} {}
+  ~DClamp() = default;
 
   constexpr DClamp(const DClamp& instance) = default;
   constexpr DClamp& operator=(const DClamp& instance) = default;
@@ -58,8 +62,13 @@ public:
     return *this;
   }
 
-  constexpr TType operator()() noexcept {
+  constexpr TType operator()() const noexcept {
     return m_value;
+  }
+
+  constexpr friend bool operator==(const DClamp<TType>& lhs,
+                                   const TType& value) noexcept {
+    return lhs.m_value == value;
   }
 
 private:
