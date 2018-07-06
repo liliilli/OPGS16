@@ -269,6 +269,7 @@
     <ClCompile Include="_Project\Debug\Source\Script\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\float.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\integer.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\SceneSelect\management.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\text_script.cc" />
@@ -431,6 +432,7 @@
     <ClInclude Include="_Project\Debug\Include\Scene\Test\random.h" />
     <ClInclude Include="_Project\Debug\Include\Script\canvas_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\__s_debugcanvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\integer.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\manager.h" />
     <ClInclude Include="_Project\Debug\Include\Script\SceneSelect\management.h" />
     <ClInclude Include="_Project\Debug\Include\Script\text_script.h" />

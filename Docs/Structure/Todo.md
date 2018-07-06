@@ -81,7 +81,15 @@ Updated 2018.05.23
   - [ ] Phitos 가 아닌 Assertion 파일 및 의존성 지우기
   - [ ] `Component/Internal/flag.h` 의존성을 `Phitos` 로 옮기기
   - [ ] `Input` 에서, `Stick` 과 `non-stick` 이 아직 구분이 되지 않아서 계속 쭈욱 이동함.
-  - [ ] 스크립트 도중에 `Script` 을 생성해버리면, `Initiate` 가 호출되지 않는 문제점 발생.
+  - [x] 스크립트 도중에 `Script` 을 생성해버리면, `Initiate` 가 호출되지 않는 문제점 발생.
+  - [ ] `input.meta` 의 키 바인딩을 숫자가 아닌 따로 설정된 키 스트링으로 하게 할 것.
+    - 예를 들어서 256 대신에 "esc" 라던가, 265 대신에 "arrow_up" 이라던가...
+    - 다만 그렇게 할 경우에는 페이지를 만들어서 어떤 키가 어떤 스트링인지를 명확하게 해야할 필요가 있음.
+    - 또한 이 키를 바인딩하기 위해서 `input` 쪽에서 파싱 처리를 해줘야함.
+  - [ ] `CObject` 및 `Object` `Scene` 에서 이름 생성하는 방법 같게 하기.
+  - [ ] `CObject` 및 `Obejct` `Scene` 에서 Destroy object 시, 어드레스 비교로 지우게 끔 하기.
+    - 우선 DestroyChild 에서 manager::object::Destroy 을 할 때 자기 오브젝트에서 루트를 만들어서 지우게끔 함.
+    - 문제는 `DestroyChild` 의 ref 을 받는 버전에선 리턴값으로 성공 아니면 실패를 내놔야하는데 지금은 `object::Destroy` 가 `void` 라서 성공 실패 여부 확인이 안됨.
 - Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초

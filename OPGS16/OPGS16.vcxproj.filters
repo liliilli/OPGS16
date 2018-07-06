@@ -107,6 +107,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\Common\simplelog.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\float.cc" />
     <ClCompile Include="Source\Helper\Type\color32.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\integer.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Include\Helper\Math\math.h" />
     <ClInclude Include="Include\Helper\Type\rangedata.h" />
     <ClInclude Include="Include\Helper\Type\color32.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\integer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

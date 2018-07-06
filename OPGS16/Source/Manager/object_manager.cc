@@ -166,7 +166,7 @@ void RenderAABB() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void Destroy(const element::CObject& object) {
+void Destroy(const element::CObject& object, element::CObject* root) {
   const auto hash_value = object.GetHash();
 
   using object_map = std::unordered_map<std::string, object_ptr>;
@@ -174,7 +174,13 @@ void Destroy(const element::CObject& object) {
   std::stack<object_map*> tree_list;
   std::stack<it_type> it_list;
 
-  tree_list.emplace(&manager::scene::GetPresentScene()->GetObjectList());
+  if (root == nullptr) {
+    tree_list.emplace(&manager::scene::GetPresentScene()->GetObjectList());
+  }
+  else {
+    tree_list.emplace(&root->GetChildList());
+  }
+
   it_list.emplace(tree_list.top()->begin());
 
   bool destroyed = false;

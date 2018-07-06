@@ -69,8 +69,9 @@ void RenderAABB();
 /// before deleted permanently.
 ///
 /// @param[in] object Object to be destroyed.
+/// @param[in] root Object start point.
 ///
-void Destroy(const element::CObject& object);
+void Destroy(const element::CObject& object, element::CObject* root = nullptr);
 
 ///
 /// @brief

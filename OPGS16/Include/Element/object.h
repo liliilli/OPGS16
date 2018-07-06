@@ -286,6 +286,13 @@ public:
 	///
 	bool DestroyChild(const std::string& name);
 
+  ///
+  /// @brief Destory child object with address.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroyed, return ture.
+  ///
+  bool DestroyChild(const element::CObject& child_object);
+
 	///
 	/// @brief Get children tag list.
 	/// @return Children's tags container of object.
@@ -396,15 +403,17 @@ public:
   >
   bool RemoveComponent() {
     auto it = std::find_if(
-      m_components.cbegin(),
-      m_components.cend(),
-      [](const std::unique_ptr<component::Component>& item) {
-      return item->DoesTypeMatch(_Ty::type);
-    }
+        m_components.cbegin(),
+        m_components.cend(),
+        [](const auto& item) { return item.first->DoesTypeMatch(_Ty::type); }
     );
 
     if (it != m_components.cend()) {
-      m_components.erase(it);    /*! Too much execution time */
+      using EComponentType = component::_internal::EComponentType;
+      if (it->second == EComponentType::Script) {
+        static_cast<component::CScriptFrame*>(it->first.get())->Destroy();
+        m_components.erase(it);    /*! Too much execution time */
+      }
       return true;
     }
     else return false;

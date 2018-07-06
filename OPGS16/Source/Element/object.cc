@@ -233,9 +233,17 @@ bool CObject::DestroyChild(const std::string& child_name) {
     return false;
   }
   else {
-    manager::object::Destroy(*(it->second.get()));
+    manager::object::Destroy(*(it->second.get()), this);
     return true;
   }
+}
+
+bool CObject::DestroyChild(const element::CObject& child_object) {
+  using TObjectMap = std::unordered_map<std::string, object_ptr>;
+  using TItType = TObjectMap::iterator;
+
+  manager::object::Destroy(child_object, this);
+  return true;
 }
 
 bool CObject::GetActive() const {
