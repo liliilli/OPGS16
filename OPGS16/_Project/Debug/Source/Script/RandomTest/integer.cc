@@ -7,7 +7,7 @@
 ///
 
 /// Header file
-#include "../../../Include/Script/RandomTest/float.h"
+#include "../../../Include/Script/RandomTest/integer.h"
 
 #include <limits>
 
@@ -25,13 +25,13 @@
 
 namespace debug::script {
 
-void FloatTest::Initiate() {
+void IntegerTest::Initiate() {
   auto& obj = GetBindObject();
   using opgs16::element::canvas::CText;
   using opgs16::manager::scene::GetPresentScene;
   m_object = GetPresentScene()->GetGameObject("Canvas").get();
 
-  auto subject = obj.Instantiate<CText>("Subject", "Floating number test");
+  auto subject = obj.Instantiate<CText>("Subject", "Integer number test");
   subject->SetFontName("Hangul");
   subject->SetOrigin(IOriginable::Origin::UP_CENTER);
   subject->SetAlignment(IAlignable::Alignment::CENTER);
@@ -47,16 +47,10 @@ void FloatTest::Initiate() {
   using opgs16::manager::sound::GenerateSound;
   GenerateSound("Success1");
 
-  OP16_TIMER_SET(m_timer, 20, true, this, &FloatTest::Tick);
+  OP16_TIMER_SET(m_timer, 20, true, this, &IntegerTest::Tick);
 }
 
-void FloatTest::Update(float delta_time) {
-  if (opgs16::manager::input::IsKeyPressed("Back")) {
-    Exit();
-  }
-}
-
-void FloatTest::Destroy() {
+void IntegerTest::Destroy() {
   auto& obj = GetBindObject();
   obj.DestroyChild(*m_subject);
   obj.DestroyChild(*m_log);
@@ -69,58 +63,67 @@ void FloatTest::Destroy() {
   GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 }
 
-void FloatTest::Tick() {
+void IntegerTest::Tick() {
   // If test is succeeded,
   if (m_count > m_test_count) {
     OP16_TIMER_STOP(m_timer);
-    OP16_TIMER_SET(m_timer, 500, true, this, &FloatTest::ExecuteSuccess);
-    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &FloatTest::Exit);
+    OP16_TIMER_SET(m_timer, 500, true, this, &IntegerTest::ExecuteSuccess);
+    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &IntegerTest::Exit);
     opgs16::manager::sound::PlaySound("Success1");
     m_state = EState::Success;
     return;
   }
 
   // Test body
-  const auto test = opgs16::random::RandomFloat();
-  if (test <= std::numeric_limits<float>::max() &&
-      test > std::numeric_limits<float>::lowest()) {
+  const auto test = opgs16::random::RandomInteger();
+  if (test <= std::numeric_limits<int32_t>::max() &&
+      test > std::numeric_limits<int32_t>::lowest()) {
     if (m_count % m_set == 0) {
-      m_log->PushLog("Float test Set.. " + std::to_string(m_count / m_set));
+      m_log->PushLog("Integer test Set.. " + std::to_string(m_count / m_set));
     }
     m_count += 1;
   }
   else {
     // Failure!
     OP16_TIMER_STOP(m_timer);
-    OP16_TIMER_SET(m_timer, 5'000, true, this, &FloatTest::ExecuteFailure);
-    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &FloatTest::Exit);
+    OP16_TIMER_SET(m_timer, 5'000, true, this, &IntegerTest::ExecuteFailure);
+    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &IntegerTest::Exit);
     opgs16::manager::sound::PlaySound("Failure1");
     m_state = EState::Failure;
   }
 }
 
-void FloatTest::ExecuteSuccess() {
+void IntegerTest::ExecuteSuccess() {
+  using opgs16::manager::scene::GetPresentScene;
   if (!m_is_color_changed)
-    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_success);
+    GetPresentScene()->SetBackgroundColor(m_success);
   else
-    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
+    GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 
   m_is_color_changed = !m_is_color_changed;
 }
 
-void FloatTest::ExecuteFailure() {
+void IntegerTest::ExecuteFailure() {
+  using opgs16::manager::scene::GetPresentScene;
   if (!m_is_color_changed)
-    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(m_failure);
+    GetPresentScene()->SetBackgroundColor(m_failure);
   else
-    opgs16::manager::scene::GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
+    GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 
   m_is_color_changed = !m_is_color_changed;
 }
 
-void FloatTest::Exit() {
+void IntegerTest::Update(float delta_time) {
+  if (opgs16::manager::input::IsKeyPressed("Back")) {
+    Exit();
+  }
+}
+
+void IntegerTest::Exit() {
   const auto scr = m_object->GetComponent<script::RandomTestManager>();
-  if (scr) scr->ExecuteFloatTestToLobbyA();
+  if (scr) scr->ExecuteIntegerTestToLobbyA();
   else PHITOS_UNEXPECTED_BRANCH();
 }
 
-} /// ::debug::script namespace
+
+} /// ::debug::script

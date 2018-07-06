@@ -20,6 +20,11 @@ class RandomTestManager final : public opgs16::component::CScriptFrame {
 public:
   OP16_SCRIPT_GENERATE(RandomTestManager);
 
+  void ExecuteFloatTest() noexcept;
+  void ExecuteFloatTestToLobbyA() noexcept;
+  void ExecuteLobbyAToIntegerTestA() noexcept;
+  void ExecuteIntegerTestToLobbyA() noexcept;
+
 private:
   void Initiate() override final;
   void Start() override final;
@@ -27,11 +32,13 @@ private:
 
   void InitializeLobbyA();
   void InitializeFloatTestA();
+  void InitializeIntegerTestA();
 
   void InputLobbyA();
-  void CleanLobbyAToFloatTestA();
 
-  void ExecuteFloatTest() noexcept;
+  void CleanLobbyA();
+  void CleanFloatTestA();
+  void CleanIntegerTestA();
 
   bool m_is_pressed = false;
 

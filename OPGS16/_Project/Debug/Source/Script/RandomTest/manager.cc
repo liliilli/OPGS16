@@ -23,6 +23,7 @@
 
 #include "../../../Include/Object/SceneSelect/choice_list.h"
 #include "../../../Include/Script/RandomTest/float.h"
+#include "../../../Include/Script/RandomTest/integer.h"
 
 namespace {
 
@@ -95,7 +96,9 @@ void RandomTestManager::InitializeLobbyA() {
   m_list->SetNormalColor(opgs16::DColor::Gray);
   m_list->SetOrigin(IOriginable::Origin::DOWN_LEFT);
   m_list->SetWorldPosition({32.f, 96.f, 0.f});
+
   m_list->SetFunction(0, std::bind(&RandomTestManager::ExecuteFloatTest, this));
+  m_list->SetFunction(1, std::bind(&RandomTestManager::ExecuteLobbyAToIntegerTestA, this));
 
   m_description = m_obj->Instantiate<object::Description>("Desc");
   m_description->SetText(command_list[m_list->GetCursorIndex()].second);
@@ -137,14 +140,14 @@ void RandomTestManager::InputLobbyA() {
 }
 
 void RandomTestManager::InitializeFloatTestA() {
-  using opgs16::element::canvas::CText;
-  using object::ChoiceList;
-
   m_obj->AddComponent<script::FloatTest>(*m_obj);
-  //m_obj->Instantiate<object::SimpleLog>("Log", 8);
 }
 
-void RandomTestManager::CleanLobbyAToFloatTestA() {
+void RandomTestManager::InitializeIntegerTestA() {
+  m_obj->AddComponent<script::IntegerTest>(*m_obj);
+}
+
+void RandomTestManager::CleanLobbyA() {
   if (!m_obj) {
     PUSH_LOG_CRITICAL("Binded object address is nullptr.");
     PHITOS_UNEXPECTED_BRANCH();
@@ -156,13 +159,53 @@ void RandomTestManager::CleanLobbyAToFloatTestA() {
   m_obj->DestroyChild("Desc");
 }
 
+void RandomTestManager::CleanFloatTestA() {
+  if (!m_obj->RemoveComponent<script::FloatTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+}
+
+void RandomTestManager::CleanIntegerTestA() {
+  if (!m_obj->RemoveComponent<script::IntegerTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+}
+
 void RandomTestManager::ExecuteFloatTest() noexcept {
   PUSH_LOG_INFO("ExecuteFloatTest()");
 
-  CleanLobbyAToFloatTestA();
+  CleanLobbyA();
   m_big_state = EBigState::FloatTest;
   m_detailed_state = EDetailedState::A;
   InitializeFloatTestA();
 }
+
+void RandomTestManager::ExecuteLobbyAToIntegerTestA() noexcept {
+  PUSH_LOG_INFO("ExecuteLobbyAToIntegerTestA()");
+
+  CleanLobbyA();
+  m_big_state = EBigState::IntegerTest;
+  m_detailed_state = EDetailedState::A;
+  InitializeIntegerTestA();
+}
+
+void RandomTestManager::ExecuteFloatTestToLobbyA() noexcept {
+  PUSH_LOG_INFO("ExecuteFloatTestToLobbyA()");
+
+  CleanFloatTestA();
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
+
+void RandomTestManager::ExecuteIntegerTestToLobbyA() noexcept {
+  PUSH_LOG_INFO("ExecuteFloatTestToLobbyA()");
+
+  CleanIntegerTestA();
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
+
 
 } /// ::debug::script namespace

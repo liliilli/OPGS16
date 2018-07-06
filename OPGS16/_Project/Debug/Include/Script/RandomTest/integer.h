@@ -1,5 +1,5 @@
-#ifndef DEBUG_PROJECT_SCRIPT_RANDOMTEST_FLOAT_H
-#define DEBUG_PROJECT_SCRIPT_RANDOMTEST_FLOAT_H
+#ifndef DEBUG_PROJECT_SCRIPT_RANDOMTEST_INTEGER_H
+#define DEBUG_PROJECT_SCRIPT_RANDOMTEST_INTEGER_H
 
 ///
 /// @license BSD 2-Clause License
@@ -18,9 +18,9 @@ class SimpleLog;
 
 namespace debug::script {
 
-class FloatTest final : public opgs16::component::CScriptFrame {
+class IntegerTest final : public opgs16::component::CScriptFrame {
 public:
-  OP16_SCRIPT_GENERATE(FloatTest);
+  OP16_SCRIPT_GENERATE(IntegerTest);
 
 private:
   opgs16::element::CObject* m_subject = nullptr;
@@ -55,4 +55,4 @@ private:
 
 } /// ::debug::script namespace
 
-#endif /// DEBUG_PROJECT_SCRIPT_RANDOMTEST_FLOAT_H
+#endif /// DEBUG_PROJECT_SCRIPT_RANDOMTEST_INTEGER_H
