@@ -9,7 +9,7 @@
 ///
 
 /// Header file
-#include "../../Include/Script/hopping.h"
+#include "../../../Include/Script/LifecycleTest/hopping.h"
 
 #include <chrono>
 #include <random>
@@ -26,7 +26,7 @@
 #include <Element/scene.h>
 #include <Element/object.h>
 
-#include "../../Include/Script/lifecycle_manager.h"
+#include "../../../Include/Script/LifecycleTest/lifecycle_manager.h"
 
 constexpr float k_angle_offset = 90.f;
 

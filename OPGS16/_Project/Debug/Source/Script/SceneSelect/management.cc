@@ -14,14 +14,14 @@
 #include <Helper/Type/vectori2.h>
 #include <Manager/input_manager.h>
 #include <Manager/scene_manager.h>
-#include <Phitos/Dbg/assert.h>
 
+#include "../../../Include/Object/Common/choice_list.h"
 #include "../../../Include/Object/Common/description.h"
-#include "../../../Include/Object/SceneSelect/choice_list.h"
 #include "../../../Include/Object/SceneSelect/select_manager.h"
 
-#include "../../../Include/Scene/object_lifecycle.h"
+#include "../../../Include/Scene/Test/object_lifecycle.h"
 #include "../../../Include/Scene/Test/random.h"
+#include "../../../Include/Scene/Test/sound.h"
 
 namespace {
 
@@ -59,7 +59,9 @@ void Management::Initiate() {
       std::vector<std::string>{
           "Object lifecycle test", "Random feature test",
           "Sound test",
-          "Input test", "Nothing.", "Nothing.", "Nothing.", "Nothing."
+          "Input test",
+          "Rendering test.",
+          "Nothing.", "Nothing.", "Nothing."
       }
   );
   list->SetItemSize(12);
@@ -72,6 +74,7 @@ void Management::Initiate() {
   list->SetWorldPosition({48.f, 96.f, 0.f});
   list->SetFunction(0, std::bind(&Management::ExecuteLifecycleTest, this));
   list->SetFunction(1, std::bind(&Management::ExecuteRandomFeatureTest, this));
+  list->SetFunction(2, std::bind(&Management::ExecuteSoundTest, this));
   m_list = list;
 
   auto copyright = obj.Instantiate<CText>("Copyright", "2018 Jongmin Yun(Neu.)");
@@ -87,11 +90,13 @@ void Management::Initiate() {
   m_description->SetText(description_container[m_list->GetCursorIndex()].data());
 }
 
-void Management::Start() {
-
-}
+void Management::Start() { }
 
 void Management::Update(float delta_time) {
+  Input();
+}
+
+void Management::Input() {
   using opgs16::manager::input::GetKeyValue;
   using opgs16::manager::input::IsKeyPressed;
   using opgs16::manager::input::IsKeyReleased;
@@ -135,7 +140,7 @@ void Management::ExecuteRandomFeatureTest() {
 }
 
 void Management::ExecuteSoundTest() {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
+  M_REPLACE_SCENE(scene::SoundTestScnee);
 }
 
 } /// ::debug::script namespace

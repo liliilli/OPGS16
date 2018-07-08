@@ -30,6 +30,8 @@ private:
   void Start() override final;
   void Update(float delta_time) override final;
 
+  void Input();
+
   void ExecuteLifecycleTest();
   void ExecuteRandomFeatureTest();
   void ExecuteSoundTest();

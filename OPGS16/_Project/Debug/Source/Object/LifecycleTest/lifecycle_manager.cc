@@ -1,8 +1,8 @@
 
-#include "../../Include/Object/lifecycle_manager.h"
+#include "../../../Include/Object/LifecycleTest/lifecycle_manager.h"
 
 /// ::debug::script::LifecycleManager
-#include "../../Include/Script/lifecycle_manager.h"
+#include "../../../Include/Script/LifecycleTest/lifecycle_manager.h"
 
 namespace debug::object {
 

@@ -14,6 +14,7 @@
 #include <Element/ui_object.h>
 /// ::opgs16::DColor (float)
 #include <Helper/Type/color.h>
+#include <Helper/Type/vectori2.h>
 
 namespace opgs16 {
 struct DColor;

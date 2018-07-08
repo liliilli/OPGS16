@@ -6,14 +6,15 @@
  * If you want to read full statements, read LICENSE file.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "..\..\Include\Object\__s_debugcanvas.h"    /// Header file
-#include "..\..\Include\Script\canvas_script.h"
+/// Header file
+#include "../../../Include/Object/SoundTest/sound_compact_test.h"
+#include "../../../Include/Script/SoundTest/sound_compact_test.h"
 
-namespace opgs16::builtin::sample {
+namespace debug::object {
 
-__S_DebugTestCanvas::__S_DebugTestCanvas() {
-    AddComponent<DebugCanvasScript>(*this);
+SoundCompactTest::SoundCompactTest() {
+  AddComponent<script::SoundCompactTest>(*this);
 }
 
-} /*! opgs16::builtin::sample */
+} /// ::debug::object namespace
 

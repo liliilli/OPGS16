@@ -7,7 +7,7 @@
 ///
 
 /// Header file
-#include "../../../Include/Script/RandomTest/integer.h"
+#include "../../../Include/Script/RandomTest/positive_random.h"
 
 #include <limits>
 
@@ -25,14 +25,14 @@
 
 namespace debug::script {
 
-void IntegerTest::Initiate() {
+void PositiveValueTest::Initiate() {
   auto& obj = GetBindObject();
   using opgs16::element::canvas::CText;
   using opgs16::manager::scene::GetPresentScene;
   m_object = GetPresentScene()->GetGameObject("Canvas").get();
 
   auto subject = obj.Instantiate<object::Subject>("Subject");
-  subject->SetText("Integer number test");
+  subject->SetText("Positive random number test");
   m_subject = subject;
 
   m_log = obj.Instantiate<object::SimpleLog>("Log", 10);
@@ -44,10 +44,10 @@ void IntegerTest::Initiate() {
   GenerateSound("Success1");
   GenerateSound("Failure1");
 
-  OP16_TIMER_SET(m_timer, 20, true, this, &IntegerTest::Tick);
+  OP16_TIMER_SET(m_timer, 20, true, this, &PositiveValueTest::Tick);
 }
 
-void IntegerTest::Destroy() {
+void PositiveValueTest::Destroy() {
   auto& obj = GetBindObject();
   obj.DestroyChild(*m_subject);
   obj.DestroyChild(*m_log);
@@ -60,38 +60,83 @@ void IntegerTest::Destroy() {
   GetPresentScene()->SetBackgroundColor(opgs16::DColor::Black);
 }
 
-void IntegerTest::Tick() {
+void PositiveValueTest::Tick() {
+  switch (m_type) {
+  case EType::Float:
+    TestFloat();
+    break;
+  case EType::Integer:
+    TestInteger();
+    break;
+  }
+}
+
+void PositiveValueTest::TestFloat() {
   // If test is succeeded,
   if (m_count > m_test_count) {
-    OP16_TIMER_STOP(m_timer);
-    OP16_TIMER_SET(m_timer, 500, true, this, &IntegerTest::ExecuteSuccess);
-    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &IntegerTest::Exit);
-    opgs16::manager::sound::PlaySound("Success1");
-    m_state = EState::Success;
+    m_log->Clear();
+    m_log->PushLog("Positive float test succeeded!");
+
+    m_type = EType::Integer;
+    m_count = 1;
     return;
   }
 
   // Test body
-  const auto test = opgs16::random::RandomInteger();
-  if (test <= std::numeric_limits<int32_t>::max() &&
-      test > std::numeric_limits<int32_t>::lowest()) {
+  const auto test = opgs16::random::RandomNegativeFloat();
+  if (test <= std::numeric_limits<float>::max() && test >= 0.f) {
     if (m_count % m_set == 0) {
-      m_log->PushLog("Integer test Set.. " + std::to_string(m_count / m_set));
+      m_log->PushLog("Positive Float test Set.. " +
+                     std::to_string(m_count / m_set));
     }
     m_count += 1;
   }
   else {
     // Failure!
     OP16_TIMER_STOP(m_timer);
-    OP16_TIMER_SET(m_timer, 5'000, true, this, &IntegerTest::ExecuteFailure);
-    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &IntegerTest::Exit);
+    OP16_TIMER_SET(m_timer, 500, true, this, &PositiveValueTest::ExecuteFailure);
+    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &PositiveValueTest::Exit);
+
     opgs16::manager::sound::PlaySound("Failure1");
     m_state = EState::Failure;
   }
 }
 
-void IntegerTest::ExecuteSuccess() {
+void PositiveValueTest::TestInteger() {
+  // If test is succeeded,
+  if (m_count > m_test_count) {
+    OP16_TIMER_STOP(m_timer);
+    OP16_TIMER_SET(m_timer, 500, true, this, &PositiveValueTest::ExecuteSuccess);
+    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &PositiveValueTest::Exit);
+
+    opgs16::manager::sound::PlaySound("Success1");
+    m_state = EState::Success;
+    return;
+  }
+
+  // Test body
+  const auto test = opgs16::random::RandomPositiveInteger();
+  if (test <= std::numeric_limits<int32_t>::max() && test >= 0) {
+    if (m_count % m_set == 0) {
+      m_log->PushLog("Positive integer test Set.. " +
+                     std::to_string(m_count / m_set));
+    }
+    m_count += 1;
+  }
+  else {
+    // Failure!
+    OP16_TIMER_STOP(m_timer);
+    OP16_TIMER_SET(m_timer, 5'000, true, this, &PositiveValueTest::ExecuteFailure);
+    OP16_TIMER_SET(m_timer_return, 3'000, false, this, &PositiveValueTest::Exit);
+
+    opgs16::manager::sound::PlaySound("Failure1");
+    m_state = EState::Failure;
+  }
+}
+
+void PositiveValueTest::ExecuteSuccess() {
   using opgs16::manager::scene::GetPresentScene;
+
   if (!m_is_color_changed)
     GetPresentScene()->SetBackgroundColor(m_success);
   else
@@ -100,8 +145,9 @@ void IntegerTest::ExecuteSuccess() {
   m_is_color_changed = !m_is_color_changed;
 }
 
-void IntegerTest::ExecuteFailure() {
+void PositiveValueTest::ExecuteFailure() {
   using opgs16::manager::scene::GetPresentScene;
+
   if (!m_is_color_changed)
     GetPresentScene()->SetBackgroundColor(m_failure);
   else
@@ -110,17 +156,17 @@ void IntegerTest::ExecuteFailure() {
   m_is_color_changed = !m_is_color_changed;
 }
 
-void IntegerTest::Update(float delta_time) {
+void PositiveValueTest::Exit() {
+  const auto scr = m_object->GetComponent<script::RandomTestManager>();
+  if (scr) scr->ExecutePositiveRandomTestAToLobbyA();
+  else PHITOS_UNEXPECTED_BRANCH();
+}
+
+void PositiveValueTest::Update(float delta_time) {
   if (opgs16::manager::input::IsKeyPressed("Back")) {
     Exit();
   }
 }
 
-void IntegerTest::Exit() {
-  const auto scr = m_object->GetComponent<script::RandomTestManager>();
-  if (scr) scr->ExecuteIntegerTestToLobbyA();
-  else PHITOS_UNEXPECTED_BRANCH();
-}
 
-
-} /// ::debug::script
+} /// ::debug::script namespace

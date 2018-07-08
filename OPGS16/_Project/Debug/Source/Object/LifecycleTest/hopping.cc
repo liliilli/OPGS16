@@ -9,7 +9,7 @@
 ///
 
 /// Header file
-#include "../../Include/Object/hopping.h"
+#include "../../../Include/Object/LifecycleTest/hopping.h"
 
 /// ::opgs16::component::CCamera
 #include <Component/camera.h>
@@ -19,7 +19,7 @@
 #include <Manager/scene_manager.h>
 #include <Shader/shader_wrapper.h>
 
-#include "../../Include/Script/hopping.h"
+#include "../../../Include/Script/LifecycleTest/hopping.h"
 
 namespace debug::object {
 

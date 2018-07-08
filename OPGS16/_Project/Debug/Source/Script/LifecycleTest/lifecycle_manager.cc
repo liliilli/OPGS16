@@ -9,7 +9,7 @@
 ///
 
 /// Header file
-#include "../../Include/Script/lifecycle_manager.h"
+#include "../../../Include/Script/LifecycleTest/lifecycle_manager.h"
 
 /// Enhanced assertion
 #include <Helper/assert.h>
@@ -19,7 +19,7 @@
 #include <Manager/timer_manager.h>
 
 /// ::debug::object::Hopping for object to being spawned.
-#include "../../Include/Object/hopping.h"
+#include "../../../Include/Object/LifecycleTest/hopping.h"
 
 #include <Manager/scene_manager.h>
 #include <Element/Canvas/text.h>

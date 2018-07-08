@@ -40,6 +40,10 @@
       "Success1": {
         "path": "Resource/Audio/decision1.mp3",
         "type": "effect"
+      },
+      "Failure1": {
+        "path": "Resource/Audio/decision2.mp3",
+        "type": "effect"
       }
     }
   },

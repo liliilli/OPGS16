@@ -7,7 +7,7 @@
 ///
 
 /// Header file
-#include "../../../Include/Object/SceneSelect/choice_list.h"
+#include "../../../Include/Object/Common/choice_list.h"
 
 #include <Phitos/Dbg/assert.h>
 #include <Element/Canvas/image.h>

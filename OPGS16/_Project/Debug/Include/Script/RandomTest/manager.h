@@ -24,6 +24,8 @@ public:
   void ExecuteFloatTestToLobbyA() noexcept;
   void ExecuteLobbyAToIntegerTestA() noexcept;
   void ExecuteIntegerTestToLobbyA() noexcept;
+  void ExecuteLobbyAToPositiveRandomTestA() noexcept;
+  void ExecutePositiveRandomTestAToLobbyA() noexcept;
 
 private:
   void Initiate() override final;
@@ -33,15 +35,18 @@ private:
   void InitializeLobbyA();
   void InitializeFloatTestA();
   void InitializeIntegerTestA();
+  void InitializePositiveRandomTestA();
 
   void InputLobbyA();
 
   void CleanLobbyA();
   void CleanFloatTestA();
   void CleanIntegerTestA();
+  void CleanPositiveRandomTestA();
 
   bool m_is_pressed = false;
 
+  opgs16::element::CObject* m_subject = nullptr;
   object::ChoiceList* m_list = nullptr;
   opgs16::element::canvas::CText* m_description = nullptr;
 
@@ -50,7 +55,9 @@ private:
   enum class EBigState {
     Lobby,
     FloatTest,
-    IntegerTest
+    IntegerTest,
+    PositiveRandomTest,
+    NegativeRandomTest
   };
 
   enum class EDetailedState {

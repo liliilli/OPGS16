@@ -5,15 +5,13 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-/// @file Scene/object_lifecycle.cc
-///
 
 /// Header file
-#include "../../Include/Scene/object_lifecycle.h"
+#include "../../../Include/Scene/Test/object_lifecycle.h"
 
-#include "../../Include/Object/empty_canvas.h"
-#include "../../Include/Object/empty_object.h"
-#include "../../Include/Object/lifecycle_manager.h"
+#include "../../../Include/Object/Common/empty_canvas.h"
+#include "../../../Include/Object/Common/empty_object.h"
+#include "../../../Include/Object/LifecycleTest/lifecycle_manager.h"
 
 #include <Element/Canvas/text.h>
 

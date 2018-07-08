@@ -11,7 +11,6 @@
 
 #include <limits>
 
-#include <Element/Canvas/text.h>
 /// Random library
 #include <Helper/Math/random.h>
 #include <Manager/input_manager.h>
@@ -21,6 +20,7 @@
 #include <Phitos/Dbg/assert.h>
 
 #include "../../../Include/Object/Common/simplelog.h"
+#include "../../../Include/Object/Common/subject.h"
 #include "../../../Include/Script/RandomTest/manager.h"
 
 namespace debug::script {
@@ -31,12 +31,8 @@ void FloatTest::Initiate() {
   using opgs16::manager::scene::GetPresentScene;
   m_object = GetPresentScene()->GetGameObject("Canvas").get();
 
-  auto subject = obj.Instantiate<CText>("Subject", "Floating number test");
-  subject->SetFontName("Hangul");
-  subject->SetOrigin(IOriginable::Origin::UP_CENTER);
-  subject->SetAlignment(IAlignable::Alignment::CENTER);
-  subject->SetFontSize(16);
-  subject->SetWorldPosition({0.f, -24.f, 0.f});
+  auto subject = obj.Instantiate<object::Subject>("Subject");
+  subject->SetText("Floating number test");
   m_subject = subject;
 
   m_log = obj.Instantiate<object::SimpleLog>("Log", 10);
@@ -46,6 +42,7 @@ void FloatTest::Initiate() {
 
   using opgs16::manager::sound::GenerateSound;
   GenerateSound("Success1");
+  GenerateSound("Failure1");
 
   OP16_TIMER_SET(m_timer, 20, true, this, &FloatTest::Tick);
 }
