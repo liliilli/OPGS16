@@ -1,5 +1,5 @@
-#ifndef DEBUG_PROJECT_SCRIPT_RANDOMTEST_V2_UNIT_H
-#define DEBUG_PROJECT_SCRIPT_RANDOMTEST_V2_UNIT_H
+#ifndef DEBUG_PROJECT_SCRIPT_RANDOMTEST_V3_UNIT_H
+#define DEBUG_PROJECT_SCRIPT_RANDOMTEST_V3_UNIT_H
 
 ///
 /// @license BSD 2-Clause License
@@ -17,16 +17,17 @@ class VectorDistribution;
 
 namespace debug::script {
 
-class Vector2UnitRandomTest final : public opgs16::component::CScriptFrame {
+class Vector3UnitRandomTest final : public opgs16::component::CScriptFrame {
 public:
-  OP16_SCRIPT_GENERATE(Vector2UnitRandomTest);
+  OP16_SCRIPT_GENERATE(Vector3UnitRandomTest);
 
 private:
   opgs16::element::CObject* m_subject = nullptr;
   opgs16::element::CObject* m_object = nullptr;
   opgs16::element::CObject* m_camera = nullptr;
 
-  script::VectorDistribution* m_dist_obj = nullptr;
+  script::VectorDistribution* m_xy_obj = nullptr;
+  script::VectorDistribution* m_zy_obj = nullptr;
 
   opgs16::element::CTimerHandle m_timer;
 
@@ -41,4 +42,4 @@ private:
 
 } /// ::debug::script namespace
 
-#endif /// DEBUG_PROJECT_SCRIPT_RANDOMTEST_V2_UNIT_H
+#endif /// DEBUG_PROJECT_SCRIPT_RANDOMTEST_V3_UNIT_H

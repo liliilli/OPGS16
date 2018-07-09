@@ -27,6 +27,7 @@
 #include "../../../Include/Script/RandomTest/integer.h"
 #include "../../../Include/Script/RandomTest/positive_random.h"
 #include "../../../Include/Script/RandomTest/v2_unit.h"
+#include "../../../Include/Script/RandomTest/v3_unit.h"
 
 #include "../../../Include/Internal/keyword.h"
 
@@ -102,8 +103,8 @@ void RandomTestManager::InitializeLobbyA() {
       std::bind(&RandomTestManager::ExecuteLobbyAToIntegerTestA, this));
   m_list->SetFunction(2,
       std::bind(&RandomTestManager::ExecuteLobbyAToPositiveRandomTestA, this));
-  m_list->SetFunction(4,
-      std::bind(&RandomTestManager::ExecuteVector2Test, this));
+  m_list->SetFunction(4, std::bind(&RandomTestManager::ExecuteVector2Test, this));
+  m_list->SetFunction(5, std::bind(&RandomTestManager::ExecuteVector3Test, this));
 
   m_description = m_obj->Instantiate<object::Description>("Desc");
   m_description->SetText(command_list[m_list->GetCursorIndex()].second);
@@ -160,6 +161,10 @@ void RandomTestManager::InitilaizeVector2UnitTest() {
   m_obj->AddComponent<script::Vector2UnitRandomTest>(*m_obj);
 }
 
+void RandomTestManager::InitializeVector3UnitTest() {
+  m_obj->AddComponent<script::Vector3UnitRandomTest>(*m_obj);
+}
+
 void RandomTestManager::CleanLobbyA() {
   if (!m_obj) {
     PUSH_LOG_CRITICAL("Binded object address is nullptr.");
@@ -196,6 +201,12 @@ void RandomTestManager::CleanPositiveRandomTestA() {
 
 void RandomTestManager::CleanVector2UnitTest() {
   if (!m_obj->RemoveComponent<script::Vector2UnitRandomTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+}
+
+void RandomTestManager::CleanVector3UnitTest() {
+ if (!m_obj->RemoveComponent<script::Vector3UnitRandomTest>()) {
     PHITOS_UNEXPECTED_BRANCH();
   }
 }
@@ -267,6 +278,24 @@ void RandomTestManager::ReturnFromVector2Test() {
   PUSH_LOG_INFO("ReturnFromVector2Test()");
 
   CleanVector2UnitTest();
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
+
+void RandomTestManager::ExecuteVector3Test() {
+  PUSH_LOG_INFO("ExecuteVector3Test()");
+
+  CleanLobbyA();
+  m_big_state = EBigState::Vector3Unit;
+  m_detailed_state = EDetailedState::A;
+  InitializeVector3UnitTest();
+}
+
+void RandomTestManager::ReturnFromVector3Test() {
+  PUSH_LOG_INFO("ReturnFromVector3Test()");
+
+  CleanVector3UnitTest();
   m_big_state = EBigState::Lobby;
   m_detailed_state = EDetailedState::A;
   InitializeLobbyA();

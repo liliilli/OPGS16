@@ -27,8 +27,10 @@ public:
   void ExecuteLobbyAToPositiveRandomTestA() noexcept;
   void ExecutePositiveRandomTestAToLobbyA() noexcept;
   void ExecuteVector2Test();
+  void ExecuteVector3Test();
 
   void ReturnFromVector2Test();
+  void ReturnFromVector3Test();
 
 private:
   void Initiate() override final;
@@ -40,6 +42,7 @@ private:
   void InitializeIntegerTestA();
   void InitializePositiveRandomTestA();
   void InitilaizeVector2UnitTest();
+  void InitializeVector3UnitTest();
 
   void InputLobbyA();
 
@@ -48,6 +51,7 @@ private:
   void CleanIntegerTestA();
   void CleanPositiveRandomTestA();
   void CleanVector2UnitTest();
+  void CleanVector3UnitTest();
 
   bool m_is_pressed = false;
 

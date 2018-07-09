@@ -120,6 +120,8 @@
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\vectordist.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural_obj.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\vectordist.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v3_unit.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\perspective_camera.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -305,6 +307,8 @@
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vectordist.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural_obj.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\vectordist.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v3_unit.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\perspective_camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

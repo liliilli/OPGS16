@@ -252,6 +252,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\Common\copyright.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\description.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\gotoback.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\Common\perspective_camera.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\simplelog.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\subject.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
@@ -270,6 +271,7 @@
     <ClCompile Include="_Project\Debug\Source\Scene\Test\rendering.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\Test\sound.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v2_unit.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v3_unit.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural2d.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural_obj.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\select_menu.cc" />
@@ -430,6 +432,7 @@
     <ClInclude Include="_Project\Debug\Include\Object\Common\copyright.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\description.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\gotoback.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\Common\perspective_camera.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\subject.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\empty_canvas.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\empty_object.h" />
@@ -449,6 +452,7 @@
     <ClInclude Include="_Project\Debug\Include\Scene\select_scene.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\random.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v2_unit.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v3_unit.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural2d.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural_obj.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\select_menu.h" />

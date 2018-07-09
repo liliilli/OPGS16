@@ -7,7 +7,7 @@
 ///
 
 /// Header file
-#include "../../../Include/Script/RandomTest/v2_unit.h"
+#include "../../../Include/Script/RandomTest/v3_unit.h"
 
 #include <Component/camera.h>
 #include <Helper/math/random.h>
@@ -26,53 +26,57 @@
 
 namespace debug::script {
 
-void Vector2UnitRandomTest::Initiate() {
-  auto& obj = GetBindObject();
+void Vector3UnitRandomTest::Initiate() {
   using opgs16::element::canvas::CText;
   using opgs16::manager::scene::GetPresentScene;
 
+  auto& obj = GetBindObject();
   auto scene = GetPresentScene();
   m_object = scene->GetGameObject("Canvas").get();
 
   auto subject = obj.Instantiate<object::Subject>("Subject");
-  subject->SetText("Vector2 Unit random dist test");
+  subject->SetText("Vector3 Unit random dist test");
   m_subject = subject;
 
   m_camera = scene->Instantiate<object::PerspectiveCameraObject>("Camera");
 
-  m_dist_obj = scene->
-      Instantiate<object::VectorDistTestObject>("ProcedureObj")->
-      GetComponent<script::VectorDistribution>();
+  m_xy_obj = scene->Instantiate<object::VectorDistTestObject>("ProcObj")->GetComponent<VectorDistribution>();
+  m_xy_obj->GetBindObject().SetLocalPosition({-64.f, 0, 0});
 
-  OP16_TIMER_SET(m_timer, 250, true, this, &Vector2UnitRandomTest::Tick);
+  m_zy_obj = scene->Instantiate<object::VectorDistTestObject>("ProcObj")->GetComponent<VectorDistribution>();
+  m_zy_obj->GetBindObject().SetLocalPosition({64.f, 0, 0});
+
+  OP16_TIMER_SET(m_timer, 250, true, this, &Vector3UnitRandomTest::Tick);
 }
 
-void Vector2UnitRandomTest::Destroy() {
-  using opgs16::manager::scene::GetPresentScene;
-
-  auto& obj = GetBindObject();
-  obj.DestroyChild(*m_subject);
-  opgs16::manager::object::Destroy(m_dist_obj->GetBindObject());
-  opgs16::manager::object::Destroy(*m_camera);
-
-  OP16_TIMER_STOP(m_timer);
-}
-
-void Vector2UnitRandomTest::Tick() {
-  const auto result = opgs16::random::RandomVector2Length(1.f);
-  m_dist_obj->InsertVector(result);
-}
-
-void Vector2UnitRandomTest::Update(float delta_time) {
+void Vector3UnitRandomTest::Update(float delta_time) {
   using opgs16::manager::input::IsKeyPressed;
 
   if (IsKeyPressed("Back"))
     Exit();
 }
 
-void Vector2UnitRandomTest::Exit() {
+void Vector3UnitRandomTest::Tick() {
+  const auto result = opgs16::random::RandomVector3Length(1.f);
+  m_xy_obj->InsertVector({result.x, result.y});
+  m_zy_obj->InsertVector({result.z, result.y});
+}
+
+void Vector3UnitRandomTest::Destroy() {
+  using opgs16::manager::scene::GetPresentScene;
+
+  auto& obj = GetBindObject();
+  obj.DestroyChild(*m_subject);
+  opgs16::manager::object::Destroy(m_xy_obj->GetBindObject());
+  opgs16::manager::object::Destroy(m_zy_obj->GetBindObject());
+  opgs16::manager::object::Destroy(*m_camera);
+
+  OP16_TIMER_STOP(m_timer);
+}
+
+void Vector3UnitRandomTest::Exit() {
   const auto scr = m_object->GetComponent<script::RandomTestManager>();
-  if (scr) scr->ReturnFromVector2Test();
+  if (scr) scr->ReturnFromVector3Test();
   else PHITOS_UNEXPECTED_BRANCH();
 }
 
