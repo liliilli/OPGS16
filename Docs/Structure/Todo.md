@@ -90,6 +90,7 @@ Updated 2018.05.23
   - [ ] `CObject` 및 `Obejct` `Scene` 에서 Destroy object 시, 어드레스 비교로 지우게 끔 하기.
     - 우선 DestroyChild 에서 manager::object::Destroy 을 할 때 자기 오브젝트에서 루트를 만들어서 지우게끔 함.
     - 문제는 `DestroyChild` 의 ref 을 받는 버전에선 리턴값으로 성공 아니면 실패를 내놔야하는데 지금은 `object::Destroy` 가 `void` 라서 성공 실패 여부 확인이 안됨.
+  - [ ] `CScene` 의 오브젝트 이름 충돌을 피할 것.
 - Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
   - [ ] Object 부분
     - [ ] 기초
