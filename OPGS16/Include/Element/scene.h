@@ -27,22 +27,19 @@
 /// 2018-04-14 Rename ::opgs16::element::Scene to ::opgs16::element::CScene.
 /// 2018-04-14 Move file to /System/Element/Public/ directory.
 /// 2018-05-24 Implement object life cycle.
+/// 2018-07-09 Add name generation.
 ///
 
 #include <memory>
-
 #include <GL/glew.h>
 
-/// ::opgs16::component::CScriptFrame
-#include <Component/script_frame.h>
 /// ::opgs16::element::CObject
 #include <Element/object.h>
-
 /// Type checking templates
 #include <Helper/template.h>
+#include <Helper/Type/color.h>
 /// Forward declaration
 #include <opgs16fwd.h>
-#include "Helper/Type/color.h"
 
 namespace opgs16::element {
 
@@ -62,6 +59,7 @@ private:
   using object_ptr    = std::unique_ptr<CObject>;
   using object_map    = std::unordered_map<std::string, object_ptr>;
   using _camera       = component::CCamera;
+  using TNameCounterMap = std::unordered_map<std::string, int32_t>;
 
 public:
   /// Must need virtual destrcutor
@@ -103,19 +101,15 @@ public:
   >
   _Ty* Instantiate(const std::string& object_name,
                    std::unique_ptr<_Ty>&& object_smtptr) {
-    if (DoesObjectExist(object_name)) {
-      PUSH_LOG_WARN_EXT("Object {0} already exist.", object_name);
-      return nullptr;
-    }
+    const auto object_final_name = CreateChildTag(object_name);
 
     auto result_pair = m_object_list.emplace(std::make_pair(
-          object_name,
-          std::move(object_smtptr))
+        object_final_name, std::move(object_smtptr))
     );
     NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
 
     object_ptr& object_ref = (result_pair.first)->second;
-    object_ref->SetHash(object_name);
+    object_ref->SetHash(object_final_name);
     return static_cast<_Ty*>(object_ref.get());
 	}
 
@@ -136,17 +130,13 @@ public:
     typename = std::enable_if_t<IsCObjectBase<_Ty> && IsCObjectSmtPtr<_Ty>>
   >
   _Ty* Instantiate(const std::string& object_name, std::unique_ptr<_Ty>& obj) {
-    if (DoesObjectExist(object_name)) {
-      PUSH_LOG_WARN_EXT("Object {0} already exist.", object_name);
-      return nullptr;
-    }
+    const auto object_final_name = CreateChildTag(object_name);
 
-    auto result_pair =
-        m_object_list.emplace(std::make_pair(object_name, std::move(obj)));
+    auto result_pair = m_object_list.emplace(object_final_name, std::move(obj));
     NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
 
     object_ptr& object_ref = (result_pair.first)->second;
-    object_ref->SetHash(object_name);
+    object_ref->SetHash(object_final_name);
     return static_cast<_Ty*>(object_ref.get());
 	}
 
@@ -170,19 +160,14 @@ public:
     typename = std::enable_if_t<IsCObjectBase<_Ty>>
   >
   _Ty* Instantiate(const std::string& object_name, _Args&&... args) {
-    if (DoesObjectExist(object_name)) {
-      PUSH_LOG_WARN_EXT("Object {0} already exist.", object_name);
-      return nullptr;
-    }
+    const auto object_final_name = CreateChildTag(object_name);
 
-    auto result_pair = m_object_list.emplace(std::make_pair(
-        object_name,
-        std::make_unique<_Ty>(std::forward<_Args>(args)...))
-    );
+    auto result_pair = m_object_list.emplace(object_final_name,
+        std::make_unique<_Ty>(std::forward<_Args>(args)...));
     NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
 
     object_ptr& object_ref = (result_pair.first)->second;
-    object_ref->SetHash(object_name);
+    object_ref->SetHash(object_final_name);
     return static_cast<_Ty*>(object_ref.get());
 	}
 
@@ -236,9 +221,28 @@ public:
 private:
   void ScriptInitiate(object_ptr& object_pointer);
 
+  ///
+  /// @brief Create child object name.
+  /// @param[in] name
+  /// @return
+  ///
+  inline std::string CreateChildTag(const std::string& name) noexcept {
+    std::string item_tag = name;
+
+    if (m_name_counter.find(name) != m_name_counter.end()) {
+      auto& count = m_name_counter[name];
+      count += 1;
+      item_tag.append('_' + std::to_string(count));
+    }
+    else { m_name_counter[name] = 0; }
+
+    return item_tag;
+  }
+
   _camera* m_main_camera{ nullptr };
   DColor m_background_color = DColor::Black;
   object_map  m_object_list;
+  TNameCounterMap m_name_counter;
 };
 
 } /// ::opgs16::element namespace
