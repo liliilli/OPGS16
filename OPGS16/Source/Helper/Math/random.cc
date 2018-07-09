@@ -121,8 +121,8 @@ DVector3 RandomVector3Length(float length) {
     result.z = RandomFloatRange(-1.0f * length, 1.0f * length);
     squared_length = result.GetSquareLength();
   }
-  while (squared_length < std::pow(length * 1.5f, 2) ||
-         squared_length > std::pow(length * 0.5f, 2));
+  while (squared_length > std::pow(length * 1.75f, 2) ||
+         squared_length < std::pow(length * 0.25f, 2));
 
   return result * (length / std::sqrtf(squared_length));
 }
