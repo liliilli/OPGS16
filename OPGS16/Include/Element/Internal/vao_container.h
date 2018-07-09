@@ -29,6 +29,9 @@
 //! Forward declaration.
 //!
 
+namespace opgs16::component {
+class CProcedural2DRenderer;
+}
 namespace opgs16::component::_internal {
 class CSpriteRendererImpl;
 }
@@ -88,7 +91,7 @@ public:
   /// @brief Get reference count from rendering component.
   /// @return reference count (but weak and fragile) from rendering component.
   ///
-  /// @todo Replace it with 
+  /// @todo Replace it with
   ///
   uint32_t GetCount() const noexcept {
     return m_count;
@@ -140,6 +143,7 @@ private:
   EGcGeneration m_generation = EGcGeneration::Zero;
 
   friend class component::_internal::CSpriteRendererImpl;
+  friend class component::CProcedural2DRenderer;
 };
 
 } /// ::opgs16::element namespace
