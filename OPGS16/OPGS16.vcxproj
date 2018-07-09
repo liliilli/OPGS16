@@ -178,6 +178,7 @@
     <ClCompile Include="Source\Component\Physics\collider_general.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
+    <ClCompile Include="Source\Component\procedural2d_rendrer.cc" />
     <ClCompile Include="Source\Component\rigidbody2d_compact.cc" />
     <ClCompile Include="Source\Core\application.cc" />
     <ClCompile Include="Include\Element\camera_object.cc" />
@@ -256,6 +257,9 @@
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RandomTest\vectordist.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RenderingTest\manager_canvas.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RenderingTest\procedrual2d_test.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\rotatable_obstacle.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\choice_list.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\SceneSelect\select_manager.cc" />
@@ -263,7 +267,13 @@
     <ClCompile Include="_Project\Debug\Source\Scene\Test\object_lifecycle.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\select_scene.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\Test\random.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\Test\rendering.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\Test\sound.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v2_unit.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural2d.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural_obj.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\select_menu.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\vectordist.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\SoundTest\sound_compact_test.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\SoundTest\sound_compact_test.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\LifecycleTest\hopping.cc" />
@@ -283,6 +293,7 @@
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\Physics\collider_general.h" />
+    <ClInclude Include="Include\Component\procedural2d_renderer.h" />
     <ClInclude Include="Include\Component\rigidbody2d_compact.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
@@ -424,7 +435,11 @@
     <ClInclude Include="_Project\Debug\Include\Object\Common\empty_object.h" />
     <ClInclude Include="_Project\Debug\Include\Object\LifecycleTest\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\LifecycleTest\lifecycle_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vectordist.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\manager_canvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\procedural2d_test.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SoundTest\sound_select.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\Test\rendering.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\sound.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\float.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\manager.h" />
@@ -433,6 +448,11 @@
     <ClInclude Include="_Project\Debug\Include\Scene\Test\object_lifecycle.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\select_scene.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\random.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v2_unit.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural2d.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural_obj.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\select_menu.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\vectordist.h" />
     <ClInclude Include="_Project\Debug\Include\Script\SoundTest\sound_compact_test.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SoundTest\sound_compact_test.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\integer.h" />

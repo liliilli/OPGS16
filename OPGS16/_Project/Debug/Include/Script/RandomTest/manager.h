@@ -26,6 +26,9 @@ public:
   void ExecuteIntegerTestToLobbyA() noexcept;
   void ExecuteLobbyAToPositiveRandomTestA() noexcept;
   void ExecutePositiveRandomTestAToLobbyA() noexcept;
+  void ExecuteVector2Test();
+
+  void ReturnFromVector2Test();
 
 private:
   void Initiate() override final;
@@ -36,6 +39,7 @@ private:
   void InitializeFloatTestA();
   void InitializeIntegerTestA();
   void InitializePositiveRandomTestA();
+  void InitilaizeVector2UnitTest();
 
   void InputLobbyA();
 
@@ -43,6 +47,7 @@ private:
   void CleanFloatTestA();
   void CleanIntegerTestA();
   void CleanPositiveRandomTestA();
+  void CleanVector2UnitTest();
 
   bool m_is_pressed = false;
 
@@ -57,7 +62,9 @@ private:
     FloatTest,
     IntegerTest,
     PositiveRandomTest,
-    NegativeRandomTest
+    NegativeRandomTest,
+    Vector2Unit,
+    Vector3Unit,
   };
 
   enum class EDetailedState {

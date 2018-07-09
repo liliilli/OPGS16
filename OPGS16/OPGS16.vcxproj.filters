@@ -110,6 +110,16 @@
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\LifecycleTest\lifecycle_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\LifecycleTest\hopping.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v2_unit.cc" />
+    <ClCompile Include="Source\Component\procedural2d_rendrer.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\select_menu.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural2d.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\Test\rendering.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RenderingTest\manager_canvas.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RenderingTest\procedrual2d_test.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RandomTest\vectordist.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural_obj.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\vectordist.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -285,6 +295,16 @@
     <ClInclude Include="_Project\Debug\Include\Object\LifecycleTest\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Script\LifecycleTest\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Script\LifecycleTest\hopping.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v2_unit.h" />
+    <ClInclude Include="Include\Component\procedural2d_renderer.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\select_menu.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural2d.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\Test\rendering.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\manager_canvas.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\procedural2d_test.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vectordist.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RenderingTest\procedural_obj.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\vectordist.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

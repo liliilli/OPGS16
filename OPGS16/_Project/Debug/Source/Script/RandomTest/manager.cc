@@ -26,6 +26,7 @@
 #include "../../../Include/Script/RandomTest/float.h"
 #include "../../../Include/Script/RandomTest/integer.h"
 #include "../../../Include/Script/RandomTest/positive_random.h"
+#include "../../../Include/Script/RandomTest/v2_unit.h"
 
 #include "../../../Include/Internal/keyword.h"
 
@@ -95,9 +96,14 @@ void RandomTestManager::InitializeLobbyA() {
   m_list->SetOrigin(IOriginable::Origin::DOWN_LEFT);
   m_list->SetWorldPosition({32.f, 96.f, 0.f});
 
-  m_list->SetFunction(0, std::bind(&RandomTestManager::ExecuteFloatTest, this));
-  m_list->SetFunction(1, std::bind(&RandomTestManager::ExecuteLobbyAToIntegerTestA, this));
-  m_list->SetFunction(2, std::bind(&RandomTestManager::ExecuteLobbyAToPositiveRandomTestA, this));
+  m_list->SetFunction(0,
+      std::bind(&RandomTestManager::ExecuteFloatTest, this));
+  m_list->SetFunction(1,
+      std::bind(&RandomTestManager::ExecuteLobbyAToIntegerTestA, this));
+  m_list->SetFunction(2,
+      std::bind(&RandomTestManager::ExecuteLobbyAToPositiveRandomTestA, this));
+  m_list->SetFunction(4,
+      std::bind(&RandomTestManager::ExecuteVector2Test, this));
 
   m_description = m_obj->Instantiate<object::Description>("Desc");
   m_description->SetText(command_list[m_list->GetCursorIndex()].second);
@@ -150,6 +156,10 @@ void RandomTestManager::InitializePositiveRandomTestA() {
   m_obj->AddComponent<script::PositiveValueTest>(*m_obj);
 }
 
+void RandomTestManager::InitilaizeVector2UnitTest() {
+  m_obj->AddComponent<script::Vector2UnitRandomTest>(*m_obj);
+}
+
 void RandomTestManager::CleanLobbyA() {
   if (!m_obj) {
     PUSH_LOG_CRITICAL("Binded object address is nullptr.");
@@ -180,6 +190,12 @@ void RandomTestManager::CleanIntegerTestA() {
 
 void RandomTestManager::CleanPositiveRandomTestA() {
   if (!m_obj->RemoveComponent<script::PositiveValueTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+}
+
+void RandomTestManager::CleanVector2UnitTest() {
+  if (!m_obj->RemoveComponent<script::Vector2UnitRandomTest>()) {
     PHITOS_UNEXPECTED_BRANCH();
   }
 }
@@ -233,6 +249,24 @@ void RandomTestManager::ExecutePositiveRandomTestAToLobbyA() noexcept {
   PUSH_LOG_INFO("ExecutePositiveRandomTestAToLobbyA()");
 
   CleanPositiveRandomTestA();
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
+
+void RandomTestManager::ExecuteVector2Test() {
+  PUSH_LOG_INFO("ExecuteVector2Test()");
+
+  CleanLobbyA();
+  m_big_state = EBigState::Vector2Unit;
+  m_detailed_state = EDetailedState::A;
+  InitilaizeVector2UnitTest();
+}
+
+void RandomTestManager::ReturnFromVector2Test() {
+  PUSH_LOG_INFO("ReturnFromVector2Test()");
+
+  CleanVector2UnitTest();
   m_big_state = EBigState::Lobby;
   m_detailed_state = EDetailedState::A;
   InitializeLobbyA();

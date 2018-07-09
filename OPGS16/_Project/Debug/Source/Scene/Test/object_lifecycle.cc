@@ -17,7 +17,7 @@
 
 /// ::opgs16::component::CCamera
 #include <Component/camera.h>
-#include "Component/font2d_renderer.h"
+#include <Component/font2d_renderer.h>
 
 namespace debug::scene {
 

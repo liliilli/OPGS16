@@ -35,6 +35,7 @@ private:
   void ExecuteLifecycleTest();
   void ExecuteRandomFeatureTest();
   void ExecuteSoundTest();
+  void ExecuteRenderingTest();
 
   object::ChoiceList* m_list = nullptr;
   opgs16::element::canvas::CText* m_description = nullptr;

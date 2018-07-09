@@ -42,6 +42,7 @@ void Hopping::Render() {
   using opgs16::manager::scene::GetPresentScenePvMatrix;
   m_wrapper->SetUniformValue<glm::mat4>("opProj", GetPresentScenePvMatrix());
   m_wrapper->SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
+
   using opgs16::component::CSprite2DRenderer;
   GetComponent<CSprite2DRenderer>()->RenderSprite();
 }

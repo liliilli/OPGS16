@@ -48,7 +48,7 @@ int32_t RandomInteger() {
 }
 
 float RandomFloat() {
-  return real_distribution(rng_device);
+  return real_distribution(rng_device) * 200.f - 100.f;
 }
 
 int32_t RandomPositiveInteger() {
@@ -67,14 +67,14 @@ int32_t RandomNegativeInteger() {
 }
 
 float RandomPositiveFloat() {
-  const float value = real_distribution(rng_device);
+  const float value = real_distribution(rng_device) * 100.f;
 
   if (value < 0.f) return -value;
   return value;
 }
 
 float RandomNegativeFloat() {
-  const float value = real_distribution(rng_device);
+  const float value = real_distribution(rng_device) * 100.f;
 
   if (value > 0.f) return -value;
   return value;
@@ -89,7 +89,7 @@ int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to) {
 }
 
 float RandomFloatRange(const float from, const float prior_to) {
-  auto result = real_distribution(rng_device);
+  auto result = RandomFloat();
   result = std::fmod(result, prior_to - from);
   result += from;
 
@@ -105,8 +105,8 @@ DVector2 RandomVector2Length(float length) {
     result.y = RandomFloatRange(-1.0f * length, 1.0f * length);
     squared_length = result.GetSquareLength();
   }
-  while (squared_length < std::pow(length * 1.5f, 2) ||
-         squared_length > std::pow(length * 0.5f, 2));
+  while (squared_length > std::pow(length * 1.75f, 2) ||
+         squared_length < std::pow(length * 0.25f, 2));
 
   return result * (length / std::sqrtf(squared_length));
 }

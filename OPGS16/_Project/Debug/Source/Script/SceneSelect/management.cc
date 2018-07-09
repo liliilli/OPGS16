@@ -21,6 +21,7 @@
 
 #include "../../../Include/Scene/Test/object_lifecycle.h"
 #include "../../../Include/Scene/Test/random.h"
+#include "../../../Include/Scene/Test/rendering.h"
 #include "../../../Include/Scene/Test/sound.h"
 
 namespace {
@@ -30,7 +31,7 @@ std::vector<std::string_view> description_container = {
   u8"랜덤 값 기능을\n테스트합니다.",
   u8"BGM, Effect 등의\n사운드를 테스트합니다.",
   u8"키보드, 마우스 등의\n인풋 기능을 테스트합니다.",
-  u8"There is nothing!",
+  u8"묘화 기능을 테스트합니다.",
   u8"There is nothing!",
   u8"There is nothing!",
   u8"There is nothing!"
@@ -57,7 +58,8 @@ void Management::Initiate() {
       object::SelectManager::list_name, "opSystem",
       static_cast<opgs16::element::canvas::CCanvas*>(&GetBindObject()),
       std::vector<std::string>{
-          "Object lifecycle test", "Random feature test",
+          "Object lifecycle test",
+          "Random feature test",
           "Sound test",
           "Input test",
           "Rendering test.",
@@ -72,9 +74,12 @@ void Management::Initiate() {
   list->SetNormalColor(opgs16::DColor::Gray);
   list->SetOrigin(IOriginable::Origin::DOWN_LEFT);
   list->SetWorldPosition({48.f, 96.f, 0.f});
+
   list->SetFunction(0, std::bind(&Management::ExecuteLifecycleTest, this));
   list->SetFunction(1, std::bind(&Management::ExecuteRandomFeatureTest, this));
   list->SetFunction(2, std::bind(&Management::ExecuteSoundTest, this));
+  list->SetFunction(4, std::bind(&Management::ExecuteRenderingTest, this));
+
   m_list = list;
 
   auto copyright = obj.Instantiate<CText>("Copyright", "2018 Jongmin Yun(Neu.)");
@@ -141,6 +146,10 @@ void Management::ExecuteRandomFeatureTest() {
 
 void Management::ExecuteSoundTest() {
   M_REPLACE_SCENE(scene::SoundTestScnee);
+}
+
+void Management::ExecuteRenderingTest() {
+  M_REPLACE_SCENE(scene::RenderingTestScene);
 }
 
 } /// ::debug::script namespace
