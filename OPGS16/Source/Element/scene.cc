@@ -23,7 +23,7 @@ namespace opgs16::element {
 
 void CScene::Update(float delta_time) {
 	for (auto& object : m_object_list) {
-		if (object.second->GetActive())
+		if (object.second && object.second->GetActive())
 			object.second->Update(delta_time);
 	}
 }
