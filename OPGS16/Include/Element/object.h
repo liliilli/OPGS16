@@ -90,7 +90,7 @@ class CObject {
   using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
   using component_list    = std::vector<
       std::pair<component_ptr, component::_internal::EComponentType>>;
-  using name_counter_map  = std::unordered_map<std::string, unsigned>;
+  using name_counter_map  = std::unordered_map<std::string, int32_t>;
 	using object_raw = CObject*;
 	using object_ptr = std::unique_ptr<CObject>;
 	using object_map = std::unordered_map<std::string, object_ptr>;
