@@ -73,6 +73,22 @@ public:
     return 0.2126f * this->r() + 0.7152f * this->g() + 0.0722f * this->b();
   }
 
+  constexpr uint8_t R() const noexcept {
+    return this->r();
+  }
+
+  constexpr uint8_t G() const noexcept {
+    return this->g();
+  }
+
+  constexpr uint8_t B() const noexcept {
+    return this->b();
+  }
+
+  constexpr uint8_t A() const noexcept {
+    return this->a();
+  }
+
   //!
   //! Operator overloading
   //!
