@@ -19,6 +19,7 @@
 #include "../../../Include/Object/Common/description.h"
 #include "../../../Include/Object/SceneSelect/select_manager.h"
 
+#include "../../../Include/Scene/Test/input_scene.h"
 #include "../../../Include/Scene/Test/object_lifecycle.h"
 #include "../../../Include/Scene/Test/random.h"
 #include "../../../Include/Scene/Test/rendering.h"
@@ -78,6 +79,7 @@ void Management::Initiate() {
   list->SetFunction(0, std::bind(&Management::ExecuteLifecycleTest, this));
   list->SetFunction(1, std::bind(&Management::ExecuteRandomFeatureTest, this));
   list->SetFunction(2, std::bind(&Management::ExecuteSoundTest, this));
+  list->SetFunction(3, std::bind(&Management::ExecuteInputTest, this));
   list->SetFunction(4, std::bind(&Management::ExecuteRenderingTest, this));
 
   m_list = list;
@@ -146,6 +148,10 @@ void Management::ExecuteRandomFeatureTest() {
 
 void Management::ExecuteSoundTest() {
   M_REPLACE_SCENE(scene::SoundTestScnee);
+}
+
+void Management::ExecuteInputTest() {
+  M_REPLACE_SCENE(scene::InputTestScene);
 }
 
 void Management::ExecuteRenderingTest() {

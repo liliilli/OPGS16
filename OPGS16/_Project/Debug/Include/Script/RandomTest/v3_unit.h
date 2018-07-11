@@ -26,6 +26,9 @@ private:
   opgs16::element::CObject* m_object = nullptr;
   opgs16::element::CObject* m_camera = nullptr;
 
+  opgs16::element::CObject* m_axis_xy = nullptr;
+  opgs16::element::CObject* m_axis_zy = nullptr;
+
   script::VectorDistribution* m_xy_obj = nullptr;
   script::VectorDistribution* m_zy_obj = nullptr;
 

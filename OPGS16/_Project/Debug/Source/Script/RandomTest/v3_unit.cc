@@ -38,6 +38,22 @@ void Vector3UnitRandomTest::Initiate() {
   subject->SetText("Vector3 Unit random dist test");
   m_subject = subject;
 
+  auto xy = obj.Instantiate<CText>("Xy", "XY Axis");
+  xy->SetFontName("opSystem");
+  xy->SetFontSize(8);
+  xy->SetAlignment(IAlignable::Alignment::CENTER);
+  xy->SetOrigin(IOriginable::Origin::CENTER_CENTER);
+  xy->SetWorldPosition({-64.f, -64.f, 0});
+  m_axis_xy = xy;
+
+  auto zy = obj.Instantiate<CText>("Zy", "ZY Axis");
+  zy->SetFontName("opSystem");
+  zy->SetFontSize(8);
+  zy->SetAlignment(IAlignable::Alignment::CENTER);
+  zy->SetOrigin(IOriginable::Origin::CENTER_CENTER);
+  zy->SetWorldPosition({64.f, -64.f, 0});
+  m_axis_zy = zy;
+
   m_camera = scene->Instantiate<object::PerspectiveCameraObject>("Camera");
 
   m_xy_obj = scene->Instantiate<object::VectorDistTestObject>("ProcObj")->GetComponent<VectorDistribution>();
@@ -67,6 +83,9 @@ void Vector3UnitRandomTest::Destroy() {
 
   auto& obj = GetBindObject();
   obj.DestroyChild(*m_subject);
+  obj.DestroyChild(*m_axis_xy);
+  obj.DestroyChild(*m_axis_zy);
+
   opgs16::manager::object::Destroy(m_xy_obj->GetBindObject());
   opgs16::manager::object::Destroy(m_zy_obj->GetBindObject());
   opgs16::manager::object::Destroy(*m_camera);

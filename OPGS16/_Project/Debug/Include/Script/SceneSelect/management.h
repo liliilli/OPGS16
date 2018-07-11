@@ -35,6 +35,7 @@ private:
   void ExecuteLifecycleTest();
   void ExecuteRandomFeatureTest();
   void ExecuteSoundTest();
+  void ExecuteInputTest();
   void ExecuteRenderingTest();
 
   object::ChoiceList* m_list = nullptr;

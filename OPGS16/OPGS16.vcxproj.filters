@@ -122,6 +122,13 @@
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\vectordist.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v3_unit.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\perspective_camera.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\input_select.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\InputTest\select_lobby.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\Test\input_scene.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_compact.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_ui.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\key.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -309,6 +316,14 @@
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\vectordist.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v3_unit.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\perspective_camera.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\input_select.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\InputTest\select_lobby.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\InputTest\keyboard_compact.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\Test\input_scene.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\keyboard.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\InputTest\keyboard_ui.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\key.h" />
+    <ClInclude Include="_Project\Debug\Include\Internal\key_code.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -420,6 +435,14 @@
     <None Include="Legacy\_resource.meta" />
     <None Include="_Project\Debug\Resource\Builtin\Sprite\System.atlas" />
     <None Include="_Project\Debug\Resource\Animation\char_mov.anim" />
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="ClassDiagram4.cd" />
+    <None Include="ClassDiagram5.cd" />
+    <None Include="ClassDiagram6.cd" />
+    <None Include="ClassDiagram7.cd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

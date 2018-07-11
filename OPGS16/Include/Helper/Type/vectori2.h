@@ -24,6 +24,7 @@
 
 /// ::opgs16::DVector2 (float)
 #include <Helper/Type/vector2.h>
+#include <Helper/Type/vector3.h>
 
 namespace opgs16 {
 
@@ -69,6 +70,10 @@ struct DVectorInt2 {
 
   explicit operator DVector2() const noexcept {
     return DVector2{static_cast<float>(x), static_cast<float>(y)};
+  }
+
+  explicit operator DVector3() const noexcept {
+    return DVector3{static_cast<float>(x), static_cast<float>(y), 0.f};
   }
 
   //!
