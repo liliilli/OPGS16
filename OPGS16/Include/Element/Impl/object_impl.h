@@ -283,8 +283,22 @@ public:
     return m_is_object_activated;
   }
 
-  inline void SetFinalActivate(const phitos::enums::EActivated value) {
-    m_is_finally_activated = value;
+  inline void CalculateActivation() noexcept {
+    if (m_is_any_parent_activated == EActivated::Disabled ||
+        m_is_object_activated == EActivated::Disabled) {
+      m_is_finally_activated = EActivated::Disabled;
+    }
+    else {
+      m_is_finally_activated = EActivated::Activated;
+    }
+  }
+
+  inline void PropagateActivation(const phitos::enums::EActivated value) {
+    m_is_any_parent_activated = value;
+  }
+
+  inline phitos::enums::EActivated IsAnyParentActivated() const noexcept {
+    return m_is_any_parent_activated;
   }
 
   inline phitos::enums::EActivated IsFinallyActivated() const {
@@ -350,9 +364,10 @@ private:
 
   using EActivated = phitos::enums::EActivated;
   /// Object all update activation variable.
-  EActivated m_is_object_activated = EActivated::Activated;
+  EActivated m_is_object_activated      = EActivated::Activated;
+  EActivated m_is_any_parent_activated  = EActivated::Activated;
   /// Any parent all update activation variable.
-  EActivated m_is_finally_activated = EActivated::Activated;
+  EActivated m_is_finally_activated     = EActivated::Activated;
 
   /// Flag for succeeding parent position.
   bool m_position_succeedable{ true };

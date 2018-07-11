@@ -131,6 +131,12 @@
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\key.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard_log.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\key_log.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_object.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_script.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\tree_activation.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_manager.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_manager_script.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_cursor.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -328,6 +334,12 @@
     <ClInclude Include="_Project\Debug\Include\Internal\key_code.h" />
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\keyboard_log.h" />
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\key_log.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_object.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_script.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\tree_activation.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_manager.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_manager_script.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_cursor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -439,14 +451,6 @@
     <None Include="Legacy\_resource.meta" />
     <None Include="_Project\Debug\Resource\Builtin\Sprite\System.atlas" />
     <None Include="_Project\Debug\Resource\Animation\char_mov.anim" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
-    <None Include="ClassDiagram3.cd" />
-    <None Include="ClassDiagram4.cd" />
-    <None Include="ClassDiagram5.cd" />
-    <None Include="ClassDiagram6.cd" />
-    <None Include="ClassDiagram7.cd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\_system.png" />

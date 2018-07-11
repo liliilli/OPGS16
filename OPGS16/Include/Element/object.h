@@ -533,7 +533,17 @@ private:
   ///
   /// @brief
   ///
-  void SetFinalActivated(const phitos::enums::EActivated value);
+  void PropagateActivation(phitos::enums::EActivated value) noexcept;
+
+  ///
+  /// @brief
+  ///
+  void CalculateActivation();
+
+  ///
+  /// @brief
+  ///
+  void Propagate() ;
 
 protected:
   /// Local update method for derived object.

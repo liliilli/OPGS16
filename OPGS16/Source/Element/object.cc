@@ -257,26 +257,45 @@ bool CObject::DestroyChild(const element::CObject& child_object) {
 
 void CObject::SetActive(const bool value) {
 	m_data->SetActive(value);
+  m_data->CalculateActivation();
+  this->Propagate();
+}
 
+void CObject::Propagate() {
   using phitos::enums::EActivated;
-  SetFinalActivated(value ? EActivated::Activated : EActivated::Disabled);
+  auto& child_list = GetChildList();
+  if (m_data->IsActive() == EActivated::Disabled ||
+      m_data->IsAnyParentActivated() == EActivated::Disabled) {
+    // Propagate activation.
+    for (auto& [name, ptr] : child_list) {
+      ptr->PropagateActivation(EActivated::Disabled);
+      ptr->CalculateActivation();
+      ptr->Propagate();
+    }
+  }
+  else {
+    for (auto& [name, ptr] : child_list) {
+      ptr->PropagateActivation(EActivated::Activated);
+      ptr->CalculateActivation();
+      ptr->Propagate();
+    }
+  }
 }
 
 phitos::enums::EActivated CObject::IsActive() const {
   return m_data->IsActive();
 }
 
-void CObject::SetFinalActivated(const phitos::enums::EActivated value) {
-  m_data->SetFinalActivate(value);
-
-  auto& child_list = GetChildList();
-  for (auto& [name, ptr] : child_list) {
-    if (ptr->IsActive() != value) ptr->SetFinalActivated(value);
-  }
-}
-
 phitos::enums::EActivated CObject::GetFinalActivated() const {
   return m_data->IsFinallyActivated();
+}
+
+void CObject::PropagateActivation(phitos::enums::EActivated value) noexcept {
+  m_data->PropagateActivation(value);
+}
+
+void CObject::CalculateActivation() {
+  m_data->CalculateActivation();
 }
 
 void CObject::SetTag(const std::string& tag_name) {
