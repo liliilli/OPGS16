@@ -129,6 +129,8 @@
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_ui.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\key.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard_log.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\key_log.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -324,6 +326,8 @@
     <ClInclude Include="_Project\Debug\Include\Script\InputTest\keyboard_ui.h" />
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\key.h" />
     <ClInclude Include="_Project\Debug\Include\Internal\key_code.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\keyboard_log.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\key_log.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

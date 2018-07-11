@@ -258,6 +258,8 @@
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\input_select.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\key.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\keyboard_log.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\InputTest\key_log.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_compact.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\lifecycle_manager.cc" />
@@ -447,6 +449,8 @@
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\input_select.h" />
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\key.h" />
     <ClInclude Include="_Project\Debug\Include\Object\InputTest\keyboard.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\keyboard_log.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\InputTest\key_log.h" />
     <ClInclude Include="_Project\Debug\Include\Object\LifecycleTest\hopping.h" />
     <ClInclude Include="_Project\Debug\Include\Object\LifecycleTest\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vectordist.h" />

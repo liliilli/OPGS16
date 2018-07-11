@@ -15,6 +15,10 @@
       "AnimChar": {
         "path": "Resource/Sprite/character.png",
         "atlas": "Resource/Sprite/character.atlas"
+      },
+      "Input": {
+        "path": "Resource/Sprite/input.png",
+        "atlas": "Resource/Sprite/input.atlas"
       }
     }
   },
