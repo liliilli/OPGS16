@@ -28,6 +28,8 @@
 #include <string>
 
 #include <glm/glm.hpp>
+#include <Phitos/Enums/activated.h>
+
 /// ::opgs16::element::_internal::EDirection
 #include <Element/Internal/direction_type.h>
 /// ::opgs16::DVector3
@@ -274,12 +276,19 @@ public:
   /// @param[in] value Active option value.
   ///
   inline void SetActive(const bool value) {
-    m_active = value;
+    m_is_object_activated = value ? EActivated::Activated : EActivated::Disabled;
   }
 
-  /*! Get active value. */
-  inline bool GetActive() const {
-    return m_active;
+  inline phitos::enums::EActivated IsActive() const {
+    return m_is_object_activated;
+  }
+
+  inline void SetFinalActivate(const phitos::enums::EActivated value) {
+    m_is_finally_activated = value;
+  }
+
+  inline phitos::enums::EActivated IsFinallyActivated() const {
+    return m_is_finally_activated;
   }
 
   ///
@@ -339,8 +348,12 @@ private:
   /// Final model matrix also reflected by parent's and world rot.
   mutable glm::mat4 m_final_model{};
 
-  /// Object update activation variable.
-  bool m_active{ true };
+  using EActivated = phitos::enums::EActivated;
+  /// Object all update activation variable.
+  EActivated m_is_object_activated = EActivated::Activated;
+  /// Any parent all update activation variable.
+  EActivated m_is_finally_activated = EActivated::Activated;
+
   /// Flag for succeeding parent position.
   bool m_position_succeedable{ true };
   /// Flag for succeeding parent rotation information.

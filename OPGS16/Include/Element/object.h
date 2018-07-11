@@ -61,6 +61,7 @@
 #include <opgs16fwd.h>
 /// ::opgs16::DVector3
 #include <Helper/Type/vector3.h>
+#include "Phitos/Enums/activated.h"
 
 namespace opgs16::element {
 ///
@@ -224,11 +225,17 @@ public:
   ///
   /// @brief Set active option of object.
   /// If m_active is false, this object cannot update until m_active return to true.
+  ///
   /// @param[in] value Active option value.
   ///
   void SetActive(const bool value);
 
-  bool GetActive() const;
+  phitos::enums::EActivated IsActive() const;
+
+  ///
+  /// @brief
+  ///
+  phitos::enums::EActivated GetFinalActivated() const;
 
   ///
   /// @brief
@@ -522,6 +529,11 @@ private:
 
   /// Propagate parent rotation recursively.
   void PropagateParentRotation();
+
+  ///
+  /// @brief
+  ///
+  void SetFinalActivated(const phitos::enums::EActivated value);
 
 protected:
   /// Local update method for derived object.

@@ -22,8 +22,11 @@
 namespace opgs16::element {
 
 void CScene::Update(float delta_time) {
+  using phitos::enums::EActivated;
+
 	for (auto& object : m_object_list) {
-		if (object.second && object.second->GetActive())
+		if (object.second &&
+        object.second->GetFinalActivated() == EActivated::Activated)
 			object.second->Update(delta_time);
 	}
 }

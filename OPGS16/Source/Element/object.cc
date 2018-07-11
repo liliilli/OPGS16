@@ -37,10 +37,13 @@ namespace {
 using _internal::CObjectImpl;
 } /*! unnamed namespace */
 
-CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } { }
+CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } {
+  SetActive(true);
+}
 
 void CObject::Update(float delta_time) {
-  if (m_data && GetActive()) {
+  using phitos::enums::EActivated;
+  if (m_data && GetFinalActivated() == EActivated::Activated) {
     LocalUpdate();
 
     for (auto&[component, type] : m_components) {
@@ -68,8 +71,8 @@ void CObject::Update(float delta_time) {
     }
 
     for (auto& child : m_children) {
-      // If child.second is not emtpy and activated.
-      if (child.second && child.second->GetActive())
+      if (child.second &&
+          child.second->GetFinalActivated() == EActivated::Activated)
         child.second->Update(delta_time);
     }
   }
@@ -110,8 +113,11 @@ void CObject::SetParentPosition(const DVector3& parent_position) {
 void CObject::PropagateParentPosition() {
   for (auto& child : m_children) {
     auto& child_ptr = child.second;
-    /*! If object is not empty and activated and permits succeeding positioning. */
-    if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingPositionFlag())
+    /// If object is not empty and activated and permits succeeding positioning.
+    using phitos::enums::EActivated;
+    if (child_ptr &&
+        child_ptr->GetFinalActivated() == EActivated::Activated &&
+        child_ptr->GetSucceedingPositionFlag())
       child_ptr->SetParentPosition(GetParentPosition());
   }
 }
@@ -150,14 +156,17 @@ void CObject::SetRotationWorldAngle(_internal::EDirection direction, const float
 
 
 void CObject::PropagateParentRotation() {
-    for (auto& child : m_children) {
-        auto& child_ptr = child.second;
-        /*! If object is not empty and activated and permits succeeding positioning. */
-        if (child_ptr && child_ptr->GetActive() && child_ptr->GetSucceedingRotationFlag()) {
-            for (const auto& direction : _internal::k_direction_list)
-                child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
-        }
+  for (auto& child : m_children) {
+    auto& child_ptr = child.second;
+    /// If object is not empty and activated and permits succeeding positioning.
+    using phitos::enums::EActivated;
+    if (child_ptr &&
+      child_ptr->GetFinalActivated() == EActivated::Activated &&
+      child_ptr->GetSucceedingRotationFlag()) {
+      for (const auto& direction : _internal::k_direction_list)
+        child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
     }
+  }
 }
 
 // Scaling functions
@@ -246,20 +255,36 @@ bool CObject::DestroyChild(const element::CObject& child_object) {
   return true;
 }
 
-bool CObject::GetActive() const {
-    return m_data->GetActive();
-}
-
 void CObject::SetActive(const bool value) {
 	m_data->SetActive(value);
+
+  using phitos::enums::EActivated;
+  SetFinalActivated(value ? EActivated::Activated : EActivated::Disabled);
+}
+
+phitos::enums::EActivated CObject::IsActive() const {
+  return m_data->IsActive();
+}
+
+void CObject::SetFinalActivated(const phitos::enums::EActivated value) {
+  m_data->SetFinalActivate(value);
+
+  auto& child_list = GetChildList();
+  for (auto& [name, ptr] : child_list) {
+    if (ptr->IsActive() != value) ptr->SetFinalActivated(value);
+  }
+}
+
+phitos::enums::EActivated CObject::GetFinalActivated() const {
+  return m_data->IsFinallyActivated();
 }
 
 void CObject::SetTag(const std::string& tag_name) {
-    m_data->SetTag(tag_name);
+  m_data->SetTag(tag_name);
 }
 
 void CObject::SetTag(const unsigned tag_index) {
-    m_data->SetTag(tag_index);
+  m_data->SetTag(tag_index);
 }
 
 unsigned CObject::GetTagIndexOf() const {
