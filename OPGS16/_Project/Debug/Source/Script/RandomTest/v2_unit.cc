@@ -18,7 +18,7 @@
 
 #include <Phitos/Dbg/assert.h>
 
-#include "../../../Include/Object/Common/perspective_camera.h"
+#include "../../../Include/Object/Common/orthogonal_camera.h"
 #include "../../../Include/Object/Common/subject.h"
 #include "../../../Include/Object/RandomTest/vectordist.h"
 #include "../../../Include/Script/RandomTest/manager.h"
@@ -38,7 +38,7 @@ void Vector2UnitRandomTest::Initiate() {
   subject->SetText("Vector2 Unit random dist test");
   m_subject = subject;
 
-  m_camera = scene->Instantiate<object::PerspectiveCameraObject>("Camera");
+  m_camera = scene->Instantiate<object::OrthogonalCameraObject>("Camera");
 
   m_dist_obj = scene->
       Instantiate<object::VectorDistTestObject>("ProcedureObj")->

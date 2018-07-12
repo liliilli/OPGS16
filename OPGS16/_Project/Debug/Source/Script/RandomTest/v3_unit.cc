@@ -18,7 +18,7 @@
 
 #include <Phitos/Dbg/assert.h>
 
-#include "../../../Include/Object/Common/perspective_camera.h"
+#include "../../../Include/Object/Common/orthogonal_camera.h"
 #include "../../../Include/Object/Common/subject.h"
 #include "../../../Include/Object/RandomTest/vectordist.h"
 #include "../../../Include/Script/RandomTest/manager.h"
@@ -54,7 +54,7 @@ void Vector3UnitRandomTest::Initiate() {
   zy->SetWorldPosition({64.f, -64.f, 0});
   m_axis_zy = zy;
 
-  m_camera = scene->Instantiate<object::PerspectiveCameraObject>("Camera");
+  m_camera = scene->Instantiate<object::OrthogonalCameraObject>("Camera");
 
   m_xy_obj = scene->Instantiate<object::VectorDistTestObject>("ProcObj")->GetComponent<VectorDistribution>();
   m_xy_obj->GetBindObject().SetLocalPosition({-64.f, 0, 0});
