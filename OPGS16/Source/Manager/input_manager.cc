@@ -160,6 +160,7 @@ EInitiated m_initiated = EInitiated::NotInitiated;
 ///
 namespace {
 using opgs16::manager::_internal::BindingKeyInfo;
+using opgs16::manager::input::EKeyPrimaryState;
 using namespace std::string_view_literals;
 using TKeyMap = std::unordered_map<std::string, BindingKeyInfo>;
 
@@ -167,6 +168,7 @@ using TKeyMap = std::unordered_map<std::string, BindingKeyInfo>;
 GLFWwindow* m_window;
 GLFWcursor* m_cursor = nullptr;
 
+EKeyPrimaryState m_primary_keys[349];
 TKeyMap m_key_inputs;
 
 } /// unnamed namespace
@@ -192,9 +194,21 @@ EKeyExist IsKeyExist(const std::string& key) {
 /// @param[in] action Key pressed, released, keeping pushed states.
 /// @param[in] mod Not be used now.
 ///
-void __InputKeyCallback(GLFWwindow* window,
-                        int key, int scancode, int action, int mod) {
+static void __InputKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod) {
   PUSH_LOG_DEBUG_EXT("Key input : {0}, {1}", key, action);
+
+  switch (action) {
+  case GLFW_PRESS:
+    m_primary_keys[key] = EKeyPrimaryState::Pressed;
+    break;
+  case GLFW_RELEASE:
+    m_primary_keys[key] = EKeyPrimaryState::Released;
+    break;
+  case GLFW_REPEAT:
+    m_primary_keys[key] = EKeyPrimaryState::Repeated;
+    break;
+  default: break;
+  }
 }
 
 ///
@@ -208,7 +222,7 @@ void __InputKeyCallback(GLFWwindow* window,
 /// @param[in] xpos x coordinate position value.
 /// @param[in] ypos y coordinate position value.
 ///
-void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
+static void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
   const auto& setting = opgs16::entry::Setting();
   const auto scale_value = setting.ScaleValueIntegerOf();
 
@@ -231,8 +245,8 @@ void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
 /// @param[in] action Mouse button action.
 /// @param[in] modes Mouse modifier bits.
 ///
-void __MouseInputCallback(GLFWwindow* window,
-                          int button, int action, int modes) {
+static void __MouseInputCallback(GLFWwindow* window,
+    int button, int action, int modes) {
   PUSH_LOG_DEBUG_EXT(
       "Mouse input update [Button : {0}], [Action : {1}]", button, action);
 }
@@ -294,16 +308,17 @@ bool IsKeyPressed(const std::string& key) {
   switch (key_info.key_status) {
   case BindingKeyInfo::KeyInputStatus::NEG_PRESSED:
   case BindingKeyInfo::KeyInputStatus::POS_PRESSED:
-    if (!key_info.stick_key)
-      return true;
+    if (key_info.send_signal)
+      return false;
 
-    // Key has stick key property.
-    if (!key_info.send_signal) {
+    if (!key_info.stick_key) {
       key_info.send_signal = true;
       return true;
     }
-    else
-      return false;
+    [[fallthrough]];
+  case BindingKeyInfo::KeyInputStatus::NegativeRepeated:
+  case BindingKeyInfo::KeyInputStatus::PositiveRepeated:
+    return true;
   default:
     return false;
   }
@@ -327,8 +342,7 @@ bool IsKeyReleased(const std::string& key) {
 }
 
 void Update() {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
-      debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
 
 	for (auto& key_info : m_key_inputs) {
 		auto& key = key_info.second;
@@ -337,45 +351,85 @@ void Update() {
 		using Status = BindingKeyInfo::KeyInputStatus;
 
 		switch (key.key_status) {
+		case Status::RELEASED:
+			ProceedGravity(key);
+      [[fallthrough]];
 		case Status::NEUTRAL:
 			if (key.neg != GLFW_KEY_UNKNOWN &&
-          glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
+          m_primary_keys[key.neg] == EKeyPrimaryState::Pressed) {
 				key.value = -1.0f;
 				key.key_status = Status::NEG_PRESSED;
 			}
 			else if (key.pos != GLFW_KEY_UNKNOWN &&
-               glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
+               m_primary_keys[key.pos] == EKeyPrimaryState::Pressed) {
 				key.value = 1.0f;
 				key.key_status = Status::POS_PRESSED;
 			}
 			break;
 		case Status::NEG_PRESSED:
 			if (key.pos != GLFW_KEY_UNKNOWN &&
-          glfwGetKey(m_window, key.pos) == GLFW_PRESS) {
+          m_primary_keys[key.pos] == EKeyPrimaryState::Pressed) {
 				key.value = 1.0f;
 				key.key_status = Status::POS_PRESSED;
 			}
-			else if (key.neg != GLFW_KEY_UNKNOWN &&
-               glfwGetKey(m_window, key.neg) == GLFW_RELEASE) {
-				key.key_status = Status::RELEASED;
-				ProceedGravity(key);
-			}
+			else if (key.neg != GLFW_KEY_UNKNOWN) {
+        const auto key_md = m_primary_keys[key.neg];
+        if (key.stick_key && key_md == EKeyPrimaryState::Repeated) {
+          key.value = -1.0f;
+          key.key_status = Status::NegativeRepeated;
+        }
+        else if (key_md == EKeyPrimaryState::Released) {
+          key.key_status = Status::RELEASED;
+          ProceedGravity(key);
+        }
+      }
 			break;
 		case Status::POS_PRESSED:
 			if (key.neg != GLFW_KEY_UNKNOWN &&
-          glfwGetKey(m_window, key.neg) == GLFW_PRESS) {
+          m_primary_keys[key.neg] == EKeyPrimaryState::Pressed) {
 				key.value = -1.0f;
 				key.key_status = Status::NEG_PRESSED;
 			}
-			else if (key.pos != GLFW_KEY_UNKNOWN &&
-               glfwGetKey(m_window, key.pos) == GLFW_RELEASE) {
-				key.key_status = Status::RELEASED;
-				ProceedGravity(key);
+			else if (key.pos != GLFW_KEY_UNKNOWN) {
+        const auto key_md = m_primary_keys[key.pos];
+        if (key.stick_key && key_md == EKeyPrimaryState::Repeated) {
+          key.value = 1.0f;
+          key.key_status = Status::PositiveRepeated;
+        }
+        else if (key_md == EKeyPrimaryState::Released) {
+          key.key_status = Status::RELEASED;
+          ProceedGravity(key);
+        }
+      }
+			break;
+    case Status::PositiveRepeated:
+      if (key.neg != GLFW_KEY_UNKNOWN &&
+          m_primary_keys[key.neg] == EKeyPrimaryState::Pressed) {
+				key.value = -1.0f;
+				key.key_status = Status::NEG_PRESSED;
 			}
-			break;
-		case Status::RELEASED:
-			ProceedGravity(key);
-			break;
+			else if (key.pos != GLFW_KEY_UNKNOWN) {
+        const auto key_md = m_primary_keys[key.pos];
+        if (key_md == EKeyPrimaryState::Released) {
+          key.key_status = Status::RELEASED;
+          ProceedGravity(key);
+        }
+      }
+      break;
+    case Status::NegativeRepeated:
+      if (key.pos != GLFW_KEY_UNKNOWN &&
+          m_primary_keys[key.pos] == EKeyPrimaryState::Pressed) {
+				key.value = 1.0f;
+				key.key_status = Status::POS_PRESSED;
+			}
+			else if (key.neg != GLFW_KEY_UNKNOWN) {
+        const auto key_md = m_primary_keys[key.neg];
+        if (key_md == EKeyPrimaryState::Released) {
+          key.key_status = Status::RELEASED;
+          ProceedGravity(key);
+        }
+      }
+      break;
 		}
 	}
 }
@@ -568,7 +622,7 @@ phitos::enums::ESucceed KeyboardBindKey(const nlohmann::basic_json<>::const_iter
 
   const auto& stick_it_value = value.find("stick");
   if (stick_it_value->is_boolean()) {
-    PUSH_LOG_WARN("Stick key feature is not implemented yet.");
+    key_information.stick_key = stick_it_value.value();
   }
 
   m_key_inputs.try_emplace(key, std::move(key_information));

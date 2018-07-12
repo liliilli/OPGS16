@@ -456,8 +456,6 @@
     <None Include="Legacy\render_layer.meta" />
     <None Include="Legacy\tag.meta" />
     <None Include="Legacy\collision.meta" />
-    <None Include="_Project\_Template\Setting\input.meta" />
-    <None Include="_Project\_Template\Setting\setting.meta" />
     <None Include="Legacy\_resource.meta" />
     <None Include="_Project\Debug\Resource\Builtin\Sprite\System.atlas" />
     <None Include="_Project\Debug\Resource\Animation\char_mov.anim" />

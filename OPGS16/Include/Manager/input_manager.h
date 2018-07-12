@@ -41,6 +41,16 @@
 namespace opgs16::manager::input {
 
 ///
+/// @enum EKeyPrimaryState
+///
+///
+enum class EKeyPrimaryState : int8_t {
+  Released  = 0,
+  Pressed   = 1,
+  Repeated  = 2
+};
+
+///
 /// @brief
 /// Let load and initiate input setting to be used in application.
 /// This function must be called only once out of entire application.

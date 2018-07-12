@@ -66,6 +66,8 @@ struct BindingKeyInfo {
         NEG_PRESSED = 2,	// If negative key is pressed, key_status will sustain PRESSED.
         RELEASED = 3,	// Changes to RELEASED when released. constraints of Update.
         NEUTRAL = 4,	// If released, and within range of dead_zone, NEURTAL.
+        PositiveRepeated = 5,
+        NegativeRepeated = 6
     };
 
     enum class KeyType {
