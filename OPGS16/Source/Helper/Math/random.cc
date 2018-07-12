@@ -23,6 +23,7 @@
 
 #include <Helper/Type/vector2.h>
 #include <Helper/Type/vector3.h>
+#include <Phitos/Dbg/assert.h>
 
 //!
 //! Data
@@ -33,8 +34,12 @@ namespace {
 std::random_device rd;
 std::mt19937 rng_device(rd());
 
-std::uniform_int_distribution<int> int_distribution;
-std::uniform_real_distribution<float> real_distribution;
+std::uniform_int_distribution<int>    int_distribution;
+std::uniform_real_distribution<float> real_distribution{
+  -1'000'000'000.f,
+  1'000'000'000.f
+};
+
 }
 
 //!
@@ -48,7 +53,7 @@ int32_t RandomInteger() {
 }
 
 float RandomFloat() {
-  return real_distribution(rng_device) * 200.f - 100.f;
+  return real_distribution(rng_device);
 }
 
 int32_t RandomPositiveInteger() {
@@ -67,20 +72,22 @@ int32_t RandomNegativeInteger() {
 }
 
 float RandomPositiveFloat() {
-  const float value = real_distribution(rng_device) * 100.f;
+  const float value = real_distribution(rng_device);
 
   if (value < 0.f) return -value;
   return value;
 }
 
 float RandomNegativeFloat() {
-  const float value = real_distribution(rng_device) * 100.f;
+  const float value = real_distribution(rng_device);
 
   if (value > 0.f) return -value;
   return value;
 }
 
 int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to) {
+  PHITOS_ASSERT(from <= inclusive_to, "");
+
   auto result = int_distribution(rng_device);
   result %= (inclusive_to - from + 1);
   result += from;
@@ -89,11 +96,10 @@ int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to) {
 }
 
 float RandomFloatRange(const float from, const float prior_to) {
-  auto result = RandomFloat();
-  result = std::fmod(result, prior_to - from);
-  result += from;
+  PHITOS_ASSERT(from < prior_to, "");
 
-  return result;
+  const std::uniform_real_distribution<float> rng{from, prior_to};
+  return rng(rng_device);
 }
 
 DVector2 RandomVector2Length(float length) {
@@ -129,15 +135,21 @@ DVector3 RandomVector3Length(float length) {
 
 DVector2 RandomVector2Range(ERandomPolicy policy, float from, float prior_to) {
   switch (policy) {
-  case ERandomPolicy::Uniform: return {}; break;
-  case ERandomPolicy::Discrete: return {}; break;
+  case ERandomPolicy::Uniform:
+    return RandomVector2Length(1.f) * RandomFloatRange(from, prior_to);
+  case ERandomPolicy::Discrete:
+    return {};
+  default: return {};
   }
 }
 
 DVector3 RandomVector3Range(ERandomPolicy policy, float from, float prior_to) {
   switch (policy) {
-  case ERandomPolicy::Uniform: return {}; break;
-  case ERandomPolicy::Discrete: return {}; break;
+  case ERandomPolicy::Uniform:
+    return RandomVector3Length(1.f) * RandomFloatRange(from, prior_to);
+  case ERandomPolicy::Discrete:
+    return {};
+  default: return {};
   }
 }
 
