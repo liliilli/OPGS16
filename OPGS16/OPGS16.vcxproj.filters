@@ -142,6 +142,10 @@
     <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\object_test_select.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_canvas_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\Common\orthogonal_camera.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v2_range.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\vector_dist_range.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\RandomTest\vector_range_dist_obj.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v3_range.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -350,6 +354,10 @@
     <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\object_test_select.h" />
     <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_canvas_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\orthogonal_camera.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v2_range.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\vector_dist_range.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vector_range_dist_obj.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\RandomTest\v3_range.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

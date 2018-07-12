@@ -28,8 +28,10 @@
 #include "../../../Include/Script/RandomTest/positive_random.h"
 #include "../../../Include/Script/RandomTest/v2_unit.h"
 #include "../../../Include/Script/RandomTest/v3_unit.h"
+#include "../../../Include/Script/RandomTest/v2_range.h"
 
 #include "../../../Include/Internal/keyword.h"
+#include "../../../Include/Script/RandomTest/v3_range.h"
 
 namespace {
 
@@ -102,6 +104,8 @@ void RandomTestManager::InitializeLobbyA() {
   m_list->SetFunction(2, std::bind(&RandomTestManager::ExecuteLobbyAToPositiveRandomTestA, this));
   m_list->SetFunction(4, std::bind(&RandomTestManager::ExecuteVector2Test, this));
   m_list->SetFunction(5, std::bind(&RandomTestManager::ExecuteVector3Test, this));
+  m_list->SetFunction(6, std::bind(&RandomTestManager::ExecuteVector2RangeTest, this));
+  m_list->SetFunction(7, std::bind(&RandomTestManager::ExecuteVector3RangeTest, this));
 
   m_description = m_obj->Instantiate<object::Description>("Desc");
   m_description->SetText(command_list[m_list->GetCursorIndex()].second);
@@ -137,7 +141,7 @@ void RandomTestManager::InputLobbyA() {
     m_is_pressed = true;
   }
 
-  if (IsKeyPressed(keyword::key_axis_horz)) {
+  if (IsKeyPressed(keyword::key_enter)) {
     m_list->SelectCommand();
   }
 }
@@ -162,6 +166,9 @@ void RandomTestManager::InitializeVector3UnitTest() {
   m_obj->AddComponent<script::Vector3UnitRandomTest>(*m_obj);
 }
 
+void RandomTestManager::InitializeVector2RangeTest() {
+  m_obj->AddComponent<script::Vector2RangeTest>(*m_obj);
+}
 
 
 void RandomTestManager::CleanLobbyA() {
@@ -210,7 +217,11 @@ void RandomTestManager::CleanVector3UnitTest() {
   }
 }
 
-
+void RandomTestManager::CleanVector2RangeTest() {
+ if (!m_obj->RemoveComponent<script::Vector2RangeTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+}
 
 void RandomTestManager::ExecuteFloatTest() noexcept {
   PUSH_LOG_INFO("ExecuteFloatTest()");
@@ -284,7 +295,23 @@ void RandomTestManager::ExecuteVector3Test() {
   InitializeVector3UnitTest();
 }
 
+void RandomTestManager::ExecuteVector2RangeTest() {
+  PUSH_LOG_INFO("ExecuteVector2RangeTest()");
 
+  CleanLobbyA();
+  m_big_state = EBigState::Vector2Range;
+  m_detailed_state = EDetailedState::A;
+  InitializeVector2RangeTest();
+}
+
+void RandomTestManager::ExecuteVector3RangeTest() {
+  PUSH_LOG_INFO("ExecuteVector3RangeTest()");
+
+  CleanLobbyA();
+  m_big_state = EBigState::Vector3Range;
+  m_detailed_state = EDetailedState::A;
+  m_obj->AddComponent<script::Vector3RangeTest>(*m_obj);;
+}
 
 void RandomTestManager::ReturnFromVector2Test() {
   PUSH_LOG_INFO("ReturnFromVector2Test()");
@@ -304,6 +331,24 @@ void RandomTestManager::ReturnFromVector3Test() {
   InitializeLobbyA();
 }
 
+void RandomTestManager::ReturnFromVector2RangeTest() {
+  PUSH_LOG_INFO("ReturnFromVector2RangeTest()");
 
+  CleanVector2RangeTest();
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
+
+void RandomTestManager::ReturnFromVector3RangeTest() {
+  PUSH_LOG_INFO("ReturnFromVector3RangeTest()");
+
+  if (!m_obj->RemoveComponent<script::Vector3RangeTest>()) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+  m_big_state = EBigState::Lobby;
+  m_detailed_state = EDetailedState::A;
+  InitializeLobbyA();
+}
 
 } /// ::debug::script namespace
