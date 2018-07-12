@@ -85,6 +85,21 @@
     {
       "index": 15,
       "offset_x": 16, "offset_y": 160, "width": 16, "height": 16
+    },
+    "Cursor":
+    {
+      "index": 16,
+      "offset_x": 144, "offset_y": 16, "width": 16, "height": 16
+    },
+    "Activated":
+    {
+      "index": 17,
+      "offset_x": 128, "offset_y": 0, "width": 16, "height": 16
+    },
+    "Deactivated":
+    {
+      "index": 18,
+      "offset_x": 128, "offset_y": 16, "width": 16, "height": 16
     }
   }
 }

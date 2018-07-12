@@ -19,8 +19,8 @@
 #include "../../../Include/Object/Common/description.h"
 #include "../../../Include/Object/SceneSelect/select_manager.h"
 
+#include "../../../Include/Scene/ObjectTest/object_test_select.h"
 #include "../../../Include/Scene/Test/input_scene.h"
-#include "../../../Include/Scene/Test/object_lifecycle.h"
 #include "../../../Include/Scene/Test/random.h"
 #include "../../../Include/Scene/Test/rendering.h"
 #include "../../../Include/Scene/Test/sound.h"
@@ -28,7 +28,7 @@
 namespace {
 
 std::vector<std::string_view> description_container = {
-  u8"이 테스트는\n오브젝트 생명주기를\n테스트합니다.",
+  u8"오브젝트 기능들을\n테스트합니다.",
   u8"랜덤 값 기능을\n테스트합니다.",
   u8"BGM, Effect 등의\n사운드를 테스트합니다.",
   u8"키보드, 마우스 등의\n인풋 기능을 테스트합니다.",
@@ -139,7 +139,7 @@ void Management::Input() {
 }
 
 void Management::ExecuteLifecycleTest() {
-  M_REPLACE_SCENE(scene::ObjectLifeCycle);
+  M_REPLACE_SCENE(scene::ObjectTestSelectScene);
 }
 
 void Management::ExecuteRandomFeatureTest() {

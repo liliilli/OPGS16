@@ -90,8 +90,8 @@ void __B_SCR::SetLogoImage() {
     std::default_random_engine rng;
     rng.seed(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
 
-    logo = GetObject().Instantiate<element::canvas::CImage>("Logo", "System",
-                                                            static_cast<element::canvas::CCanvas*>(&GetObject()));
+    logo = GetObject().Instantiate<element::canvas::CImage>(
+        "Logo", "opSystem", static_cast<element::canvas::CCanvas*>(&GetObject()));
 
     component::CSprite2DRenderer* renderer = logo->GetComponent<component::CSprite2DRenderer>();
     renderer->SetTextureIndex(4);

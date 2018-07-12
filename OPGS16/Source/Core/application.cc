@@ -294,7 +294,7 @@ void Initiate() {
   // SHOW BOOT LOGO
   M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
   M_PUSH_SCENE(builtin::sample::__BOOT, true);
-  ReplacePresentStatus(GameStatus::PLAYING);
+  ReplacePresentStatus(_internal::EGameStatus::PLAYING);
 #endif
 #endif
 #else

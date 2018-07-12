@@ -137,6 +137,10 @@
     <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_manager_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_cursor.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\obj_test_mgn.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\obj_test_mgn_script.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\object_test_select.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_canvas_script.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -340,6 +344,10 @@
     <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_manager_script.h" />
     <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_cursor.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\obj_test_mgn.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\obj_test_mgn_script.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\object_test_select.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_canvas_script.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

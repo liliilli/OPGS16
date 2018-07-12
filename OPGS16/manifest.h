@@ -59,7 +59,7 @@ L"TEST GAME"
 /// If you want to show the logo, set this true or false.
 ///
 #define _SHOW_BOOT_SCREEN \
-false
+true
 
 #endif
 

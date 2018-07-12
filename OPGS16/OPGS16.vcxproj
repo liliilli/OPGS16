@@ -263,6 +263,8 @@
     <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_cursor.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_manager.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\node_object.cc" />
+    <ClCompile Include="_Project\Debug\Source\Object\ObjectTest\obj_test_mgn.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\object_test_select.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\tree_activation.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_compact.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
@@ -283,8 +285,10 @@
     <ClCompile Include="_Project\Debug\Source\Scene\Test\sound.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_ui.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\select_lobby.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_canvas_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_manager_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_script.cc" />
+    <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\obj_test_mgn_script.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v2_unit.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RandomTest\v3_unit.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\RenderingTest\procedural2d.cc" />
@@ -462,10 +466,12 @@
     <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_cursor.h" />
     <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\node_object.h" />
+    <ClInclude Include="_Project\Debug\Include\Object\ObjectTest\obj_test_mgn.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\vectordist.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\manager_canvas.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RenderingTest\procedural2d_test.h" />
     <ClInclude Include="_Project\Debug\Include\Object\SoundTest\sound_select.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\object_test_select.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\tree_activation.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\input_scene.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\rendering.h" />
@@ -475,6 +481,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\InputTest\select_lobby.h" />
     <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_manager_script.h" />
     <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_script.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\obj_test_mgn_script.h" />
     <ClInclude Include="_Project\Debug\Include\Script\RandomTest\float.h" />
     <ClInclude Include="_Project\Debug\Include\Object\RandomTest\manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\choice_list.h" />
@@ -500,6 +507,7 @@
     <ClInclude Include="_Project\Debug\Include\Script\LifecycleTest\lifecycle_manager.h" />
     <ClInclude Include="_Project\Debug\Include\Object\rotatable_obstacle.h" />
     <ClInclude Include="_Project\Debug\Include\Object\Common\simplelog.h" />
+    <ClInclude Include="_Project\Debug\Include\Script\ObjectTest\node_canvas_script.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
