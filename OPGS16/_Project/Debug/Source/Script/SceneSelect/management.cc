@@ -133,7 +133,7 @@ void Management::Input() {
     m_is_pressed = true;
   }
 
-  if (IsKeyPressed("Horizontal")) {
+  if (IsKeyPressed("Enter")) {
     m_list->SelectCommand();
   }
 }

@@ -1,81 +1,56 @@
 {
-  "meta":
-  {
-
-  },
+  "meta": { "builtin": true },
   "font":
   {
-    "meta":
-    {
-      "default_font": "please_input_font_name",
-      "default_size": 16
-    },
-    "list":
-    {
-      "font_name":
-      {
-        "path": "please_input_font_path"
-      }
+    "meta": { },
+    "list": {
+      "opSystem": { "path": "Resource/Builtin/Font/SolomonP.ttf" }
     }
   },
   "texture":
   {
-    "meta":
-    {
-
-    },
+    "meta": { },
     "list":
     {
-      "texture2d_name":
-      {
-        "path": "please_input_texture2d_path",
-        "atlas": "please_input_texture2d_atlas_path",
-        "is_atlas": false
+      "opSystem": {
+        "path": "Resource/Builtin/Sprite/System.png",
+        "atlas": "Resource/Builtin/Sprite/System.atlas"
       }
     }
   },
-  "mesh":
-  {
-    "meta":
-    {
-
-    },
-    "list":
-    {
-      "mesh_name":
-      {
-        "path": "please_input_mesh_path"
-      }
-    }
+  "mesh": {
+    "meta": { },
+    "list": { }
   },
   "shader":
   {
-    "meta":
-    {
-
-    },
+    "meta": { },
     "list":
     {
-      "shader_name":
-      {
-        "vs": "please_input_vertex_shader_path",
-        "fs": "please_input_fragment_shader_path"
+      "ppConvex": {
+        "vs": "Resource/Builtin/Shader/Global/quad.vert",
+        "fs": "Resource/Builtin/Shader/PostProcessing/convex.frag"
+      },
+      "ppGray": {
+        "vs": "Resource/Builtin/Shader/Global/quad.vert",
+        "fs": "Resource/Builtin/Shader/PostProcessing/gray.frag"
+      },
+      "ppSineWave": {
+        "vs": "Resource/Builtin/Shader/Global/quad.vert",
+        "fs": "Resource/Builtin/Shader/PostProcessing/sinewave.frag"
+      },
+      "__b_sliced": {
+        "vs": "Resource/Builtin/Shader/__b_scr.vert",
+        "fs": "Resource/Builtin/Shader/__b_scr.frag"
       }
     }
   },
-  "sound":
-  {
-    "meta":
-    {
-
-    },
-    "list":
-    {
-      "sound_name":
-      {
-        "path": "please_input_sound_path",
-        "type": "effect"
-      }
-    }
+  "sound": {
+    "meta": { },
+    "list": { }
+  },
+  "animation": {
+    "meta": { },
+    "list": { }
   }
 }

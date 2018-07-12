@@ -477,7 +477,9 @@ ESucceed ReadResourceFile(const std::string& file_path) {
   InitializeMesh(atlas_json[s_json_mesh]);
   InitializeShader(atlas_json[s_json_shader]);
   InitializeSound(atlas_json[s_json_sound]);
+#ifdef false
   InitializeAnimation(atlas_json[s_json_animation]);
+#endif
 
   return ESucceed::Succeed;
 }

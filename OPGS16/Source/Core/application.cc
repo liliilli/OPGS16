@@ -249,6 +249,7 @@ void Initiate() {
 
   manager::setting::Initiate();
   manager::resource::__::Initiate();
+
   manager::mesh::Initiate();
   manager::_internal::vao::Initiate();
 

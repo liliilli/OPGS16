@@ -62,6 +62,12 @@
       "+": 259,
       "gravity":  1000,
       "stick": false
+    },
+    "Enter":
+    {
+      "+": 257,
+      "gravity": 1000,
+      "stick": false
     }
   },
   "mouse": {
