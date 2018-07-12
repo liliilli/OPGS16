@@ -120,10 +120,14 @@ private:
   DVector3 m_look = DVector3{0.f, 0.f, -1.f};
   mutable DVector3 m_world_look = {};
 
-	float m_near, m_far;			/*! Distance sets region of sight. used only for perspective */
-    float m_fov;                    /*! Angle sets how to see world, used only for perspective */
-    bool  m_view_changed{ false };
-    bool  m_proj_changed{ false };
+  /*! Distance sets region of sight. used only for perspective */
+	float m_near = 0.1f;
+  float m_far = 100.f;
+
+  /*! Angle sets how to see world, used only for perspective */
+  float m_fov = 70.f;
+  bool  m_view_changed{ false };
+  bool  m_proj_changed{ false };
 
     static bool s_main_camera_initiated;/** Check flag if main camera is already initiated */
 

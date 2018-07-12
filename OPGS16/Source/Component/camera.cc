@@ -42,33 +42,24 @@ bool CCamera::s_main_camera_initiated{ false };
 
 CCamera::CCamera(element::CObject& bound_obj, ViewType view_type, CameraType camera_type, bool _auto) :
     CComponent{ bound_obj }, m_viewtype{ view_type }, m_cameratype{ camera_type } {
-    /*! Body */
-    SetWorldPosition({ 128, 112, 0 });
-    SetLookDirection({ 0, 0, -1 });
+  SetWorldPosition({ 128, 112, 10 });
+  SetLookDirection({ 0, 0, -1 });
 
-	switch (m_viewtype) {
-	case ViewType::ORTHO:
-        m_fov = m_near  = m_far = 0.f;
-        break;
-    case ViewType::PERSPECTIVE:
-        m_fov = 50.f; m_near = 0.1f; m_far = 100.f;
-        break;
-	}
-    m_view_changed = true; m_proj_changed = true;
-    Update(0);
+  m_view_changed = true; m_proj_changed = true;
+  Update(0);
 
-    if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
-        s_main_camera_initiated = true;
-        manager::scene::GetPresentScene()->SetMainCamera(this);
-    }
-    else m_cameratype = CameraType::SUB;
+  if (m_cameratype == CameraType::MAIN && !s_main_camera_initiated) {
+    s_main_camera_initiated = true;
+    manager::scene::GetPresentScene()->SetMainCamera(this);
+  }
+  else m_cameratype = CameraType::SUB;
 }
 
 CCamera::~CCamera() {
-    if (m_cameratype == CameraType::MAIN) {
-        s_main_camera_initiated = false;
-        manager::scene::GetPresentScene()->SetMainCamera(nullptr);
-    }
+  if (m_cameratype == CameraType::MAIN) {
+    s_main_camera_initiated = false;
+    manager::scene::GetPresentScene()->SetMainCamera(nullptr);
+  }
 }
 
 void CCamera::SetRear(const float value) {
@@ -111,26 +102,28 @@ void CCamera::SetFov(const float value) {
 }
 
 void CCamera::Update(float) {
-    if (m_view_changed || m_proj_changed) {
-        if (m_view_changed) {
-            m_view = glm::lookAt(static_cast<glm::vec3>(m_world),
-                                 static_cast<glm::vec3>(m_world_look),
-                                 y_direction);
-            m_view_changed = false;
-        }
-        if (m_proj_changed) {
-            switch (m_viewtype) {
-            case ViewType::ORTHO:
-                m_projection = glm::ortho<float>(-128.f, 128.f, -112.f, 112.f);
-                break;
-            case ViewType::PERSPECTIVE:
-                m_projection = glm::perspective(glm::radians(m_fov), k_ratio, m_near, m_far);
-                break;
-            }
-            m_proj_changed = false;
-        }
-        m_pv = m_projection * m_view;
+  if (m_view_changed || m_proj_changed) {
+    if (m_view_changed) {
+      m_view = glm::lookAt(
+          static_cast<glm::vec3>(m_world), static_cast<glm::vec3>(m_world_look),
+          y_direction);
+      m_view_changed = false;
     }
+
+    if (m_proj_changed) {
+      switch (m_viewtype) {
+      case ViewType::ORTHO:
+        m_projection = glm::ortho(-128.f, 128.f, -112.f, 112.f, m_near, m_far);
+        break;
+      case ViewType::PERSPECTIVE:
+        m_projection = glm::perspective(glm::radians(m_fov), k_ratio, m_near, m_far);
+        break;
+      }
+      m_proj_changed = false;
+    }
+
+    m_pv = m_projection * m_view;
+  }
 }
 
 } /*! opgs16::component */
