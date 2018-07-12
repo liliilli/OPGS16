@@ -39,7 +39,7 @@
  */
 
 #include <opgs16fwd.h>                      /// Forward declaration
-
+#include <Phitos/Enums/activated.h>
 #include <Component\Internal\component_macro.h>
 
 namespace opgs16 {
@@ -88,10 +88,19 @@ public:
     return m_object;
   }
 
-private:
-    element::CObject& m_object;   /*! Bound object which script instance refers to */
+  inline phitos::enums::EActivated IsComponentActivated() const noexcept {
+    return m_activated;
+  }
 
-    SET_UP_HASH_VALUE(Component)
+  inline void SetComponentActivation(phitos::enums::EActivated value) noexcept {
+    m_activated = value;
+  }
+
+private:
+  element::CObject& m_object;   /*! Bound object which script instance refers to */
+  phitos::enums::EActivated m_activated = phitos::enums::EActivated::Activated;
+
+  SET_UP_HASH_VALUE(Component)
 };
 
 } /*! opgs16::component::_internal */

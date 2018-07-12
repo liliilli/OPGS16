@@ -52,6 +52,9 @@ void CObject::Update(float delta_time) {
     case EActivated::Disabled: {
       if (m_data->IsCallbackNotCalled()) {
         for (auto& [component, type] : m_components) {
+          if (component->IsComponentActivated() == EActivated::Disabled)
+            continue;
+
           if (type == EComponentType::Script) {
             auto script = static_cast<CScriptFrame*>(component.get());
             script->OnDisabled();
@@ -64,7 +67,10 @@ void CObject::Update(float delta_time) {
     case EActivated::Activated: {
       LocalUpdate();
 
-      for (auto&[component, type] : m_components) {
+      for (auto& [component, type] : m_components) {
+        if (component->IsComponentActivated() == EActivated::Disabled)
+          continue;
+
         // At first, check if component is script type (based on CScriptFrame)
         // and cast component to base script type.
         // If Start() function is not called, call and turn on the start flag
@@ -82,6 +88,7 @@ void CObject::Update(float delta_time) {
 
           if (m_data->IsCallbackNotCalled()) {
             script->OnEnabled();
+            script->Start();
           }
         }
 
