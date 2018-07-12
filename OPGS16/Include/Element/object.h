@@ -235,7 +235,7 @@ public:
   ///
   /// @brief
   ///
-  phitos::enums::EActivated GetFinalActivated() const;
+  phitos::enums::EActivated IsFinallyActivated() const;
 
   ///
   /// @brief
@@ -536,7 +536,7 @@ private:
   void PropagateActivation(phitos::enums::EActivated value) noexcept;
 
   ///
-  /// @brief
+  /// @brief Calculate and set up new final activation flag.
   ///
   void CalculateActivation();
 

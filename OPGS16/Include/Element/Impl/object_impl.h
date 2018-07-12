@@ -284,12 +284,18 @@ public:
   }
 
   inline void CalculateActivation() noexcept {
+    const auto previous = m_is_finally_activated;
+
     if (m_is_any_parent_activated == EActivated::Disabled ||
         m_is_object_activated == EActivated::Disabled) {
       m_is_finally_activated = EActivated::Disabled;
     }
     else {
       m_is_finally_activated = EActivated::Activated;
+    }
+
+    if (previous != m_is_finally_activated) {
+      m_is_callback_called = false;
     }
   }
 
@@ -303,6 +309,14 @@ public:
 
   inline phitos::enums::EActivated IsFinallyActivated() const {
     return m_is_finally_activated;
+  }
+
+  inline bool IsCallbackNotCalled() const noexcept {
+    return !m_is_callback_called;
+  }
+
+  inline void SetCallbackFlagToFalse() noexcept {
+    m_is_callback_called = true;
   }
 
   ///
@@ -368,6 +382,7 @@ private:
   EActivated m_is_any_parent_activated  = EActivated::Activated;
   /// Any parent all update activation variable.
   EActivated m_is_finally_activated     = EActivated::Activated;
+  bool m_is_callback_called = true;
 
   /// Flag for succeeding parent position.
   bool m_position_succeedable{ true };

@@ -43,36 +43,56 @@ CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } {
 
 void CObject::Update(float delta_time) {
   using phitos::enums::EActivated;
-  if (m_data && GetFinalActivated() == EActivated::Activated) {
-    LocalUpdate();
+  using CScriptFrame = component::CScriptFrame;
+  using EComponentType = component::_internal::EComponentType;
+  using EScriptStarted = component::_internal::EScriptStarted;
 
-    for (auto&[component, type] : m_components) {
-      using CScriptFrame    = component::CScriptFrame;
-      using EComponentType  = component::_internal::EComponentType;
-      using EScriptStarted  = component::_internal::EScriptStarted;
+  if (m_data) {
+    switch (IsFinallyActivated()) {
+    case EActivated::Disabled: {
+      if (m_data->IsCallbackNotCalled()) {
+        for (auto& [component, type] : m_components) {
+          if (type == EComponentType::Script) {
+            auto script = static_cast<CScriptFrame*>(component.get());
+            script->OnDisabled();
+          }
+        }
 
-      // At first, check if component is script type (based on CScriptFrame)
-      // and cast component to base script type.
-      // If Start() function is not called, call and turn on the start flag
-      // not to be callled over twice.
-      if (type == EComponentType::Script) {
-        if (auto script = static_cast<CScriptFrame*>(component.get());
-            script->m_started == EScriptStarted::NotStarted) {
+        m_data->SetCallbackFlagToFalse();
+      }
+    } break;
+    case EActivated::Activated: {
+      LocalUpdate();
 
-          PUSH_LOG_INFO_EXT(
+      for (auto&[component, type] : m_components) {
+        // At first, check if component is script type (based on CScriptFrame)
+        // and cast component to base script type.
+        // If Start() function is not called, call and turn on the start flag
+        // not to be callled over twice.
+        if (type == EComponentType::Script) {
+          auto script = static_cast<CScriptFrame*>(component.get());
+
+          if (script->m_started == EScriptStarted::NotStarted) {
+            PUSH_LOG_INFO_EXT(
               "Object call Start() : [Name : {0}]",
               script->GetBindObject().GetObjectName());
-          script->Start();
-          script->m_started = decltype(script->m_started)::Started;
-        }
-      }
+            script->Start();
+            script->m_started = decltype(script->m_started)::Started;
+          }
 
-      component->Update(delta_time);
+          if (m_data->IsCallbackNotCalled()) {
+            script->OnEnabled();
+          }
+        }
+
+        component->Update(delta_time);
+      }
+      m_data->SetCallbackFlagToFalse();
+    } break;
     }
 
     for (auto& child : m_children) {
-      if (child.second &&
-          child.second->GetFinalActivated() == EActivated::Activated)
+      if (child.second)
         child.second->Update(delta_time);
     }
   }
@@ -116,7 +136,7 @@ void CObject::PropagateParentPosition() {
     /// If object is not empty and activated and permits succeeding positioning.
     using phitos::enums::EActivated;
     if (child_ptr &&
-        child_ptr->GetFinalActivated() == EActivated::Activated &&
+        child_ptr->IsFinallyActivated() == EActivated::Activated &&
         child_ptr->GetSucceedingPositionFlag())
       child_ptr->SetParentPosition(GetParentPosition());
   }
@@ -161,7 +181,7 @@ void CObject::PropagateParentRotation() {
     /// If object is not empty and activated and permits succeeding positioning.
     using phitos::enums::EActivated;
     if (child_ptr &&
-      child_ptr->GetFinalActivated() == EActivated::Activated &&
+      child_ptr->IsFinallyActivated() == EActivated::Activated &&
       child_ptr->GetSucceedingRotationFlag()) {
       for (const auto& direction : _internal::k_direction_list)
         child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
@@ -263,22 +283,18 @@ void CObject::SetActive(const bool value) {
 
 void CObject::Propagate() {
   using phitos::enums::EActivated;
-  auto& child_list = GetChildList();
-  if (m_data->IsActive() == EActivated::Disabled ||
-      m_data->IsAnyParentActivated() == EActivated::Disabled) {
-    // Propagate activation.
-    for (auto& [name, ptr] : child_list) {
-      ptr->PropagateActivation(EActivated::Disabled);
-      ptr->CalculateActivation();
-      ptr->Propagate();
-    }
+
+  EActivated flag = EActivated::Disabled;
+  if (m_data->IsActive() == EActivated::Activated &&
+      m_data->IsAnyParentActivated() == EActivated::Activated) {
+    flag = EActivated::Activated;
   }
-  else {
-    for (auto& [name, ptr] : child_list) {
-      ptr->PropagateActivation(EActivated::Activated);
-      ptr->CalculateActivation();
-      ptr->Propagate();
-    }
+
+  auto& child_list = GetChildList();
+  for (auto& [name, ptr] : child_list) {
+    ptr->PropagateActivation(flag);
+    ptr->CalculateActivation();
+    ptr->Propagate();
   }
 }
 
@@ -286,7 +302,7 @@ phitos::enums::EActivated CObject::IsActive() const {
   return m_data->IsActive();
 }
 
-phitos::enums::EActivated CObject::GetFinalActivated() const {
+phitos::enums::EActivated CObject::IsFinallyActivated() const {
   return m_data->IsFinallyActivated();
 }
 

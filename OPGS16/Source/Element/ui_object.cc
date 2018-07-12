@@ -25,7 +25,7 @@ void UiObject::LocalUpdate() {
   using phitos::enums::EActivated;
   for (auto& child : m_children) {
     if (child.second &&
-        child.second->GetFinalActivated() == EActivated::Activated) {
+        child.second->IsFinallyActivated() == EActivated::Activated) {
       auto child_temp = static_cast<UiObject*>(child.second.get());
       child_temp->SetUiParentPosition(screen_origin.x, screen_origin.y,
                                       screen_size.x, screen_size.y);
