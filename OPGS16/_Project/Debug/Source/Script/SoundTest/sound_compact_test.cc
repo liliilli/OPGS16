@@ -19,6 +19,7 @@
 #include <Manager/scene_manager.h>
 
 #include "../../../Include/Internal/keyword.h"
+#include "../../../Include/Scene/select_scene.h"
 
 namespace {
 
@@ -161,7 +162,7 @@ void SoundCompactTest::Input() {
   }
 
   if (IsKeyPressed(keyword::key_backspace)) {
-    M_POP_SCENE();
+    M_REPLACE_SCENE(scene::SelectScene);
   }
 }
 

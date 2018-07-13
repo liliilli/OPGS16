@@ -150,7 +150,7 @@ void Management::ExecuteRandomFeatureTest() {
 }
 
 void Management::ExecuteSoundTest() {
-  M_PUSH_SCENE(scene::SoundTestSelectScene, true);
+  M_REPLACE_SCENE(scene::SoundTestSelectScene);
 }
 
 void Management::ExecuteInputTest() {
