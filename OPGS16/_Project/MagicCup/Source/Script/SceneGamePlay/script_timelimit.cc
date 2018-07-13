@@ -1,0 +1,40 @@
+
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+
+/// Header file
+#include "../../../Include/Script/SceneGamePlay/script_timelimit.h"
+
+#include <Element/Canvas/canvas.h>
+#include <Element/Canvas/text.h>
+#include <Manager/scene_manager.h>
+
+#include "../../../Include/Object/SceneGamePlay/timer_image.h"
+#include "../../../Include/Internal/object_keyword.h"
+
+namespace magiccup {
+
+void ScriptUiTimelimit::Initiate() {
+  auto& obj = GetBindObject();
+  using opgs16::element::canvas::CText;
+
+  auto text = obj.Instantiate<CText>("Text", "Time");
+  text->SetAlignment(IAlignable::Alignment::CENTER);
+  text->SetFontName("opSystem");
+  text->SetFontSize(8);
+  text->SetWorldPosition({0, 20.f, 0});
+
+  auto& canvas =
+      opgs16::manager::scene::GetPresentScene()->GetGameObject(name::canvas);
+  if (canvas) {
+    auto raw_ptr = static_cast<opgs16::element::canvas::CCanvas*>(canvas.get());
+    auto timer = obj.Instantiate<TimerImage>("Timer", raw_ptr);
+    timer->SetWorldPosition({0.f, 8.f, 0.f});
+  }
+}
+
+} /// ::magiccup namespace

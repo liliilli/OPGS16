@@ -1,0 +1,93 @@
+{
+  "meta":
+  {
+    "texture_width": 256,
+    "texture_height": 256
+  },
+  "list":
+  {
+    "KeyNormalIdle": { "index": 0, "offset_x": 0, "offset_y": 0, "width": 16, "height": 16 },
+    "KeyNormalPress": { "index": 1, "offset_x": 16, "offset_y":  0, "width": 16, "height": 16 },
+    "KeyNormalRepeat": { "index": 2, "offset_x": 32, "offset_y":  0, "width": 16, "height": 16 },
+    "KeyNormalRelease": { "index": 3, "offset_x": 48, "offset_y":  0, "width": 16, "height": 16 },
+    "KeyOneHalfIdle": { "index": 4, "offset_x": 128, "offset_y": 0, "width": 24, "height": 16 },
+    "KeyOneHalfPress": { "index": 5, "offset_x": 152, "offset_y": 0, "width": 24, "height": 16 },
+    "KeyOneHalfRepeat": { "index": 6, "offset_x": 176, "offset_y": 0, "width": 24, "height": 16 },
+    "KeyOneHalfRelease": { "index": 7, "offset_x": 200, "offset_y": 0, "width": 24, "height": 16 },
+    "KeyDoubleIdle": { "index": 8, "offset_x": 128, "offset_y": 16, "width": 32, "height": 16 },
+    "KeyDoublePress": { "index": 9, "offset_x": 160, "offset_y": 16, "width": 32, "height": 16 },
+    "KeyDoubleRepeat": { "index": 10, "offset_x": 192, "offset_y": 16, "width": 32, "height": 16 },
+    "KeyDoubleRelease": { "index": 11, "offset_x": 224, "offset_y": 16, "width": 32, "height": 16 },
+    "KeySpaceIdle": { "index": 12, "offset_x": 128, "offset_y": 32, "width": 128, "height": 16 },
+    "KeySpacePress": { "index": 13, "offset_x": 128, "offset_y": 48, "width": 128, "height": 16 },
+    "KeySpaceRepeat": { "index": 14, "offset_x": 128, "offset_y": 64, "width": 128, "height": 16 },
+    "KeySpaceRelease":  { "index": 15, "offset_x": 128, "offset_y": 80, "width": 128, "height": 16 },
+
+    "A": { "index": 16, "offset_x": 0, "offset_y": 16, "width": 16, "height": 16 },
+    "B": { "index": 17, "offset_x": 16, "offset_y": 16, "width": 16, "height": 16 },
+    "C": { "index": 18, "offset_x": 32, "offset_y": 16, "width": 16, "height": 16 },
+    "D": { "index": 19, "offset_x": 48, "offset_y": 16, "width": 16, "height": 16 },
+    "E": { "index": 20, "offset_x": 64, "offset_y": 16, "width": 16, "height": 16 },
+    "F": { "index": 21, "offset_x": 80, "offset_y": 16, "width": 16, "height": 16 },
+    "G": { "index": 22, "offset_x": 96, "offset_y": 16, "width": 16, "height": 16 },
+    "H": { "index": 23, "offset_x": 112, "offset_y": 16, "width": 16, "height": 16 },
+
+    "I": { "index": 24, "offset_x": 0, "offset_y": 32, "width": 16, "height": 16 },
+    "J": { "index": 25, "offset_x": 16, "offset_y": 32, "width": 16, "height": 16 },
+    "K": { "index": 26, "offset_x": 32, "offset_y": 32, "width": 16, "height": 16 },
+    "L": { "index": 27, "offset_x": 48, "offset_y": 32, "width": 16, "height": 16 },
+    "M": { "index": 28, "offset_x": 64, "offset_y": 32, "width": 16, "height": 16 },
+    "N": { "index": 29, "offset_x": 80, "offset_y": 32, "width": 16, "height": 16 },
+    "O": { "index": 30, "offset_x": 96, "offset_y": 32, "width": 16, "height": 16 },
+    "P": { "index": 31, "offset_x": 112, "offset_y": 32, "width": 16, "height": 16 },
+
+    "Q": { "index": 32, "offset_x": 0, "offset_y": 48, "width": 16, "height": 16 },
+    "R": { "index": 33, "offset_x": 16, "offset_y": 48, "width": 16, "height": 16 },
+    "S": { "index": 34, "offset_x": 32, "offset_y": 48, "width": 16, "height": 16 },
+    "T": { "index": 35, "offset_x": 48, "offset_y": 48, "width": 16, "height": 16 },
+    "U": { "index": 36, "offset_x": 64, "offset_y": 48, "width": 16, "height": 16 },
+    "V": { "index": 37, "offset_x": 80, "offset_y": 48, "width": 16, "height": 16 },
+    "W": { "index": 38, "offset_x": 96, "offset_y": 48, "width": 16, "height": 16 },
+    "X": { "index": 39, "offset_x": 112, "offset_y": 48, "width": 16, "height": 16 },
+
+    "Y": { "index": 40, "offset_x": 0, "offset_y": 64, "width": 16, "height": 16 },
+    "Z": { "index": 41, "offset_x": 16, "offset_y": 64, "width": 16, "height": 16 },
+    "0": { "index": 42, "offset_x": 32, "offset_y": 64, "width": 16, "height": 16 },
+    "1": { "index": 43, "offset_x": 48, "offset_y": 64, "width": 16, "height": 16 },
+    "2": { "index": 44, "offset_x": 64, "offset_y": 64, "width": 16, "height": 16 },
+    "3": { "index": 45, "offset_x": 80, "offset_y": 64, "width": 16, "height": 16 },
+    "4": { "index": 46, "offset_x": 96, "offset_y": 64, "width": 16, "height": 16 },
+    "5": { "index": 47, "offset_x": 112, "offset_y": 64, "width": 16, "height": 16 },
+
+    "6": { "index": 48, "offset_x": 0, "offset_y": 80, "width": 16, "height": 16 },
+    "7": { "index": 49, "offset_x": 16, "offset_y": 80, "width": 16, "height": 16 },
+    "8": { "index": 50, "offset_x": 32, "offset_y": 80, "width": 16, "height": 16 },
+    "9": { "index": 51, "offset_x": 48, "offset_y": 80, "width": 16, "height": 16 },
+    "-": { "index": 52, "offset_x": 64, "offset_y": 80, "width": 16, "height": 16 },
+    "+": { "index": 53, "offset_x": 80, "offset_y": 80, "width": 16, "height": 16 },
+    "[": { "index": 54, "offset_x": 96, "offset_y": 80, "width": 16, "height": 16 },
+    "]": { "index": 55, "offset_x": 112, "offset_y": 80, "width": 16, "height": 16 },
+
+    ";": { "index": 56, "offset_x": 0, "offset_y": 96, "width": 16, "height": 16 },
+    "'": { "index": 57, "offset_x": 16, "offset_y": 96, "width": 16, "height": 16 },
+    "<": { "index": 58, "offset_x": 32, "offset_y": 96, "width": 16, "height": 16 },
+    ">": { "index": 59, "offset_x": 48, "offset_y": 96, "width": 16, "height": 16 },
+    "?": { "index": 60, "offset_x": 64, "offset_y": 96, "width": 16, "height": 16 },
+    "ArrowLeft": { "index": 61, "offset_x": 80, "offset_y": 96, "width": 16, "height": 16 },
+    "ArrowUp": { "index": 62, "offset_x": 96, "offset_y": 96, "width": 16, "height": 16 },
+    "ArrowDown": { "index": 63, "offset_x": 112, "offset_y": 96, "width": 16, "height": 16 },
+
+    "ArrowRight": { "index": 64, "offset_x": 0, "offset_y": 112, "width": 16, "height": 16 },
+    "Ctrl": { "index": 65, "offset_x": 16, "offset_y": 112, "width": 16, "height": 16 },
+    "Alt": { "index": 66, "offset_x": 32, "offset_y": 112, "width": 16, "height": 16 },
+    "~": { "index": 67, "offset_x": 48, "offset_y": 112, "width": 16, "height": 16 },
+    "Escape": { "index": 68, "offset_x": 64, "offset_y": 112, "width": 16, "height": 16 },
+    "|": { "index": 69, "offset_x": 80, "offset_y": 112, "width": 16, "height": 16 },
+
+    "Tab": { "index": 70, "offset_x": 0, "offset_y": 128, "width": 24, "height": 16 },
+    "BackSpace": { "index": 71, "offset_x": 24, "offset_y": 128, "width": 24, "height": 16 },
+    "Return": { "index": 72, "offset_x": 48, "offset_y": 128, "width": 24, "height": 16 },
+
+    "Shift": { "index": 73, "offset_x": 0, "offset_y": 144, "width": 32, "height": 16 }
+  }
+}

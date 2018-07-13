@@ -1,0 +1,33 @@
+{
+  "mode" : {
+    "keyboard" : true,
+    "mouse" : true,
+    "joystick" : false
+  },
+  "keyboard" : {
+    "YAxis": {
+      "+": 265,
+      "-": 264,
+      "gravity": 1000,
+      "stick": false
+    },
+    "XAxis": {
+      "+": 262,
+      "-": 263,
+      "gravity": 1000,
+      "stick": false
+    },
+    "Enter":  {
+      "+": 257,
+      "gravity": 1000,
+      "stick": false
+    }
+  },
+  "mouse" : {
+    "Click" : {
+      "key" : 0,
+      "gravity" : 300,
+      "stick" : false
+    }
+  }
+}

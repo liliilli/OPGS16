@@ -1,0 +1,45 @@
+{
+  "meta": { },
+  "font":
+  {
+    "meta": { "default_size": 16 },
+    "list": { "font_name": { } }
+  },
+  "texture":
+  {
+    "meta": { },
+    "list":
+    {
+      "GameSprite":
+      {
+        "path": "Resource/Sprite/Sprite.png",
+        "atlas": "Resource/Sprite/Sprite.atlas"
+      },
+      "GameSprite2":
+      {
+        "path": "Resource/Sprite/Sprite2.png",
+        "atlas": "Resource/Sprite/Sprite2.atlas"
+      }
+    }
+  },
+  "mesh":
+  {
+    "meta": { },
+    "list": { "mesh_name": { } }
+  },
+  "shader":
+  {
+    "meta": { },
+    "list": { "shader_name": { } }
+  },
+  "sound":
+  {
+    "meta": { },
+    "list": { "sound_name": { } }
+  },
+  "animation":
+  {
+    "meta": { },
+    "list": { }
+  }
+}
