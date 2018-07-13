@@ -21,6 +21,13 @@
 
 namespace opgs16::element {
 
+void CScene::Destroy() {
+  if (m_main_camera)
+    m_main_camera = nullptr;
+  m_object_list.clear();
+  m_name_counter.clear();
+}
+
 void CScene::Update(float delta_time) {
   using phitos::enums::EActivated;
 

@@ -337,7 +337,17 @@ std::string CObject::GetTagNameOf() const {
     return m_data->GetTagNameOf();
 }
 
-CObject::~CObject() = default;
+CObject::~CObject() {
+  m_data.release();
+  m_children.clear();
+
+  for (auto& [element, type] : m_components) {
+    using component::_internal::EComponentType;
+    if (type == EComponentType::Script) {
+      static_cast<component::CScriptFrame*>(element.get())->Destroy();
+    }
+  }
+}
 
 } /// ::opgs16::element namespace
 

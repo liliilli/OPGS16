@@ -30,6 +30,7 @@
 #include <Manager/shader_manager.h>
 /// ::opgs16::manager::MSoundManager
 #include <Manager/sound_manager.h>
+#include <Phitos/Dbg/assert.h>
 
 //!
 //! Datas
@@ -94,10 +95,14 @@ void ReleaseAllResources() {
 }
 
 void PrivatePopScene() {
-  ReleaseAllResources();
+  if (m_scene_stack.empty()) {
+    PHITOS_ASSERT(m_scene_stack.empty() == false,
+                  "Scene stack must not be empty, at least have one.");
+    return;
+  }
 
-  if (!m_scene_stack.empty())
-    m_scene_stack.pop_back();
+  m_scene_stack.pop_back();
+  ReleaseAllResources();
 
   if (m_scene_stack.size() >= 1)
     InitiateTopScene();

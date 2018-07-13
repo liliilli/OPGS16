@@ -67,6 +67,8 @@ public:
 
   virtual void Initiate() = 0;
 
+  void Destroy();
+
   ///
   /// @brief
   /// The method update components movement, UI refresh, and so on.

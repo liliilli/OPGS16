@@ -104,6 +104,8 @@ template <
   typename = std::enable_if_t<IsCSceneBase<TTy>>
 >
 void PushScene() {
+  if (!__::Get().empty())
+    (*__::Get().rbegin())->Destroy();
   __::Get().push_back(std::make_unique<TTy>());
 }
 
@@ -170,11 +172,12 @@ namespace opgs16::manager::scene::__ {
 
 template <class TTy, typename>
 void PrivateReplaceScene() {
+  // Pop present scene.
+  (*Get().rbegin())->Destroy();
+  Get().pop_back();
+
   // Purify remain resources.
   ReleaseAllResources();
-
-  // Pop present scene.
-  Get().pop_back();
 
   // Push present scene.
   PushScene<TTy>();
