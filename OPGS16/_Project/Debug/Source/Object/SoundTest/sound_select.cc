@@ -8,12 +8,12 @@
 
 /// Header file
 #include "../../../Include/Object/SoundTest/sound_select.h"
-#include "../../../Include/Script/SoundTest/root.h"
+#include "../../../Include/Script/SoundTest/sound_compact_test.h"
 
 namespace debug::object {
 
 SoundSelect::SoundSelect() {
-  AddComponent<script::SoundTestRoot>(*this);
+  AddComponent<script::SoundCompactTest>(*this);
 }
 
 } /// ::debug::object namespace

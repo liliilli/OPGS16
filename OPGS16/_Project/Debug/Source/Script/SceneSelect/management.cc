@@ -20,10 +20,12 @@
 #include "../../../Include/Object/SceneSelect/select_manager.h"
 
 #include "../../../Include/Scene/ObjectTest/object_test_select.h"
+#include "../../../Include/Scene/SoundTest/sound_test_select.h"
 #include "../../../Include/Scene/Test/input_scene.h"
 #include "../../../Include/Scene/Test/random.h"
 #include "../../../Include/Scene/Test/rendering.h"
-#include "../../../Include/Scene/Test/sound.h"
+
+#include "../../../Include/Internal/keyword.h"
 
 namespace {
 
@@ -109,11 +111,12 @@ void Management::Input() {
   using opgs16::manager::input::IsKeyReleased;
 
   if (m_is_pressed == true) {
-    if (IsKeyReleased("Vertical")) m_is_pressed = false;
+    if (IsKeyReleased(keyword::key_axis_vert))
+      m_is_pressed = false;
     return;
   }
 
-  auto key_val = GetKeyValue("Vertical");
+  auto key_val = GetKeyValue(keyword::key_axis_vert);
   if (key_val == 1.0f) {
     const auto idx = m_list->GetCursorIndex();
     m_list->MoveCursor(object::EDirection::Up);
@@ -133,7 +136,7 @@ void Management::Input() {
     m_is_pressed = true;
   }
 
-  if (IsKeyPressed("Enter")) {
+  if (IsKeyPressed(keyword::key_enter)) {
     m_list->SelectCommand();
   }
 }
@@ -147,7 +150,7 @@ void Management::ExecuteRandomFeatureTest() {
 }
 
 void Management::ExecuteSoundTest() {
-  M_REPLACE_SCENE(scene::SoundTestScnee);
+  M_PUSH_SCENE(scene::SoundTestSelectScene, true);
 }
 
 void Management::ExecuteInputTest() {

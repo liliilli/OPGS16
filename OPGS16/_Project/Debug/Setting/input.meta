@@ -57,15 +57,33 @@
       "gravity": 10,
       "stick": true
     },
-    "Back":
-    {
+    "Back": {
       "+": 259,
       "gravity":  1000,
       "stick": false
     },
-    "Enter":
-    {
+    "Enter": {
       "+": 257,
+      "gravity": 1000,
+      "stick": false
+    },
+    "Key1": {
+      "+": 48,
+      "gravity": 1000,
+      "stick": false
+    },
+    "Key2": {
+      "+": 49,
+      "gravity": 1000,
+      "stick": false
+    },
+    "Key3": {
+      "+": 50,
+      "gravity": 1000,
+      "stick": false
+    },
+    "Key4": {
+      "+": 51,
       "gravity": 1000,
       "stick": false
     }

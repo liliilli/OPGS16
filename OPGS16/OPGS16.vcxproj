@@ -268,6 +268,7 @@
     <ClCompile Include="_Project\Debug\Source\Object\RandomTest\vector_range_dist_obj.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\object_test_select.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\ObjectTest\tree_activation.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\SoundTest\sound_test_select.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_compact.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\hopping.cc" />
     <ClCompile Include="_Project\Debug\Source\Object\LifecycleTest\lifecycle_manager.cc" />
@@ -284,7 +285,7 @@
     <ClCompile Include="_Project\Debug\Source\Scene\select_scene.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\Test\random.cc" />
     <ClCompile Include="_Project\Debug\Source\Scene\Test\rendering.cc" />
-    <ClCompile Include="_Project\Debug\Source\Scene\Test\sound.cc" />
+    <ClCompile Include="_Project\Debug\Source\Scene\SoundTest\sound.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\keyboard_ui.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\InputTest\select_lobby.cc" />
     <ClCompile Include="_Project\Debug\Source\Script\ObjectTest\node_canvas_script.cc" />
@@ -480,9 +481,10 @@
     <ClInclude Include="_Project\Debug\Include\Object\SoundTest\sound_select.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\object_test_select.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\ObjectTest\tree_activation.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\SoundTest\sound_test_select.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\input_scene.h" />
     <ClInclude Include="_Project\Debug\Include\Scene\Test\rendering.h" />
-    <ClInclude Include="_Project\Debug\Include\Scene\Test\sound.h" />
+    <ClInclude Include="_Project\Debug\Include\Scene\SoundTest\sound.h" />
     <ClInclude Include="_Project\Debug\Include\Script\InputTest\keyboard_compact.h" />
     <ClInclude Include="_Project\Debug\Include\Script\InputTest\keyboard_ui.h" />
     <ClInclude Include="_Project\Debug\Include\Script\InputTest\select_lobby.h" />

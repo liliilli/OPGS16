@@ -14,7 +14,7 @@
 #include <Element/Canvas/canvas.h>
 
 #include <Manager/input_manager.h>
-#include <Phitos/Dbg/assert.h>
+#include <Manager/scene_manager.h>
 
 #include "../../../Include/Internal/keyword.h"
 
@@ -22,8 +22,9 @@
 #include "../../../Include/Object/Common/copyright.h"
 #include "../../../Include/Object/Common/description.h"
 #include "../../../Include/Object/Common/gotoback.h"
-#include "../../../Include/Object/Common/simplelog.h"
 #include "../../../Include/Object/Common/subject.h"
+
+#include "../../../Include/Scene/SoundTest/sound.h"
 
 namespace {
 
@@ -127,7 +128,7 @@ void SoundTestRoot::ExecuteLobby() {
 }
 
 void SoundTestRoot::ExecuteBgmTest() {
-
+  M_PUSH_SCENE(scene::SoundTestScnee, false);
 }
 
 void SoundTestRoot::ExecuteEffectTest() {

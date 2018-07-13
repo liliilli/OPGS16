@@ -16,6 +16,9 @@
 #include <Component/sprite_renderer.h>
 #include <Manager/sound_manager.h>
 #include <Manager/input_manager.h>
+#include <Manager/scene_manager.h>
+
+#include "../../../Include/Internal/keyword.h"
 
 namespace {
 
@@ -41,13 +44,13 @@ void SoundCompactTest::Initiate() {
   using CCanvas = opgs16::element::canvas::CCanvas;
   using CText = opgs16::element::canvas::CText;
 
-  auto* obj = static_cast<CCanvas*>(&GetObject());
+  auto* obj = static_cast<CCanvas*>(&GetBindObject());
 
   // Make instruction text object.
   // This object will display debug test instruction.
   auto instruction = obj->Instantiate<CText>(k_instruction_name, k_instruction_string);
   instruction->SetOrigin(IOriginable::Origin::UP_LEFT);
-  instruction->SetFontName("Solomon");
+  instruction->SetFontName("opSystem");
   instruction->SetFontSize(8u);
   instruction->SetWorldPosition(opgs16::DVector3{ 16, -24, 0 });
   instruction->SetColor(opgs16::DColor{ 1.f, 1.f, 1.f });
@@ -57,7 +60,7 @@ void SoundCompactTest::Initiate() {
   m_bgm_sentence = obj->Instantiate<CText>(k_bgm_sentence_name, "~BGM OFF~");
   m_bgm_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
   m_bgm_sentence->SetAlignment(IAlignable::Alignment::CENTER);
-  m_bgm_sentence->SetFontName("Solomon");
+  m_bgm_sentence->SetFontName("opSystem");
   m_bgm_sentence->SetFontSize(8u);
   m_bgm_sentence->SetWorldPosition(opgs16::DVector3{ 0, 48, 0 });
 
@@ -66,7 +69,7 @@ void SoundCompactTest::Initiate() {
   m_info_sentence = obj->Instantiate<CText>(k_info_sentence_name, "");
   m_info_sentence->SetOrigin(IOriginable::Origin::DOWN_CENTER);
   m_info_sentence->SetAlignment(IAlignable::Alignment::CENTER);
-  m_info_sentence->SetFontName("Solomon");
+  m_info_sentence->SetFontName("opSystem");
   m_info_sentence->SetFontSize(8u);
   m_info_sentence->SetWorldPosition(opgs16::DVector3{ 0, 32, 0 });
 }
@@ -80,6 +83,22 @@ void SoundCompactTest::Start() {
   GenerateSound("Beep1");
   GenerateSound("Beep2");
   GenerateSound("Beep3");
+}
+
+void SoundCompactTest::Destroy() {
+  using opgs16::manager::sound::DestroySound;
+
+  auto& bind_object = GetBindObject();
+  bind_object.DestroyChild(k_instruction_name);
+  bind_object.DestroyChild(*m_bgm_sentence);
+  bind_object.DestroyChild(*m_info_sentence);
+
+  DestroySound("Drumloop");
+  DestroySound("Jaguar");
+  DestroySound("c_ogg");
+  DestroySound("Beep1");
+  DestroySound("Beep2");
+  DestroySound("Beep3");
 }
 
 void SoundCompactTest::Update(float delta_time) {
@@ -139,6 +158,10 @@ void SoundCompactTest::Input() {
     PlaySound("Beep1");
     PlaySound("Beep2");
     PlaySound("Beep3");
+  }
+
+  if (IsKeyPressed(keyword::key_backspace)) {
+    M_POP_SCENE();
   }
 }
 
