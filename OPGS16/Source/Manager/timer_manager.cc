@@ -36,6 +36,7 @@ uint32_t s_rehash_count = s_rehash_init_value;
 
 // Timer container
 opgs16::manager::timer::TTimerContainer m_timer_container;
+std::vector<decltype(m_timer_container)::value_type> m_timer_candidates;
 
 // Deletion candidates list
 std::list<uint32_t> m_delete_list;
@@ -63,8 +64,8 @@ bool IsTimerExist(const opgs16::element::CTimerHandle& handle) {
 
 namespace opgs16::manager::timer {
 
-TTimerContainer& __::Get() noexcept {
-  return m_timer_container;
+TTimerCandidates& __::Get() noexcept {
+  return m_timer_candidates;
 }
 
 uint32_t __::__GetTimerCount() noexcept {
@@ -82,12 +83,6 @@ void __::__SetTimerCount(uint32_t value) noexcept {
   using _internal::Status;
 
 void Update(float delta_time) {
-  // Iteration & Timer Check
-  for (auto&[__, timer] : m_timer_container) {
-    if (timer.m_status == Status::ACTIVATED)
-      timer.m_handle->Try(delta_time);
-  }
-
   // Deletion
   for (const auto& keyval : m_delete_list) {
     m_timer_container.erase(keyval);
@@ -99,6 +94,18 @@ void Update(float delta_time) {
     s_rehash_count = s_rehash_init_value;
     m_timer_container.rehash(m_timer_container.size());
     PUSH_LOG_CRITICAL("Timer table rehashing");
+  }
+
+  // Move to timer container.
+  for (auto& element : m_timer_candidates) {
+    m_timer_container.emplace(std::move(element));
+  }
+
+  m_timer_candidates.clear();
+  // Iteration & Timer Check
+  for (auto&[__, timer] : m_timer_container) {
+    if (timer.m_status == Status::ACTIVATED)
+      timer.m_handle->Try(delta_time);
   }
 }
 

@@ -40,19 +40,6 @@ CImage::CImage(const std::string& sprite_tag,
     CImage{ sprite_tag, ref_canvas.get() } {
 }
 
-void CImage::LocalUpdate() {
-	/** Update my xywh */
-	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
-	const auto xy = GetFinalPosition() - (wh / 2.0f);
-
-	std::array<GLint, 4>&& xywh = {
-		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
-		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
-	UpdateScreenXYWH(xywh);
-
-	UiObject::LocalUpdate();
-}
-
 void CImage::SetImageSize(const float width, const float height) {
 	SetScaleValue(1.0f);
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
@@ -61,6 +48,19 @@ void CImage::SetImageSize(const float width, const float height) {
 void CImage::SetTextureIndex(const int32_t index) {
   PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
   m_renderer_ptr->SetTextureIndex(index);
+}
+
+void CImage::LocalUpdate() {
+  // Update xywh
+	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
+	const auto xy = GetFinalPosition() - (wh / 2.0f);
+
+	std::array<GLint, 4>&& xywh = {
+		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
+		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
+	UpdateScreenXYWH(xywh);
+
+  UiObject::LocalUpdate();
 }
 
 void CImage::Render() {

@@ -227,19 +227,15 @@ void Initiate() {
       "Application project name is not active."
       "Please uncomment or make macro _APPLICATION_PROJECT_NAME");
 #endif
-#if !(_APPLICATION_PROJECT_NAME + 0)
-  static_assert(false,
-      "Application project name is not valid. Check manifest file.");
-#endif
 #if defined (_APPLICATION_WINDOW_NAME)
 #if !(_APPLICATION_WINDOW_NAME + 0)
   static_assert(false,
       "Application window name is not valid, check manifest file.");
 #else
-  m_window{ InitApplication(_APPLICATION_WINDOW_NAME) },
+  m_window = InitApplication(_APPLICATION_WINDOW_NAME);
 #endif
 #else
-  m_window{ InitApplication(_APPLICATION_PROJECT_NAME) },
+  m_window = InitApplication(_APPLICATION_PROJECT_NAME);
 #endif
 #else
   static_assert(false,
@@ -450,7 +446,9 @@ void Update(float delta_time) {
   manager::input::Update();
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
+#ifdef _OPGS16_DEBUG_OPTION
     InputGlobal();
+#endif
     break;
   default: break;
   }
@@ -496,14 +494,10 @@ void InputGlobal() {
       ChangeScalingOption(EScaleType::X3);
   }
 
-  // @todo : Renovate debug mode input and detach it from release mode.
-
-#if defined(_OPGS16_DEBUG_OPTION)
   if (IsKeyPressed("GlobalF7"))
     ToggleCollisionBoxDisplay();
   if (IsKeyPressed("GlobalF9"))
     ToggleFpsDisplay();
-#endif
 
   if (IsKeyPressed("GlobalF10"))
     TogglePostProcessingEffect();

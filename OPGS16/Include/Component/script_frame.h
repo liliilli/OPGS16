@@ -70,14 +70,14 @@ public:
   /// And all derived scripts have to override this,
   /// even though not have components to set up.
   ///
-  virtual void Start() = 0;
+  virtual void Start() {};
 
   ///
   /// @brief
   /// This method updates information of script instance bound to specific object.
   /// Must be overriden and implemented by derived script class.
   ///
-  // virtual void Update() = 0;
+  void Update(float delta_time) override {};
 
   ///
   /// @brief

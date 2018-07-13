@@ -17,7 +17,7 @@ namespace opgs16::manifest {
 
 // If you want to turn on DEBUG MODE to display console log and special debug display,
 // Remove "//" Commend specifier.
-#define _OPGS16_DEBUG_OPTION
+//#define _OPGS16_DEBUG_OPTION
 
 ///
 /// PROJECT SETTING
@@ -31,11 +31,11 @@ constexpr unsigned k_size{ 2 };
 
 // Set Application project name.
 #define _APPLICATION_PROJECT_NAME \
-L"TEST GAME"
+"Magic Cup Game"
 
 // Set Project path
 #define _APPLICATION_PROJECT_PATH \
-"D:/Development/OPGS16/OPGS16/_Project/Debug"
+"D:/Development/OPGS16/OPGS16/_Project/MagicCup"
 
 // Set Application window name when operating. If this is not uncommented, just use PROJECT_NAME insteadily.
 //#define _APPLICATION_WINDOW_NAME
@@ -47,12 +47,12 @@ L"TEST GAME"
 
 //
 #define _INITIAL_SCENE_INCLUDE_PATH \
-<../_Project/Debug/Include/Scene/select_scene.h>
+<../_Project/MagicCup/Include/Scene/scene_logo.h>
 
 // set first scene of your project.
 // This must be written as the style of L" ... " or application will not build up.
 #define _INITIAL_SCENE_FULL_NAME \
-::debug::scene::SelectScene
+::magiccup::SceneLogo
 
 ///
 /// Decide whether show the boot screen logo when application is executed.

@@ -38,7 +38,13 @@ public:
 	virtual ~UiObject() = default;
 
   /// Uiobject updates children edge position.
-  virtual void LocalUpdate() override;
+  /**
+	 * @brief Image instance updates x, y, w, h for each frame, referencing with Scale values.
+	 * And, updates children calling Parent's Update method.
+	 *
+	 * This virtual methods can not override any more.
+	 */
+  void LocalUpdate() override;
 
 protected:
 	///

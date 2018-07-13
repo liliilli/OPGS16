@@ -32,8 +32,8 @@
 
 namespace opgs16::manager::timer {
 
-using TTimerContainer =
-    std::unordered_map<uint32_t, opgs16::manager::_internal::TimerWrapper>;
+using TTimerContainer = std::unordered_map<uint32_t, opgs16::manager::_internal::TimerWrapper>;
+using TTimerCandidates = std::vector<TTimerContainer::value_type>;
 
 } /// ::opgs16::manager::timer namespace
 
@@ -43,7 +43,7 @@ namespace opgs16::manager::timer::__ {
 ///
 /// @brief Return internal reference of timer container.
 ///
-TTimerContainer& Get() noexcept;
+TTimerCandidates& Get() noexcept;
 
 ///
 /// @brief Return internal timer id count.
@@ -136,7 +136,7 @@ void SetTimer(element::CTimerHandle& handle, long interval, bool is_loop,
   using _internal::TimerWrapper;
   using _internal::Status;
 
-  __::Get().try_emplace(count, TimerWrapper(Status::ACTIVATED, &handle));
+  __::Get().emplace_back(count, TimerWrapper(Status::ACTIVATED, &handle));
   __::__SetTimerCount(count + 1);
 }
 

@@ -67,13 +67,7 @@ public:
 
 	virtual ~CImage() = default;
 
-	/**
-	 * @brief Image instance updates x, y, w, h for each frame, referencing with Scale values.
-	 * And, updates children calling Parent's Update method.
-	 *
-	 * This virtual methods can not override any more.
-	 */
-	void LocalUpdate() override final;
+  void LocalUpdate() override;
 
 	/**
 	 * @brief This calls callee to draw or render something it has.
