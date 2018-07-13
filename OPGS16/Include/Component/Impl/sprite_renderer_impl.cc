@@ -102,7 +102,8 @@ void CSpriteRendererImpl::SetShader(const std::string& shader_name) {
 }
 
 void CSpriteRendererImpl::RenderSprite() {
-  if (m_weak_vao_ref == nullptr) return;
+  if (m_weak_vao_ref == nullptr)
+    return;
 
   // The name is incorrect
   m_wrapper.UseShader();
@@ -112,7 +113,7 @@ void CSpriteRendererImpl::RenderSprite() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
 
-    glDrawElements(m_primitive_mode, 6, GL_UNSIGNED_INT, nullptr);
+    glDrawElementsInstanced(m_primitive_mode, 6, GL_UNSIGNED_INT, nullptr, m_instance_count);
   }
 
   glBindTexture(GL_TEXTURE_2D, 0);
