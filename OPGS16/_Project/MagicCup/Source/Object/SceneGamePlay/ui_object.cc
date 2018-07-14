@@ -9,20 +9,14 @@
 /// Header file
 #include "../../../Include/Object/SceneGamePlay/ui_object.h"
 
-#include "../../../Include/Object/SceneGamePlay/ui_life.h"
-#include "../../../Include/Object/SceneGamePlay/ui_score.h"
-#include "../../../Include/Object/SceneGamePlay/ui_timelimit.h"
-#include "../../../Include/Object/SceneGamePlay/ui_stage.h"
+#include "../../../Include/Script/SceneGamePlay/script_ui_object.h"
 
 namespace magiccup {
 
 GamePlayUi::GamePlayUi() {
   SetScaleFactor({128.f, 112.f, 0});
 
-  Instantiate<UiScore>(UiScore::s_object_name);
-  Instantiate<UiLife>(UiLife::s_object_name);
-  Instantiate<UiTimelimit>(UiTimelimit::s_object_name);
-  Instantiate<UiStage>(UiStage::s_object_name);
+  AddComponent<ScriptUiObject>(*this);
 }
 
 void GamePlayUi::LocalUpdate() {

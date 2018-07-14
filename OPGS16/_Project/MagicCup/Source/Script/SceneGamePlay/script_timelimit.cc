@@ -9,6 +9,8 @@
 /// Header file
 #include "../../../Include/Script/SceneGamePlay/script_timelimit.h"
 
+#include <Component/empty_renderer.h>
+#include <Component/sprite_renderer.h>
 #include <Element/Canvas/canvas.h>
 #include <Element/Canvas/text.h>
 #include <Manager/scene_manager.h>
@@ -27,6 +29,7 @@ void ScriptUiTimelimit::Initiate() {
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({0, 20.f, 0});
+  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
 
   auto& canvas =
       opgs16::manager::scene::GetPresentScene()->GetGameObject(name::canvas);
@@ -34,6 +37,7 @@ void ScriptUiTimelimit::Initiate() {
     auto raw_ptr = static_cast<opgs16::element::canvas::CCanvas*>(canvas.get());
     auto timer = obj.Instantiate<TimerImage>("Timer", raw_ptr);
     timer->SetWorldPosition({0.f, 8.f, 0.f});
+    timer->GetComponent<opgs16::component::CSprite2DRenderer>()->SetRenderLayer(3);
   }
 }
 

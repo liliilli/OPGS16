@@ -13,6 +13,9 @@
 #include <Element/Canvas/text.h>
 #include <Manager/scene_manager.h>
 
+#include <Component/empty_renderer.h>
+#include <Component/sprite_renderer.h>
+
 #include "../../../Include/Object/SceneGamePlay/life_image.h"
 #include "../../../Include/Internal/object_keyword.h"
 
@@ -28,6 +31,7 @@ void ScriptUiLife::Initiate() {
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({-16.f, -24.f, 0});
+  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
 
   auto& canvas =
       opgs16::manager::scene::GetPresentScene()->GetGameObject(name::canvas);
@@ -37,13 +41,22 @@ void ScriptUiLife::Initiate() {
     for (int32_t i = 1; i <= 5; ++i) {
       auto instance = obj.Instantiate<LifeImage>("_", raw_ptr);
       instance->SetWorldPosition({-16.f * i, -24.f, 0});
+      instance->GetComponent<opgs16::component::CSprite2DRenderer>()->
+          SetRenderLayer(3);
       m_life_container.push_back(instance);
     }
   }
 }
 
 void ScriptUiLife::UpdateLife(int32_t life) noexcept {
+  const auto sep = (life <= 5 ? life : 5);
+  for (int32_t i = 0; i < sep; ++i) {
+    m_life_container[i]->SetActive(true);
+  }
 
+  for (int32_t i = life; i < 5; ++i) {
+    m_life_container[i]->SetActive(false);
+  }
 }
 
 } /// ::magiccup namespace

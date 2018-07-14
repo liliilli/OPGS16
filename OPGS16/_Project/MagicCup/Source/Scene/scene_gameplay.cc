@@ -15,6 +15,7 @@
 #include "../../Include/Object/Common/orthogonal_camera.h"
 #include "../../Include/Object/SceneGamePlay/stage_obj_mng.h"
 #include "../../Include/Object/SceneGamePlay/ui_object.h"
+#include "../../Include/Object/SceneGamePlay/total_management.h"
 
 namespace magiccup {
 
@@ -30,6 +31,8 @@ void SceneGamePlay::Initiate() {
   auto management = Instantiate<StageObjectManagement>(
       StageObjectManagement::s_object_name);
   management->SetWorldPosition({128.f, 80.f, 0.f});
+
+  auto total_management = Instantiate<TotalManagement>(TotalManagement::s_object_name);
 }
 
 } /// ::magiccup namespace
