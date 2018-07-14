@@ -110,6 +110,13 @@
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_cup_item.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_number.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_cup_number.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\total_management.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_state_machine.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_data.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_ui_object.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_item_movement.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_key_input.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\object_cursor.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -286,6 +293,15 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_cup_item.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_number.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_cup_number.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\total_management.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_state_machine.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_data.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Internal\state_machine.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_ui_object.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_item_movement.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Internal\moving_callback.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_key_input.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

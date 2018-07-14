@@ -13,6 +13,8 @@
 #include <Manager/input_manager.h>
 #include <Manager/scene_manager.h>
 
+#include <Core/application.h>
+
 #include "../../../Include/Internal/general_keyword.h"
 #include "../../../Include/Object/Common/choice_list.h"
 #include "../../../Include/Scene/scene_gameplay.h"
@@ -62,7 +64,7 @@ void ScriptTitleSelect::GotoGameplay() {
 }
 
 void ScriptTitleSelect::ExitGame() {
-
+  opgs16::entry::ExitGame();
 }
 
 void ScriptTitleSelect::Destroy() { }

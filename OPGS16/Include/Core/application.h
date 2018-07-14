@@ -50,12 +50,17 @@ void Initiate();
 /// Let application run.
 ///
 void Run();
-
+//
+/////
+///// @brief
+///// Release and shutdown application.
+/////
+//void Shutdown();
+//
 ///
 /// @brief
-/// Release and shutdown application.
 ///
-void Shutdown();
+void ExitGame();
 
 ///
 /// @brief

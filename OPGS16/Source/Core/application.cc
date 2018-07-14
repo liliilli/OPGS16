@@ -124,6 +124,22 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
+void Shutdown() {
+  // Must terminate glfw window
+  glfwTerminate();
+
+  using namespace opgs16;
+  manager::postprocessing::__::Shutdown();
+  manager::timer::ClearAllTimers();
+  manager::sound::ReleaseAllSounds();
+  manager::sound::__::Shutdown();
+  manager::scene::__::Shutdown();
+  manager::font::__::Shutdown();
+  manager::_internal::vao::Shutdown();
+  manager::mesh::Shutdown();
+  manager::resource::__::Shutdown();
+}
+
 } /// unnamed namespace
 
 namespace opgs16::entry {
@@ -317,7 +333,7 @@ void Initiate() {
 ///
 GLFWwindow* InitApplication(const std::string& application_name) {
   glfwInit();
-  PHITOS_SET_RELEASE_FUNCTION(&opgs16::entry::Shutdown);
+  PHITOS_SET_RELEASE_FUNCTION(&Shutdown);
 
   // OpenGL Setting
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -368,9 +384,7 @@ void PopStatus() {
   if (!m_game_status.empty()) {
     m_game_status.pop();
     if (m_game_status.empty()) {
-      PushStatus(_internal::EGameStatus::EXIT);
       glfwSetWindowShouldClose(m_window, true);
-      ReplacePresentStatus(_internal::EGameStatus::TERMINATE);
     }
   }
 }
@@ -415,22 +429,16 @@ void Run() {
       Draw();
     }
   }
+
+  Shutdown();
 }
 
-void Shutdown() {
-  // Must terminate glfw window
-  glfwTerminate();
-
-  manager::postprocessing::__::Shutdown();
-  manager::timer::ClearAllTimers();
-  manager::sound::ReleaseAllSounds();
-  manager::sound::__::Shutdown();
-  manager::scene::__::Shutdown();
-  manager::font::__::Shutdown();
-  manager::_internal::vao::Shutdown();
-  manager::mesh::Shutdown();
-  manager::resource::__::Shutdown();
+void ExitGame() {
+  while (!m_game_status.empty()) {
+    PopStatus();
+  }
 }
+
 
 void Update(float delta_time) {
   // If callback is being bound,
