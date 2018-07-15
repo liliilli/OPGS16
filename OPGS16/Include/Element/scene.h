@@ -31,13 +31,17 @@
 ///
 
 #include <memory>
+
 #include <GL/glew.h>
+#include <Phitos/Dbg/assert.h>
 
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// Type checking templates
 #include <Helper/template.h>
+/// ::opgs16::DColor
 #include <Helper/Type/color.h>
+
 /// Forward declaration
 #include <opgs16fwd.h>
 
@@ -55,14 +59,11 @@ namespace opgs16::element {
 /// Move ::Scene class to ::opgs16::element::Scene class. Revised DEFINE name.
 ///
 class CScene {
-private:
-  using object_ptr    = std::unique_ptr<CObject>;
-  using object_map    = std::unordered_map<std::string, object_ptr>;
-  using _camera       = component::CCamera;
+  using TObjectSmtPtr   = std::unique_ptr<CObject>;
+  using TObjectMap      = std::unordered_map<std::string, TObjectSmtPtr>;
   using TNameCounterMap = std::unordered_map<std::string, int32_t>;
 
 public:
-  /// Must need virtual destrcutor
   virtual ~CScene() = default;
 
   virtual void Initiate() = 0;
@@ -95,24 +96,27 @@ public:
   ///
   /// @return If success, raw pointer of moved object; otherwise nullptr.
   ///
-  /// @todo Prevent object_name duplicated problem using object's mechanism.
-  ///
 	template <
-    class _Ty,
-    typename = std::enable_if_t<IsCObjectBase<_Ty> && IsCObjectSmtPtr<_Ty>>
+    class TCObjectType,
+    typename = std::enable_if_t<IsCObjectBase<TCObjectType> &&
+                                IsCObjectSmtPtr<TCObjectType>>
   >
-  _Ty* Instantiate(const std::string& object_name,
-                   std::unique_ptr<_Ty>&& object_smtptr) {
+  TCObjectType* Instantiate(const std::string& object_name,
+                            std::unique_ptr<TCObjectType>&& object_smtptr) {
     const auto object_final_name = CreateChildTag(object_name);
 
-    auto result_pair = m_object_list.emplace(std::make_pair(
-        object_final_name, std::move(object_smtptr))
-    );
-    NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
+    auto [result_pair, result] = m_object_list.try_emplace(
+        object_final_name,
+        nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Object did not be made properly.");
+      return nullptr;
+    }
 
-    object_ptr& object_ref = (result_pair.first)->second;
+    result_pair->second = std::move(object_smtptr);
+    TObjectSmtPtr& object_ref = result_pair->second;
     object_ref->SetHash(object_final_name);
-    return static_cast<_Ty*>(object_ref.get());
+    return static_cast<TCObjectType*>(object_ref.get());
 	}
 
   ///
@@ -125,21 +129,27 @@ public:
   ///
   /// @return If success, raw pointer of moved object; otherwise nullptr.
   ///
-  /// @todo Prevent object_name duplicated problem using object's mechanism.
-  ///
 	template <
-    class _Ty,
-    typename = std::enable_if_t<IsCObjectBase<_Ty> && IsCObjectSmtPtr<_Ty>>
+    class TCObjectType,
+    typename = std::enable_if_t<IsCObjectBase<TCObjectType> &&
+                                IsCObjectSmtPtr<TCObjectType>>
   >
-  _Ty* Instantiate(const std::string& object_name, std::unique_ptr<_Ty>& obj) {
+  TCObjectType* Instantiate(const std::string& object_name,
+                            std::unique_ptr<TCObjectType>& obj) {
     const auto object_final_name = CreateChildTag(object_name);
 
-    auto result_pair = m_object_list.emplace(object_final_name, std::move(obj));
-    NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
+    auto [result_pair, result] = m_object_list.try_emplace(
+        object_final_name,
+        nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Object did not be made properly.");
+      return nullptr;
+    }
 
-    object_ptr& object_ref = (result_pair.first)->second;
+    result_pair->second = std::move(obj);
+    TObjectSmtPtr& object_ref = result_pair->second;
     object_ref->SetHash(object_final_name);
-    return static_cast<_Ty*>(object_ref.get());
+    return static_cast<TCObjectType*>(object_ref.get());
 	}
 
   ///
@@ -154,42 +164,48 @@ public:
   ///
   /// @return If success, raw pointer of moved object; otherwise nullptr.
   ///
-  /// @todo Prevent object_name duplicated problem using object's mechanism.
-  ///
   template <
-    class _Ty,
-    class... _Args,
-    typename = std::enable_if_t<IsCObjectBase<_Ty>>
+    class TCObjectType,
+    class... TConstructionArgs,
+    typename = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  _Ty* Instantiate(const std::string& object_name, _Args&&... args) {
+  TCObjectType* Instantiate(const std::string& object_name,
+                            TConstructionArgs&&... args) {
     const auto object_final_name = CreateChildTag(object_name);
 
-    auto result_pair = m_object_list.emplace(object_final_name,
-        std::make_unique<_Ty>(std::forward<_Args>(args)...));
-    NEU_ASSERT(result_pair.second, "Object did not be made proeprly.");
+    auto [result_pair, result] = m_object_list.try_emplace(
+        object_final_name,
+        nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Object did not be made properly.");
+      return nullptr;
+    }
 
-    object_ptr& object_ref = (result_pair.first)->second;
+    result_pair->second = std::make_unique<TCObjectType>(
+        std::forward<TConstructionArgs>(args)...);
+    TObjectSmtPtr& object_ref = result_pair->second;
     object_ref->SetHash(object_final_name);
-    return static_cast<_Ty*>(object_ref.get());
+    return static_cast<TCObjectType*>(object_ref.get());
 	}
 
 	///
 	/// @brief Get object list loaded in scene.
 	/// @return The reference of object list with hash_map.
 	///
-	object_map& GetObjectList();
+	const TObjectMap* GetGameObjectList() const noexcept;
 
 	///
 	/// @brief Get specific object with tag.
 	///
-	object_ptr& GetGameObject(const std::string& tag);
+	CObject* GetGameObject(const std::string& object_name,
+                         bool is_resursive = false);
 
   ///
   /// @brief Set main camera of this scene, to display game scene.
   /// All object except for Canvas m_object_list (UI object) uses to main_camera to display.
   /// If main_camera value is nullptr, this means main_camera is detached.
   ///
-  void SetMainCamera(_camera* const main_camera) {
+  void SetMainCamera(component::CCamera* main_camera) {
     m_main_camera = main_camera;
   }
 
@@ -197,11 +213,11 @@ public:
   /// @brief Get bound main camera.
   /// if main camera is not bound, return nullptr.
   ///
-  const _camera* GetMainCamera() {
+  const component::CCamera* GetMainCamera() const noexcept {
     return m_main_camera;
   }
 
-  bool DoesObjectExist(const std::string& name) const {
+  bool IsObjectExist(const std::string& name) const {
     return m_object_list.find(name) != m_object_list.end();
   }
 
@@ -209,7 +225,7 @@ public:
   /// @brief Get pointer of background color.
   /// @return Pointer of background color.
   ///
-  DColor* BackgroundColor() noexcept {
+  DColor* GetBackgroundColor() noexcept {
     return &m_background_color;
   }
 
@@ -239,9 +255,12 @@ private:
     return item_tag;
   }
 
-  _camera* m_main_camera{ nullptr };
+  CObject* GetGameObjectResursively(const std::string& object_name);
+
+  component::CCamera* m_main_camera = nullptr;
   DColor m_background_color = DColor::Black;
-  object_map  m_object_list;
+
+  TObjectMap  m_object_list;
   TNameCounterMap m_name_counter;
 };
 

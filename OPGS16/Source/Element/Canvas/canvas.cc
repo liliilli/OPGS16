@@ -1,23 +1,25 @@
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
- * If you want to read full statements, read LICENSE file.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/canvas.cc
- * @brief Definition file of ./canvas.h
- * @log
- * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
- * 2018-04-17 Move file path to System/Element/Canvas/Private.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Element/Canvas/canvas.cc
+///
+/// @brief Definition file of ./canvas.h
+///
+/// @log
+/// 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
+/// 2018-04-17 Move file path to System/Element/Canvas/Private.
+///
 
-#include <Element\Canvas\canvas.h>  /// Header file
+/// Header file
+#include <Element/Canvas/canvas.h>
 
-#include <array>                    /// std::array
-
-#include <Component\camera.h>       /// ::opgs16::component::CCamera
+#include <array>
+/// ::opgs16::component::CCamera
+#include <Component/camera.h>
 
 namespace {
 constexpr std::array<GLint, 4> k_viewport_size{0, 0, 256, 224};
@@ -26,9 +28,9 @@ constexpr std::array<GLint, 4> k_viewport_size{0, 0, 256, 224};
 namespace opgs16::element::canvas {
 
 CCanvas::CCanvas() : m_is_size_changed{ true } {
-    using Camera = component::CCamera;
-    AddComponent<Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
-    m_camera = GetComponent<Camera>();
+  using Camera = component::CCamera;
+  AddComponent<Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
+  m_camera = GetComponent<Camera>();
 }
 
 void CCanvas::LocalUpdate() {
@@ -41,16 +43,16 @@ void CCanvas::LocalUpdate() {
 }
 
 void CCanvas::Render() {
-    glDisable(GL_DEPTH_TEST);
+  glDisable(GL_DEPTH_TEST);
 
-    for (auto& child : GetChildList())
-        child.second->Draw();
+  for (auto& child : GetGameObjectList())
+    child.second->Draw();
 
-    glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 }
 
-const glm::mat4 CCanvas::GetUiCameraPVMatrix() const {
+const glm::mat4& CCanvas::GetUiCameraPVMatrix() const {
 	return m_camera->PvMatrix();
 }
 
-} /*! opgs16::element::canvas */
+} /// ::opgs16::element::canvas namespace
