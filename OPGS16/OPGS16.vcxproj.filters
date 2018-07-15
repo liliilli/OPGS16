@@ -11,7 +11,6 @@
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
     <ClCompile Include="Source\Component\rigidbody_2d.cc" />
-    <ClCompile Include="Source\Component\sprite_renderer.cc" />
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
     <ClCompile Include="Source\Component\Physics2D\Collider\rectangle.cc" />
     <ClCompile Include="Source\Component\Physics2D\collider_2d.cc" />
@@ -117,6 +116,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_key_input.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\object_cursor.cc" />
     <ClCompile Include="Source\Component\Internal\component.cc" />
+    <ClCompile Include="Source\Component\sprite2d_renderer.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -199,7 +199,6 @@
     <ClInclude Include="Include\Element\Interface\i_originable.h" />
     <ClInclude Include="Include\Element\camera_object.h" />
     <ClInclude Include="Include\opgs16fwd.h" />
-    <ClInclude Include="Include\Component\sprite_renderer.h" />
     <ClInclude Include="Include\Shader\Default\shader_font.h" />
     <ClInclude Include="Include\Debug\obj_tree.h" />
     <ClInclude Include="Include\Debug\obj_fps.h" />
@@ -302,6 +301,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_key_input.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
     <ClInclude Include="Include\Helper\policies.h" />
+    <ClInclude Include="Include\Component\sprite2d_renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

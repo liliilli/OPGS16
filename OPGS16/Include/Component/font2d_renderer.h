@@ -46,8 +46,7 @@ public:
 public:
   CFont2DRenderer(element::CObject& bind_object,
                   const std::string& font_tag,
-                  const std::string& shader_tag,
-                  const uint32_t rendering_layer = 0);
+                  const std::string& shader_tag, const int32_t layer = 0);
 
   ///
   /// @brief The method renders given text on given position with given color.

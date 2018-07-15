@@ -35,13 +35,13 @@
  */
 
 #include <Component\empty_renderer.h>   /// Header file
-#include <Element\object.h> /// ::opgs16::element::CObject 
+#include <Element\object.h> /// ::opgs16::element::CObject
 
 namespace opgs16 {
 namespace component {
 
-CEmptyRenderer::CEmptyRenderer(element::CObject& bind_object, const unsigned layer) :
-    CRendererBase{ bind_object, layer } {}
+CEmptyRenderer::CEmptyRenderer(element::CObject& bind_object) :
+    CRendererBase{ bind_object } {}
 
 } /*! opgs16::component */
 } /*! opgs16 */

@@ -7,7 +7,7 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-/// @file Component/sprite_renderer.h
+/// @file Component/sprite2d_renderer.h
 ///
 /// @brief The file contains sprite renderer class members.
 ///
@@ -29,6 +29,7 @@
 #include <Component/Internal/component_macro.h> /// Component macroes
 /// ::opgs16::component::_internal::CRendererBase
 #include <Component/Internal/renderer_base.h>
+#include <Helper/Type/vectori2.h>
 
 #include <opgs16fwd.h>  /// Forward declaration
 
@@ -68,12 +69,12 @@ public:
   /// @brief Set texture index to display.
   /// @param[in] index_value Texture fragment value.
   ///
-  void SetTextureIndex(int32_t index_value);
+  void SetTextureFragmentIndex(int32_t index_value);
 
-  int32_t GetTextureIndex() const noexcept;
+  int32_t GetTextureFragmentIndex() const noexcept;
 
 	/*! Get ShaderWrapper instance. */
-	element::CShaderWrapper& Wrapper() noexcept;
+	element::CShaderWrapper& GetWrapper() noexcept;
 
   ///
   /// @brief Set Shader newly.
@@ -106,6 +107,8 @@ private:
   int32_t m_texture_fragment_index = 0;
   int32_t m_instance_count = 1;
   int32_t m_base_instance = 0;
+
+  DVectorInt2 m_sprite_fragment_size;
 
   /// Sprite 2d texture stores image information.
 	texture::CTexture2D* m_sprite = nullptr;

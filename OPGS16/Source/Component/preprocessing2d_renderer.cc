@@ -23,8 +23,8 @@ namespace opgs16::component {
 
 CPreProcessing2DRenderer::CPreProcessing2DRenderer(
     element::CObject& bind_object, component::CPreProcessingGetter* getter,
-    const std::string& shader_tag, const unsigned render_layer) :
-    CRendererBase{ bind_object, render_layer }, m_getter{ getter } {
+    const std::string& shader_tag ) :
+    CRendererBase{ bind_object }, m_getter{ getter } {
     /*! Body */
     m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
     glGenVertexArrays(1, &m_empty_vao);

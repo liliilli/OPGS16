@@ -37,8 +37,7 @@ struct DTexelInfo final {
 class CProcedural2DRenderer final : public _internal::CRendererBase {
 public:
   CProcedural2DRenderer(element::CObject& bind_object,
-                        const std::string& shader_name,
-                        const int32_t render_layer = 0);
+                        const std::string& shader_name);
   ~CProcedural2DRenderer();
 
   ///

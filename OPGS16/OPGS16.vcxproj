@@ -236,7 +236,7 @@
     <ClCompile Include="Source\Manager\resource_manager.cc" />
     <ClCompile Include="Source\Manager\texture_manager.cc" />
     <ClCompile Include="Include\Element\Impl\object_impl.cc" />
-    <ClCompile Include="Source\Component\sprite_renderer.cc" />
+    <ClCompile Include="Source\Component\sprite2d_renderer.cc" />
     <ClCompile Include="Source\Shader\Impl\pp_frame_impl.cc" />
     <ClCompile Include="Source\Shader\PostProcessing\pp_convex.cc" />
     <ClCompile Include="Source\Shader\PostProcessing\pp_sinewave.cc" />
@@ -411,7 +411,7 @@
     <ClInclude Include="Include\Manager\resource_manager.h" />
     <ClInclude Include="Include\Manager\texture_manager.h" />
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
-    <ClInclude Include="Include\Component\sprite_renderer.h" />
+    <ClInclude Include="Include\Component\sprite2d_renderer.h" />
     <ClInclude Include="Include\Shader\Impl\pp_frame_impl.h" />
     <ClInclude Include="Include\Shader\PostProcessing\pp_convex.h" />
     <ClInclude Include="Include\Shader\PostProcessing\pp_gray.h" />

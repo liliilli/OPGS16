@@ -7,7 +7,7 @@
 ///
 /// @file Component/sprite_renderer.cc
 ///
-/// @brief Definition file of sprite_renderer.h
+/// @brief Definition file of sprite2d_renderer.h
 ///
 /// @author Jongmin Yun
 ///
@@ -21,7 +21,7 @@
 ///
 
 /// Header file
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 
 /// ::opgs16::element::CObject
 #include <Element/object.h>
@@ -44,30 +44,27 @@ CSprite2DRenderer::CSprite2DRenderer(
     const std::string& sprite_tag,
     const std::string& shader_tag,
     const int32_t texture_index, const int32_t layer) :
-    CRendererBase{ bind_object },
-    m_sprite{ manager::TextureManager::Instance().GetTexture(sprite_tag) },
-    m_texture_fragment_index{ texture_index } {
+    CRendererBase{ bind_object } {
   using manager::_internal::vao::FindVaoResource;
+  using manager::shader::GetShader;
   using builtin::model::BModel2DQuad;
   using phitos::enums::EFound;
 
   auto [ptr, result] = FindVaoResource(BModel2DQuad::m_model_name.data());
-  if (result == EFound::NotFound) {
-    PHITOS_ASSERT(result == EFound::Found,
-        "Did not find built-in vao items. opQuad2D.");
-  }
-
+  PHITOS_ASSERT(result == EFound::Found,
+                "Did not find built-in vao items. opQuad2D.");
   m_weak_vao_ref = ptr;
   m_weak_vao_ref->IncreaseCount();
   m_weak_vao_ref->SetDirty();
 
-  m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
+  SetTexture(sprite_tag);
+  SetShader(shader_tag);
   m_wrapper.SetAttribute(m_weak_vao_ref);
 
-  SetTextureIndex(texture_index);
+  SetTextureFragmentIndex(texture_index);
 }
 
-element::CShaderWrapper& CSprite2DRenderer::Wrapper() noexcept {
+element::CShaderWrapper& CSprite2DRenderer::GetWrapper() noexcept {
   return m_wrapper;
 }
 
@@ -77,7 +74,7 @@ void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
     m_sprite = manager::TextureManager::Instance().GetTexture("opSystem");
   }
   m_sprite = texture;
-  SetTextureIndex(0);
+  SetTextureFragmentIndex(0);
 }
 
 const std::string& CSprite2DRenderer::GetTextureName() const noexcept {
@@ -88,12 +85,13 @@ const std::string& CSprite2DRenderer::GetTextureName() const noexcept {
   return "";
 }
 
-int32_t CSprite2DRenderer::GetTextureIndex() const noexcept {
+int32_t CSprite2DRenderer::GetTextureFragmentIndex() const noexcept {
   return m_texture_fragment_index;
 }
 
-void CSprite2DRenderer::SetTextureIndex(int32_t index_value) {
-  PHITOS_ASSERT(index_value >= 1, "Instance count must be bigger than 1 or equal.");
+void CSprite2DRenderer::SetTextureFragmentIndex(int32_t index_value) {
+  PHITOS_ASSERT(index_value >= 0,
+                "Texture fragment index must be bigger than 0 or equal.");
 
   if (!m_sprite->DoesHasAtlas()) {
     PUSH_LOG_WARN(

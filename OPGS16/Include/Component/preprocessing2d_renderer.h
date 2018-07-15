@@ -23,8 +23,9 @@ namespace opgs16::component {
 
 class CPreProcessing2DRenderer final : public _internal::CRendererBase {
 public:
-    CPreProcessing2DRenderer(element::CObject& bind_object, component::CPreProcessingGetter* getter,
-                             const std::string& shader_tag, const unsigned render_layer = 0);
+    CPreProcessing2DRenderer(element::CObject& bind_object,
+                             component::CPreProcessingGetter* getter,
+                             const std::string& shader_tag);
 
   ~CPreProcessing2DRenderer();
 

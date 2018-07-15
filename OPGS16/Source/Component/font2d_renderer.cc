@@ -253,8 +253,8 @@ namespace opgs16::component {
 
 CFont2DRenderer::CFont2DRenderer(
     element::CObject& bind_object, const std::string& font_tag,
-    const std::string& shader_tag, const uint32_t rendering_layer) :
-    CRendererBase(bind_object, rendering_layer),
+    const std::string& shader_tag, const int32_t layer) :
+    CRendererBase(bind_object),
     m_font_name{font_tag} {
 
   SetProjectionMatrix({

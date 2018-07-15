@@ -25,9 +25,8 @@
 namespace opgs16::component {
 
 CProcedural2DRenderer::CProcedural2DRenderer(element::CObject& bind_object,
-                                             const std::string& shader_name,
-                                             const int32_t render_layer) :
-    CRendererBase{ bind_object, static_cast<uint32_t>(render_layer) } {
+                                             const std::string& shader_name) :
+    CRendererBase{ bind_object } {
   using manager::_internal::vao::FindVaoResource;
   using builtin::model::BModel2DQuad;
 
@@ -69,7 +68,7 @@ void CProcedural2DRenderer::SetSize(int32_t width, int32_t height) {
   m_buffer_size.y = height;
 
   for (auto& element : m_buffer) {
-    element[3] = 0xFF;
+    element[3] = static_cast<int8_t>(0xFF);
   }
 
   if (m_texture_id > 0) {
