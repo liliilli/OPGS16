@@ -9,7 +9,7 @@
 /// Header file
 #include "../../../Include/Object/SceneGamePlay/object_cursor.h"
 
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
 
 namespace magiccup {
@@ -21,7 +21,7 @@ ObjectCursor::ObjectCursor() {
 
   auto texture = AddComponent<opgs16::component::CSprite2DRenderer>(*this,
       "opSystem", "gQuad", 8, 3);
-  m_wrapper = &texture->Wrapper();
+  m_wrapper = &texture->GetWrapper();
   m_texture = texture;
 }
 

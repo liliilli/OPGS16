@@ -18,19 +18,19 @@ void ScriptUiScore::Initiate() {
   using opgs16::element::canvas::CText;
   auto& obj = GetBindObject();
 
-  auto text = obj.Instantiate<CText>("Text", "Score");
+  auto text = obj.CreateGameObject<CText>("Text", "Score");
   text->SetOrigin(IOriginable::Origin::UP_LEFT);
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({16.f, -24.f, 0});
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
+  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
 
-  auto score = obj.Instantiate<CText>("Score", "00000");
+  auto score = obj.CreateGameObject<CText>("Score", "00000");
   score->SetOrigin(IOriginable::Origin::UP_LEFT);
   score->SetWorldPosition({16.f, -32.f, 0.f});
   score->SetFontName("opSystem");
   score->SetFontSize(8);
-  score->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
+  score->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
 
   m_score = score;
 }

@@ -26,7 +26,7 @@ namespace magiccup {
 void ScriptLogo::Initiate() {
   using opgs16::element::canvas::CText;
 
-  auto logo = GetBindObject().Instantiate<CText>(logo_text, "MADE BY STUDIO-N");
+  auto logo = GetBindObject().CreateGameObject<CText>(logo_text, "MADE BY STUDIO-N");
   logo->SetFontName("opSystem");
   logo->SetFontSize(8);
   logo->SetOrigin(IOriginable::Origin::CENTER_CENTER);
@@ -43,7 +43,7 @@ void ScriptLogo::Initiate() {
 void ScriptLogo::Update(float delta_time) { }
 
 void ScriptLogo::Destroy() {
-  GetBindObject().DestroyChild(*m_logo);
+  GetBindObject().DestroyGameObject(*m_logo);
 }
 
 void ScriptLogo::ShowLogo() {

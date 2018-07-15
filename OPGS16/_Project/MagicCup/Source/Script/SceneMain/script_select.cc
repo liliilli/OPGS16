@@ -23,7 +23,7 @@ namespace magiccup {
 
 void ScriptTitleSelect::Initiate() {
   auto& obj = GetBindObject();
-  auto choice_list = obj.Instantiate<ChoiceList>("ChoiceList",
+  auto choice_list = obj.CreateGameObject<ChoiceList>("ChoiceList",
     "opSystem",
     static_cast<opgs16::element::canvas::CCanvas*>(&obj),
     std::vector<std::string>{"New Game", "Exit"});

@@ -24,16 +24,16 @@ namespace magiccup {
 void ScriptUiObject::Initiate() {
   auto& obj = GetBindObject();
 
-  m_score = obj.Instantiate<UiScore>(UiScore::s_object_name)->
+  m_score = obj.CreateGameObject<UiScore>(UiScore::s_object_name)->
       GetComponent<ScriptUiScore>();
 
-  m_life = obj.Instantiate<UiLife>(UiLife::s_object_name)->
+  m_life = obj.CreateGameObject<UiLife>(UiLife::s_object_name)->
       GetComponent<ScriptUiLife>();
 
-  m_timelimit = obj.Instantiate<UiTimelimit>(UiTimelimit::s_object_name)->
+  m_timelimit = obj.CreateGameObject<UiTimelimit>(UiTimelimit::s_object_name)->
       GetComponent<ScriptUiTimelimit>();
 
-  m_stage = obj.Instantiate<UiStage>(UiStage::s_object_name)->
+  m_stage = obj.CreateGameObject<UiStage>(UiStage::s_object_name)->
       GetComponent<ScriptUiStage>();
 }
 

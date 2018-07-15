@@ -10,7 +10,7 @@
 /// @file Element/Internal/physics_collision_shape_wrapper.h
 ///
 /// @brief
-/// Wrapper file of bullet library's collison shape class from pre C++11.
+/// GetWrapper file of bullet library's collison shape class from pre C++11.
 ///
 /// @author Jongmin Yun
 ///

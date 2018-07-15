@@ -17,13 +17,13 @@
 
 CanvasDebug::CanvasDebug() {
     /*! Object binding */
-    Instantiate<ObjectFps>("Fps");
-    Instantiate<ObjectDate>("Date");
-    Instantiate<ObjectObjectTree>("Hier");
+    CreateGameObject<ObjectFps>("Fps");
+    CreateGameObject<ObjectDate>("Date");
+    CreateGameObject<ObjectObjectTree>("Hier");
 
     /*! Script binding */
     AddComponent<DebugUiManager>(*this,
-        static_cast<opgs16::element::canvas::CText*>(GetChild("Fps")),
-        static_cast<opgs16::element::canvas::CText*>(GetChild("Date")),
-        static_cast<opgs16::element::canvas::CText*>(GetChild("Hier")));
+        static_cast<opgs16::element::canvas::CText*>(GetGameObject("Fps")),
+        static_cast<opgs16::element::canvas::CText*>(GetGameObject("Date")),
+        static_cast<opgs16::element::canvas::CText*>(GetGameObject("Hier")));
 }

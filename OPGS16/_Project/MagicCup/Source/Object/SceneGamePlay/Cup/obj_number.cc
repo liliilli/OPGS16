@@ -9,7 +9,7 @@
 /// Header file
 #include "../../../../Include/Object/SceneGamePlay/Cup/obj_number.h"
 
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
 
 #include "../../../../Include/Internal/general_keyword.h"
@@ -20,7 +20,7 @@ ObjectNumber::ObjectNumber() {
   SetScaleValue(8.f);
   auto texture = AddComponent<opgs16::component::CSprite2DRenderer>(
       *this, keyword::rsc_sprite2, "gQuad", 42);
-  m_wrapper = &texture->Wrapper();
+  m_wrapper = &texture->GetWrapper();
   m_texture = texture;
 }
 

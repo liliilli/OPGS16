@@ -13,7 +13,7 @@
 #include <vector>
 #include <random>
 
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
 #include <Manager/timer_manager.h>
 #include <Phitos/Dbg/assert.h>
@@ -41,12 +41,12 @@ void ScriptObjectManagement::Initiate() {
   opgs16::DVector3 point = {-(256 - 64) / 2, 0.f, 0.f};
 
   for (int32_t i = 1; i <= number; ++i) {
-    auto item = obj.Instantiate<ObjectCupItem>(ObjectCupItem::s_object_name);
+    auto item = obj.CreateGameObject<ObjectCupItem>(ObjectCupItem::s_object_name);
     item->SetWorldPosition(point);
     point += opgs16::DVector3{interval, 0.f, 0.f};
 
     auto script = item->
-        GetChild(ObjectCup::s_object_name)->GetComponent<ScriptCupNumbering>();
+        GetGameObject(ObjectCup::s_object_name)->GetComponent<ScriptCupNumbering>();
     if (script) {
       script->SetNumber(i);
     }
@@ -54,7 +54,7 @@ void ScriptObjectManagement::Initiate() {
     m_item_list.push_back(item);
   }
 
-  m_cursor = obj.Instantiate<ObjectCursor>(ObjectCursor::s_object_name);
+  m_cursor = obj.CreateGameObject<ObjectCursor>(ObjectCursor::s_object_name);
   auto position = m_item_list[m_cursor_index]->GetWorldPosition();
   position += opgs16::DVector3{0.f, -16.f, 0.f};
   m_cursor->SetWorldPosition(position);
@@ -69,7 +69,7 @@ void ScriptObjectManagement::FirstStartObjectEffect() {
   const int32_t size = static_cast<int32_t>(m_item_list.size());
 
   for (int32_t i = 0; i < size; ++i) {
-    m_item_list[i]->GetChild(ObjectBall::s_object_name)->
+    m_item_list[i]->GetGameObject(ObjectBall::s_object_name)->
         SetActive(i == m_ball_index ? true : false);
   }
 
@@ -100,7 +100,7 @@ void ScriptObjectManagement::ExecuteTransitionShaking() {
 
 void ScriptObjectManagement::ExecuteShaking(int32_t shaking_count) {
 #ifdef false
-  m_item_list[m_ball_index]->GetChild(ObjectBall::s_object_name)->
+  m_item_list[m_ball_index]->GetGameObject(ObjectBall::s_object_name)->
       SetActive(false);
 #endif
 

@@ -14,7 +14,7 @@
 #include <Manager/scene_manager.h>
 
 #include <Component/empty_renderer.h>
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 
 #include "../../../Include/Object/SceneGamePlay/life_image.h"
 #include "../../../Include/Internal/object_keyword.h"
@@ -25,24 +25,24 @@ void ScriptUiLife::Initiate() {
   auto& obj = GetBindObject();
   using opgs16::element::canvas::CText;
 
-  auto text = obj.Instantiate<CText>("Text", "Life");
+  auto text = obj.CreateGameObject<CText>("Text", "Life");
   text->SetOrigin(IOriginable::Origin::UP_RIGHT);
   text->SetAlignment(IAlignable::Alignment::RIGHT);
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({-16.f, -24.f, 0});
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
+  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
 
   using opgs16::manager::scene::GetPresentScene;
-  auto& canvas = GetPresentScene()->GetGameObject(name::canvas);
-  if (canvas) {
-    auto raw_ptr = static_cast<opgs16::element::canvas::CCanvas*>(canvas.get());
+  if (auto canvas = GetPresentScene()->GetGameObject(name::canvas);
+      canvas) {
+    auto raw_ptr = static_cast<opgs16::element::canvas::CCanvas*>(canvas);
 
     for (int32_t i = 1; i <= 5; ++i) {
-      auto instance = obj.Instantiate<LifeImage>("_", raw_ptr);
+      auto instance = obj.CreateGameObject<LifeImage>("_", raw_ptr);
       instance->SetWorldPosition({-16.f * i, -24.f, 0});
       instance->GetComponent<opgs16::component::CSprite2DRenderer>()->
-          SetRenderLayer(3);
+          SetRenderingLayer(3);
       m_life_container.push_back(instance);
     }
   }

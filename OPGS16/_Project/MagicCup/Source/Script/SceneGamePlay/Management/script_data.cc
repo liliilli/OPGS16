@@ -36,7 +36,7 @@ void ScriptDataContainer::SetScore(int32_t value) noexcept {
 
   if (!m_script_score) {
     m_script_score = GetPresentScene()->GetGameObject(name::canvas)->
-        GetChild(GamePlayUi::s_obj_name)->
+        GetGameObject(GamePlayUi::s_obj_name)->
         GetComponent<ScriptUiObject>()->GetScriptScore();
   }
 
@@ -53,7 +53,7 @@ void ScriptDataContainer::SetLife(int32_t value) noexcept {
 
   if (!m_script_life) {
     m_script_life = GetPresentScene()->GetGameObject(name::canvas)->
-        GetChild(GamePlayUi::s_obj_name)->
+        GetGameObject(GamePlayUi::s_obj_name)->
         GetComponent<ScriptUiObject>()->GetScriptLife();
   }
 
@@ -66,7 +66,7 @@ void ScriptDataContainer::IncrementStage() noexcept {
 
   if (!m_script_stage) {
     m_script_stage = GetPresentScene()->GetGameObject(name::canvas)->
-        GetChild(GamePlayUi::s_obj_name)->
+        GetGameObject(GamePlayUi::s_obj_name)->
         GetComponent<ScriptUiObject>()->GetScriptStage();
   }
 

@@ -36,7 +36,7 @@
 
 #include <Component\animator.h> /// Header file
 
-#include <Component\sprite_renderer.h>  /// opgs16::component::CSprite2DRenderer
+#include <Component\sprite2d_renderer.h>  /// opgs16::component::CSprite2DRenderer
 #include <Element\object.h>             /// ::opgs16::element::CObject
 #include <Manager\resource_manager.h>   /// ::opgs16::manager::MResourceManager
 #include <Manager\resource_type.h>      /// resource::STexture2D::IndexSize
@@ -109,7 +109,7 @@ void CAnimator::OnSleep() {
 void CAnimator::OnTriggerTick() {
   if ((++m_cell_index) < m_cell_length) {
     m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-    m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
+    m_renderer.SetTextureFragmentIndex(m_animation->cells[m_cell_index].m_fragment_index);
 
     using manager::MTimerManager;
     const auto tick = static_cast<long>(
@@ -119,7 +119,7 @@ void CAnimator::OnTriggerTick() {
   else if (IsSwitchOn(m_loop)) {
     m_cell_index = 0;
     m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-    m_renderer.SetTextureIndex(m_animation->cells[m_cell_index].m_fragment_index);
+    m_renderer.SetTextureFragmentIndex(m_animation->cells[m_cell_index].m_fragment_index);
 
     using manager::MTimerManager;
     const auto tick = static_cast<long>(

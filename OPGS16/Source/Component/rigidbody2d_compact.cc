@@ -67,7 +67,7 @@ void CRigidbody2DCompact::Update(float) {
 }
 
 std::string CRigidbody2DCompact::GetTemporaryColliderName() {
-  return GetBindObject().GetObjectName() + std::to_string(m_value);
+  return GetBindObject().GetGameObjectName() + std::to_string(m_value);
 }
 
 void CRigidbody2DCompact::UpdateTransform() {

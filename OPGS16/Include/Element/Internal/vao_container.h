@@ -30,10 +30,8 @@
 //!
 
 namespace opgs16::component {
+class CSprite2DRenderer;
 class CProcedural2DRenderer;
-}
-namespace opgs16::component::_internal {
-class CSpriteRendererImpl;
 }
 
 //!
@@ -142,7 +140,7 @@ private:
   phitos::enums::EDirty m_dirty = phitos::enums::EDirty::Clean;
   EGcGeneration m_generation = EGcGeneration::Zero;
 
-  friend class component::_internal::CSpriteRendererImpl;
+  friend class component::CSprite2DRenderer;
   friend class component::CProcedural2DRenderer;
 };
 

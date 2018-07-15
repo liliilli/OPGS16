@@ -102,7 +102,7 @@ std::vector<std::list<object_raw>> m_rendering_list;
 std::list<opgs16::DAABBInfoBox> m_aabb_2d_list;
 std::list<opgs16::DAABBInfoBox> m_aabb_3d_list;
 
-/// AABB Wrapper
+/// AABB GetWrapper
 opgs16::element::CShaderWrapper m_aabb_2d_wrapper;
 opgs16::element::CShaderWrapper m_aabb_3d_wrapper;
 
@@ -175,10 +175,10 @@ void Destroy(const element::CObject& object, element::CObject* root) {
   std::stack<it_type> it_list;
 
   if (root == nullptr) {
-    tree_list.emplace(&manager::scene::GetPresentScene()->GetObjectList());
+    tree_list.emplace(manager::scene::GetPresentScene()->GetGameObjectList());
   }
   else {
-    tree_list.emplace(&root->GetChildList());
+    tree_list.emplace(&root->GetGameObjectList());
   }
 
   it_list.emplace(tree_list.top()->begin());
@@ -197,7 +197,7 @@ void Destroy(const element::CObject& object, element::CObject* root) {
         break;
       }
 
-      if (auto& additional_list = it->second->GetChildList();
+      if (auto& additional_list = it->second->GetGameObjectList();
           !additional_list.empty()) {
         it_list.pop();
         it_list.emplace(++it);
@@ -261,7 +261,7 @@ void DestroyObjects() {
     std::stack<object_map*> tree_list;
     std::stack<it_type> it_list;
 
-    tree_list.emplace(&opgs16::manager::scene::GetPresentScene()->GetObjectList());
+    tree_list.emplace(opgs16::manager::scene::GetPresentScene()->GetGameObjectList());
     it_list.emplace(tree_list.top()->begin());
 
     bool destroyed = false;
@@ -276,7 +276,7 @@ void DestroyObjects() {
           break;
         };
 
-        if (auto& additional_list = it->second->GetChildList();
+        if (auto& additional_list = it->second->GetGameObjectList();
             !additional_list.empty()) {
           it_list.pop();
           it_list.emplace(++it);
@@ -300,7 +300,7 @@ void DestroyObjects() {
     for (auto script : script_list) {
       PUSH_LOG_INFO_EXT(
         "Object {0} called Destroy() function"
-        "prior to being destroyed actually.", object->GetObjectName());
+        "prior to being destroyed actually.", object->GetGameObjectName());
       script->Destroy();
     }
   }

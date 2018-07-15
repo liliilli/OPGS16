@@ -19,7 +19,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 /// ::opgs16::component::CSprite2DRenderer
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Element/Canvas/canvas.h>      /// ::opgs16::element::canvas::CCanvas
 #include <Manager/texture_manager.h>    /// ::opgs16::manager::MTextureManager
 #include <Shader/shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
@@ -47,7 +47,7 @@ void CImage::SetImageSize(const float width, const float height) {
 
 void CImage::SetTextureIndex(const int32_t index) {
   PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
-  m_renderer_ptr->SetTextureIndex(index);
+  m_renderer_ptr->SetTextureFragmentIndex(index);
 }
 
 void CImage::LocalUpdate() {
@@ -71,7 +71,7 @@ void CImage::Render() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	auto& wrapper = m_renderer_ptr->Wrapper();
+	auto& wrapper = m_renderer_ptr->GetWrapper();
 	wrapper.SetUniformValue<glm::mat4>("opProj", m_ref_canvas->GetUiCameraPVMatrix());
 	wrapper.SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
 	wrapper.SetUniformValue("opAlpha", 1.0f);

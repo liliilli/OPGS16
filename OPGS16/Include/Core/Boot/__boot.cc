@@ -34,18 +34,17 @@
  * 2018-04-14 Move codes into ::opgs16::builtin::sample namespace.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include "__boot.h"     /// Header file 
-#include <GL/glew.h>    /// OpenGL functions
+#include "__boot.h"     /// Header file
 
-#include <Element\camera_object.h>  /// MainCameraObject
+#include <Element/camera_object.h>  /// MainCameraObject
 #include "__b_canv.h"   /// ::opgs16::builtin::sample::__B_CANV
 
 namespace opgs16::builtin::sample {
 
 void __BOOT::Initiate() {
-    BackgroundColor()->b = 0.8f;
-    Instantiate<MainCameraObject>("Camera");
-    Instantiate<__B_CANV>("GameCanvas");
+  GetBackgroundColor()->b = 0.8f;
+  CreateGameObject<MainCameraObject>("Camera");
+  CreateGameObject<__B_CANV>("GameCanvas");
 }
 
 } /*! opgs16::builtin::sample */

@@ -51,7 +51,7 @@ void UiObject::SetUiParentPosition(
       0.f }
   );
 
-	for (auto& child : GetChildList()) {
+	for (auto& child : GetGameObjectList()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());
     child_temp->SetUiParentPosition(screen_origin.x, screen_origin.y,

@@ -20,7 +20,7 @@ namespace magiccup {
 void SceneMain::Initiate() {
   SetBackgroundColor(opgs16::DColor::Purple);
 
-  auto canvas = Instantiate<magiccup::EmptyCanvas>(name::canvas);
+  auto canvas = CreateGameObject<magiccup::EmptyCanvas>(name::canvas);
   canvas->AddComponent<ScriptTitleSelect>(*canvas);
   canvas->AddComponent<ScriptTitleDisplay>(*canvas);
 }

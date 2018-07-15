@@ -22,17 +22,17 @@ namespace magiccup {
 void SceneGamePlay::Initiate() {
   SetBackgroundColor(opgs16::DColor::DarkGray);
 
-  auto canvas = Instantiate<EmptyCanvas>(name::canvas);
-  canvas->Instantiate<magiccup::GamePlayUi>(GamePlayUi::s_obj_name);
+  auto canvas = CreateGameObject<EmptyCanvas>(name::canvas);
+  canvas->CreateGameObject<magiccup::GamePlayUi>(GamePlayUi::s_obj_name);
 
-  auto camera = Instantiate<OrthogonalCameraObject>(
+  auto camera = CreateGameObject<OrthogonalCameraObject>(
       OrthogonalCameraObject::s_object_name);
 
-  auto management = Instantiate<StageObjectManagement>(
+  auto management = CreateGameObject<StageObjectManagement>(
       StageObjectManagement::s_object_name);
   management->SetWorldPosition({128.f, 80.f, 0.f});
 
-  auto total_management = Instantiate<TotalManagement>(TotalManagement::s_object_name);
+  auto total_management = CreateGameObject<TotalManagement>(TotalManagement::s_object_name);
 }
 
 } /// ::magiccup namespace

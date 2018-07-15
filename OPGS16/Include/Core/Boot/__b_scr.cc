@@ -23,7 +23,7 @@
 
 #include <glm/glm.hpp>
 
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Core/core_setting.h>
 #include <Element/Canvas/canvas.h>
 #include <Element/Canvas/text.h>
@@ -57,12 +57,12 @@ void __B_SCR::Start() {
 void __B_SCR::SetLogoImage() {
   auto& bind_obj = GetBindObject();
 
-  logo = bind_obj.Instantiate<element::canvas::CImage>(
+  logo = bind_obj.CreateGameObject<element::canvas::CImage>(
       "Logo", "opSystem",
       static_cast<element::canvas::CCanvas*>(&bind_obj));
 
   auto* renderer = logo->GetComponent<component::CSprite2DRenderer>();
-  renderer->SetTextureIndex(4);
+  renderer->SetTextureFragmentIndex(4);
   logo->SetImageSize(178.f, 19.f);
 
   using random::RandomIntegerRange;
@@ -80,7 +80,7 @@ void __B_SCR::SetLogoImage() {
 
     renderer->SetShader(shader_sliced);
     renderer->SetInstanceCount(k_sliced_number << 1);
-    auto& wrapper = renderer->Wrapper();
+    auto& wrapper = renderer->GetWrapper();
     wrapper.SetUniformValueInt("uNumber", k_sliced_number << 1);
     wrapper.SetUniformValueIntPtr("uPos", y_positions, k_sliced_number << 1);
     wrapper.SetUniformValue<float>("uYScale", k_sliced_y_initial_scale);
@@ -94,13 +94,13 @@ void __B_SCR::Destroy() {
   OP16_TIMER_STOP(m_timer);
   OP16_TIMER_STOP(m_timer_2);
 
-  bind_obj.DestroyChild("Logo");
-  bind_obj.DestroyChild("Statement");
+  bind_obj.DestroyGameObject("Logo");
+  bind_obj.DestroyGameObject("Statement");
 }
 
 void __B_SCR::MoveLogo1() {
   static float elapsed{ 0.f };
-  auto logo = GetBindObject().GetChild("Logo");
+  auto logo = GetBindObject().GetGameObject("Logo");
   if (!logo) return;
 
   auto pos = logo->GetWorldPosition();
@@ -132,7 +132,7 @@ void __B_SCR::MoveLogoSliced() {
     y_positions[i] = static_cast<int>(sigma * (y_initial[i] / time_pow));
 
   auto* renderer = logo->GetComponent<CSprite2DRenderer>();
-  auto& wrapper = renderer->Wrapper();
+  auto& wrapper = renderer->GetWrapper();
 
   wrapper.SetUniformValue<float>(
       "uYScale", sigma / offset_scale + k_sliced_y_final_scale);
@@ -163,7 +163,7 @@ void __B_SCR::CreateTextObject() {
     text->SetFontSize(8u);
     text->SetColor(DColor{ 1, 1, 1 });
   }
-  GetBindObject().Instantiate<element::canvas::CText>("Statement", text);
+  GetBindObject().CreateGameObject<element::canvas::CText>("Statement", text);
   OP16_TIMER_SET(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
 }
 

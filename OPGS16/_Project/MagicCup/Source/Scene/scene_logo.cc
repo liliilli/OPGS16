@@ -18,7 +18,7 @@ namespace magiccup {
 void SceneLogo::Initiate() {
   this->SetBackgroundColor(opgs16::DColor::Magenta);
 
-  auto canvas = Instantiate<magiccup::EmptyCanvas>(name::canvas);
+  auto canvas = CreateGameObject<magiccup::EmptyCanvas>(name::canvas);
   canvas->AddComponent<ScriptLogo>(*canvas);
 }
 

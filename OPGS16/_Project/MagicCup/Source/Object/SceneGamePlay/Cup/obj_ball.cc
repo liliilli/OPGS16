@@ -9,7 +9,7 @@
 /// Header file
 #include "../../../../Include/Object/SceneGamePlay/Cup/obj_ball.h"
 
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
 
 #include "../../../../Include/Internal/general_keyword.h"
@@ -22,7 +22,7 @@ ObjectBall::ObjectBall() {
 
   auto cup_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
       *this, keyword::rsc_sprite, "gQuad", 5);
-  m_wrapper = &cup_texture->Wrapper();
+  m_wrapper = &cup_texture->GetWrapper();
   m_texture = cup_texture;
 }
 

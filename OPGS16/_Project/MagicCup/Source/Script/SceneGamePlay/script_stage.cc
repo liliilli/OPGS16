@@ -24,11 +24,11 @@ void ScriptUiStage::Initiate() {
   using opgs16::element::canvas::CText;
   auto& obj = GetBindObject();
 
-  auto text = obj.Instantiate<CText>("Text", "Stage 01");
+  auto text = obj.CreateGameObject<CText>("Text", "Stage 01");
   text->SetAlignment(IAlignable::Alignment::CENTER);
   text->SetFontName("opSystem");
   text->SetFontSize(8);
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
+  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
   text->SetActive(false);
   m_stage_display = text;
 

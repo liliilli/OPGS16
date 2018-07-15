@@ -12,7 +12,7 @@
 #include <Phitos/Dbg/assert.h>
 
 #include <Component/empty_renderer.h>
-#include <Component/sprite_renderer.h>
+#include <Component/sprite2d_renderer.h>
 #include <Element/Canvas/image.h>
 #include <Element/Canvas/text.h>
 #include <Helper/Type/vectori2.h>
@@ -26,11 +26,11 @@ ChoiceList::ChoiceList(
   using opgs16::element::canvas::CImage;
   using opgs16::element::canvas::CText;
 
-  m_selection_ref = Instantiate<CImage>("Select", sprite_name, canvas_ref);
+  m_selection_ref = CreateGameObject<CImage>("Select", sprite_name, canvas_ref);
   const auto length = static_cast<int32_t>(choice_list.size());
   for (int32_t i = 0; i < length; ++i) {
     m_commands.emplace_back(
-        Instantiate<CText>("Com" + std::to_string(i), choice_list[i]),
+        CreateGameObject<CText>("Com" + std::to_string(i), choice_list[i]),
         nullptr
     );
   }
@@ -70,11 +70,11 @@ void ChoiceList::SetTextureIndex(const int32_t index) {
 
 void ChoiceList::SetRenderingLayer(int32_t layer_value) {
   m_selection_ref->GetComponent<opgs16::component::CSprite2DRenderer>()->
-      SetRenderLayer(layer_value);
+      SetRenderingLayer(layer_value);
 
   for (auto& [text_ref, callback] : m_commands) {
     text_ref->GetComponent<opgs16::component::CEmptyRenderer>()->
-        SetRenderLayer(layer_value);
+        SetRenderingLayer(layer_value);
   }
 }
 
