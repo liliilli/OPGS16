@@ -171,6 +171,7 @@
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
     <ClCompile Include="Source\Component\font2d_renderer.cc" />
+    <ClCompile Include="Source\Component\Internal\component.cc" />
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
@@ -226,7 +227,6 @@
     <ClCompile Include="Source\Manager\physics_manager.cc" />
     <ClCompile Include="Source\Manager\scene_manager.cc" />
     <ClCompile Include="Source\Manager\setting_manager.cc" />
-    <ClCompile Include="Include\Component\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="Source\Element\object.cc" />
     <ClCompile Include="Source\Element\scene.cc" />
     <!-- <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild> -->
@@ -313,6 +313,7 @@
     <ClInclude Include="Include\Helper\Math\math.h" />
     <ClInclude Include="Include\Helper\Math\random.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
+    <ClInclude Include="Include\Helper\policies.h" />
     <ClInclude Include="Include\Helper\string_helper.h" />
     <ClInclude Include="Include\Helper\Type\clamp.h" />
     <ClInclude Include="Include\Helper\Type\color.h" />
@@ -401,7 +402,6 @@
     <ClInclude Include="Include\Manager\scene_manager.h" />
     <ClInclude Include="Include\Manager\setting_manager.h" />
     <ClInclude Include="Include\Manager\time_manager.h" />
-    <ClInclude Include="Include\Component\Impl\sprite_renderer_impl.h" />
     <ClInclude Include="Include\Element\object.h" />
     <ClInclude Include="Include\Element\scene.h" />
     <!-- <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild> -->

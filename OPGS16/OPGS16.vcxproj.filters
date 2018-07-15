@@ -5,7 +5,6 @@
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Element\Impl\object_impl.cc" />
     <ClCompile Include="Include\Frame\constant.h" />
-    <ClCompile Include="Include\Component\Impl\sprite_renderer_impl.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\camera.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
@@ -117,6 +116,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_item_movement.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_key_input.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\object_cursor.cc" />
+    <ClCompile Include="Source\Component\Internal\component.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -141,7 +141,6 @@
     <ClInclude Include="Include\Shader\framebuffer.h" />
     <ClInclude Include="Include\Shader\shader.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
-    <ClInclude Include="Include\Component\Impl\sprite_renderer_impl.h" />
     <ClInclude Include="Include\Component\Internal\animator_internal.h" />
     <ClInclude Include="Include\Component\Internal\component.h" />
     <ClInclude Include="Include\Component\Internal\component_macro.h" />
@@ -302,6 +301,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Internal\moving_callback.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_key_input.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
+    <ClInclude Include="Include\Helper\policies.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

@@ -19,21 +19,27 @@
 /// 2018-03-07 Move file to /Component.
 /// 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
 /// 2018-04-08 Supporting change of shader on running.
+/// 2018-07-15 Remove pimpl.
 ///
 
-#include <string>
 #include <memory>
 
 /// ::opgs16::component::_internal::CComponent
-#include <Component\Internal\component.h>
-#include <Component\Internal\component_macro.h> /// Component macroes
+#include <Component/Internal/component.h>
+#include <Component/Internal/component_macro.h> /// Component macroes
 /// ::opgs16::component::_internal::CRendererBase
-#include <Component\Internal\renderer_base.h>
+#include <Component/Internal/renderer_base.h>
 
-#include <Manager\resource_type.h>
 #include <opgs16fwd.h>  /// Forward declaration
 
 namespace opgs16::component {
+
+enum class EPrimitiveType {
+  Point,
+  Line,
+  LineLoop,
+  Triangle,
+};
 
 ///
 /// @class CSprite2DRenderer
@@ -41,64 +47,72 @@ namespace opgs16::component {
 /// SpriteRender class has sprite to render on object position,
 /// and has at least one more shader to display to screen.
 ///
-/// @log
-/// 2018-02-26 Componentization of Sprite2DRenderer.
-/// 2018-02-28 Add Get/SetTextureIndex() member function.
-/// 2018-03-07 Move to opgs16::component namespace.
-/// 2018-04-06 Abandon IndexSize structure indicates texture index, replace it with one unsigned value.
-/// 2018-04-08 Supporting change of shader on running.
-///
 class CSprite2DRenderer final : public _internal::CRendererBase {
-private:
-  using pimpl_type = std::unique_ptr<_internal::CSpriteRendererImpl>;
+  using TPimplSmtPtr = std::unique_ptr<_internal::CSpriteRendererImpl>;
 
 public:
-	/*! Make Sprite2DRenderer instance. (Constructor) */
 	CSprite2DRenderer(element::CObject& bind_object,
                     const std::string& sprite_tag,
                     const std::string& shader_tag,
-                    const unsigned texture_index = 0,
-                    const unsigned render_layer = 0);
+                    const int32_t texture_index = 0, const int32_t layer = 0);
 
-  /*!
-   * @brief Set new texture replacing present bound texture.
-   * @param[in] texture_name Texture tag name.
-   */
+  ///
+  /// @brief Set new texture replacing present bound texture.
+  /// @param[in] texture_name Texture tag name.
+  ///
   void SetTexture(const std::string& texture_name);
 
-  /*!
-   * @brief Set texture index to display.
-   * @param[in] index_value Texture fragment value.
-   */
-  void SetTextureIndex(const unsigned index_value);
+  const std::string& GetTextureName() const noexcept;
 
-  /*! Get Texture index position. */
-  const unsigned TextureIndex() const noexcept;
+  ///
+  /// @brief Set texture index to display.
+  /// @param[in] index_value Texture fragment value.
+  ///
+  void SetTextureIndex(int32_t index_value);
+
+  int32_t GetTextureIndex() const noexcept;
 
 	/*! Get ShaderWrapper instance. */
-	element::CShaderWrapper& Wrapper() const;
+	element::CShaderWrapper& Wrapper() noexcept;
 
-  /*!
-   * @brief Set Shader newly.
-   * @param[in] shader_name Shader name to specify.
-   */
+  ///
+  /// @brief Set Shader newly.
+  /// @param[in] shader_name Shader name to specify.
+  ///
   void SetShader(const std::string& shader_name);
 
-  /*!*/
-  void SetInstanceCount(unsigned instance_count);
+  void SetInstanceCount(int32_t instance_count);
 
-  /**
-   * @brief Render sprite on screen. Procedure is below.
-   * 1. m_shader is enable (must be enabled), active shader to use.
-   * 2. update shader uniform parameter.
-   * 3. bind texture, render it with final position(PVM) of bound object.
-   */
+  int32_t GetInstanceCount() const noexcept;
+
+  void SetPrimitiveMode(EPrimitiveType primitive_type);
+
+  EPrimitiveType GetPrimitiveMode() const noexcept;
+
+  ///
+  /// @brief Render sprite on screen. Procedure is below.
+  /// 1. m_shader is enable (must be enabled), active shader to use.
+  /// 2. update shader uniform parameter.
+  /// 3. bind texture, render it with final position(PVM) of bound object.
+  ///
   void RenderSprite();
 
   ~CSprite2DRenderer();
 
 private:
-  pimpl_type m_impl{};
+  EPrimitiveType m_primitive_type = EPrimitiveType::Triangle;
+  GLenum  m_primitive_enum = GL_TRIANGLES;
+
+  int32_t m_texture_fragment_index = 0;
+  int32_t m_instance_count = 1;
+  int32_t m_base_instance = 0;
+
+  /// Sprite 2d texture stores image information.
+	texture::CTexture2D* m_sprite = nullptr;
+  /// Shader is in ShaderManager, render sprite.
+  element::CShaderWrapper m_wrapper;
+  /// Quad VAO to render sprite on screen.
+  element::CVaoContainer* m_weak_vao_ref = nullptr;
 
   SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CSprite2DRenderer)
 };
