@@ -10,6 +10,9 @@
 #include "../../../Include/Object/Common/choice_list.h"
 
 #include <Phitos/Dbg/assert.h>
+
+#include <Component/empty_renderer.h>
+#include <Component/sprite_renderer.h>
 #include <Element/Canvas/image.h>
 #include <Element/Canvas/text.h>
 #include <Helper/Type/vectori2.h>
@@ -63,6 +66,16 @@ void ChoiceList::SetItemSize(const int32_t size) {
 void ChoiceList::SetTextureIndex(const int32_t index) {
   PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
   m_selection_ref->SetTextureIndex(index);
+}
+
+void ChoiceList::SetRenderingLayer(int32_t layer_value) {
+  m_selection_ref->GetComponent<opgs16::component::CSprite2DRenderer>()->
+      SetRenderLayer(layer_value);
+
+  for (auto& [text_ref, callback] : m_commands) {
+    text_ref->GetComponent<opgs16::component::CEmptyRenderer>()->
+        SetRenderLayer(layer_value);
+  }
 }
 
 void ChoiceList::SetCursorSize(const opgs16::DVectorInt2& value) {

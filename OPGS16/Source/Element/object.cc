@@ -79,9 +79,6 @@ void CObject::Update(float delta_time) {
           auto script = static_cast<CScriptFrame*>(component.get());
 
           if (script->m_started == EScriptStarted::NotStarted) {
-            PUSH_LOG_INFO_EXT(
-              "Object call Start() : [Name : {0}]",
-              script->GetBindObject().GetObjectName());
             script->Start();
             script->m_started = decltype(script->m_started)::Started;
           }

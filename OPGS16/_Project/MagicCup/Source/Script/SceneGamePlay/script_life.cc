@@ -33,8 +33,8 @@ void ScriptUiLife::Initiate() {
   text->SetWorldPosition({-16.f, -24.f, 0});
   text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderLayer(3);
 
-  auto& canvas =
-      opgs16::manager::scene::GetPresentScene()->GetGameObject(name::canvas);
+  using opgs16::manager::scene::GetPresentScene;
+  auto& canvas = GetPresentScene()->GetGameObject(name::canvas);
   if (canvas) {
     auto raw_ptr = static_cast<opgs16::element::canvas::CCanvas*>(canvas.get());
 

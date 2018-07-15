@@ -221,8 +221,6 @@ public:
   }
 
 private:
-  void ScriptInitiate(object_ptr& object_pointer);
-
   ///
   /// @brief Create child object name.
   /// @param[in] name

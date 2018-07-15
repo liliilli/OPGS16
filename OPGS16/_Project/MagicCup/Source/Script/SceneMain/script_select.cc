@@ -35,6 +35,7 @@ void ScriptTitleSelect::Initiate() {
   choice_list->SetOrigin(IOriginable::Origin::DOWN_CENTER);
   choice_list->SetWorldPosition({-24.f, 48.f, 0.f});
   choice_list->SetTextureIndex(8);
+  choice_list->SetRenderingLayer(3);
 
   choice_list->SetFunction(0, std::bind(&ScriptTitleSelect::GotoGameplay, this));
   choice_list->SetFunction(1, std::bind(&ScriptTitleSelect::ExitGame, this));

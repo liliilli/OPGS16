@@ -47,10 +47,10 @@ Updated 2018.05.23
   - [x] 생명주기 디버그 및 테스트 씬 만들기
     - [ ] Bug? Object 가 Disabled 되었을 때, 해당 Object 의 스크립트의 타이머는 어떻게 되는가?
     - [x] Camera Orthogonal 시, Z 가 안보이는 문제?
-  - [ ] 사양임. Orthogonal 은 기본 rear 와 far 이 0 으로 되어 있음.
+  - [x] 사양임. Orthogonal 은 기본 rear 와 far 이 0 으로 되어 있음.
     - [x] EmptyObject (말 그대로 텅 빈 오브젝트) 를 만들어서 빌트인으로 제공해야 함.
-    - [ ] Bug : Texture2DAtlas Index 반영 안되는 문제
-  - [ ] 생명주기 루틴 구현
+    - [x] Bug : Texture2DAtlas Index 반영 안되는 문제 (되는데?)
+  - [x] 생명주기 루틴 구현
     - [x] scene Instantiate 부분 수정
     - [x] object Instantiate 부분 수정
   - [x] 생명주기 Initiate() 루틴 구현
@@ -75,7 +75,7 @@ Updated 2018.05.23
   - [ ] Release mode 동작 테스트+'
   - [x] VAO, VBO 와 같은 메쉬 버퍼 컨테이너 내부 관리자 만들기. 및 RAII 로 메모리 누수 처리하면서...
     - [x] 3D 는 아직 하지 말기. 2D 쿼드만 처리하거나, 아니면 2D 형태만 할 수 있도록. 하지만 2D 메쉬도 결국 3D 이기 때문에... 등등.
-  - [ ] TimerManager 1프레임 일시정지, 재개 테스트
+  - [x] TimerManager 1프레임 일시정지, 재개 테스트
   - [x] 리소스 파일 구조 바꾸기
   - [ ] *Bug* : Rendering layer 가 제대로 정렬되지 않는 것 같음.
   - [ ] Phitos 가 아닌 Assertion 파일 및 의존성 지우기
@@ -86,16 +86,17 @@ Updated 2018.05.23
     - 예를 들어서 256 대신에 "esc" 라던가, 265 대신에 "arrow_up" 이라던가...
     - 다만 그렇게 할 경우에는 페이지를 만들어서 어떤 키가 어떤 스트링인지를 명확하게 해야할 필요가 있음.
     - 또한 이 키를 바인딩하기 위해서 `input` 쪽에서 파싱 처리를 해줘야함.
-  - [ ] `CObject` 및 `Object` `Scene` 에서 이름 생성하는 방법 같게 하기.
+  - [x] `CObject` 및 `Object` `Scene` 에서 이름 생성하는 방법 같게 하기.
   - [ ] `CObject` 및 `Obejct` `Scene` 에서 Destroy object 시, 어드레스 비교로 지우게 끔 하기.
     - 우선 DestroyChild 에서 manager::object::Destroy 을 할 때 자기 오브젝트에서 루트를 만들어서 지우게끔 함.
     - 문제는 `DestroyChild` 의 ref 을 받는 버전에선 리턴값으로 성공 아니면 실패를 내놔야하는데 지금은 `object::Destroy` 가 `void` 라서 성공 실패 여부 확인이 안됨.
   - [ ] `CScene` 의 오브젝트 이름 충돌을 피할 것.
 - Object, Component 의 Enable, Disable 처리 기능. (8th 및 onEnable disable 이랑 관계 有)
-  - [ ] Object 부분
-    - [ ] 기초
-    - [ ] 전파
-  - [ ] Component 부분
+  - [x] Object 부분
+    - [x] 기초
+    - [x] 전파
+  - [x] Component 부분
+  - [ ] Object 을 생성하자 마자 바로 Deactivate 할 경우, 좌표가 이상하게 전파되는 것 같음. 예를 들면 상위 오브젝트가 포지션 전파를 했는데, `Deactivate` 된 곳에서는 이를 받지 않아서 좌표가 이상하게 된다던가.
 - [ ] OPGS16 내부 통용 타입 만들기
   - [ ] Vector2, Vector3, Vector4
     - [x] Vector2
@@ -106,7 +107,7 @@ Updated 2018.05.23
   - [ ] 1차원 메모리 공간을 갖는 2차원 배열 Matrix, 혹은 Dim2Vector
     - Dim2Vector 을 사용해서 Matrix 을 쓰면 되지 않을까?
     - 구현하지 말 것. 고정형 2차원 벡터를 쓰게 되면 부딪히는 부분이 너무 많다.
-  - [ ] `<random>` 및 `<chrono>`  을 정의하지 않고도 바로 랜덤을 쓸 수 있도록 제공하는 `SRandom` 네임스페이스.
+  - [x] `<random>` 및 `<chrono>`  을 정의하지 않고도 바로 랜덤을 쓸 수 있도록 제공하는 `SRandom` 네임스페이스.
   - [ ] 회전 값을 담고 있는 `Quaternion` 클래스
-  - [ ] `DClamp` 클래스
+  - [x] `DClamp` 클래스
 - [ ] 샘플 게임으로 테트리스 만들어보기. (GAME BOY)

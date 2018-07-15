@@ -87,6 +87,10 @@ public:
   ///
   void SetTextureIndex(const int32_t index);
 
+  void SetRenderLayer(const std::string& layer_name) {};
+
+  void SetRenderLayer(int32_t layer_value) {};
+
 private:
   component::CSprite2DRenderer* m_renderer_ptr;
   CCanvas* const m_ref_canvas;		/** l_value reference of canvas to get projection matrix. */

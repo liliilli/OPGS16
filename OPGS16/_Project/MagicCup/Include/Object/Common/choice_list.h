@@ -82,6 +82,11 @@ public:
   ///
   ///
   ///
+  void SetRenderingLayer(int32_t layer_value);
+
+  ///
+  ///
+  ///
   void SetFunction(int32_t index, std::function<void(void)> callback_function);
 
   ///
