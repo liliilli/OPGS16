@@ -12,8 +12,12 @@
 #include <Manager/scene_manager.h>
 #include <Manager/timer_manager.h>
 
+#include "../../../../Include/Internal/object_keyword.h"
 #include "../../../../Include/Object/SceneGamePlay/stage_obj_mng.h"
+#include "../../../../Include/Object/SceneGamePlay/ui_object.h"
 #include "../../../../Include/Script/SceneGamePlay/script_obj_mng.h"
+#include "../../../../Include/Script/SceneGamePlay/script_timelimit.h"
+#include "../../../../Include/Script/SceneGamePlay/script_ui_object.h"
 #include "../../../../Include/Script/SceneGamePlay/Management/script_data.h"
 #include "../../../../Include/Script/SceneGamePlay/Management/script_key_input.h"
 #include "../../../../Include/Scene/scene_main.h"
@@ -38,6 +42,13 @@ void ScriptStateMachine::Start() {
 
   if (!m_input) {
     m_input = obj.GetComponent<ScriptKeyInput>();
+  }
+
+  if (!m_timelimit) {
+    m_timelimit = GetPresentScene()->GetGameObject(name::canvas)->
+        GetGameObject(GamePlayUi::s_obj_name)->
+        GetComponent<ScriptUiObject>()->
+        GetScriptTimelimit();
   }
 
   TransitGameState(EGameState::GameStart);
@@ -77,11 +88,19 @@ void ScriptStateMachine::TransitGameState(EGameState new_state) {
     if (new_state == EGameState::Select) {
       m_object_management->EnableCursor();
       m_input->EnableSelectKeyInput();
+      m_timelimit->ExecuteTimeLimit(5'000);
     }
     break;
   case EGameState::Select:
     if (new_state == EGameState::Result) {
       m_object_management->ExecuteJudging();
+      m_timelimit->HaltTimeLimit();
+    }
+    else if (new_state == EGameState::GameOver) {
+      using opgs16::manager::scene::GetPresentScene;
+      GetPresentScene()->SetBackgroundColor(opgs16::DColor::Red);
+      OP16_TIMER_SET(m_gameover_effect_timer, 2'000, false, this,
+                     &ScriptStateMachine::ReturnToTitle);
     }
     break;
   case EGameState::Result:

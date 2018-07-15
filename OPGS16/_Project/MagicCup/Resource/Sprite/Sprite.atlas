@@ -10,7 +10,9 @@
     "BackPattern2": { "index": 1, "offset_x": 32, "offset_y":  0, "width": 32, "height": 32 },
     "BackPattern3": { "index": 2, "offset_x": 64, "offset_y":  0, "width": 32, "height": 32 },
     "BackPattern4": { "index": 3, "offset_x": 96, "offset_y":  0, "width": 32, "height": 32 },
-    "Cup":  { "index": 4, "offset_x": 0, "offset_y": 32, "width": 64, "height": 96 },
-    "Ball": { "index": 5, "offset_x": 64, "offset_y": 32, "width": 32, "height": 32 }
+    "BackPattern5": { "index": 4, "offset_x": 128, "offset_y":  0, "width": 32, "height": 32 },
+    "BackPattern6": { "index": 5, "offset_x": 160, "offset_y":  0, "width": 32, "height": 32 },
+    "Cup":  { "index": 6, "offset_x": 0, "offset_y": 32, "width": 64, "height": 96 },
+    "Ball": { "index": 7, "offset_x": 64, "offset_y": 32, "width": 32, "height": 32 }
   }
 }

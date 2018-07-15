@@ -16,9 +16,20 @@ class ScriptUiTimelimit final : public opgs16::component::CScriptFrame {
 public:
   OP16_SCRIPT_GENERATE(ScriptUiTimelimit);
 
+  void ExecuteTimeLimit(int32_t time_value);
+
+  void HaltTimeLimit();
+
 private:
   void Initiate() override final;
+  void Update(float delta_time) override final;
 
+  opgs16::element::canvas::CImage*  m_timer_bar = nullptr;
+  opgs16::element::canvas::CText*   m_timer_text = nullptr;
+
+  const int32_t m_initial_width = 128;
+  int32_t m_time_value = 0;
+  int32_t m_time_set = 0;
 };
 
 } /// ::magiccup namespace

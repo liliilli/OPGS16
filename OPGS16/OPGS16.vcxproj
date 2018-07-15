@@ -249,6 +249,7 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\CanvasItem\background.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_ball.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_cup.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_cup_item.cc" />
@@ -268,6 +269,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Scene\scene_logo.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Scene\scene_main.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Scene\scene_gameplay.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\CanvasItem\script_background.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_cup_number.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_item_movement.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_data.cc" />
@@ -427,6 +429,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Internal\moving_callback.h" />
     <ClInclude Include="_Project\MagicCup\Include\Internal\object_keyword.h" />
     <ClInclude Include="_Project\MagicCup\Include\Internal\state_machine.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\CanvasItem\background.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\Common\choice_list.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\Common\empty_canvas.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\Common\empty_object.h" />
@@ -446,6 +449,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Scene\scene_logo.h" />
     <ClInclude Include="_Project\MagicCup\Include\Scene\scene_main.h" />
     <ClInclude Include="_Project\MagicCup\Include\Scene\scene_gameplay.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\CanvasItem\script_background.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_cup_number.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_item_movement.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_data.h" />

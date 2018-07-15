@@ -99,13 +99,11 @@ void ScriptObjectManagement::ExecuteTransitionShaking() {
 }
 
 void ScriptObjectManagement::ExecuteShaking(int32_t shaking_count) {
-#ifdef false
   m_item_list[m_ball_index]->GetGameObject(ObjectBall::s_object_name)->
       SetActive(false);
-#endif
 
   m_shaking_count_on_stage = shaking_count;
-  OP16_TIMER_SET(m_shaking_timer, 2'000, true, this,
+  OP16_TIMER_SET(m_shaking_timer, 1'000, true, this,
                  &ScriptObjectManagement::NextShake);
 }
 
@@ -143,10 +141,17 @@ void ScriptObjectManagement::NextShake() {
 
   auto lhs_instance = m_item_list[lhs]->GetComponent<ScriptItemMovement>();
   auto rhs_instance = m_item_list[rhs]->GetComponent<ScriptItemMovement>();
-  lhs_instance->SetMoveSetting(m_item_list[rhs]->GetWorldPosition(), 2'000);
-  rhs_instance->SetMoveSetting(m_item_list[lhs]->GetWorldPosition(), 2'000);
-  lhs_instance->SetMoveFunction(magiccup::DontMove);
-  rhs_instance->SetMoveFunction(magiccup::DontMove);
+  lhs_instance->SetMoveSetting(m_item_list[rhs]->GetWorldPosition(), 1'000);
+  rhs_instance->SetMoveSetting(m_item_list[lhs]->GetWorldPosition(), 1'000);
+
+  if (lhs < rhs) {
+    lhs_instance->SetMoveFunction(magiccup::BazierMoveLtR);
+    rhs_instance->SetMoveFunction(magiccup::BazierMoveRtL);
+  }
+  else {
+    rhs_instance->SetMoveFunction(magiccup::BazierMoveLtR);
+    lhs_instance->SetMoveFunction(magiccup::BazierMoveRtL);
+  }
 
   lhs_instance->ExecuteMoving();
   rhs_instance->ExecuteMoving();

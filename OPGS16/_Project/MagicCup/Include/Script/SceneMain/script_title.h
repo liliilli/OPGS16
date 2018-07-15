@@ -9,6 +9,11 @@
 ///
 
 #include <Component/script_frame.h>
+#include <Frame/timer_handle.h>
+
+namespace magiccup {
+class ScriptUiBackground;
+} /// ::magiccup namespace
 
 namespace magiccup {
 
@@ -18,6 +23,13 @@ public:
 
 private:
   void Initiate() override final;
+
+  void ChangeBackground();
+
+  magiccup::ScriptUiBackground* m_background = nullptr;
+
+  opgs16::element::CTimerHandle m_temporary_timer;
+  int32_t m_background_index = 0;
 };
 
 } /// ::magiccup namespace

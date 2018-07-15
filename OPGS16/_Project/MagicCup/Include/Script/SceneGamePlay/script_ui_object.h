@@ -15,6 +15,7 @@ class ScriptUiScore;
 class ScriptUiLife;
 class ScriptUiTimelimit;
 class ScriptUiStage;
+class ScriptUiBackground;
 }
 
 namespace magiccup {
@@ -39,6 +40,10 @@ public:
     return m_stage;
   }
 
+  inline ScriptUiBackground* GetBackground() noexcept {
+    return m_background;
+  }
+
 private:
   void Initiate() override final;
 
@@ -46,6 +51,7 @@ private:
   ScriptUiLife*   m_life = nullptr;
   ScriptUiTimelimit* m_timelimit = nullptr;
   ScriptUiStage*  m_stage = nullptr;
+  ScriptUiBackground* m_background = nullptr;
 };
 
 }

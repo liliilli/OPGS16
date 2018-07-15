@@ -17,6 +17,7 @@ namespace magiccup {
 class ScriptDataContainer;
 class ScriptObjectManagement;
 class ScriptKeyInput;
+class ScriptUiTimelimit;
 } /// Forward declarations
 
 namespace magiccup {
@@ -42,6 +43,7 @@ private:
   ScriptDataContainer* m_data = nullptr;
   ScriptObjectManagement* m_object_management = nullptr;
   ScriptKeyInput* m_input = nullptr;
+  ScriptUiTimelimit* m_timelimit = nullptr;
 
   opgs16::element::CTimerHandle m_gameover_effect_timer;
 };

@@ -16,6 +16,7 @@ class TimerImage final : public opgs16::element::canvas::CImage {
 public:
   TimerImage(const opgs16::element::canvas::CCanvas* canvas_reference);
 
+  inline static constexpr const char* s_object_name = "Timer";
 };
 
 } /// ::magiccup namespace

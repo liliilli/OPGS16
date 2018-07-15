@@ -117,6 +117,8 @@
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\object_cursor.cc" />
     <ClCompile Include="Source\Component\Internal\component.cc" />
     <ClCompile Include="Source\Component\sprite2d_renderer.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\CanvasItem\background.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\CanvasItem\script_background.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -302,6 +304,8 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
     <ClInclude Include="Include\Helper\policies.h" />
     <ClInclude Include="Include\Component\sprite2d_renderer.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\CanvasItem\background.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\CanvasItem\script_background.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

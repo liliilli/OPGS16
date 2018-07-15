@@ -49,18 +49,27 @@ constexpr const char* shader_fragment_shader =
 "#version 430 core\n\
 \n\
 out vec4 color;\
+\
+layout (binding = 0) uniform sampler2D uTexture1;\
 uniform vec2 uTexelLD;\
 uniform vec2 uTexelRU;\
+uniform vec2 opScale = vec2(1, 1);\
+uniform vec2 opOffset = vec2(0, 0);\
+uniform float opAlpha;\
 \
 in VS_OUT {\
 	vec2 texCoord;\
 } fs_in;\
 \
-layout (binding = 0) uniform sampler2D uTexture1;\
-uniform float opAlpha;\
+vec2 GetTransformedTexel() {\
+  vec2 uTexelRegion = uTexelRU - uTexelLD;\
+  vec2 finalTexel = mod((fs_in.texCoord / opScale), 1.0);\
+  finalTexel += opOffset;\
+  return uTexelLD + mod(finalTexel, 1.0) * uTexelRegion;\
+};\
 \
 void main() {\
-	color = texture(uTexture1, uTexelLD + (fs_in.texCoord * (uTexelRU - uTexelLD))) * vec4(1, 1, 1, opAlpha);\
+	color = texture(uTexture1, GetTransformedTexel()) * vec4(1, 1, 1, opAlpha);\
 }";
 
 } /*! unnamed namespace */

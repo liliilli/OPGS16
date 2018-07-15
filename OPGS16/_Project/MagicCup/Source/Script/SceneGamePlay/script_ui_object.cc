@@ -9,11 +9,18 @@
 /// Header file
 #include "../../../Include/Script/SceneGamePlay/script_ui_object.h"
 
+#include <Element/Canvas/canvas.h>
+#include <Manager/scene_manager.h>
+
+#include "../../../Include/Internal/object_keyword.h"
+
+#include "../../../Include/Object/CanvasItem/background.h"
 #include "../../../Include/Object/SceneGamePlay/ui_life.h"
 #include "../../../Include/Object/SceneGamePlay/ui_score.h"
 #include "../../../Include/Object/SceneGamePlay/ui_timelimit.h"
 #include "../../../Include/Object/SceneGamePlay/ui_stage.h"
 
+#include "../../../Include/Script/CanvasItem/script_background.h"
 #include "../../../Include/Script/SceneGamePlay/script_score.h"
 #include "../../../Include/Script/SceneGamePlay/script_life.h"
 #include "../../../Include/Script/SceneGamePlay/script_timelimit.h"
@@ -35,6 +42,15 @@ void ScriptUiObject::Initiate() {
 
   m_stage = obj.CreateGameObject<UiStage>(UiStage::s_object_name)->
       GetComponent<ScriptUiStage>();
+
+  using opgs16::element::canvas::CCanvas;
+  using opgs16::manager::scene::GetPresentScene;
+  m_background = obj.CreateGameObject<UiBackground>(
+      UiBackground::s_object_name,
+      static_cast<CCanvas*>(GetPresentScene()->GetGameObject(name::canvas)))->
+          GetComponent<ScriptUiBackground>();
+  m_background->SetTile(3);
+  m_background->SetOffset(0.01f, 0.01f);
 }
 
 } /// ::magiccup namespace
