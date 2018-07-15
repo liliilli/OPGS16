@@ -18,19 +18,23 @@
 /// a storing type to avoid cracking of polymorphism.
 ///
 /// @author Jongmin Yun
-///
+
 /// @log
+/// 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
 /// 2018-02-19
-/// Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
+/// Add GetParentPosition(). Remove virtual property from Draw() and Render()
+/// virtual methods. and Remove virtual property from Update() instead of
+/// adding LocalUpdate() method which replaces Update() override.
 /// 2018-02-23
 /// Add hierarchy rotation and scaling option. (mechanism is not implemented yet)
-/// 2018-03-05
-/// Add member function related to controlling rendering layer.
+/// 2018-03-05 Add member function related to controlling rendering layer.
 /// 2018-03-11 Move contents into ::opgs16::element namespace.
 /// 2018-04-16 Add rotation (parent, world) get/set functions.
 /// 2018-04-18 Change function and mechanism of rotation.
 /// 2018-05-24 Add object cycle implementation for Initiate() calling.
+/// 2018-05-25 Add object cycle for Start() calling.
 /// 2018-07-02 Refactoring glm::vec3 to DVector3
+/// 2018-07-15 Refactoring, and rename Instantiate to CreateGameObject
 ///
 
 #include <algorithm>
@@ -62,6 +66,7 @@
 /// ::opgs16::DVector3
 #include <Helper/Type/vector3.h>
 #include "Phitos/Enums/activated.h"
+#include <Phitos/Dbg/assert.h>
 
 namespace opgs16::element {
 ///
@@ -73,29 +78,15 @@ namespace opgs16::element {
 /// polymorphism.
 /// Each object can be called using Update and Draw with shader to use.
 ///
-/// @log
-/// 2018-02-19 Refactoring. Remove Draw(ShaderNew) obsolete not helpful method. Yeah!
-/// 2018-02-19
-/// Add GetParentPosition(). Remove virtual property from Draw() and Render()
-/// virtual methods. and Remove virtual property from Update() instead of
-/// adding LocalUpdate() method which replaces Update() override.
-/// 2018-03-05 Add member function related to controlling rendering layer.
-/// 2018-03-11 Move contents into ::opgs16::element namespace.
-/// 2018-04-16 Add rotation (parent, world) get/set functions.
-/// 2018-04-18 Change function and mechanism of rotation.
-/// 2018-05-24 Add object cycle implementation for Initiate() calling.
-/// 2018-05-25 Add object cycle for Start() calling.
-/// 2018-07-02 Refactoring glm::vec3 to DVector3
-///
 class CObject {
-  using component_ptr     = std::unique_ptr<component::_internal::CComponent>;
-  using component_list    = std::vector<
-      std::pair<component_ptr, component::_internal::EComponentType>>;
-  using name_counter_map  = std::unordered_map<std::string, int32_t>;
-	using object_raw = CObject*;
-	using object_ptr = std::unique_ptr<CObject>;
-	using object_map = std::unordered_map<std::string, object_ptr>;
-  using pimpl_ptr  = std::unique_ptr<_internal::CObjectImpl>;
+  using TComponentSmtPtr  = std::unique_ptr<component::_internal::CComponent>;
+  using TComponentPair    = std::pair<TComponentSmtPtr,
+                                      component::_internal::EComponentType>;
+  using TComponentList    = std::vector<TComponentPair>;
+  using TNameCounterMap   = std::unordered_map<std::string, int32_t>;
+	using TGameObjectSmtPtr = std::unique_ptr<CObject>;
+	using TGameObjectMap    = std::unordered_map<std::string, TGameObjectSmtPtr>;
+  using TPimplSmtPtr      = std::unique_ptr<_internal::CObjectImpl>;
 
 public:
 	CObject();
@@ -242,16 +233,26 @@ public:
   /// Overloaded function of Instantiate(Varadic...)
   ///
   template <
-    class _Ty,
-    class = std::enable_if_t<IsCObjectBase<_Ty>>
+    class TCObjectType,
+    class = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  _Ty* Instantiate(const std::string name, std::unique_ptr<_Ty>& instance) {
-    const auto item_tag = CreateChildTag(name);
-    m_children[item_tag] = std::move(instance);
-    m_children[item_tag]->SetHash(item_tag);
-    m_children[item_tag]->SetParentPosition(GetParentPosition());
+  TCObjectType* CreateGameObject(const std::string& object_name,
+                            std::unique_ptr<TCObjectType>& object_smtptr) {
+    const auto object_final_name = CreateChildTag(object_name);
 
-    return static_cast<_Ty*>(m_children[item_tag].get());
+    auto [result_pair, result] = m_children.try_emplace(
+        object_final_name,
+        nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Object did not be made properly.");
+      return nullptr;
+    }
+
+    result_pair->second = std::move(object_smtptr);
+    TGameObjectSmtPtr& object_ref = result_pair->second;
+    object_ref->SetHash(object_final_name);
+    object_ref->SetParentPosition(GetParentPosition());
+    return static_cast<TCObjectType*>(object_ref.get());
   }
 
 	///
@@ -266,23 +267,28 @@ public:
 	///
 	/// You have to <> parenthesis to input specific class type to create.
 	///
-	/// @param[in] object Object instance to make.
-	/// @param[in] name Object Tag.
-	/// @tparam _Args variadic args to be used c-tor initialize parameters inputs.
-	/// @return Success/Failed flag. If the methods success to make child object, return true.
-	///
   template <
-    class _Ty,
-    class... _Args,
-    class = std::enable_if_t<IsCObjectBase<_Ty>>
+    class TCObjectType,
+    class... TConstructionArgs,
+    class = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  _Ty* Instantiate(const std::string name, _Args&&... _args) {
-    const auto item_tag = CreateChildTag(name);
-    m_children.emplace(item_tag, std::make_unique<_Ty>(std::forward<_Args>(_args)...));
-    m_children[item_tag]->SetHash(item_tag);
-    m_children[item_tag]->SetParentPosition(GetParentPosition());
+  TCObjectType* CreateGameObject(const std::string object_name,
+                            TConstructionArgs&&... args) {
+      const auto object_final_name = CreateChildTag(object_name);
 
-    return static_cast<_Ty*>(m_children[item_tag].get());
+    auto [result_pair, result] = m_children.try_emplace(
+        object_final_name,
+        nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Object did not be made properly.");
+      return nullptr;
+    }
+
+    result_pair->second = std::make_unique<TCObjectType>(
+        std::forward<TConstructionArgs>(args)...);
+    TGameObjectSmtPtr& object_ref = result_pair->second;
+    object_ref->SetHash(object_final_name);
+    return static_cast<TCObjectType*>(object_ref.get());
   }
 
 	///
@@ -291,33 +297,34 @@ public:
 	/// @return Success/Failed tag.
   /// If arbitary m_object_list has been destroied, return ture.
 	///
-	bool DestroyChild(const std::string& name);
+	bool DestroyGameObject(const std::string& name);
 
   ///
   /// @brief Destory child object with address.
 	/// @return Success/Failed tag.
   /// If arbitary m_object_list has been destroyed, return ture.
   ///
-  bool DestroyChild(const element::CObject& child_object);
+  bool DestroyGameObject(const element::CObject& child_object);
 
 	///
 	/// @brief Get children tag list.
 	/// @return Children's tags container of object.
 	///
-	std::vector<std::string> GetChildrenNameList() const;
+	std::vector<std::string> GetGameObjectNameList() const;
 
 	///
 	/// @brief Get children reference.
 	/// @return Children m_object_list component list.
 	///
-	object_map& GetChildList();
+	TGameObjectMap& GetGameObjectList();
 
 	///
 	/// @brief Get arbitary child object.
-	/// @param[in] child_name The name of object to find.
+	/// @param[in] object_name The name of object to find.
 	/// @return Object's raw-pointer instance. this cannot removeable.
 	///
-	object_raw const GetChild(const std::string& child_name);
+	CObject* GetGameObject(const std::string& object_name,
+                         bool is_resursive = false);
 
   ///
   /// @brief
@@ -480,7 +487,7 @@ public:
   ///
   /// @brief Return object name
   ///
-  inline const std::string& GetObjectName() const {
+  inline const std::string& GetGameObjectName() const {
     return m_object_name;
   }
 
@@ -489,21 +496,10 @@ public:
   ///
   const DVector3& GetParentPosition() const noexcept;
 
-private:
-  /// Object name counter to avoid duplicated object name
-  name_counter_map m_name_counter;
-
-  /// this object name
-  mutable std::string m_object_name{};
-  /// Hash value to verify object number
-  mutable int32_t m_hash_value{};
-  /// Flag
-  mutable bool m_hash_initialized{ false };
-
 protected:
-	pimpl_ptr   m_data{ nullptr }; /*! Pointer implementation heap instance. */
-	object_map  m_children;        /*! The container stores child object. */
-  component_list m_components{}; /*! CComponent list of thie object. */
+	TPimplSmtPtr   m_data{ nullptr }; /*! Pointer implementation heap instance. */
+	TGameObjectMap  m_children;        /*! The container stores child object. */
+  TComponentList m_components{}; /*! CComponent list of thie object. */
 
 private:
   ///
@@ -523,6 +519,8 @@ private:
 
     return item_tag;
   }
+
+  CObject* GetGameObjectResursively(const std::string& object_name) noexcept;
 
   /// Propagate parent position recursively.
   void PropagateParentPosition();
@@ -551,6 +549,17 @@ protected:
 
   /// Render method for derived object.
   virtual void Render() {};
+
+private:
+  /// Object name counter to avoid duplicated object name
+  TNameCounterMap m_name_counter;
+
+  /// this object name
+  mutable std::string m_object_name;
+  /// Hash value to verify object number
+  mutable int32_t m_hash_value = 0;
+  /// Flag
+  mutable bool m_hash_initialized = false;
 };
 
 } /// ::opgs16::element namespace

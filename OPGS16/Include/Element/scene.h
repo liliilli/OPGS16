@@ -28,6 +28,7 @@
 /// 2018-04-14 Move file to /System/Element/Public/ directory.
 /// 2018-05-24 Implement object life cycle.
 /// 2018-07-09 Add name generation.
+/// 2018-07-15 Refactoring, and rename Instantiate to CreateGameObject
 ///
 
 #include <memory>
@@ -59,9 +60,9 @@ namespace opgs16::element {
 /// Move ::Scene class to ::opgs16::element::Scene class. Revised DEFINE name.
 ///
 class CScene {
-  using TObjectSmtPtr   = std::unique_ptr<CObject>;
-  using TObjectMap      = std::unordered_map<std::string, TObjectSmtPtr>;
-  using TNameCounterMap = std::unordered_map<std::string, int32_t>;
+  using TGameObjectSmtPtr = std::unique_ptr<CObject>;
+  using TGameObjectMap    = std::unordered_map<std::string, TGameObjectSmtPtr>;
+  using TNameCounterMap   = std::unordered_map<std::string, int32_t>;
 
 public:
   virtual ~CScene() = default;
@@ -86,23 +87,22 @@ public:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   };
 
-	///
-	/// @brief
+  ///
+  /// @brief
 	/// Instantiate game object in scene by moving object instance to container.
   /// If success, return pointer of moved object but nullptr if failed.
   ///
   /// @param[in] object_name Object name to speicify.
-  /// @param[in] object_smtptr PRvalue unique smart pointer of object.
+  /// @param[in] object_smtptr Unique smart pointer reference of object.
   ///
   /// @return If success, raw pointer of moved object; otherwise nullptr.
   ///
 	template <
     class TCObjectType,
-    typename = std::enable_if_t<IsCObjectBase<TCObjectType> &&
-                                IsCObjectSmtPtr<TCObjectType>>
+    typename = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  TCObjectType* Instantiate(const std::string& object_name,
-                            std::unique_ptr<TCObjectType>&& object_smtptr) {
+  TCObjectType* CreateGameObject(const std::string& object_name,
+                            std::unique_ptr<TCObjectType>& object_smtptr) {
     const auto object_final_name = CreateChildTag(object_name);
 
     auto [result_pair, result] = m_object_list.try_emplace(
@@ -114,40 +114,7 @@ public:
     }
 
     result_pair->second = std::move(object_smtptr);
-    TObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->SetHash(object_final_name);
-    return static_cast<TCObjectType*>(object_ref.get());
-	}
-
-  ///
-  /// @brief
-	/// Instantiate game object in scene by moving object instance to container.
-  /// If success, return pointer of moved object but nullptr if failed.
-  ///
-  /// @param[in] object_name Object name to speicify.
-  /// @param[in] obj Unique smart pointer reference of object.
-  ///
-  /// @return If success, raw pointer of moved object; otherwise nullptr.
-  ///
-	template <
-    class TCObjectType,
-    typename = std::enable_if_t<IsCObjectBase<TCObjectType> &&
-                                IsCObjectSmtPtr<TCObjectType>>
-  >
-  TCObjectType* Instantiate(const std::string& object_name,
-                            std::unique_ptr<TCObjectType>& obj) {
-    const auto object_final_name = CreateChildTag(object_name);
-
-    auto [result_pair, result] = m_object_list.try_emplace(
-        object_final_name,
-        nullptr);
-    if (!result) {
-      PHITOS_ASSERT(result, "Object did not be made properly.");
-      return nullptr;
-    }
-
-    result_pair->second = std::move(obj);
-    TObjectSmtPtr& object_ref = result_pair->second;
+    TGameObjectSmtPtr& object_ref = result_pair->second;
     object_ref->SetHash(object_final_name);
     return static_cast<TCObjectType*>(object_ref.get());
 	}
@@ -169,7 +136,7 @@ public:
     class... TConstructionArgs,
     typename = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  TCObjectType* Instantiate(const std::string& object_name,
+  TCObjectType* CreateGameObject(const std::string& object_name,
                             TConstructionArgs&&... args) {
     const auto object_final_name = CreateChildTag(object_name);
 
@@ -183,7 +150,7 @@ public:
 
     result_pair->second = std::make_unique<TCObjectType>(
         std::forward<TConstructionArgs>(args)...);
-    TObjectSmtPtr& object_ref = result_pair->second;
+    TGameObjectSmtPtr& object_ref = result_pair->second;
     object_ref->SetHash(object_final_name);
     return static_cast<TCObjectType*>(object_ref.get());
 	}
@@ -192,7 +159,7 @@ public:
 	/// @brief Get object list loaded in scene.
 	/// @return The reference of object list with hash_map.
 	///
-	const TObjectMap* GetGameObjectList() const noexcept;
+	TGameObjectMap* GetGameObjectList() noexcept;
 
 	///
 	/// @brief Get specific object with tag.
@@ -255,12 +222,12 @@ private:
     return item_tag;
   }
 
-  CObject* GetGameObjectResursively(const std::string& object_name);
+  CObject* GetGameObjectResursively(const std::string& object_name) noexcept;
 
   component::CCamera* m_main_camera = nullptr;
   DColor m_background_color = DColor::Black;
 
-  TObjectMap  m_object_list;
+  TGameObjectMap  m_object_list;
   TNameCounterMap m_name_counter;
 };
 

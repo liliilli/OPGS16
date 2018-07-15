@@ -30,6 +30,7 @@
 #include <Headers/import_logger.h>
 
 #include <Manager/object_manager.h>
+#include <Phitos/Dbg/assert.h>
 
 namespace opgs16::element {
 
@@ -138,10 +139,9 @@ void CObject::PropagateParentPosition() {
   for (auto& child : m_children) {
     auto& child_ptr = child.second;
     /// If object is not empty and activated and permits succeeding positioning.
-    using phitos::enums::EActivated;
-    if (child_ptr &&
-        child_ptr->IsFinallyActivated() == EActivated::Activated &&
-        child_ptr->GetSucceedingPositionFlag())
+    //using phitos::enums::EActivated;
+    //child_ptr->IsFinallyActivated() == EActivated::Activated &&
+    if (child_ptr && child_ptr->GetSucceedingPositionFlag())
       child_ptr->SetParentPosition(GetParentPosition());
   }
 }
@@ -239,28 +239,55 @@ bool CObject::GetSucceedingScalingFlag() const noexcept {
     return m_data->GetSucceedingScalingFlag();
 }
 
-std::vector<std::string> CObject::GetChildrenNameList() const {
+std::vector<std::string> CObject::GetGameObjectNameList() const {
 	std::vector<std::string> list;
-	list.resize(m_children.size());
+	list.reserve(m_children.size());
 
 	for (const auto& object_pair : m_children) {
-        /*! emplace_back evades unnecessary temp instance. */
-	    list.emplace_back(object_pair.first);
+    list.emplace_back(object_pair.first);
 	}
 
 	return list;
 }
 
-CObject::object_map& CObject::GetChildList() {
+CObject::TGameObjectMap& CObject::GetGameObjectList() {
 	 return m_children;
- }
-
-CObject::object_raw const CObject::GetChild(const std::string& tag) {
-    if (m_children.find(tag) == m_children.end()) return nullptr;
-    return m_children.at(tag).get();
 }
 
-bool CObject::DestroyChild(const std::string& child_name) {
+CObject* CObject::GetGameObject(const std::string& object_name,
+                                bool is_recursive) {
+  if (!is_recursive) {
+    if (const auto it = m_children.find(object_name);
+        it != m_children.end()) {
+      return it->second.get();
+    }
+    return nullptr;
+  }
+
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+  return nullptr;
+}
+
+CObject* CObject::GetGameObjectResursively(const std::string& object_name) noexcept {
+  for (auto& element : m_children) {
+    const auto& object = element.second;
+    // If object is empty, pass it.
+    if (object) continue;
+
+    if (object->GetGameObjectName() == object_name) {
+      return object.get();
+    }
+
+    if (const auto object_pointer = object->GetGameObject(object_name, true)) {
+      return object_pointer;
+    }
+  }
+
+  return nullptr;
+}
+
+
+bool CObject::DestroyGameObject(const std::string& child_name) {
   if (const auto it = m_children.find(child_name); it == m_children.end()) {
     PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]", child_name);
     return false;
@@ -271,8 +298,8 @@ bool CObject::DestroyChild(const std::string& child_name) {
   }
 }
 
-bool CObject::DestroyChild(const element::CObject& child_object) {
-  using TObjectMap = std::unordered_map<std::string, object_ptr>;
+bool CObject::DestroyGameObject(const element::CObject& child_object) {
+  using TObjectMap = std::unordered_map<std::string, TGameObjectSmtPtr>;
   using TItType = TObjectMap::iterator;
 
   manager::object::Destroy(child_object, this);
@@ -294,7 +321,7 @@ void CObject::Propagate() {
     flag = EActivated::Activated;
   }
 
-  auto& child_list = GetChildList();
+  auto& child_list = GetGameObjectList();
   for (auto& [name, ptr] : child_list) {
     ptr->PropagateActivation(flag);
     ptr->CalculateActivation();
