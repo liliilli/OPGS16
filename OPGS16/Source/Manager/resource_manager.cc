@@ -1036,8 +1036,9 @@ GetCustomUniformVariableList(const std::string& file_path) {
     }
 
     using opgs16::builtin::s_shader_builtin;
-    if (std::any_of(s_shader_builtin.begin(), s_shader_builtin.end(),
-        [&key](const std::string_view& builtin_variable) {
+    using opgs16::builtin::builtin_size;
+    if (std::any_of(s_shader_builtin, s_shader_builtin + builtin_size,
+        [&key](const char* builtin_variable) {
           return key == builtin_variable;
         }
     )) {

@@ -131,7 +131,7 @@ void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
                 debug::err_font_duplicated_init);
 
-	m_common_shader = shader::GetShader("gCommonFont");
+	m_common_shader = shader::GetShader("opFont2d");
 
   GenerateFont("opSystem");
   m_default_font = m_fonts["opSystem"].get();

@@ -292,7 +292,7 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
     m_color_dirty = _internal::EDirtyFlag::Clean;
   }
   if (m_proj_matrix_dirty == _internal::EDirtyFlag::Dirty) {
-    m_wrapper.SetUniformValue("projection", m_projection);
+    m_wrapper.SetUniformValue("opProjView", m_projection);
     m_proj_matrix_dirty = _internal::EDirtyFlag::Clean;
   }
 

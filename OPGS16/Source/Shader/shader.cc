@@ -72,10 +72,7 @@ CShaderNew::SetShader(const opgs16::resource::SShader& shader_information) {
 
   LinkShaderProgram();
 
-  Use();
   InitializeUniformVariables(shader_information.GetVariableList());
-  glUseProgram(0);
-
   return this;
 }
 
@@ -97,8 +94,9 @@ void CShaderNew::SetShader(resource::EShaderType shader_type,
   int success = 0;
   glGetShaderiv(source, GL_COMPILE_STATUS, &success);
   char info_log[LOG_SIZE]{};
-  if (!success)
+  if (!success) {
     ShaderErrorPrint(m_shaders[shader_type], info_log);
+  }
 }
 
 CShaderNew::~CShaderNew() {
@@ -139,23 +137,38 @@ void CShaderNew::InitializeUniformVariables(
   using opgs16::builtin::s_shader_builtin;
   using opgs16::builtin::s_shader_builtin_type;
 
+#ifdef false // Querying
+  int32_t count = 0;
+  glGetProgramiv(m_program_id, GL_ACTIVE_UNIFORMS, &count);
+  GLsizei length = 0;
+  GLint size = 0;
+  GLenum type = 0;
+
+  for (int32_t i = 0; i < count; i++) {
+    GLchar name[0x20];
+    glGetActiveUniform(m_program_id, (GLuint)i, 0x20, &length, &size, &type, name);
+    auto id = glGetUniformLocation(m_program_id, name);
+    PUSH_LOG_INFO_EXT("Uniform #{} Type: {} Name: {} Id : {}", i, type, name, id);
+  }
+#endif
+
   int32_t i = 0;
-  for (const std::string_view& variable : s_shader_builtin) {
-    const auto uniform_id = glGetUniformLocation(m_program_id, variable.data());
-    if (uniform_id > 0) {
+  for (const char* variable : s_shader_builtin) {
+    const auto uniform_id = glGetUniformLocation(m_program_id, variable);
+    if (uniform_id >= 0) {
       m_uniform_variables.emplace_back(std::make_tuple(
-          variable.data(), s_shader_builtin_type[i], uniform_id)
+          variable, s_shader_builtin_type[i], uniform_id)
       );
+      break;
     }
     ++i;
   }
 
   for (const auto& [variable_name, type] : uniforms) {
-    const auto uniform_id = glGetUniformLocation(m_program_id,
-                                                 variable_name.c_str());
-    if (uniform_id > 0) {
+    const auto uniform_id = glGetUniformLocation(m_program_id, variable_name.c_str());
+    if (uniform_id >= 0) {
       m_uniform_variables.emplace_back(std::make_tuple(
-          variable_name, s_shader_builtin_type[i], uniform_id)
+          variable_name, type, uniform_id)
       );
     }
   }

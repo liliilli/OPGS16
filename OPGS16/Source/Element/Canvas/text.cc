@@ -38,7 +38,7 @@ CText::CText(const std::string& initial_text,
   SetWorldPosition(position);
 
   auto renderer =
-      AddComponent<component::CFont2DRenderer>(*this, u8"", u8"gCommonFont", 0);
+      AddComponent<component::CFont2DRenderer>(*this, u8"", "opFont2d", 0);
   renderer->SetText(m_text);
   renderer->SetColor(color);
 }
