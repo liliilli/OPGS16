@@ -31,12 +31,14 @@
 /// ::phitos Expanded Assertion.
 #include <Phitos/Dbg/assert.h>
 
-/// opgs16::manager::MResourceManager
-#include <Manager/resource_manager.h>
-/// opgs16::manager::ShaderManager
-#include <Manager/shader_manager.h>
 /// ::opgs16::manager::_internal flags
 #include <Manager/Internal/flag.h>
+/// opgs16::manager::MResourceManager
+#include <Manager/resource_manager.h>
+#include <Manager/resource_type.h>
+/// opgs16::manager::ShaderManager
+#include <Manager/shader_manager.h>
+
 
 /// import logger header file
 #include <Headers/import_logger.h>
@@ -151,8 +153,8 @@ bool GenerateFont(const std::string& name_tag) {
     return false;
   }
 
-  if (const auto& [success, information] = resource::GetFont(name_tag);
-      success && CheckFreeType() && LoadFreeType(information->Path())) {
+  auto information = resource::GetFont(name_tag);
+  if (information && CheckFreeType() && LoadFreeType(information->Path())) {
     FT_Set_Pixel_Sizes(m_ft_face, 0, k_default_font_size);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -188,8 +190,8 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) 
     return false;
   }
 
-  if (const auto&[success, information] = resource::GetFont(font_name);
-      success && CheckFreeType() && LoadFreeType(information->Path())) {
+  auto information = resource::GetFont(font_name);
+  if (information && CheckFreeType() && LoadFreeType(information->Path())) {
     FT_Set_Pixel_Sizes(m_ft_face, 0, k_default_font_size);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

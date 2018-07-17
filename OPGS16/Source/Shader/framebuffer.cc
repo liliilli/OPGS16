@@ -85,8 +85,9 @@ void CFrameBuferFrame::InitializeDefaultDepthBuffer() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
 }
 
-void CFrameBuferFrame::BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
-                                                const GLenum attachment, const GLenum target) {
+void CFrameBuferFrame::BindTextureToFrameBuffer(
+    int32_t texture_id, int32_t framebuffer_id,
+    const GLenum attachment, const GLenum target) {
 	/*! Check if both texture and framebuffer are exist. */
 	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_id]);

@@ -34,160 +34,228 @@
  * 2018-04-08 Add comment.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <Shader\shader.h>  /// Header file
+/// Header file
+#include <Shader/shader.h>
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include <Manager\resource_type.h>
+#include <Headers/import_logger.h>
+#include <Manager/resource_type.h>
+#include <Manager/Internal/shader_builtin_keywords.h>
+#include <Phitos/Dbg/assert.h>
 
 constexpr unsigned LOG_SIZE = 0x200;
 
-namespace opgs16 {
-namespace element {
+namespace opgs16::element {
 
-CShaderNew& CShaderNew::SetShader(resource::EShaderType shader_type, const GLchar* path) {
-    if (m_linked || IsCompiled(shader_type)) {
-        std::cerr << "ERROR::SHADER::ALREADY::COMPILED" << std::endl;
-    }
+void CShaderNew::Use() {
+  if (m_linked) {
+    glUseProgram(m_program_id);
+    return;
+  }
 
-    /** create shader */
-    m_shaders[shader_type] = glCreateShader((GLenum)shader_type);
+  PUSH_LOG_ERRO("Failed load shader, you must to link the shader before using it.");
+  glUseProgram(0);
+}
 
-    /** shader setting */
-    std::string code = ReadShaderCodeFrom(path);
-    auto code_ptr = code.c_str();
-    auto source = m_shaders.at(shader_type);
+CShaderNew*
+CShaderNew::SetShader(const opgs16::resource::SShader& shader_information) {
+  for (auto& [type, shader_path] : shader_information.GetShaderList()) {
+		SetShader(type, shader_path);
+	}
 
-    glShaderSource(source, 1, &code_ptr, nullptr);
-    glCompileShader(source);
+  LinkShaderProgram();
 
-#if defined(_DEBUG)
-    /** Log buffer setting to check compilation result of each shader fragment. */
-    int success = 0;
-    glGetShaderiv(source, GL_COMPILE_STATUS, &success);
-    char info_log[LOG_SIZE]{};
-    if (!success)
-        ShaderErrorPrint(m_shaders[shader_type], info_log);
-#endif
+  Use();
+  InitializeUniformVariables(shader_information.GetVariableList());
+  glUseProgram(0);
 
-    /* Return l-value reference of this, to use it as cascade. */
-    return *this;
+  return this;
+}
+
+void CShaderNew::SetShader(resource::EShaderType shader_type,
+                           const std::string& path) {
+  if (m_linked || IsCompiled(shader_type)) {
+    PUSH_LOG_ERROR_EXT("Shader path already compiled.");
+  }
+
+  m_shaders[shader_type] = glCreateShader((GLenum)shader_type);
+  std::string code = ReadShaderCodeFrom(path);
+  auto code_ptr = code.c_str();
+  auto source   = m_shaders[shader_type];
+
+  glShaderSource(source, 1, &code_ptr, nullptr);
+  glCompileShader(source);
+
+  /// Log buffer setting to check compilation result of each shader fragment.
+  int success = 0;
+  glGetShaderiv(source, GL_COMPILE_STATUS, &success);
+  char info_log[LOG_SIZE]{};
+  if (!success)
+    ShaderErrorPrint(m_shaders[shader_type], info_log);
 }
 
 CShaderNew::~CShaderNew() {
-    if (!m_shaders.empty())
-        m_shaders.clear();
-
-    glDeleteProgram(m_program_id);
-}
-
-void CShaderNew::Link() {
-    m_program_id = glCreateProgram();
-
-    // Attach shader fragments (already compiled)
-    for (auto& shader : m_shaders) {
-        glAttachShader(m_program_id, shader.second);
-    }
-
-    glLinkProgram(m_program_id);
-
-    for (auto& shader : m_shaders) {
-        glDetachShader(m_program_id, shader.second);
-        glDeleteShader(shader.second);
-    }
+  if (!m_shaders.empty())
     m_shaders.clear();
 
-    int success = 0;
-    glGetShaderiv(m_program_id, GL_COMPILE_STATUS, &success);
-
-    char info_log[LOG_SIZE];
-    if (!success) ShaderErrorPrint(m_program_id, info_log);
-
-    // Set flag to use Shader for now.
-    m_linked = true;
+  glDeleteProgram(m_program_id);
 }
 
-void CShaderNew::Use() {
-    if (!m_linked) {
-        std::cerr << "ERROR::SHADER::NOT::LINKED::YET" << std::endl;
-        throw std::runtime_error("ERROR::SHADER::NOT::LINKED::YET");
-    }
-    else { glUseProgram(m_program_id); }
+void CShaderNew::LinkShaderProgram() {
+  m_program_id = glCreateProgram();
+
+  for (auto& compiled_shader : m_shaders) {
+    glAttachShader(m_program_id, compiled_shader.second);
+  }
+
+  glLinkProgram(m_program_id);
+
+  for (auto& compiled_shader : m_shaders) {
+    glDetachShader(m_program_id, compiled_shader.second);
+    glDeleteShader(compiled_shader.second);
+  }
+  m_shaders.clear();
+
+  int success = 0;
+  glGetShaderiv(m_program_id, GL_COMPILE_STATUS, &success);
+
+  char info_log[LOG_SIZE];
+  if (!success) {
+    ShaderErrorPrint(m_program_id, info_log);
+  }
+
+  m_linked = true;
 }
 
-std::string CShaderNew::ReadShaderCodeFrom(const std::string path) {
-    std::string code;
-    std::ifstream file;
-    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+void CShaderNew::InitializeUniformVariables(
+    const resource::SShader::TVariableList& uniforms) {
+  using opgs16::builtin::s_shader_builtin;
+  using opgs16::builtin::s_shader_builtin_type;
 
-    try {
-        file.open(path);
-        std::stringstream stream;
-
-        // Read file and bring to each stream
-        stream << file.rdbuf();
-        file.close();
-
-        // Convert stream into plain text string
-        code = stream.str();
+  int32_t i = 0;
+  for (const std::string_view& variable : s_shader_builtin) {
+    const auto uniform_id = glGetUniformLocation(m_program_id, variable.data());
+    if (uniform_id > 0) {
+      m_uniform_variables.emplace_back(std::make_tuple(
+          variable.data(), s_shader_builtin_type[i], uniform_id)
+      );
     }
-    catch (std::ifstream::failure err) {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY::READ" << std::endl;
-        throw std::runtime_error("shader read error" + path);
-    }
+    ++i;
+  }
 
-    return code;
+  for (const auto& [variable_name, type] : uniforms) {
+    const auto uniform_id = glGetUniformLocation(m_program_id,
+                                                 variable_name.c_str());
+    if (uniform_id > 0) {
+      m_uniform_variables.emplace_back(std::make_tuple(
+          variable_name, s_shader_builtin_type[i], uniform_id)
+      );
+    }
+  }
+}
+
+std::string CShaderNew::ReadShaderCodeFrom(const std::string& path) {
+  std::string code;
+  std::ifstream file;
+  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+  try {
+    file.open(path);
+    std::stringstream stream;
+
+    // Read file and bring to each stream
+    stream << file.rdbuf();
+    file.close();
+
+    // Convert stream into plain text string
+    code = stream.str();
+  }
+  catch (std::ifstream::failure err) {
+    PUSH_LOG_ERRO("Failed to read shader-path or string.");
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+
+  return code;
 }
 
 void CShaderNew::ShaderErrorPrint(GLuint shader, char* info_log) {
-    glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
-    std::cout << "ERROR::SHADER::COMPILATION_FAILED" << info_log << std::endl;
+  glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
+  PUSH_LOG_ERROR_EXT("Failed to compile shader. {}", info_log);
 }
 
 void CShaderNew::LinkingErrorPrint(GLuint shader, char* info_log) {
-    glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
-    std::cout << "ERROR::SHADER::LINKING_FAILED" << info_log << std::endl;
+  glGetShaderInfoLog(shader, LOG_SIZE, nullptr, info_log);
+  PUSH_LOG_ERROR_EXT("Failed to link shader program. {}", info_log);
 }
 
-void CShaderNew::SetBool(const std::string & name, bool value) const {
-    glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), static_cast<GLint>(value));
+const std::vector<CShaderNew::TUniformStruct>&
+CShaderNew::GetUniformVariableContainer() const noexcept {
+  return m_uniform_variables;
 }
 
-void CShaderNew::SetInt(const std::string & name, int value) const {
-    glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
+void CShaderNew::SetInt(int32_t uniform_id, int value) const {
+  glUniform1i(uniform_id, value);
+}
+
+void CShaderNew::SetIntPtr(int32_t uniform_id, int* value, int amount) const {
+  glUniform1iv(uniform_id, amount, (GLint*)value);
+}
+
+void CShaderNew::SetFloat(int32_t uniform_id, float value) const {
+  glUniform1f(uniform_id, value);
+}
+
+void CShaderNew::SetVec2f(int32_t uniform_id, const glm::vec2& vector) {
+  glUniform2fv(uniform_id, 1, glm::value_ptr(vector));
+}
+
+void CShaderNew::SetVec3f(int32_t uniform_id, const glm::vec3& vector) {
+  glUniform3fv(uniform_id, 1, glm::value_ptr(vector));
+}
+
+void CShaderNew::SetVecMatrix4f(int32_t uniform_id, const glm::mat4& matrix) {
+  glUniformMatrix4fv(uniform_id, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+
+void CShaderNew::SetInt(const std::string& name, int value) const {
+  glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
 void CShaderNew::SetIntPtr(const std::string& name, int* value, int amount) const {
-    const auto location = glGetUniformLocation(m_program_id, name.c_str());
-    glUniform1iv(location, amount, (GLint*)value);
+  const auto location = glGetUniformLocation(m_program_id, name.c_str());
+  glUniform1iv(location, amount, (GLint*)value);
 }
 
 void CShaderNew::SetFloat(const std::string& name, float value) const {
-    glUniform1f(glGetUniformLocation(m_program_id, name.c_str()), value);
+  glUniform1f(glGetUniformLocation(m_program_id, name.c_str()), value);
 }
 
 void CShaderNew::SetVec2f(const std::string& name, const glm::vec2& vector) {
-    glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
+  glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
 void CShaderNew::SetVec3f(const std::string& name,
-                         const float _1, const float _2, const float _3) {
-    glUniform3f(glGetUniformLocation(m_program_id, name.c_str()), _1, _2, _3);
+                          const float _1, const float _2, const float _3) {
+  glUniform3f(glGetUniformLocation(m_program_id, name.c_str()), _1, _2, _3);
 }
 
 void CShaderNew::SetVec3f(const std::string& name, const glm::vec3& vector) {
-    glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
+  glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(vector));
 }
 
 void CShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix) {
-    auto uniform = glGetUniformLocation(m_program_id, name.c_str());
-    glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
+  const auto uniform = glGetUniformLocation(m_program_id, name.c_str());
+  glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
 }
+
 //
 //void CShaderNew::SetStructDirLight(const std::string & name, const light::DirectionalLight & container) {
 //    SetVec3f(name + ".direction", container.GetDirection());
@@ -226,7 +294,6 @@ void CShaderNew::SetVecMatrix4f(const std::string& name, const glm::mat4& matrix
 //}
 //
 } /*! opgs16::element */
-} /*! opgs16 */
 
 //
 //namespace helper {

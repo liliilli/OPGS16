@@ -27,7 +27,7 @@ void ScriptTitleDisplay::Initiate() {
   m_background = bind_obj.CreateGameObject<UiBackground>(
       UiBackground::s_object_name,
       static_cast<CCanvas*>(&bind_obj))->GetComponent<ScriptUiBackground>();
-  m_background->SetOffset(0.25f, -0.25f);
+  m_background->SetScale(0.25f, -0.25f);
 
   OP16_TIMER_SET(m_temporary_timer, 1'000, true, this,
                  &ScriptTitleDisplay::ChangeBackground);

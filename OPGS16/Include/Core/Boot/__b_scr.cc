@@ -153,7 +153,7 @@ void __B_SCR::CreateTextObject() {
   std::string text_string; string_stream >> text_string;
   text_string.append("\n\n"
     "VIDEO RAM:1024KiBytes\n"
-    "MAIN RAN:2048KiByes\n\n");
+    "MAIN RAN:2048KiBytes\n\n");
 
   auto text = std::make_unique<element::canvas::CText>(text_string); {
     text->SetOrigin(IOriginable::Origin::CENTER_CENTER);

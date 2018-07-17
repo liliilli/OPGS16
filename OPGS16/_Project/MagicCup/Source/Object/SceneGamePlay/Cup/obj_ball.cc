@@ -21,7 +21,7 @@ ObjectBall::ObjectBall() {
   SetScaleFactor({1.f, 1.f, 0.f});
 
   auto cup_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
-      *this, keyword::rsc_sprite, "gQuad", 5);
+      *this, keyword::rsc_sprite, "gQuad", 7);
   m_wrapper = &cup_texture->GetWrapper();
   m_texture = cup_texture;
 }

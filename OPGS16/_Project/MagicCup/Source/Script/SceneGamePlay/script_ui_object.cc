@@ -50,7 +50,7 @@ void ScriptUiObject::Initiate() {
       static_cast<CCanvas*>(GetPresentScene()->GetGameObject(name::canvas)))->
           GetComponent<ScriptUiBackground>();
   m_background->SetTile(3);
-  m_background->SetOffset(0.01f, 0.01f);
+  m_background->SetOffset(0, 0);
 }
 
 } /// ::magiccup namespace

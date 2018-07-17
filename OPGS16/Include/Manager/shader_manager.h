@@ -23,8 +23,6 @@
 #include <memory>
 #include <unordered_map>
 
-/// ::opgs16::manager::resource_manager
-#include <Manager/resource_manager.h>
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// ::opgs16::element::CShaderNew
@@ -47,13 +45,12 @@
 /// 2018-03-04 Refactoring.
 /// 2018-06-07 Detach class structure to namespace.
 ///
-///@todo Implement ReleaseAll(), ReleaseShader(), CheckError();
+///@todo Implement ReleaseAll(), ReleaseShader()
 ///
 namespace opgs16::manager::shader {
 
-using shader_raw = element::CShaderNew*;
-using shader_ptr = std::unique_ptr<element::CShaderNew>;
-using shader_map = std::unordered_map<std::string, shader_ptr>;
+using TShaderSmtPtr = std::unique_ptr<element::CShaderNew>;
+using TShaderMap = std::unordered_map<std::string, TShaderSmtPtr>;
 
 ///
 /// @brief
@@ -82,7 +79,7 @@ void ReleaseShader(const std::string& shader_name);
 /// @param[in] name The tag to find.
 /// @return Founded shader pointer, if fails create shader and return late.
 ///
-inline shader_raw GetShader(const std::string& name);
+inline element::CShaderNew* GetShader(const std::string& name);
 
 } /// ::opgs16::manager namespace
 

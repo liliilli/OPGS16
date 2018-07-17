@@ -20,6 +20,8 @@
 #include <Phitos/Dbg/assert.h>
 #include <Phitos/Enums/initiated.h>
 
+/// ::opgs16::manager::resource_manager
+#include <Manager/resource_manager.h>
 /// ::opgs16::builtin::shader::SAABB2DShader
 #include <Shader/Default/aabb_2d_line.h>
 /// opgs16::builtin::shader::SGlobalQuad2D
@@ -32,18 +34,17 @@
 #include <Headers/import_logger.h>
 
 //!
-//! Forward declaration.
+//! Data
 //!
 
-///
-/// @brief Override version method of CreateShader(std::string, shader_list).
-/// @param[in] tag The tag to specify.
-/// @param[in] container vector conatiner contains shader arguments to create.
-/// @return created shader raw-pointer.
-///
-opgs16::manager::shader::shader_raw
-    CreateShader(const std::string& tag,
-                 const opgs16::resource::SShader& container);
+namespace {
+using EInitiated = phitos::enums::EInitiated;
+EInitiated s_initiated = EInitiated::NotInitiated;
+
+opgs16::manager::shader::TShaderMap m_shader_container;
+} /// unnamed namespace
+
+namespace {
 
 ///
 /// @brief
@@ -53,18 +54,33 @@ opgs16::manager::shader::shader_raw
 ///
 /// @return If shader already exist, return true else false.
 ///
-inline bool DoesShaderExist(const std::string& shader_name);
+inline bool IsShaderExist(const std::string& shader_name) noexcept {
+  return m_shader_container.find(shader_name) != m_shader_container.end();
+}
 
-//!
-//! Data
-//!
+///
+/// @brief Override version method of CreateShader(std::string, shader_list).
+/// @param[in] shader_name The shader_name to specify.
+/// @param[in] container vector conatiner contains shader arguments to create.
+/// @return created shader raw-pointer.
+///
+opgs16::element::CShaderNew*
+CreateShader(const std::string& shader_name,
+             const opgs16::resource::SShader* container) {
+	if (IsShaderExist(shader_name))
+    return opgs16::manager::shader::GetShader(shader_name);
 
-namespace {
-using EInitiated = phitos::enums::EInitiated;
-EInitiated s_initiated = EInitiated::NotInitiated;
+	auto shader = std::make_unique<opgs16::element::CShaderNew>();
+  shader->SetShader(*container);
 
-// Shader container.
-opgs16::manager::shader::shader_map m_shaders{};
+	auto [it, result] = m_shader_container.try_emplace(shader_name, std::move(shader));
+  if (!result) {
+    PUSH_LOG_WARN_EXT("Something was wrong on making shader, [Name : {}]", shader_name);
+  }
+
+  return it->second.get();
+}
+
 } /// unnamed namespace
 
 //!
@@ -78,60 +94,43 @@ void Initiate() {
       "Duplicated opgs16::manager::shader::Initiate() calling is prohibited.");
   using namespace builtin::shader;
 
-  m_shaders[SGlobalQuad2D::s_shader_name] = std::make_unique<SGlobalQuad2D>();
-  m_shaders[SGlobalQuad2D::s_shader_name]->Link();
-  m_shaders[SGlobalFont2D::s_shader_name] = std::make_unique<SGlobalFont2D>();
-  m_shaders[SGlobalFont2D::s_shader_name]->Link();
-  m_shaders[SGlobalPostProcessingQuad::s_shader_name] =
-    std::make_unique<SGlobalPostProcessingQuad>();
-  m_shaders[SGlobalPostProcessingQuad::s_shader_name]->Link();
+  m_shader_container[SGlobalQuad2D::s_shader_name] = std::make_unique<SGlobalQuad2D>();
+  m_shader_container[SGlobalFont2D::s_shader_name] = std::make_unique<SGlobalFont2D>();
 
-  auto [it, result] = m_shaders.try_emplace(
+  m_shader_container[SGlobalPostProcessingQuad::s_shader_name] =
+    std::make_unique<SGlobalPostProcessingQuad>();
+
+  auto [it, result] = m_shader_container.try_emplace(
       SAABB2DShader::s_shader_name,
       std::make_unique<SAABB2DShader>());
   PHITOS_ASSERT(result == true,
       "Invalid shader emplace, SAABB2DShader was not inserted properly. "
       "on opgs16::manager::shader::Initiate().");
-  it->second->Link();
 
   s_initiated = EInitiated::Initiated;
 }
 
 void ReleaseAll() {
+
 }
 
 void ReleaseShader(const std::string& shader_name) {
-  if (DoesShaderExist(shader_name))
-    m_shaders.erase(shader_name);
+  if (IsShaderExist(shader_name))
+    m_shader_container.erase(shader_name);
 }
 
-shader_raw GetShader(const std::string& name) {
-  if (!DoesShaderExist(name)) {
-		auto& list = manager::resource::GetShader(name);
-		CreateShader(name, list);
+element::CShaderNew* GetShader(const std::string& shader_name) {
+  if (!IsShaderExist(shader_name)) {
+    const auto list = manager::resource::GetShader(shader_name);
+    if (!list) {
+      PHITOS_ASSERT(list != nullptr, "Could not find the shader you want.");
+      return nullptr;
+    }
+
+		CreateShader(shader_name, list);
 	}
-	return m_shaders[name].get();
+
+	return m_shader_container[shader_name].get();
 }
 
 } /// ::opgs16::manager::shader namespace.
-
-opgs16::manager::shader::shader_raw CreateShader(
-    const std::string& tag,
-    const opgs16::resource::SShader& container) {
-	if (DoesShaderExist(tag))
-    return opgs16::manager::shader::GetShader(tag);
-
-	auto shader = std::make_unique<opgs16::element::CShaderNew>();
-	for (auto& [type, shader_path] : container.List()) {
-		shader->SetShader(type, shader_path.c_str());
-	}
-	shader->Link();
-
-	// Bind
-	m_shaders[tag] = std::move(shader);
-	return m_shaders[tag].get();
-}
-
-inline bool DoesShaderExist(const std::string& shader_name) {
-  return m_shaders.find(shader_name) != m_shaders.end();
-}

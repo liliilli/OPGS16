@@ -22,7 +22,7 @@ ObjectCup::ObjectCup() {
   SetScaleFactor({2.f, 3.f, 0.f});
 
   auto cup_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
-      *this, keyword::rsc_sprite, "gQuad", 4);
+      *this, keyword::rsc_sprite, "gQuad", 6);
   m_wrapper = &cup_texture->GetWrapper();
   m_cup_texture = cup_texture;
 

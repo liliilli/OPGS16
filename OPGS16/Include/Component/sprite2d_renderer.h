@@ -53,8 +53,8 @@ class CSprite2DRenderer final : public _internal::CRendererBase {
 
 public:
 	CSprite2DRenderer(element::CObject& bind_object,
-                    const std::string& sprite_tag,
-                    const std::string& shader_tag,
+                    const std::string& sprite_name,
+                    const std::string& shader_name,
                     const int32_t texture_index = 0, const int32_t layer = 0);
 
   ///

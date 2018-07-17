@@ -63,7 +63,7 @@ namespace opgs16::manager::resource {
 /// @param[in] name_key shader program aliasing name.
 /// @return Specific shader container.
 ///
-const opgs16::resource::SShader& GetShader(const std::string& name_key);
+const opgs16::resource::SShader* GetShader(const std::string& name_key);
 
 ///
 /// @brief
@@ -72,7 +72,7 @@ const opgs16::resource::SShader& GetShader(const std::string& name_key);
 /// @param[in] name_key Wrapping tag name of actual sprite path.
 /// @return Selected 2D texture path.
 ///
-const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_key);
+const opgs16::resource::STexture2DAtlas* GetTexture2D(const std::string& name_key);
 
 ///
 /// @brief
@@ -81,7 +81,7 @@ const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_ke
 /// @param[in] name_key Wrapping tag name of actual sound path.
 /// @return Sound path
 ///
-const opgs16::resource::SSound& GetSound(const std::string& name_key);
+const opgs16::resource::SSound* GetSound(const std::string& name_key);
 
 ///
 /// @brief
@@ -90,7 +90,7 @@ const opgs16::resource::SSound& GetSound(const std::string& name_key);
 /// @param[in] name_key Name tag of font information you want to find
 /// @return success flag, and information
 ///
-std::pair<bool, const opgs16::resource::SFont*> GetFont(const std::string& name_key);
+const opgs16::resource::SFont* GetFont(const std::string& name_key);
 
 ///
 /// @brief

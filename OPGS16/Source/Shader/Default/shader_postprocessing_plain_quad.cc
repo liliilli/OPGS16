@@ -36,7 +36,7 @@
 
 #include <Shader\Default\shader_postprocess_plain_quad.h>   /// Header file
 /// ::opgs16::resource::EShaderType
-#include <Manager\resource_type.h>  
+#include <Manager\resource_type.h>
 /// import logger
 #include <Headers\import_logger.h>
 
@@ -101,11 +101,11 @@ SGlobalPostProcessingQuad::SGlobalPostProcessingQuad() {
         else {
             char log[100] = { "SGlobalPostProcessingQuad ppQuad " };
             switch (type) {
-            case EShaderType::VS: 
-              strcat(log, "vertex shader");   
+            case EShaderType::VS:
+              strcat(log, "vertex shader");
               break;
-            case EShaderType::FS: 
-              strcat(log, "fragment shader");  
+            case EShaderType::FS:
+              strcat(log, "fragment shader");
               break;
             default: break;
             }
@@ -114,6 +114,8 @@ SGlobalPostProcessingQuad::SGlobalPostProcessingQuad() {
         }
 #endif
     }
+
+  LinkShaderProgram();
 }
 
 } /*! opgs16::builtin::shader */

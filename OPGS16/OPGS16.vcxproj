@@ -329,11 +329,13 @@
     <ClInclude Include="Include\Helper\vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
+    <ClInclude Include="Include\Manager\Internal\shader_builtin_keywords.h" />
     <ClInclude Include="Include\Manager\mesh_manager.h" />
     <ClInclude Include="Include\Manager\Internal\physics_collision_shape_list.h" />
     <ClInclude Include="Include\Manager\Internal\physics_environment.h" />
     <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
     <ClInclude Include="Include\Manager\Internal\vao_management.h" />
+    <ClInclude Include="Include\Manager\ResourceType\shader.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />

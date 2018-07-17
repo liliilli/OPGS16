@@ -45,11 +45,14 @@ namespace opgs16::manager {
 
 TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
 	if (!DoesTextureExist(name)) {
-		const auto& container = manager::resource::GetTexture2D(name);
+		const auto container = manager::resource::GetTexture2D(name);
 
-        auto [it, good] = m_container.emplace(name, std::make_unique<texture::CTexture2D>(container));
-        if (good) return it->second.get();
-        else return nullptr;
+    auto [it, good] =
+      m_container.emplace(name, std::make_unique<texture::CTexture2D>(*container));
+    if (good)
+      return it->second.get();
+
+    return nullptr;
 	}
     return m_container[name].get();
 }

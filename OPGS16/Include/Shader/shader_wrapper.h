@@ -31,22 +31,26 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+#include <Manager/ResourceType/shader.h>
 /// Forward declaration
 #include <opgs16fwd.h>
 
 namespace opgs16::element {
-  class CVaoContainer;
+class CVaoContainer;
 }
 
 namespace opgs16::element {
 
 class CShaderWrapper {
+  using TUniformId = int32_t;
+  using TUniformInformation = std::pair<resource::SShader::EVariableType,
+                                        TUniformId>;
 public:
   ///
   /// @brief Set shader.
   /// @param[in] shader
   ///
-  void SetShader(CShaderNew* const shader);
+  void SetShader(CShaderNew* shader);
 
   ///
   /// @brief Use shader. If shader graps nothing, do nothing any more.
@@ -74,79 +78,109 @@ public:
 
   template <>
   void SetUniformValue<float>(const std::string& tag, const float& value) {
-    m_parameters.m_floats[tag] = value;
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(tag); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Float) {
+        m_parameters.m_floats[it->second.second] = value;
+      }
+    }
   }
 
   template <>
   void SetUniformValue<glm::mat4>(const std::string& tag, const glm::mat4& value) {
-    m_parameters.m_mat4s[tag] = value;
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(tag); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Matrix4) {
+        m_parameters.m_mat4s[it->second.second] = value;
+      }
+    }
   }
 
   template <>
   void SetUniformValue<glm::vec2>(const std::string& tag, const glm::vec2& value) {
-    m_parameters.m_vec2[tag] = value;
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(tag); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Vec2) {
+        m_parameters.m_vec2[it->second.second] = value;
+      }
+    }
+    //m_parameters.m_vec2[tag] = value;
   }
 
   template <>
   void SetUniformValue<glm::vec3>(const std::string& var_name, const glm::vec3& value) {
-    m_parameters.m_vec3[var_name] = value;
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Vec3) {
+        m_parameters.m_vec3[it->second.second] = value;
+      }
+    }
+    //m_parameters.m_vec3[var_name] = value;
   }
 
   template <>
-  void SetUniformValue<int>(const std::string& tag, const int& value) {
-    m_parameters.m_ints[tag] = value;
+  void SetUniformValue<int>(const std::string& var_name, const int& value) {
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Int) {
+        m_parameters.m_ints[it->second.second] = value;
+      }
+    }
+    //m_parameters.m_ints[tag] = value;
   }
 
-  void SetUniformValueInt(const char* variable_name, const int value) {
-    m_parameters.m_ints[variable_name] = value;
+  void SetUniformValueInt(const std::string& var_name, const int value) {
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Int) {
+        m_parameters.m_ints[it->second.second] = value;
+      }
+    }
+    //m_parameters.m_ints[variable_name] = value;
   }
 
-  void SetUniformValueIntPtr(const char* variable_name, int* pointer, const int amount) {
-    m_parameters.m_int_ptr[variable_name] = std::make_pair(pointer, amount);
-  }
-
-  ///
-  /// @brief Check parameter value is already exist.
-  ///
-  /// @param[in] tag The tag to find and check if it's exist.
-  ///
-  /// @tparam _Ty Type paramter to check container type in m_paramaters of this.
-  ///
-  /// @return The flag accounts for success or failure of finding one.
-  ///
-  template <typename _Ty>
-  bool IsValueAlreadyExist(const std::string& tag) {
-    if constexpr (std::is_same_v<float, _Ty>)
-      return m_parameters.m_floats.find(tag) != m_parameters.m_floats.end();
-    if constexpr (std::is_same_v<glm::mat4, _Ty>)
-      return m_parameters.m_mat4s.find(tag) != m_parameters.m_mat4s.end();
-    if constexpr (std::is_same_v<glm::vec2, _Ty>)
-      return m_parameters.m_vec2.find(tag) != m_parameters.m_vec2.end();
-    if constexpr (std::is_same_v<int, _Ty>)
-      return m_parameters.m_ints.find(tag) != m_parameters.m_ints.end();
+  void SetUniformValueIntPtr(const char* var_name, int* pointer, const int amount) {
+    using opgs16::resource::SShader;
+    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+      if (it->second.first == SShader::EVariableType::Int) {
+        m_parameters.m_int_ptr[it->second.second] = std::make_pair(pointer, amount);
+      }
+    }
+    //m_parameters.m_int_ptr[variable_name] = std::make_pair(pointer, amount);
   }
 
 private:
-  // Set uniform variables of shader with new values.
+  /// Set uniform variables of shader with new values.
   void RefreshUniformValues();
 
-  struct DParameters {
+  /// Initialize uniform values whenever new shader set.
+  void InitializeUnfiormValues();
+
+  struct DParameters final {
+    std::map<int32_t, float> m_floats;
+    std::map<int32_t, int32_t> m_ints;
+    std::map<int32_t, std::pair<int*, int>> m_int_ptr;
+    std::map<int32_t, glm::vec2> m_vec2;
+    std::map<int32_t, glm::vec3> m_vec3;
+    std::map<int32_t, glm::mat4> m_mat4s;
+#ifdef false
     std::map<std::string, float> m_floats{};
     std::map<std::string, int> m_ints{};
     std::map<std::string, std::pair<int*, int>> m_int_ptr{};
     std::map<std::string, glm::vec2> m_vec2{};
     std::map<std::string, glm::vec3> m_vec3{};
     std::map<std::string, glm::mat4> m_mat4s{};
+#endif
   };
 
-  // Shader pointer retrieved from ShaderManager.
+  /// Shader pointer retrieved from ShaderManager.
   CShaderNew* m_shader = nullptr;
-
-  // The flag for preventing using of nullptr shader.
+  /// The flag for preventing using of nullptr shader.
   bool m_is_useable = false;
-
-  // Uniform parameters
+  /// Uniform parameters
   DParameters m_parameters;
+  ///
+  std::unordered_map<std::string, TUniformInformation> m_uniform_mapper;
 };
 
 } /// ::opgs16::element namespace

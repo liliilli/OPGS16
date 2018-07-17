@@ -57,6 +57,8 @@ SAABB2DShader::SAABB2DShader() {
     glShaderSource(m_shaders[type], 1, &source, nullptr);
     glCompileShader(m_shaders[type]);
   }
+
+  LinkShaderProgram();
 }
 
 } /// ::opgs16::builtin::shader namespace

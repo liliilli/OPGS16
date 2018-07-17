@@ -43,17 +43,15 @@
 namespace {
 constexpr const char* shader_vertex_shader =
 "#version 430 core\n"
-"\n"
 "layout (location = 0) in vec3 opPosition;\n"
 "layout (location = 1) in vec3 opNormal;\n"
 "layout (location = 2) in vec3 opTangent;\n"
 "layout (location = 3) in vec2 opTexCoord;\n"
-"out VS_OUT {\
-	vec2 texCoord;\
-} vs_out;\
-uniform mat4 projection;\
-\
-void main() {\
+"out VS_OUT {"
+"	vec2 texCoord;"
+"} vs_out;"
+"uniform mat4 projection;"
+"void main() {\
 	gl_Position = projection * vec4(opPosition.xy, 0, 1);\
 	vs_out.texCoord = opTexCoord.xy;\
 }";
@@ -116,6 +114,8 @@ SGlobalFont2D::SGlobalFont2D() {
         }
 #endif
     }
+
+  LinkShaderProgram();
 }
 
 } /*! opgs16::builtin::shader */

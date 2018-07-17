@@ -25,7 +25,6 @@
 
 #include <fstream>
 #include <optional>
-#include <stdexcept>
 #include <utility>
 
 /// Third-party json library
@@ -41,9 +40,11 @@
 #include <Helper/Json/json_helper.h>
 
 /// ::opgs16::debug error messages.
-#include <Manager\Internal\error_message.h>
+#include <Manager/Internal/error_message.h>
 /// ::opgs16::manager::_internal flags
-#include <Manager\Internal\flag.h>
+#include <Manager/Internal/flag.h>
+/// ::opgs16::builtin
+#include <Manager/Internal/shader_builtin_keywords.h>
 
 /// @todo remove this
 #include <../manifest.h>
@@ -75,7 +76,7 @@ ESucceed ReadResourceFile(const std::string& file_path);
 /// @return
 ///
 ESucceed VerifyResourceFile(const nlohmann::json& json,
-                                           const std::string& file_path);
+                            const std::string& file_path);
 
 ///
 /// @brief
@@ -289,6 +290,7 @@ constexpr const char* s_json_shader = "shader";
 constexpr const char* s_json_sound = "sound";
 constexpr const char* s_json_list = "list";
 constexpr const char* s_json_animation = "animation";
+constexpr const char* s_json_uniform = "uniform";
 
 constexpr const char* s_json_path = "path";
 constexpr const char* s_json_type = "type";
@@ -373,48 +375,45 @@ void Shutdown() {
 
 namespace opgs16::manager::resource {
 
-const opgs16::resource::SShader& GetShader(const std::string& name_key) {
+const opgs16::resource::SShader* GetShader(const std::string& name_key) {
   if (!ExistKey(m_shaders, name_key)) {
-    PUSH_LOG_ERROR_EXT(
-        "Did not find appropriate shader : [Tag : {0}]", name_key);
-    throw std::runtime_error("GetShader error");
+    PUSH_LOG_ERROR_EXT("Did not find appropriate shader : [Tag : {0}]", name_key);
+    return nullptr;
   }
 
-  return m_shaders[name_key];
+  return &m_shaders[name_key];
 }
 
-const opgs16::resource::STexture2DAtlas& GetTexture2D(const std::string& name_key) {
+const opgs16::resource::STexture2DAtlas* GetTexture2D(const std::string& name_key) {
   if (!ExistKey(m_textures, name_key)) {
-    PUSH_LOG_ERROR_EXT(
-        "Did not find appropriate texture2D : [Tag : {0}]", name_key);
-    throw std::runtime_error("GetTexture2D error");
+    PUSH_LOG_ERROR_EXT("Did not find appropriate texture2D : [Tag : {0}]", name_key);
+    return nullptr;
   }
 
-  return m_textures[name_key];
+  return &m_textures[name_key];
 }
 
-const opgs16::resource::SSound& GetSound(const std::string& name_key) {
+const opgs16::resource::SSound* GetSound(const std::string& name_key) {
   if (!ExistKey(m_sounds, name_key)) {
-    PUSH_LOG_ERROR_EXT(
-        "Did not find appropriate texture2D : [Tag : {0}]", name_key);
-    throw std::runtime_error("GetSound error");
+    PUSH_LOG_ERROR_EXT( "Did not find appropriate sound : [Tag : {0}]", name_key);
+    return nullptr;
   }
 
-  return m_sounds[name_key];
+  return &m_sounds[name_key];
 }
 
-std::pair<bool, const opgs16::resource::SFont*> GetFont(const std::string & name_key) {
+const opgs16::resource::SFont* GetFont(const std::string& name_key) {
   if (ExistKey(m_fonts, name_key))
-    return { true, &m_fonts[name_key] };
-  else
-    return { false, nullptr };
+    return &m_fonts[name_key];
+
+  PUSH_LOG_ERROR_EXT("Did not find appropriate proper font: [Tag : {0}]", name_key);
+  return nullptr;
 }
 
 const opgs16::resource::SAnimation* GetAnimation(const std::string& name_key) {
   if (!ExistKey(m_animations, name_key)) {
-    PUSH_LOG_ERROR_EXT(
-        "Did not find appropriate proper animation : [Tag : {0}]", name_key);
-    throw std::runtime_error("GetSound error");
+    PUSH_LOG_ERROR_EXT("Did not find appropriate proper animation : [Tag : {0}]", name_key);
+    throw nullptr;
   }
 
   return &m_animations[name_key];
@@ -1004,15 +1003,90 @@ ESucceed VerifyShaderInsertion(const nlohmann::json& json) {
   return ESucceed::Succeed;
 }
 
+static opgs16::resource::SShader::TVariableList
+GetCustomUniformVariableList(const std::string& file_path) {
+  using opgs16::helper::json::IsJsonKeyExist;
+
+  auto json_instance = LoadJsonFile(file_path);
+  if (!json_instance.has_value()) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return {};
+  }
+
+  const auto& atlas_json = json_instance.value();
+  PUSH_LOG_INFO_EXT("Opened resource meta file. [Path : {}]", file_path);
+
+  if (IsJsonKeyExist(atlas_json, s_json_uniform) == EFound::NotFound) {
+    PUSH_LOG_ERROR_EXT(
+        "Could not find 'uniform' header from shader smeta file. [Path : {}]",
+        file_path);
+    return {};
+  }
+
+  using TVariableList = opgs16::resource::SShader::TVariableList;
+  TVariableList var_list;
+
+  auto& uniform = atlas_json[s_json_uniform];
+  for (auto it = uniform.begin(); it != uniform.end(); ++it) {
+    const std::string& key = it.key();
+
+    if (var_list.find(key) != var_list.end()) {
+      PUSH_LOG_ERROR_EXT("Duplicated variable name. [Name : {}]", key);
+      continue;
+    }
+
+    using opgs16::builtin::s_shader_builtin;
+    if (std::any_of(s_shader_builtin.begin(), s_shader_builtin.end(),
+        [&key](const std::string_view& builtin_variable) {
+          return key == builtin_variable;
+        }
+    )) {
+      PUSH_LOG_ERROR_EXT(
+          "Builtin variable name redifinition is prohibited. [Name : {}]",
+          key);
+      continue;
+    }
+
+    using opgs16::resource::SShader;
+    if (auto result = std::find(
+            SShader::s_variable_str,
+            SShader::s_variable_str + 11,
+            it.value().get<std::string>());
+        result == SShader::s_variable_str + 11) {
+      PUSH_LOG_ERROR_EXT(
+          "Could not find appropriate shader variable type. [Name : {}]",
+          key);
+    }
+    else {
+      auto index = std::distance(SShader::s_variable_str, result);
+      using EVariableType = opgs16::resource::SShader::EVariableType;
+      var_list.try_emplace(key, static_cast<EVariableType>(index));
+    }
+  }
+
+  return var_list;
+}
+
 opgs16::resource::SShader MakeShader(const nlohmann::json& json) {
   using opgs16::helper::ConcatDirectoryWithFile;
+  using opgs16::helper::json::IsJsonKeyExist;
   using opgs16::resource::EShaderType;
 
-  opgs16::resource::SShader::shader_list shader_list;
+  opgs16::resource::SShader::TShaderList shader_list;
   shader_list.emplace_back(EShaderType::VS,
       ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_vs]));
   shader_list.emplace_back(EShaderType::FS,
       ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_fs]));
+
+  if (IsJsonKeyExist(json, s_json_meta) == EFound::Found) {
+    const auto path =
+        ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_meta]);
+
+    return opgs16::resource::SShader{
+        shader_list,
+        GetCustomUniformVariableList(path)
+    };
+  }
 
   return opgs16::resource::SShader{ shader_list };
 }

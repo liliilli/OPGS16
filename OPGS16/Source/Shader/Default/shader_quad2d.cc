@@ -114,6 +114,8 @@ SGlobalQuad2D::SGlobalQuad2D() {
 #endif
 #endif
   }
+
+  LinkShaderProgram();
 }
 
 } /// ::opgs16::builtin::shader namespace

@@ -306,6 +306,8 @@
     <ClInclude Include="Include\Component\sprite2d_renderer.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\CanvasItem\background.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\CanvasItem\script_background.h" />
+    <ClInclude Include="Include\Manager\Internal\shader_builtin_keywords.h" />
+    <ClInclude Include="Include\Manager\ResourceType\shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

@@ -49,7 +49,8 @@ void CRendererBase::SetRenderingLayer(const std::string& layer_name) {
 void CRendererBase::SetRenderingLayer(int32_t layer_index) {
   PHITOS_ASSERT(layer_index >= 0, "layer index value must be 0 or positive.");
 
-  const auto list_size = manager::setting::GetRenderingLayerNameListSize();
+  const int32_t list_size =
+    static_cast<int32_t>(manager::setting::GetRenderingLayerNameListSize());
   m_render_layer_index = layer_index >= list_size ? 0 : layer_index;
 }
 

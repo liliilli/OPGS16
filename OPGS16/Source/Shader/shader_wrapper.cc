@@ -21,6 +21,8 @@
 #include <Element/Internal/mesh_vector.h>
 /// ::opgs16::element::CVaoContainer
 #include <Element/Internal/vao_container.h>
+
+#include <Manager/Internal/shader_builtin_keywords.h>
 /// ::opgs16::element::CShaderNew
 #include <Shader/shader.h>
 
@@ -29,15 +31,66 @@
 
 namespace opgs16::element {
 
-void CShaderWrapper::SetShader(CShaderNew* const shader) {
-  m_shader = shader;
-  m_is_useable = true;
+void CShaderWrapper::SetShader(CShaderNew* shader) {
+  if (shader) {
+    m_shader     = shader;
+    InitializeUnfiormValues();
+    m_is_useable = true;
+  }
+  else {
+    m_shader     = nullptr;
+    m_is_useable = false;
+  }
+}
+
+void CShaderWrapper::InitializeUnfiormValues() {
+  m_parameters = DParameters{};
+  const auto& uniforms = m_shader->GetUniformVariableContainer();
+
+  for (auto& [var_name, type, uniform_id] : uniforms) {
+    switch (type) {
+    case resource::SShader::EVariableType::Matrix4:
+      m_parameters.m_mat4s.emplace(uniform_id, glm::mat4{});
+      break;
+    case resource::SShader::EVariableType::Vec3:
+      m_parameters.m_vec3.emplace(uniform_id, glm::vec3{});
+      break;
+    case resource::SShader::EVariableType::Vec2:
+      if (var_name == builtin::s_uniform_scale) {
+        m_parameters.m_vec2.emplace(uniform_id, glm::vec2{1, 1});
+      }
+      else if (var_name == builtin::s_uniform_offset) {
+        m_parameters.m_vec2.emplace(uniform_id, glm::vec2{0, 0});
+      }
+      else {
+        m_parameters.m_vec2.emplace(uniform_id, glm::vec2{0, 0});
+      }
+      break;
+    case resource::SShader::EVariableType::Float:
+      m_parameters.m_floats.emplace(uniform_id, 0.f);
+      break;
+
+    case resource::SShader::EVariableType::Vec4:
+    case resource::SShader::EVariableType::Matrix3:
+    case resource::SShader::EVariableType::IVec4:
+    case resource::SShader::EVariableType::IVec3:
+    case resource::SShader::EVariableType::IVec2:
+    case resource::SShader::EVariableType::Int:
+    case resource::SShader::EVariableType::Texture2D:
+      break;
+    }
+
+    m_uniform_mapper.emplace(var_name, std::make_pair(type, uniform_id));
+  }
 }
 
 void CShaderWrapper::UseShader() {
   if (m_is_useable) {
     m_shader->Use();
     RefreshUniformValues();
+  }
+  else {
+    PUSH_LOG_WARN("Shader is not bind so can not render because of initialization failure and etc.");
   }
 }
 
@@ -53,11 +106,17 @@ void CShaderWrapper::SetAttribute(const CVaoContainer* vao_container) {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, nullptr);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof DVector3));
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride,
+                          (void*)(sizeof DVector3));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof DVector3 * 2));
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride,
+                          (void*)(sizeof DVector3 * 2));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof DVector3 * 3));
+
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride,
+                          (void*)(sizeof DVector3 * 3));
     glEnableVertexAttribArray(3);
 
     glBindVertexArray(0);
@@ -79,7 +138,7 @@ void CShaderWrapper::RefreshUniformValues() {
   // Vector3
   for (const auto&[name, value] : m_parameters.m_vec3)
     m_shader->SetVec3f(name, value);
-  // Int
+
   // Int
   for (const auto&[name, value] : m_parameters.m_ints)
     m_shader->SetInt(name, value);

@@ -41,8 +41,8 @@ namespace opgs16::component {
 
 CSprite2DRenderer::CSprite2DRenderer(
     element::CObject& bind_object,
-    const std::string& sprite_tag,
-    const std::string& shader_tag,
+    const std::string& sprite_name,
+    const std::string& shader_name,
     const int32_t texture_index, const int32_t layer) :
     CRendererBase{ bind_object } {
   using manager::_internal::vao::FindVaoResource;
@@ -57,9 +57,11 @@ CSprite2DRenderer::CSprite2DRenderer(
   m_weak_vao_ref->IncreaseCount();
   m_weak_vao_ref->SetDirty();
 
-  SetTexture(sprite_tag);
-  SetShader(shader_tag);
+  SetTexture(sprite_name);
+  SetShader(shader_name);
   m_wrapper.SetAttribute(m_weak_vao_ref);
+  m_wrapper.SetUniformValue<glm::vec2>("opScale", {1, 1});
+  m_wrapper.SetUniformValue<glm::vec2>("opOffset", {0, 0});
 
   SetTextureFragmentIndex(texture_index);
 }
@@ -148,7 +150,8 @@ void CSprite2DRenderer::RenderSprite() {
 }
 
 void CSprite2DRenderer::SetShader(const std::string& shader_name) {
-  m_wrapper.SetShader(manager::shader::GetShader(shader_name));
+  using opgs16::manager::shader::GetShader;
+  m_wrapper.SetShader(GetShader(shader_name));
 }
 
 void CSprite2DRenderer::SetPrimitiveMode(EPrimitiveType primitive_type) {

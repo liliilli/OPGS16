@@ -25,7 +25,6 @@
 #include <array>	/** std::array */
 #include <memory>	/** std::shared_ptr */
 
-#include <Shader\shader.h>          /// ::opgs16::element::CShaderNew
 #include <Shader\shader_wrapper.h>  /// ::opgs16::element::CShaderWrapper
 #include <Frame\texture.h>          /// ::opgs16::texture::CTexture2D
 
@@ -104,7 +103,9 @@ public:
 	 * @return The reference of std::unique_ptr<helper::CTexture2D>.
 	 */
 	using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2D>;
-	texture_ptr& GetTexture(const size_t id) { return m_color_buffers.at(id); }
+	texture_ptr& GetTexture(const int32_t id) {
+	  return m_color_buffers[id];
+	}
 
 	/**
 	 * @brief Bind texture to specific frame buffer with attributes.
@@ -117,8 +118,10 @@ public:
 	 *
 	 * @see https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glFramebufferTexture2D.xml
 	 */
-	 void BindTextureToFrameBuffer(const size_t texture_id, const size_t framebuffer_id,
-                                   const GLenum attachment, const GLenum target);
+	 void BindTextureToFrameBuffer(int32_t texture_id,
+                                 int32_t framebuffer_id,
+                                 GLenum attachment,
+                                 GLenum target);
 
 	/**
 	 * @brief Create and Initialize shader to be used only in this post-processing frame.
@@ -160,7 +163,7 @@ public:
 	 */
 	template <typename _Ty>
 	void InsertUniformValue(const char* tag, const _Ty value) {
-		if (!IsValueAlreadyExist(tag, value)) m_shader_wrapper.SetUniformValue(tag, value);
+	  m_shader_wrapper.SetUniformValue(tag, value);
 	}
 
 	/**
@@ -171,7 +174,7 @@ public:
 	 */
 	template <typename _Ty>
 	void ReplaceUniformValue(const char* tag, const _Ty value) {
-        if (IsValueAlreadyExist(tag, value)) m_shader_wrapper.SetUniformValue(tag, value);
+    m_shader_wrapper.SetUniformValue(tag, value);
 	}
 
 private:
@@ -198,25 +201,22 @@ private:
 	 * @return Success or failure flag. Return true if buffer in index is already generated.
 	 * (except for helper::CTexture2D. helper::CTexture2D version is below.)
 	 */
-	template <size_t _Amnt>
-	bool IsAlreadyGenerated(const size_t id, const std::array<GLuint, _Amnt>& buffer) const {
-		if (id < _Amnt && buffer[id] == 0) return false; else return true;
+	template <int32_t TAmnt>
+	bool IsAlreadyGenerated(const int32_t id,
+                          const std::array<GLuint, TAmnt>& buffer) const {
+		if (id < TAmnt && buffer[id] == 0)
+      return false;
+
+	  return true;
 	}
 
-	/** Overriden method of IsAlreadyGenerated<size_t>(const size, const std::array). */
-	bool IsAlreadyGenerated(const size_t id, const decltype(m_color_buffers)& buffer) const {
-		if (id < buffer.size() && buffer[id] == nullptr) return false; else return true;
-	}
+	/// Overriden method of IsAlreadyGenerated<size_t>(const size, const std::array). */
+	bool IsAlreadyGenerated(const int32_t id,
+                          const decltype(m_color_buffers)& buffer) const {
+		if (id < buffer.size() && buffer[id] == nullptr)
+      return false;
 
-	/**
-	 * @brief Check parameter value is already exist.
-	 * @param[in] tag The tag to find and check if it's exist.
-	 * @param[in] _Ty Type paramter to check container type in m_paramaters of this.
-	 * @return The flag accounts for success or failure of finding one.
-	 */
-	template <typename _Ty>
-	bool IsValueAlreadyExist(const char* tag, const _Ty) {
-		if (std::is_same_v<float, _Ty>) return m_shader_wrapper.IsValueAlreadyExist<float>(tag);
+	  return true;
 	}
 };
 

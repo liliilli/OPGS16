@@ -150,20 +150,20 @@ ESucceed GenerateSound(const std::string& item_tag) {
     return ESucceed::Succeed;
   }
 
-  auto& sound_item = resource::GetSound(item_tag);
+  auto sound_item = resource::GetSound(item_tag);
 
   FMOD::Sound* sound = nullptr;
-  if (const auto result = m_system->createSound(sound_item.Path().c_str(),
+  if (const auto result = m_system->createSound(sound_item->Path().c_str(),
           FMOD_DEFAULT, 0, &sound);
       result != FMOD_OK) {
     PUSH_LOG_ERROR_EXT(
         "Could not create sound. [Sound item tag : {}], [Sound item path : {}]",
-        item_tag, sound_item.Path());
+        item_tag, sound_item->Path());
     return ESucceed::Failed;
   }
 
   ESoundType sound_type = ESoundType::Effect;
-  if (sound_item.IsBgm())
+  if (sound_item->IsBgm())
     sound_type = ESoundType::Background;
 
   switch (sound_type) {

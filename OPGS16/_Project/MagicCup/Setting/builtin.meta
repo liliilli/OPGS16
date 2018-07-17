@@ -27,6 +27,16 @@
     "meta": { },
     "list":
     {
+      "opQuad2d": {
+        "vs": "Resource/Builtin/Shader/Global/opQuad2d.vert",
+        "fs": "Resource/Builtin/Shader/Global/opQuad2d.frag",
+        "meta": "Resource/Builtin/Shader/Meta/opQuad2d.smeta"
+      },
+      "opFont2d": {
+        "vs": "Resource/Builtin/Shader/Global/opFont2d.vert",
+        "fs": "Resource/Builtin/Shader/Global/opFont2d.frag",
+        "meta": "Resource/Builtin/Shader/Meta/opFont2d.smeta"
+      },
       "ppConvex": {
         "vs": "Resource/Builtin/Shader/Global/quad.vert",
         "fs": "Resource/Builtin/Shader/PostProcessing/convex.frag"
