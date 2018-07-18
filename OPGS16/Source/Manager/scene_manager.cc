@@ -75,6 +75,14 @@ const glm::mat4& GetPresentScenePvMatrix() {
   return (*m_scene_stack.rbegin())->GetMainCamera()->PvMatrix();
 }
 
+const glm::mat4& GetPresentMainCamProjMatrix() noexcept {
+  return (*m_scene_stack.rbegin())->GetMainCamera()->ProjectionMatrix();
+}
+
+const glm::mat4& GetPresentMainCamViewMatrix() noexcept {
+  return (*m_scene_stack.rbegin())->GetMainCamera()->ViewMatrix();
+}
+
 } /// ::opgs16::manager::scene namespace
 
 namespace opgs16::manager::scene::__ {

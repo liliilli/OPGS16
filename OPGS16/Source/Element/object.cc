@@ -212,7 +212,7 @@ void CObject::SetScaleFactor(const DVector3& factor) {
 }
 
 const glm::mat4& CObject::GetModelMatrix() const {
-    return m_data->GetModelMatrix();
+  return m_data->GetModelMatrix();
 }
 
 void CObject::SetSucceedingPositionFlag(bool value) noexcept {
@@ -228,15 +228,15 @@ void CObject::SetSucceedingScalingFlag(bool value) noexcept {
 }
 
 bool CObject::GetSucceedingPositionFlag() const noexcept {
-    return m_data->GetSucceedingPositionFlag();
+  return m_data->GetSucceedingPositionFlag();
 }
 
 bool CObject::GetSucceedingRotationFlag() const noexcept {
-    return m_data->GetSucceedingRotationFlag();
+  return m_data->GetSucceedingRotationFlag();
 }
 
 bool CObject::GetSucceedingScalingFlag() const noexcept {
-    return m_data->GetSucceedingScalingFlag();
+  return m_data->GetSucceedingScalingFlag();
 }
 
 std::vector<std::string> CObject::GetGameObjectNameList() const {

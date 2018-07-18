@@ -33,7 +33,7 @@ CProcedural2DRenderer::CProcedural2DRenderer(element::CObject& bind_object,
   auto [ptr, result] = FindVaoResource(BModel2DQuad::m_model_name.data());
   if (result == phitos::enums::EFound::NotFound) {
     PHITOS_ASSERT(result == phitos::enums::EFound::Found,
-        "Did not find built-in vao items. opQuad2D.");
+                  "Did not find built-in vao items.");
   }
   m_weak_vao_ref = ptr;
   m_weak_vao_ref->IncreaseCount();

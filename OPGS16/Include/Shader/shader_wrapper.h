@@ -104,7 +104,6 @@ public:
         m_parameters.m_vec2[it->second.second] = value;
       }
     }
-    //m_parameters.m_vec2[tag] = value;
   }
 
   template <>
@@ -115,7 +114,6 @@ public:
         m_parameters.m_vec3[it->second.second] = value;
       }
     }
-    //m_parameters.m_vec3[var_name] = value;
   }
 
   template <>
@@ -126,7 +124,6 @@ public:
         m_parameters.m_ints[it->second.second] = value;
       }
     }
-    //m_parameters.m_ints[tag] = value;
   }
 
   void SetUniformValueInt(const std::string& var_name, const int value) {
@@ -136,17 +133,15 @@ public:
         m_parameters.m_ints[it->second.second] = value;
       }
     }
-    //m_parameters.m_ints[variable_name] = value;
   }
 
   void SetUniformValueIntPtr(const char* var_name, int* pointer, const int amount) {
     using opgs16::resource::SShader;
     if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
-      if (it->second.first == SShader::EVariableType::Int) {
+      if (it->second.first == SShader::EVariableType::IntPtr) {
         m_parameters.m_int_ptr[it->second.second] = std::make_pair(pointer, amount);
       }
     }
-    //m_parameters.m_int_ptr[variable_name] = std::make_pair(pointer, amount);
   }
 
 private:
@@ -163,14 +158,6 @@ private:
     std::map<int32_t, glm::vec2> m_vec2;
     std::map<int32_t, glm::vec3> m_vec3;
     std::map<int32_t, glm::mat4> m_mat4s;
-#ifdef false
-    std::map<std::string, float> m_floats{};
-    std::map<std::string, int> m_ints{};
-    std::map<std::string, std::pair<int*, int>> m_int_ptr{};
-    std::map<std::string, glm::vec2> m_vec2{};
-    std::map<std::string, glm::vec3> m_vec3{};
-    std::map<std::string, glm::mat4> m_mat4s{};
-#endif
   };
 
   /// Shader pointer retrieved from ShaderManager.

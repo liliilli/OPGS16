@@ -22,6 +22,7 @@
 #include <Component/sprite2d_renderer.h>
 #include <Element/Canvas/canvas.h>      /// ::opgs16::element::canvas::CCanvas
 #include <Manager/texture_manager.h>    /// ::opgs16::manager::MTextureManager
+#include <Manager/Internal/shader_builtin_keywords.h>
 #include <Shader/shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
 #include <Shader/Default/shader_quad2d.h>
 #include <Phitos/Dbg/assert.h>
@@ -32,7 +33,7 @@ CImage::CImage(const std::string& sprite_tag,
                const CCanvas* const ref_canvas) :
     m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
   m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(
-      *this, sprite_tag, builtin::shader::SGlobalQuad2D::s_shader_name);
+      *this, sprite_tag, "opQuad2d");
 }
 
 CImage::CImage(const std::string& sprite_tag,
@@ -51,7 +52,6 @@ void CImage::SetTextureIndex(const int32_t index) {
 }
 
 void CImage::LocalUpdate() {
-  // Update xywh
 	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
 	const auto xy = GetFinalPosition() - (wh / 2.0f);
 
@@ -64,23 +64,16 @@ void CImage::LocalUpdate() {
 }
 
 void CImage::Render() {
-	auto is_already_enabled{ false };
-	if (glIsEnabled(GL_BLEND)) is_already_enabled = true;
-	else {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-
 	auto& wrapper = m_renderer_ptr->GetWrapper();
-	wrapper.SetUniformValue<glm::mat4>("opProj", m_ref_canvas->GetUiCameraPVMatrix());
-	wrapper.SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
-	wrapper.SetUniformValue("opAlpha", 1.0f);
+	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_proj,
+                                     m_ref_canvas->GetUiCameraProjectMatrix());
+	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_view,
+                                     m_ref_canvas->GetUiCameraViewMatrix());
+	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_model,
+                                     GetModelMatrix());
+	wrapper.SetUniformValue(builtin::s_uniform_alpha, 1.0f);
 
 	m_renderer_ptr->RenderSprite();
-
-	if (!is_already_enabled) {
-    glDisable(GL_BLEND);
-	}
 }
 
 } /// ::opgs16::element::canvas namespace

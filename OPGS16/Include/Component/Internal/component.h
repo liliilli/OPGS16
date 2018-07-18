@@ -15,6 +15,8 @@
 /// 2018-03-10 Make components bind Object explicitly.
 ///
 
+#include <cstring>
+
 #include <Phitos/Enums/activated.h>
 
 #include <Component/Internal/component_macro.h>
@@ -35,7 +37,7 @@ namespace _internal {
 ///
 class CComponent {
 public:
-  CComponent(element::CObject& bind_object) : m_object{ bind_object } {};
+  CComponent(element::CObject& bind_object) : m_object{ &bind_object } {};
   virtual ~CComponent() = 0;
 
   virtual void Update(float delta_time) = 0;
@@ -45,8 +47,10 @@ public:
   /// @param[in] type_value Hashed type value of type which you want to find.
   /// @return True/False flag, if you found proper class return true else false.
   ///
-  inline virtual bool DoesTypeMatch(const uint32_t type_value) const noexcept {
-    return type == type_value;
+  inline virtual bool DoesTypeMatch(
+      const uint32_t type_value,
+      const char* str) const noexcept {
+    return type == type_value && strcmp(str, __string_literal) == 0;
   }
 
   ///
@@ -58,7 +62,7 @@ public:
   /// @return Reference of bound game object.
   ///
   element::CObject& GetBindObject() const {
-    return m_object;
+    return *m_object;
   }
 
   inline phitos::enums::EActivated IsComponentActivated() const noexcept {
@@ -71,7 +75,7 @@ public:
 
 private:
   /// Bound object which script instance refers to.
-  element::CObject& m_object;
+  element::CObject* m_object = nullptr;
   phitos::enums::EActivated m_activated = phitos::enums::EActivated::Activated;
 
   SET_UP_HASH_VALUE(Component)

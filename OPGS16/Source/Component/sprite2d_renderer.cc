@@ -34,6 +34,7 @@
 
 /// ::opgs16::element::builtin::BModel2DQuad
 #include <Element/Default/model_2dquad.h>
+#include <Manager/Internal/shader_builtin_keywords.h>
 /// ::opgs16::manager::_internal::vao namespace
 #include <Manager/Internal/vao_management.h>
 
@@ -51,18 +52,15 @@ CSprite2DRenderer::CSprite2DRenderer(
   using phitos::enums::EFound;
 
   auto [ptr, result] = FindVaoResource(BModel2DQuad::m_model_name.data());
-  PHITOS_ASSERT(result == EFound::Found,
-                "Did not find built-in vao items. opQuad2D.");
+  PHITOS_ASSERT(result == EFound::Found, "Did not find built-in vao items. opQuad2d");
+
   m_weak_vao_ref = ptr;
   m_weak_vao_ref->IncreaseCount();
   m_weak_vao_ref->SetDirty();
 
-  SetTexture(sprite_name);
   SetShader(shader_name);
+  SetTexture(sprite_name);
   m_wrapper.SetAttribute(m_weak_vao_ref);
-  m_wrapper.SetUniformValue<glm::vec2>("opScale", {1, 1});
-  m_wrapper.SetUniformValue<glm::vec2>("opOffset", {0, 0});
-
   SetTextureFragmentIndex(texture_index);
 }
 
@@ -75,6 +73,7 @@ void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
   if (!texture) {
     m_sprite = manager::TextureManager::Instance().GetTexture("opSystem");
   }
+
   m_sprite = texture;
   SetTextureFragmentIndex(0);
 }
@@ -100,8 +99,8 @@ void CSprite2DRenderer::SetTextureFragmentIndex(int32_t index_value) {
         "Bound texture does not have atlas information.\n"
         "so failed to assign new_index.");
     m_texture_fragment_index = 0;
-    m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
-    m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelld, glm::vec2{ 0.f, 0.f });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelru, glm::vec2{ 1.f, 1.f });
     return;
   }
 
@@ -112,15 +111,17 @@ void CSprite2DRenderer::SetTextureFragmentIndex(int32_t index_value) {
   const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RIGHT_UP, index_value);
 
   if (texel_ptr_ld && texel_ptr_ru) {
-    m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
-    m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelld,
+                              glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelru,
+                              glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
   }
   else {
     PUSH_LOG_WARN(
         "Any getting texel from resource has been failed.\n"
         "Texel is assigned to overall region.");
-    m_wrapper.SetUniformValue("uTexelLD", glm::vec2{ 0.f, 0.f });
-    m_wrapper.SetUniformValue("uTexelRU", glm::vec2{ 1.f, 1.f });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelld, glm::vec2{ 0.f, 0.f });
+    m_wrapper.SetUniformValue(builtin::s_uniform_texelru, glm::vec2{ 1.f, 1.f });
   };
 }
 
@@ -128,7 +129,6 @@ void CSprite2DRenderer::RenderSprite() {
   if (m_weak_vao_ref == nullptr)
     return;
 
-  // The name is incorrect
   m_wrapper.UseShader();
 
   for (const auto& vao : m_weak_vao_ref->GetVaoList()) {

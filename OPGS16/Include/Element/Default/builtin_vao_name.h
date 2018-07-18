@@ -17,8 +17,8 @@
 
 namespace opgs16::builtin {
 
-constexpr const char* g_model_2d_quad = "opQuad2D";
-constexpr const char* g_model_2d_quad_dynamic = "opQuad2Dd";
+constexpr const char* g_model_2d_quad = "opQuad2d";
+constexpr const char* g_model_2d_quad_dynamic = "opQuad2dDynamic";
 
 } /// ::opgs16::builtin namespace
 

@@ -316,11 +316,10 @@ void CFont2DRenderer::RenderText(IOriginable::Origin origin,
                     m_font_set, final_position,
                     m_vao_ptr->GetVaoList()[0].GetVboId(), scale);
     break;
-  default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
 
-  glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
+  glBindVertexArray(0);
   glUseProgram(0);
 }
 

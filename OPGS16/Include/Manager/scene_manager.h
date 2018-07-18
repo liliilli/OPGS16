@@ -166,6 +166,10 @@ bool IsSceneEmpty() noexcept;
 ///
 const glm::mat4& GetPresentScenePvMatrix();
 
+const glm::mat4& GetPresentMainCamProjMatrix() noexcept;
+
+const glm::mat4& GetPresentMainCamViewMatrix() noexcept;
+
 } /// ::opgs16::manager::scene namespace
 
 namespace opgs16::manager::scene::__ {

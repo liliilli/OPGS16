@@ -137,7 +137,6 @@ void CShaderNew::InitializeUniformVariables(
   using opgs16::builtin::s_shader_builtin;
   using opgs16::builtin::s_shader_builtin_type;
 
-#ifdef false // Querying
   int32_t count = 0;
   glGetProgramiv(m_program_id, GL_ACTIVE_UNIFORMS, &count);
   GLsizei length = 0;
@@ -150,7 +149,6 @@ void CShaderNew::InitializeUniformVariables(
     auto id = glGetUniformLocation(m_program_id, name);
     PUSH_LOG_INFO_EXT("Uniform #{} Type: {} Name: {} Id : {}", i, type, name, id);
   }
-#endif
 
   int32_t i = 0;
   for (const char* variable : s_shader_builtin) {
@@ -159,7 +157,6 @@ void CShaderNew::InitializeUniformVariables(
       m_uniform_variables.emplace_back(std::make_tuple(
           variable, s_shader_builtin_type[i], uniform_id)
       );
-      break;
     }
     ++i;
   }

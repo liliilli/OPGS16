@@ -11,7 +11,7 @@
 /// @author Jongmin Yun
 /// @log
 /// 2018-03-04 Refactoring. Add copyright and comments.
-/// 2018-04-03 Add default quad2d(gQuad) shader in bootstrapping.
+/// 2018-04-03 Add default quad2d(opQuad2d) shader in bootstrapping.
 ///
 
 /// Header file
@@ -93,9 +93,6 @@ void Initiate() {
   PHITOS_ASSERT(s_initiated == EInitiated::NotInitiated,
       "Duplicated opgs16::manager::shader::Initiate() calling is prohibited.");
   using namespace builtin::shader;
-
-  m_shader_container[SGlobalQuad2D::s_shader_name] = std::make_unique<SGlobalQuad2D>();
-  m_shader_container[SGlobalFont2D::s_shader_name] = std::make_unique<SGlobalFont2D>();
 
   m_shader_container[SGlobalPostProcessingQuad::s_shader_name] =
     std::make_unique<SGlobalPostProcessingQuad>();

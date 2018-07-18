@@ -24,7 +24,9 @@
  * and value it in compile time.
  */
 #define SET_UP_HASH_VALUE(__TYPE__) \
-public: static constexpr uint32_t type { HASH(__TYPE__) };
+public: \
+static constexpr uint32_t type = HASH(__TYPE__); \
+static constexpr const char* __string_literal = TO_STRING(__TYPE__);
 
 /*!
  * @macro OVERRIDE_TYPEMATCH
@@ -35,12 +37,15 @@ public: static constexpr uint32_t type { HASH(__TYPE__) };
  * The argument has to be a full name, with namespace.
  * @param[in] __DERIVED__ __DERIVED__ type itself. The argument doesn't have to be a full name.
  */
-#define OVERRIDE_TYPEMATCH(__BASE__, __DERIVED__)                                       \
-public:                                                                                 \
-inline virtual bool DoesTypeMatch(const uint32_t type_val) const noexcept override {    \
-    if (__DERIVED__::type == type_val)                                                  \
-        return true;                                                                    \
-    else return __BASE__::DoesTypeMatch(type_val);                                      \
+#define OVERRIDE_TYPEMATCH(__BASE__, __DERIVED__) \
+public: \
+inline virtual bool DoesTypeMatch( \
+    const uint32_t type_val, \
+    const char* str) const noexcept override { \
+  if (__DERIVED__::type == type_val && \
+      strcmp(str, __DERIVED__::__string_literal) == 0) \
+    return true; \
+  else return __BASE__::DoesTypeMatch(type_val, str); \
 }
 
 /*!
@@ -51,8 +56,8 @@ inline virtual bool DoesTypeMatch(const uint32_t type_val) const noexcept overri
  * The argument has to be a full name, with namespace.
  * @param[in] __DERIVED__ __DERIVED__ type itself. The argument doesn't have to be a full name.
  */
-#define SET_UP_TYPE_MEMBER(__BASE__, __DERIVED__)                                       \
-SET_UP_HASH_VALUE(__DERIVED__)                                                          \
+#define SET_UP_TYPE_MEMBER(__BASE__, __DERIVED__) \
+SET_UP_HASH_VALUE(__DERIVED__) \
 OVERRIDE_TYPEMATCH(__BASE__, __DERIVED__)
 
 #endif // !OPGS16_SYSTEM_COMPONENTS_INTERNAL_COMPONENT_MACRO_H

@@ -1051,9 +1051,9 @@ GetCustomUniformVariableList(const std::string& file_path) {
     using opgs16::resource::SShader;
     if (auto result = std::find(
             SShader::s_variable_str,
-            SShader::s_variable_str + 11,
+            SShader::s_variable_str + SShader::s_variable_size,
             it.value().get<std::string>());
-        result == SShader::s_variable_str + 11) {
+        result == SShader::s_variable_str + SShader::s_variable_size) {
       PUSH_LOG_ERROR_EXT(
           "Could not find appropriate shader variable type. [Name : {}]",
           key);

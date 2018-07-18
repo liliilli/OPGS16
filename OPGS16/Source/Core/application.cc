@@ -425,7 +425,11 @@ void Run() {
       // Timer alarm event checking.
       const float dt = manager::time::GetDeltaTime();
       manager::timer::Update(dt);
+      if (m_game_status.empty()) break;
+
       Update(dt);
+      if (m_game_status.empty()) break;
+
       Draw();
     }
   }
@@ -439,41 +443,32 @@ void ExitGame() {
   }
 }
 
-
 void Update(float delta_time) {
-  // If callback is being bound,
-  // call function once and terminate callback function.
+  /// If callback is being bound,
+  /// call function once and terminate callback function.
   if (m_on_before_update_callback) {
     m_on_before_update_callback();
     m_on_before_update_callback = nullptr;
   }
 
-  // Pre-processing (Pre-rendering) update.
+  /// Pre-processing (Pre-rendering) update.
   manager::prerendering::Update();
-
   manager::input::Update();
+
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
 #ifdef _OPGS16_DEBUG_OPTION
     InputGlobal();
 #endif
-    break;
-  default: break;
-  }
-
-  switch (GetPresentStatus()) {
-  case _internal::EGameStatus::PLAYING:
-  case _internal::EGameStatus::MENU:
     if (!manager::scene::IsSceneEmpty()) {
-      // pre-work such as Delete object, Replace object etc.
+      /// pre-work such as Delete object, Replace object etc.
       manager::object::Update();
-
-      // Update
+      /// Update
       manager::scene::GetPresentScene()->Update(delta_time);
       manager::physics::Update();
     }
     break;
-  default: break;;
+  default: break;
   }
 
 #if defined(_OPGS16_DEBUG_OPTION)
@@ -483,7 +478,7 @@ void Update(float delta_time) {
     manager::physics::RenderCollisionBox();
 #endif
 
-  // Update active effects.
+  /// Update active effects.
   if (IsSwitchOn(m_setting->PostProcessing()))
     manager::postprocessing::UpdateSequences();
 }

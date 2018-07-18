@@ -55,4 +55,12 @@ const glm::mat4& CCanvas::GetUiCameraPVMatrix() const {
 	return m_camera->PvMatrix();
 }
 
+const glm::mat4& CCanvas::GetUiCameraProjectMatrix() const noexcept {
+  return m_camera->ProjectionMatrix();
+}
+
+const glm::mat4& CCanvas::GetUiCameraViewMatrix() const noexcept {
+  return m_camera->ViewMatrix();
+}
+
 } /// ::opgs16::element::canvas namespace

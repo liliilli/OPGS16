@@ -31,7 +31,7 @@ void CPreRenderingContainer::Initialize() {
     final_frame_buffer->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
     final_frame_buffer->InitializeDefaultDepthBuffer();
-    final_frame_buffer->SetShader("gQuad");
+    final_frame_buffer->SetShader("opQuad2d");
     final_frame_buffer->Initialize();
     m_frame_buffer.emplace_back(std::move(final_frame_buffer));
 

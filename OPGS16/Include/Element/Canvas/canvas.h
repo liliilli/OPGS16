@@ -57,6 +57,10 @@ public:
 	/// Get Ui camera's orthographic projection matrix.
 	const glm::mat4& GetUiCameraPVMatrix() const;
 
+  const glm::mat4& GetUiCameraProjectMatrix() const noexcept;
+
+  const glm::mat4& GetUiCameraViewMatrix() const noexcept;
+
 private:
 	/// Camera object uses just one orthographic type.
   component::CCamera* m_camera = nullptr;
