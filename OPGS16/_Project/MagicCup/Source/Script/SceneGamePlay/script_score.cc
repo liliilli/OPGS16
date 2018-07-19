@@ -9,7 +9,7 @@
 /// Header file
 #include "../../../Include/Script/SceneGamePlay/script_score.h"
 
-#include <Component/empty_renderer.h>
+#include <Component/font2d_renderer.h>
 #include <Element/Canvas/text.h>
 
 namespace magiccup {
@@ -23,14 +23,14 @@ void ScriptUiScore::Initiate() {
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({16.f, -24.f, 0});
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
+  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
 
   auto score = obj.CreateGameObject<CText>("Score", "00000");
   score->SetOrigin(IOriginable::Origin::UP_LEFT);
   score->SetWorldPosition({16.f, -32.f, 0.f});
   score->SetFontName("opSystem");
   score->SetFontSize(8);
-  score->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
+  score->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
 
   m_score = score;
 }

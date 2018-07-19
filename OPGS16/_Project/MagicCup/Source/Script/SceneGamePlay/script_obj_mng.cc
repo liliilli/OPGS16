@@ -59,9 +59,19 @@ void ScriptObjectManagement::Initiate() {
   position += opgs16::DVector3{0.f, -16.f, 0.f};
   m_cursor->SetWorldPosition(position);
   m_cursor->GetComponent<opgs16::component::CSprite2DRenderer>()->
-      SetComponentActivation(phitos::enums::EActivated::Disabled);
+      SetComponentActive(false);
 
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
+}
+
+void ScriptObjectManagement::Start() {
+  using opgs16::manager::scene::GetPresentScene;
+
+  if (!m_state_machine) {
+    m_state_machine = GetPresentScene()->
+        GetGameObject(TotalManagement::s_object_name)->
+        GetComponent<ScriptStateMachine>();
+  }
 }
 
 void ScriptObjectManagement::FirstStartObjectEffect() {
@@ -70,52 +80,113 @@ void ScriptObjectManagement::FirstStartObjectEffect() {
 
   for (int32_t i = 0; i < size; ++i) {
     m_item_list[i]->GetGameObject(ObjectBall::s_object_name)->
-        SetActive(i == m_ball_index ? true : false);
+        SetObjectActive(i == m_ball_index ? true : false);
   }
 
-  SetComponentActivation(phitos::enums::EActivated::Activated);
+  m_state = EState::StartEffect;
+  SetComponentActive(true);
 }
 
 void ScriptObjectManagement::StartObjectEffect() {
-  SetComponentActivation(phitos::enums::EActivated::Activated);
+  m_state = EState::IntermissionDownEffect;
+  SetComponentActive(true);
 }
 
 void ScriptObjectManagement::Update(float delta_time) {
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
-  OP16_TIMER_SET(m_effect_timer, 1'000, false, this,
-                 &ScriptObjectManagement::ExecuteTransitionShaking);
+  using phitos::enums::EActivated;
+
+  static constexpr float start_eff_int = 1.5f;
+  static constexpr float eff_int = 1.0f;
+  static constexpr float a = 96.f;
+  static constexpr float o = 64.f;
+  const int32_t size = static_cast<int32_t>(m_item_list.size());
+
+  static float elapsed = 0.f;
+  elapsed += delta_time;
+
+  switch (m_state) {
+  case EState::StartEffect: {
+      if (elapsed >= start_eff_int) {
+        elapsed = 0.f;
+        m_state = EState::Idle;
+
+        for (int32_t i = 0; i < size; ++i) {
+          m_item_list[i]->GetGameObject(ObjectCup::s_object_name)->
+              SetWorldPosition({0, a, 0});
+        }
+
+        SetComponentActive(false);
+        OP16_TIMER_SET(m_effect_timer, 1'000, false, this,
+                       &ScriptObjectManagement::ExecuteEffectCupDown);
+        break;
+      }
+
+      const auto h = (ObjectCup::s_initial_y_pos - a) * 0.25f;
+      const auto x = std::powf(elapsed - start_eff_int, 2);
+      const float new_y = h * x + a;
+
+      for (int32_t i = 0; i < size; ++i) {
+        m_item_list[i]->GetGameObject(ObjectCup::s_object_name)->
+            SetWorldPosition({0, new_y, 0});
+      }
+    } break;
+  case EState::JudgeUpEffect: {
+      if (elapsed >= eff_int) {
+        elapsed = 0.f;
+        m_state = EState::Idle;
+        SetComponentActive(false);
+        OP16_TIMER_SET(m_effect_timer, 1'000, false, this,
+                       &ScriptObjectManagement::Judge);
+        break;
+      }
+
+      const float off1 = elapsed / eff_int;
+      const float off2 = (eff_int - elapsed) / eff_int;
+      for (int32_t i = 0; i < size; ++i) {
+        m_item_list[i]->GetGameObject(ObjectCup::s_object_name)->
+            SetWorldPosition({0, a * off1 + 64.f * off2, 0});
+      }
+    }
+    break;
+  case EState::IntermissionDownEffect: {
+      if (elapsed >= eff_int) {
+        elapsed = 0.f;
+        m_state = EState::Idle;
+        SetComponentActive(false);
+        OP16_TIMER_SET(m_effect_timer, 1'000, false, this,
+                       &ScriptObjectManagement::ExecuteTransitionShaking);
+        break;
+      }
+
+      const float off1 = (eff_int - elapsed) / eff_int;
+      const float off2 = elapsed / eff_int;
+      for (int32_t i = 0; i < size; ++i) {
+        m_item_list[i]->GetGameObject(ObjectCup::s_object_name)->
+            SetWorldPosition({0, a * off1 + 64.f * off2, 0});
+      }
+    } break;
+  default: PHITOS_UNEXPECTED_BRANCH(); break;
+  }
+}
+
+void ScriptObjectManagement::ExecuteEffectCupDown() {
+  using phitos::enums::EActivated;
+  m_state = EState::IntermissionDownEffect;
+  SetComponentActive(true);
+}
+
+void ScriptObjectManagement::ExecuteShaking(int32_t shaking_count) {
+  m_shaking_count_on_stage = shaking_count;
+  OP16_TIMER_SET(m_shaking_timer, 1'000, true, this, &ScriptObjectManagement::NextShake);
 }
 
 void ScriptObjectManagement::ExecuteTransitionShaking() {
   using opgs16::manager::scene::GetPresentScene;
-
-  if (!m_state_machine) {
-    m_state_machine = GetPresentScene()->
-        GetGameObject(TotalManagement::s_object_name)->
-        GetComponent<ScriptStateMachine>();
-  }
-
   m_state_machine->TransitShaking();
-}
-
-void ScriptObjectManagement::ExecuteShaking(int32_t shaking_count) {
-  m_item_list[m_ball_index]->GetGameObject(ObjectBall::s_object_name)->
-      SetActive(false);
-
-  m_shaking_count_on_stage = shaking_count;
-  OP16_TIMER_SET(m_shaking_timer, 1'000, true, this,
-                 &ScriptObjectManagement::NextShake);
 }
 
 void ScriptObjectManagement::ExecuteTransitionSelect() {
   using opgs16::manager::scene::GetPresentScene;
-
-  if (!m_state_machine) {
-    m_state_machine = GetPresentScene()->
-        GetGameObject(TotalManagement::s_object_name)->
-        GetComponent<ScriptStateMachine>();
-  }
-
   m_state_machine->TransitSelect();
 }
 
@@ -189,17 +260,18 @@ void ScriptObjectManagement::MoveCursorSelectCup() {
 
 void ScriptObjectManagement::EnableCursor() {
   m_cursor->GetComponent<opgs16::component::CSprite2DRenderer>()->
-      SetComponentActivation(phitos::enums::EActivated::Activated);
+  SetComponentActive(true);;
 }
 
 void ScriptObjectManagement::DisableCursor() {
   m_cursor->GetComponent<opgs16::component::CSprite2DRenderer>()->
-      SetComponentActivation(phitos::enums::EActivated::Disabled);
+      SetComponentActive(false);
 }
 
 void ScriptObjectManagement::ExecuteJudging() {
-  OP16_TIMER_SET(m_effect_timer, 1'000, false, this,
-                 &ScriptObjectManagement::Judge);
+ using phitos::enums::EActivated;
+  m_state = EState::JudgeUpEffect;
+  SetComponentActive(true);;
 }
 
 void ScriptObjectManagement::Judge() {

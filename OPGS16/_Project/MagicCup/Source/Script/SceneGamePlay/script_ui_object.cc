@@ -50,6 +50,7 @@ void ScriptUiObject::Initiate() {
       static_cast<CCanvas*>(GetPresentScene()->GetGameObject(name::canvas)))->
           GetComponent<ScriptUiBackground>();
   m_background->SetTile(3);
+  m_background->SetScale(0.25f, 0.25f);
   m_background->SetOffset(0, 0);
 }
 

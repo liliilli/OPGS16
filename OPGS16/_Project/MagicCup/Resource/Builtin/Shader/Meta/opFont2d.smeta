@@ -1,0 +1,8 @@
+{
+	"meta": { },
+	"uniform" :
+	{
+    "text": "TEXTURE2D",
+    "textColor": "VEC3"
+	}
+}

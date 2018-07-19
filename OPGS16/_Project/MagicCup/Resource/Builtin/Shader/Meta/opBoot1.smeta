@@ -1,0 +1,9 @@
+{
+	"meta": { },
+	"uniform" :
+	{
+    "uNumber" : "INT",
+		"uPos" : "INTPTR",
+    "uYScale" : "FLOAT"
+	}
+}

@@ -13,7 +13,7 @@
 #include <Element/Canvas/text.h>
 #include <Manager/scene_manager.h>
 
-#include <Component/empty_renderer.h>
+#include <Component/font2d_renderer.h>
 #include <Component/sprite2d_renderer.h>
 
 #include "../../../Include/Object/SceneGamePlay/life_image.h"
@@ -31,7 +31,7 @@ void ScriptUiLife::Initiate() {
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({-16.f, -24.f, 0});
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
+  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
 
   using opgs16::manager::scene::GetPresentScene;
   if (auto canvas = GetPresentScene()->GetGameObject(name::canvas);
@@ -51,11 +51,11 @@ void ScriptUiLife::Initiate() {
 void ScriptUiLife::UpdateLife(int32_t life) noexcept {
   const auto sep = (life <= 5 ? life : 5);
   for (int32_t i = 0; i < sep; ++i) {
-    m_life_container[i]->SetActive(true);
+    m_life_container[i]->SetObjectActive(true);
   }
 
   for (int32_t i = life; i < 5; ++i) {
-    m_life_container[i]->SetActive(false);
+    m_life_container[i]->SetObjectActive(false);
   }
 }
 

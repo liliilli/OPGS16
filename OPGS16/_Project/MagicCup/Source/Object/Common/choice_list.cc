@@ -11,7 +11,7 @@
 
 #include <Phitos/Dbg/assert.h>
 
-#include <Component/empty_renderer.h>
+#include <Component/font2d_renderer.h>
 #include <Component/sprite2d_renderer.h>
 #include <Element/Canvas/image.h>
 #include <Element/Canvas/text.h>
@@ -65,7 +65,7 @@ void ChoiceList::SetItemSize(const int32_t size) {
 
 void ChoiceList::SetTextureIndex(const int32_t index) {
   PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
-  m_selection_ref->SetTextureIndex(index);
+  m_selection_ref->SetTextureFragmentIndex(index);
 }
 
 void ChoiceList::SetRenderingLayer(int32_t layer_value) {
@@ -73,7 +73,7 @@ void ChoiceList::SetRenderingLayer(int32_t layer_value) {
       SetRenderingLayer(layer_value);
 
   for (auto& [text_ref, callback] : m_commands) {
-    text_ref->GetComponent<opgs16::component::CEmptyRenderer>()->
+    text_ref->GetComponent<opgs16::component::CFont2DRenderer>()->
         SetRenderingLayer(layer_value);
   }
 }
@@ -168,8 +168,8 @@ void ChoiceList::LocalUpdate() {
 	std::array<GLint, 4>&& xywh = {
 		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
 		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
-	UpdateScreenXYWH(xywh);
 
+	UpdateScreenXYWH(xywh);
 	UiObject::LocalUpdate();
 }
 

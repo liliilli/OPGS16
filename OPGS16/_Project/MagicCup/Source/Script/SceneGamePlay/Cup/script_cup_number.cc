@@ -16,7 +16,7 @@
 namespace magiccup {
 
 void ScriptCupNumbering::Initiate() {
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
 
   auto& obj = GetBindObject();
   auto texture = obj.CreateGameObject<ObjectNumber>(ObjectNumber::s_object_name);

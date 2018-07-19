@@ -12,11 +12,14 @@
 #include <Element/Canvas/canvas.h>
 #include <Manager/input_manager.h>
 #include <Manager/scene_manager.h>
+#include <Manager/sound_manager.h>
+#include <Manager/timer_manager.h>
 
 #include <Core/application.h>
 
 #include "../../../Include/Internal/general_keyword.h"
 #include "../../../Include/Object/Common/choice_list.h"
+#include "../../../Include/Object/Common/fade_out.h"
 #include "../../../Include/Scene/scene_gameplay.h"
 
 namespace magiccup {
@@ -40,19 +43,32 @@ void ScriptTitleSelect::Initiate() {
   choice_list->SetFunction(0, std::bind(&ScriptTitleSelect::GotoGameplay, this));
   choice_list->SetFunction(1, std::bind(&ScriptTitleSelect::ExitGame, this));
 
+  using opgs16::manager::sound::GenerateSound;
+  GenerateSound(keyword::eff_cursormove);
+  GenerateSound(keyword::eff_decision);
+  GenerateSound(keyword::eff_exit);
+
   m_choice_list = choice_list;
+  m_choice_list->SetObjectActive(false);
+  SetComponentActive(false);
 }
 
 void ScriptTitleSelect::Update(float delta_time) {
   using opgs16::manager::input::IsKeyPressed;
+  using opgs16::manager::input::IsKeyReleased;
   using opgs16::manager::input::GetKeyValue;
+  using opgs16::manager::sound::PlaySound;
 
   const auto up_value = GetKeyValue(keyword::key_y);
-  if (up_value == 1.0f) {
-    m_choice_list->MoveCursor(EDirection::Up);
-  }
-  else if (up_value == -1.0f) {
-    m_choice_list->MoveCursor(EDirection::Down);
+  if (IsKeyPressed(keyword::key_y)) {
+    if (up_value == 1.0f) {
+      m_choice_list->MoveCursor(EDirection::Up);
+      PlaySound(keyword::eff_cursormove);
+    }
+    else if (up_value == -1.0f) {
+      m_choice_list->MoveCursor(EDirection::Down);
+      PlaySound(keyword::eff_cursormove);
+    }
   }
 
   if (IsKeyPressed(keyword::key_enter)) {
@@ -61,13 +77,42 @@ void ScriptTitleSelect::Update(float delta_time) {
 }
 
 void ScriptTitleSelect::GotoGameplay() {
+  using opgs16::manager::sound::PlaySound;
+  PlaySound(keyword::eff_decision);
+
+  OP16_TIMER_SET(m_common_timer, 1'000, false, this,
+                 &ScriptTitleSelect::ExecuteGotoGamePlay);
+}
+
+void ScriptTitleSelect::ExecuteGotoGamePlay() {
   M_REPLACE_SCENE(magiccup::SceneGamePlay);
 }
 
 void ScriptTitleSelect::ExitGame() {
+  using opgs16::manager::sound::PlaySound;
+  PlaySound(keyword::eff_exit);
+
+  auto& obj = GetBindObject();
+  obj.CreateGameObject<UiFadeOut>(UiFadeOut::s_object_name,
+      1'000,
+      std::bind(&ScriptTitleSelect::ExecuteExit, this),
+      static_cast<opgs16::element::canvas::CCanvas*>(&obj));
+}
+
+void ScriptTitleSelect::ExecuteExit() {
   opgs16::entry::ExitGame();
 }
 
-void ScriptTitleSelect::Destroy() { }
+void ScriptTitleSelect::Destroy() {
+  using opgs16::manager::sound::DestroySound;
+  DestroySound(keyword::eff_cursormove);
+  DestroySound(keyword::eff_decision);
+  DestroySound(keyword::eff_exit);
+}
+
+void ScriptTitleSelect::EnableComponent() {
+  m_choice_list->SetObjectActive(true);
+  SetComponentActive(true);
+}
 
 } /// ::magiccup namespace

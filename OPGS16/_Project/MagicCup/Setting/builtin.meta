@@ -51,7 +51,8 @@
       },
       "__b_sliced": {
         "vs": "Resource/Builtin/Shader/__b_scr.vert",
-        "fs": "Resource/Builtin/Shader/__b_scr.frag"
+        "fs": "Resource/Builtin/Shader/__b_scr.frag",
+        "meta": "Resource/Builtin/Shader/Meta/opBoot1.smeta"
       }
     }
   },

@@ -9,8 +9,8 @@
 /// Header file
 #include "../../../Include/Script/SceneGamePlay/script_stage.h"
 
-#include <Component/empty_renderer.h>
 #include <Element/Canvas/text.h>
+#include <Component/font2d_renderer.h>
 #include <Manager/scene_manager.h>
 #include <Manager/timer_manager.h>
 #include <Phitos/Dbg/assert.h>
@@ -28,16 +28,16 @@ void ScriptUiStage::Initiate() {
   text->SetAlignment(IAlignable::Alignment::CENTER);
   text->SetFontName("opSystem");
   text->SetFontSize(8);
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
-  text->SetActive(false);
+  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
+  text->SetObjectActive(false);
   m_stage_display = text;
 
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
 }
 
 void ScriptUiStage::ExecuteStageEffect(int32_t stage_value) {
-  m_stage_display->SetActive(true);
   m_stage = stage_value;
+  m_stage_display->SetObjectActive(true);
   m_stage_display->SetText(std::to_string(m_stage));
 
   OP16_TIMER_SET(m_effect_interval, 2'000, false, this,

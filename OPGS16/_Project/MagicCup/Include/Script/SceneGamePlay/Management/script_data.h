@@ -40,10 +40,12 @@ public:
 private:
   void Initiate() override final;
 
+  int32_t CalculateScore();
+
   int32_t m_score = 0;
-  int32_t m_life = 3;
+  int32_t m_life  = 3;
   int32_t m_stage = 0;
-  int32_t m_time_limit = 100'000;
+  int32_t m_time_limit = 10'000;
   int32_t m_shaking = 2;
 
   ScriptUiScore* m_script_score = nullptr;

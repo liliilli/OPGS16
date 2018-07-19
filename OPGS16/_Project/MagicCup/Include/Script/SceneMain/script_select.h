@@ -9,6 +9,7 @@
 ///
 
 #include <Component/script_frame.h>
+#include <Frame/timer_handle.h>
 
 namespace magiccup {
 class ChoiceList;
@@ -20,6 +21,8 @@ class ScriptTitleSelect final : public opgs16::component::CScriptFrame {
 public:
   OP16_SCRIPT_GENERATE(ScriptTitleSelect);
 
+  void EnableComponent();
+
 private:
   void Initiate() override final;
   void Update(float delta_time) override final;
@@ -27,6 +30,11 @@ private:
 
   void GotoGameplay();
   void ExitGame();
+
+  opgs16::element::CTimerHandle m_common_timer;
+
+  void ExecuteGotoGamePlay();
+  void ExecuteExit();
 
   magiccup::ChoiceList* m_choice_list = nullptr;
 };

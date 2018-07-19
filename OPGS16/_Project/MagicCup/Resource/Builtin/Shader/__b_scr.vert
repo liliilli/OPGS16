@@ -7,6 +7,7 @@ out VS_OUT {
 } vs_out;
 
 uniform mat4	opProj;
+uniform mat4	opView;
 
 uniform int		uNumber;
 uniform int		uPos[64];
@@ -22,7 +23,7 @@ void main() {
 	model[3]			= vec4(39 + world_x, 112 + uPos[gl_InstanceID], 0, 1);
 
 	const vec2 local	= vec2(opPosition.x / uNumber, opPosition.y);
-	gl_Position			= opProj * model * vec4(local, 0, 1);
+	gl_Position			= opProj * opView * model * vec4(local, 0, 1);
 
 	const vec2 offset	= ((opPosition.xy + 1) / 2) * vec2(x_width, 1);
 	const vec2 texel	= vec2(x_width * gl_InstanceID, 0) + offset;

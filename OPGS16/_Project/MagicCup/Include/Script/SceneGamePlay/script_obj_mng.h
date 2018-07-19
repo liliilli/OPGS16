@@ -38,11 +38,14 @@ public:
 
 private:
   void Initiate() override final;
+  void Start() override final;
   void Update(float delta_time) override final;
 
   void ExecuteTransitionShaking();
   void ExecuteTransitionSelect();
   void NextShake();
+
+  void ExecuteEffectCupDown();
 
   void Judge();
 
@@ -50,6 +53,12 @@ private:
 
   opgs16::element::CTimerHandle m_effect_timer;
   opgs16::element::CTimerHandle m_shaking_timer;
+
+  enum class EState {
+    Idle, StartEffect,
+    JudgeUpEffect, IntermissionDownEffect,
+  };
+  EState m_state = EState::Idle;
 
   ObjectCursor* m_cursor = nullptr;
   ScriptStateMachine* m_state_machine = nullptr;

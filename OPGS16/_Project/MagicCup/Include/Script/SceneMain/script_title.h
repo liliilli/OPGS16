@@ -12,10 +12,6 @@
 #include <Frame/timer_handle.h>
 
 namespace magiccup {
-class ScriptUiBackground;
-} /// ::magiccup namespace
-
-namespace magiccup {
 
 class ScriptTitleDisplay final : public opgs16::component::CScriptFrame {
 public:
@@ -23,13 +19,15 @@ public:
 
 private:
   void Initiate() override final;
+  void Update(float delta_time) override final;
 
-  void ChangeBackground();
+  void ShowUpComponents();
 
-  magiccup::ScriptUiBackground* m_background = nullptr;
+  opgs16::element::CObject* m_title = nullptr;
 
-  opgs16::element::CTimerHandle m_temporary_timer;
-  int32_t m_background_index = 0;
+  opgs16::element::CTimerHandle m_timer;
+
+  float m_elapsed = 0.f;
 };
 
 } /// ::magiccup namespace

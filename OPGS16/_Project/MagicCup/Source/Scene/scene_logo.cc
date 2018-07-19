@@ -11,15 +11,18 @@
 
 #include "../../Include/Object/Common/empty_canvas.h"
 #include "../../Include/Internal/object_keyword.h"
-#include "../../Include/Script/SceneLogo/script_logo.h"
+#include "../../Include/Script/SceneGameLogo/script_logo_effect.h"
+#include "../../Include/Script/SceneGameLogo/script_file_manage.h"
+#include "../../Include/Object/Common/orthogonal_camera.h"
 
 namespace magiccup {
 
 void SceneLogo::Initiate() {
-  this->SetBackgroundColor(opgs16::DColor::Magenta);
+  this->SetBackgroundColor(opgs16::DColor::Black);
 
   auto canvas = CreateGameObject<magiccup::EmptyCanvas>(name::canvas);
-  canvas->AddComponent<ScriptLogo>(*canvas);
+  canvas->AddComponent<ScriptLogoEffect>(*canvas);
+  canvas->AddComponent<ScriptFileManage>(*canvas);
 }
 
 } /// ::magiccup namespace

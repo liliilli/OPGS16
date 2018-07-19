@@ -14,11 +14,11 @@
   {
     "list":
     [
-      "opBackground",
-      "opObject",
-      "opObject2",
-      "opInterface",
-      "opForemost"
+      "Background",
+      "Object",
+      "Object2",
+      "Interface",
+      "Foremost"
     ]
   },
   "collision":

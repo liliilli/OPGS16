@@ -11,6 +11,7 @@
 namespace magiccup::name {
 
 static constexpr const char* canvas = "Canvas";
+static constexpr const char* title = "Title";
 
 } /// ::magiccup namespace
 

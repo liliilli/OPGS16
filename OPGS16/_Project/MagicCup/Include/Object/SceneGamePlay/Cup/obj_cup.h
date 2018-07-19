@@ -21,6 +21,7 @@ public:
   ObjectCup();
 
   inline static constexpr const char* s_object_name = "Cup";
+  inline static constexpr const float s_initial_y_pos = 300.f;
 
 private:
   void Render() override final;

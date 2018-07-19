@@ -11,6 +11,7 @@
 
 #include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
+#include <Manager/Internal/shader_builtin_keywords.h>
 
 #include "../../../../Include/Internal/general_keyword.h"
 
@@ -21,15 +22,23 @@ ObjectBall::ObjectBall() {
   SetScaleFactor({1.f, 1.f, 0.f});
 
   auto cup_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
-      *this, keyword::rsc_sprite, "gQuad", 7);
+      *this, keyword::rsc_sprite, "opQuad2d", 7);
   m_wrapper = &cup_texture->GetWrapper();
   m_texture = cup_texture;
+
+  this->SetObjectActive(false);
 }
 
 void ObjectBall::Render() {
-  using opgs16::manager::scene::GetPresentScenePvMatrix;
-  m_wrapper->SetUniformValue<glm::mat4>("opProj", GetPresentScenePvMatrix());
-  m_wrapper->SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
+  using opgs16::manager::scene::GetPresentMainCamProjMatrix;
+  using opgs16::manager::scene::GetPresentMainCamViewMatrix;
+  using namespace opgs16::builtin;
+
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_proj,
+                                        GetPresentMainCamProjMatrix());
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_view,
+                                        GetPresentMainCamViewMatrix());
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_model, GetModelMatrix());
   m_texture->RenderSprite();
 }
 

@@ -10,13 +10,22 @@
 
 #include <Element/Canvas/image.h>
 
+namespace opgs16 {
+  struct DColor;
+}
+
 namespace magiccup {
 
 class TimerImage final : public opgs16::element::canvas::CImage {
 public:
   TimerImage(const opgs16::element::canvas::CCanvas* canvas_reference);
 
+  void SetColor(const opgs16::DColor& color);
+
   inline static constexpr const char* s_object_name = "Timer";
+
+private:
+  opgs16::component::CSprite2DRenderer* m_renderer = nullptr;
 };
 
 } /// ::magiccup namespace

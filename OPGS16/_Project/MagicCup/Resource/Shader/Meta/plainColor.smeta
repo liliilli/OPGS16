@@ -1,0 +1,7 @@
+{
+	"meta": { },
+	"uniform" :
+	{
+		"uColor" : "VEC3"
+	}
+}

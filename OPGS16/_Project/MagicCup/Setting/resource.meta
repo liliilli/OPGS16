@@ -2,8 +2,11 @@
   "meta": { },
   "font":
   {
-    "meta": { "default_size": 16 },
-    "list": { "font_name": { } }
+    "meta": { "default_size": 8 },
+    "list":
+    {
+      "Font1": { "path": "Resource/Font/04B_03__.TTF" }
+    }
   },
   "texture":
   {
@@ -30,12 +33,41 @@
   "shader":
   {
     "meta": { },
-    "list": { "shader_name": { } }
+    "list": {
+      "plainColor":
+      {
+        "vs": "Resource/Shader/plainColor.vert",
+        "fs": "Resource/Shader/plainColor.frag",
+        "meta": "Resource/Shader/Meta/plainColor.smeta"
+      }
+    }
   },
   "sound":
   {
     "meta": { },
-    "list": { "sound_name": { } }
+    "list":
+    {
+      "EffDecision":
+      {
+        "path": "Resource/Audio/Effect/decision.mp3",
+        "type": "effect"
+      },
+      "EffNext":
+      {
+        "path": "Resource/Audio/Effect/next.mp3",
+        "type": "effect"
+      },
+      "EffExit":
+      {
+        "path": "Resource/Audio/Effect/exit.mp3",
+        "type": "effect"
+      },
+      "EffCursorMove":
+      {
+        "path": "Resource/Audio/Effect/cursormove.mp3",
+        "type": "effect"
+      }
+    }
   },
   "animation":
   {

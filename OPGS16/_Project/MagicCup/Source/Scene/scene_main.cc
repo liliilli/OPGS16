@@ -12,17 +12,19 @@
 #include "../../Include/Internal/object_keyword.h"
 #include "../../Include/Object/Common/empty_canvas.h"
 
+#include "../../Include/Script/SceneMain/script_component.h"
 #include "../../Include/Script/SceneMain/script_select.h"
 #include "../../Include/Script/SceneMain/script_title.h"
 
 namespace magiccup {
 
 void SceneMain::Initiate() {
-  SetBackgroundColor(opgs16::DColor::Purple);
+  SetBackgroundColor(opgs16::DColor::Black);
 
   auto canvas = CreateGameObject<magiccup::EmptyCanvas>(name::canvas);
   canvas->AddComponent<ScriptTitleSelect>(*canvas);
   canvas->AddComponent<ScriptTitleDisplay>(*canvas);
+  canvas->AddComponent<ScriptTitleComponent>(*canvas);
 }
 
 } /// ::magiccup namespace

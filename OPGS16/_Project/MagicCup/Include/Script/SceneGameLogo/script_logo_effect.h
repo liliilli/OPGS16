@@ -12,10 +12,14 @@
 #include <Frame/timer_handle.h>
 
 namespace magiccup {
+class ScriptCharJumping;
+} /// forward declaration
 
-class ScriptLogo final : public opgs16::component::CScriptFrame {
+namespace magiccup {
+
+class ScriptLogoEffect final : public opgs16::component::CScriptFrame {
 public:
-  OP16_SCRIPT_GENERATE(ScriptLogo);
+  OP16_SCRIPT_GENERATE(ScriptLogoEffect);
 
 private:
   void Initiate() override final;
@@ -26,7 +30,7 @@ private:
   void GotoMain();
 
   opgs16::element::CTimerHandle m_timer;
-  opgs16::element::CObject* m_logo = nullptr;
+  std::vector<magiccup::ScriptCharJumping*> m_logos;
 };
 
 } /// ::magiccup namespace

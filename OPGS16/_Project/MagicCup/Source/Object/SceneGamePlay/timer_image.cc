@@ -9,13 +9,32 @@
 /// Header file
 #include "../../../Include/Object/SceneGamePlay/timer_image.h"
 
+#include <Component/sprite2d_renderer.h>
+#include <Helper/Type/color.h>
+
 namespace magiccup {
 
 TimerImage::TimerImage(const opgs16::element::canvas::CCanvas* canvas_reference) :
     CImage{"opSystem", canvas_reference} {
-  SetTextureIndex(0);
+  using opgs16::component::CSprite2DRenderer;
+
+  SetTextureFragmentIndex(0);
   SetLocalPosition({0.f, 4.f, 0.f});
   SetRenderingLayer(3);
+
+  auto renderer = GetComponent<CSprite2DRenderer>();
+  renderer->SetShader("plainColor");
+  m_renderer = renderer;
+  SetColor(opgs16::DColor::Aqua);
+
+  using opgs16::component::CSprite2DRenderer;
+}
+
+void TimerImage::SetColor(const opgs16::DColor& color) {
+  m_renderer->GetWrapper().SetUniformValue<glm::vec3>(
+      "uColor",
+      static_cast<glm::vec3>(static_cast<opgs16::DVector3>(color))
+  );
 }
 
 } /// ::magiccup namespace

@@ -23,8 +23,7 @@
 namespace magiccup {
 
 void ScriptDataContainer::Initiate() {
-  using phitos::enums::EActivated;
-  SetComponentActivation(EActivated::Disabled);
+  SetComponentActive(false);
 }
 
 int32_t ScriptDataContainer::GetScore() const noexcept {
@@ -63,6 +62,8 @@ void ScriptDataContainer::SetLife(int32_t value) noexcept {
 
 void ScriptDataContainer::IncrementStage() noexcept {
   using opgs16::manager::scene::GetPresentScene;
+  static constexpr int32_t increment_creterion = 20'000;
+  static int32_t next_to_score = 0;
 
   if (!m_script_stage) {
     m_script_stage = GetPresentScene()->GetGameObject(name::canvas)->
@@ -70,10 +71,18 @@ void ScriptDataContainer::IncrementStage() noexcept {
         GetComponent<ScriptUiObject>()->GetScriptStage();
   }
 
+  const int32_t score_instage = CalculateScore();
+  next_to_score += score_instage;
+
   ++m_stage;
+
   if (m_stage != 1) {
-    SetScore(GetScore() + 573);
-    if (GetScore() >= 10000) {
+    m_shaking += 1;
+    SetScore(GetScore() + score_instage);
+
+    if (next_to_score >= increment_creterion) {
+      next_to_score %= increment_creterion;
+
       if (GetLife() < 5) {
         SetLife(GetLife() + 1);
       }
@@ -81,6 +90,13 @@ void ScriptDataContainer::IncrementStage() noexcept {
   }
 
   m_script_stage->ExecuteStageEffect(m_stage);
+}
+
+int32_t ScriptDataContainer::CalculateScore() {
+  static constexpr int32_t score_base = 1'000;
+
+  auto _1 = score_base + (50 * (m_stage - 1));
+  return _1;
 }
 
 }

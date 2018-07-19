@@ -9,7 +9,7 @@
 /// Header file
 #include "../../../Include/Script/SceneGamePlay/script_timelimit.h"
 
-#include <Component/empty_renderer.h>
+#include <Component/font2d_renderer.h>
 #include <Component/sprite2d_renderer.h>
 #include <Element/Canvas/canvas.h>
 #include <Element/Canvas/text.h>
@@ -54,7 +54,7 @@ void ScriptUiTimelimit::Initiate() {
   text->SetFontName("opSystem");
   text->SetFontSize(8);
   text->SetWorldPosition({0, 20.f, 0});
-  text->GetComponent<opgs16::component::CEmptyRenderer>()->SetRenderingLayer(3);
+  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
   m_timer_text = text;
   m_timer_text->SetText("Time " + GetTimerText(m_time_value));
 
@@ -67,16 +67,16 @@ void ScriptUiTimelimit::Initiate() {
     m_timer_bar = timer;
   }
 
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
 }
 
 void ScriptUiTimelimit::ExecuteTimeLimit(int32_t time_value) {
   m_time_set = m_time_value = time_value;
-  SetComponentActivation(phitos::enums::EActivated::Activated);
+  SetComponentActive(true);
 }
 
 void ScriptUiTimelimit::HaltTimeLimit() {
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
 }
 
 void ScriptUiTimelimit::Update(float delta_time) {

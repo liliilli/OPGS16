@@ -11,6 +11,7 @@
 
 #include <Component/sprite2d_renderer.h>
 #include <Manager/scene_manager.h>
+#include <Manager/Internal/shader_builtin_keywords.h>
 
 namespace magiccup {
 
@@ -20,15 +21,22 @@ ObjectCursor::ObjectCursor() {
   SetRotationLocalAngle(opgs16::element::_internal::EDirection::Z, 90.f);
 
   auto texture = AddComponent<opgs16::component::CSprite2DRenderer>(*this,
-      "opSystem", "gQuad", 8, 3);
+      "opSystem", "opQuad2d", 8, 3);
   m_wrapper = &texture->GetWrapper();
   m_texture = texture;
 }
 
 void ObjectCursor::Render() {
-  using opgs16::manager::scene::GetPresentScenePvMatrix;
-  //m_wrapper->SetUniformValue<glm::mat4>("opProj", GetPresentScenePvMatrix());
-  m_wrapper->SetUniformValue<glm::mat4>("opModel", GetModelMatrix());
+  using opgs16::manager::scene::GetPresentMainCamProjMatrix;
+  using opgs16::manager::scene::GetPresentMainCamViewMatrix;
+  using namespace opgs16::builtin;
+
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_proj,
+                                        GetPresentMainCamProjMatrix());
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_view,
+                                        GetPresentMainCamViewMatrix());
+  m_wrapper->SetUniformValue<glm::mat4>(s_uniform_model, GetModelMatrix());
+
   m_texture->RenderSprite();
 }
 

@@ -14,7 +14,7 @@
 namespace magiccup {
 
 void ScriptItemMovement::Initiate() {
-  SetComponentActivation(phitos::enums::EActivated::Disabled);
+  SetComponentActive(false);
 }
 
 void ScriptItemMovement::Update(float delta_time) {
@@ -30,7 +30,7 @@ void ScriptItemMovement::Update(float delta_time) {
 
   if (elapsed >= 1.0f) {
     obj.SetWorldPosition(destination_point);
-    SetComponentActivation(phitos::enums::EActivated::Disabled);
+    SetComponentActive(false);
     elapsed = 0.f;
   }
 }
@@ -48,7 +48,7 @@ void ScriptItemMovement::SetMoveSetting(opgs16::DVector3 destination,
 }
 
 void ScriptItemMovement::ExecuteMoving() {
-  SetComponentActivation(phitos::enums::EActivated::Activated);
+  SetComponentActive(true);
 }
 
 } /// ::magiccup namespace
