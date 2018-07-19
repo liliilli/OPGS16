@@ -65,12 +65,12 @@ public:
     return *m_object;
   }
 
-  inline phitos::enums::EActivated IsComponentActivated() const noexcept {
-    return m_activated;
+  inline bool IsComponentActive() const noexcept {
+    return static_cast<bool>(m_activated);
   }
 
-  inline void SetComponentActivation(phitos::enums::EActivated value) noexcept {
-    m_activated = value;
+  inline void SetComponentActive(bool is_activate) noexcept {
+    m_activated = static_cast<phitos::enums::EActivated>(is_activate);
   }
 
 private:
@@ -78,7 +78,7 @@ private:
   element::CObject* m_object = nullptr;
   phitos::enums::EActivated m_activated = phitos::enums::EActivated::Activated;
 
-  SET_UP_HASH_VALUE(Component)
+  SET_UP_HASH_VALUE(CComponent)
 };
 
 } /*! opgs16::component::_internal */

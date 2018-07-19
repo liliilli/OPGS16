@@ -39,7 +39,7 @@ using _internal::CObjectImpl;
 } /*! unnamed namespace */
 
 CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } {
-  SetActive(true);
+  SetObjectActive(true);
 }
 
 void CObject::Update(float delta_time) {
@@ -49,11 +49,11 @@ void CObject::Update(float delta_time) {
   using EScriptStarted = component::_internal::EScriptStarted;
 
   if (m_data) {
-    switch (IsFinallyActivated()) {
+    switch (IsObjectActive()) {
     case EActivated::Disabled: {
       if (m_data->IsCallbackNotCalled()) {
         for (auto& [component, type] : m_components) {
-          if (component->IsComponentActivated() == EActivated::Disabled)
+          if (component->IsComponentActive() == false)
             continue;
 
           if (type == EComponentType::Script) {
@@ -69,7 +69,7 @@ void CObject::Update(float delta_time) {
       LocalUpdate();
 
       for (auto& [component, type] : m_components) {
-        if (component->IsComponentActivated() == EActivated::Disabled)
+        if (component->IsComponentActive() == false)
           continue;
 
         // At first, check if component is script type (based on CScriptFrame)
@@ -140,7 +140,7 @@ void CObject::PropagateParentPosition() {
     auto& child_ptr = child.second;
     /// If object is not empty and activated and permits succeeding positioning.
     //using phitos::enums::EActivated;
-    //child_ptr->IsFinallyActivated() == EActivated::Activated &&
+    //child_ptr->IsObjectActive() == EActivated::Activated &&
     if (child_ptr && child_ptr->GetSucceedingPositionFlag())
       child_ptr->SetParentPosition(GetParentPosition());
   }
@@ -185,7 +185,7 @@ void CObject::PropagateParentRotation() {
     /// If object is not empty and activated and permits succeeding positioning.
     using phitos::enums::EActivated;
     if (child_ptr &&
-      child_ptr->IsFinallyActivated() == EActivated::Activated &&
+      child_ptr->IsObjectActive() == EActivated::Activated &&
       child_ptr->GetSucceedingRotationFlag()) {
       for (const auto& direction : _internal::k_direction_list)
         child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
@@ -306,7 +306,7 @@ bool CObject::DestroyGameObject(const element::CObject& child_object) {
   return true;
 }
 
-void CObject::SetActive(const bool value) {
+void CObject::SetObjectActive(const bool value) {
 	m_data->SetActive(value);
   m_data->CalculateActivation();
   this->Propagate();
@@ -329,11 +329,11 @@ void CObject::Propagate() {
   }
 }
 
-phitos::enums::EActivated CObject::IsActive() const {
+phitos::enums::EActivated CObject::IsObjectInternallyActive() const {
   return m_data->IsActive();
 }
 
-phitos::enums::EActivated CObject::IsFinallyActivated() const {
+phitos::enums::EActivated CObject::IsObjectActive() const {
   return m_data->IsFinallyActivated();
 }
 

@@ -219,14 +219,14 @@ public:
   ///
   /// @param[in] value Active option value.
   ///
-  void SetActive(const bool value);
+  void SetObjectActive(const bool value);
 
-  phitos::enums::EActivated IsActive() const;
+  phitos::enums::EActivated IsObjectInternallyActive() const;
 
   ///
   /// @brief
   ///
-  phitos::enums::EActivated IsFinallyActivated() const;
+  phitos::enums::EActivated IsObjectActive() const;
 
   ///
   /// @brief
