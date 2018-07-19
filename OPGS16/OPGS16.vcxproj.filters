@@ -127,6 +127,8 @@
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_char_jumping.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGameLogo\logo_char.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Global\data_singleton.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_file_manage.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_shadow.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -324,6 +326,10 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGameLogo\logo_char.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_char_jumping.h" />
     <ClInclude Include="_Project\MagicCup\Include\Global\data_singleton.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Type\score_container.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_file_manage.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_shadow.h" />
+    <ClInclude Include="Include\Helper\hash_crc32.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

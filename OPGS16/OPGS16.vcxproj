@@ -250,6 +250,7 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_shadow.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Global\data_singleton.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\CanvasItem\background.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\Common\fade_out.cc" />
@@ -277,6 +278,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Script\CanvasItem\script_background.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\Common\script_fade_out.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_char_jumping.cc" />
+    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_file_manage.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_cup_number.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_item_movement.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_data.cc" />
@@ -320,6 +322,7 @@
     <ClInclude Include="Include\Helper\assert.h" />
     <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="Include\Helper\float.h" />
+    <ClInclude Include="Include\Helper\hash_crc32.h" />
     <ClInclude Include="Include\Helper\Json\json_helper.h" />
     <ClInclude Include="Include\Helper\Math\math.h" />
     <ClInclude Include="Include\Helper\Math\random.h" />
@@ -452,6 +455,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_ball.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_cup_item.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_number.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_shadow.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\life_image.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\total_management.h" />
@@ -467,6 +471,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Script\CanvasItem\script_background.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\Common\script_fade_out.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_char_jumping.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_file_manage.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_cup_number.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_item_movement.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_data.h" />
@@ -484,6 +489,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_obj_mng.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_cup.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_key_input.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Type\score_container.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />

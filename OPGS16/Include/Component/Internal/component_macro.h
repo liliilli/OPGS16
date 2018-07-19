@@ -14,19 +14,20 @@
 /// 2018-03-07 Correction.
 ///
 
-#include <Helper/hash_function.h>   /// HASH(), HASH_STR()
+//#include <Helper/hash_function.h>   /// HASH(), HASH_STR()
+#include <Helper/hash_crc32.h>
 
 #define TO_STRING(__TYPE__) #__TYPE__   /*! Convert arguement to string literal */
 
-/*!
- * @macro SET_UP_HASH_VALUE
- * @brief Declare type member variable, which is used for storing hashed type value.
- * and value it in compile time.
- */
+///
+/// @macro SET_UP_HASH_VALUE
+/// @brief Declare type member variable, which is used for storing hashed type value.
+/// and value it in compile time.
+///
 #define SET_UP_HASH_VALUE(__TYPE__) \
 public: \
-static constexpr uint32_t type = HASH(__TYPE__); \
-static constexpr const char* __string_literal = TO_STRING(__TYPE__);
+static constexpr const char* __string_literal = TO_STRING(__TYPE__); \
+static constexpr uint32_t type = opgs16::__hash::ToCrc32(__string_literal);
 
 /*!
  * @macro OVERRIDE_TYPEMATCH
