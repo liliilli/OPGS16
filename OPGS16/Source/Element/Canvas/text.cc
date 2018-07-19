@@ -37,27 +37,25 @@ CText::CText(const std::string& initial_text,
     m_text{initial_text}, m_color{color} {
   SetWorldPosition(position);
 
-  auto renderer =
-      AddComponent<component::CFont2DRenderer>(*this, u8"", "opFont2d", 0);
+  auto renderer = AddComponent<component::CFont2DRenderer>(*this, u8"", "opFont2d", 0);
   renderer->SetText(m_text);
   renderer->SetColor(color);
+  m_component = renderer;
 }
 
 void CText::Render() {
-  auto renderer = GetComponent<component::CFont2DRenderer>();
-
   // Set font
   auto font_name = GetFontName();
   if (font_name.empty())
-    renderer->SetDefaultFont();
+    m_component->SetDefaultFont();
   else
-    renderer->SetFont(font_name);
+    m_component->SetFont(font_name);
 
   // Render
-  renderer->SetText(GetText());
-  renderer->SetColor(GetColor());
+  m_component->SetText(GetText());
+  m_component->SetColor(GetColor());
   const auto& fp = GetFinalPosition();
-  renderer->RenderText(
+  m_component->RenderText(
       GetOrigin(),
       glm::vec2{ fp.x, fp.y },
       GetAlignment(),
@@ -105,6 +103,14 @@ void CText::SetColor(const DColor& color) {
 
 const DColor& CText::GetColor() {
   return m_color;
+}
+
+void CText::SetRenderingLayer(int32_t layer_index) {
+  m_component->SetRenderingLayer(layer_index);
+}
+
+void CText::SetRenderingLayer(const std::string& layer_string) {
+  m_component->SetRenderingLayer(layer_string);
 }
 
 } /// ::opgs16::element::canvas

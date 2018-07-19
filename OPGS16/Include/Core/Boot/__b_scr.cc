@@ -66,10 +66,10 @@ void __B_SCR::SetLogoImage() {
   logo->SetImageSize(178.f, 19.f);
 
   using random::RandomIntegerRange;
-  if (RandomIntegerRange(0, 100) < 50) {
+  if (RandomIntegerRange(0, 100) < 0) {
     // Normal
     logo->SetWorldPosition({ 0.f, 160.f, 0.f });
-    OP16_TIMER_SET(m_timer, 32, true, this, &__B_SCR::MoveLogo1);
+    OP16_TIMER_SET(m_timer, 20, true, this, &__B_SCR::MoveLogo1);
   }
   else {
     // Sliced
@@ -80,10 +80,12 @@ void __B_SCR::SetLogoImage() {
 
     renderer->SetShader(shader_sliced);
     renderer->SetInstanceCount(k_sliced_number << 1);
+
     auto& wrapper = renderer->GetWrapper();
     wrapper.SetUniformValueInt("uNumber", k_sliced_number << 1);
     wrapper.SetUniformValueIntPtr("uPos", y_positions, k_sliced_number << 1);
     wrapper.SetUniformValue<float>("uYScale", k_sliced_y_initial_scale);
+
     OP16_TIMER_SET(m_timer, 16, true, this, &__B_SCR::MoveLogoSliced);
   }
 }
@@ -139,7 +141,7 @@ void __B_SCR::MoveLogoSliced() {
 
   if (elapsed >= time) {
     PUSH_LOG_INFO("Logo soft-randing");
-    renderer->SetShader("gQuad");
+    renderer->SetShader("opQuad2d");
     renderer->SetInstanceCount(1);
     OP16_TIMER_STOP(m_timer);
     OP16_TIMER_SET(m_timer_2, 500, false, this, &__B_SCR::CreateTextObject);
@@ -164,6 +166,7 @@ void __B_SCR::CreateTextObject() {
     text->SetColor(DColor{ 1, 1, 1 });
   }
   GetBindObject().CreateGameObject<element::canvas::CText>("Statement", text);
+
   OP16_TIMER_SET(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
 }
 

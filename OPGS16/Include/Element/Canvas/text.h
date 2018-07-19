@@ -31,6 +31,12 @@
 /// ::opgs16::DColor (float)
 #include <Helper/Type/color.h>
 
+namespace opgs16::component {
+
+class CFont2DRenderer;
+
+} /// ::opgs16::component namespace
+
 namespace opgs16::element::canvas {
 ///
 /// @class CText
@@ -116,6 +122,16 @@ public:
   ///
   const DColor& GetColor();
 
+  ///
+  /// @brief
+  ///
+  void SetRenderingLayer(int32_t layer_index);
+
+  ///
+  /// @brief
+  ///
+  void SetRenderingLayer(const std::string& layer_string);
+
 private:
 
   //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
@@ -131,6 +147,8 @@ private:
 	DColor m_color{};
   /// Font size how display size big is.
   uint32_t m_font_size{};
+
+  opgs16::component::CFont2DRenderer* m_component = nullptr;
 };
 } /// ::opgs16::element::canvas namespace.
 

@@ -1,29 +1,30 @@
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
- * If you want to read full statements, read LICENSE file.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-/*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
- * @file GlobalObjects/Canvas/image.cc
- * @brief Definition file of ./image.h
- * @log
- * 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
- * 2018-04-17 Rearrange file path of #include macros.
- *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Element/Canvas/image.cc
+///
+/// @brief Definition file of ./image.h
+///
+/// @log
+/// 2018-04-17 Add comments and move definition functions to ::opgs16::element::canvas namespace.
+/// 2018-04-17 Rearrange file path of #include macros.
+///
 
-#include <Element/Canvas/image.h>       /// Header file
+/// Header file
+#include <Element/Canvas/image.h>
 
-#include <array>                        /// std::array
+#include <array>
 #include <glm/gtc/matrix_transform.hpp>
 
 /// ::opgs16::component::CSprite2DRenderer
 #include <Component/sprite2d_renderer.h>
-#include <Element/Canvas/canvas.h>      /// ::opgs16::element::canvas::CCanvas
-#include <Manager/texture_manager.h>    /// ::opgs16::manager::MTextureManager
+#include <Element/Canvas/canvas.h>
 #include <Manager/Internal/shader_builtin_keywords.h>
-#include <Shader/shader_wrapper.h>      /// ::opgs16::element::CShaderWrapper
+#include <Shader/shader_wrapper.h>
 #include <Shader/Default/shader_quad2d.h>
 #include <Phitos/Dbg/assert.h>
 
@@ -46,7 +47,7 @@ void CImage::SetImageSize(const float width, const float height) {
 	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
 }
 
-void CImage::SetTextureIndex(const int32_t index) {
+void CImage::SetTextureFragmentIndex(const int32_t index) {
   PHITOS_ASSERT(index >= 0, "Index must be positive integer.");
   m_renderer_ptr->SetTextureFragmentIndex(index);
 }
@@ -74,6 +75,14 @@ void CImage::Render() {
 	wrapper.SetUniformValue(builtin::s_uniform_alpha, 1.0f);
 
 	m_renderer_ptr->RenderSprite();
+}
+
+void CImage::SetRenderingLayer(const std::string& layer_name) {
+  m_renderer_ptr->SetRenderingLayer(layer_name);
+}
+
+void CImage::SetRenderingLayer(int32_t layer_value) {
+  m_renderer_ptr->SetRenderingLayer(layer_value);
 }
 
 } /// ::opgs16::element::canvas namespace
