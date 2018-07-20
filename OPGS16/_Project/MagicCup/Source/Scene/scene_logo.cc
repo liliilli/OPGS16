@@ -15,6 +15,8 @@
 #include "../../Include/Script/SceneGameLogo/script_file_manage.h"
 #include "../../Include/Object/Common/orthogonal_camera.h"
 
+#include "../../Include/Object/Scoreboard/ui_scoreboard.h"
+
 namespace magiccup {
 
 void SceneLogo::Initiate() {

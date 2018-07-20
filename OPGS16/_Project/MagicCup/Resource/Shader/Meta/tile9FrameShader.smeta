@@ -1,0 +1,8 @@
+{
+	"meta": { },
+	"uniform" :
+	{
+		"uEdgeSize" : "INT",
+		"uPresentSize" : "VEC2"
+	}
+}

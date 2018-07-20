@@ -12,9 +12,10 @@
 #include "../../Include/Internal/object_keyword.h"
 #include "../../Include/Object/Common/empty_canvas.h"
 
-#include "../../Include/Script/SceneMain/script_component.h"
-#include "../../Include/Script/SceneMain/script_select.h"
-#include "../../Include/Script/SceneMain/script_title.h"
+#include "../../Include/Object/SceneMain/ui_title_part.h"
+#include "../../Include/Object/SceneMain/ui_scoreboard_part.h"
+#include "../../Include/Script/SceneMain/script_transition_manage.h"
+#include "../../Include/Object/SceneMain/ui_background_part.h"
 
 namespace magiccup {
 
@@ -22,9 +23,10 @@ void SceneMain::Initiate() {
   SetBackgroundColor(opgs16::DColor::Black);
 
   auto canvas = CreateGameObject<magiccup::EmptyCanvas>(name::canvas);
-  canvas->AddComponent<ScriptTitleSelect>(*canvas);
-  canvas->AddComponent<ScriptTitleDisplay>(*canvas);
-  canvas->AddComponent<ScriptTitleComponent>(*canvas);
+  canvas->CreateGameObject<UiBackgroundPart>(UiBackgroundPart::s_object_name);
+  canvas->CreateGameObject<UiTitlePart>(UiTitlePart::s_object_name);
+  canvas->CreateGameObject<UiScoreboardPart>(UiScoreboardPart::s_object_name);
+  canvas->AddComponent<ScriptTransitionManagement>(*canvas);
 }
 
 } /// ::magiccup namespace

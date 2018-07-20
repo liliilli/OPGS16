@@ -21,15 +21,22 @@
 #include "../../../Include/Object/Common/choice_list.h"
 #include "../../../Include/Object/Common/fade_out.h"
 #include "../../../Include/Scene/scene_gameplay.h"
+#include "../../../Include/Internal/object_keyword.h"
 
 namespace magiccup {
 
 void ScriptTitleSelect::Initiate() {
+  using opgs16::manager::scene::GetPresentScene;
+  using opgs16::element::canvas::CCanvas;
+
+  const auto canvas = GetPresentScene()->GetGameObject(name::canvas);
   auto& obj = GetBindObject();
-  auto choice_list = obj.CreateGameObject<ChoiceList>("ChoiceList",
-    "opSystem",
-    static_cast<opgs16::element::canvas::CCanvas*>(&obj),
-    std::vector<std::string>{"New Game", "Exit"});
+
+  auto choice_list = obj.CreateGameObject<ChoiceList>(
+      "ChoiceList",
+      "opSystem",
+      static_cast<CCanvas*>(canvas),
+      std::vector<std::string>{"New Game", "Exit"});
   choice_list->SetCursorSize({16, 16});
   choice_list->SetFontSize(8);
   choice_list->SetItemSize(12);
@@ -90,13 +97,18 @@ void ScriptTitleSelect::ExecuteGotoGamePlay() {
 
 void ScriptTitleSelect::ExitGame() {
   using opgs16::manager::sound::PlaySound;
+  using opgs16::manager::scene::GetPresentScene;
+  using opgs16::element::canvas::CCanvas;
+
   PlaySound(keyword::eff_exit);
 
+  const auto canvas = GetPresentScene()->GetGameObject(name::canvas);
   auto& obj = GetBindObject();
+
   obj.CreateGameObject<UiFadeOut>(UiFadeOut::s_object_name,
       1'000,
       std::bind(&ScriptTitleSelect::ExecuteExit, this),
-      static_cast<opgs16::element::canvas::CCanvas*>(&obj));
+      static_cast<CCanvas*>(canvas));
 }
 
 void ScriptTitleSelect::ExecuteExit() {

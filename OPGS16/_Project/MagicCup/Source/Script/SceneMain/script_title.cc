@@ -13,6 +13,7 @@
 #include <Element/object.h>
 #include <Element/canvas/canvas.h>
 #include <Manager/timer_manager.h>
+#include <Manager/scene_manager.h>
 
 #include "../../../Include/Internal/general_keyword.h"
 #include "../../../Include/Internal/object_keyword.h"
@@ -20,6 +21,8 @@
 
 #include "../../../Include/Script/SceneMain/script_component.h"
 #include "../../../Include/Script/SceneMain/script_select.h"
+#include "../../../Include/Script/SceneMain/script_transition_manage.h"
+#include "../../../Include/Object/SceneMain/ui_background_part.h"
 
 namespace {
 
@@ -38,14 +41,19 @@ void ScriptTitleDisplay::Initiate() {
 
   using opgs16::element::canvas::CImage;
   using opgs16::element::canvas::CCanvas;
+  using opgs16::manager::scene::GetPresentScene;
+
+  m_canvas = static_cast<CCanvas*>(GetPresentScene()->GetGameObject(name::canvas));
 
   auto title = bind_obj.CreateGameObject<CImage>(
-      name::title, keyword::rsc_sprite,
-      static_cast<CCanvas*>(&bind_obj));
+      name::title,
+      keyword::rsc_sprite,
+      m_canvas);
   title->SetImageSize(256, 64);
   title->SetRenderingLayer("Interface");
   title->SetTextureFragmentIndex(8);
   title->SetWorldPosition({0, height + final_y_pos, 0});
+
   m_title = title;
 }
 
@@ -57,13 +65,18 @@ void ScriptTitleDisplay::Update(float delta_time) {
     OP16_TIMER_SET(m_timer, 1'000, false, this, &ScriptTitleDisplay::ShowUpComponents);
   }
 
-  const float new_y_pos =
-      (height - (a * m_elapsed)) * abs(std::cosf(freq * m_elapsed));
+  const float new_y_pos = (height - (a * m_elapsed)) * abs(std::cosf(freq * m_elapsed));
   m_title->SetWorldPosition({0, new_y_pos + final_y_pos, 0});
 }
 
 void ScriptTitleDisplay::ShowUpComponents() {
   auto& obj = GetBindObject();
+
+  auto canvas_obj = m_canvas->GetGameObject(UiBackgroundPart::s_object_name);
+  canvas_obj->SetObjectActive(true);
+
+  auto canvas_man = m_canvas->GetComponent<ScriptTransitionManagement>();
+  canvas_man->SwitchOnSequence();
 
   auto script_select = obj.GetComponent<ScriptTitleSelect>();
   script_select->EnableComponent();

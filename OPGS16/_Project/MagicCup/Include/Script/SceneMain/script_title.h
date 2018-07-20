@@ -24,6 +24,7 @@ private:
   void ShowUpComponents();
 
   opgs16::element::CObject* m_title = nullptr;
+  opgs16::element::canvas::CCanvas* m_canvas = nullptr;
 
   opgs16::element::CTimerHandle m_timer;
 

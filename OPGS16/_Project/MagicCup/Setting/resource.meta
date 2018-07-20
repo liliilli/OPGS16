@@ -39,6 +39,12 @@
         "vs": "Resource/Shader/plainColor.vert",
         "fs": "Resource/Shader/plainColor.frag",
         "meta": "Resource/Shader/Meta/plainColor.smeta"
+      },
+      "Tile9FrameShader":
+      {
+        "vs": "Resource/Shader/tile9FrameShader.vert",
+        "fs": "Resource/Shader/tile9FrameShader.frag",
+        "meta": "Resource/Shader/Meta/tile9FrameShader.smeta"
       }
     }
   },

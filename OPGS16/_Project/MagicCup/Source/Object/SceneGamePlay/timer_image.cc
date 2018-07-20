@@ -17,21 +17,20 @@ namespace magiccup {
 TimerImage::TimerImage(const opgs16::element::canvas::CCanvas* canvas_reference) :
     CImage{"opSystem", canvas_reference} {
   using opgs16::component::CSprite2DRenderer;
+  using opgs16::DColor;
 
   SetTextureFragmentIndex(0);
   SetLocalPosition({0.f, 4.f, 0.f});
   SetRenderingLayer(3);
+  SetColor(DColor::Aqua);
 
   auto renderer = GetComponent<CSprite2DRenderer>();
   renderer->SetShader("plainColor");
   m_renderer = renderer;
-  SetColor(opgs16::DColor::Aqua);
-
-  using opgs16::component::CSprite2DRenderer;
 }
 
 void TimerImage::SetColor(const opgs16::DColor& color) {
-  m_renderer->GetWrapper().SetUniformValue<glm::vec3>(
+  m_renderer->GetWrapper().SetUniformVec3(
       "uColor",
       static_cast<glm::vec3>(static_cast<opgs16::DVector3>(color))
   );

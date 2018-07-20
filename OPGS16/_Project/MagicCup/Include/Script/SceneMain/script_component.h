@@ -32,6 +32,7 @@ private:
   magiccup::ScriptUiBackground* m_background = nullptr;
   opgs16::element::CObject* m_subject = nullptr;
   opgs16::element::CObject* m_copyright = nullptr;
+  opgs16::element::canvas::CCanvas* m_canvas = nullptr;
 
   opgs16::element::CTimerHandle m_temporary_timer;
   int32_t m_background_index = 0;
