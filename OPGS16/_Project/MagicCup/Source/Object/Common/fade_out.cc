@@ -17,8 +17,10 @@
 
 namespace magiccup {
 
-UiFadeOut::UiFadeOut(int32_t time, std::function<void()> callback,
-                     opgs16::element::canvas::CCanvas* canvas_ref) :
+UiFadeOut::UiFadeOut(int32_t time,
+                     std::function<void()> callback,
+                     opgs16::element::canvas::CCanvas* canvas_ref,
+                     float intensity) :
     m_canvas_ref{canvas_ref} {
   using opgs16::component::CProcedural2DRenderer;
   using opgs16::component::DTexelInfo;
@@ -40,30 +42,17 @@ UiFadeOut::UiFadeOut(int32_t time, std::function<void()> callback,
   auto script = AddComponent<ScriptFadeOut>(*this);
   script->SetTimer(time);
   script->SetCallback(callback);
+  script->SetIntensity(intensity);
   script->Execute();
-}
-
-void UiFadeOut::LocalUpdate() {
-  const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
-	const auto xy = GetFinalPosition() - (wh / 2.0f);
-
-	std::array<GLint, 4>&& xywh = {
-		static_cast<GLint>(xy.x), static_cast<GLint>(xy.y),
-		static_cast<GLint>(wh.x), static_cast<GLint>(wh.y) };
-
-	UpdateScreenXYWH(xywh);
-	UiObject::LocalUpdate();
 }
 
 void UiFadeOut::Render() {
   using namespace opgs16::builtin;
-  auto wrapper = m_renderer->GetWrapper();
 
-  wrapper->SetUniformValue<glm::mat4>(s_uniform_proj,
-                                      m_canvas_ref->GetUiCameraProjectMatrix());
-	wrapper->SetUniformValue<glm::mat4>(s_uniform_view,
-                                      m_canvas_ref->GetUiCameraViewMatrix());
-	wrapper->SetUniformValue<glm::mat4>(s_uniform_model, GetModelMatrix());
+  auto wrapper = m_renderer->GetWrapper();
+  wrapper->SetUniformMat4(s_uniform_proj, m_canvas_ref->GetUiCameraProjectMatrix());
+	wrapper->SetUniformMat4(s_uniform_view, m_canvas_ref->GetUiCameraViewMatrix());
+	wrapper->SetUniformMat4(s_uniform_model, GetModelMatrix());
 
   m_renderer->RenderSprite();
 }

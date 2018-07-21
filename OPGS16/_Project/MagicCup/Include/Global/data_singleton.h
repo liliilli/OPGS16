@@ -23,6 +23,8 @@ bool LoadSaveFile();
 
 bool SaveSaveFile();
 
+int32_t GetRankOf(const DScoreContainer& item);
+
 ///
 /// @brief
 ///
@@ -30,9 +32,15 @@ bool IsIoBusy() noexcept;
 
 bool SaveRankData(const DScoreContainer& item);
 
-const DScoreContainer& LoadRankData(int32_t index);
+DScoreContainer& LoadRankData(int32_t index);
 
 TScoreContainer& LoadRankDataContainer();
+
+int32_t VerifyRankDataWithNew(const DScoreContainer& item);
+
+void SaveAsRecentData(const DScoreContainer& item);
+
+int32_t GetRecentDataRank() noexcept;
 
 } /// ::magiccup namespace
 

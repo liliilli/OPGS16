@@ -44,6 +44,10 @@ public:
     return m_background;
   }
 
+  void ExecuteBackgroundSuccessEffect() noexcept;
+
+  void ExecuteBackgroundFailureEffect() noexcept;
+
 private:
   void Initiate() override final;
 

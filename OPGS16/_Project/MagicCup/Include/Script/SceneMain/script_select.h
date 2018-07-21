@@ -37,6 +37,9 @@ private:
   void ExecuteExit();
 
   magiccup::ChoiceList* m_choice_list = nullptr;
+  opgs16::element::CObject* m_canvas = nullptr;
+
+  bool m_is_selected = false;
 };
 
 } /// ::magiccup namespace

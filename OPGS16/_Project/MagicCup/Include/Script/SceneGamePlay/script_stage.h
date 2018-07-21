@@ -33,6 +33,7 @@ private:
   opgs16::element::CTimerHandle m_effect_interval;
 
   int32_t m_stage = 0;
+  bool m_is_first_stage_executed = false;
 };
 
 } /// ::magiccup namespace

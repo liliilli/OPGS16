@@ -15,8 +15,10 @@
 #include <Element/Canvas/text.h>
 #include <Manager/scene_manager.h>
 
-#include "../../../Include/Object/SceneGamePlay/timer_image.h"
 #include "../../../Include/Internal/object_keyword.h"
+#include "../../../Include/Object/SceneGamePlay/timer_image.h"
+#include "../../../Include/Object/SceneGamePlay/total_management.h"
+#include "../../../Include/Script/SceneGamePlay/Management/script_state_machine.h"
 
 namespace {
 
@@ -62,7 +64,7 @@ void ScriptUiTimelimit::Initiate() {
     auto timer = obj.CreateGameObject<TimerImage>(
         TimerImage::s_object_name,
         static_cast<CCanvas*>(canvas));
-    timer->SetImageSize(m_initial_width, 8.f);
+    timer->SetImageSize(static_cast<float>(m_initial_width), 8.f);
     timer->SetWorldPosition({0.f, 8.f, 0.f});
     m_timer_bar = timer;
   }
@@ -79,19 +81,29 @@ void ScriptUiTimelimit::HaltTimeLimit() {
   SetComponentActive(false);
 }
 
+int32_t ScriptUiTimelimit::GetTimeValue() const noexcept {
+  return m_time_value;
+}
+
 void ScriptUiTimelimit::Update(float delta_time) {
+  using opgs16::manager::scene::GetPresentScene;
+
   m_time_value -= delta_time * 1000;
   if (m_time_value <= 0) {
     m_time_value = 0;
     m_timer_text->SetText("Time " + GetTimerText(m_time_value));
     m_timer_bar->SetImageSize(0.f, 8.f);
+
     HaltTimeLimit();
+    GetPresentScene()->GetGameObject(TotalManagement::s_object_name)
+        ->GetComponent<ScriptStateMachine>()->
+        TransitGameState(EGameState::GameOver);
+
     return;
   }
 
   m_timer_text->SetText("Time " + GetTimerText(m_time_value));
-  const auto width =
-      static_cast<float>(m_time_value) / m_time_set * m_initial_width;
+  const auto width = static_cast<float>(m_time_value) / m_time_set * m_initial_width;
   m_timer_bar->SetImageSize(width, 8.f);
 }
 

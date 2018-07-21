@@ -28,6 +28,12 @@ public:
 
   void ExecuteMoving();
 
+  void DownRenderingLayer();
+
+  void UpRenderingLayer();
+
+  void RevertRenderingLayer();
+
 private:
   void Initiate() override final;
   void Update(float delta_time) override final;
@@ -38,6 +44,8 @@ private:
   opgs16::DVector3 destination_point;
   int32_t interval = 0;
   float elapsed = 0.f;
+
+
 };
 
 } /// ::magiccup namespace

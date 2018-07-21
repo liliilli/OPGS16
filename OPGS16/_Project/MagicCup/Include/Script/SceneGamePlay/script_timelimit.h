@@ -20,6 +20,8 @@ public:
 
   void HaltTimeLimit();
 
+  int32_t GetTimeValue() const noexcept;
+
 private:
   void Initiate() override final;
   void Update(float delta_time) override final;

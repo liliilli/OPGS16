@@ -9,7 +9,7 @@
 ///
 
 /// Header file
-#include <Element/ui_object.h>
+#include <Element/ui_default_object.h>
 
 namespace opgs16::component {
 class CProcedural2DRenderer;
@@ -17,15 +17,16 @@ class CProcedural2DRenderer;
 
 namespace magiccup {
 
-class UiFadeOut final : public opgs16::element::UiObject {
+class UiFadeOut final : public opgs16::element::CUiDefaultObject {
 public:
-  UiFadeOut(int32_t time, std::function<void(void)> callback,
-      opgs16::element::canvas::CCanvas* canvas_ref);
+  UiFadeOut(int32_t time,
+      std::function<void(void)> callback,
+      opgs16::element::canvas::CCanvas* canvas_ref,
+      float intensity = 1.0f);
 
   inline static constexpr const char* s_object_name = "FadeOut";
 
 private:
-  void LocalUpdate() override final;
   void Render() override final;
 
   opgs16::component::CProcedural2DRenderer* m_renderer = nullptr;

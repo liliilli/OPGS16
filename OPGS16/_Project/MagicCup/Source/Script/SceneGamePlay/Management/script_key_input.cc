@@ -11,6 +11,7 @@
 
 #include <Manager/input_manager.h>
 #include <Manager/scene_manager.h>
+#include <Manager/sound_manager.h>
 
 #include "../../../../Include/Internal/general_keyword.h"
 
@@ -36,18 +37,22 @@ void ScriptKeyInput::Start() {
 void ScriptKeyInput::Update(float delta_time) {
   using opgs16::manager::input::IsKeyPressed;
   using opgs16::manager::input::GetKeyValue;
+  using opgs16::manager::sound::PlaySound;
 
   if (is_select_key_enabled) {
     if (IsKeyPressed(keyword::key_x)) {
       const auto key_val = GetKeyValue(keyword::key_x);
 
-      if (key_val == 1.0f)
+      if (key_val == 1.0f) {
         m_obj_management->MoveCursorRight();
-      else if (key_val == -1.0f)
+      }
+      else if (key_val == -1.0f) {
         m_obj_management->MoveCursorLeft();
+      }
     }
 
     if (IsKeyPressed(keyword::key_enter)) {
+      PlaySound(keyword::eff_decision);
       m_obj_management->MoveCursorSelectCup();
       DisableSelectKeyInput();
     }

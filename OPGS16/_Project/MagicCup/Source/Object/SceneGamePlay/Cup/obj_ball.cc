@@ -25,6 +25,7 @@ ObjectBall::ObjectBall() {
       *this, keyword::rsc_sprite, "opQuad2d", 7);
   m_wrapper = &cup_texture->GetWrapper();
   m_texture = cup_texture;
+  m_texture->SetRenderingLayer(1);
 
   this->SetObjectActive(false);
 }

@@ -22,6 +22,7 @@ ObjectCupShadow::ObjectCupShadow() {
 
   m_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
       *this, keyword::rsc_sprite, "opQuad2d", 10);
+  m_texture->SetRenderingLayer(1);
   m_wrapper = &m_texture->GetWrapper();
 
   using opgs16::manager::scene::GetPresentMainCamProjMatrix;

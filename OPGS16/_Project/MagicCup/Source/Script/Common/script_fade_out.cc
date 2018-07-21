@@ -28,6 +28,16 @@ void ScriptFadeOut::SetCallback(std::function<void()> cb_function) {
   m_callback = cb_function;
 }
 
+void ScriptFadeOut::SetIntensity(float intensity) {
+  m_intensity = intensity;
+
+  if (m_intensity < 0)
+    m_intensity = 0.0f;
+  else if (m_intensity > 1.0f) {
+    m_intensity = 1.0f;
+  }
+}
+
 void ScriptFadeOut::Execute() {
   SetComponentActive(true);
 }
@@ -47,7 +57,7 @@ void ScriptFadeOut::Update(float delta_time) {
   m_elapsed += static_cast<int32_t>(delta_time * 1'000);
 
   const float alpha = static_cast<float>(m_elapsed) / m_total;
-  m_wrapper->SetUniformValue<float>(s_uniform_alpha, alpha);
+  m_wrapper->SetUniformFloat(s_uniform_alpha, m_intensity * alpha);
 
   if (m_elapsed >= m_total) {
     SetComponentActive(false);

@@ -20,6 +20,7 @@
 #include "../../../../Include/Script/SceneGamePlay/script_ui_object.h"
 #include "../../../../Include/Script/SceneGamePlay/Management/script_data.h"
 #include "../../../../Include/Script/SceneGamePlay/Management/script_key_input.h"
+#include "../../../../Include/Script/SceneGamePlay/Disposable/effect_obj_gameover.h"
 #include "../../../../Include/Scene/scene_main.h"
 
 namespace magiccup {
@@ -73,45 +74,57 @@ void ScriptStateMachine::TransitGameState(EGameState new_state) {
   switch (previous) {
   case EGameState::Initialize:
     if (new_state == EGameState::GameStart) {
-      m_data->SetScore(0);
-      m_data->SetLife(3);
       m_data->IncrementStage();
+      m_data->SetLife(m_data->GetLife());
     }
     break;
   case EGameState::GameStart:
   case EGameState::NextStage:
     if (new_state == EGameState::Shaking) {
-      m_object_management->ExecuteShaking(m_data->GetShakingCount());
+      m_object_management->ExecuteShaking(
+          m_data->GetShakingCount(),
+          m_data->GetShakingInterval());
     }
     break;
   case EGameState::Shaking:
     if (new_state == EGameState::Select) {
       m_object_management->EnableCursor();
       m_input->EnableSelectKeyInput();
-      m_timelimit->ExecuteTimeLimit(5'000);
+      m_timelimit->ExecuteTimeLimit(m_data->GetTimerLimitValue());
     }
     break;
   case EGameState::Select:
     if (new_state == EGameState::Result) {
       m_object_management->ExecuteJudging();
       m_timelimit->HaltTimeLimit();
+      m_data->SetTimerValue(m_timelimit->GetTimeValue());
+      return;
     }
-    else if (new_state == EGameState::GameOver) {
-      using opgs16::manager::scene::GetPresentScene;
-      GetPresentScene()->SetBackgroundColor(opgs16::DColor::Red);
-      OP16_TIMER_SET(m_gameover_effect_timer, 2'000, false, this,
-                     &ScriptStateMachine::ReturnToTitle);
+    if (new_state == EGameState::GameOver) {
+      m_data->SetLife(0);
+      m_data->StoreData();
+      m_object_management->ExecuteEffectGameOver();
+      return;
     }
     break;
   case EGameState::Result:
     if (new_state == EGameState::GameOver) {
-      using opgs16::manager::scene::GetPresentScene;
-      GetPresentScene()->SetBackgroundColor(opgs16::DColor::Red);
-      OP16_TIMER_SET(m_gameover_effect_timer, 2'000, false, this,
-                     &ScriptStateMachine::ReturnToTitle);
+      const auto life = m_data->GetLife();
+      m_data->SetLife(life - 1);
+
+      if (life > 1) {
+        m_data->RepeatStage();
+        m_state = EGameState::NextStage;
+      }
+      else {
+        m_data->StoreData();
+        m_object_management->ExecuteEffectGameOver();
+      }
+      return;
     }
-    else if (new_state == EGameState::NextStage) {
+    if (new_state == EGameState::NextStage) {
       m_data->IncrementStage();
+      return;
     }
     break;
   case EGameState::GameOver:
@@ -123,7 +136,7 @@ void ScriptStateMachine::TransitGameState(EGameState new_state) {
 }
 
 void ScriptStateMachine::ReturnToTitle() {
-  M_REPLACE_SCENE(SceneMain);
+
 }
 
 } /// ::magiccup namespace

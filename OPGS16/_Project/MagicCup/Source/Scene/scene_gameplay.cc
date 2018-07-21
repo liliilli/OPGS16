@@ -16,23 +16,27 @@
 #include "../../Include/Object/SceneGamePlay/stage_obj_mng.h"
 #include "../../Include/Object/SceneGamePlay/ui_object.h"
 #include "../../Include/Object/SceneGamePlay/total_management.h"
+#include "../../Include/Object/Common/empty_object.h"
+#include "../../Include/Script/SceneGamePlay/Management/script_sound_manage.h"
 
 namespace magiccup {
 
 void SceneGamePlay::Initiate() {
+  auto sound_object = CreateGameObject<EmptyObject>("Sound");
+  sound_object->AddComponent<ScriptSoundManage>(*sound_object);
+
   SetBackgroundColor(opgs16::DColor::DarkGray);
 
   auto canvas = CreateGameObject<EmptyCanvas>(name::canvas);
   canvas->CreateGameObject<magiccup::GamePlayUi>(GamePlayUi::s_obj_name);
 
-  auto camera = CreateGameObject<OrthogonalCameraObject>(
-      OrthogonalCameraObject::s_object_name);
+  CreateGameObject<OrthogonalCameraObject>(OrthogonalCameraObject::s_object_name);
 
   auto management = CreateGameObject<StageObjectManagement>(
       StageObjectManagement::s_object_name);
   management->SetWorldPosition({128.f, 80.f, 0.f});
 
-  auto total_management = CreateGameObject<TotalManagement>(TotalManagement::s_object_name);
+  CreateGameObject<TotalManagement>(TotalManagement::s_object_name);
 }
 
 } /// ::magiccup namespace

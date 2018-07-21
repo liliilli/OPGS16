@@ -1,0 +1,17 @@
+﻿{
+  "meta":
+  {
+
+  },
+  "list":
+  [
+    { "texture_name": "GameSprite", "index": 12, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 13, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 14, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 15, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 16, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 17, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 18, "interval": 125 },
+    { "texture_name": "GameSprite", "index": 19, "interval": 250 }
+  ]
+}

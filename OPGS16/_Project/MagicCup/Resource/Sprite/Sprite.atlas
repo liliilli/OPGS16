@@ -29,6 +29,22 @@
     "CupShadow":
     { "index": 10, "offset_x": 64, "offset_y": 96, "width": 64, "height": 32 },
     "Tile9":
-    { "index": 11, "offset_x": 192, "offset_y": 64, "width": 64, "height": 64 }
+    { "index": 11, "offset_x": 192, "offset_y": 64, "width": 64, "height": 64 },
+    "Boom0":
+    { "index": 12, "offset_x": 96, "offset_y": 32, "width": 32, "height": 32 },
+    "Boom1":
+    { "index": 13, "offset_x": 128, "offset_y": 32, "width": 32, "height": 32 },
+    "Boom2":
+    { "index": 14, "offset_x": 160, "offset_y": 32, "width": 32, "height": 32 },
+    "Boom3":
+    { "index": 15, "offset_x": 192, "offset_y": 32, "width": 32, "height": 32 },
+    "Boom4":
+    { "index": 16, "offset_x": 224, "offset_y": 32, "width": 32, "height": 32 },
+    "Boom5":
+    { "index": 17, "offset_x": 64, "offset_y": 64, "width": 32, "height": 32 },
+    "Boom6":
+    { "index": 18, "offset_x": 96, "offset_y": 64, "width": 32, "height": 32 },
+    "Boom7":
+    { "index": 19, "offset_x": 128, "offset_y": 64, "width": 32, "height": 32 }
   }
 }

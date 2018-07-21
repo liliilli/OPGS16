@@ -53,6 +53,11 @@
     "meta": { },
     "list":
     {
+      "BgmSchool":
+      {
+        "path": "Resource/Audio/Bgm/Schooldays.mp3",
+        "type": "back"
+      },
       "EffDecision":
       {
         "path": "Resource/Audio/Effect/decision.mp3",
@@ -72,12 +77,28 @@
       {
         "path": "Resource/Audio/Effect/cursormove.mp3",
         "type": "effect"
+      },
+      "EffWarning":
+      {
+        "path": "Resource/Audio/Effect/warning2.mp3",
+        "type": "effect"
+      },
+      "EffBomb":
+      {
+        "path": "Resource/Audio/Effect/bomb1.mp3",
+        "type": "effect"
       }
     }
   },
   "animation":
   {
     "meta": { },
-    "list": { }
+    "list":
+    {
+      "Boom":
+      {
+        "path": "Resource/Animation/boom.anim"
+      }
+    }
   }
 }

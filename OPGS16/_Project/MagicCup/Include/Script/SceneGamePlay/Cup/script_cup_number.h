@@ -16,8 +16,6 @@ class ScriptCupNumbering final : public opgs16::component::CScriptFrame {
 public:
   OP16_SCRIPT_GENERATE(ScriptCupNumbering);
 
-  void SetNumber(int32_t value);
-
 private:
   void Initiate() override final;
 

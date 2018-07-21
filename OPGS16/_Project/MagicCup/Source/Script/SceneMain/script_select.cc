@@ -22,6 +22,7 @@
 #include "../../../Include/Object/Common/fade_out.h"
 #include "../../../Include/Scene/scene_gameplay.h"
 #include "../../../Include/Internal/object_keyword.h"
+#include "../../../Include/Script/SceneMain/script_transition_manage.h"
 
 namespace magiccup {
 
@@ -30,6 +31,7 @@ void ScriptTitleSelect::Initiate() {
   using opgs16::element::canvas::CCanvas;
 
   const auto canvas = GetPresentScene()->GetGameObject(name::canvas);
+  m_canvas = canvas;
   auto& obj = GetBindObject();
 
   auto choice_list = obj.CreateGameObject<ChoiceList>(
@@ -66,8 +68,16 @@ void ScriptTitleSelect::Update(float delta_time) {
   using opgs16::manager::input::GetKeyValue;
   using opgs16::manager::sound::PlaySound;
 
-  const auto up_value = GetKeyValue(keyword::key_y);
+  if (m_is_selected)
+    return;
+
+  auto man = m_canvas->GetComponent<ScriptTransitionManagement>();
+  if (man && man->IsFocused())
+    return;
+
   if (IsKeyPressed(keyword::key_y)) {
+    const auto up_value = GetKeyValue(keyword::key_y);
+
     if (up_value == 1.0f) {
       m_choice_list->MoveCursor(EDirection::Up);
       PlaySound(keyword::eff_cursormove);
@@ -78,7 +88,8 @@ void ScriptTitleSelect::Update(float delta_time) {
     }
   }
 
-  if (IsKeyPressed(keyword::key_enter)) {
+  if (man->IsKeyNextFrameOn() && IsKeyPressed(keyword::key_enter)) {
+    m_is_selected = true;
     m_choice_list->SelectCommand();
   }
 }

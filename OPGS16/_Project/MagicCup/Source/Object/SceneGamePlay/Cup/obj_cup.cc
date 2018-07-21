@@ -26,9 +26,8 @@ ObjectCup::ObjectCup() {
   m_cup_texture = AddComponent<opgs16::component::CSprite2DRenderer>(
       *this, keyword::rsc_sprite,
       "opQuad2d", 6);
+  m_cup_texture->SetRenderingLayer(2);
   m_wrapper = &m_cup_texture->GetWrapper();
-
-  m_numbering_script = AddComponent<ScriptCupNumbering>(*this);
 }
 
 void ObjectCup::Render() {

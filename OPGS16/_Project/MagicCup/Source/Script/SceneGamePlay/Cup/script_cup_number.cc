@@ -23,11 +23,4 @@ void ScriptCupNumbering::Initiate() {
   m_texture = texture->GetComponent<opgs16::component::CSprite2DRenderer>();
 }
 
-void ScriptCupNumbering::SetNumber(int32_t value) {
-  constexpr int32_t start_index = 42;
-  if (m_texture) {
-    m_texture->SetTextureFragmentIndex(start_index + value);
-  }
-}
-
 } /// ::magiccup namespace

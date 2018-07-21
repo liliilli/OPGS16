@@ -4,7 +4,7 @@
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 
-namespace debug::object {
+namespace magiccup {
 
 class EmptyObject final : public opgs16::element::CObject {};
 

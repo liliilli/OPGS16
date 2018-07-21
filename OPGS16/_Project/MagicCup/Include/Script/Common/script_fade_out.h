@@ -23,6 +23,8 @@ public:
 
   void SetCallback(std::function<void(void)> cb_function);
 
+  void SetIntensity(float intensity);
+
   void Execute();
 
 private:
@@ -38,6 +40,7 @@ private:
 
   int32_t m_elapsed = 0;
   int32_t m_total   = 1;
+  float m_intensity = 0.0f;
 
   opgs16::element::CTimerHandle m_timer;
 };

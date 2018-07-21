@@ -11,10 +11,71 @@
 
 #include <Element/object.h>
 
+#include "../../../../Include/Object/SceneGamePlay/Cup/obj_ball.h"
+#include "../../../../Include/Object/SceneGamePlay/Cup/obj_cup.h"
+#include "../../../../Include/Object/SceneGamePlay/Cup/obj_shadow.h"
+#include "Component/sprite2d_renderer.h"
+
 namespace magiccup {
 
 void ScriptItemMovement::Initiate() {
+  auto& obj = GetBindObject();
+
+  obj.CreateGameObject<ObjectCupShadow>(ObjectCupShadow::s_object_name);
+  obj.CreateGameObject<ObjectBall>(ObjectBall::s_object_name);
+
+  auto cup = obj.CreateGameObject<ObjectCup>(ObjectCup::s_object_name);
+  cup->SetWorldPosition({0.f, ObjectCup::s_initial_y_pos, 0.f});
+
   SetComponentActive(false);
+}
+
+void ScriptItemMovement::DownRenderingLayer() {
+  auto& obj = GetBindObject();
+
+  auto nm = obj.GetGameObject(ObjectCupShadow::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(2);
+
+  nm = obj.GetGameObject(ObjectBall::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(2);
+
+  nm = obj.GetGameObject(ObjectCup::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(3);
+}
+
+void ScriptItemMovement::UpRenderingLayer() {
+  auto& obj = GetBindObject();
+
+  auto nm = obj.GetGameObject(ObjectCupShadow::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(0);
+
+  nm = obj.GetGameObject(ObjectBall::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(0);
+
+  nm = obj.GetGameObject(ObjectCup::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(1);
+}
+
+void ScriptItemMovement::RevertRenderingLayer() {
+  auto& obj = GetBindObject();
+
+  auto nm = obj.GetGameObject(ObjectCupShadow::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(1);
+
+  nm = obj.GetGameObject(ObjectBall::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(1);
+
+  nm = obj.GetGameObject(ObjectCup::s_object_name);
+  nm->GetComponent<opgs16::component::CSprite2DRenderer>()->
+    SetRenderingLayer(2);
 }
 
 void ScriptItemMovement::Update(float delta_time) {
@@ -30,6 +91,7 @@ void ScriptItemMovement::Update(float delta_time) {
 
   if (elapsed >= 1.0f) {
     obj.SetWorldPosition(destination_point);
+    RevertRenderingLayer();
     SetComponentActive(false);
     elapsed = 0.f;
   }

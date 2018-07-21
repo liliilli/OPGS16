@@ -22,11 +22,11 @@ TimerImage::TimerImage(const opgs16::element::canvas::CCanvas* canvas_reference)
   SetTextureFragmentIndex(0);
   SetLocalPosition({0.f, 4.f, 0.f});
   SetRenderingLayer(3);
-  SetColor(DColor::Aqua);
 
   auto renderer = GetComponent<CSprite2DRenderer>();
   renderer->SetShader("plainColor");
   m_renderer = renderer;
+  SetColor(DColor::Aqua);
 }
 
 void TimerImage::SetColor(const opgs16::DColor& color) {

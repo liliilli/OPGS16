@@ -22,14 +22,16 @@ namespace magiccup {
 
 void ScriptUiStage::Initiate() {
   using opgs16::element::canvas::CText;
+  using opgs16::component::CFont2DRenderer;
   auto& obj = GetBindObject();
 
   auto text = obj.CreateGameObject<CText>("Text", "Stage 01");
-  text->SetAlignment(IAlignable::Alignment::CENTER);
+  text->SetAlignment(IAlignable::Alignment::LEFT);
   text->SetFontName("opSystem");
   text->SetFontSize(8);
-  text->GetComponent<opgs16::component::CFont2DRenderer>()->SetRenderingLayer(3);
+  text->GetComponent<CFont2DRenderer>()->SetRenderingLayer(3);
   text->SetObjectActive(false);
+
   m_stage_display = text;
 
   SetComponentActive(false);
@@ -38,7 +40,7 @@ void ScriptUiStage::Initiate() {
 void ScriptUiStage::ExecuteStageEffect(int32_t stage_value) {
   m_stage = stage_value;
   m_stage_display->SetObjectActive(true);
-  m_stage_display->SetText(std::to_string(m_stage));
+  m_stage_display->SetText("Stage : " + std::to_string(m_stage));
 
   OP16_TIMER_SET(m_effect_interval, 2'000, false, this,
                  &ScriptUiStage::FinishEffect);
@@ -53,7 +55,8 @@ void ScriptUiStage::FinishEffect() {
         GetComponent<ScriptObjectManagement>();
   }
 
-  if (m_stage == 1) {
+  if (m_stage == 1 && !m_is_first_stage_executed) {
+    m_is_first_stage_executed = true;
     m_object_management->FirstStartObjectEffect();
   }
   else {

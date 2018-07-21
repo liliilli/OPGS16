@@ -21,6 +21,10 @@ public:
 
   void SwitchOnSequence();
 
+  bool IsFocused();
+
+  bool IsKeyNextFrameOn();
+
 private:
   void Initiate() override final;
   void Update(float delta_time) override final;
@@ -30,6 +34,7 @@ private:
   opgs16::element::CTimerHandle m_timer;
 
   bool m_on_focused  = false;
+  bool m_on_next_frame = false;
   int32_t m_sequence = 0;
   int32_t m_seq_size = 2;
 

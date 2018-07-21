@@ -34,7 +34,11 @@ public:
   void StartObjectEffect();
 
   void ExecuteJudging();
-  void ExecuteShaking(int32_t shaking_count);
+  void ExecuteShaking(int32_t shaking_count,
+                      int32_t shaking_interval);
+  void ExecuteEffectGameOver();
+
+  void IncreaseCup();
 
 private:
   void Initiate() override final;
@@ -46,6 +50,8 @@ private:
   void NextShake();
 
   void ExecuteEffectCupDown();
+  void ExecuteGameOverFadeOut();
+  void ExecuteGameOverDisplay();
 
   void Judge();
 
@@ -66,6 +72,8 @@ private:
   int32_t m_ball_index = 1;
   int32_t m_shaking_count_on_stage = -1;
   int32_t m_cursor_index = 1;
+
+  int32_t m_shaking_interval = 0;
 };
 
 } /// ::magiccup namespace

@@ -44,8 +44,7 @@ void ScriptUiBackground::SetOffset(const float x, const float y) noexcept {
 void ScriptUiBackground::SetScale(const float x, const float y) noexcept {
   using namespace opgs16::builtin;
 
-  m_wrapper->SetUniformValue<glm::vec2>(
-    s_uniform_scale, {x, y});
+  m_wrapper->SetUniformVec2(s_uniform_scale, {x, y});
 }
 
 } /// ::magiccup namespace

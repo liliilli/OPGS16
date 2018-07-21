@@ -46,7 +46,12 @@ std::atomic<bool> s_io_busy = false;
 std::mutex s_io_mutex;
 
 bool s_is_first_time = false;
+
 std::array<magiccup::DScoreContainer, 10> s_scoreboard;
+
+magiccup::DScoreContainer s_recent_item;
+
+int32_t s_recent_item_rank = -1;
 
 void InitializeScoreboard() noexcept {
   for (int32_t i = 0; i < 10; ++i) {
@@ -63,7 +68,7 @@ void WriteToken(std::ofstream& file_stream, const TType& value) {
   }
   else if constexpr (std::is_same_v<std::string, std::decay_t<TType>>) {
     const char* string = value.c_str();
-    const int32_t size = strlen(string);
+    const int32_t size = static_cast<int32_t>(strlen(string));
 
     file_stream.write(reinterpret_cast<const char*>(&size), sizeof(int32_t));
     file_stream.write(string, size);
@@ -158,11 +163,25 @@ bool SaveSaveFile() {
   return true;
 }
 
-TScoreContainer& LoadRankDataContainer() {
-  return s_scoreboard;
+bool SaveRankData(const DScoreContainer& item) {
+  const int32_t rev_index = VerifyRankDataWithNew(item);
+  if (rev_index == -1) {
+    return false;
+  }
+
+  const int32_t last_index = static_cast<int32_t>(s_scoreboard.size()) - 1;
+  for (int32_t i = last_index; i > rev_index; --i) {
+    if (i == last_index)
+      continue;
+
+    s_scoreboard[i + 1] = s_scoreboard[i];
+  }
+
+  s_scoreboard[rev_index] = item;
+  return true;
 }
 
-bool SaveRankData(const DScoreContainer& item) {
+int32_t VerifyRankDataWithNew(const DScoreContainer& item) {
   const auto satisfying_it =
       std::find_if(s_scoreboard.begin(), s_scoreboard.end(),
       [&item](const DScoreContainer& elem) {
@@ -170,28 +189,30 @@ bool SaveRankData(const DScoreContainer& item) {
       }
   );
 
-  if (satisfying_it == s_scoreboard.end())
-    return false;
+  const int32_t rev_index =
+    static_cast<int32_t>(std::distance(s_scoreboard.begin(), satisfying_it));
 
-  const int32_t rev_index = std::distance(s_scoreboard.begin(), satisfying_it);
-  const int32_t last_index = s_scoreboard.size() - 1;
-
-  for (int32_t i = last_index; i > rev_index; --i) {
-    if (i == last_index)
-      continue;
-
-    s_scoreboard[i] = s_scoreboard[i + 1];
-  }
-
-  s_scoreboard[rev_index] = item;
-  return true;
+  return rev_index >= 10 ? -1 : rev_index;
 }
 
-const DScoreContainer& LoadRankData(int32_t index) {
+DScoreContainer& LoadRankData(int32_t index) {
   PHITOS_ASSERT(index < s_scoreboard.size(), "Index must be less than.");
   PHITOS_ASSERT(index >= 0, "Index must be bigger than -1.");
 
   return s_scoreboard[index];
+}
+
+TScoreContainer& LoadRankDataContainer() {
+  return s_scoreboard;
+}
+
+void SaveAsRecentData(const DScoreContainer& item) {
+  s_recent_item = item;
+  s_recent_item_rank = VerifyRankDataWithNew(item);
+}
+
+int32_t GetRecentDataRank() noexcept {
+  return s_recent_item_rank;
 }
 
 } /// ::magiccup::data namespace
