@@ -53,7 +53,7 @@
 #include <Core\Internal\application_flag.h>
 
 /// expanded assertion
-#include <Helper\assert.h>
+#include <Phitos/Dbg/assert.h>
 /// import logger
 #include <Headers\import_logger.h>
 
@@ -230,7 +230,7 @@ SGlobalSetting& Setting() noexcept {
 }
 
 void Initiate() {
-  NEU_ASSERT(m_initiated == EInitiated::NotInitiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       "Duplicated function call of ::opgs16::entry::Initiate() is prohibited.");
   m_initiated = EInitiated::Initiated;
 
@@ -298,7 +298,6 @@ void Initiate() {
     ChangeScalingOption(EScaleType::X3);
 
 #if defined(_CUSTOM_PROJECT)
-#if defined(_RESOURCE_SETTING_FILE_PATH)
 #if defined(_INITIAL_SCENE_FULL_NAME)
 #if !_SHOW_BOOT_SCREEN
   M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
@@ -309,9 +308,6 @@ void Initiate() {
   M_PUSH_SCENE(builtin::sample::__BOOT, true);
   ReplacePresentStatus(_internal::EGameStatus::PLAYING);
 #endif
-#endif
-#else
-  static_assert(false, "Set a path for _RESOURCE_SETTING_FILE_PATH);
 #endif
 #else
   // SHOW BOOT LOGO
@@ -413,7 +409,7 @@ void InitiatePostProcessingEffects() {
 }
 
 void Run() {
-  NEU_ASSERT(m_operated == EOperated::NotOperated,
+  PHITOS_ASSERT(m_operated == EOperated::NotOperated,
       "Duplicated function call of ::opgs16::entry::Run() is prohibited.");
   m_operated = EOperated::Operated;
 
@@ -543,13 +539,10 @@ void Draw() {
 
 void ToggleFpsDisplay() {
   m_setting->ToggleDebugMode();
-	std::cerr << static_cast<bool>(m_setting->DebugMode()) << std::endl;
 }
 
 void TogglePostProcessingEffect() {
   m_setting->TogglePostProcessing();
-	std::cerr << "POST::PROCESSING::SWITCH::" <<
-        static_cast<bool>(m_setting->PostProcessing()) << std::endl;
 }
 
 void ToggleCollisionBoxDisplay() {
@@ -575,9 +568,6 @@ void ToggleCollisionBoxDisplay() {
 		}
 
 		m_setting->SetScaleValue(value);
-	}
-	else {
-		std::cerr << "NOTIFY::M_SCALE::VALUE::ARE::SAME" << std::endl;
 	}
 }
 

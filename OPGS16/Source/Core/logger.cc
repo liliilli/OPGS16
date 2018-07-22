@@ -7,7 +7,7 @@
 ///
 /// @file Core/logger.h
 ///
-/// @brief 
+/// @brief
 /// CLogger class implementation file.
 ///
 /// @author Jongmin Yun
@@ -24,14 +24,14 @@
 #include <memory>
 
 /// Enhanced assertion
-#include <Helper\assert.h>
+#include <Phitos/Dbg/assert.h>
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 namespace {
-  
+
 std::shared_ptr<spdlog::logger> m_console = spdlog::stdout_color_mt("OPGS16");
 
 } /// unnamed namespace
@@ -46,10 +46,10 @@ void Push(_internal::ELogMessageType msg_type, const char* log_message) {
   using _internal::ELogMessageType;
 
   switch (msg_type) {
-  case ELogMessageType::Info: 
+  case ELogMessageType::Info:
     m_console->info(log_message);
     break;
-  case ELogMessageType::Debug: 
+  case ELogMessageType::Debug:
     m_console->debug(log_message);
     break;
   case ELogMessageType::Warning:
@@ -58,7 +58,7 @@ void Push(_internal::ELogMessageType msg_type, const char* log_message) {
   case ELogMessageType::Critical:
     m_console->critical(log_message);
     break;
-  case ELogMessageType::Error: 
+  case ELogMessageType::Error:
     m_console->error(log_message);
     break;
   }

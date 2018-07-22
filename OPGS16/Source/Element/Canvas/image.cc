@@ -35,6 +35,9 @@ CImage::CImage(const std::string& sprite_tag,
     m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
   m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(
       *this, sprite_tag, "opQuad2d");
+
+  auto& wrapper = m_renderer_ptr->GetWrapper();
+	wrapper.SetUniformValue(builtin::s_uniform_alpha, 1.0f);
 }
 
 CImage::CImage(const std::string& sprite_tag,
@@ -65,14 +68,10 @@ void CImage::LocalUpdate() {
 }
 
 void CImage::Render() {
-	auto& wrapper = m_renderer_ptr->GetWrapper();
-	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_proj,
-                                     m_ref_canvas->GetUiCameraProjectMatrix());
-	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_view,
-                                     m_ref_canvas->GetUiCameraViewMatrix());
-	wrapper.SetUniformValue<glm::mat4>(builtin::s_uniform_model,
-                                     GetModelMatrix());
-	wrapper.SetUniformValue(builtin::s_uniform_alpha, 1.0f);
+  auto& wrapper = m_renderer_ptr->GetWrapper();
+	wrapper.SetUniformMat4(builtin::s_uniform_proj, m_ref_canvas->GetUiCameraProjectMatrix());
+	wrapper.SetUniformMat4(builtin::s_uniform_view, m_ref_canvas->GetUiCameraViewMatrix());
+	wrapper.SetUniformMat4(builtin::s_uniform_model, GetModelMatrix());
 
 	m_renderer_ptr->RenderSprite();
 }

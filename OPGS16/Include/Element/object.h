@@ -59,7 +59,7 @@
 /// Type checking template
 #include <Helper/template.h>
 /// Enforced assert macroes.
-#include <Helper/assert.h>
+#include <Phitos/Dbg/assert.h>
 
 /// Forward declaration
 #include <opgs16fwd.h>
@@ -471,7 +471,7 @@ public:
   /// @brief Set hash value
   ///
   inline void SetHash(const std::string& name) const {
-    NEU_ASSERT(m_hash_initialized == false,
+    PHITOS_ASSERT(m_hash_initialized == false,
       "Hash value of object is already defined.");
 
     if (!m_hash_initialized) {

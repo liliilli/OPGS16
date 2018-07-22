@@ -330,7 +330,7 @@ void Update() {
 }
 
 void RenderCollisionBox() {
-  NEU_NOT_IMPLEMENTED_ASSERT();
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
 void Clear() {

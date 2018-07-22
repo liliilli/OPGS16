@@ -476,9 +476,7 @@ ESucceed ReadResourceFile(const std::string& file_path) {
   InitializeMesh(atlas_json[s_json_mesh]);
   InitializeShader(atlas_json[s_json_shader]);
   InitializeSound(atlas_json[s_json_sound]);
-#ifdef false
   InitializeAnimation(atlas_json[s_json_animation]);
-#endif
 
   return ESucceed::Succeed;
 }
@@ -1107,10 +1105,11 @@ void InitializeAnimation(const nlohmann::json& json) {
 
   // @todo Intentionally neglect font::meta header.
   // If meta information of font header is needed later, implement this.
-  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
-    // @todo Integrity check
-    auto container = MakeAnimationContainer(it.value());
-    if (container.has_value()) {
+  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end();
+       ++it) {
+    if (auto container = MakeAnimationContainer(it.value());
+        container.has_value()) {
+
       auto [_, result] = m_animations.try_emplace(it.key(), container.value());
 
       if (result) {
@@ -1123,19 +1122,46 @@ void InitializeAnimation(const nlohmann::json& json) {
   }
 }
 
+std::optional<opgs16::resource::SAnimation>
+MakeAnimationContainer(const nlohmann::json& json) {
+  auto json_atlas = LoadJsonFile(
+      opgs16::helper::ConcatDirectoryWithFile(
+          _APPLICATION_PROJECT_PATH,
+          json[s_json_path])
+  );
+  if (!json_atlas.has_value()) {
+    return std::nullopt;
+  }
+
+  opgs16::resource::SAnimation animation;
+
+  for (auto it = json_atlas.value()[s_json_list].begin();
+       it != json_atlas.value()[s_json_list].end();
+       ++it) {
+    if (VerifyAnimationInsertion(it.value()) == ESucceed::Failed)
+      continue;
+
+    animation.cells.emplace_back(MakeAnimationCell(it.value()));
+  }
+
+  return animation;
+}
+
 ESucceed VerifyAnimationStructure(const nlohmann::json& json) {
   using phitos::enums::EFound;
   using phitos::enums::ESucceed;
   using opgs16::helper::json::IsJsonKeyExist;
 
   if (IsJsonKeyExist(json, s_json_meta) == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_animation);
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.",
+                          s_json_meta, s_json_animation);
     PHITOS_UNEXPECTED_BRANCH();
     return ESucceed::Failed;
   }
 
   if (IsJsonKeyExist(json, s_json_list) == EFound::NotFound) {
-    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.", s_json_meta, s_json_animation);
+    PUSH_LOG_CRITICAL_EXT("Header {} is not found in {} header.",
+                          s_json_meta, s_json_animation);
     PHITOS_UNEXPECTED_BRANCH();
     return ESucceed::Failed;
   }
@@ -1193,24 +1219,6 @@ ESucceed VerifyAnimationInsertion(const nlohmann::json& json) {
   }
 
   return ESucceed::Succeed;
-}
-
-std::optional<opgs16::resource::SAnimation>
-MakeAnimationContainer(const nlohmann::json& json) {
-  auto json_atlas = LoadJsonFile(json[s_json_path]);
-  if (!json_atlas.has_value()) {
-    return std::nullopt;
-  }
-
-  opgs16::resource::SAnimation animation;
-  for (auto it = json[s_json_list].begin(); it != json[s_json_list].end(); ++it) {
-    if (VerifyAnimationInsertion(it.value()) == ESucceed::Failed)
-      continue;
-
-    animation.cells.emplace_back(MakeAnimationCell(it.value()));
-  }
-
-  return animation;
 }
 
 opgs16::resource::SAnimationCell MakeAnimationCell(const nlohmann::json& json) {

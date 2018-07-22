@@ -194,6 +194,67 @@ void CShaderWrapper::SetAttribute(const CVaoContainer* vao_container) {
   glUseProgram(0);
 }
 
+void CShaderWrapper::SetUniformFloat(const std::string& var_name,
+                                     float value) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::Float) {
+      m_parameters.m_floats[it->second.second] = value;
+    }
+  }
+}
+
+void CShaderWrapper::SetUniformMat4(const std::string& var_name,
+                                    const glm::mat4& value) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::Matrix4) {
+      m_parameters.m_mat4s[it->second.second] = value;
+    }
+  }
+}
+
+void CShaderWrapper::SetUniformVec2(const std::string& var_name,
+                                    const glm::vec2& value) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::Vec2) {
+      m_parameters.m_vec2[it->second.second] = value;
+    }
+  }
+}
+
+void CShaderWrapper::SetUniformVec3(const std::string& var_name,
+                                    const glm::vec3& value) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::Vec3) {
+      m_parameters.m_vec3[it->second.second] = value;
+    }
+  }
+}
+
+void CShaderWrapper::SetUniformInt(const std::string& var_name,
+                                   int32_t value) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::Int) {
+      m_parameters.m_ints[it->second.second] = value;
+    }
+  }
+}
+
+void CShaderWrapper::SetUniformIntPtr(const char* var_name,
+                                      int32_t* pointer,
+                                      int32_t amount) noexcept {
+  using opgs16::resource::SShader;
+  if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
+    if (it->second.first == SShader::EVariableType::IntPtr) {
+      m_parameters.m_int_ptr[it->second.second] = std::make_pair(pointer, amount);
+    }
+  }
+}
+
 void CShaderWrapper::RefreshUniformValues() {
   // Float
   for (const auto&[name, value] : m_parameters.m_floats)

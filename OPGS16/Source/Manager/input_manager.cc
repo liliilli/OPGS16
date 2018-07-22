@@ -171,6 +171,8 @@ GLFWcursor* m_cursor = nullptr;
 EKeyPrimaryState m_primary_keys[349];
 TKeyMap m_key_inputs;
 
+std::vector<std::reference_wrapper<BindingKeyInfo>> m_key_disposal;
+
 } /// unnamed namespace
 
 //!
@@ -296,7 +298,8 @@ float GetKeyValue(const std::string& key) {
 }
 
 bool IsKeyPressed(const std::string& key) {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
+                debug::err_input_not_initiated);
 
   if (m_key_inputs.find(key) == m_key_inputs.end()) {
     PUSH_LOG_ERROR_EXT(debug::err_input_key_not_exist, key);
@@ -308,13 +311,15 @@ bool IsKeyPressed(const std::string& key) {
   switch (key_info.key_status) {
   case BindingKeyInfo::KeyInputStatus::NEG_PRESSED:
   case BindingKeyInfo::KeyInputStatus::POS_PRESSED:
-    if (key_info.send_signal)
+    if (key_info.send_signal) {
       return false;
+    }
 
     if (!key_info.stick_key) {
-      key_info.send_signal = true;
+      m_key_disposal.emplace_back(key_info);
       return true;
     }
+
     [[fallthrough]];
   case BindingKeyInfo::KeyInputStatus::NegativeRepeated:
   case BindingKeyInfo::KeyInputStatus::PositiveRepeated:
@@ -342,7 +347,15 @@ bool IsKeyReleased(const std::string& key) {
 }
 
 void Update() {
-  PHITOS_ASSERT(m_initiated == EInitiated::Initiated, debug::err_input_not_initiated);
+  PHITOS_ASSERT(m_initiated == EInitiated::Initiated,
+                debug::err_input_not_initiated);
+
+  if (!m_key_disposal.empty()) {
+    for (auto& key_elem : m_key_disposal) {
+      key_elem.get().send_signal = true;
+    }
+    m_key_disposal.clear();
+  }
 
 	for (auto& key_info : m_key_inputs) {
 		auto& key = key_info.second;

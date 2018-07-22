@@ -82,9 +82,9 @@ void __B_SCR::SetLogoImage() {
     renderer->SetInstanceCount(k_sliced_number << 1);
 
     auto& wrapper = renderer->GetWrapper();
-    wrapper.SetUniformValueInt("uNumber", k_sliced_number << 1);
-    wrapper.SetUniformValueIntPtr("uPos", y_positions, k_sliced_number << 1);
-    wrapper.SetUniformValue<float>("uYScale", k_sliced_y_initial_scale);
+    wrapper.SetUniformInt("uNumber", k_sliced_number << 1);
+    wrapper.SetUniformIntPtr("uPos", y_positions, k_sliced_number << 1);
+    wrapper.SetUniformFloat("uYScale", k_sliced_y_initial_scale);
 
     OP16_TIMER_SET(m_timer, 16, true, this, &__B_SCR::MoveLogoSliced);
   }

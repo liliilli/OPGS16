@@ -53,7 +53,7 @@ void CObject::Update(float delta_time) {
     case EActivated::Disabled: {
       if (m_data->IsCallbackNotCalled()) {
         for (auto& [component, type] : m_components) {
-          if (component->IsComponentActive() == false)
+          if (!component || component->IsComponentActive() == false)
             continue;
 
           if (type == EComponentType::Script) {
@@ -66,10 +66,8 @@ void CObject::Update(float delta_time) {
       }
     } break;
     case EActivated::Activated: {
-      LocalUpdate();
-
       for (auto& [component, type] : m_components) {
-        if (component->IsComponentActive() == false)
+        if (!component || component->IsComponentActive() == false)
           continue;
 
         // At first, check if component is script type (based on CScriptFrame)
@@ -92,6 +90,8 @@ void CObject::Update(float delta_time) {
 
         component->Update(delta_time);
       }
+
+      LocalUpdate();
       m_data->SetCallbackFlagToFalse();
     } break;
     }
@@ -139,8 +139,6 @@ void CObject::PropagateParentPosition() {
   for (auto& child : m_children) {
     auto& child_ptr = child.second;
     /// If object is not empty and activated and permits succeeding positioning.
-    //using phitos::enums::EActivated;
-    //child_ptr->IsObjectActive() == EActivated::Activated &&
     if (child_ptr && child_ptr->GetSucceedingPositionFlag())
       child_ptr->SetParentPosition(GetParentPosition());
   }

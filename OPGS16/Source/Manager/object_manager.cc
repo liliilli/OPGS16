@@ -34,7 +34,7 @@
 /// Import logger
 #include <Headers/import_logger.h>
 /// Expanded assertion
-#include <Helper/assert.h>
+#include <Phitos/Dbg/assert.h>
 /// ::opgs16::manager::MSceneManager
 #include <Manager/scene_manager.h>
 /// ::opgs16::manager::setting
@@ -111,7 +111,7 @@ opgs16::element::CShaderWrapper m_aabb_3d_wrapper;
 namespace opgs16::manager::object {
 
 void Initiate() {
-  NEU_ASSERT(m_initiated == EInitiated::NotInitiated,
+  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       debug::err_object_duplicated_init);
   m_initiated = EInitiated::Initiated;
 
@@ -225,7 +225,7 @@ void ClearRenderingList() {
 
 void InsertRenderingObject(element::CObject* const object,
                            unsigned layer_index) {
-  NEU_ASSERT(layer_index < m_rendering_list.size(),
+  PHITOS_ASSERT(layer_index < m_rendering_list.size(),
       debug::err_object_out_of_bound_rendering_list);
 
   m_rendering_list[layer_index].emplace_back(object);

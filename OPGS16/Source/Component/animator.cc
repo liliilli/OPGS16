@@ -69,14 +69,18 @@ CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer,
 }
 
 void CAnimator::Update(float) {
-    switch (m_state) {
-    default: /*! Do nothing */ break;;
-    case AnimatorState::ANIMATION_START: break;
-    case AnimatorState::UPDATE: OnUpdate(); break;
-    case AnimatorState::ANIMATION_END: break;
-    case AnimatorState::END: OnEnd(); break;
-    case AnimatorState::SLEEP: break;
-    }
+  switch (m_state) {
+  default: /*! Do nothing */ break;;
+  case AnimatorState::ANIMATION_START: break;
+  case AnimatorState::UPDATE: OnUpdate(); break;
+  case AnimatorState::ANIMATION_END: break;
+  case AnimatorState::END: OnEnd(); break;
+  case AnimatorState::SLEEP: break;
+  }
+}
+
+bool CAnimator::IsSleep() {
+  return m_state == AnimatorState::SLEEP;
 }
 
 void CAnimator::OnStart() {
@@ -92,14 +96,14 @@ void CAnimator::OnUpdate() {
 }
 
 void CAnimator::OnAnimationEnd() {
-    if (IsSwitchOn(m_loop))
-        m_state = AnimatorState::UPDATE;
-    else
-        m_state = AnimatorState::END;
+  if (IsSwitchOn(m_loop))
+    m_state = AnimatorState::UPDATE;
+  else
+    m_state = AnimatorState::END;
 }
 
 void CAnimator::OnEnd() {
-    m_state = AnimatorState::SLEEP;
+  m_state = AnimatorState::SLEEP;
 }
 
 void CAnimator::OnSleep() {

@@ -35,8 +35,6 @@
 
 /// Import logger
 #include <Headers/import_logger.h>
-/// Expanded assertion
-#include <Helper/assert.h>
 /// ::opgs16::helper string helper functions.
 #include <Helper/string_helper.h>
 /// ::opgs16::helper::json helper functions.
@@ -45,6 +43,8 @@
 #include <Manager/Internal/flag.h>
 /// ::opgs16::debug error messages.
 #include <Manager/Internal/error_message.h>
+/// Expanded assertion
+#include <Phitos/Dbg/assert.h>
 
 /// Manifest file
 #include <../manifest.h>

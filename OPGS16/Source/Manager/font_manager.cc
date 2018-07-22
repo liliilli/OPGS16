@@ -218,7 +218,7 @@ bool GenerateCharacter(const std::string& font_name, const char16_t utf16_char) 
 
 TFontType* GetDefaultFont() {
   if (!m_default_font) {
-    NEU_NOT_IMPLEMENTED_ASSERT();
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
   }
 
   return m_default_font;

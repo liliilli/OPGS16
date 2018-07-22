@@ -126,23 +126,17 @@ public:
     }
   }
 
-  void SetUniformValueInt(const std::string& var_name, const int value) {
-    using opgs16::resource::SShader;
-    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
-      if (it->second.first == SShader::EVariableType::Int) {
-        m_parameters.m_ints[it->second.second] = value;
-      }
-    }
-  }
+  void SetUniformFloat(const std::string& var_name, float value) noexcept;
 
-  void SetUniformValueIntPtr(const char* var_name, int* pointer, const int amount) {
-    using opgs16::resource::SShader;
-    if (auto it = m_uniform_mapper.find(var_name); it != m_uniform_mapper.end()) {
-      if (it->second.first == SShader::EVariableType::IntPtr) {
-        m_parameters.m_int_ptr[it->second.second] = std::make_pair(pointer, amount);
-      }
-    }
-  }
+  void SetUniformInt(const std::string& var_name, int32_t value) noexcept;
+
+  void SetUniformMat4(const std::string& var_name, const glm::mat4& value) noexcept;
+
+  void SetUniformVec2(const std::string& var_name, const glm::vec2& value) noexcept;
+
+  void SetUniformVec3(const std::string& var_name, const glm::vec3& value) noexcept;
+
+  void SetUniformIntPtr(const char* var_name, int32_t* pointer, int32_t amount) noexcept;
 
 private:
   /// Set uniform variables of shader with new values.

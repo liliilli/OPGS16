@@ -20,7 +20,7 @@
 ///
 
 /// Enhanced assertion
-#include <Helper\assert.h>
+#include <Phitos/Dbg/assert.h>
 
 #if defined(_DEBUG)
 
@@ -50,7 +50,7 @@
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
     spt->info(__MAString__, __VA_ARGS__); \
   } else { \
-    NEU_NOT_IMPLEMENTED_ASSERT(); \
+    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
   }
 
 ///
@@ -61,28 +61,28 @@
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
     spt->info(__MAString__, __VA_ARGS__); \
   } else { \
-    NEU_NOT_IMPLEMENTED_ASSERT(); \
+    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
   }
 
 #define PUSH_LOG_WARN_EXT(__MAString__, ...) \
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
     spt->warn(__MAString__, __VA_ARGS__); \
   } else { \
-    NEU_NOT_IMPLEMENTED_ASSERT(); \
+    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
   }
 
 #define PUSH_LOG_CRITICAL_EXT(__MAString__, ...) \
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
     spt->critical(__MAString__, __VA_ARGS__); \
   } else { \
-    NEU_NOT_IMPLEMENTED_ASSERT(); \
+    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
   }
 
 #define PUSH_LOG_ERROR_EXT(__MAString__, ...) \
   if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
     spt->error(__MAString__, __VA_ARGS__); \
   } else { \
-    NEU_NOT_IMPLEMENTED_ASSERT(); \
+    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
   }
 
 #else
