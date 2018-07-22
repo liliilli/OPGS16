@@ -15,6 +15,7 @@
 #include <Manager/Internal/shader_builtin_keywords.h>
 
 #include "../../../Include/Internal/general_keyword.h"
+#include "../../../Include/Script/SceneGamePlay/Disposable/effect_boom_script.h"
 
 namespace magiccup {
 
@@ -25,14 +26,11 @@ EffectBoomObject::EffectBoomObject() {
   SetScaleValue(16.f);
   SetScaleFactor({1.f, 1.f, 0.f});
 
-  m_renderer = AddComponent<CSprite2DRenderer>(
-      *this, keyword::rsc_sprite,
-      "opQuad2d");
+  m_renderer = AddComponent<CSprite2DRenderer>(*this, keyword::rsc_sprite, "opQuad2d");
   m_wrapper  = &m_renderer->GetWrapper();
 
-  m_animator = AddComponent<CAnimator>(
-      *this, *m_renderer,
-      "Boom");
+  m_animator = AddComponent<CAnimator>(*this, *m_renderer, "Boom");
+  AddComponent<ScriptEffectBoom>(*this);
 }
 
 void EffectBoomObject::Render() {

@@ -19,10 +19,9 @@ public:
 private:
   void Render() override final;
 
+  opgs16::component::CAnimator*         m_animator = nullptr;
   opgs16::component::CSprite2DRenderer* m_renderer = nullptr;
-  opgs16::element::CShaderWrapper* m_wrapper = nullptr;
-
-  opgs16::component::CAnimator* m_animator = nullptr;
+  opgs16::element::CShaderWrapper*      m_wrapper  = nullptr;
 };
 
 } /// ::magiccup namespace
