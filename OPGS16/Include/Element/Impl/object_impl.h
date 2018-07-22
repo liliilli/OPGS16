@@ -382,7 +382,7 @@ private:
   EActivated m_is_any_parent_activated  = EActivated::Activated;
   /// Any parent all update activation variable.
   EActivated m_is_finally_activated     = EActivated::Activated;
-  bool m_is_callback_called = true;
+  bool m_is_callback_called = false;
 
   /// Flag for succeeding parent position.
   bool m_position_succeedable{ true };

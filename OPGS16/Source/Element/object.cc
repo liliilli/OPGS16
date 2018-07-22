@@ -44,7 +44,7 @@ CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } {
 
 void CObject::Update(float delta_time) {
   using phitos::enums::EActivated;
-  using CScriptFrame = component::CScriptFrame;
+  using CScriptFrame   = component::CScriptFrame;
   using EComponentType = component::_internal::EComponentType;
   using EScriptStarted = component::_internal::EScriptStarted;
 
@@ -53,7 +53,7 @@ void CObject::Update(float delta_time) {
     case EActivated::Disabled: {
       if (m_data->IsCallbackNotCalled()) {
         for (auto& [component, type] : m_components) {
-          if (!component || component->IsComponentActive() == false)
+          if (!(component && component->IsComponentActive()))
             continue;
 
           if (type == EComponentType::Script) {
@@ -67,7 +67,7 @@ void CObject::Update(float delta_time) {
     } break;
     case EActivated::Activated: {
       for (auto& [component, type] : m_components) {
-        if (!component || component->IsComponentActive() == false)
+        if (!(component && component->IsComponentActive()))
           continue;
 
         // At first, check if component is script type (based on CScriptFrame)
@@ -84,7 +84,6 @@ void CObject::Update(float delta_time) {
 
           if (m_data->IsCallbackNotCalled()) {
             script->OnEnabled();
-            script->Start();
           }
         }
 

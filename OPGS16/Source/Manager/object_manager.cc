@@ -138,17 +138,16 @@ void Render() {
 void RenderAABB() {
   glDisable(GL_DEPTH_TEST);
 
+#ifdef false
   if (!m_aabb_2d_list.empty()) {
     glLineWidth(2.f);
     m_aabb_2d_wrapper.SetUniformValue("uColor", glm::vec3{0, 1, 0});
     m_aabb_2d_wrapper.UseShader();
     for (const auto& _2d_aabb : m_aabb_2d_list) {
-#ifdef false
       const auto rectangle_vectors = _2d_aabb.GetVertexPoints();
       m_vao.Map(rectangle_vectors);
       glBindVertexArray(m_vao.GetVao());
       glDrawArrays(GL_LINE_LOOP, 0, 4);
-#endif
     }
 
     glBindVertexArray(0);
@@ -162,36 +161,36 @@ void RenderAABB() {
 
     m_aabb_3d_list.clear();
   }
+#endif
 
   glEnable(GL_DEPTH_TEST);
 }
 
 void Destroy(const element::CObject& object, element::CObject* root) {
-  const auto hash_value = object.GetHash();
+  using TObjectMap = std::unordered_map<std::string, object_ptr>;
+  using TObjectItType = TObjectMap::iterator;
+  std::stack<TObjectMap*> tree_list;
+  std::stack<TObjectItType> it_list;
 
-  using object_map = std::unordered_map<std::string, object_ptr>;
-  using it_type = object_map::iterator;
-  std::stack<object_map*> tree_list;
-  std::stack<it_type> it_list;
-
-  if (root == nullptr) {
-    tree_list.emplace(manager::scene::GetPresentScene()->GetGameObjectList());
-  }
-  else {
+  if (!root)
+    tree_list.emplace(scene::GetPresentScene()->GetGameObjectList());
+  else
     tree_list.emplace(&root->GetGameObjectList());
-  }
 
   it_list.emplace(tree_list.top()->begin());
-
   bool destroyed = false;
+  const auto hash_value = object.GetHash();
+
   while (!destroyed && !tree_list.empty()) {
     auto& object_list = *tree_list.top();
     auto it = it_list.top();
 
     for (; it != object_list.end(); ++it) {
-      if (!it->second) continue;
+      if (!it->second)
+        continue;
 
-      if (hash_value == it->second->GetHash()) {
+      if (hash_value == it->second->GetHash() &&
+          it->second.get() == &object) {
         AddDestroyObject(it->second);
         destroyed = true;
         break;
