@@ -1,0 +1,9 @@
+{
+  "mode" : {
+    "keyboard" : true,
+    "mouse" : false,
+    "joystick" : false
+  },
+  "keyboard" : { },
+  "mouse" : { }
+}

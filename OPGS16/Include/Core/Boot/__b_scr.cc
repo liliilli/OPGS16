@@ -136,8 +136,7 @@ void __B_SCR::MoveLogoSliced() {
   auto* renderer = logo->GetComponent<CSprite2DRenderer>();
   auto& wrapper = renderer->GetWrapper();
 
-  wrapper.SetUniformValue<float>(
-      "uYScale", sigma / offset_scale + k_sliced_y_final_scale);
+  wrapper.SetUniformFloat("uYScale", sigma / offset_scale + k_sliced_y_final_scale);
 
   if (elapsed >= time) {
     PUSH_LOG_INFO("Logo soft-randing");
@@ -149,34 +148,30 @@ void __B_SCR::MoveLogoSliced() {
 }
 
 void __B_SCR::CreateTextObject() {
+  using opgs16::element::canvas::CText;
+  auto& obj = GetBindObject();
+
   std::stringstream string_stream;
   string_stream << 'v' << _OPGS16_VERSION_MAJOR << '.' << _OPGS16_VERSION_MINOR << '.' << _OPGS16_VERSION_FIXED;
-
   std::string text_string; string_stream >> text_string;
   text_string.append("\n\n"
     "VIDEO RAM:1024KiBytes\n"
     "MAIN RAN:2048KiBytes\n\n");
 
-  auto text = std::make_unique<element::canvas::CText>(text_string); {
-    text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
-    text->SetWorldPosition({ 0, -48, 0 });
-    text->SetAlignment(IAlignable::Alignment::CENTER);
-    text->SetFontName("opSystem");
-    text->SetFontSize(8u);
-    text->SetColor(DColor{ 1, 1, 1 });
-  }
-  GetBindObject().CreateGameObject<element::canvas::CText>("Statement", text);
+  auto text = obj.CreateGameObject<CText>("Statement", text_string);
+  text->SetOrigin(IOriginable::Origin::CENTER_CENTER);
+  text->SetWorldPosition({ 0, -48, 0 });
+  text->SetAlignment(IAlignable::Alignment::CENTER);
+  text->SetFontName("opSystem");
+  text->SetFontSize(8u);
+  text->SetColor(DColor{ 1, 1, 1 });
 
   OP16_TIMER_SET(m_timer, 2'000, false, this, &__B_SCR::OnTriggerNextScene);
 }
 
 void __B_SCR::OnTriggerNextScene() {
-    PUSH_LOG_INFO("Booting scene to sample game scene...");
-#if !defined(_CUSTOM_PROJECT)
-    //M_REPLACE_SCENE(opgs16::builtin::sample::SampleGame);
-#else
-    M_POP_SCENE();
-#endif
+  PUSH_LOG_INFO("Booting scene to sample game scene...");
+  M_POP_SCENE();
 }
 
 } /// ::opgs16::builtin::sample namespace

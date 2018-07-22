@@ -319,6 +319,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_title.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_transition_manage.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\Scoreboard\script_scoreboard.cc" />
+    <ClCompile Include="_Project\Template\Source\hello_world.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -537,6 +538,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Type\score_container.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneMain\ui_scoreboard_part.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_back_success.h" />
+    <ClInclude Include="_Project\Template\Include\hello_world.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />

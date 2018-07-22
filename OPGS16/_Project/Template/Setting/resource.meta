@@ -1,0 +1,32 @@
+{
+  "meta": { },
+  "font":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "texture":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "mesh":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "shader":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "sound":
+  {
+    "meta": { },
+    "list": { }
+  },
+  "animation": {
+    "meta": { },
+    "list": { }
+  }
+}

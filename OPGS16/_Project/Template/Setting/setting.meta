@@ -1,0 +1,39 @@
+{
+  "tag":
+  {
+    "gameobject":
+    [
+      "TagLayer0",
+      "TagLayer1",
+      "TagLayer2",
+      "TagLayer3"
+    ]
+  },
+  "rendering":
+  {
+    "list":
+    [
+      "RendLayer0",
+      "RendLayer1",
+      "RendLayer2",
+      "RendLayer3"
+    ]
+  },
+  "collision":
+  {
+    "list":
+    {
+      "0": "Block",
+      "1": "Object",
+      "2": "Bullet",
+      "3": "Foreground"
+    },
+    "table":
+    {
+      "0": [ 1, 2, 3 ],
+      "1": [ 1, 2, 3 ],
+      "2": [],
+      "3": []
+    }
+  }
+}

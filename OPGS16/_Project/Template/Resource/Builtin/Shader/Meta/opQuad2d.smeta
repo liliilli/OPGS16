@@ -1,0 +1,8 @@
+{
+	"meta": { },
+	"uniform" :
+	{
+		"opAlpha" : "FLOAT",
+		"opTexture0" : "TEXTURE2D"
+	}
+}

@@ -10,58 +10,40 @@
 
 namespace opgs16::manifest {
 
-///
-/// IF YOU WANT TO USE "YOUR OWN" PROJECT, UNCOMMENT THIS BELOW.
-///
-#define _CUSTOM_PROJECT
-
-// If you want to turn on DEBUG MODE to display console log and special debug display,
-// Remove "//" Commend specifier.
+/// If you want to turn on DEBUG MODE to display console log and special debug display,
+/// Remove "//" Commend specifier.
 //#define _OPGS16_DEBUG_OPTION
 
 ///
 /// PROJECT SETTING
 ///
 
-// INITIAL SCREEN SIZE
-constexpr unsigned k_size{ 2 };
+/// INITIAL SCREEN SIZE
+constexpr unsigned k_size = 2;
 
-// To use your own application setting, please uncomment #define _CUSTOM_PROJECT.
-#if defined(_CUSTOM_PROJECT)
-
-// Set Application project name.
+/// Set Application project name.
 #define _APPLICATION_PROJECT_NAME \
-"Magic Cup Game"
+"Enter Your own game name"
 
-// Set Project path
+/// Set Project path
 #define _APPLICATION_PROJECT_PATH \
-"D:/Development/OPGS16/OPGS16/_Project/MagicCup"
+"D:/Development/OPGS16/OPGS16/_Project/Template"
 
 // Set Application window name when operating. If this is not uncommented, just use PROJECT_NAME insteadily.
 //#define _APPLICATION_WINDOW_NAME
-//
-//// set resource setting file to load your resource on run-time.
-//// This must be written as the style of " ... " or application will not build up.
-//#define _RESOURCE_SETTING_FILE_PATH \
-//"_Project/Debug/Setting/resource.meta"
-//
-//
-#define _INITIAL_SCENE_INCLUDE_PATH \
-<../_Project/MagicCup/Include/Scene/scene_logo.h>
 
-// set first scene of your project.
-// This must be written as the style of L" ... " or application will not build up.
+#define _INITIAL_SCENE_INCLUDE_PATH \
+<../_Project/Template/Include/hello_world.h>
+
+/// set first scene full name of your project.
 #define _INITIAL_SCENE_FULL_NAME \
-::magiccup::SceneLogo
+::SceneFirstHelloWorld
 
 ///
 /// Decide whether show the boot screen logo when application is executed.
 /// If you want to show the logo, set this true or false.
 ///
-#define _SHOW_BOOT_SCREEN \
-true
-
-#endif
+#define _SHOW_BOOT_SCREEN true
 
 } /// opgs16::manifest
 

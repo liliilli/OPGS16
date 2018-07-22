@@ -1,0 +1,105 @@
+{
+  "meta":
+  {
+    "texture_width": 256,
+    "texture_height": 256
+  },
+  "list":
+  {
+    "BoxGreen1":
+    {
+      "index": 0,
+      "offset_x": 0, "offset_y": 0, "width": 32, "height": 32
+    },
+    "BoxYellow2":
+    {
+      "index": 1,
+      "offset_x": 32, "offset_y":  0, "width": 32, "height": 32
+    },
+    "BoxBlue3":
+    {
+      "index": 2,
+      "offset_x": 64, "offset_y":  0, "width": 32, "height": 32
+    },
+    "BoxRed4":
+    {
+      "index": 3,
+      "offset_x": 128, "offset_y":  0, "width": 32, "height": 32
+    },
+    "LogoPlainW":
+    {
+      "index": 4,
+      "offset_x": 0, "offset_y": 31, "width": 177, "height": 19
+    },
+    "LogoPlainB":
+    {
+      "index": 5,
+      "offset_x": 0, "offset_y": 51, "width": 177, "height": 19
+    },
+    "LogoBoxedB":
+    {
+      "index": 6,
+      "offset_x": 0, "offset_y": 70, "width": 192, "height": 25
+    },
+    "LogoBoxedW":
+    {
+      "index": 7,
+      "offset_x": 0, "offset_y": 95, "width": 192, "height": 25
+    },
+    "Hand":
+    {
+      "index": 8,
+      "offset_x": 144, "offset_y": 0, "width": 16, "height": 16
+    },
+    "CheckerRW":
+    {
+      "index": 9,
+      "offset_x": 160, "offset_y": 0, "width": 16, "height": 16
+    },
+    "Tako":
+    {
+      "index": 10,
+      "offset_x": 0, "offset_y": 128, "width": 16, "height": 16
+    },
+    "Bibibik":
+    {
+      "index": 11,
+      "offset_x": 16, "offset_y": 128, "width": 16, "height": 16
+    },
+    "Zangu":
+    {
+      "index": 12,
+      "offset_x": 0, "offset_y": 144, "width": 16, "height": 16
+    },
+    "Xioxi":
+    {
+      "index": 13,
+      "offset_x": 16, "offset_y": 144, "width": 16, "height": 16
+    },
+    "Player":
+    {
+      "index": 14,
+      "offset_x": 0, "offset_y": 160, "width": 16, "height": 16
+    },
+    "Bullet":
+    {
+      "index": 15,
+      "offset_x": 16, "offset_y": 160, "width": 16, "height": 16
+    },
+    "Cursor":
+    {
+      "index": 16,
+      "offset_x": 144, "offset_y": 16, "width": 16, "height": 16
+    },
+    "Activated":
+    {
+      "index": 17,
+      "offset_x": 128, "offset_y": 0, "width": 16, "height": 16
+    },
+    "Deactivated":
+    {
+      "index": 18,
+      "offset_x": 128, "offset_y": 16, "width": 16, "height": 16
+    }
+  }
+}

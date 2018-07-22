@@ -154,6 +154,7 @@
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\ui_char.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\script_nameentry.cc" />
     <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\GameOver\script_char.cc" />
+    <ClCompile Include="_Project\Template\Source\hello_world.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -377,6 +378,7 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_gameover.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_char.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_nameentry.h" />
+    <ClInclude Include="_Project\Template\Include\hello_world.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

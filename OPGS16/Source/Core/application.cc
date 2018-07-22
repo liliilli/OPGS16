@@ -237,7 +237,6 @@ void Initiate() {
 #if defined(_OPGS16_DEBUG_OPTION)
   m_window = InitApplication("OPGS16 DEBUG MODE");
 #else
-#if defined (_CUSTOM_PROJECT)
 #if !defined (_APPLICATION_PROJECT_NAME)
   static_assert(false,
       "Application project name is not active."
@@ -252,10 +251,6 @@ void Initiate() {
 #endif
 #else
   m_window = InitApplication(_APPLICATION_PROJECT_NAME);
-#endif
-#else
-  static_assert(false,
-      "Please turn on _CUSTOM_PROJECT macro to make window properly.");
 #endif
 #endif
 
@@ -281,9 +276,6 @@ void Initiate() {
 
   // Initialize resource list.
   InitiatePostProcessingEffects();
-#if defined(_OPGS16_DEBUG_OPTION)
-  InitiateDebugUi();
-#endif
 
   // Set gl rendering options.
   glEnable(GL_BLEND);
@@ -297,7 +289,10 @@ void Initiate() {
   else
     ChangeScalingOption(EScaleType::X3);
 
-#if defined(_CUSTOM_PROJECT)
+#if defined(_OPGS16_DEBUG_OPTION)
+  InitiateDebugUi();
+#endif
+
 #if defined(_INITIAL_SCENE_FULL_NAME)
 #if !_SHOW_BOOT_SCREEN
   M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
@@ -309,15 +304,6 @@ void Initiate() {
   ReplacePresentStatus(_internal::EGameStatus::PLAYING);
 #endif
 #endif
-#else
-  // SHOW BOOT LOGO
-  // GOTO SAMPLE GAME
-  m_resource_manager.ReadResourceFile(L"System/Boot/Resources/_resource.meta");
-
-  M_PUSH_SCENE(builtin::sample::__BOOT, true);
-  ReplacePresentStatus(GameStatus::PLAYING);
-#endif
-
 }
 
 ///
