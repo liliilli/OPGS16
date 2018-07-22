@@ -22,7 +22,6 @@
 /// ::opgs16::component::_internal::CComponent
 #include <Component/Internal/component.h>
 #include <Component/Internal/component_macro.h> /// Component Macroes
-#include <Frame/timer_handle.h> /// ::opgs16::element::CTimerHandle
 #include <Helper/switch.h>      /// ::opgs16::CSwitch
 #include <opgs16fwd.h>  /// Forward declaration
 
@@ -37,38 +36,29 @@ public:
   explicit CAnimator(element::CObject& bind_object,
                      CSprite2DRenderer& bind_renderer,
                      const std::string& load_name,
-                     Switch loop = Switch::OFF);
+                     bool is_loop = false);
 
   void Update(float delta_time) override final;
-
-  bool IsSleep();
+  bool IsSleep() const noexcept;
 
 private:
+  void OnUpdate(float delta_time);
+  void OnAnimationEnd();
+  void OnSleep();
+
+  void SetNextAnimationCell();
+
   CSprite2DRenderer& m_renderer;
-  Switch m_loop;
+  Switch  m_is_loop;
 
-  element::CTimerHandle m_timer;
   _internal::AnimatorState m_state;
-
   const resource::SAnimation* m_animation = nullptr;
+
   int32_t m_cell_length = 0;
   int32_t m_cell_index = 0;
 
-private:
-  void OnStart();
-
-  void OnAnimationStart();
-
-  void OnUpdate();
-
-  void OnAnimationEnd();
-
-  void OnEnd();
-
-  void OnSleep();
-
-  /*! Only used for timer trigger callback. */
-  void OnTriggerTick();
+  float m_elapsed_time = 0.f;
+  float m_cell_time = 0.f;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CAnimator)
 };

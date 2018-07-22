@@ -375,6 +375,8 @@
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_obj_gameover.h" />
     <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_gameover.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_gameover.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_char.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_nameentry.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

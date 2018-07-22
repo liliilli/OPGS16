@@ -482,7 +482,9 @@
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_number.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_shadow.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\effect_boom_object.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_char.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_gameover.h" />
+    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_nameentry.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\life_image.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
     <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\total_management.h" />

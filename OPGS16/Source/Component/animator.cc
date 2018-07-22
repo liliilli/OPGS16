@@ -1,36 +1,18 @@
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-/// @file Components/Private/animator.cc
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Components/animator.cc
+///
 /// @author Jongmin Yun
+///
 /// @log
 /// 2018-03-10 Create file.
 /// 2018-04-06 Replace two-index with one-index as ReadFile::index.
+///
 
 #include <string>
 
@@ -40,7 +22,6 @@
 #include <Element\object.h>             /// ::opgs16::element::CObject
 #include <Manager\resource_manager.h>   /// ::opgs16::manager::MResourceManager
 #include <Manager\resource_type.h>      /// resource::STexture2D::IndexSize
-#include <Manager\timer_manager.h>      /// ::opgs16::manager::MTimerManager
 
 namespace opgs16 {
 namespace component {
@@ -50,87 +31,66 @@ using _internal::AnimatorState;
 } /*! unnamed namespace */
 
 CAnimator::CAnimator(Object& bind_object, CSprite2DRenderer& bind_renderer,
-                     const std::string& load_name, Switch loop) :
+                     const std::string& load_name, bool is_loop) :
     _internal::CComponent{ bind_object },
-  m_renderer{ bind_renderer }, m_loop{ loop }, m_state{ AnimatorState::START } {
-  OnStart();
+    m_renderer{ bind_renderer },
+    m_is_loop{ is_loop ? Switch::ON : Switch::OFF },
+    m_state{ AnimatorState::UPDATE } {
 
   const resource::SAnimation* container = manager::resource::GetAnimation(load_name);
-  if (container) {
-    m_animation = container;
-    OnAnimationStart();
-    m_cell_index = 0;
-    m_cell_length = container->cells.size();
 
-    const auto tick = static_cast<long>(
-        m_animation->cells[m_cell_index].m_time_milli);
-    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
+  if (container) {
+    m_animation   = container;
+    m_cell_index  = 0;
+    m_cell_length = static_cast<int32_t>(container->cells.size());
+    m_cell_time   = static_cast<float>(m_animation->cells[m_cell_index].m_time_milli);
   }
 }
 
-void CAnimator::Update(float) {
+void CAnimator::Update(float delta_time) {
   switch (m_state) {
   default: /*! Do nothing */ break;;
-  case AnimatorState::ANIMATION_START: break;
-  case AnimatorState::UPDATE: OnUpdate(); break;
-  case AnimatorState::ANIMATION_END: break;
-  case AnimatorState::END: OnEnd(); break;
+  case AnimatorState::UPDATE: OnUpdate(delta_time); break;
   case AnimatorState::SLEEP: break;
   }
 }
 
-bool CAnimator::IsSleep() {
+bool CAnimator::IsSleep() const noexcept {
   return m_state == AnimatorState::SLEEP;
 }
 
-void CAnimator::OnStart() {
-    m_state = AnimatorState::ANIMATION_START;
+void CAnimator::OnUpdate(float delta_time) {
+  m_elapsed_time += delta_time * 1'000;
+  if (m_elapsed_time < m_cell_time) return;
+
+  m_elapsed_time = 0.f;
+  if ((++m_cell_index) < m_cell_length) {
+    SetNextAnimationCell();
+    return;
+  }
+
+  OnAnimationEnd();
+  if (m_state == AnimatorState::UPDATE) {
+    m_cell_index = 0;
+    SetNextAnimationCell();
+  }
 }
 
-void CAnimator::OnAnimationStart() {
-    m_state = AnimatorState::UPDATE;
-}
+void CAnimator::SetNextAnimationCell() {
+  m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
+  m_renderer.SetTextureFragmentIndex(m_animation->cells[m_cell_index].m_fragment_index);
 
-void CAnimator::OnUpdate() {
-    /*! Do nothing now */
+  m_cell_time = static_cast<float>(m_animation->cells[m_cell_index].m_time_milli);
 }
 
 void CAnimator::OnAnimationEnd() {
-  if (IsSwitchOn(m_loop))
+  if (IsSwitchOn(m_is_loop))
     m_state = AnimatorState::UPDATE;
   else
-    m_state = AnimatorState::END;
+    m_state = AnimatorState::SLEEP;
 }
 
-void CAnimator::OnEnd() {
-  m_state = AnimatorState::SLEEP;
-}
-
-void CAnimator::OnSleep() {
-    /*! Do nothing now */
-}
-
-void CAnimator::OnTriggerTick() {
-  if ((++m_cell_index) < m_cell_length) {
-    m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-    m_renderer.SetTextureFragmentIndex(m_animation->cells[m_cell_index].m_fragment_index);
-
-    using manager::MTimerManager;
-    const auto tick = static_cast<long>(
-        m_animation->cells[m_cell_index].m_time_milli);
-    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
-  }
-  else if (IsSwitchOn(m_loop)) {
-    m_cell_index = 0;
-    m_renderer.SetTexture(m_animation->cells[m_cell_index].m_texture_name);
-    m_renderer.SetTextureFragmentIndex(m_animation->cells[m_cell_index].m_fragment_index);
-
-    using manager::MTimerManager;
-    const auto tick = static_cast<long>(
-        m_animation->cells[m_cell_index].m_time_milli);
-    OP16_TIMER_SET(m_timer, tick, false, this, &CAnimator::OnTriggerTick);
-  }
-}
+void CAnimator::OnSleep() { }
 
 } /*! opgs16::component */
 } /*! opgs16 */
