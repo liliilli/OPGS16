@@ -277,9 +277,16 @@ void Initiate(GLFWwindow* window_context) {
 
   m_window = window_context;
   glfwSetKeyCallback(m_window, __InputKeyCallback);
+
+  //!
+  //! Version 0.1.5 Milestone :: Mouse input.
+  //!
+#ifdef false
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
   glfwSetCursorPosCallback(m_window, __MousePositionCallback);
   glfwSetMouseButtonCallback(m_window, __MouseInputCallback);
   SetMouseCursorTemporary();
+#endif
 
   ReadInputFile(helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH,
                                                 "Setting/input.meta"));
