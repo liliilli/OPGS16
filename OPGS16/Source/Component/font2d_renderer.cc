@@ -256,22 +256,25 @@ CFont2DRenderer::CFont2DRenderer(
     const std::string& shader_tag, const int32_t layer) :
     CRendererBase(bind_object),
     m_font_name{font_tag} {
+  using phitos::enums::EFound;
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+  using opgs16::manager::_internal::vao::FindVaoResource;
+  using opgs16::manager::shader::GetShader;
 
-  SetProjectionMatrix({
-      glm::ortho(0.f, static_cast<float>(SGlobalSetting::ScreenWidth()),
-      0.f,
-      static_cast<float>(SGlobalSetting::ScreenHeight())) });
+  SetProjectionMatrix(glm::ortho(
+      0.f, static_cast<float>(GetScreenWidth()),
+      0.f, static_cast<float>(GetScreenHeight()))
+  );
 
-  phitos::enums::EFound result;
-  using manager::_internal::vao::FindVaoResource;
+  EFound result;
   std::tie(m_vao_ptr, result) = FindVaoResource(builtin::g_model_2d_quad_dynamic);
 
-  if (result == phitos::enums::EFound::NotFound)
+  if (result == EFound::NotFound)
     PHITOS_UNEXPECTED_BRANCH();
 
-  m_wrapper.SetShader(manager::shader::GetShader(shader_tag));
+  m_wrapper.SetShader(GetShader(shader_tag));
   m_wrapper.SetAttribute(m_vao_ptr);
-
   SetFont(font_tag);
 }
 

@@ -19,15 +19,18 @@
  * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
-#include <Shader\framebuffer.h> /// Header file
+/// Header file
+#include <Shader/framebuffer.h>
+
+#include <Core/core_setting.h>
 /// ::opgs16::element::CVertexArrayObject
 #include <Element/Internal/vertex_array_object.h>
-/// ::opgs16::manager::ShaderManager
-#include <Manager\shader_manager.h>
 /// ::opgs16::element::_internal namespace
-#include <Element\Internal\constant.h>
+#include <Element/Internal/constant.h>
 /// import logger
-#include <Headers\import_logger.h>
+#include <Headers/import_logger.h>
+/// ::opgs16::manager::ShaderManager
+#include <Manager/shader_manager.h>
 
 namespace opgs16::element {
 
@@ -38,51 +41,57 @@ void CFrameBuferFrame::Initialize() {
 }
 
 void CFrameBuferFrame::GenerateFrameBuffer(const unsigned id) {
-    if (IsAlreadyGenerated(id, m_frame_buffers)) {
-        PUSH_LOG_WARN("Already generated frame buffer.");
-        return;
-    }
+  if (IsAlreadyGenerated(id, m_frame_buffers)) {
+    PUSH_LOG_WARN("Already generated frame buffer.");
+    return;
+  }
 
-    glGenFramebuffers(1, &m_frame_buffers[id]);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[id]);
+  glGenFramebuffers(1, &m_frame_buffers[id]);
+  glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[id]);
 }
 
-void CFrameBuferFrame::GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format,
-                                           GLenum type, GLint width, GLint height) {
-    /*! Error checking */
-	if (IsAlreadyGenerated(id, m_color_buffers)) {
-        PUSH_LOG_ERRO("Failed to create color buffer. There is color buffer already.");
-	    return;
-	}
-	if (width < 0 || height < 0) {
-        PUSH_LOG_ERRO("Failed to create color buffer. Either width or height is less than 0.");
-	    return;
-	}
+void CFrameBuferFrame::GenerateColorBuffer(const unsigned id,
+    GLint internal_format, GLenum format, GLenum type,
+    GLint width, GLint height) {
+  PHITOS_ASSERT(width > 0, "Width must not be less than 0.");
+  PHITOS_ASSERT(height > 0, "Height must not be less than 0.");
+  using opgs16::texture::CTexture2D;
 
-    /*! Resize size components have zero value. */
-    int t_width = width, t_height = height;
-    if (t_width == 0 || t_height == 0) {
-        if (t_width == 0)   t_width = _internal::screen_coord[2];
-        if (t_height == 0)  t_height = _internal::screen_coord[3];
-    }
+  // Error checking
+  if (IsAlreadyGenerated(id, m_color_buffers)) {
+    PUSH_LOG_ERRO("Failed to create color buffer. There is color buffer already.");
+    return;
+  }
 
-    /*! Insert. */
-    using opgs16::texture::CTexture2D;
-	m_color_buffers[id] = std::make_unique<CTexture2D>(internal_format, format, type, t_width, t_height);
+  // Insert.
+  m_color_buffers[id] = std::make_unique<CTexture2D>(
+      internal_format, format, type, width, height);
+}
+
+void CFrameBuferFrame::GenerateDefaultColorBuffer() {
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+
+  GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT,
+                      GetScreenWidth(), GetScreenHeight());
 }
 
 void CFrameBuferFrame::SetShader(const char* name) {
-	/** Check If pp+Name is exist, push created shader */
-    m_shader_wrapper.SetShader(manager::shader::GetShader(name));
+  m_shader_wrapper.SetShader(manager::shader::GetShader(name));
 }
 
 void CFrameBuferFrame::InitializeDefaultDepthBuffer() {
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+
 	GLuint& depth_buffer = m_common_buffers[0];
 
 	glGenRenderbuffers(1, &depth_buffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _internal::screen_coord[2], _internal::screen_coord[3]);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                        GetScreenWidth(), GetScreenHeight());
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                            GL_RENDERBUFFER, depth_buffer);
 }
 
 void CFrameBuferFrame::BindTextureToFrameBuffer(

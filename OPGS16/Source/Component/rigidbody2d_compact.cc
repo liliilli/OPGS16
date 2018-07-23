@@ -45,6 +45,9 @@ CRigidbody2DCompact::~CRigidbody2DCompact() {
 }
 
 void CRigidbody2DCompact::Update(float) {
+  using opgs16::setting::IsEnableRenderingAabb;
+  using opgs16::manager::object::InsertAABBInformation;
+
   if (m_rigidbody) {
     btVector3 _min, _max;
     m_rigidbody->getAabb(_min, _max);
@@ -57,12 +60,11 @@ void CRigidbody2DCompact::Update(float) {
 #endif
   }
 
-  if (m_rigidbody && entry::Setting().CollisionAABBBoxDisplay() == Switch::ON) {
+  if (m_rigidbody && IsEnableRenderingAabb()) {
     btVector3 _min, _max;
     m_rigidbody->getAabb(_min, _max);
 
-    manager::object::InsertAABBInformation(EAABBStyle::_2D,
-                                           DAABBInfoBox(_min, _max));
+    InsertAABBInformation(EAABBStyle::_2D, DAABBInfoBox(_min, _max));
   }
 }
 

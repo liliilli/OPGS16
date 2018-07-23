@@ -15,7 +15,7 @@
 /// 2018-06-17 Revise own format input file to json.
 ///
 /// @todo implement mouse click
-/// @todo implement stick key , stick mouse
+/// @todo implement stick key, stick mouse
 /// @todo implement mouse cursor graphics
 /// @todo refactoring
 ///
@@ -27,8 +27,8 @@
 #include <string_view>
 #include <unordered_map>
 
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 /// nlohmann::json reading library
 #include <json.hpp>
@@ -37,10 +37,8 @@
 /// phitos::enums::ESuccess
 #include <Phitos/Enums/success.h>
 
-/// ::opgs16;:core::application
-#include <Core\application.h>
-/// ::opgs16::SGlobalSetting
-#include <Core\core_setting.h>
+/// ::opgs16::setting
+#include <Core/core_setting.h>
 
 /// Import logger
 #include <Headers/import_logger.h>
@@ -52,11 +50,11 @@
 /// Header file
 #include <Manager/time_manager.h>
 /// ::opgs16::debug error messages.
-#include <Manager\Internal\error_message.h>
+#include <Manager/Internal/error_message.h>
 /// ::opgs16::manager::_internal flags
-#include <Manager\Internal\flag.h>
+#include <Manager/Internal/flag.h>
 /// ::opgs16::manager::_internal::BindingKeyInfo
-#include <Manager\Internal\input_internal.h>
+#include <Manager/Internal/input_internal.h>
 
 /// ::manifest
 #include <../manifest.h>
@@ -218,16 +216,15 @@ static void __InputKeyCallback(GLFWwindow* window, int key, int scancode, int ac
 /// Polling mouse position update.
 ///
 /// In this now, just print how much cursor moved on window.
-/// origin is left, down (0, 0). max size is (256, 224).
 ///
 /// @param[in] window GLFW window instance.
 /// @param[in] xpos x coordinate position value.
 /// @param[in] ypos y coordinate position value.
 ///
 static void __MousePositionCallback(GLFWwindow* window, double xpos, double ypos) {
-  const auto& setting = opgs16::entry::Setting();
-  const auto scale_value = setting.ScaleValueIntegerOf();
+  using opgs16::setting::GetScaleValueIntegerOf;
 
+  const auto scale_value = GetScaleValueIntegerOf();
   const auto regulated_xpos = xpos / scale_value;
   const auto regulated_ypos = ypos / scale_value;
 

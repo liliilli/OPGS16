@@ -20,10 +20,11 @@ namespace opgs16::builtin::postprocessing {
 
 void PpEffectSinewave::Initialize() {
 	GenerateFrameBuffer(0);
-	/** Color buffer and texture */
-	GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+	// Color buffer and texture
+  GenerateDefaultColorBuffer();
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-	/** The rest */
+
+	// The rest
 	InitializeDefaultDepthBuffer();
 	InsertUniformValue("uIntensity", 2.f);
 	InsertUniformValue("uInterval", 0.05f);

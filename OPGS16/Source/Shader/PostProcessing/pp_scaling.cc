@@ -21,8 +21,7 @@ namespace opgs16::builtin::postprocessing {
 
 void PpEffectScaling::Initialize() {
 	GenerateFrameBuffer(0);
-
-	GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+  GenerateDefaultColorBuffer();
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 	InitializeDefaultDepthBuffer();
 	SetShader("ppQuad");
@@ -31,10 +30,18 @@ void PpEffectScaling::Initialize() {
 }
 
 void PpEffectScaling::RenderEffect() {
-    const auto scale_val = opgs16::entry::Setting().ScaleValueIntegerOf();
+  using opgs16::setting::GetScaleValueIntegerOf;
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
 
-    glViewport(0, 0, 256 * scale_val, 224 * scale_val);
-    CFrameBuferFrame::RenderEffect();
+  const int32_t scale_val = GetScaleValueIntegerOf();
+  glViewport(
+      0, 0,
+      GetScreenWidth()  * scale_val,
+      GetScreenHeight() * scale_val
+  );
+
+  CFrameBuferFrame::RenderEffect();
 }
 
 } /*! opgs16::builtin::postprocessing */

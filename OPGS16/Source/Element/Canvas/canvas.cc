@@ -20,10 +20,7 @@
 #include <array>
 /// ::opgs16::component::CCamera
 #include <Component/camera.h>
-
-namespace {
-constexpr std::array<GLint, 4> k_viewport_size{0, 0, 256, 224};
-} /*! unnamed namespace */
+#include "Core/core_setting.h"
 
 namespace opgs16::element::canvas {
 
@@ -34,8 +31,11 @@ CCanvas::CCanvas() : m_is_size_changed{ true } {
 }
 
 void CCanvas::LocalUpdate() {
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+
 	if (m_is_size_changed) {
-		UpdateScreenXYWH(k_viewport_size);
+		UpdateScreenXYWH({0, 0, GetScreenWidth(), GetScreenHeight()});
 		m_is_size_changed = false;
 	}
 

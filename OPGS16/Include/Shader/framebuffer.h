@@ -7,8 +7,6 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-
-///
 /// @file Shader/framebuffer.h
 /// @brief Elementary post-processing frame to manage a thing to be rendered.
 /// This file consists of application operation class and member API functions.
@@ -22,37 +20,39 @@
 /// 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
 ///
 
-#include <array>	/** std::array */
-#include <memory>	/** std::shared_ptr */
+#include <array>
+#include <memory>
 
-#include <Shader\shader_wrapper.h>  /// ::opgs16::element::CShaderWrapper
-#include <Frame\texture.h>          /// ::opgs16::texture::CTexture2D
-
-#include <opgs16fwd.h>      /// Forward declaration
+/// ::opgs16::texture::CTexture2D
+#include <Frame/texture.h>
+/// ::opgs16::element::CShaderWrapper
+#include <Shader/shader_wrapper.h>
+/// Forward declaration
+#include <opgs16fwd.h>
 
 namespace opgs16::element {
 
-/**
- * @class CFrameBuferFrame
- * @brief The frame manages things to render on post-processing time.
- *
- * This class's m_object_list has frame buffer, texture, and render buffer to be able to bind
- * frame buffer object.
- * And PostProcessingFrame has also shaders to render post-processing effects.
- *
- * Each frame is managed by PostProcessingManager, you can call and bind it through Manager.
- * But you should not try to bind this itself, not Calling PostProcessingManager's BindSequence().
- * This will crash application or at least it incurs undefined behavior.
- *
- * @log
- * 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
- * 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
- */
+///
+/// @class CFrameBuferFrame
+/// @brief The frame manages things to render on post-processing time.
+///
+/// This class's m_object_list has frame buffer, texture, and render buffer to be able to bind
+/// frame buffer object.
+/// And PostProcessingFrame has also shaders to render post-processing effects.
+///
+/// Each frame is managed by PostProcessingManager, you can call and bind it through Manager.
+/// But you should not try to bind this itself, not Calling PostProcessingManager's BindSequence().
+/// This will crash application or at least it incurs undefined behavior.
+///
+/// @log
+/// 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
+/// 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
+///
 class CFrameBuferFrame {
 public:
-    virtual ~CFrameBuferFrame() = default;
+  virtual ~CFrameBuferFrame() = default;
 
-    /**
+  /**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
 	 * This makes it operable to use in rendering time. Otherwise, this does not render anything.
 	 * If you didn't call this method in creating, Undefined rendering behavior will occur.
@@ -72,29 +72,38 @@ public:
 	 */
 	void GenerateFrameBuffer(const unsigned id);
 
-	/**
-	 * @brief Insert new color buffer, with arguments need to be passed to making color buffer.
-	 * @param[in] internal_format Color buffer's internal format how to specify a way of storing
-	 * values in each pixels. Use OpenGL's format. (from table 1, 2, 3 below)
-	 *
-	 * @param[in] format Specifies the format of the pixel data.
-	 * The following symbolic values are accepted.
-	 * GL_RED, GL_RG, GL_RGB, GL_BGR, GL_RGBA, GL_BGRA, GL_RED_INTEGER, GL_RG_INTEGER,
-	 * GL_RGB_INTEGER, GL_BGR_INTEGER, GL_RGBA_INTEGER, GL_BGRA_INTEGER, GL_STENCIL_INDEX,
-	 * GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL.
-	 *
-	 * @param[in] type Specifies the data type of the pixel data.
-	 * Use OpenGL's enum type written in below @see header. (type section)
-	 *
-	 * @param[in] width Buffer width. if this is blank, automatically binds it to resolution width.
-	 * @param[in] height Buffer height. if this is blank, bind it to resolution height.
-	 *
-	 * @see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
-	 */
-	void GenerateColorBuffer(const unsigned id, GLint internal_format, GLenum format, GLenum type,
-                             GLint width = 0, GLint height = 0);
+	///
+	/// @brief Insert new color buffer, with arguments need to be passed to making color buffer.
+	/// @param[in] internal_format Color buffer's internal format how to specify a way of storing
+	/// values in each pixels. Use OpenGL's format. (from table 1, 2, 3 below)
+	///
+	/// @param[in] format Specifies the format of the pixel data.
+	/// The following symbolic values are accepted.
+	/// GL_RED, GL_RG, GL_RGB, GL_BGR, GL_RGBA, GL_BGRA, GL_RED_INTEGER, GL_RG_INTEGER,
+	/// GL_RGB_INTEGER, GL_BGR_INTEGER, GL_RGBA_INTEGER, GL_BGRA_INTEGER, GL_STENCIL_INDEX,
+	/// GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL.
+	///
+	/// @param[in] type Specifies the data type of the pixel data.
+	/// Use OpenGL's enum type written in below @see header. (type section)
+	///
+	/// @param[in] width Buffer width. if this is blank, automatically binds it to resolution width.
+	/// @param[in] height Buffer height. if this is blank, bind it to resolution height.
+	///
+	/// @see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
+	///
+	void GenerateColorBuffer(
+      const unsigned id,
+      GLint internal_format, GLenum format, GLenum type,
+      GLint width, GLint height);
 
-	/** Initialize default depth buffer to [0] position of m_common_buffers. */
+  ///
+  /// @brief Generate default color buffer instead of GenerateColorBuffer()
+  ///
+  void GenerateDefaultColorBuffer();
+
+  ///
+  /// Initialize default depth buffer to [0] position of m_common_buffers.
+	///
 	void InitializeDefaultDepthBuffer();
 
 	/**

@@ -21,7 +21,7 @@ namespace opgs16::builtin::postprocessing {
 void PpEffectConvex::Initialize() {
 	GenerateFrameBuffer(0);
 	/** Color Buffer and texture */
-	GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+  GenerateDefaultColorBuffer();
 	auto& texture_0 = GetTexture(0);
 	texture_0->SetTextureParameterI({
 		{ GL_TEXTURE_MIN_FILTER, GL_LINEAR }, { GL_TEXTURE_MAG_FILTER, GL_LINEAR },

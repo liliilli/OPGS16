@@ -26,8 +26,7 @@ namespace opgs16::builtin::postprocessing {
 class PpEffectGray final : public element::CPostProcessingFrame {
 	void Initialize() override final {
 		GenerateFrameBuffer(0);
-
-		GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+    GenerateDefaultColorBuffer();
 		BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 		InitializeDefaultDepthBuffer();
 		InsertUniformValue("uIntensity", 1.0f);

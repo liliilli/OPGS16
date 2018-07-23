@@ -27,7 +27,7 @@ void CPreRenderingContainer::Initialize() {
     // Make final output texture.
     std::unique_ptr<CFrameBuferFrame> final_frame_buffer = std::make_unique<CFrameBuferFrame>();
     final_frame_buffer->GenerateFrameBuffer(0);
-    final_frame_buffer->GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT);
+    final_frame_buffer->GenerateDefaultColorBuffer();
     final_frame_buffer->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
     final_frame_buffer->InitializeDefaultDepthBuffer();

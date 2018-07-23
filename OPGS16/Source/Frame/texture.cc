@@ -110,32 +110,33 @@ CTexture2D::CTexture2D(const resource::STexture2DAtlas& container) {
 }
 
 CTexture2D::CTexture2D(const GLint internal_format, GLenum format, GLenum type, GLsizei width, GLsizei height) {
-    /*! Temporary */
-    m_width = 256;
-    m_height = 224;
+  PHITOS_ASSERT(width > 0,  "Width value must be bigger than 0.");
+  PHITOS_ASSERT(height > 0, "Height value must be bigger than 0.");
+  m_width = width; m_height = height;
 
-    /*! Make Texture for entire screen size */
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_width, m_height, 0, format, type, 0);
-    SetDefaultParameterSetting(*this);
+  // Make Texture for entire screen size.
+  glGenTextures(1, &m_texture);
+  glBindTexture(GL_TEXTURE_2D, m_texture);
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               internal_format, width, height,
+               0, format, type, nullptr);
+  SetDefaultParameterSetting(*this);
 }
 
 void CTexture2D::SetTextureParameterI(const GLint option, const GLint mode) {
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexParameteri(GL_TEXTURE_2D, option, mode);
+  glBindTexture(GL_TEXTURE_2D, m_texture);
+  glTexParameteri(GL_TEXTURE_2D, option, mode);
 }
 
 void CTexture2D::SetTextureParameterI(const std::vector<TextureParameter>& lists) {
-
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    for (const auto& option_item : lists) {
-        glTexParameteri(GL_TEXTURE_2D, option_item.option, option_item.mode);
-    }
+  glBindTexture(GL_TEXTURE_2D, m_texture);
+  for (const auto& option_item : lists) {
+    glTexParameteri(GL_TEXTURE_2D, option_item.option, option_item.mode);
+  }
 }
 
 void CTexture2D::SetBorderColor(const std::array<GLfloat, 4>& border_color) {
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &border_color[0]);
 }
 
 ///**
