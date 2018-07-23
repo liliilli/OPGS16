@@ -50,6 +50,19 @@ constexpr unsigned k_size = 1;
 //#define OP16_SETTING_RESOLUTION_640480
 
 ///
+/// HARD OPTION : Fixed function fixed fps controller
+///
+/// You must turn on only one FPS value option
+/// even though you are using no-vsync option on application.
+///
+/// OP16_SETTING_USING_60FPS_ON_VSYNC
+/// OP16_SETTING_USING_30FPS_ON_VSYNC
+///
+
+#define OP16_SETTING_USING_60FPS_ON_VSYNC
+//#define OP16_SETTING_USING_30FPS_ON_VSYNC
+
+///
 /// Decide whether show the boot screen logo when application is executed.
 /// If you want to show the logo, set this true or false.
 ///

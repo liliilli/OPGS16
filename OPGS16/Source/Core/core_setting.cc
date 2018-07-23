@@ -27,6 +27,7 @@ bool m_scaling_feature =
   true;
 #endif
 
+// Screen size
 #if defined(OP16_SETTING_RESOLUTION_256224)
   #if defined(OP16_SETTING_RESOLUTION_320240) ||\
       defined(OP16_SETTING_RESOLUTION_640480) ||\
@@ -61,6 +62,23 @@ bool m_scaling_feature =
   #endif
 #else
   static_assert(false, "At least one resolution setting option must be turned on.")
+#endif
+
+// Vsync fixed fps
+#if defined(OP16_SETTING_USING_60FPS_ON_VSYNC)
+  #if defined(OP16_SETTING_USING_30FPS_ON_VSYNC)
+    static_assert(false, "Just only one vsync fixed fps setting must be turned on.");
+  #else
+    constexpr int32_t s_vsync_fixed_fps = 60;
+  #endif
+#elif defined(OP16_SETTING_USING_30FPS_ON_VSYNC)
+  #if defined(OP16_SETTING_USING_60FPS_ON_VSYNC)
+    static_assert(false, "Just only one vsync fixed fps setting must be turned on.");
+  #else
+    constexpr int32_t s_vsync_fixed_fps = 30;
+  #endif
+#else
+  static_assert(false, "At least one vsync fixed fps option must be turned on.");
 #endif
 } /// ::unnamed namesapce
 
@@ -139,6 +157,10 @@ TActualScreenSize::value_type GetScreenWidth() noexcept {
 
 TActualScreenSize::value_type GetScreenHeight() noexcept {
   return screen_size[1];
+}
+
+int32_t GetFixedFpsValue() noexcept {
+  return s_vsync_fixed_fps;
 }
 
 } /// ::opgs16

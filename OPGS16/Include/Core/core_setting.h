@@ -79,6 +79,8 @@ int32_t GetScaleValueIntegerOf() noexcept;
 
 EScaleType GetScaleValue() noexcept;
 
+int32_t GetFixedFpsValue() noexcept;
+
 } /// ::opgs16::setting namespace
 
 #endif

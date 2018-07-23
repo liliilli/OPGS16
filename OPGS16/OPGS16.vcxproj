@@ -121,6 +121,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>assimp-vc140-mt.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;fmodL64_vc.lib;freetype.lib;glew32d.lib;glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -157,6 +158,9 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

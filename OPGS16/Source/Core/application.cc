@@ -98,8 +98,6 @@ EOperated m_operated    = EOperated::NotOperated;
 
 namespace {
 
-constexpr float k_fps_count = 60.f;
-
 // Window handle pointer
 GLFWwindow* m_window = nullptr;
 std::stack<opgs16::entry::_internal::EGameStatus> m_game_status;
@@ -262,7 +260,7 @@ void Initiate() {
 
   PushStatus(_internal::EGameStatus::INIT);
 
-  manager::time::SetFps(k_fps_count);
+  manager::time::SetFps(static_cast<float>(setting::GetFixedFpsValue()));
   manager::time::SetVsync(phitos::enums::ESwitch::Off);
 
   // Initialize resource list.
