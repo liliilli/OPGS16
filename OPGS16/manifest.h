@@ -16,7 +16,7 @@ namespace opgs16::manifest {
 //#define _OPGS16_DEBUG_OPTION
 
 /// INITIAL SCREEN SIZE
-constexpr unsigned k_size = 2;
+constexpr unsigned k_size = 1;
 
 /// Set Application project name.
 #define _APPLICATION_PROJECT_NAME \

@@ -20,14 +20,22 @@
 #include <array>
 /// ::opgs16::component::CCamera
 #include <Component/camera.h>
-#include "Core/core_setting.h"
+#include <Core/core_setting.h>
 
 namespace opgs16::element::canvas {
 
 CCanvas::CCanvas() : m_is_size_changed{ true } {
-  using Camera = component::CCamera;
-  AddComponent<Camera>(*this, Camera::ViewType::ORTHO, Camera::CameraType::SUB);
-  m_camera = GetComponent<Camera>();
+  using opgs16::component::CCamera;
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+  using EViewType = opgs16::component::CCamera::ViewType;
+  using ECamType = opgs16::component::CCamera::CameraType;
+
+  m_camera = AddComponent<CCamera>(*this, EViewType::ORTHO, ECamType::SUB);
+
+  const int32_t half_width   = GetScreenWidth() / 2;
+  const int32_t half_height  = GetScreenHeight() / 2;
+  m_camera->SetWorldPosition({half_width, half_height, 10});
 }
 
 void CCanvas::LocalUpdate() {

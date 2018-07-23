@@ -22,9 +22,12 @@
 
 #include <glm/glm.hpp>
 
-#include <Component\Internal\component.h>   /// ::opgs16::component::CComponent
-#include <Component\Internal\component_macro.h> /// Component macroes
-#include <opgs16fwd.h>  /// Forward declaration
+/// ::opgs16::component::CComponent
+#include <Component/Internal/component.h>
+/// Component macroes
+#include <Component/Internal/component_macro.h>
+/// Forward declaration
+#include <opgs16fwd.h>
 
 /// ::opgs16::DVector3
 #include <Helper/Type/vector3.h>
@@ -59,7 +62,9 @@ public:
 		SUB,	/** Sub camera, this type permits one more cameras in one scene. */
 	};
 
-	CCamera(element::CObject& bound_obj, ViewType view_type, CameraType camera_type, bool _auto = true);
+	CCamera(element::CObject& bound_obj,
+          ViewType view_type, CameraType camera_type);
+
 	virtual ~CCamera();
 
     /*! Get View matrix */
