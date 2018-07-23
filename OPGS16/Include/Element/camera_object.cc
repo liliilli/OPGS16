@@ -1,3 +1,4 @@
+#include <precompiled.h>
 #include "camera_object.h"      /// Header file
 #include <Component\camera.h>   /// ::opgs16::component::CCamera
 

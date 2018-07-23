@@ -1,4 +1,4 @@
-
+#include <precompiled.h>
 #include <Shader\Impl\pp_frame_impl.h>  /// Header file
 
 namespace shading {

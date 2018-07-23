@@ -12,6 +12,7 @@
 ///
 
 /// Header file
+#include <precompiled.h>
 #include <Element/Internal/mesh_texture_id.h>
 
 #include <string>

@@ -19,7 +19,6 @@
 
 namespace opgs16::element::_internal {
 
-constexpr std::array<int, 4> screen_coord{ 0, 0, 256, 224 };
 constexpr std::array<unsigned, 6> quad_indices = { 0, 1, 2, 2, 3, 0 };
 constexpr std::array<float, 32> quad_info = {
 	// Vertex       //Normal        // TexCoord

@@ -1,4 +1,4 @@
-
+#include <precompiled.h>
 /*!---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 * @license BSD 2-Clause License
 *
@@ -15,12 +15,12 @@
 
 #include <Component\preprocessing_getter.h> /// Header file
 /// ::opgs16::manager::MPreprocessingManager
-#include <Manager\prerendering_manager.h>   
+#include <Manager\prerendering_manager.h>
 
 namespace opgs16::component {
 
 CPreProcessingGetter::CPreProcessingGetter(element::CObject& bind_object, const char* preprocessing_container_name) :
-    _internal::CComponent{ bind_object }, 
+    _internal::CComponent{ bind_object },
     m_container{ manager::prerendering::GetFrameBuffer(preprocessing_container_name) } {
 }
 

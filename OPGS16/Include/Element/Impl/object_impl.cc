@@ -1,4 +1,4 @@
-
+#include <precompiled.h>
 ///
 /// @license BSD 2-Clause License
 ///
@@ -161,7 +161,7 @@ void CObjectImpl::SetTag(const std::string& tag_name) {
     decltype(tag_list.size()) i = 0;
     for (; i < tag_list.size(); ++i) {
         if (tag_name == tag_list[i]) {
-            m_tag_index = i;
+            m_tag_index = static_cast<int32_t>(i);
             break;
         }
     }

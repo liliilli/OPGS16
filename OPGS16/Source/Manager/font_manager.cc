@@ -1,3 +1,4 @@
+#include <precompiled.h>
 
 ///
 /// @license BSD 2-Clause License
@@ -38,7 +39,6 @@
 #include <Manager/resource_type.h>
 /// opgs16::manager::ShaderManager
 #include <Manager/shader_manager.h>
-
 
 /// import logger header file
 #include <Headers/import_logger.h>

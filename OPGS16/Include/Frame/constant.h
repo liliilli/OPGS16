@@ -1,3 +1,4 @@
+#include <precompiled.h>
 #ifndef OPGS16_SYSTEM_LEGACY_CONSTANT_H
 #define OPGS16_SYSTEM_LEGACY_CONSTANT_H
 

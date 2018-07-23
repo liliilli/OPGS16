@@ -1,4 +1,4 @@
-
+#include <precompiled.h>
 ///
 /// @file Component/rigidbody2d_compact.cc
 ///

@@ -117,9 +117,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>5033;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -172,6 +172,9 @@
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
+    <ClCompile Include="Source\precompiled.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Component\font2d_renderer.cc" />
     <ClCompile Include="Source\Component\Internal\component.cc" />
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
@@ -252,75 +255,6 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Common\ui_tile9_dialogue_frame.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_shadow.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Global\data_singleton.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\CanvasItem\background.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Common\fade_out.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGameLogo\logo_char.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGameLogo\logo_effect.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_ball.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_cup.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_cup_item.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\Cup\obj_number.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\effect_boom_object.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\script_nameentry.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\ui_char.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\ui_gameover.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\GameOver\ui_nameentry.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\life_image.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Common\choice_list.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Common\orthogonal_camera.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\object_cursor.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\stage_obj_mng.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\timer_image.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\total_management.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\ui_life.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\ui_object.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\ui_score.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\ui_stage.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneGamePlay\ui_timelimit.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneMain\ui_background_part.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneMain\ui_scoreboard_part.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\SceneMain\ui_title_part.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\DIsposable\effect_back_failure.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\DIsposable\effect_back_success.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\DIsposable\effect_boom_script.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\DIsposable\effect_cup_flyingdown.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\DIsposable\effect_obj_gameover.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\GameOver\script_char.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_sound_manage.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_gameover.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_seq_moving.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\Scoreboard\rank_text_divingin.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Scoreboard\ui_rank_text.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Object\Scoreboard\ui_scoreboard.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Scene\scene_logo.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Scene\scene_main.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Scene\scene_gameplay.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\CanvasItem\script_background.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\Common\script_fade_out.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\Common\script_tile9_frame.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_char_jumping.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_file_manage.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_cup_number.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Cup\script_item_movement.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_data.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_state_machine.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\Management\script_key_input.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_life.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_obj_mng.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_score.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_stage.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_timelimit.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGamePlay\script_ui_object.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneGameLogo\script_logo_effect.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_background_part.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_component.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_select.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_title.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\SceneMain\script_transition_manage.cc" />
-    <ClCompile Include="_Project\MagicCup\Source\Script\Scoreboard\script_scoreboard.cc" />
     <ClCompile Include="_Project\Template\Source\hello_world.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
@@ -376,6 +310,7 @@
     <ClInclude Include="Include\Manager\Internal\vao_management.h" />
     <ClInclude Include="Include\Manager\ResourceType\shader.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
+    <ClInclude Include="Include\precompiled.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Include\Core\Boot\__b_canv.h" />
     <ClInclude Include="Include\Core\Boot\__boot.h" />
@@ -466,80 +401,6 @@
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Global\data_singleton.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Internal\general_keyword.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Internal\moving_callback.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Internal\object_keyword.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Internal\state_machine.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\CanvasItem\background.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\choice_list.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\empty_canvas.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\empty_object.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\fade_out.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\orthogonal_camera.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Common\ui_tile9_dialogue_frame.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGameLogo\logo_char.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGameLogo\logo_effect.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_ball.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_cup_item.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_number.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_shadow.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\effect_boom_object.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_char.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_gameover.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Gameover\ui_nameentry.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\life_image.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\object_cursor.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\total_management.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\timer_image.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\ui_life.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\ui_object.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\ui_score.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\ui_stage.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\ui_timelimit.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneMain\ui_background_part.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneMain\ui_title_part.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Scoreboard\ui_rank_text.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\Scoreboard\ui_scoreboard.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Scene\scene_logo.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Scene\scene_main.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Scene\scene_gameplay.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\CanvasItem\script_background.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\Common\script_fade_out.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\Common\script_tile9_frame.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_char_jumping.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_file_manage.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_cup_number.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Cup\script_item_movement.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_back_failure.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_boom_script.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_cup_flyingdown.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_obj_gameover.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_data.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_sound_manage.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_gameover.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_life.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_score.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_stage.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_state_machine.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_timelimit.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_ui_object.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGameLogo\script_logo_effect.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_seq_moving.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_background_part.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_component.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_select.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_title.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\stage_obj_mng.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\script_obj_mng.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneGamePlay\Cup\obj_cup.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Management\script_key_input.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneMain\script_transition_manage.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\Scoreboard\rank_text_divingin.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\Scoreboard\script_scoreboard.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Type\score_container.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Object\SceneMain\ui_scoreboard_part.h" />
-    <ClInclude Include="_Project\MagicCup\Include\Script\SceneGamePlay\Disposable\effect_back_success.h" />
     <ClInclude Include="_Project\Template\Include\hello_world.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />

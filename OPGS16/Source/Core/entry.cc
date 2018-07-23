@@ -1,4 +1,4 @@
-
+#include <precompiled.h>
 ///
 /// @license BSD 2-Clause License
 ///
@@ -29,10 +29,6 @@ _CrtDumpMemoryLeaks();
 
 /// ::opgs16::MApplication
 #include <Core/application.h>
-
-#if defined(_WIN32)
-#include <Windows.h>
-#endif
 
 int main(int argc, char** argv) {
 #if defined(_WIN32)

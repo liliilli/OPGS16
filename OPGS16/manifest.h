@@ -1,3 +1,4 @@
+#include "precompiled.h"
 #ifndef OPGS16_MANIFEST_USER_CONFIGURE_H
 #define OPGS16_MANIFEST_USER_CONFIGURE_H
 

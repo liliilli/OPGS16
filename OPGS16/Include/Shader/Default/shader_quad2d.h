@@ -1,3 +1,4 @@
+#include <precompiled.h>
 #ifndef OPGS16_SHADER_DEFAULT_SHADER_QUAD2D_H
 #define OPGS16_SHADER_DEFAULT_SHADER_QUAD2D_H
 
