@@ -32,30 +32,27 @@
 #include <Manager\physics_manager.h>
 #include <Manager\postprocessing_manager.h>
 #include <Manager\prerendering_manager.h>
-#include <Manager\resource_manager.h>
-#include <Manager\scene_manager.h>
-#include <Manager\setting_manager.h>
-#include <Manager\shader_manager.h>
-#include <Manager\sound_manager.h>
-#include <Manager\time_manager.h>
-#include <Manager\timer_manager.h>
+#include <Manager/resource_manager.h>
+#include "Manager/scene_manager.h"
+#include <Manager/setting_manager.h>
+#include <Manager/shader_manager.h>
+#include <Manager/sound_manager.h>
+#include <Manager/time_manager.h>
+#include <Manager/timer_manager.h>
 #include <Manager/Internal/vao_management.h>
 
-#include <Shader\PostProcessing\pp_convex.h>
+#include <Shader/PostProcessing/pp_convex.h>
 #include <Shader\PostProcessing\pp_sinewave.h>
-#include <Shader\PostProcessing\pp_gray.h>
+#include <Shader/PostProcessing/pp_gray.h>
 
 /// ::opgs16 core setting file
-#include <Core\core_setting.h>
+#include <Core/core_setting.h>
 /// ::opgs16::entry::_internal::EGameStatus
-#include <Core\Internal\application_status.h>
+#include <Core/Internal/application_status.h>
 /// ::opgs16::entry::_internal strong enum boolean flags.
-#include <Core\Internal\application_flag.h>
-
-/// expanded assertion
-#include <Phitos/Dbg/assert.h>
+#include <Core/Internal/application_flag.h>
 /// import logger
-#include <Headers\import_logger.h>
+#include <Headers/import_logger.h>
 
 // @todo Adjust each project manifest file path not to write .. chars.
 
@@ -222,7 +219,7 @@ void InitiateDebugUi();
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 void SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
-    m_on_before_update_callback = callback;
+  m_on_before_update_callback = callback;
 }
 
 SGlobalSetting& Setting() noexcept {
@@ -289,6 +286,7 @@ void Initiate() {
   else
     ChangeScalingOption(EScaleType::X3);
 
+
 #if defined(_OPGS16_DEBUG_OPTION)
   InitiateDebugUi();
 #endif
@@ -318,6 +316,10 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   PHITOS_SET_RELEASE_FUNCTION(&Shutdown);
 
   // OpenGL Setting
+  glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  glfwWindowHint(GLFW_FOCUSED, GL_TRUE);
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -334,9 +336,9 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   }
 
   glfwMakeContextCurrent(window);
-  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_FALSE);
   glfwSetFramebufferSizeCallback(window, &OnCallbackFrameBufferSize);
+  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   //glfwSetCursorPosCallback(window, camera::MouseControl);
 
   glewInit();
@@ -538,7 +540,7 @@ void ToggleCollisionBoxDisplay() {
 }
 
   void ChangeScalingOption(EScaleType value) {
-	if (!IsSameValue(value, m_setting->ScaleValue())) {
+	if (value != m_setting->ScaleValue()) {
     auto [width, height] = SGlobalSetting::ScreenSize();
 
 		switch (value) {
