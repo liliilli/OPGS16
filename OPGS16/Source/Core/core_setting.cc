@@ -29,21 +29,32 @@ bool m_scaling_feature =
 
 #if defined(OP16_SETTING_RESOLUTION_256224)
   #if defined(OP16_SETTING_RESOLUTION_320240) ||\
-      defined(OP16_SETTING_RESOLUTION_640480)
+      defined(OP16_SETTING_RESOLUTION_640480) ||\
+      defined(OP16_SETTING_RESOLUTION_400240)
     static_assert(false, "Just only one resolution setting option must be turned on.");
   #else
     constexpr TActualScreenSize screen_size{ 256, 224 };
   #endif
 #elif defined(OP16_SETTING_RESOLUTION_320240)
   #if defined(OP16_SETTING_RESOLUTION_256224) ||\
+      defined(OP16_SETTING_RESOLUTION_400240) ||\
       defined(OP16_SETTING_RESOLUTION_640480)
     static_assert(false, "Just only one resolution setting option must be turned on.");
   #else
     constexpr TActualScreenSize screen_size{ 320, 240 };
   #endif
+#elif defined(OP16_SETTING_RESOLUTION_400240)
+  #if defined(OP16_SETTING_RESOLUTION_256224) ||\
+      defined(OP16_SETTING_RESOLUTION_320240) ||\
+      defined(OP16_SETTING_RESOLUTION_640480)
+    static_assert(false, "Just only one resolution setting option must be turned on.");
+  #else
+    constexpr TActualScreenSize screen_size{ 400, 240 };
+  #endif
 #elif defined(OP16_SETTING_RESOLUTION_640480)
   #if defined(OP16_SETTING_RESOLUTION_256224) ||\
-      defined(OP16_SETTING_RESOLUTION_320240)
+      defined(OP16_SETTING_RESOLUTION_320240) ||\
+      defined(OP16_SETTING_RESOLUTION_400240)
     static_assert(false, "Just only one resolution setting option must be turned on.");
   #else
     constexpr TActualScreenSize screen_size{ 640, 480 };
