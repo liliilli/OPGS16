@@ -25,15 +25,15 @@
 
 #include <Phitos/Dbg/assert.h>
 
-#include <Manager\font_manager.h>
-#include <Manager\input_manager.h>
+#include <Manager/font_manager.h>
+#include <Manager/input_manager.h>
 #include <Manager/mesh_manager.h>
-#include <Manager\object_manager.h>
-#include <Manager\physics_manager.h>
-#include <Manager\postprocessing_manager.h>
-#include <Manager\prerendering_manager.h>
+#include <Manager/object_manager.h>
+#include <Manager/physics_manager.h>
+#include <Manager/postprocessing_manager.h>
+#include <Manager/prerendering_manager.h>
 #include <Manager/resource_manager.h>
-#include "Manager/scene_manager.h"
+#include <Manager/scene_manager.h>
 #include <Manager/setting_manager.h>
 #include <Manager/shader_manager.h>
 #include <Manager/sound_manager.h>
@@ -42,7 +42,7 @@
 #include <Manager/Internal/vao_management.h>
 
 #include <Shader/PostProcessing/pp_convex.h>
-#include <Shader\PostProcessing\pp_sinewave.h>
+#include <Shader/PostProcessing/pp_sinewave.h>
 #include <Shader/PostProcessing/pp_gray.h>
 
 /// ::opgs16 core setting file
@@ -56,7 +56,8 @@
 
 // @todo Adjust each project manifest file path not to write .. chars.
 
-#include <../manifest.h>        /// ::opgs16::manifest
+/// ::opgs16::manifest
+#include <../manifest.h>
 
 #include <Debug/debug_canvas.h>
 /// opgs16::manifest::sample::boot
@@ -101,9 +102,7 @@ constexpr float k_fps_count = 60.f;
 
 // Window handle pointer
 GLFWwindow* m_window = nullptr;
-
 std::stack<opgs16::entry::_internal::EGameStatus> m_game_status;
-std::unique_ptr<opgs16::SGlobalSetting> m_setting = nullptr;
 
 // This callback will be called before update routine only once.
 std::function<void()> m_on_before_update_callback = nullptr;
@@ -222,10 +221,6 @@ void SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
   m_on_before_update_callback = callback;
 }
 
-SGlobalSetting& Setting() noexcept {
-  return *m_setting;
-}
-
 void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       "Duplicated function call of ::opgs16::entry::Initiate() is prohibited.");
@@ -265,7 +260,6 @@ void Initiate() {
   manager::sound::__::Initiate();
   manager::input::Initiate(m_window);
 
-  m_setting = std::make_unique<SGlobalSetting>();
   PushStatus(_internal::EGameStatus::INIT);
 
   manager::time::SetFps(k_fps_count);
@@ -279,13 +273,14 @@ void Initiate() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
 
+#if !defined(OP16_SETTING_RESOLUTION_640480)
   if constexpr (manifest::k_size == 1)
     ChangeScalingOption(EScaleType::X1);
   else if constexpr (manifest::k_size == 2)
     ChangeScalingOption(EScaleType::X2);
   else
     ChangeScalingOption(EScaleType::X3);
-
+#endif
 
 #if defined(_OPGS16_DEBUG_OPTION)
   InitiateDebugUi();
@@ -308,10 +303,13 @@ void Initiate() {
 /// @brief The method that initiates application.
 /// Initiate glfw, glew, create window and return window object pointer.
 ///
-/// @param[in] app_name Application title name.
+/// @param[in] application_name Application title name.
 /// @return Window handle pointer.
 ///
 GLFWwindow* InitApplication(const std::string& application_name) {
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::GetScreenHeight;
+
   glfwInit();
   PHITOS_SET_RELEASE_FUNCTION(&Shutdown);
 
@@ -325,8 +323,8 @@ GLFWwindow* InitApplication(const std::string& application_name) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   PUSH_LOG_DEBUG("GLFW CONTEXT VERSION 4.3 Core.");
 
-  const auto window = glfwCreateWindow(SGlobalSetting::ScreenWidth(),
-                                       SGlobalSetting::ScreenHeight(),
+  const auto window = glfwCreateWindow(GetScreenWidth(),
+                                       GetScreenHeight(),
                                        application_name.c_str(),
                                        nullptr, nullptr);
   if (!window) {
@@ -428,6 +426,8 @@ void ExitGame() {
 }
 
 void Update(float delta_time) {
+  using opgs16::setting::IsEnablePostProcessing;
+
   /// If callback is being bound,
   /// call function once and terminate callback function.
   if (m_on_before_update_callback) {
@@ -463,16 +463,18 @@ void Update(float delta_time) {
 #endif
 
   /// Update active effects.
-  if (IsSwitchOn(m_setting->PostProcessing()))
+  if (IsEnablePostProcessing())
     manager::postprocessing::UpdateSequences();
 }
 
 void InputGlobal() {
-  using manager::input::IsKeyPressed;
+  using opgs16::manager::input::IsKeyPressed;
+  using opgs16::setting::IsEnableScaling;
+
 	if (IsKeyPressed("GlobalCancel"))
 		PopStatus();
 
-  if (IsSwitchOn(m_setting->SizeScalable())) {
+  if (IsEnableScaling()) {
     if (IsKeyPressed("GlobalF1"))
       ChangeScalingOption(EScaleType::X1);
     else if (IsKeyPressed("GlobalF2"))
@@ -491,17 +493,20 @@ void InputGlobal() {
 }
 
 void Draw() {
+  using opgs16::setting::GetScreenHeight;
+  using opgs16::setting::GetScreenWidth;
+  using opgs16::setting::IsEnablePostProcessing;
+  using opgs16::setting::IsEnableRenderingAabb;
+
   // If there is no scene, do not rendering anything.
   if (!manager::scene::IsSceneEmpty()) {
-    glViewport(0, 0,
-               SGlobalSetting::ScreenWidth(),
-               SGlobalSetting::ScreenHeight());
+    glViewport(0, 0, GetScreenWidth(), GetScreenHeight());
 
     // Pre-processing (Pre-rendering) render
     manager::prerendering::Render();
 
     // Actual Rendering
-    if (IsSwitchOn(m_setting->PostProcessing()))
+    if (IsEnablePostProcessing())
       manager::postprocessing::BindSequence("opConvex");
     else
       manager::postprocessing::BindSequence("opDefault");
@@ -509,9 +514,7 @@ void Draw() {
     manager::scene::GetPresentScene()->Draw();
     manager::object::Render();
 
-    if (m_setting->CollisionAABBBoxDisplay() == Switch::ON) {
-      manager::object::RenderAABB();
-    }
+    if (IsEnableRenderingAabb()) manager::object::RenderAABB();
 
     manager::postprocessing::Render();
   }
@@ -526,22 +529,32 @@ void Draw() {
 }
 
 void ToggleFpsDisplay() {
-  m_setting->ToggleDebugMode();
+  setting::ToggleDebugMode();
 }
 
 void TogglePostProcessingEffect() {
-  m_setting->TogglePostProcessing();
+  setting::TogglePostProcessing();
 }
 
 void ToggleCollisionBoxDisplay() {
-  m_setting->ToggleCollisionAABBBoxDisplay();
-  PUSH_LOG_INFO_EXT("Toggle Collision box display {}",
-      (m_setting->CollisionAABBBoxDisplay() == Switch::ON) ? "ON" : "OFF");
+  using opgs16::setting::IsEnableRenderingAabb;
+  using opgs16::setting::ToggleCollisionAABBBoxDisplay;
+
+  ToggleCollisionAABBBoxDisplay();
+  PUSH_LOG_INFO_EXT(
+      "Toggle Collision box display {}",
+      (IsEnableRenderingAabb() ? "ON" : "OFF")
+  );
 }
 
-  void ChangeScalingOption(EScaleType value) {
-	if (value != m_setting->ScaleValue()) {
-    auto [width, height] = SGlobalSetting::ScreenSize();
+void ChangeScalingOption(EScaleType value) {
+#if !defined(OP16_SETTING_RESOLUTION_640480)
+  using opgs16::setting::GetScaleValue;
+  using opgs16::setting::GetScreenSize;
+  using opgs16::setting::SetScaleValue;
+
+	if (value != GetScaleValue()) {
+    auto& [width, height] = GetScreenSize();
 
 		switch (value) {
 		case EScaleType::X1:
@@ -555,8 +568,9 @@ void ToggleCollisionBoxDisplay() {
 		  break;
 		}
 
-		m_setting->SetScaleValue(value);
+		SetScaleValue(value);
 	}
+#endif
 }
 
 _internal::EGameStatus GetPresentStatus() {

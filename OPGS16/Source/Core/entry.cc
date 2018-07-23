@@ -19,11 +19,16 @@
 ///
 
 /*! This statements are for checking memory leaks. */
-//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
-//_crtBreakAlloc = 180;
-//_CrtDumpMemoryLeaks();
+#ifdef false
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+_crtBreakAlloc = 180;
+_CrtDumpMemoryLeaks();
+#endif
 
-#include <Core\application.h>   /// ::opgs16::MApplication
+/// ::opgs16::MApplication
+#include <Core/application.h>
 
 #if defined(_WIN32)
 #include <Windows.h>

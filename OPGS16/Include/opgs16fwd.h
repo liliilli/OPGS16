@@ -47,7 +47,6 @@
 struct	GLFWwindow;
 
 namespace opgs16 {
-enum class EScaleType : unsigned;
 class   SGlobalSetting;
 
 namespace component {

@@ -50,13 +50,7 @@ void Initiate();
 /// Let application run.
 ///
 void Run();
-//
-/////
-///// @brief
-///// Release and shutdown application.
-/////
-//void Shutdown();
-//
+
 ///
 /// @brief
 ///
@@ -70,12 +64,6 @@ void ExitGame();
 /// Callback function to execute at next frame.
 ///
 void SetOnBeforeUpdateCallback(std::function<void(void)> callback);
-
-///
-/// @brief
-/// Return global setting reference.
-///
-SGlobalSetting& Setting() noexcept;
 
 } /// opgs16::entry
 

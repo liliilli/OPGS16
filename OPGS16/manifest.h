@@ -14,10 +14,6 @@ namespace opgs16::manifest {
 /// Remove "//" Commend specifier.
 //#define _OPGS16_DEBUG_OPTION
 
-///
-/// PROJECT SETTING
-///
-
 /// INITIAL SCREEN SIZE
 constexpr unsigned k_size = 2;
 
@@ -29,15 +25,26 @@ constexpr unsigned k_size = 2;
 #define _APPLICATION_PROJECT_PATH \
 "D:/Development/OPGS16/OPGS16/_Project/Template"
 
-// Set Application window name when operating. If this is not uncommented, just use PROJECT_NAME insteadily.
+// Set Application window name when operating.
+// If this is not uncommented, just use PROJECT_NAME insteadily.
 //#define _APPLICATION_WINDOW_NAME
 
-#define _INITIAL_SCENE_INCLUDE_PATH \
-<../_Project/Template/Include/hello_world.h>
+#define _INITIAL_SCENE_INCLUDE_PATH <../_Project/Template/Include/hello_world.h>
 
 /// set first scene full name of your project.
-#define _INITIAL_SCENE_FULL_NAME \
-::SceneFirstHelloWorld
+#define _INITIAL_SCENE_FULL_NAME ::SceneFirstHelloWorld
+
+///
+/// Fixed function resolution feature
+///
+/// OP16_SETTING_RESOLUTION_256224
+/// OP16_SETTING_RESOLUTION_320240
+/// OP16_SETTING_RESOLUTION_640480
+///
+
+//#define OP16_SETTING_RESOLUTION_256224
+#define OP16_SETTING_RESOLUTION_320240
+//#define OP16_SETTING_RESOLUTION_640480
 
 ///
 /// Decide whether show the boot screen logo when application is executed.

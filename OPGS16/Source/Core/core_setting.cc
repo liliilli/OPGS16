@@ -16,10 +16,16 @@ using opgs16::setting::TActualScreenSize;
 bool m_anti_aliasing_feature    = false;
 bool m_is_debug_mode            = false;
 bool m_post_processing_feature  = false;
-bool m_scaling_feature          = true;
 bool m_render_collision_aabb    = false;
 
 EScaleType m_scale_value = EScaleType::X1;
+
+bool m_scaling_feature =
+#if defined(OP16_SETTING_RESOLUTION_640480)
+  false;
+#else
+  true;
+#endif
 
 #if defined(OP16_SETTING_RESOLUTION_256224)
   #if defined(OP16_SETTING_RESOLUTION_320240) ||\
@@ -45,7 +51,6 @@ EScaleType m_scale_value = EScaleType::X1;
 #else
   static_assert(false, "At least one resolution setting option must be turned on.")
 #endif
-
 } /// ::unnamed namesapce
 
 namespace opgs16::setting {
