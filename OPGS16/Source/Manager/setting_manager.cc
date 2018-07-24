@@ -172,7 +172,7 @@ void Initiate() {
                 debug::err_setting_duplicated_init);
 
   ReadSettingFile(
-      helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH,
+      helper::ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH,
       "Setting/setting.meta"));
 
   m_initiated = EInitiated::Initiated;

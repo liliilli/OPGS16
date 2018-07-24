@@ -15,25 +15,41 @@ namespace opgs16::manifest {
 /// Remove "//" Commend specifier.
 //#define _OPGS16_DEBUG_OPTION
 
-/// INITIAL SCREEN SIZE
-constexpr unsigned k_size = 1;
-
+///
 /// Set Application project name.
-#define _APPLICATION_PROJECT_NAME \
-"Enter Your own game name"
+///
 
-/// Set Project path
-#define _APPLICATION_PROJECT_PATH \
-"D:/Development/OPGS16/OPGS16/_Project/Template"
+#define OP16_SETTING_APPLICATION_NAME \
+"TestProject"
 
-// Set Application window name when operating.
-// If this is not uncommented, just use PROJECT_NAME insteadily.
-//#define _APPLICATION_WINDOW_NAME
+///
+/// Set Project developement path.
+///
 
-#define _INITIAL_SCENE_INCLUDE_PATH <../_Project/Template/Include/hello_world.h>
+#define OP16_SETTING_APPLICATION_DEVPATH \
+"D:/Development/OPGS16/OPGS16/_Project/Test020"
 
+///
+/// Set Application window name when operating.
+/// If this is not uncommented, just use PROJECT_NAME insteadily.
+///
+
+#define OP16_SETTING_APPLICATION_WINDOW_NAME \
+"OPGS16 0.2.0 2018-07-24"
+
+///
+/// Set Project first scene (entry scene) path from this manifest file.
+///
+
+#define OP16_SETTING_FIRST_SCENE_INCLUDE_RELATIVE_PATH \
+<../_Project/Test020/Include/hello_world.h>
+
+///
 /// set first scene full name of your project.
-#define _INITIAL_SCENE_FULL_NAME ::SceneFirstHelloWorld
+///
+
+#define OP16_SETTING_FIRST_SCENE_FULL_NAME \
+::SceneFirstHelloWorld
 
 ///
 /// Fixed function resolution feature
@@ -45,9 +61,17 @@ constexpr unsigned k_size = 1;
 ///
 
 //#define OP16_SETTING_RESOLUTION_256224
-//#define OP16_SETTING_RESOLUTION_320240
-#define OP16_SETTING_RESOLUTION_400240
+#define OP16_SETTING_RESOLUTION_320240
+//#define OP16_SETTING_RESOLUTION_400240
 //#define OP16_SETTING_RESOLUTION_640480
+
+///
+/// INITIAL SCREEN SIZE
+///
+
+//#define OP16_SETTING_START_SCALE_X1
+#define OP16_SETTING_START_SCALE_X2
+//#define OP16_SETTING_START_SCALE_X3
 
 ///
 /// HARD OPTION : Fixed function fixed fps controller
@@ -64,9 +88,10 @@ constexpr unsigned k_size = 1;
 
 ///
 /// Decide whether show the boot screen logo when application is executed.
-/// If you want to show the logo, set this true or false.
+/// If you want to show the logo or not, commment #define below.
 ///
-#define _SHOW_BOOT_SCREEN true
+
+#define OP16_SETTING_BOOTSCREEN_SHOW
 
 } /// opgs16::manifest
 

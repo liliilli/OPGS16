@@ -285,7 +285,7 @@ void Initiate(GLFWwindow* window_context) {
   SetMouseCursorTemporary();
 #endif
 
-  ReadInputFile(helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH,
+  ReadInputFile(helper::ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH,
                                                 "Setting/input.meta"));
   m_initiated = EInitiated::Initiated;
 }

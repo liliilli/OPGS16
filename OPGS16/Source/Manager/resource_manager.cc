@@ -354,9 +354,9 @@ void Initiate() {
       "Reinitiation after shutdown is prohibited.");
 
   ReadResourceFile(
-      helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, s_builtin));
+      helper::ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, s_builtin));
   ReadResourceFile(
-      helper::ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, s_resource));
+      helper::ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, s_resource));
 
   m_initiated = EInitiated::Initiated;
 }
@@ -530,7 +530,7 @@ void InitializeFont(const nlohmann::json& json) {
     using opgs16::resource::SFont;
     using opgs16::helper::ConcatDirectoryWithFile;
     auto [_, result] = m_fonts.try_emplace(it.key(), SFont(
-        ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, it.value()[s_json_path].get<std::string>()),
+        ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, it.value()[s_json_path].get<std::string>()),
         false
     ));
 
@@ -677,13 +677,13 @@ MakeTexture2D(const nlohmann::json::const_iterator& json) {
   };
 
   STexture2DAtlas atlas;
-  const std::string texture_path = ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json.value()[s_json_path]);
+  const std::string texture_path = ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, json.value()[s_json_path]);
 
   if (IsJsonKeyExist(json.value(), s_json_atlas) == EFound::NotFound) {
     MakeTexture2DSimple(atlas, texture_path);
   }
   else {
-    const std::string atlas_path = ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json.value()[s_json_atlas]);
+    const std::string atlas_path = ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, json.value()[s_json_atlas]);
     atlas.path = texture_path;
 
     if (MakeTextureAtlasInformation(atlas, atlas_path) == ESucceed::Failed) {
@@ -916,7 +916,7 @@ opgs16::resource::SSound MakeSound(const nlohmann::json& json) {
   }
 
   return opgs16::resource::SSound{
-      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, local_path),
+      ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, local_path),
       is_bgm
   };
 }
@@ -1073,13 +1073,13 @@ opgs16::resource::SShader MakeShader(const nlohmann::json& json) {
 
   opgs16::resource::SShader::TShaderList shader_list;
   shader_list.emplace_back(EShaderType::VS,
-      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_vs]));
+      ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, json[s_json_vs]));
   shader_list.emplace_back(EShaderType::FS,
-      ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_fs]));
+      ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, json[s_json_fs]));
 
   if (IsJsonKeyExist(json, s_json_meta) == EFound::Found) {
     const auto path =
-        ConcatDirectoryWithFile(_APPLICATION_PROJECT_PATH, json[s_json_meta]);
+        ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, json[s_json_meta]);
 
     return opgs16::resource::SShader{
         shader_list,
@@ -1126,7 +1126,7 @@ std::optional<opgs16::resource::SAnimation>
 MakeAnimationContainer(const nlohmann::json& json) {
   auto json_atlas = LoadJsonFile(
       opgs16::helper::ConcatDirectoryWithFile(
-          _APPLICATION_PROJECT_PATH,
+          OP16_SETTING_APPLICATION_DEVPATH,
           json[s_json_path])
   );
   if (!json_atlas.has_value()) {

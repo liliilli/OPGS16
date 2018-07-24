@@ -63,18 +63,36 @@
 /// opgs16::manifest::sample::boot
 #include <Core/Boot/__boot.h>
 
-#if defined(_INITIAL_SCENE_INCLUDE_PATH)
-#include _INITIAL_SCENE_INCLUDE_PATH
+#if defined(OP16_SETTING_FIRST_SCENE_INCLUDE_RELATIVE_PATH)
+#include OP16_SETTING_FIRST_SCENE_INCLUDE_RELATIVE_PATH
 #endif
 
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+///
 /// Static intergrity checking
-/// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
+///
 
-static_assert(opgs16::manifest::k_size <= 3,
-    "manifest k_size must be range from 1 to 3.");
-static_assert(opgs16::manifest::k_size > 0,
-    "manifest k_size must be range from 1 to 3.");
+#if defined(OP16_SETTING_START_SCALE_X1)
+  #if defined(OP16_SETTING_START_SCALE_X2) ||\
+      defined(OP16_SETTING_START_SCALE_X3)
+    static_assert(false, "Just one of scaling values must be turned on.");
+  #endif
+#elif defined(OP16_SETTING_START_SCALE_X2)
+  #if defined(OP16_SETTING_START_SCALE_X1) ||\
+      defined(OP16_SETTING_START_SCALE_X3)
+    static_assert(false, "Just one of scaling values must be turned on.");
+  #elif defined(OP16_SETTING_RESOLUTION_640480)
+    static_assert(false, "640 x 480 resolution does not support scaling. turn on X1 macro.");
+  #endif
+#elif defined(OP16_SETTING_START_SCALE_X3)
+  #if defined(OP16_SETTING_START_SCALE_X1) ||\
+      defined(OP16_SETTING_START_SCALE_X2)
+    static_assert(false, "Just one of scaling values must be turned on.");
+  #elif defined(OP16_SETTING_RESOLUTION_640480)
+    static_assert(false, "640 x 480 resolution does not support scaling. turn on X1 macro.");
+  #endif
+#else
+  static_assert(false, "At least one of scaling values must be turned on.");
+#endif
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
@@ -119,7 +137,6 @@ void OnCallbackFrameBufferSize(GLFWwindow* window, int width, int height) {
 }
 
 void Shutdown() {
-  // Must terminate glfw window
   glfwTerminate();
 
   using namespace opgs16;
@@ -227,21 +244,17 @@ void Initiate() {
 #if defined(_OPGS16_DEBUG_OPTION)
   m_window = InitApplication("OPGS16 DEBUG MODE");
 #else
-#if !defined (_APPLICATION_PROJECT_NAME)
-  static_assert(false,
-      "Application project name is not active."
-      "Please uncomment or make macro _APPLICATION_PROJECT_NAME");
-#endif
-#if defined (_APPLICATION_WINDOW_NAME)
-#if !(_APPLICATION_WINDOW_NAME + 0)
-  static_assert(false,
-      "Application window name is not valid, check manifest file.");
-#else
-  m_window = InitApplication(_APPLICATION_WINDOW_NAME);
-#endif
-#else
-  m_window = InitApplication(_APPLICATION_PROJECT_NAME);
-#endif
+  #if !defined (OP16_SETTING_APPLICATION_NAME)
+    static_assert(false,
+        "Application project name is not active."
+        "Please uncomment or make macro OP16_SETTING_APPLICATION_NAME");
+  #endif
+
+  #if defined (OP16_SETTING_APPLICATION_WINDOW_NAME)
+    m_window = InitApplication(OP16_SETTING_APPLICATION_WINDOW_NAME);
+  #else
+    m_window = InitApplication(OP16_SETTING_APPLICATION_NAME);
+  #endif
 #endif
 
   manager::setting::Initiate();
@@ -271,26 +284,25 @@ void Initiate() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
 
-#if !defined(OP16_SETTING_RESOLUTION_640480)
-  if constexpr (manifest::k_size == 1)
-    ChangeScalingOption(EScaleType::X1);
-  else if constexpr (manifest::k_size == 2)
-    ChangeScalingOption(EScaleType::X2);
-  else
-    ChangeScalingOption(EScaleType::X3);
+#if defined(OP16_SETTING_START_SCALE_X1)
+  ChangeScalingOption(EScaleType::X1);
+#elif defined(OP16_SETTING_START_SCALE_X2)
+  ChangeScalingOption(EScaleType::X2);
+#elif defined(OP16_SETTING_START_SCALE_X3)
+  ChangeScalingOption(EScaleType::X3);
 #endif
 
 #if defined(_OPGS16_DEBUG_OPTION)
   InitiateDebugUi();
 #endif
 
-#if defined(_INITIAL_SCENE_FULL_NAME)
-#if !_SHOW_BOOT_SCREEN
-  M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, true);
+#if defined(OP16_SETTING_FIRST_SCENE_FULL_NAME)
+#if !defined(OP16_SETTING_BOOTSCREEN_SHOW)
+  M_PUSH_SCENE(OP16_SETTING_FIRST_SCENE_FULL_NAME, true);
   ReplacePresentStatus(_internal::EGameStatus::PLAYING);
 #else
-  // SHOW BOOT LOGO
-  M_PUSH_SCENE(_INITIAL_SCENE_FULL_NAME, false);
+  // SHOW BOOT SCREEN
+  M_PUSH_SCENE(OP16_SETTING_FIRST_SCENE_FULL_NAME, false);
   M_PUSH_SCENE(builtin::sample::__BOOT, true);
   ReplacePresentStatus(_internal::EGameStatus::PLAYING);
 #endif
