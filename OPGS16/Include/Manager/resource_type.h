@@ -85,17 +85,6 @@ public:
   }
 };
 
-class SSound {
-  std::string     m_path;
-  bool            m_is_bgm;
-
-public:
-  SSound() {};
-  explicit SSound(std::string path, bool is_bgm) : m_path{ path }, m_is_bgm{ is_bgm } {};
-  inline std::string Path() const noexcept { return m_path; }
-  inline bool IsBgm() const noexcept { return m_is_bgm; }
-};
-
 enum class EShaderType : int {
   VS = GL_VERTEX_SHADER,
   TCS = GL_TESS_CONTROL_SHADER,

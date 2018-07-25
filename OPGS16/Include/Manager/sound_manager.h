@@ -92,28 +92,135 @@ phitos::enums::ESucceed GenerateSound(const std::string& item_tag);
 
 ///
 /// @brief Destroy sound with tag.
-/// @param[in] tag The tag to be used for searching sound object.
+/// @param[in] sound_name The tag to be used for searching sound object.
 /// @return The success flag, return true if success.
 ///
-phitos::enums::ESucceed DestroySound(const std::string& tag);
+phitos::enums::ESucceed DestroySound(const std::string& sound_name);
 
 ///
 /// @brief Play specified sound with tag.
-/// @param[in] tag The tag to find sound object.
+/// @param[in] sound_name The tag to find sound object.
 ///
-phitos::enums::ESucceed PlaySound(const std::string& tag);
+phitos::enums::ESucceed PlaySound(const std::string& sound_name);
 
 ///
 /// @brief Stop specified sound with tag.
-/// @param[in] tag The tag to stop sound object has that tag name.
+/// @param[in] sound_name The tag to stop sound object has that tag name.
 ///
-phitos::enums::ESucceed StopSound(const std::string& tag);
+phitos::enums::ESucceed StopSound(const std::string& sound_name);
+
+///
+/// @brief
+/// Pause given sound channel, all of sounds are paused and stopped.
+/// To resume paused sounds, call ResumeSoundChannel() function.
+///
+bool PauseSoundChannel(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Resume give paused sound channel, all of sounds are resumed and play again.
+/// To pause playing sounds, call PauseSoundChannel() function.
+///
+bool ResumeSoundChannel(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Mute given sound channel, all of sounds are muted.
+/// To resume muted sound or check whethere if channel is being muted,
+/// call UnmutedSoundChannel() and IsSoundChannelMuted().
+///
+bool MuteSoundChannel(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Ummute given sound channel, all of sounds are unmuted.
+/// To mute sounds or check whether if channel is being muted or not,
+/// call MutedSoundChannel() and IsSoundChannelMuted().
+///
+bool UnmuteSoundChannel(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Pause given master sound channel. all of sounds of all channels are paused.
+/// To resume master sound channel, call ResumeMasterSoundChannel();
+///
+bool PauseMasterSoundChannel();
+
+///
+/// @brief
+/// Resume given master sound channel. all of sounds of all channels are resume.
+/// To pause master sound channel, call PauseMasterSoundChannel();
+///
+bool ResumeMasterSoundChannel();
+
+///
+/// @brief
+/// Mute given master sound channel. all of sounds of all channels are muted.
+/// To resume master sound channel, call UnmuteMasterSoundChannel();
+///
+bool MuteMasterSoundChannel();
+
+///
+/// @brief
+/// Unmute given master sound channel. all of sounds of all channels are unmuted.
+/// To mute master sound channel, call MuteMasterSoundChannel();
+///
+bool UnmuteMasterSoundChannel();
+
+///
+/// @brief
+/// Set volume of sound channel you speicified.
+/// volume_value must be a 0 ~ 100. If not, value will be clamped.
+///
+void SetVolumeSoundChannel(opgs16::resource::ESoundType sound_channel_type,
+                           int32_t volume_value);
+
+///
+/// @brief
+/// Set volume of master sound channel.
+/// volume_value must be a 0 ~ 100. If not, value will be clamped.
+///
+void SetVolumeMasterChannel(int32_t volume_value);
+
+///
+/// @brief
+/// Check if or not sound channel you specified is being muted.
+///
+bool IsSoundChannelMuted(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Check if or not sound channel you specified is being paused.
+///
+bool IsSoundChannelPaused(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+/// Check if or not master sound channel is being muted.
+///
+bool IsMasterSoundChannelMuted();
+
+///
+/// @brief
+/// Check if or not master sound channel is being paused.
+///
+bool IsMasterSoundChannelPaused();
 
 ///
 /// @brief Verity whether speicific sound is playing or not.
-/// @param[in] tag The tag to verify.
+/// @param[in] sound_name The tag to verify.
 ///
-phitos::enums::EActivated IsSoundPlaying(const std::string& tag);
+bool IsSoundPlaying(const std::string& sound_name);
+
+///
+/// @brief
+///
+void StopSoundChannel(opgs16::resource::ESoundType sound_channel_type);
+
+///
+/// @brief
+///
+void StopMasterSoundChannel();
 
 ///
 /// @brief Stop all of sounds which are playing.

@@ -45,6 +45,7 @@
 #include <Manager/Internal/flag.h>
 /// ::opgs16::builtin
 #include <Manager/Internal/shader_builtin_keywords.h>
+#include <Manager/ResourceType/sound.h>
 
 /// @todo remove this
 #include <../manifest.h>
@@ -205,7 +206,7 @@ ESucceed VerifySoundInsertion(const nlohmann::json::const_iterator& json);
 ///
 /// @return
 ///
-opgs16::resource::SSound MakeSound(const nlohmann::json& json);
+opgs16::resource::SSoundInfo MakeSound(const nlohmann::json& json);
 
 ///
 /// @brief
@@ -323,7 +324,7 @@ EInitiated m_shutdowned = EInitiated::NotInitiated;
 namespace {
 
 using texture_map       = std::map<std::string, opgs16::resource::STexture2DAtlas>;
-using sound_map         = std::map<std::string, opgs16::resource::SSound>;
+using sound_map         = std::map<std::string, opgs16::resource::SSoundInfo>;
 using shader_map        = std::map<std::string, opgs16::resource::SShader>;
 using font_map          = std::map<std::string, opgs16::resource::SFont>;
 using animation_map     = std::map<std::string, opgs16::resource::SAnimation>;
@@ -393,7 +394,7 @@ const opgs16::resource::STexture2DAtlas* GetTexture2D(const std::string& name_ke
   return &m_textures[name_key];
 }
 
-const opgs16::resource::SSound* GetSound(const std::string& name_key) {
+const opgs16::resource::SSoundInfo* GetSound(const std::string& name_key) {
   if (!ExistKey(m_sounds, name_key)) {
     PUSH_LOG_ERROR_EXT( "Did not find appropriate sound : [Tag : {0}]", name_key);
     return nullptr;
@@ -818,6 +819,8 @@ void InitializeMesh(const nlohmann::json& json) {
 void InitializeSound(const nlohmann::json& json) {
   using phitos::enums::EFound;
   using phitos::enums::ESucceed;
+  using opgs16::resource::SSoundInfo;
+  using opgs16::helper::ConcatDirectoryWithFile;
 
   if (VerifyTextureInternalStructure(json) == ESucceed::Failed) {
     PHITOS_UNEXPECTED_BRANCH();
@@ -831,15 +834,14 @@ void InitializeSound(const nlohmann::json& json) {
     if (VerifyTextureInsertion(it) == ESucceed::Failed)
       continue;
 
-    using opgs16::resource::SSound;
-    using opgs16::helper::ConcatDirectoryWithFile;
-
     // Insert texture information.
-
     auto [_, result] = m_sounds.try_emplace(it.key(), MakeSound(it.value()));
 
     if (result) {
-      PUSH_LOG_DEBUG_EXT("{} {} is inserted as {} successfully.", "Sound", it.key(), _->second.Path());
+      PUSH_LOG_DEBUG_EXT(
+          "{} {} is inserted as {} successfully.", "Sound",
+          it.key(),
+          _->second.GetPath());
     }
     else {
       PUSH_LOG_ERROR_EXT("Failed to insert sound {}.", it.key());
@@ -901,23 +903,24 @@ ESucceed VerifySoundInsertion(const nlohmann::json::const_iterator& json) {
   return ESucceed::Succeed;
 }
 
-opgs16::resource::SSound MakeSound(const nlohmann::json& json) {
+opgs16::resource::SSoundInfo MakeSound(const nlohmann::json& json) {
   using opgs16::helper::ConcatDirectoryWithFile;
+  using opgs16::resource::SSoundInfo;
+  using opgs16::resource::ESoundType;
 
-  const auto local_path = json[s_json_path].get<std::string>();
-  const auto type = json[s_json_type].get<std::string>();
+  const auto& local_path = json[s_json_path].get<std::string>();
+  const auto& type = json[s_json_type].get<std::string>();
 
-  bool is_bgm = false;
-  if (type == s_json_st_effect) {
-    is_bgm = false;
-  }
-  else if (type == s_json_st_back) {
-    is_bgm = true;
-  }
+  ESoundType sound_type = ESoundType::None;
+  if (type == s_json_st_effect)
+    sound_type = ESoundType::Effect;
+  else if (type == s_json_st_back)
+    sound_type = ESoundType::BackgroundMusic;
+  PHITOS_ASSERT(sound_type != ESoundType::None, "Sound type must not be none.");
 
-  return opgs16::resource::SSound{
+  return SSoundInfo{
       ConcatDirectoryWithFile(OP16_SETTING_APPLICATION_DEVPATH, local_path),
-      is_bgm
+      sound_type
   };
 }
 
@@ -941,7 +944,7 @@ void InitializeShader(const nlohmann::json& json) {
     if (VerifyShaderInsertion(it.value()) == ESucceed::Failed)
       continue;
 
-    using opgs16::resource::SSound;
+    using opgs16::resource::SSoundInfo;
     using opgs16::helper::ConcatDirectoryWithFile;
 
     // Insert texture information.

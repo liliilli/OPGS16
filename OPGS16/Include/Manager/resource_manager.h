@@ -81,7 +81,7 @@ const opgs16::resource::STexture2DAtlas* GetTexture2D(const std::string& name_ke
 /// @param[in] name_key Wrapping tag name of actual sound path.
 /// @return Sound path
 ///
-const opgs16::resource::SSound* GetSound(const std::string& name_key);
+const opgs16::resource::SSoundInfo* GetSound(const std::string& name_key);
 
 ///
 /// @brief

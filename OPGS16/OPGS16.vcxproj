@@ -259,7 +259,11 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
-    <ClCompile Include="_Project\Template\Source\hello_world.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
+    <ClCompile Include="_Project\Test020\Source\Scene\hello_world.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\scriptSound.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +317,7 @@
     <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
     <ClInclude Include="Include\Manager\Internal\vao_management.h" />
     <ClInclude Include="Include\Manager\ResourceType\shader.h" />
+    <ClInclude Include="Include\Manager\ResourceType\sound.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="Include\precompiled.h" />
     <ClInclude Include="resource.h" />
@@ -405,7 +410,13 @@
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
-    <ClInclude Include="_Project\Template\Include\hello_world.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Common\empty_canvas.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Common\empty_object.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\objectSound.h" />
+    <ClInclude Include="_Project\Test020\Include\Scene\hello_world.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />

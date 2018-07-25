@@ -19,23 +19,12 @@
 
 /// Library for sound loading.
 #include <fmod.hpp>
+#include <Manager/ResourceType/sound.h>
 
 namespace opgs16::manager::_internal {
 
 ///
-/// @enum ESoundType
-/// @brief
-/// ESoundType is type of each sounds to have been storing.
-///
-enum class ESoundType {
-  Effect,		/** This is for effect sound, once play but not looped normally. */
-  Background, /** This is for background sound, looped normally. */
-  Surround,   /** This is for 3D surround ambient sound have distance. */
-  Nothing     // Default Initailized type.
-};
-
-///
-/// @class SSoundInfo
+/// @class SSoundResource
 /// @brief
 /// This class stores sound information.
 /// Sound pointer instance, sound type, and sound channel which sound will play
@@ -44,21 +33,41 @@ enum class ESoundType {
 /// Sound instance and type must be parameterized when creating new SSoundInfo
 /// object. Sound channel will be internally created automatically.
 ///
-class SSoundInfo {
+class SSoundResource {
 private:
-  FMOD::Sound*        m_sound;        /*! Sound buffer */
-  const ESoundType    m_type;	        /*! The type of sound. */
-  FMOD::Channel*      m_channel;      /*! Channel */
+  using ESoundType = opgs16::resource::ESoundType;
+
+  /// Sound buffer.
+  FMOD::Sound*        m_sound = nullptr;
+  /// The type of sound.
+  const ESoundType    m_type = ESoundType::None;
+  /// Channel.
+  FMOD::Channel*      m_channel = nullptr;
 
 public:
-  SSoundInfo() : m_type{ ESoundType::Nothing } {};
-  explicit SSoundInfo(FMOD::Sound* sound, const ESoundType type) :
-    m_sound{ sound }, m_type{ type }, m_channel{ nullptr } {};
+  SSoundResource() = default;
 
-  FMOD::Sound*    Sound() const noexcept { return m_sound; }
-  ESoundType      Type() const noexcept { return m_type; }
-  FMOD::Channel*  Channel() const noexcept { return m_channel; }
-  FMOD::Channel** ChannelPtr() noexcept { return &m_channel; }
+  explicit SSoundResource(FMOD::Sound* sound, const ESoundType type) :
+      m_sound{ sound },
+      m_type{ type },
+      m_channel{ nullptr }
+  {};
+
+  FMOD::Sound* GetSoundBuffer() const noexcept {
+    return m_sound;
+  }
+
+  ESoundType GetSoundType() const noexcept {
+    return m_type;
+  }
+
+  FMOD::Channel* GetChannel() const noexcept {
+    return m_channel;
+  }
+
+  FMOD::Channel** GetChannelPtr() noexcept {
+    return &m_channel;
+  }
 };
 
 } /// ::opgs16::manager::_internal namespace
