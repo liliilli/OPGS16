@@ -15,14 +15,17 @@
 /// 2018-03-04 Refactoring.
 /// 2018-05-13 Changed std::cerr to PUSH_LOG_ERRO logger routine.
 /// 2018-06-15 Refactoring.
-///
-/// @todo Make sound mute system.
+/// 2018-07-25 Make channel system.
 ///
 
 /// Header file
 #include <Manager/sound_manager.h>
 
 #include <string>
+#include <unordered_map>
+
+/// FMOD sound library
+#include <fmod.hpp>
 
 #include <Phitos/Dbg/assert.h>
 #include <Phitos/Enums/initiated.h>
@@ -30,6 +33,9 @@
 #include <Headers/import_logger.h>
 #include <Manager/resource_manager.h>
 #include <Manager/ResourceType/sound.h>
+
+/// ::phitos::enums::EFound boolean flag.
+#include <Phitos/Enums/found.h>
 
 //!
 //! Datas
@@ -58,11 +64,15 @@ inline constexpr const char* err_failed_to_get_master_channel =
 "Failed to retrieve information of master channel.";
 inline constexpr const char* err_failed_to_get_each_channel =
 "ERROR::COULD::NOT::CREATE::SOUND::CHANNEL";
+inline constexpr const char* err_failed_to_find_information =
+"Failed to find sound information.";
 
 inline constexpr const char* log_item_already_exist =
-"Redundant GenerateSound() call. [Sound item tag : {}]";
+"Redundant GenerateSoundElement() call. [Sound item tag : {}]";
 inline constexpr const char* log_failed_to_create_sound =
 "Could not create sound. [Sound item tag : {}], [Sound item path : {}]";
+inline constexpr const char* log_failed_to_release_sound =
+"ERROR::SOUND::RELEASE::FAILED";
 
 inline constexpr const char* s_channel_effect     = "opEffect";
 inline constexpr const char* s_channel_background = "opBack";
@@ -74,7 +84,7 @@ unsigned        m_version = 0;
 int             m_sound_driver_count = 0;
 
 // Switch if all sounds needs to be sliented.
-bool m_is_sound_muted = false;
+bool s_is_sound_system_available = false;
 
 // Sound container stores all of sound to be played in application.
 TSoundContainerMap m_sounds;
@@ -95,12 +105,12 @@ namespace {
 ///
 /// @brief
 /// This private method actually processes stopping sound be playing.
-/// This must be called StopSound method and StopAllSounds method.
+/// This must be called StopSoundElement method and StopAllSoundElements method.
 ///
 /// @param[in] sound The sound container to stop.
 ///
 void ProcessStopSound(const SSoundResource& sound) {
-  auto result = sound.GetChannel()->stop();
+  sound.GetChannel()->stop();
 }
 
 } /// unnamed namespace
@@ -108,27 +118,32 @@ void ProcessStopSound(const SSoundResource& sound) {
 namespace opgs16::manager::sound::__ {
 
 void Initiate() {
-  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated, err_duplicated_initiate_call);
+  PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
+                err_duplicated_initiate_call);
 
   if (FMOD::System_Create(&s_sound_system) != FMOD_OK) {
     PUSH_LOG_ERRO(err_failed_create_sound_system);
-    goto label_failed;
+    s_sound_system = nullptr;
+    return;
   }
 
   if (s_sound_system->getVersion(&m_version); m_version < FMOD_VERSION) {
     PUSH_LOG_ERRO(err_version_mismatch);
-    goto label_failed;
+    s_sound_system = nullptr;
+    return;
   }
 
-  if (s_sound_system->getNumDrivers(&m_sound_driver_count); m_sound_driver_count <= 0) {
+  if (s_sound_system->getNumDrivers(&m_sound_driver_count);
+      m_sound_driver_count <= 0) {
     PUSH_LOG_ERRO(err_failed_to_get_drivers);
-    goto label_failed;
+    s_sound_system = nullptr;
+    return;
   }
 
   if (s_sound_system->init(32, FMOD_INIT_NORMAL, nullptr) != FMOD_OK) {
     PUSH_LOG_ERRO(err_failed_to_initialize);
     s_sound_system = nullptr;
-    goto label_failed;
+    return;
   }
 
   if (s_sound_system->createChannelGroup(
@@ -136,7 +151,7 @@ void Initiate() {
           &s_effect_channel) != FMOD_OK) {
     PUSH_LOG_ERRO(err_failed_to_get_each_channel);
     s_effect_channel = nullptr;
-    goto label_failed;
+    return;
   }
 
   if (s_sound_system->createChannelGroup(
@@ -144,44 +159,27 @@ void Initiate() {
           &s_background_channel) != FMOD_OK) {
     PUSH_LOG_ERRO(err_failed_to_get_each_channel);
     s_background_channel = nullptr;
-    goto label_failed;
+    return;
   }
 
   if (s_sound_system->getMasterChannelGroup(&s_master_channel) != FMOD_OK) {
     PUSH_LOG_ERRO(err_failed_to_get_master_channel);
-    goto label_failed;
+    return;
   }
 
   if (s_master_channel->addGroup(s_effect_channel) != FMOD_OK) {
-    goto label_failed;
+    return;
   }
 
   if (s_master_channel->addGroup(s_background_channel) != FMOD_OK) {
-    goto label_failed;
+    return;
   }
 
-  goto label_success;
-
-label_failed:
-  m_is_sound_muted = true;
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
-
-label_success:
-  return;
+  s_is_sound_system_available = true;
 }
 
 void Shutdown() {
-  StopAllSounds();
-
-  // Release all sounds
-  for (auto& pair_item : m_sounds) {
-    auto& sound = pair_item.second;
-    if (sound.GetSoundBuffer()->release() != FMOD_OK) {
-      // Write to logger if debug mode. if not and after this, mute app.
-      PUSH_LOG_ERRO("ERROR::SOUND::RELEASE::FAILED\n");
-    }
-  }
-
+  // Release all sound channels
   if (s_effect_channel) {
     s_effect_channel->stop();
     s_effect_channel->release();
@@ -192,7 +190,11 @@ void Shutdown() {
     s_background_channel->release();
   }
 
+  // Release all sound resources
+  StopAllSoundElements();
+  ReleaseAllSoundElements();
   m_sounds.clear();
+
   s_sound_system->close();
   s_sound_system->release();
 }
@@ -200,34 +202,40 @@ void Shutdown() {
 } /// ::opgs16::manager::sound::__ namespace.
 
 namespace opgs16::manager::sound {
-using phitos::enums::EFound;
 using phitos::enums::ESucceed;
 using opgs16::resource::ESoundType;
 using _internal::SSoundResource;
 
-ESucceed GenerateSound(const std::string& item_tag) {
-  if (IsSoundExist(item_tag) == EFound::Found) {
-    PUSH_LOG_INFO_EXT(log_item_already_exist, item_tag);
-    return ESucceed::Succeed;
-  }
-
-  auto* sound_info = resource::GetSound(item_tag);
-  if (!sound_info) {
-    PHITOS_ASSERT(sound_info, "Failed to find sound information.");
+ESucceed GenerateSoundElement(const std::string& sound_name) {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return ESucceed::Failed;
   }
 
-  FMOD::Sound* sound = nullptr;
+  if (!IsSoundElementExist(sound_name)) {
+    PUSH_LOG_INFO_EXT(log_item_already_exist, sound_name);
+    return ESucceed::Succeed;
+  }
 
+  // Get sound
+  auto* sound_info = resource::GetSound(sound_name);
+  if (!sound_info) {
+    PHITOS_ASSERT(sound_info, err_failed_to_find_information);
+    return ESucceed::Failed;
+  }
+
+  // Create sound resource
+  FMOD::Sound* sound = nullptr;
   const auto result = s_sound_system->createSound(
       sound_info->GetPath().c_str(),
       FMOD_DEFAULT, 0, &sound);
 
   if (result != FMOD_OK) {
-    PUSH_LOG_ERROR_EXT(log_failed_to_create_sound, item_tag, sound_info->GetPath());
+    PUSH_LOG_ERROR_EXT(log_failed_to_create_sound, sound_name, sound_info->GetPath());
     return ESucceed::Failed;
   }
 
+  // Set ESoundType of created sound resource
   ESoundType sound_type = ESoundType::None;
   switch (sound_info->GetSoundType()) {
   case ESoundType::BackgroundMusic:
@@ -242,57 +250,71 @@ ESucceed GenerateSound(const std::string& item_tag) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
 
-  /// Insert created sound to sound container.
-  m_sounds.try_emplace(item_tag, SSoundResource{ sound, sound_type });
+  // Insert created sound to sound container.
+  m_sounds.try_emplace(sound_name, SSoundResource{ sound, sound_type });
   return ESucceed::Succeed;
 }
 
-ESucceed DestroySound(const std::string& tag) {
-  if (IsSoundExist(tag) == EFound::NotFound) {
-    PUSH_LOG_ERROR_EXT("Failed to find sound in DestroySound(), [{} : {}]", "Sound name", tag);
+ESucceed DestroySoundElement(const std::string& sound_name) {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return ESucceed::Failed;
   }
 
-  StopSound(tag);
+  if (!IsSoundElementExist(sound_name)) {
+    PUSH_LOG_ERROR_EXT(
+      "Failed to find sound in DestroySoundElement(), [Sound name : {}]", sound_name);
+    return ESucceed::Failed;
+  }
 
-  const auto result = m_sounds[tag].GetSoundBuffer()->release();
+  StopSoundElement(sound_name);
+
+  // Release speicified sound resources
+  const auto result = m_sounds[sound_name].GetSoundBuffer()->release();
   if (result != FMOD_OK) {
-    PUSH_LOG_ERROR_EXT("Failed to delete sound incompletely. [{} : {}]", "Sound name", tag);
-    m_sounds.erase(tag);
+    PUSH_LOG_ERROR_EXT("Failed to delete sound incompletely. [{} : {}]", "Sound name", sound_name);
+    m_sounds.erase(sound_name);
     return ESucceed::Failed;
   }
 
-  m_sounds.erase(tag);
-  PUSH_LOG_INFO_EXT("Deleted sound resource. [{} : {}]", "Sound name", tag);
+  m_sounds.erase(sound_name);
+  PUSH_LOG_INFO_EXT("Deleted sound resource. [{} : {}]", "Sound name", sound_name);
   return ESucceed::Succeed;
 }
 
-ESucceed PlaySound(const std::string& tag) {
-  if (IsSoundExist(tag) == EFound::NotFound) {
-    PUSH_LOG_ERROR_EXT("Failed to find sound, {}, [{} : {}]", "in PlaySound().", "Sound name", tag);
+ESucceed PlaySoundElement(const std::string& sound_name) {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return ESucceed::Failed;
   }
 
+  if (!IsSoundElementExist(sound_name)) {
+    PUSH_LOG_ERROR_EXT("Failed to find sound, {}, [{} : {}]", "in PlaySoundElement().", "Sound name", sound_name);
+    return ESucceed::Failed;
+  }
+
+  // If speicifed sound is found, play sound along with ESoundType of this.
   const auto result = s_sound_system->playSound(
-      m_sounds[tag].GetSoundBuffer(),
+      m_sounds[sound_name].GetSoundBuffer(),
       0, false,
-      m_sounds[tag].GetChannelPtr());
+      m_sounds[sound_name].GetChannelPtr());
 
   if (result != FMOD_OK) {
-    PUSH_LOG_ERROR_EXT("Failed to play sound. [{} : {}]", "Sound name", tag);
-    StopSound(tag);
+    PUSH_LOG_ERROR_EXT("Failed to play sound. [{} : {}]", "Sound name", sound_name);
+    StopSoundElement(sound_name);
     return ESucceed::Failed;
   }
 
-  switch (m_sounds[tag].GetSoundType()) {
+  // And bind instance to appropriate sound channel.
+  switch (m_sounds[sound_name].GetSoundType()) {
   case ESoundType::Effect:
     if (s_effect_channel) {
-      m_sounds[tag].GetChannel()->setChannelGroup(s_effect_channel);
+      m_sounds[sound_name].GetChannel()->setChannelGroup(s_effect_channel);
     }
     break;
   case ESoundType::BackgroundMusic:
     if (s_background_channel) {
-      m_sounds[tag].GetChannel()->setChannelGroup(s_background_channel);
+      m_sounds[sound_name].GetChannel()->setChannelGroup(s_background_channel);
     }
     break;
   default: PHITOS_UNEXPECTED_BRANCH(); break;
@@ -301,8 +323,13 @@ ESucceed PlaySound(const std::string& tag) {
   return ESucceed::Succeed;
 }
 
-ESucceed StopSound(const std::string& sound_name) {
-  if (IsSoundExist(sound_name) == EFound::NotFound) {
+ESucceed StopSoundElement(const std::string& sound_name) {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return ESucceed::Failed;
+  }
+
+  if (!IsSoundElementExist(sound_name)) {
     PUSH_LOG_ERROR_EXT("Failed to stop sound. [{} : {}]", "Sound name", sound_name);
     return ESucceed::Failed;
   }
@@ -311,10 +338,10 @@ ESucceed StopSound(const std::string& sound_name) {
   return ESucceed::Succeed;
 }
 
-void ReleaseAllSounds() {
-  StopAllSounds();
+void ReleaseAllSoundElements() {
+  StopAllSoundElements();
 
-  /*! Release all sounds */
+  // Release all sounds
   for (auto& pair_item : m_sounds) {
     auto& sound = pair_item.second;
     if (sound.GetSoundBuffer()->release() != FMOD_OK) {
@@ -326,6 +353,10 @@ void ReleaseAllSounds() {
 
 bool PauseSoundChannel(ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
 
   switch (sound_channel_type) {
   default: PHITOS_UNEXPECTED_BRANCH(); return false;
@@ -362,6 +393,10 @@ bool PauseSoundChannel(ESoundType sound_channel_type) {
 
 bool ResumeSoundChannel(ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
 
   switch (sound_channel_type) {
   default: PHITOS_UNEXPECTED_BRANCH(); return false;
@@ -398,6 +433,10 @@ bool ResumeSoundChannel(ESoundType sound_channel_type) {
 
 bool MuteSoundChannel(ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
 
   switch (sound_channel_type) {
   default: PHITOS_UNEXPECTED_BRANCH();
@@ -434,6 +473,10 @@ bool MuteSoundChannel(ESoundType sound_channel_type) {
 
 bool UnmuteSoundChannel(ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
 
   switch (sound_channel_type) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
@@ -469,6 +512,11 @@ bool UnmuteSoundChannel(ESoundType sound_channel_type) {
 }
 
 bool PauseMasterSoundChannel() {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
+
   if (s_master_channel) {
     bool is_paused = false;
     if (s_master_channel->getPaused(&is_paused); is_paused) {
@@ -485,6 +533,11 @@ bool PauseMasterSoundChannel() {
 }
 
 bool ResumeMasterSoundChannel() {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
+
   if (s_master_channel) {
     bool is_paused = true;
     if (s_master_channel->getPaused(&is_paused); !is_paused) {
@@ -501,6 +554,11 @@ bool ResumeMasterSoundChannel() {
 }
 
 bool MuteMasterSoundChannel() {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
+
   if (s_master_channel) {
     bool is_muted = false;
     if (s_master_channel->getMute(&is_muted); is_muted) {
@@ -517,6 +575,11 @@ bool MuteMasterSoundChannel() {
 }
 
 bool UnmuteMasterSoundChannel() {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return false;
+  }
+
   if (s_master_channel) {
     bool is_muted = true;
     if (s_master_channel->getMute(&is_muted); !is_muted) {
@@ -535,8 +598,8 @@ bool UnmuteMasterSoundChannel() {
 void SetVolumeSoundChannel(opgs16::resource::ESoundType sound_channel_type,
                            int32_t volume_value) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return;
   }
 
@@ -558,8 +621,8 @@ void SetVolumeSoundChannel(opgs16::resource::ESoundType sound_channel_type,
 }
 
 void SetVolumeMasterChannel(int32_t volume_value) {
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return;
   }
 
@@ -577,9 +640,9 @@ void SetVolumeMasterChannel(int32_t volume_value) {
 
 bool IsSoundChannelMuted(opgs16::resource::ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
-    return false;
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return;
   }
 
   bool is_muted = false;
@@ -609,9 +672,9 @@ bool IsSoundChannelMuted(opgs16::resource::ESoundType sound_channel_type) {
 
 bool IsSoundChannelPaused(opgs16::resource::ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
-    return false;
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return;
   }
 
   bool is_paused = false;
@@ -640,9 +703,9 @@ bool IsSoundChannelPaused(opgs16::resource::ESoundType sound_channel_type) {
 }
 
 bool IsMasterSoundChannelMuted() {
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
-    return false;
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return;
   }
   if (!s_master_channel) {
     PUSH_LOG_ERRO("Could not get mute state of master sound channel. Channel may not be initialized.");
@@ -655,9 +718,9 @@ bool IsMasterSoundChannelMuted() {
 }
 
 bool IsMasterSoundChannelPaused() {
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
-    return false;
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return;
   }
   if (!s_master_channel) {
     PUSH_LOG_ERRO("Could not get mute state of master sound channel. Channel may not be initialized.");
@@ -669,9 +732,13 @@ bool IsMasterSoundChannelPaused() {
   return is_paused;
 }
 
-bool IsSoundPlaying(const std::string& sound_name) {
-  if (IsSoundExist(sound_name) == EFound::NotFound) {
-    PUSH_LOG_ERROR_EXT("Failed to find sound in IsSoundPlaying(). [{} : {}]", "Sound name", sound_name);
+bool IsSoundElementPlaying(const std::string& sound_name) {
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
+    return;
+  }
+  if (!IsSoundElementExist(sound_name)) {
+    PUSH_LOG_ERROR_EXT("Failed to find sound in IsSoundElementPlaying(). [{} : {}]", "Sound name", sound_name);
     return false;
   }
 
@@ -682,8 +749,8 @@ bool IsSoundPlaying(const std::string& sound_name) {
 
 void StopSoundChannel(opgs16::resource::ESoundType sound_channel_type) {
   PHITOS_ASSERT(sound_channel_type != ESoundType::None, "Sound channel type must not be None.");
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return;
   }
 
@@ -701,11 +768,10 @@ void StopSoundChannel(opgs16::resource::ESoundType sound_channel_type) {
 }
 
 void StopMasterSoundChannel() {
-  if (!s_sound_system) {
-    PUSH_LOG_ERRO("Nothing do in SetVolumeSoundChannel() because of sound system is not initiated.");
+  if (!IsSoundSystemAvailable()) {
+    PUSH_LOG_WARN("Sound system is not available.");
     return;
   }
-
   if (!s_master_channel) {
     PUSH_LOG_ERRO("Could not set volume of master sound channel. Channel may not be initialized.");
     return;
@@ -714,24 +780,19 @@ void StopMasterSoundChannel() {
   s_master_channel->stop();
 }
 
-void StopAllSounds() {
+void StopAllSoundElements() {
   for (auto& pair_item : m_sounds) {
     auto& sound = pair_item.second;
     ProcessStopSound(sound);
   }
 }
 
-EFound IsSoundExist(const std::string& tag) {
-	return m_sounds.find(tag) != m_sounds.end() ? EFound::Found : EFound::NotFound;
+bool IsSoundElementExist(const std::string& sound_name) {
+	return m_sounds.find(sound_name) != m_sounds.end();
 }
 
-bool IsSoundMuted() noexcept {
-  return m_is_sound_muted;
-}
-
-void SetMute(phitos::enums::ESwitch value) {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
-  m_is_sound_muted = value == phitos::enums::ESwitch::On ? true : false;
+bool IsSoundSystemAvailable() noexcept {
+  return s_is_sound_system_available;
 }
 
 } /// ::opgs16::manager namespace
