@@ -142,7 +142,7 @@ void Shutdown() {
   using namespace opgs16;
   manager::postprocessing::__::Shutdown();
   manager::timer::ClearAllTimers();
-  manager::sound::ReleaseAllSounds();
+  manager::sound::ReleaseAllSoundElements();
   manager::sound::__::Shutdown();
   manager::scene::__::Shutdown();
   manager::font::__::Shutdown();
