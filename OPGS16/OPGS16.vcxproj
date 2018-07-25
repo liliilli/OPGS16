@@ -277,6 +277,8 @@
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
+    <ClInclude Include="Include\Element\Bulitin\empty_canvas.h" />
+    <ClInclude Include="Include\Element\Bulitin\empty_object.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />

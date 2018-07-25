@@ -249,6 +249,8 @@
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_canvas.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_object.h" />
+    <ClInclude Include="Include\Element\Bulitin\empty_canvas.h" />
+    <ClInclude Include="Include\Element\Bulitin\empty_object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
