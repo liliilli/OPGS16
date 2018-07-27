@@ -286,7 +286,8 @@ CObject* CObject::GetGameObjectResursively(const std::string& object_name) noexc
 
 bool CObject::DestroyGameObject(const std::string& child_name) {
   if (const auto it = m_children.find(child_name); it == m_children.end()) {
-    PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]", child_name);
+    PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]",
+                       child_name);
     return false;
   }
   else {

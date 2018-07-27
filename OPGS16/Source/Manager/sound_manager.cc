@@ -218,11 +218,6 @@ ESucceed GenerateSoundElement(const std::string& sound_name) {
     return ESucceed::Failed;
   }
 
-  if (!IsSoundElementExist(sound_name)) {
-    PUSH_LOG_INFO_EXT(log_item_already_exist, sound_name);
-    return ESucceed::Succeed;
-  }
-
   // Get sound
   auto* sound_info = resource::GetSound(sound_name);
   if (!sound_info) {
