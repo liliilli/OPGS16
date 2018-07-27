@@ -166,7 +166,7 @@ void RenderAABB() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void Destroy(const element::CObject& object, element::CObject* root) {
+bool Destroy(const element::CObject& object, element::CObject* root) {
   using TObjectMap = std::unordered_map<std::string, object_ptr>;
   using TObjectItType = TObjectMap::iterator;
   std::stack<TObjectMap*> tree_list;
@@ -178,10 +178,9 @@ void Destroy(const element::CObject& object, element::CObject* root) {
     tree_list.emplace(&root->GetGameObjectList());
 
   it_list.emplace(tree_list.top()->begin());
-  bool destroyed = false;
   const auto hash_value = object.GetHash();
 
-  while (!destroyed && !tree_list.empty()) {
+  while (!tree_list.empty()) {
     auto& object_list = *tree_list.top();
     auto it = it_list.top();
 
@@ -192,8 +191,7 @@ void Destroy(const element::CObject& object, element::CObject* root) {
       if (hash_value == it->second->GetHash() &&
           it->second.get() == &object) {
         AddDestroyObject(it->second);
-        destroyed = true;
-        break;
+        return true;
       }
 
       if (auto& additional_list = it->second->GetGameObjectList();
@@ -211,6 +209,8 @@ void Destroy(const element::CObject& object, element::CObject* root) {
       it_list.pop();
     }
   }
+
+  return false;
 }
 
 void ClearDestroyCandidates() {

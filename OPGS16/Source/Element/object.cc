@@ -291,8 +291,8 @@ bool CObject::DestroyGameObject(const std::string& child_name) {
     return false;
   }
   else {
-    manager::object::Destroy(*(it->second.get()), this);
-    return true;
+    const auto result = manager::object::Destroy(*(it->second.get()), this);
+    return result;
   }
 }
 
@@ -300,8 +300,8 @@ bool CObject::DestroyGameObject(const element::CObject& child_object) {
   using TObjectMap = std::unordered_map<std::string, TGameObjectSmtPtr>;
   using TItType = TObjectMap::iterator;
 
-  manager::object::Destroy(child_object, this);
-  return true;
+  const auto result = manager::object::Destroy(child_object, this);
+  return result;
 }
 
 void CObject::SetObjectActive(const bool value) {
