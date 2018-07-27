@@ -48,4 +48,22 @@ DVector3 Lerp(const DVector3& lhs, const DVector3& rhs, float offset) {
   return lhs * (1 - offset) + rhs * offset;
 }
 
+DVector2 GetQuadBezierCurvePoint(const DVector2& lhs,
+                                 const DVector2& rhs,
+                                 const DVector2& control,
+                                 float offset) {
+  return Lerp(Lerp(lhs, control, offset),
+              Lerp(control, rhs, offset),
+              offset);
+}
+
+DVector3 GetQuadBezierCurvePoint(const DVector3& lhs,
+                                 const DVector3& rhs,
+                                 const DVector3& control,
+                                 float offset) {
+  return Lerp(Lerp(lhs, control, offset),
+              Lerp(control, rhs, offset),
+              offset);
+}
+
 } /// ::opgs16::math namespace

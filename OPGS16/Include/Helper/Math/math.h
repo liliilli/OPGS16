@@ -84,6 +84,22 @@ DVector2 Lerp(const DVector2& lhs, const DVector2& rhs, float offset);
 ///
 DVector3 Lerp(const DVector3& lhs, const DVector3& rhs, float offset);
 
+///
+/// @brief Get result point through quadratic bezier curve calculation.
+///
+DVector2 GetQuadBezierCurvePoint(const DVector2& lhs,
+                                 const DVector2& rhs,
+                                 const DVector2& control,
+                                 float offset);
+
+///
+/// @brief Get result point through quadratic bezier curve calculation.
+///
+DVector3 GetQuadBezierCurvePoint(const DVector3& lhs,
+                                 const DVector3& rhs,
+                                 const DVector3& control,
+                                 float offset);
+
 } /// ::opgs16::math namespace
 
 #endif /// OPGS16_HELPER_MATH_MATH_H
