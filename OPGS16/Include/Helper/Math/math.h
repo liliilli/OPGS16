@@ -38,6 +38,28 @@ constexpr TType Clamp(const TType& value,
     range.from );
 }
 
+///
+/// @brief Check float lhs is nearly equal to rhs.
+/// floating-point number type like a float and double has a natural problem like
+/// a floating-error such as 0.1 but 0.10000007, so you have to use this function
+/// if you want to compare two floating points.
+///
+constexpr bool IsNearlyEqual(const float lhs, const float rhs,
+                             const float error_tolerance = 0.0001f) noexcept {
+  return (rhs < lhs ? lhs - rhs : rhs - lhs) < error_tolerance;
+}
+
+///
+/// @brief Check double lhs is nearly equal to rhs.
+/// floating-point number type like a float and double has a natural problem like
+/// a floating-error such as 0.1 but 0.10000007, so you have to use this function
+/// if you want to compare two double points.
+///
+constexpr bool IsNearlyEqual(const double lhs, const double rhs,
+                             const double error_tolerance = 0.0001) noexcept {
+  return (rhs < lhs ? lhs - rhs : rhs - lhs) < error_tolerance;
+}
+
 } /// ::opgs16::math namespace
 
 #endif /// OPGS16_HELPER_MATH_MATH_H
