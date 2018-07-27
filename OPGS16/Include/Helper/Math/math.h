@@ -18,6 +18,8 @@
 ///
 
 #include <Helper/Type/rangedata.h>
+#include <Helper/Type/vector2.h>
+#include <Helper/Type/vector3.h>
 
 namespace opgs16::math {
 
@@ -59,6 +61,28 @@ constexpr bool IsNearlyEqual(const double lhs, const double rhs,
                              const double error_tolerance = 0.0001) noexcept {
   return (rhs < lhs ? lhs - rhs : rhs - lhs) < error_tolerance;
 }
+
+///
+/// @brief Do linear interpolation with float type.
+/// If something wrong has been happened, return lowest value of float.
+///
+float Lerp(float lhs, float rhs, float offset);
+
+///
+/// @brief Do linear interpolation with double type.
+/// If something wrong has been happened, return lowest value of double.
+///
+double Lerp(double lhs, double rhs, float offset);
+
+///
+/// @brief Do linear interpolation with DVector2 type.
+///
+DVector2 Lerp(const DVector2& lhs, const DVector2& rhs, float offset);
+
+///
+/// @brief Do linear interpolation with DVector3 type.
+///
+DVector3 Lerp(const DVector3& lhs, const DVector3& rhs, float offset);
 
 } /// ::opgs16::math namespace
 
