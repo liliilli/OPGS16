@@ -292,7 +292,7 @@ public:
   }
 
 	///
-	/// @brief Destroy child object has unique tag key.
+	/// @brief Destroy child object has unique tag key but not recursively.
 	/// @param[in] name Object name.
 	/// @return Success/Failed tag.
   /// If arbitary m_object_list has been destroied, return ture.
@@ -301,10 +301,13 @@ public:
 
   ///
   /// @brief Destory child object with address.
+  /// @param[in] child_object Object reference.
+  /// @param[in] is_recursive Flag for destruction of specified object recursively.
 	/// @return Success/Failed tag.
   /// If arbitary m_object_list has been destroyed, return ture.
   ///
-  bool DestroyGameObject(const element::CObject& child_object);
+  bool DestroyGameObject(const element::CObject& child_object,
+                         bool is_recursive = false);
 
 	///
 	/// @brief Get children tag list.

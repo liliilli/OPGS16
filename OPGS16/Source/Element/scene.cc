@@ -19,6 +19,7 @@
 /// Header file
 #include <Element/scene.h>
 #include <Phitos/Dbg/assert.h>
+#include <Manager/object_manager.h>
 
 namespace opgs16::element {
 
@@ -54,6 +55,25 @@ CObject* CScene::GetGameObject(const std::string& object_name,
   }
 
   return GetGameObjectResursively(object_name);
+}
+
+bool CScene::DestroyGameObject(const std::string& child_name) {
+  if (const auto it = m_object_list.find(child_name); it == m_object_list.end()) {
+    PUSH_LOG_ERROR_EXT("Could not destroy object, {0}. [Name : {0}]", child_name);
+    return false;
+  }
+  else {
+    const auto result = manager::object::DestroyGameObject(
+        *(it->second.get()), nullptr, false);
+    return result;
+  }
+}
+
+bool CScene::DestroyGameObject(const element::CObject& object_reference,
+                               bool is_recursive) {
+  const auto result = manager::object::DestroyGameObject(
+      object_reference, nullptr, is_recursive);
+  return result;
 }
 
 CObject* CScene::GetGameObjectResursively(const std::string& object_name) noexcept {

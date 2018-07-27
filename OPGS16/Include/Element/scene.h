@@ -167,6 +167,24 @@ public:
 	CObject* GetGameObject(const std::string& object_name,
                          bool is_resursive = false);
 
+	///
+	/// @brief Destroy object has unique tag key but not recursively.
+	/// @param[in] object_name Object name.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroied, return ture.
+	///
+  bool DestroyGameObject(const std::string& object_name);
+
+  ///
+  /// @brief Destory child object with address.
+  /// @param[in] object_reference Object reference.
+  /// @param[in] is_recursive Flag for destruction of specified object recursively.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroyed, return ture.
+  ///
+  bool DestroyGameObject(const element::CObject& object_reference,
+                         bool is_recursive = false);
+
   ///
   /// @brief Set main camera of this scene, to display game scene.
   /// All object except for Canvas m_object_list (UI object) uses to main_camera to display.

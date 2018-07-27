@@ -291,16 +291,16 @@ bool CObject::DestroyGameObject(const std::string& child_name) {
     return false;
   }
   else {
-    const auto result = manager::object::Destroy(*(it->second.get()), this);
+    const auto result = manager::object::DestroyGameObject(
+        *(it->second.get()), this, false);
     return result;
   }
 }
 
-bool CObject::DestroyGameObject(const element::CObject& child_object) {
-  using TObjectMap = std::unordered_map<std::string, TGameObjectSmtPtr>;
-  using TItType = TObjectMap::iterator;
-
-  const auto result = manager::object::Destroy(child_object, this);
+bool CObject::DestroyGameObject(const element::CObject& child_object,
+                                bool is_recursive) {
+  const auto result = manager::object::DestroyGameObject(
+      child_object, this, is_recursive);
   return result;
 }
 

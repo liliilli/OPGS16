@@ -65,13 +65,15 @@ void RenderAABB();
 /// @brief
 /// Destroy specified object in present scene.
 ///
-/// If the object has script component, object will call Destroy() function
+/// If the object has script component, object will call DestroyGameObject() function
 /// before deleted permanently.
 ///
 /// @param[in] object Object to be destroyed.
 /// @param[in] root Object start point.
 ///
-bool Destroy(const element::CObject& object, element::CObject* root = nullptr);
+bool DestroyGameObject(const element::CObject& object,
+                       element::CObject* root = nullptr,
+                       bool is_recursive = false);
 
 ///
 /// @brief

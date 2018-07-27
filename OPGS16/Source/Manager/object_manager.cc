@@ -166,19 +166,40 @@ void RenderAABB() {
   glEnable(GL_DEPTH_TEST);
 }
 
-bool Destroy(const element::CObject& object, element::CObject* root) {
+bool DestroyGameObject(const element::CObject& object,
+                       element::CObject* root,
+                       bool is_recursive) {
   using TObjectMap = std::unordered_map<std::string, object_ptr>;
   using TObjectItType = TObjectMap::iterator;
-  std::stack<TObjectMap*> tree_list;
-  std::stack<TObjectItType> it_list;
 
+  if (!is_recursive) {
+    TObjectMap* object_list = nullptr;
+
+    if (!root)
+      object_list = scene::GetPresentScene()->GetGameObjectList();
+    else
+      object_list = &root->GetGameObjectList();
+
+    for (auto& [object_name, object_ptr] : *object_list) {
+      if (object_ptr.get() == &object) {
+        AddDestroyObject(object_ptr);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  // Old code
+
+  std::stack<TObjectMap*> tree_list;
   if (!root)
     tree_list.emplace(scene::GetPresentScene()->GetGameObjectList());
   else
     tree_list.emplace(&root->GetGameObjectList());
 
+  std::stack<TObjectItType> it_list;
   it_list.emplace(tree_list.top()->begin());
-  const auto hash_value = object.GetHash();
 
   while (!tree_list.empty()) {
     auto& object_list = *tree_list.top();
@@ -188,8 +209,7 @@ bool Destroy(const element::CObject& object, element::CObject* root) {
       if (!it->second)
         continue;
 
-      if (hash_value == it->second->GetHash() &&
-          it->second.get() == &object) {
+      if (it->second.get() == &object) {
         AddDestroyObject(it->second);
         return true;
       }
@@ -294,11 +314,11 @@ void DestroyObjects() {
 
   for (auto& object : m_destroy_candidates) {
     // Get script component list from object which will be destroyed,
-    // call Destroy() function.
+    // call DestroyGameObject() function.
     auto script_list = object->GetComponents<opgs16::component::CScriptFrame>();
     for (auto script : script_list) {
       PUSH_LOG_INFO_EXT(
-        "Object {0} called Destroy() function"
+        "Object {0} called DestroyGameObject() function"
         "prior to being destroyed actually.", object->GetGameObjectName());
       script->Destroy();
     }
