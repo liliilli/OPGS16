@@ -43,16 +43,6 @@ namespace opgs16::manager::physics {
 
 ///
 /// @brief
-/// Add AABB collider to be performed collision check by physics manager.
-///
-/// @param[in] collider 2D Collider to apply.
-/// @param[in] rigidbody 2D rigidbody to apply.
-///
-void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
-                 component::CRigidbody2D* const rigidbody);
-
-///
-/// @brief
 /// Update physics manager namespace to calculate physics collision process.
 ///
 void Update(float delta_time);
@@ -63,11 +53,26 @@ void Update(float delta_time);
 ///
 void RenderCollisionBox();
 
+#ifdef false
 ///
 /// @brief
-/// Release and clean physics object container.
+/// Add AABB collider to be performed collision check by physics manager.
 ///
-void Clear();
+/// @param[in] collider 2D Collider to apply.
+/// @param[in] rigidbody 2D rigidbody to apply.
+///
+void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
+                 component::CRigidbody2D* const rigidbody);
+
+///
+/// @brief
+/// Return reference of collision shape list.
+///
+/// @return Reference of collision shape list.
+///
+_internal::CCollisionShapeList& GetShapeList();
+
+#endif
 
 ///
 /// @brief
@@ -79,11 +84,9 @@ _internal::CPhysicsEnvironment* GetManagement();
 
 ///
 /// @brief
-/// Return reference of collision shape list.
+/// Release and clean physics object container.
 ///
-/// @return Reference of collision shape list.
-///
-_internal::CCollisionShapeList& GetShapeList();
+void Clear();
 
 } /// ::opgs16::manager::physics namespace.
 

@@ -85,6 +85,8 @@ struct CollisionFlag {
   ECollided y_bottom = ECollided::NotCollided;
 };
 
+#ifdef false
+
 ///
 /// @brief
 /// Check AABB Collision detection
@@ -216,13 +218,11 @@ void AdjustPosition(opgs16::component::CRigidbody2D* source,
   }
 }
 
+#endif
+
 } /// unnamed namespace
 
 namespace opgs16::manager::physics {
-
-void AddCollider(opgs16::physics::CRectangleCollider2D* const collider, component::CRigidbody2D* const rigidbody)
-{
-}
 
 void Update(float delta_time) {
 
@@ -240,8 +240,16 @@ CPhysicsEnvironment* GetManagement() {
   return &physics_environment;
 }
 
+#ifdef false
+
 CCollisionShapeList& GetShapeList() {
   return collision_shape_list;
 }
+
+void AddCollider(opgs16::physics::CRectangleCollider2D* const collider, component::CRigidbody2D* const rigidbody)
+{
+}
+
+#endif
 
 } /// ::opgs16::manager::physics namespace

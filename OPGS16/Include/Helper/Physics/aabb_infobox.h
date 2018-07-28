@@ -12,7 +12,7 @@
 
 #include <array>
 
-#include <Helper/vector.h>
+#include <Helper/include_vector.h>
 
 //!
 //! Forward declaration.

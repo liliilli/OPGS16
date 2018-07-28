@@ -185,12 +185,9 @@
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
-    <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
-    <ClCompile Include="Source\Component\Physics\collider_general.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
     <ClCompile Include="Source\Component\procedural2d_rendrer.cc" />
-    <ClCompile Include="Source\Component\Physics\rigidbody2d_compact.cc" />
     <ClCompile Include="Source\Core\application.cc" />
     <ClCompile Include="Include\Element\camera_object.cc" />
     <ClCompile Include="Source\Element\Canvas\canvas.cc" />
@@ -229,9 +226,6 @@
     <ClCompile Include="Include\Shader\Default\shader_quad2d.h" />
     <ClCompile Include="Source\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="Source\Component\camera.cc" />
-    <ClCompile Include="Source\Component\Physics\rectangle.cc" />
-    <ClCompile Include="Source\Component\Physics\collider_2d.cc" />
-    <ClCompile Include="Source\Component\Physics\rigidbody_2d.cc" />
     <ClCompile Include="Source\Core\logger.cc" />
     <ClCompile Include="Source\Manager\font_manager.cc" />
     <ClCompile Include="Source\Manager\object_manager.cc" />
@@ -271,10 +265,7 @@
     <ClInclude Include="Include\Component\font2d_renderer.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
-    <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
-    <ClInclude Include="Include\Component\Physics\collider_general.h" />
     <ClInclude Include="Include\Component\procedural2d_renderer.h" />
-    <ClInclude Include="Include\Component\Physics\rigidbody2d_compact.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
@@ -310,7 +301,7 @@
     <ClInclude Include="Include\Helper\Type\vector3.h" />
     <ClInclude Include="Include\Helper\Type\vectori2.h" />
     <ClInclude Include="Include\Helper\Type\vectori3.h" />
-    <ClInclude Include="Include\Helper\vector.h" />
+    <ClInclude Include="Include\Helper\include_vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
     <ClInclude Include="Include\Manager\Internal\shader_builtin_keywords.h" />
@@ -378,9 +369,6 @@
     <ClInclude Include="Include\Shader\Default\shader_font.h" />
     <ClInclude Include="Include\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="Include\Component\camera.h" />
-    <ClInclude Include="Include\Component\Physics\rectangle.h" />
-    <ClInclude Include="Include\Component\Physics\collider_2d.h" />
-    <ClInclude Include="Include\Component\Physics\rigidbody_2d.h" />
     <ClInclude Include="Include\Component\Internal\component.h" />
     <ClInclude Include="Include\Component\Internal\component_macro.h" />
     <ClInclude Include="Include\Component\script_frame.h" />

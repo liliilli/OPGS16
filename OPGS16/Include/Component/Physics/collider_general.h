@@ -33,7 +33,7 @@
 /// ::opgs16::ESwitch
 #include <Helper/switch.h>
 /// ::opgs16::DVector types
-#include <Helper/vector.h>
+#include <Helper/include_vector.h>
 /// ::opgs16::manager::physics
 #include <Manager/physics_manager.h>
 /// ::opgs16::manager::physics::_internal::CPhysicsEnvironment

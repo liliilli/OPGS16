@@ -22,7 +22,7 @@
 
 #include <Phitos/Enums/activated.h>
 
-#include <Helper/vector.h>
+#include <Helper/include_vector.h>
 
 namespace opgs16::element {
 
