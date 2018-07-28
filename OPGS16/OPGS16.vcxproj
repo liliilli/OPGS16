@@ -176,6 +176,7 @@
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
+    <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\precompiled.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>

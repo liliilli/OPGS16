@@ -50,8 +50,7 @@
 /// ::opgs16::builtin::SAABB2DShader
 #include <Shader/Default/aabb_2d_line.h>
 
-using object_ptr = std::unique_ptr<opgs16::element::CObject>;
-using object_raw = opgs16::element::CObject * ;
+using TObjectSmtPtr = std::unique_ptr<opgs16::element::CObject>;
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Forward Declaration
@@ -70,32 +69,23 @@ void DestroyObjects();
 /// @param[in] ptr
 ///
 ///
-void AddDestroyObject(object_ptr& ptr);
+void AddDestroyObject(TObjectSmtPtr& ptr);
 
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 /// Member container
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 ///
-/// This namespace is integrity check variable container for
-/// checking runtime caveats of source code.
-///
-namespace {
-using opgs16::debug::EInitiated;
-
-EInitiated m_initiated = EInitiated::NotInitiated;
-
-} /// unnamed namespace
-
-///
 /// This namespace stores variables or
 /// constexpr variables to be used by functions.
 ///
 namespace {
+using opgs16::debug::EInitiated;
+EInitiated m_initiated = EInitiated::NotInitiated;
 
-std::list<object_ptr> m_destroy_candidates;
+std::list<TObjectSmtPtr> m_destroy_candidates;
 
-std::vector<std::list<object_raw>> m_rendering_list;
+std::vector<std::list<opgs16::element::CObject*>> m_rendering_list;
 
 /// AABB rendering containers.
 ///
@@ -106,19 +96,133 @@ std::list<opgs16::DAABBInfoBox> m_aabb_3d_list;
 opgs16::element::CShaderWrapper m_aabb_2d_wrapper;
 opgs16::element::CShaderWrapper m_aabb_3d_wrapper;
 
+///
+/// @brief Private function for destruction object with recursive traverse.
+///
+bool pDestroyGameObjectRecursively(const opgs16::element::CObject& object,
+                                   opgs16::element::CObject* root) {
+  using TObjectMap = std::unordered_map<std::string, TObjectSmtPtr>;
+  using TObjectItType = TObjectMap::iterator;
+  using opgs16::manager::scene::GetPresentScene;
+
+  std::stack<TObjectMap*> tree_object_list;
+  if (!root) tree_object_list.emplace(GetPresentScene()->GetGameObjectList());
+  else       tree_object_list.emplace(&root->GetGameObjectList());
+
+  std::stack<TObjectItType> obj_it_list;
+  obj_it_list.emplace(tree_object_list.top()->begin());
+
+  while (!tree_object_list.empty()) {
+    auto& object_list = *tree_object_list.top();
+    auto  obj_it      =  obj_it_list.top();
+
+    for (; obj_it != object_list.end(); ++obj_it) {
+      if (obj_it->second == nullptr) continue;
+
+      // object ptr is same to object refenrence address of obj_it?
+      if (obj_it->second.get() == &object) {
+        AddDestroyObject(obj_it->second);
+        return true;
+      }
+
+      // Dig object tree down once more.
+      if (auto& additional_list = obj_it->second->GetGameObjectList();
+          !additional_list.empty()) {
+        obj_it_list.pop();
+        obj_it_list.emplace(++obj_it);
+        obj_it_list.emplace(additional_list.begin());
+        tree_object_list.emplace(&additional_list);
+        break;
+      }
+    }
+
+    // If failed to destroy object and no more children on this level.
+    if (obj_it == object_list.end() &&
+        &object_list == tree_object_list.top()) {
+      tree_object_list.pop();
+      obj_it_list.pop();
+    }
+  }
+
+  return false;
+}
+
+///
+/// @brief Private function for destruction candidate object with recursive traverse.
+///
+void pDestroyCandidateGameObjects() {
+  using TObjectMap = std::unordered_map<std::string, TObjectSmtPtr>;
+  using TObjectItType = TObjectMap::iterator;
+  using opgs16::manager::scene::GetPresentScene;
+
+  const int32_t size = static_cast<int32_t>(m_destroy_candidates.size());
+  for (int32_t i = 0; i < size; ++i) {
+    std::stack<TObjectMap*> tree_list;
+    std::stack<TObjectItType> it_list;
+    tree_list.emplace(GetPresentScene()->GetGameObjectList());
+    it_list.emplace(tree_list.top()->begin());
+
+    bool destroyed = false;
+    while (destroyed == false && !tree_list.empty()) {
+      auto object_list = tree_list.top();
+      auto it = it_list.top();
+
+      for (; it != object_list->end(); ++it) {
+        if (it->second == nullptr) {
+          object_list->erase(it);
+          destroyed = true;
+          break;
+        };
+
+        if (auto& additional_list = it->second->GetGameObjectList();
+            !additional_list.empty()) {
+          it_list.pop();
+          it_list.emplace(++it);
+          it_list.emplace(additional_list.begin());
+          tree_list.emplace(&additional_list);
+          break;
+        }
+      }
+
+      if (destroyed == false && object_list == tree_list.top()) {
+        tree_list.pop();
+        it_list.pop();
+      }
+    }
+  }
+}
+
+void pCallScriptDestroyFunction(opgs16::element::CObject* object) {
+  using opgs16::component::CScriptFrame;
+  // Get script component list from object which will be destroyed,
+  // call DestroyGameObject() function.
+  auto script_list = object->GetComponents<CScriptFrame>();
+  for (auto script : script_list) {
+    PUSH_LOG_INFO_EXT(
+      "Object {0} called DestroyGameObject() function"
+      "prior to being destroyed actually.", object->GetGameObjectName());
+    script->Destroy();
+  }
+}
+
+void pTraverseToBeDestroyedObject(opgs16::element::CObject* object) {
+  auto& children_list = object->GetGameObjectList();
+  for (auto& [string, smtptr] : children_list) {
+    pTraverseToBeDestroyedObject(smtptr.get());
+    pCallScriptDestroyFunction(smtptr.get());
+  }
+}
+
 } /// unnamed namespace
 
 namespace opgs16::manager::object {
 
 void Initiate() {
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
-      debug::err_object_duplicated_init);
+                debug::err_object_duplicated_init);
   m_initiated = EInitiated::Initiated;
-
   m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
-
-  m_aabb_2d_wrapper.SetShader(
-      shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
+  m_aabb_2d_wrapper.SetShader(shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
 }
 
 void Update() {
@@ -169,7 +273,7 @@ void RenderAABB() {
 bool DestroyGameObject(const element::CObject& object,
                        element::CObject* root,
                        bool is_recursive) {
-  using TObjectMap = std::unordered_map<std::string, object_ptr>;
+  using TObjectMap = std::unordered_map<std::string, TObjectSmtPtr>;
   using TObjectItType = TObjectMap::iterator;
 
   if (!is_recursive) {
@@ -190,47 +294,8 @@ bool DestroyGameObject(const element::CObject& object,
     return false;
   }
 
-  // Old code
-
-  std::stack<TObjectMap*> tree_list;
-  if (!root)
-    tree_list.emplace(scene::GetPresentScene()->GetGameObjectList());
-  else
-    tree_list.emplace(&root->GetGameObjectList());
-
-  std::stack<TObjectItType> it_list;
-  it_list.emplace(tree_list.top()->begin());
-
-  while (!tree_list.empty()) {
-    auto& object_list = *tree_list.top();
-    auto it = it_list.top();
-
-    for (; it != object_list.end(); ++it) {
-      if (!it->second)
-        continue;
-
-      if (it->second.get() == &object) {
-        AddDestroyObject(it->second);
-        return true;
-      }
-
-      if (auto& additional_list = it->second->GetGameObjectList();
-          !additional_list.empty()) {
-        it_list.pop();
-        it_list.emplace(++it);
-        it_list.emplace(additional_list.begin());
-        tree_list.emplace(&additional_list);
-        break;
-      }
-    }
-
-    if (it == object_list.end() && &object_list == tree_list.top()) {
-      tree_list.pop();
-      it_list.pop();
-    }
-  }
-
-  return false;
+  // Recursive code
+  return pDestroyGameObjectRecursively(object, root);
 }
 
 void ClearDestroyCandidates() {
@@ -268,61 +333,18 @@ void InsertAABBInformation(EAABBStyle mode, const DAABBInfoBox& aabb_box) {
 /// Local functions
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
-void AddDestroyObject(object_ptr& ptr) {
+void AddDestroyObject(TObjectSmtPtr& ptr) {
   m_destroy_candidates.emplace_back(std::move(ptr));
 }
 
 void DestroyObjects() {
-  const int32_t size = static_cast<int32_t>(m_destroy_candidates.size());
-  for (int32_t i = 0; i < size; ++i) {
-    using object_map = std::unordered_map<std::string, object_ptr>;
-    using it_type = object_map::iterator;
-    std::stack<object_map*> tree_list;
-    std::stack<it_type> it_list;
-
-    tree_list.emplace(opgs16::manager::scene::GetPresentScene()->GetGameObjectList());
-    it_list.emplace(tree_list.top()->begin());
-
-    bool destroyed = false;
-    while (!destroyed && !tree_list.empty()) {
-      auto& object_list = *tree_list.top();
-      auto it = it_list.top();
-
-      for (; it != object_list.end(); ++it) {
-        if (!it->second) {
-          object_list.erase(it);
-          destroyed = true;
-          break;
-        };
-
-        if (auto& additional_list = it->second->GetGameObjectList();
-            !additional_list.empty()) {
-          it_list.pop();
-          it_list.emplace(++it);
-          it_list.emplace(additional_list.begin());
-          tree_list.emplace(&additional_list);
-          break;
-        }
-      }
-
-      if (!destroyed && &object_list == tree_list.top()) {
-        tree_list.pop();
-        it_list.pop();
-      }
-    }
-  }
+  pDestroyCandidateGameObjects();
 
   for (auto& object : m_destroy_candidates) {
-    // Get script component list from object which will be destroyed,
-    // call DestroyGameObject() function.
-    auto script_list = object->GetComponents<opgs16::component::CScriptFrame>();
-    for (auto script : script_list) {
-      PUSH_LOG_INFO_EXT(
-        "Object {0} called DestroyGameObject() function"
-        "prior to being destroyed actually.", object->GetGameObjectName());
-      script->Destroy();
-    }
+    pTraverseToBeDestroyedObject(object.get());
+    pCallScriptDestroyFunction(object.get());
   }
+
   m_destroy_candidates.clear();
 }
 

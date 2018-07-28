@@ -91,6 +91,7 @@
     <ClCompile Include="_Project\Test020\Source\Script\scriptSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
+    <ClCompile Include="Source\Helper\Math\math.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
