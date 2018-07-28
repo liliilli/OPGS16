@@ -139,6 +139,12 @@ public:
 	void SetParentPosition(const DVector3& parent_position);
 
   ///
+  /// @brief The method set final position but keeping parent position
+  /// but adjusting CObject's world position.
+  ///
+  void SetWorldPosWithFinalPos(const DVector3& final_position);
+
+  ///
   /// @brief Get Object's final position.
   ///
   const DVector3& GetFinalPosition() const noexcept;

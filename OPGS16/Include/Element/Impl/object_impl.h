@@ -86,6 +86,13 @@ public:
     m_final_pos_deprecated = true;
   }
 
+  ///
+  ///
+  ///
+  inline void SetWorldPosWithFinalPos(const DVector3& final_position) {
+    SetWorldPosition(final_position - m_parent_from_position);
+  }
+
   inline void SetParentPosition(const DVector3& parent_position) {
     m_parent_from_position = parent_position;
     m_parent_to_position = parent_position + m_world_position;

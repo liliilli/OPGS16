@@ -225,7 +225,7 @@ void AdjustPosition(opgs16::component::CRigidbody2D* source,
 namespace opgs16::manager::physics {
 
 void Update(float delta_time) {
-
+  physics_environment.PhysicsUpdate(delta_time);
 }
 
 void RenderCollisionBox() {
@@ -239,6 +239,17 @@ void Clear()
 CPhysicsEnvironment* GetManagement() {
   return &physics_environment;
 }
+
+bool AddRigidbody(btRigidBody* rigidbody) {
+  physics_environment.AddRigidbody(rigidbody);
+  return true;
+}
+
+bool RemoveRigidbody(btRigidBody* rigidbody) {
+  physics_environment.RemoveRigidbody(rigidbody);
+  return true;
+}
+
 
 #ifdef false
 

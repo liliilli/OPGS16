@@ -40,6 +40,8 @@ public:
 
   void SetKinematic(bool is_kinematic);
 
+  void TemporalSetStatic();
+
   ///
   /// @update
   /// Frequent call will cause performance decrease.
@@ -53,10 +55,12 @@ public:
 private:
   void Update(float delta_time) override final;
 
-  btRigidBody* m_rigidbody = nullptr;
+  btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
 
   int32_t m_collision_tag_index = -1;
+
+  bool m_is_position_initialized = false;
 };
 
 } /// ::opgs16::component namespace

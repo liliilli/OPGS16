@@ -134,6 +134,11 @@ void CObject::SetParentPosition(const DVector3& parent_position) {
   PropagateParentPosition();
 }
 
+void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
+  m_data->SetWorldPosWithFinalPos(final_position);
+  PropagateParentPosition();
+}
+
 void CObject::PropagateParentPosition() {
   for (auto& child : m_children) {
     auto& child_ptr = child.second;

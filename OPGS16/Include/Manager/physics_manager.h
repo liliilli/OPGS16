@@ -76,6 +76,16 @@ _internal::CCollisionShapeList& GetShapeList();
 
 ///
 /// @brief
+///
+bool AddRigidbody(btRigidBody* rigidbody);
+
+///
+/// @brief
+///
+bool RemoveRigidbody(btRigidBody* rigidbody);
+
+///
+/// @brief
 /// Return reference of physics environment managerial instance.
 ///
 /// @return Reference of physics environment instance.

@@ -19,6 +19,7 @@
 #include <BulletCollision/CollisionShapes/btBox2dShape.h>
 
 #include <Element/object.h>
+#include <Manager/physics_manager.h>
 
 namespace opgs16::component {
 
@@ -29,6 +30,7 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
     const DVector2& collider_size,
     const std::string& collision_tag) : CComponent{ bind_object } {
   using opgs16::element::_internal::EDirection;
+  using opgs16::manager::physics::AddRigidbody;
 
   m_collision_shape = new btBox2dShape{
       static_cast<btVector3>(collider_size * 0.5f)
@@ -67,9 +69,14 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
     );
     m_rigidbody->setActivationState(DISABLE_DEACTIVATION);
   }
+
+  opgs16::manager::physics::AddRigidbody(m_rigidbody);
 }
 
 CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
+  using opgs16::manager::physics::RemoveRigidbody;
+  opgs16::manager::physics::RemoveRigidbody(m_rigidbody);
+
   if (m_rigidbody) {
     delete m_rigidbody->getMotionState();
     delete m_rigidbody;
@@ -103,6 +110,10 @@ void CProtoRigidbodyCollider2D::SetKinematic(bool is_kinematic) {
   }
 }
 
+void CProtoRigidbodyCollider2D::TemporalSetStatic() {
+  m_rigidbody->setMassProps(0, {});
+}
+
 void CProtoRigidbodyCollider2D::SetColliderSize(const DVector2& size) {
   if (m_collision_shape)
     delete m_collision_shape;
@@ -123,6 +134,17 @@ float CProtoRigidbodyCollider2D::IsKinematic() noexcept {
 
 void CProtoRigidbodyCollider2D::Update(float delta_time) {
   auto& obj = GetBindObject();
+  if (m_is_position_initialized) {
+    const auto& position = obj.GetFinalPosition();
+
+    btTransform transform;
+    m_rigidbody->getMotionState()->getWorldTransform(transform);
+    transform.setOrigin(position);
+    m_rigidbody->getMotionState()->setWorldTransform(transform);
+
+    m_is_position_initialized = true;
+  }
+
   const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
 
   btVector3 min;

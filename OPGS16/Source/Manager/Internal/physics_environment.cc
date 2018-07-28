@@ -25,6 +25,7 @@
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
+#include "Element/object.h"
 
 namespace opgs16::manager::physics::_internal {
 
@@ -105,28 +106,22 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
 }
 
 void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
+  using opgs16::element::CObject;
   DebugCheckWorldInitiated();
 
   m_dynamics_world->stepSimulation(delta_time, 10);
 
   for (auto j = m_dynamics_world->getNumCollisionObjects() - 1; j >= 0; --j) {
-    auto collision_obj = m_dynamics_world->getCollisionObjectArray()[j];
+    const auto collision_obj = m_dynamics_world->getCollisionObjectArray()[j];
     auto rigidbody_obj = btRigidBody::upcast(collision_obj);
 
-    btTransform trans;
     if (rigidbody_obj && rigidbody_obj->getMotionState()) {
+      btTransform trans;
       rigidbody_obj->getMotionState()->getWorldTransform(trans);
-    }
-    else {
-      trans = rigidbody_obj->getWorldTransform();
-    }
 
-    printf("World pos object %d = %f, %f, %f\n",
-      j,
-      float(trans.getOrigin().getX()),
-      float(trans.getOrigin().getY()),
-      float(trans.getOrigin().getZ())
-    );
+      auto obj_ptr = static_cast<CObject*>(rigidbody_obj->getUserPointer());
+      obj_ptr->SetWorldPosWithFinalPos(static_cast<DVector3>(trans.getOrigin()));
+    }
   }
 }
 
