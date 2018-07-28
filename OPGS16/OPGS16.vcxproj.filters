@@ -86,6 +86,11 @@
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\Helper\Physics\aabb_infobox.cc" />
+    <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
+    <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -240,6 +245,11 @@
     <ClInclude Include="Include\Manager\Physics\physics_internal.h" />
     <ClInclude Include="Include\Helper\Physics\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\include_vector.h" />
+    <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
+    <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Physics\object_player.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Physics\object_floor.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

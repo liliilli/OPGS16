@@ -176,6 +176,7 @@
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
+    <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\precompiled.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -255,7 +256,11 @@
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
     <ClCompile Include="_Project\Test020\Source\Scene\hello_world.cc" />
+    <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
@@ -265,6 +270,7 @@
     <ClInclude Include="Include\Component\font2d_renderer.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
+    <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
     <ClInclude Include="Include\Component\procedural2d_renderer.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
@@ -404,7 +410,11 @@
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_canvas.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_object.h" />
     <ClInclude Include="_Project\Test020\Include\Object\objectSound.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Physics\object_floor.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Physics\object_player.h" />
+    <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\hello_world.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
