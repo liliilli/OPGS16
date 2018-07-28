@@ -29,42 +29,33 @@
 #include <Phitos/Dbg/assert.h>
 
 /// opgs16::component::CRigidbody2D
-#include <Component/rigidbody_2d.h>
+#include <Component/Physics/rigidbody_2d.h>
 /// collision::CRectangleCollider2D
-#include <Component/Physics2D/Collider/rectangle.h>
+#include <Component/Physics/rectangle.h>
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// ::opgs16::manager::MSettingManager
 #include <Manager/setting_manager.h>
 /// ::opgs16::manager::physics::_internal::CCollisionShapeList
-#include <Manager/Internal/physics_collision_shape_list.h>
+#include <Manager/Physics/physics_collision_shape_list.h>
 /// ::opgs16::manager::physics Strong enum flags.
-#include <Manager/Internal/physics_flag.h>
+#include <Manager/Physics/physics_flag.h>
 /// ::opgs16::manager::_internal::Item
-#include <Manager/Internal/physics_internal.h>
+#include <Manager/Physics/physics_internal.h>
 /// ::opgs16::manager::physics::_internal::CPhysicsEnvironment
-#include <Manager/Internal/physics_environment.h>
-
+#include <Manager/Physics/physics_environment.h>
 
 /// import loggers
 #include <Headers/import_logger.h>
 
-using ECollided = opgs16::manager::physics::ECollided;
-using CCollisionShapeList = opgs16::manager::physics::_internal::CCollisionShapeList;
-using CPhysicsEnvironment = opgs16::manager::physics::_internal::CPhysicsEnvironment;
-using EPhysicsEnvironment = opgs16::manager::physics::_internal::EPhysicsEnvironment;
-
 namespace {
+using opgs16::manager::physics::ECollided;
+using opgs16::manager::physics::_internal::CCollisionShapeList;
+using opgs16::manager::physics::_internal::CPhysicsEnvironment;
+using opgs16::manager::physics::_internal::EPhysicsEnvironment;
 
-using item_ptr = std::unique_ptr<opgs16::manager::_internal::Item>;
-using item_raw = opgs16::manager::_internal::Item* ;
+CPhysicsEnvironment physics_environment {EPhysicsEnvironment::Default};
 
-std::vector<item_ptr> m_potential;
-std::vector<item_raw> m_active;
-
-//
-CPhysicsEnvironment management{EPhysicsEnvironment::Default};
-//
 CCollisionShapeList collision_shape_list;
 
 } /// unnamed namespace
@@ -225,121 +216,28 @@ void AdjustPosition(opgs16::component::CRigidbody2D* source,
   }
 }
 
-
-///
-/// @brief
-/// Proceed AABB collision check for Rigidbody2D item for activated rigidbody2d
-/// collidable objects.
-///
-/// If item and any object is collided each other, call OnCollisionEnter or
-/// OnTriggerEnter itself with parameter as objective's rigidbody reference.
-///
-/// @param[in] item Collision item object.
-///
-void ProceedCollisionCheck(item_ptr& item) {
-  for (auto& active_item : m_active) {
-    // If rigidbody is same, do not check collision.
-    auto const s_rigidbody = active_item->m_rigidbody;
-    auto const d_rigidbody = item->m_rigidbody;
-    if (s_rigidbody == d_rigidbody)
-      continue;
-
-    auto const s_collider = active_item->m_collider;
-    auto const d_collider = item->m_collider;
-    if (!opgs16::manager::setting::CollisionLayerCheck(
-        s_collider->CollisionLayer(), d_collider->CollisionLayer()))
-      continue;
-
-    if (DetectCollisionAabbExt(s_collider, d_collider) == ECollided::Collided) {
-      // Check solidification
-      // Disable adjusting position temporarily because it's so much buggy.
-      // @todo Fix AdjustPosition.
-#ifdef false
-      if (d_rigidbody->IsSolid() && !s_rigidbody->IsSolid()) {
-        AdjustPosition(s_rigidbody, s_collider, d_collider);
-      }
-      else if (s_rigidbody->IsSolid() && !d_rigidbody->IsSolid()) {
-        AdjustPosition(d_rigidbody, d_collider, s_collider);
-      }
-#endif
-
-      // Call callback member function
-      using CollisionType = opgs16::physics::CCollider2D::ECollisionType;
-      if (s_collider->CollisionType() == CollisionType::COLLISION)
-        s_rigidbody->OnCollisionEnter(*d_rigidbody);
-      else
-        s_rigidbody->OnTriggerEnter(*d_rigidbody);
-
-      if (d_collider->CollisionType() == CollisionType::COLLISION)
-        d_rigidbody->OnCollisionEnter(*s_rigidbody);
-      else
-        d_rigidbody->OnTriggerEnter(*s_rigidbody);
-    }
-  }
-}
-
-void EraseItem(item_ptr& item) {
-  for (auto it = m_active.cbegin(); it != m_active.cend(); ++it) {
-    if ((*it)->m_collider == item->m_collider) {
-      m_active.erase(it);
-      break;
-    }
-  }
-}
-
 } /// unnamed namespace
 
 namespace opgs16::manager::physics {
 
-void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
-  component::CRigidbody2D* const rigidbody) {
-  using Type = opgs16::physics::CRectangleCollider2D::PositionType;
-  auto ld = collider->GetTipPosition(Type::LEFT_DOWN);
-  auto ru = collider->GetTipPosition(Type::RIGHT_UP);
-
-  // Insert to potential list
-  m_potential.emplace_back(
-    std::make_unique<manager::_internal::Item>(collider, rigidbody, ld,
-                                      manager::_internal::Item::Type::Begin));
-  m_potential.emplace_back(
-    std::make_unique<manager::_internal::Item>(collider, rigidbody, ru,
-                                      manager::_internal::Item::Type::End));
+void AddCollider(opgs16::physics::CRectangleCollider2D* const collider, component::CRigidbody2D* const rigidbody)
+{
 }
 
-void Update() {
-  // Sorting lambda function (do not stable_sort).
-  std::sort(m_potential.begin(), m_potential.end(),
-      [](const item_ptr& lhs, const item_ptr& rhs) {
-      return lhs->m_position.x < rhs->m_position.x;
-  });
+void Update(float delta_time) {
 
-  // Processing
-  for (auto& item : m_potential) {
-    switch (item->m_type) {
-    case manager::_internal::Item::Type::Begin:
-      ProceedCollisionCheck(item);
-      m_active.emplace_back(item.get());
-      break;
-    case manager::_internal::Item::Type::End:
-      EraseItem(item);
-      break;
-    }
-  }
-
-  m_active.clear();
 }
 
 void RenderCollisionBox() {
   PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
-void Clear() {
-  m_active.clear();
-  m_potential.clear();
+void Clear()
+{
 }
 
-CPhysicsEnvironment& GetManagement() {
-  return management;
+CPhysicsEnvironment* GetManagement() {
+  return &physics_environment;
 }
 
 CCollisionShapeList& GetShapeList() {

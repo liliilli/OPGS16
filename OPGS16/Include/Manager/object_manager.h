@@ -22,7 +22,7 @@
 /// Forward declaration
 #include <opgs16fwd.h>
 /// ::opgs16::DAABBInfoBox
-#include <Helper/aabb_infobox.h>
+#include <Helper/Physics/aabb_infobox.h>
 
 ///
 /// @namespace opgs16::manager::object

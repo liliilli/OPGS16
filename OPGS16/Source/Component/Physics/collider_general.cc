@@ -24,9 +24,9 @@
 /// ::opgs16::manager::physics
 #include <Manager/physics_manager.h>
 /// ::opgs16::manager::physics::_internal::CCollisionShapeList
-#include <Manager/Internal/physics_collision_shape_list.h>
+#include <Manager/Physics/physics_collision_shape_list.h>
 /// ::opgs16::manager::_internal::CPhysicsEnvironment
-#include <Manager/Internal/physics_environment.h>
+#include <Manager/Physics/physics_environment.h>
 
 namespace opgs16::component::physics {
 
@@ -36,7 +36,7 @@ CColliderGeneral::~CColliderGeneral() {
 
   if (m_rigidbody != nullptr) {
     if (m_is_rigidbody_bound == ERigidbodyBound::Binded) {
-      manager::physics::GetManagement().RemoveRigidbody(m_rigidbody);
+      manager::physics::GetManagement()->RemoveRigidbody(m_rigidbody);
     }
 
     delete m_rigidbody;
@@ -86,7 +86,7 @@ void CColliderGeneral::BindRigidbodyToDynamicWorld() {
   PHITOS_ASSERT(m_is_rigidbody_bound == ERigidbodyBound::NotBind,
       "Rigidbody is not bind yet.");
 
-  manager::physics::GetManagement().AddRigidbody(m_rigidbody);
+  manager::physics::GetManagement()->AddRigidbody(m_rigidbody);
   m_is_rigidbody_bound = ERigidbodyBound::Binded;
 }
 

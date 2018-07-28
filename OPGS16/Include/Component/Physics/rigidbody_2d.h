@@ -51,7 +51,7 @@
 #include <Component/Internal/component_macro.h> /// Component macroes
 
 /// ::opgs16::component::collision::CRectangleCollider2D
-#include <Component/Physics2D/Collider/rectangle.h>
+#include <Component/Physics/rectangle.h>
 
 #include <opgs16fwd.h>  /// Forward declration.
 

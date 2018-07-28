@@ -68,7 +68,7 @@ void CProcedural2DRenderer::SetSize(int32_t width, int32_t height) {
   m_buffer_size.y = height;
 
   for (auto& element : m_buffer) {
-    element[3] = static_cast<int8_t>(0xFF);
+    element[3] = 0b11111111;
   }
 
   if (m_texture_id > 0) {

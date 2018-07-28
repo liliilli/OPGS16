@@ -31,7 +31,7 @@
 
 #include <Helper/Physics/enum_types.h>
 
-#include <Manager/Internal/physics_collision_shape_list.h>
+#include <Manager/Physics/physics_collision_shape_list.h>
 
 //!
 //! Forward declaration.

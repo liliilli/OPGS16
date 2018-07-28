@@ -55,7 +55,7 @@ void AddCollider(opgs16::physics::CRectangleCollider2D* const collider,
 /// @brief
 /// Update physics manager namespace to calculate physics collision process.
 ///
-void Update();
+void Update(float delta_time);
 
 ///
 /// @brief
@@ -75,7 +75,7 @@ void Clear();
 ///
 /// @return Reference of physics environment instance.
 ///
-_internal::CPhysicsEnvironment& GetManagement();
+_internal::CPhysicsEnvironment* GetManagement();
 
 ///
 /// @brief

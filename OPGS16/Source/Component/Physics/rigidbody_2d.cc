@@ -19,7 +19,7 @@
 ///
 
 /// Header file
-#include <Component/rigidbody_2d.h>
+#include <Component/Physics/rigidbody_2d.h>
 
 /// ::opgs16::element::CObject
 #include <Element/object.h>

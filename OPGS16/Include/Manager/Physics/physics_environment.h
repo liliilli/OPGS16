@@ -28,7 +28,7 @@
 /// ::phitos::enums::EInitated
 #include <Phitos/Enums/initiated.h>
 /// ::opgs16::EAxis3D
-#include <Helper/axis.h>
+#include <Helper/Type/axis.h>
 
 namespace opgs16::manager::physics::_internal {
 

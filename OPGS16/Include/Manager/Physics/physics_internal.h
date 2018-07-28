@@ -16,7 +16,7 @@
 ///
 
 /// ::opgs16::component::CRigidbody2D
-#include <Component/rigidbody_2d.h>
+#include <Component/Physics/rigidbody_2d.h>
 
 namespace opgs16::manager::_internal {
 

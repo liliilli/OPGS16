@@ -27,7 +27,7 @@
 /// ::opgs16::element::_internal::CCollisionShapeWrapper
 #include <Element/Internal/physics_collision_shape_wrapper.h>
 /// ::opgs16::EAxis3D
-#include <Helper/axis.h>
+#include <Helper/Type/axis.h>
 /// ::opgs16:: Enum types for physics
 #include <Helper/Physics/enum_types.h>
 /// ::opgs16::ESwitch
@@ -37,9 +37,9 @@
 /// ::opgs16::manager::physics
 #include <Manager/physics_manager.h>
 /// ::opgs16::manager::physics::_internal::CPhysicsEnvironment
-#include <Manager/Internal/physics_environment.h>
+#include <Manager/Physics/physics_environment.h>
 /// ::opgs16::manager::physics::_internal::CCollisionShapeList
-#include <Manager/Internal/physics_collision_shape_list.h>
+#include <Manager/Physics/physics_collision_shape_list.h>
 
 namespace opgs16::component::physics {
 

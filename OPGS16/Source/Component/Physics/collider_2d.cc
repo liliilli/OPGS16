@@ -35,7 +35,7 @@
 /// 2018-04-17 Move ::collider::CCollider2D functions to ::opgs16::physics::CCollider2D.
 /// \todo Remove Exception.
 
-#include <Component\Physics2D\collider_2d.h>    /// Header file
+#include <Component\Physics\collider_2d.h>    /// Header file
 
 #include <stdexcept>                    /// What???????
 #include <Manager\setting_manager.h>    /// ::opgs16::manager::MSettingManager

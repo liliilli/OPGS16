@@ -10,10 +10,7 @@
     <ClCompile Include="Source\Component\empty_renderer.cc" />
     <ClCompile Include="Source\Component\preprocessing_getter.cc" />
     <ClCompile Include="Source\Component\preprocessing2d_renderer.cc" />
-    <ClCompile Include="Source\Component\rigidbody_2d.cc" />
     <ClCompile Include="Source\Component\Internal\renderer_base.cc" />
-    <ClCompile Include="Source\Component\Physics2D\Collider\rectangle.cc" />
-    <ClCompile Include="Source\Component\Physics2D\collider_2d.cc" />
     <ClCompile Include="Source\Core\application.cc" />
     <ClCompile Include="Source\Core\core_setting.cc" />
     <ClCompile Include="Source\Core\entry.cc" />
@@ -63,8 +60,6 @@
     <ClCompile Include="Source\Manager\Internal\physics_environment.cc" />
     <ClCompile Include="Source\Component\Physics\collider_general.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
-    <ClCompile Include="Source\Component\rigidbody2d_compact.cc" />
-    <ClCompile Include="Source\Helper\aabb_infobox.cc" />
     <ClCompile Include="Source\Shader\Default\aabb_2d_line.cc" />
     <ClCompile Include="Source\Element\Internal\internal_vertex_array_object.cc" />
     <ClCompile Include="Source\Manager\Internal\vao_management.cc" />
@@ -92,6 +87,11 @@
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
+    <ClCompile Include="Source\Helper\Physics\aabb_infobox.cc" />
+    <ClCompile Include="Source\Component\Physics\collider_2d.cc" />
+    <ClCompile Include="Source\Component\Physics\rectangle.cc" />
+    <ClCompile Include="Source\Component\Physics\rigidbody_2d.cc" />
+    <ClCompile Include="Source\Component\Physics\rigidbody2d_compact.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -105,7 +105,6 @@
     <ClInclude Include="Include\Frame\timer_handle.h" />
     <ClInclude Include="Include\Manager\Internal\font_internal.h" />
     <ClInclude Include="Include\Manager\Internal\input_internal.h" />
-    <ClInclude Include="Include\Manager\Internal\physics_internal.h" />
     <ClInclude Include="Include\Manager\Internal\resource_internal.h" />
     <ClInclude Include="Include\Manager\Internal\timer_internal.h" />
     <ClInclude Include="Include\Shader\Impl\pp_frame_impl.h" />
@@ -120,14 +119,11 @@
     <ClInclude Include="Include\Component\Internal\component.h" />
     <ClInclude Include="Include\Component\Internal\component_macro.h" />
     <ClInclude Include="Include\Component\Internal\renderer_base.h" />
-    <ClInclude Include="Include\Component\Physics2D\Collider\rectangle.h" />
-    <ClInclude Include="Include\Component\Physics2D\collider_2d.h" />
     <ClInclude Include="Include\Component\animator.h" />
     <ClInclude Include="Include\Component\camera.h" />
     <ClInclude Include="Include\Component\empty_renderer.h" />
     <ClInclude Include="Include\Component\preprocessing_getter.h" />
     <ClInclude Include="Include\Component\preprocessing2d_renderer.h" />
-    <ClInclude Include="Include\Component\rigidbody_2d.h" />
     <ClInclude Include="Include\Component\script_frame.h" />
     <ClInclude Include="Include\Core\application.h" />
     <ClInclude Include="Include\Core\core_header.h" />
@@ -189,18 +185,12 @@
     <ClInclude Include="Include\Component\Internal\type.h" />
     <ClInclude Include="Include\Component\font2d_renderer.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
-    <ClInclude Include="Include\Manager\Internal\physics_flag.h" />
-    <ClInclude Include="Include\Manager\Internal\physics_environment.h" />
-    <ClInclude Include="Include\Helper\axis.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\initiated.h" />
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
-    <ClInclude Include="Include\Manager\Internal\physics_collision_shape_list.h" />
     <ClInclude Include="Include\Component\Physics\collider_general.h" />
     <ClInclude Include="Include\Helper\Physics\enum_types.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
-    <ClInclude Include="Include\Component\rigidbody2d_compact.h" />
     <ClInclude Include="Include\Helper\vector.h" />
-    <ClInclude Include="Include\Helper\aabb_infobox.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="Include\Element\Internal\vertex_array_object.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Types\ptTByte.h" />
@@ -252,6 +242,16 @@
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_object.h" />
     <ClInclude Include="Include\Element\Bulitin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Bulitin\empty_object.h" />
+    <ClInclude Include="Include\Helper\Type\axis.h" />
+    <ClInclude Include="Include\Manager\Physics\physics_collision_shape_list.h" />
+    <ClInclude Include="Include\Manager\Physics\physics_flag.h" />
+    <ClInclude Include="Include\Manager\Physics\physics_environment.h" />
+    <ClInclude Include="Include\Manager\Physics\physics_internal.h" />
+    <ClInclude Include="Include\Helper\Physics\aabb_infobox.h" />
+    <ClInclude Include="Include\Component\Physics\collider_2d.h" />
+    <ClInclude Include="Include\Component\Physics\rectangle.h" />
+    <ClInclude Include="Include\Component\Physics\rigidbody_2d.h" />
+    <ClInclude Include="Include\Component\Physics\rigidbody2d_compact.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

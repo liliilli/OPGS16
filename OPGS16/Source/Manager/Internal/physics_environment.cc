@@ -17,7 +17,7 @@
 ///
 
 /// Header file
-#include <Manager/Internal/physics_environment.h>
+#include <Manager/Physics/physics_environment.h>
 
 /// ::phitos:: enhanced assertion.
 #include <Phitos/Dbg/assert.h>
@@ -37,9 +37,9 @@ CPhysicsEnvironment::CPhysicsEnvironment(EPhysicsEnvironment environment_style) 
   switch (environment_style) {
   case EPhysicsEnvironment::Default: {}
     m_collision_configuration = new btDefaultCollisionConfiguration();
-    m_collision_dispatcher = new btCollisionDispatcher(m_collision_configuration);
-    m_overlapping_pair_cache = new btDbvtBroadphase();
-    m_solver = new btSequentialImpulseConstraintSolver();
+    m_collision_dispatcher    = new btCollisionDispatcher(m_collision_configuration);
+    m_overlapping_pair_cache  = new btDbvtBroadphase();
+    m_solver                  = new btSequentialImpulseConstraintSolver();
 
     m_dynamics_world = new btDiscreteDynamicsWorld(
       m_collision_dispatcher,
@@ -64,7 +64,6 @@ CPhysicsEnvironment::~CPhysicsEnvironment() {
 
 void CPhysicsEnvironment::SetGlobalGravity(float x, float y, float z) noexcept {
   DebugCheckWorldInitiated();
-
   m_dynamics_world->setGravity({x, y, z});
 }
 
@@ -105,10 +104,10 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
   m_dynamics_world->removeRigidBody(rigidbody_rawptr);
 }
 
-void CPhysicsEnvironment::PhysicsUpdate(float time_delta) {
+void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   DebugCheckWorldInitiated();
 
-  m_dynamics_world->stepSimulation(time_delta, 10);
+  m_dynamics_world->stepSimulation(delta_time, 10);
 
   for (auto j = m_dynamics_world->getNumCollisionObjects() - 1; j >= 0; --j) {
     auto collision_obj = m_dynamics_world->getCollisionObjectArray()[j];

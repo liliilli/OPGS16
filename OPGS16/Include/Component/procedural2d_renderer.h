@@ -73,7 +73,7 @@ public:
   }
 
 private:
-  std::vector<std::array<int8_t, 4>> m_buffer;
+  std::vector<std::array<uint8_t, 4>> m_buffer;
 
   element::CShaderWrapper m_wrapper;
   element::CVaoContainer* m_weak_vao_ref = nullptr;

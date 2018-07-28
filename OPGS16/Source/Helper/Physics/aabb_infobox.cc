@@ -8,7 +8,7 @@
 /// @file Helper/aabb_infobox.h
 ///
 
-#include <Helper/aabb_infobox.h>
+#include <Helper/Physics/aabb_infobox.h>
 
 #include <LinearMath/btVector3.h>
 

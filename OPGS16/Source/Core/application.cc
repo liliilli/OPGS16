@@ -459,7 +459,7 @@ void Update(float delta_time) {
       manager::object::Update();
       /// Update
       manager::scene::GetPresentScene()->Update(delta_time);
-      manager::physics::Update();
+      manager::physics::Update(delta_time);
     }
     break;
   default: break;
