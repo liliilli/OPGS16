@@ -98,7 +98,7 @@ void ReleaseAllResources() {
 #ifdef false
   ShaderManager::Instance().Clear();   /*! Not implemented */
 #endif
-  TextureManager::Instance().Clear();  /*! Not precise? */
+  texture::Clear();  /*! Not precise. */
   object::ClearAll();
 }
 

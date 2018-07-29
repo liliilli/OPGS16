@@ -69,9 +69,10 @@ element::CShaderWrapper& CSprite2DRenderer::GetWrapper() noexcept {
 }
 
 void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
-  const auto texture = manager::TextureManager::Instance().GetTexture(texture_name);
+  const auto texture = manager::texture::GetTexture(texture_name);
   if (!texture) {
-    m_sprite = manager::TextureManager::Instance().GetTexture("opSystem");
+    PUSH_LOG_ERROR_EXT("Failed to find texture {}.", texture_name);
+    m_sprite = manager::texture::GetTexture("opSystem");
   }
 
   m_sprite = texture;

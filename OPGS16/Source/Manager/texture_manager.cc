@@ -1,69 +1,69 @@
 #include <precompiled.h>
-/*!
- * @license BSD 2-Clause License
- *
- * Copyright (c) 2018, Jongmin Yun(Neu.)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+///
+/// @license BSD 2-Clause License
+///
+/// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
+/// If you want to read full statements, read LICENSE file.
+///
+/// @file Manager/texture_manager.cc
+///
+/// @author Jongmin Yun
+///
+/// @log
+/// 2018-03-04 Refactoring.
+/// 2018-07-29 Refactoring. Move class to namespace
+///
 
-/**
- * @file System/Manager/Private/texture_manager.cc
- * @author Jongmin Yun
- *
- * @log
- * 2018-03-04 Refactoring.
- */
-
-#include <Manager\texture_manager.h>    /// Header file
+/// Header file
+#include <Manager/texture_manager.h>
 
 /// ::opgs16::texture::CTexture2D
-#include <Frame\texture.h>
+#include <Frame/texture.h>
 /// ::opgs16::manager::MResourceManager
-#include <Manager\resource_manager.h>
+#include <Manager/resource_manager.h>
 
-namespace opgs16::manager {
+namespace {
+using opgs16::manager::texture::TTextureMap;
 
-TextureManager::texture_raw TextureManager::GetTexture(const std::string& name) {
-	if (!DoesTextureExist(name)) {
-		const auto container = manager::resource::GetTexture2D(name);
+/// Texture container used in game.
+TTextureMap m_container;
+} /// ::unnamed namespace
 
-    auto [it, good] =
-      m_container.emplace(name, std::make_unique<texture::CTexture2D>(*container));
-    if (good)
-      return it->second.get();
+namespace opgs16::manager::texture {
 
-    return nullptr;
-	}
-    return m_container[name].get();
+TTextureRaw GetTexture(const std::string& texture_name) {
+  using opgs16::texture::CTexture2D;
+
+  if (IsTextureExist(texture_name)) {
+    return m_container[texture_name].get();
+  }
+
+  const auto container = manager::resource::GetTexture2D(texture_name);
+
+  auto [it, good] = m_container.emplace(
+      texture_name,
+      std::make_unique<CTexture2D>(*container)
+  );
+
+  if (good) {
+    return it->second.get();
+  }
+
+  return nullptr;
 }
 
-void TextureManager::Release(const std::string& tag) {
-	if (DoesTextureExist(tag)) m_container.erase(tag);
+void Release(const std::string& texture_name) {
+	if (IsTextureExist(texture_name)) {
+	  m_container.erase(texture_name);
+  }
 }
 
-void TextureManager::Clear() {
-    m_container.clear();
+void Clear() {
+  m_container.clear();
 }
 
-} /*! opgs16::manager */
+bool IsTextureExist(const std::string& texture_name) {
+  return m_container.find(texture_name) != m_container.end();
+}
+
+} /// ::opgs16::manager::texture namespace
