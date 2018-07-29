@@ -32,9 +32,9 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
   using opgs16::element::_internal::EDirection;
   using opgs16::manager::physics::AddRigidbody;
 
-  m_collision_shape = new btBox2dShape{
-      static_cast<btVector3>(collider_size * 0.5f)
-  };
+  DVector2 half_size = collider_size * 0.5f;
+  m_collision_shape = new btBoxShape{{half_size.x, half_size.y, 100.f}};
+  m_collision_shape->setMargin(1.f);
 
   auto& obj = GetBindObject();
   btQuaternion rotation;
@@ -53,7 +53,7 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
           motionState,
           m_collision_shape,
           local_inertia};
-  body_construction_info.m_restitution = 1.0f;
+  body_construction_info.m_restitution = 0.8f;
   body_construction_info.m_friction = 0.5f;
 
   m_rigidbody = new btRigidBody{body_construction_info};

@@ -50,6 +50,7 @@ CPhysicsEnvironment::CPhysicsEnvironment(EPhysicsEnvironment environment_style) 
     );
 
     m_is_initiated = EInitiated::Initiated;
+    SetGlobalGravity(0, -98.0f, 0);
     break;
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   }

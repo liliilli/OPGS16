@@ -91,7 +91,7 @@ namespace opgs16::manifest {
 /// If you want to show the logo or not, commment #define below.
 ///
 
-//#define OP16_SETTING_BOOTSCREEN_SHOW
+#define OP16_SETTING_BOOTSCREEN_SHOW
 
 } /// opgs16::manifest
 

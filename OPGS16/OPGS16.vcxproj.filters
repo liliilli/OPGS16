@@ -91,6 +91,8 @@
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\Physics\script_adjust_camera_pos.cc" />
+    <ClCompile Include="_Project\Test020\Source\Object\Common\simple_log.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -250,6 +252,8 @@
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_player.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_floor.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\Physics\script_adjust_camera_pos.h" />
+    <ClInclude Include="_Project\Test020\Include\Object\Common\simple_log.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
