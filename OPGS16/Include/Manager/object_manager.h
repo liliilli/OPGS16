@@ -21,8 +21,10 @@
 
 /// Forward declaration
 #include <opgs16fwd.h>
-/// ::opgs16::DAABBInfoBox
-#include <Helper/Physics/aabb_infobox.h>
+
+namespace opgs16::component::_internal {
+class CPrivateAabbRendererBase;
+}
 
 ///
 /// @namespace opgs16::manager::object
@@ -113,11 +115,9 @@ void InsertRenderingObject(element::CObject* const object, unsigned layer_index)
 ///
 /// @brief
 ///
+/// @param[in] aabb_component
 ///
-/// @param[in] mode
-/// @param[in] aabb_box
-///
-void InsertAABBInformation(EAABBStyle mode, const DAABBInfoBox& aabb_box);
+void InsertAABBInformation(component::_internal::CPrivateAabbRendererBase& aabb_component);
 
 } /// ::opgs16::manager::object
 

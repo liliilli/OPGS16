@@ -176,7 +176,11 @@
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_2d.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_3d.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_base.cc" />
     <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\precompiled.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -207,7 +211,6 @@
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Element\ui_default_object.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
-    <ClCompile Include="Source\Helper\Physics\aabb_infobox.cc" />
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
     <ClCompile Include="Source\Helper\Math\random.cc" />
     <ClCompile Include="Source\Helper\string_helper.cc" />
@@ -270,6 +273,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Component\font2d_renderer.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_2d.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_3d.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
@@ -277,8 +283,9 @@
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
     <ClInclude Include="Include\Component\Internal\type.h" />
-    <ClInclude Include="Include\Element\Bulitin\empty_canvas.h" />
-    <ClInclude Include="Include\Element\Bulitin\empty_object.h" />
+    <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
+    <ClInclude Include="Include\Element\Builtin\empty_object.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />
@@ -290,7 +297,6 @@
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
     <ClInclude Include="Include\Element\Internal\vao_container.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
-    <ClInclude Include="Include\Helper\Physics\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\Type\axis.h" />
     <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\hash_crc32.h" />

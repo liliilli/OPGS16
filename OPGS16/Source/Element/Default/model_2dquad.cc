@@ -34,14 +34,25 @@ BModel2DQuad::BModel2DQuad() {
   mesh.ActivateVertices();
   mesh.VerticesReserve(4);
   std::vector<element::DMeshVector> vertices;
-  vertices.emplace_back(DVector3{1.f, 1.f, 0.f}, DVector3{0.f, 0.f, 1.f},
-                        DVector3{}, DVector2{1.f, 1.f});
-  vertices.emplace_back(DVector3{1.f,-1.f, 0.f}, DVector3{0.f, 0.f, 1.f},
-                        DVector3{}, DVector2{1.f, 0.f});
-  vertices.emplace_back(DVector3{-1.f,-1.f, 0.f}, DVector3{0.f, 0.f, 1.f},
-                        DVector3{}, DVector2{0.f, 0.f});
-  vertices.emplace_back(DVector3{-1.f, 1.f, 0.f}, DVector3{0.f, 0.f, 1.f},
-                        DVector3{}, DVector2{0.f, 1.f});
+  vertices.emplace_back(DVector3{1.f, 1.f, 0.f},
+                        DVector3{0.f, 0.f, 1.f},
+                        DVector3{},
+                        DVector2{1.f, 1.f});
+
+  vertices.emplace_back(DVector3{1.f,-1.f, 0.f},
+                        DVector3{0.f, 0.f, 1.f},
+                        DVector3{},
+                        DVector2{1.f, 0.f});
+
+  vertices.emplace_back(DVector3{-1.f,-1.f, 0.f},
+                        DVector3{0.f, 0.f, 1.f},
+                        DVector3{},
+                        DVector2{0.f, 0.f});
+
+  vertices.emplace_back(DVector3{-1.f, 1.f, 0.f},
+                        DVector3{0.f, 0.f, 1.f},
+                        DVector3{},
+                        DVector2{0.f, 1.f});
   for (const auto& vertex : vertices)
     mesh.PushVertice(vertex);
 

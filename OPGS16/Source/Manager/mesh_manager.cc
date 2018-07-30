@@ -26,10 +26,12 @@
 
 /// ::opgs16::element::DModelObject
 #include <Element/Internal/model_object.h>
-#include <Element/Default/model_2dquad.h>
 /// ::opgs16::element::DMeshObject
 #include <Element/Internal/mesh_object.h>
 #include <Element/Internal/vao_container.h>
+
+#include <Element/Default/model_2dquad.h>
+#include <Element/Builtin/Model/model_2dquadline.h>
 
 //!
 //! Data and flags
@@ -62,8 +64,10 @@ void InitiateBuiltinModelMeshes() {
       "Duplicated built-in model initiation must be called only once.");
 
   using opgs16::builtin::model::BModel2DQuad;
+  using opgs16::builtin::model::BModel2DQuadLine;
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad, BModel2DQuad{});
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad_dynamic, BModel2DQuad{});
+  m_model_map.try_emplace(BModel2DQuadLine::s_model_name, BModel2DQuadLine{});
 
   b_builtin_initiated = EInitiated::Initiated;
 }
@@ -81,7 +85,7 @@ void Initiate() {
       "Duplicated mesh manager initiation is prohibited.");
 
   InitiateBuiltinModelMeshes();
-  // Do not change the order.
+
   b_initiated = EInitiated::Initiated;
 }
 

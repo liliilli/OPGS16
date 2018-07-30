@@ -85,7 +85,6 @@
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
-    <ClCompile Include="Source\Helper\Physics\aabb_infobox.cc" />
     <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
     <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
@@ -93,6 +92,10 @@
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_adjust_camera_pos.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Common\simple_log.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_2d.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_3d.cc" />
+    <ClCompile Include="Source\Component\Internal\aabb_renderer_base.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -238,14 +241,11 @@
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_canvas.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_object.h" />
-    <ClInclude Include="Include\Element\Bulitin\empty_canvas.h" />
-    <ClInclude Include="Include\Element\Bulitin\empty_object.h" />
     <ClInclude Include="Include\Helper\Type\axis.h" />
     <ClInclude Include="Include\Manager\Physics\physics_collision_shape_list.h" />
     <ClInclude Include="Include\Manager\Physics\physics_flag.h" />
     <ClInclude Include="Include\Manager\Physics\physics_environment.h" />
     <ClInclude Include="Include\Manager\Physics\physics_internal.h" />
-    <ClInclude Include="Include\Helper\Physics\aabb_infobox.h" />
     <ClInclude Include="Include\Helper\include_vector.h" />
     <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
@@ -254,6 +254,12 @@
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_adjust_camera_pos.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\simple_log.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_base.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_2d.h" />
+    <ClInclude Include="Include\Component\Internal\aabb_renderer_3d.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
+    <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
+    <ClInclude Include="Include\Element\Builtin\empty_object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

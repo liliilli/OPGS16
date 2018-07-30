@@ -73,7 +73,7 @@ public:
     return m_render_frame_buffer_name;
   }
 
-  void Update(float delta_time) override final {
+  void Update(float delta_time) override {
     // If render frame buffer name is empty, regard it as default buffer and bind.
     if (m_render_frame_buffer_name.empty()) {
       manager::object::InsertRenderingObject(&GetBindObject(), m_render_layer_index);

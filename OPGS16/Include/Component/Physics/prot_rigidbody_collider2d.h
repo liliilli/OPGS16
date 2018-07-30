@@ -20,7 +20,12 @@
 #include <string>
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
-#include "Helper/Type/vector3.h"
+
+#include <Helper/Type/vector2.h>
+
+namespace opgs16::component::_internal {
+class CPrivateAabbRenderer2D;
+}
 
 namespace opgs16::component {
 
@@ -54,9 +59,13 @@ public:
 
 private:
   void Update(float delta_time) override final;
+  void pCreateRigidbody(const DVector2& collider_size,
+                        const float mass_sum,
+                        btRigidBody** rigidbody_ptr);
 
   btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
+  std::unique_ptr<_internal::CPrivateAabbRenderer2D> m_aabb_renderer = nullptr;
 
   int32_t m_collision_tag_index = -1;
 

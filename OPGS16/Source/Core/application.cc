@@ -524,7 +524,9 @@ void Draw() {
     manager::scene::GetPresentScene()->Draw();
     manager::object::Render();
 
-    if (IsEnableRenderingAabb()) manager::object::RenderAABB();
+    if (IsEnableRenderingAabb()) {
+      manager::object::RenderAABB();
+    }
 
     manager::postprocessing::Render();
   }

@@ -22,10 +22,19 @@ namespace opgs16::component::_internal {
 class CPrivateAabbRenderer2D final :
       public opgs16::component::_internal::CPrivateAabbRendererBase {
 public:
-  CPrivateAabbRenderer2D();
+  CPrivateAabbRenderer2D(element::CObject& bind_object);
+  ~CPrivateAabbRenderer2D();
+
+  CPrivateAabbRenderer2D(const CPrivateAabbRenderer2D&) = default;
+  CPrivateAabbRenderer2D& operator=(const CPrivateAabbRenderer2D&) = default;
 
 private:
+  void Render() override final;
 
+  /// Shader is in ShaderManager, render sprite.
+  element::CShaderWrapper m_wrapper;
+  /// Quad VAO to render sprite on screen.
+  element::CVaoContainer* m_weak_vao_ref = nullptr;
 };
 
 } /// ::opgs16::component::_internal namespace

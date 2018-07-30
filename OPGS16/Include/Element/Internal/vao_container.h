@@ -32,6 +32,9 @@
 namespace opgs16::component {
 class CSprite2DRenderer;
 class CProcedural2DRenderer;
+namespace _internal {
+class CPrivateAabbRenderer2D;
+}
 }
 
 //!
@@ -142,6 +145,7 @@ private:
 
   friend class component::CSprite2DRenderer;
   friend class component::CProcedural2DRenderer;
+  friend class component::_internal::CPrivateAabbRenderer2D;
 };
 
 } /// ::opgs16::element namespace

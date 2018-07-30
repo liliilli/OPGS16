@@ -32,6 +32,7 @@
 #include <Headers/import_logger.h>
 /// ::opgs16::manager::mesh
 #include <Manager/mesh_manager.h>
+#include "Element/Builtin/Model/model_2dquadline.h"
 
 //!
 //! Member & flags
@@ -81,8 +82,9 @@ GenerateVaoContainer(const std::string& model_name,
   using opgs16::builtin::model::BModel2DQuad;
   using namespace opgs16::manager;
 
-  if (IsInternalVaoExist(model_name) == EFound::Found)
+  if (IsInternalVaoExist(model_name) == EFound::Found) {
     return {m_vao_container[model_name].get(), ESucceed::Failed};
+  }
 
   if (const auto result = mesh::IsModelExist(model_name);
       result == EFound::NotFound) {
@@ -119,21 +121,24 @@ void InitiateBuiltinVaoItems() {
   using EVboBufferType = opgs16::element::_internal::EVboBufferType;
   using EEboBufferType = opgs16::element::_internal::EEboBufferType;
   using EBufferTarget = opgs16::element::_internal::EBufferTarget;
-  using CInternalVertexArrayObject =
-      opgs16::element::_internal::CInternalVertexArrayObject;
+  using CInternalVertexArrayObject = opgs16::element::_internal::CInternalVertexArrayObject;
 
   // 2D Quad (x, y) with element object buffer
-  GenerateVaoContainer(
-    opgs16::builtin::model::BModel2DQuad::m_model_name.data(),
-    EVboBufferType::StaticDraw, EEboBufferType::StaticDraw
-  );
+  using opgs16::builtin::model::BModel2DQuad;
+  GenerateVaoContainer(BModel2DQuad::m_model_name.data(),
+                       EVboBufferType::StaticDraw,
+                       EEboBufferType::StaticDraw);
 
-  // 2D Quad (x, y) with element object buffer but only for dynamic like
-  // font rendering.
-  GenerateVaoContainer(
-    opgs16::builtin::g_model_2d_quad_dynamic,
-    EVboBufferType::DynamicDraw, EEboBufferType::StaticDraw
-  );
+  // 2D Quad (x, y) with element object buffer but only for dynamic like font rendering.
+  GenerateVaoContainer(opgs16::builtin::g_model_2d_quad_dynamic,
+                       EVboBufferType::DynamicDraw,
+                       EEboBufferType::StaticDraw);
+
+  // No indice clockwise 2d square model.
+  using opgs16::builtin::model::BModel2DQuadLine;
+  GenerateVaoContainer(BModel2DQuadLine::s_model_name,
+                       EVboBufferType::StaticDraw,
+                       EEboBufferType::StaticDraw);
 }
 
 }

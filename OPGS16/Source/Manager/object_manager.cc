@@ -29,6 +29,8 @@
 
 #include <Phitos/Dbg/assert.h>
 
+#include <Component/Internal/aabb_renderer_base.h>
+#include <Component/Internal/aabb_renderer_2d.h>
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// Import logger
@@ -81,20 +83,22 @@ void AddDestroyObject(TObjectSmtPtr& ptr);
 ///
 namespace {
 using opgs16::debug::EInitiated;
+using opgs16::component::_internal::CPrivateAabbRendererBase;
+using TRenderedObjectSubList = std::list<opgs16::element::CObject*>;
+
 EInitiated m_initiated = EInitiated::NotInitiated;
 
+///
+/// Rendering objects and common.
+///
 std::list<TObjectSmtPtr> m_destroy_candidates;
+std::vector<TRenderedObjectSubList> m_rendering_list;
 
-std::vector<std::list<opgs16::element::CObject*>> m_rendering_list;
-
+///
 /// AABB rendering containers.
 ///
-std::list<opgs16::DAABBInfoBox> m_aabb_2d_list;
-std::list<opgs16::DAABBInfoBox> m_aabb_3d_list;
-
-/// AABB GetWrapper
-opgs16::element::CShaderWrapper m_aabb_2d_wrapper;
-opgs16::element::CShaderWrapper m_aabb_3d_wrapper;
+std::list<CPrivateAabbRendererBase*> m_aabb_2d_list;
+std::list<CPrivateAabbRendererBase*> m_aabb_3d_list;
 
 ///
 /// @brief Private function for destruction object with recursive traverse.
@@ -222,7 +226,7 @@ void Initiate() {
                 debug::err_object_duplicated_init);
   m_initiated = EInitiated::Initiated;
   m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
-  m_aabb_2d_wrapper.SetShader(shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
+  //m_aabb_2d_wrapper.SetShader(shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
 }
 
 void Update() {
@@ -237,34 +241,23 @@ void Render() {
     }
     list.clear();
   }
+
+  RenderAABB();
 }
 
 void RenderAABB() {
   glDisable(GL_DEPTH_TEST);
 
+  for (auto& aabb_element : m_aabb_2d_list) {
+    aabb_element->Render();
+  }
+  m_aabb_2d_list.clear();
+
 #ifdef false
-  if (!m_aabb_2d_list.empty()) {
-    glLineWidth(2.f);
-    m_aabb_2d_wrapper.SetUniformValue("uColor", glm::vec3{0, 1, 0});
-    m_aabb_2d_wrapper.UseShader();
-    for (const auto& _2d_aabb : m_aabb_2d_list) {
-      const auto rectangle_vectors = _2d_aabb.GetVertexPoints();
-      m_vao.Map(rectangle_vectors);
-      glBindVertexArray(m_vao.GetVao());
-      glDrawArrays(GL_LINE_LOOP, 0, 4);
-    }
-
-    glBindVertexArray(0);
-    m_aabb_2d_list.clear();
+  for (auto& aabb_element : m_aabb_3d_list) {
+    aabb_element->Render();
   }
-
-  if (!m_aabb_3d_list.empty()) {
-    for (const auto& _3d_aabb : m_aabb_3d_list) {
-      PHITOS_NOT_IMPLEMENTED_ASSERT();
-    }
-
-    m_aabb_3d_list.clear();
-  }
+  m_aabb_3d_list.clear();
 #endif
 
   glEnable(GL_DEPTH_TEST);
@@ -315,15 +308,15 @@ void InsertRenderingObject(element::CObject* const object,
   m_rendering_list[layer_index].emplace_back(object);
 }
 
-void InsertAABBInformation(EAABBStyle mode, const DAABBInfoBox& aabb_box) {
-  switch (mode) {
-  case EAABBStyle::_2D:
-    m_aabb_2d_list.emplace_front(aabb_box);
-    break;
-  case EAABBStyle::_3D:
-    m_aabb_3d_list.emplace_front(aabb_box);
-    break;
+void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
+  switch (aabb_component.GetColliderType()) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
+  case component::_internal::EAabbColliderStyle::D2:
+    m_aabb_2d_list.push_back(&aabb_component);
+    break;
+  case component::_internal::EAabbColliderStyle::D3:
+    m_aabb_3d_list.push_back(&aabb_component);
+    break;
   }
 }
 

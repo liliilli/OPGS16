@@ -17,14 +17,48 @@
 
 #include <Component/Internal/renderer_base.h>
 
+#include <Helper/Type/vector3.h>
+
 namespace opgs16::component::_internal {
 
-class CPrivateAabbRendererBase : public opgs16::component::_internal::CRendererBase {
+enum class EAabbColliderStyle {
+  None,
+  D2,
+  D3,
+};
+
+class CPrivateAabbRendererBase : public CRendererBase {
 public:
-  ~CPrivateAabbRendererBase() = 0;
+  CPrivateAabbRendererBase(element::CObject& bind_object) :
+      CRendererBase(bind_object)
+  {};
+
+  bool SetCollisionSize(const DVector3& collider_size);
+  bool SetCollisionRenderPosition(const DVector3& final_position);
+
+  const DVector3& GetCollisionSize() const noexcept;
+  const DVector3& GetCollisionRenderPosition() const noexcept;
+
+  void Update(float delta_time) override final;
+  virtual void Render() = 0;
+
+  EAabbColliderStyle GetColliderType() const noexcept;
+
+protected:
+  const glm::mat4& PGetModelMatrix() noexcept;
+
+  mutable EAabbColliderStyle m_type = EAabbColliderStyle::None;
 
 private:
+  void pUpdateModelMatrix();
 
+  opgs16::DVector3 m_collider_size;
+  opgs16::DVector3 m_render_position;
+  glm::mat4 m_model_matrix = glm::mat4{};
+
+  bool m_is_model_matrix_dirty = true;
+  bool m_is_render_position_dirty = true;
+  bool m_is_collider_size_dirty = true;
 };
 
 } /// ::opgs16::component::_internal namespace

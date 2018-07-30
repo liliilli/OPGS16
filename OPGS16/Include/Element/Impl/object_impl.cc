@@ -22,7 +22,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-/// ::opgs16::manager::MSettingManager
+#include <Helper/Math/math.h>
 #include <Manager/setting_manager.h>
 
 namespace {
@@ -31,12 +31,15 @@ constexpr float k_2pi{ 2 * glm::pi<float>() };
 const static glm::vec3 k_vec3_1{ 1.f };
 const static glm::mat4 k_rotation_init{ glm::rotate(glm::mat4{}, k_2pi, k_vec3_1) };
 
-bool IsAllAngleValueZero(const float (&angle)[3]) {
-    unsigned zero_count{ 0 };
-    for (float i : angle)
-        if (std::fabsf(i) <= 0.001f) { ++zero_count; }
+bool IsAllAngleValueZero(const float(&angle_array)[3]) {
+  unsigned zero_count{ 0 };
+  for (float angle_value : angle_array) {
+    if (opgs16::math::IsNearlyEqual(angle_value, 0.f, 0.001f)) {
+      ++zero_count;
+    }
+  }
 
-    return zero_count >= 3;
+  return zero_count >= 3;
 }
 
 glm::mat4 GetRotationMatrix(const float (&angle)[3]) {
@@ -74,10 +77,10 @@ void CObjectImpl::RefreshFinalPosition() const {
 }
 
 void CObjectImpl::RefreshRotateMatrix() const {
-    if (IsAllAngleValueZero(m_rotation_local_angle_n))
-        m_local_rotate_matrix = k_rotation_init;
-    else
-        m_local_rotate_matrix = GetRotationMatrix(m_rotation_local_angle_n);
+  if (IsAllAngleValueZero(m_rotation_local_angle_n))
+    m_local_rotate_matrix = k_rotation_init;
+  else
+    m_local_rotate_matrix = GetRotationMatrix(m_rotation_local_angle_n);
 }
 
 void CObjectImpl::RefreshWpRotationMatrix() const {
