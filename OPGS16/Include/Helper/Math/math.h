@@ -21,6 +21,11 @@
 #include <Helper/Type/vector2.h>
 #include <Helper/Type/vector3.h>
 
+namespace opgs16 {
+struct DVectorInt3;
+struct DVectorInt2;
+}
+
 namespace opgs16::math {
 
 template <typename TType>
@@ -99,6 +104,109 @@ DVector3 GetQuadBezierCurvePoint(const DVector3& lhs,
                                  const DVector3& rhs,
                                  const DVector3& control,
                                  float offset);
+
+//!
+//! GetMinMax Functions
+//!
+
+template <typename TValueType>
+using TMinMaxResult = std::pair<TValueType, TValueType>;
+
+///
+/// @brief Get min and max arithmetic value from list.
+/// Result container's first value has min, second value has max.
+///
+template <typename TValueType,
+          typename = std::enable_if_t<std::is_arithmetic_v<TValueType>>>
+TMinMaxResult<TValueType> GetMinMax(const std::vector<TValueType>& list) {
+  TValueType min = std::numeric_limits<TValueType>::max();
+  TValueType max = std::numeric_limits<TValueType>::lowest();
+
+  for (const auto& value : list) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
+
+  return {min, max};
+}
+
+///
+/// @brief Get min and max arithmetic value from list.
+/// Result container's first value has min, second value has max.
+///
+template <typename TValueType,
+          typename = std::enable_if_t<std::is_arithmetic_v<TValueType>>>
+TMinMaxResult<TValueType> GetMinMax(const std::list<TValueType>& list) {
+  TValueType min = std::numeric_limits<TValueType>::max();
+  TValueType max = std::numeric_limits<TValueType>::lowest();
+
+  for (const auto& value : list) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
+
+  return {min, max};
+}
+
+///
+/// @brief Get min and max arithmetic value from list.
+/// Result container's first value has min, second value has max.
+///
+template <typename TValueType, size_type TSize,
+          typename = std::enable_if_t<std::is_arithmetic_v<TValueType>>>
+TMinMaxResult<TValueType> GetMinMax(const std::array<TValueType, TSize>& list) {
+  TValueType min = std::numeric_limits<TValueType>::max();
+  TValueType max = std::numeric_limits<TValueType>::lowest();
+
+  for (const auto& value : list) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
+
+  return {min, max};
+}
+
+///
+/// @brief Get min and max arithmetic value from list.
+/// Result container's first value has min, second value has max.
+///
+template <typename TValueType, size_type TSize,
+          typename = std::enable_if_t<std::is_arithmetic_v<TValueType>>>
+TMinMaxResult<TValueType> GetMinMax(const TValueType (&list)[TSize]) {
+  TValueType min = std::numeric_limits<TValueType>::max();
+  TValueType max = std::numeric_limits<TValueType>::lowest();
+
+  for (const auto& value : list) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
+
+  return {min, max};
+}
+
+///
+/// @brief Get min and max arithmetic value from DVector2.
+/// Result container's first value has min, second value has max.
+///
+TMinMaxResult<float> GetMinMax(const opgs16::DVector2& vector) noexcept;
+
+///
+/// @brief Get min and max arithmetic value from DVector3.
+/// Result container's first value has min, second value has max.
+///
+TMinMaxResult<float> GetMinMax(const opgs16::DVector3& vector) noexcept;
+
+///
+/// @brief Get min and max arithmetic value from DVectorInt2.
+/// Result container's first value has min, second value has max.
+///
+TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt2& vector) noexcept;
+
+///
+/// @brief Get min and max arithmetic value from DVectorInt3.
+/// Result container's first value has min, second value has max.
+///
+TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept;
 
 } /// ::opgs16::math namespace
 

@@ -17,8 +17,10 @@
 #include <Helper/Math/math.h>
 
 #include <cfenv>
-
 #include <limits>
+
+#include <Helper/Type/vectori2.h>
+#include <Helper/Type/vectori3.h>
 
 namespace opgs16::math {
 
@@ -64,6 +66,46 @@ DVector3 GetQuadBezierCurvePoint(const DVector3& lhs,
   return Lerp(Lerp(lhs, control, offset),
               Lerp(control, rhs, offset),
               offset);
+}
+
+TMinMaxResult<float> GetMinMax(const opgs16::DVector2& vector) noexcept {
+  if (vector.x < vector.y) {
+    return {vector.x, vector.y};
+  }
+  else {
+    return {vector.y, vector.x};
+  }
+}
+
+TMinMaxResult<float> GetMinMax(const opgs16::DVector3& vector) noexcept {
+  auto min = vector.x;
+  auto max = min;
+
+  if (vector.y < min) min = vector.y;
+  if (vector.y > max) max = vector.y;
+  if (vector.z < min) min = vector.z;
+  if (vector.z > max) max = vector.z;
+  return {min, max};
+}
+
+TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt2& vector) noexcept {
+  if (vector.x < vector.y) {
+    return {vector.x, vector.y};
+  }
+  else {
+    return {vector.y, vector.x};
+  }
+}
+
+TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept {
+  auto min = vector.x;
+  auto max = min;
+
+  if (vector.y < min) min = vector.y;
+  if (vector.y > max) max = vector.y;
+  if (vector.z < min) min = vector.z;
+  if (vector.z > max) max = vector.z;
+  return {min, max};
 }
 
 } /// ::opgs16::math namespace
