@@ -24,6 +24,32 @@
 
 namespace opgs16::math {
 
+bool IsAllZero(const opgs16::DVector2& vector) noexcept {
+  if (!IsNearlyEqual(vector.x, 0.f)) return false;
+  if (!IsNearlyEqual(vector.y, 0.f)) return false;
+  return true;
+}
+
+bool IsAllZero(const opgs16::DVector3& vector) noexcept {
+  if (!IsNearlyEqual(vector.x, 0.f)) return false;
+  if (!IsNearlyEqual(vector.y, 0.f)) return false;
+  if (!IsNearlyEqual(vector.z, 0.f)) return false;
+  return true;
+}
+
+bool IsAllZero(const opgs16::DVectorInt2& vector) noexcept {
+  if (vector.x != 0) return false;
+  if (vector.y != 0) return false;
+  return true;
+}
+
+bool IsAllZero(const opgs16::DVectorInt3& vector) noexcept {
+  if (vector.x != 0) return false;
+  if (vector.y != 0) return false;
+  if (vector.z != 0) return false;
+  return true;
+}
+
 float Lerp(float lhs, float rhs, float offset) {
   std::feclearexcept(FE_ALL_EXCEPT);
   const auto result = lhs * (1 - offset) + rhs * offset;

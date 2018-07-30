@@ -68,6 +68,28 @@ constexpr bool IsNearlyEqual(const double lhs, const double rhs,
 }
 
 ///
+/// @brief Check if vector is all zero or nearly equal to zero.
+///
+bool IsAllZero(const opgs16::DVector2& vector) noexcept;
+
+///
+/// @brief Check if vector is all zero or nearly equal to zero.
+///
+bool IsAllZero(const opgs16::DVector3& vector) noexcept;
+
+///
+/// @brief Check if vector is all zero or nearly equal to zero.
+///
+bool IsAllZero(const opgs16::DVectorInt2& vector) noexcept;
+
+///
+/// @brief Check if vector is all zero or nearly equal to zero.
+///
+bool IsAllZero(const opgs16::DVectorInt3& vector) noexcept;
+
+// @todo Need to implement DVector4 && DVectorInt4 version IsAllZero().
+
+///
 /// @brief Do linear interpolation with float type.
 /// If something wrong has been happened, return lowest value of float.
 ///

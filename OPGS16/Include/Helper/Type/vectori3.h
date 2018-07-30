@@ -311,6 +311,16 @@ public:
                                    const DVectorInt3& rhs) noexcept {
     return (lhs < rhs) ? lhs : rhs;
   }
+
+  ///
+  /// @brief Check if vector DVectorInt3 is all zero or nearly equal to zero.
+  ///
+  static bool IsAllZero(const opgs16::DVectorInt3& vector) noexcept;
+
+  ///
+  /// @brief Check if this DVectorInt3 is all zero or nearly equal to zero.
+  ///
+  bool IsAllZero() const noexcept;
 };
 
 } /// ::opgs16 namespace

@@ -278,6 +278,13 @@ private:
     return !(lhs < rhs);
   }
 
+public:
+
+  ///
+  /// @brief Check if this DVector2 is all zero or nearly equal to zero.
+  ///
+  bool IsAllZero() const noexcept;
+
   //!
   //! Static functions
   //!
@@ -356,6 +363,11 @@ public:
                         bool normalized = true) noexcept {
     return AngleRad(lhs, rhs, normalized) * 180.f / 3.1415926535f;
   }
+
+  ///
+  /// @brief Check if vector DVector2 is all zero or nearly equal to zero.
+  ///
+  static bool IsAllZero(const opgs16::DVector2& vector) noexcept;
 };
 
 } /// ::opgs16 namespace

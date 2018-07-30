@@ -287,6 +287,16 @@ public:
                                    const DVectorInt2& rhs) noexcept {
     return (lhs < rhs) ? lhs : rhs;
   }
+
+    ///
+  /// @brief Check if vector DVector3 is all zero or nearly equal to zero.
+  ///
+  static bool IsAllZero(const opgs16::DVectorInt2& vector) noexcept;
+
+  ///
+  /// @brief Check if this DVector3 is all zero or nearly equal to zero.
+  ///
+  bool IsAllZero() const noexcept;
 };
 
 } /// ::opgs16 namespace
