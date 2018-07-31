@@ -64,7 +64,6 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
     const DVector2& collider_size,
     const float mass_sum,
     btRigidBody** rigidbody_ptr) {
-  using opgs16::element::_internal::EDirection;
   auto& obj = GetBindObject();
 
   // Create collision shape
@@ -74,9 +73,9 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
 
   // Create motion state
   btQuaternion rotation;
-  rotation.setEulerZYX(obj.GetRotationWpAngle(EDirection::Z),
-                       obj.GetRotationWpAngle(EDirection::Y),
-                       obj.GetRotationWpAngle(EDirection::X));
+  rotation.setEulerZYX(obj.GetRotationWpAngle(EAxis3D::Z),
+                       obj.GetRotationWpAngle(EAxis3D::Y),
+                       obj.GetRotationWpAngle(EAxis3D::X));
   btDefaultMotionState* motionState =
       new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
 

@@ -366,7 +366,6 @@
     <ClInclude Include="Include\Core\core_header.h" />
     <ClInclude Include="Include\Core\core_setting.h" />
     <ClInclude Include="Include\Element\Internal\constant.h" />
-    <ClInclude Include="Include\Element\Internal\direction_type.h" />
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />
     <ClInclude Include="Include\Element\postprocessing_frame.h" />
     <ClInclude Include="Include\Element\prerendering_container.h" />

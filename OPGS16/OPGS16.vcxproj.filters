@@ -107,7 +107,6 @@
     <ClInclude Include="Include\Core\Internal\logger_internal.h" />
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
     <ClInclude Include="Include\Element\Internal\constant.h" />
-    <ClInclude Include="Include\Element\Internal\direction_type.h" />
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />
     <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Frame\timer_handle.h" />

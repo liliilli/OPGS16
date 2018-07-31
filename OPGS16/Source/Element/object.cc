@@ -160,27 +160,27 @@ void CObject::PropagateParentPosition() {
 
 // Rotation functions.
 
-float CObject::GetRotationLocalAngle(_internal::EDirection direction) const noexcept {
+float CObject::GetRotationLocalAngle(EAxis3D direction) const noexcept {
   return m_data->GetRotationLocalAngle(direction);
 }
 
-float CObject::GetRotationFromParentAngle(_internal::EDirection direction) const noexcept {
+float CObject::GetRotationFromParentAngle(EAxis3D direction) const noexcept {
   return m_data->GetRotationFromParentAngle(direction);
 }
 
-float CObject::GetRotationWorldAngle(_internal::EDirection direction) const noexcept {
+float CObject::GetRotationWorldAngle(EAxis3D direction) const noexcept {
   return m_data->GetRotationWorldAngle(direction);
 }
 
-float CObject::GetRotationWpAngle(_internal::EDirection direction) const noexcept {
+float CObject::GetRotationWpAngle(EAxis3D direction) const noexcept {
   return m_data->GetRotationWpAngle(direction);
 }
 
-void CObject::SetRotationLocalAngle(_internal::EDirection direction, const float angle_value) noexcept {
+void CObject::SetRotationLocalAngle(EAxis3D direction, const float angle_value) noexcept {
 	m_data->SetRotationLocalAngle(direction, angle_value);
 }
 
-void CObject::SetRotationParentAngle(_internal::EDirection direction, const float angle_value) noexcept {
+void CObject::SetRotationParentAngle(EAxis3D direction, const float angle_value) noexcept {
   m_data->SetRotationParentAngle(direction, angle_value);
   PropagateParentRotation();
 }
@@ -194,7 +194,7 @@ void CObject::AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
   PropagateParentRotation();
 }
 
-void CObject::SetRotationWorldAngle(_internal::EDirection direction, const float angle_value) noexcept {
+void CObject::SetRotationWorldAngle(EAxis3D direction, const float angle_value) noexcept {
   m_data->SetRotationWorldAngle(direction, angle_value);
   PropagateParentRotation();
 }
@@ -208,8 +208,9 @@ void CObject::PropagateParentRotation() {
     if (child_ptr &&
       child_ptr->IsObjectActive() == EActivated::Activated &&
       child_ptr->GetSucceedingRotationFlag()) {
-      for (const auto& direction : _internal::k_direction_list)
-        child_ptr->SetRotationParentAngle(direction, GetRotationWpAngle(direction));
+      child_ptr->SetRotationParentAngle(EAxis3D::X, GetRotationWpAngle(EAxis3D::X));
+      child_ptr->SetRotationParentAngle(EAxis3D::Y, GetRotationWpAngle(EAxis3D::Y));
+      child_ptr->SetRotationParentAngle(EAxis3D::Z, GetRotationWpAngle(EAxis3D::Z));
     }
   }
 }

@@ -163,7 +163,7 @@ float GetRotationAngleRadian(float angle_value) noexcept {
 }
 
 double GetRotationAngleRadian(double angle_value) noexcept {
-  const float angle = std::fmod(angle_value, math::pi<double> * 2);
+  const double angle = std::fmod(angle_value, math::pi<double> * 2);
   return (angle > pi<double>) ? angle - (pi<double> * 2) :
              ((angle <= -pi<double>) ? angle + (pi<double> * 2) : angle);
 }

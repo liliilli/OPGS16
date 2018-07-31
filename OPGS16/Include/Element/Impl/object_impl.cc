@@ -90,18 +90,18 @@ void CObjectImpl::RefreshWpRotationMatrix() const {
         m_wp_rotate_matrix = GetRotationMatrix(m_rotation_wp_angle_n);
 }
 
-void CObjectImpl::RefreshRotationWorldParentAngle(const EDirection direction) {
+void CObjectImpl::RefreshRotationWorldParentAngle(const EAxis3D direction) {
     float* wp_target_angle{ nullptr };
     switch (direction) {
-    case EDirection::X:
+    case EAxis3D::X:
         wp_target_angle = &m_rotation_wp_angle_n[0];
         *wp_target_angle = m_rotation_parent_angle_n[0] + m_rotation_world_angle_n[0];
         break;
-    case EDirection::Y:
+    case EAxis3D::Y:
         wp_target_angle = &m_rotation_wp_angle_n[1];
         *wp_target_angle = m_rotation_parent_angle_n[1] + m_rotation_world_angle_n[1];
         break;
-    case EDirection::Z: wp_target_angle = &m_rotation_wp_angle_n[2];
+    case EAxis3D::Z: wp_target_angle = &m_rotation_wp_angle_n[2];
         *wp_target_angle = m_rotation_parent_angle_n[2] + m_rotation_world_angle_n[2];
         break;
     default: break;
@@ -114,7 +114,7 @@ void CObjectImpl::RefreshRotationWorldParentAngle(const EDirection direction) {
 }
 
 void CObjectImpl::RefreshScaleVector() const {
-    m_scale_final_vector = m_scale_local_factor * m_scale_local_value;
+  m_scale_final_vector = m_scale_local_factor * m_scale_local_value;
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
@@ -155,7 +155,7 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
 }
 
 std::string CObjectImpl::GetTagNameOf() const {
-    return manager::setting::GetTagName(m_tag_index);
+  return manager::setting::GetTagName(m_tag_index);
 }
 
 void CObjectImpl::SetTag(const std::string& tag_name) {

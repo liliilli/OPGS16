@@ -30,8 +30,7 @@
 #include <glm/glm.hpp>
 #include <Phitos/Enums/activated.h>
 
-/// ::opgs16::element::_internal::EDirection
-#include <Element/Internal/direction_type.h>
+/// ::opgs16::element::EAxis3D
 #include <Helper/Math/math.h>
 #include <Helper/Type/axis.h>
 #include <Helper/Type/vector3.h>
@@ -130,11 +129,11 @@ public:
   //! Angle
   //!
 
-  float GetRotationLocalAngle(const EDirection direction) const noexcept {
+  float GetRotationLocalAngle(const EAxis3D direction) const noexcept {
     switch (direction) {
-    case EDirection::X: return m_rotation_local_angle_n[0];
-    case EDirection::Y: return m_rotation_local_angle_n[1];
-    case EDirection::Z: return m_rotation_local_angle_n[2];
+    case EAxis3D::X: return m_rotation_local_angle_n[0];
+    case EAxis3D::Y: return m_rotation_local_angle_n[1];
+    case EAxis3D::Z: return m_rotation_local_angle_n[2];
     default:
 #ifdef _DEBUG
       return std::numeric_limits<float>::signaling_NaN();
@@ -144,11 +143,11 @@ public:
     }
   }
 
-  float GetRotationFromParentAngle(const EDirection direction) const noexcept {
+  float GetRotationFromParentAngle(const EAxis3D direction) const noexcept {
     switch (direction) {
-    case EDirection::X: return m_rotation_parent_angle_n[0];
-    case EDirection::Y: return m_rotation_parent_angle_n[1];
-    case EDirection::Z: return m_rotation_parent_angle_n[2];
+    case EAxis3D::X: return m_rotation_parent_angle_n[0];
+    case EAxis3D::Y: return m_rotation_parent_angle_n[1];
+    case EAxis3D::Z: return m_rotation_parent_angle_n[2];
     default:
 #ifdef _DEBUG
       return std::numeric_limits<float>::signaling_NaN();
@@ -158,11 +157,11 @@ public:
     }
   }
 
-  float GetRotationWorldAngle(const EDirection direction) const noexcept {
+  float GetRotationWorldAngle(const EAxis3D direction) const noexcept {
     switch (direction) {
-    case EDirection::X: return m_rotation_world_angle_n[0];
-    case EDirection::Y: return m_rotation_world_angle_n[1];
-    case EDirection::Z: return m_rotation_world_angle_n[2];
+    case EAxis3D::X: return m_rotation_world_angle_n[0];
+    case EAxis3D::Y: return m_rotation_world_angle_n[1];
+    case EAxis3D::Z: return m_rotation_world_angle_n[2];
     default:
 #ifdef _DEBUG
       return std::numeric_limits<float>::signaling_NaN();
@@ -172,11 +171,11 @@ public:
     }
   }
 
-  float GetRotationWpAngle(const EDirection direction) const {
+  float GetRotationWpAngle(const EAxis3D direction) const {
     switch (direction) {
-    case EDirection::X: return m_rotation_wp_angle_n[0];
-    case EDirection::Y: return m_rotation_wp_angle_n[1];
-    case EDirection::Z: return m_rotation_wp_angle_n[2];
+    case EAxis3D::X: return m_rotation_wp_angle_n[0];
+    case EAxis3D::Y: return m_rotation_wp_angle_n[1];
+    case EAxis3D::Z: return m_rotation_wp_angle_n[2];
     default:
 #ifdef _DEBUG
       return std::numeric_limits<float>::signaling_NaN();
@@ -186,13 +185,13 @@ public:
     }
   }
 
-  void SetRotationLocalAngle(const EDirection direction, const float angle_value) noexcept {
+  void SetRotationLocalAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EDirection::X: m_rotation_local_angle_n[0] = angle; break;
-    case EDirection::Y: m_rotation_local_angle_n[1] = angle; break;
-    case EDirection::Z: m_rotation_local_angle_n[2] = angle; break;
+    case EAxis3D::X: m_rotation_local_angle_n[0] = angle; break;
+    case EAxis3D::Y: m_rotation_local_angle_n[1] = angle; break;
+    case EAxis3D::Z: m_rotation_local_angle_n[2] = angle; break;
     default: break;
     }
 
@@ -200,13 +199,13 @@ public:
     m_local_rotation_deprecated = true;
   }
 
-  void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
+  void SetRotationWorldAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EDirection::X: m_rotation_world_angle_n[0] = angle; break;
-    case EDirection::Y: m_rotation_world_angle_n[1] = angle; break;
-    case EDirection::Z: m_rotation_world_angle_n[2] = angle; break;
+    case EAxis3D::X: m_rotation_world_angle_n[0] = angle; break;
+    case EAxis3D::Y: m_rotation_world_angle_n[1] = angle; break;
+    case EAxis3D::Z: m_rotation_world_angle_n[2] = angle; break;
     default: break;
     }
 
@@ -215,13 +214,13 @@ public:
     m_local_model_matrix_deprecated = true;
   }
 
-  void SetRotationParentAngle(const EDirection direction, const float angle_value) noexcept {
+  void SetRotationParentAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EDirection::X: m_rotation_parent_angle_n[0] = angle; break;
-    case EDirection::Y: m_rotation_parent_angle_n[1] = angle; break;
-    case EDirection::Z: m_rotation_parent_angle_n[2] = angle; break;
+    case EAxis3D::X: m_rotation_parent_angle_n[0] = angle; break;
+    case EAxis3D::Y: m_rotation_parent_angle_n[1] = angle; break;
+    case EAxis3D::Z: m_rotation_parent_angle_n[2] = angle; break;
     default: break;
     }
 
@@ -473,7 +472,7 @@ private:
   void RefreshScaleVector() const;	/** Refresh Scaling matrix */
   void RefreshWpRotationMatrix() const;
 
-  void RefreshRotationWorldParentAngle(const EDirection direction);
+  void RefreshRotationWorldParentAngle(const EAxis3D direction);
 };
 
 } /// ::opgs16::element::_internal namespace

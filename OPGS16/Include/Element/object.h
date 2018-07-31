@@ -54,8 +54,6 @@
 #include <Component/Internal/type.h>
 
 #include <Component/Physics/prot_rigidbody_collider2d.h>
-/// ::opgs16::element::_internal::EDirection
-#include <Element/Internal/direction_type.h>
 /// import logger debug mode
 #include <Headers/import_logger.h>
 /// Type checking template
@@ -176,13 +174,13 @@ public:
   /// @brief The method gets rotation angle value
   /// @return Object's rotation angle value.
   ///
-  float GetRotationLocalAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationLocalAngle(EAxis3D direction) const noexcept;
 
-  float GetRotationFromParentAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationFromParentAngle(EAxis3D direction) const noexcept;
 
-  float GetRotationWorldAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationWorldAngle(EAxis3D direction) const noexcept;
 
-  float GetRotationWpAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationWpAngle(EAxis3D direction) const noexcept;
 
   ///
   /// @brief The method sets rotation angle values.
@@ -190,11 +188,11 @@ public:
   /// input value is negative and factor is [0, 1], axis rotates counter-clockwise.
   /// @param[in] angle_value Angle value to set on.
   ///
-  void SetRotationLocalAngle(_internal::EDirection direction, float angle_value) noexcept;
+  void SetRotationLocalAngle(EAxis3D direction, float angle_value) noexcept;
 
-  void SetRotationWorldAngle(_internal::EDirection direction, float angle_value) noexcept;
+  void SetRotationWorldAngle(EAxis3D direction, float angle_value) noexcept;
 
-  void SetRotationParentAngle(_internal::EDirection direction, float angle_value) noexcept;
+  void SetRotationParentAngle(EAxis3D direction, float angle_value) noexcept;
 
   ///
   /// @brief Add offset value with axis as local rotation angle.
