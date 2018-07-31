@@ -17,7 +17,7 @@
 
 namespace opgs16::element::_internal {
 
-enum class EColliderStateColor {
+enum class EColliderBehaviorState {
   /// Activated (Aqua, Green or Orange)
   Activated,
   /// Collided with any collider. (Yellow)

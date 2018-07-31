@@ -75,37 +75,26 @@ void CPrivateAabbRendererBase::pUpdateModelMatrix() {
 }
 
 void CPrivateAabbRendererBase::pSetAabbRenderingColor() {
-  using opgs16::element::_internal::EColliderStateColor;
-  if (!m_parent) {
-    PHITOS_UNEXPECTED_BRANCH();
-  }
+  using opgs16::element::_internal::EColliderBehaviorState;
+  using opgs16::element::_internal::EColliderActualType;
+  if (!m_parent) PHITOS_UNEXPECTED_BRANCH();
 
   const auto state = m_parent->GetColliderState();
-  PHITOS_ASSERT(state != EColliderStateColor::None, "Collision state must not be None.");
+  PHITOS_ASSERT(state != EColliderBehaviorState::None,
+                "Collision state must not be None.");
 
   switch (state) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
-  case EColliderStateColor::Activated: {
-    const auto type = m_parent->GetColliderActualType();
-    switch (type) {
+  case EColliderBehaviorState::Activated: {
+    switch (m_parent->GetColliderActualType()) {
     default: PHITOS_UNEXPECTED_BRANCH(); break;
-    case element::_internal::EColliderActualType::Kinetic:
-      m_state_color = opgs16::DColor::Aqua;
-      break;
-    case element::_internal::EColliderActualType::Dynamic:
-      m_state_color = opgs16::DColor::Green;
-      break;
-    case element::_internal::EColliderActualType::Staic:
-      m_state_color = opgs16::DColor::Orange;
-      break;
+    case EColliderActualType::Kinetic: m_state_color = DColor::Aqua; break;
+    case EColliderActualType::Dynamic: m_state_color = DColor::Green; break;
+    case EColliderActualType::Staic:   m_state_color = DColor::Orange; break;
     }
   } break;
-  case EColliderStateColor::Collided:
-    m_state_color = opgs16::DColor::Yellow;
-    break;
-  case EColliderStateColor::Sleep:
-    m_state_color = opgs16::DColor::Gray;
-    break;
+  case EColliderBehaviorState::Collided: m_state_color = DColor::Yellow; break;
+  case EColliderBehaviorState::Sleep:    m_state_color = DColor::Gray; break;
   }
 }
 

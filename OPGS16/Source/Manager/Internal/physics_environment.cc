@@ -29,6 +29,8 @@
 #include <Element/object.h>
 #include <Element/Internal/physics_collider_bind_info.h>
 
+#define OP_CAST(__MAType__, __MAObject__) static_cast<__MAType__>(__MAObject__)
+
 namespace opgs16::manager::physics::_internal {
 
 CPhysicsEnvironment::CPhysicsEnvironment(EPhysicsEnvironment environment_style) {
@@ -108,15 +110,13 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
   m_dynamics_world->removeRigidBody(rigidbody_rawptr);
 }
 
-#define OP_CAST(__MAType__, __MAObject__) static_cast<__MAType__>(__MAObject__)
-
 void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   using opgs16::element::CObject;
   using opgs16::component::CProtoRigidbodyCollider2D;
 
   DebugCheckWorldInitiated();
 
-  m_dynamics_world->stepSimulation(delta_time, 10);
+  m_dynamics_world->stepSimulation(delta_time, 5);
 
   pUpdatePostProcessRigidbodyInformation();
   pCallCollidedObjectCallbacks();
@@ -134,8 +134,7 @@ void CPhysicsEnvironment::pUpdatePostProcessRigidbodyInformation() {
       rigidbody_obj->getMotionState()->getWorldTransform(trans);
 
       // Update position and aabb information.
-      auto obj_ptr =
-          static_cast<DPrivateColliderBindInfo*>(rigidbody_obj->getUserPointer());
+      auto obj_ptr = static_cast<DPrivateColliderBindInfo*>(rigidbody_obj->getUserPointer());
       obj_ptr->bind_object->SetWorldPosWithFinalPos(trans.getOrigin());
 
       btVector3 min, max;
@@ -174,9 +173,9 @@ void CPhysicsEnvironment::pCallCollidedObjectCallbacks() const noexcept {
             a_bind_ptr->bind_object->GetGameObjectName(),
             b_bind_ptr->bind_object->GetGameObjectName());
 
-        using opgs16::element::_internal::EColliderStateColor;
-        a_collider->pSetCollisionState(EColliderStateColor::Collided);
-        b_collider->pSetCollisionState(EColliderStateColor::Collided);
+        using opgs16::element::_internal::EColliderBehaviorState;
+        a_collider->pSetCollisionState(EColliderBehaviorState::Collided);
+        b_collider->pSetCollisionState(EColliderBehaviorState::Collided);
 
         a_collider->pCallBindObjectCallback(b_bind_ptr->bind_collider);
         b_collider->pCallBindObjectCallback(a_bind_ptr->bind_collider);

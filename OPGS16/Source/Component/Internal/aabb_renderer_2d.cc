@@ -33,6 +33,7 @@ CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(
   using manager::shader::GetShader;
   using manager::_internal::vao::FindVaoResource;
 
+  m_type = EAabbColliderDmStyle::D2;
   auto [ptr, result] = FindVaoResource(BModel2DQuadLine::s_model_name);
   PHITOS_ASSERT(result == EFound::Found,
                 "Did not find built-in vao items. opbtQuadLine");
@@ -43,7 +44,7 @@ CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(
 
   m_wrapper.SetShader(GetShader("opQuad2dLineLoop"));
   m_wrapper.SetAttribute(m_weak_vao_ref);
-  m_type = EAabbColliderDmStyle::D2;
+  m_wrapper.SetUniformFloat(builtin::s_uniform_alpha, 0.5f);
 }
 
 CPrivateAabbRenderer2D::~CPrivateAabbRenderer2D() {
@@ -64,10 +65,8 @@ void CPrivateAabbRenderer2D::Render() {
   m_wrapper.UseShader();
 
   const auto& vao_list = m_weak_vao_ref->GetVaoList();
-  for (const auto& vao : vao_list) {
-    glBindVertexArray(vao.GetVaoId());
-    glDrawArrays(GL_LINE_LOOP, 0, 4);
-  }
+  glBindVertexArray(vao_list[0].GetVaoId());
+  glDrawArrays(GL_LINE_LOOP, 0, 4);
 
   glBindVertexArray(0);
   glUseProgram(0);

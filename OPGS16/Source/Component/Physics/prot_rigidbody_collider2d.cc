@@ -41,7 +41,7 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
   m_bind_info.bind_collider = this;
   pCreateRigidbody(collider_size, mass_sum, &m_rigidbody);
   pSetCollisionActualType(EColliderActualType::Dynamic);
-  pSetCollisionState(EColliderStateColor::Activated);
+  pSetCollisionState(EColliderBehaviorState::Activated);
 
   // Set Kinematic or Dynamic.
   if (is_kinematic) {
@@ -127,7 +127,7 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
   }
 
   if (m_is_collided_flag_setup) {
-    pSetCollisionState(EColliderStateColor::Activated);
+    pSetCollisionState(EColliderBehaviorState::Activated);
     m_is_collided_flag_setup = false;
   }
   else {
@@ -137,12 +137,12 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
     }
   }
 
-#ifdef false
-  if (!m_rigidbody->isActive()) {
-    pSetCollisionState(EColliderStateColor::Sleep);
+  if (m_rigidbody->isActive() == false &&
+      m_collider_type != EColliderActualType::Staic) {
+    pSetCollisionState(EColliderBehaviorState::Sleep);
   }
-#endif
 
+#ifdef false
   // Debug
   const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
   btVector3 min;
@@ -154,7 +154,7 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
       center.x, center.y, center.z,
       min.x(), min.y(), min.z(),
       max.x(), max.y(), max.z());
-  // Debug end
+#endif
 }
 
 void CProtoRigidbodyCollider2D::SetMass(float mass_value) {
@@ -225,7 +225,7 @@ float CProtoRigidbodyCollider2D::GetMass() const noexcept {
   return m_rigidbody->getInvMass();
 }
 
-CProtoRigidbodyCollider2D::EColliderStateColor
+CProtoRigidbodyCollider2D::EColliderBehaviorState
 CProtoRigidbodyCollider2D::GetColliderState() const noexcept {
   return m_state;
 }
@@ -241,10 +241,6 @@ bool CProtoRigidbodyCollider2D::IsKinematic() const noexcept {
 
 bool CProtoRigidbodyCollider2D::IsTriggered() const noexcept {
   return m_is_collision_triggered;
-}
-
-void CProtoRigidbodyCollider2D::SetGravityEffected(bool is_gravitied) {
-  m_rigidbody->setGravity({0, -9.8f * 5, 0});
 }
 
 void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
@@ -265,11 +261,11 @@ void CProtoRigidbodyCollider2D::pSetCollisionActualType(EColliderActualType type
   m_collider_type = type;
 }
 
-void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
-  PHITOS_ASSERT(state != EColliderStateColor::None,
+void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderBehaviorState state) {
+  PHITOS_ASSERT(state != EColliderBehaviorState::None,
                 "Collision state must not be None.");
 
-  if (state == EColliderStateColor::Collided) {
+  if (state == EColliderBehaviorState::Collided) {
     m_is_collided_flag_setup = true;
   }
 

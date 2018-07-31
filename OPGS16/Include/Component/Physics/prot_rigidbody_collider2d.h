@@ -47,7 +47,7 @@ namespace opgs16::component {
 class CProtoRigidbodyCollider2D final : public _internal::CComponent {
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CProtoRigidbodyCollider2D)
   using EColliderActualType = element::_internal::EColliderActualType;
-  using EColliderStateColor = element::_internal::EColliderStateColor;
+  using EColliderBehaviorState = element::_internal::EColliderBehaviorState;
   using EColliderCollisionState = element::_internal::EColliderCollisionState;
   using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
 
@@ -77,15 +77,13 @@ public:
 
   float GetMass() const noexcept;
 
-  EColliderStateColor GetColliderState() const noexcept;
+  EColliderBehaviorState GetColliderState() const noexcept;
 
   EColliderActualType GetColliderActualType() const noexcept;
 
   bool IsKinematic() const noexcept;
 
   bool IsTriggered() const noexcept;
-
-  void SetGravityEffected(bool is_gravitied);
 
 private:
   void Update(float delta_time) override final;
@@ -95,7 +93,7 @@ private:
                         btRigidBody** rigidbody_ptr);
   void pUpdateAabbToRenderer(const DVector3& min, const DVector3& max);
 
-  void pSetCollisionState(EColliderStateColor state);
+  void pSetCollisionState(EColliderBehaviorState state);
 
   void pSetCollisionActualType(EColliderActualType type);
 
@@ -109,7 +107,7 @@ private:
   TAabbRendererSmtPtr m_aabb_renderer = nullptr;
 
   element::_internal::DPrivateColliderBindInfo m_bind_info;
-  EColliderStateColor m_state         = EColliderStateColor::None;
+  EColliderBehaviorState m_state      = EColliderBehaviorState::None;
   EColliderActualType m_collider_type = EColliderActualType::None;
   EColliderCollisionState m_collision_state = EColliderCollisionState::Idle;
 
