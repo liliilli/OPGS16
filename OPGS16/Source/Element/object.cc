@@ -21,16 +21,15 @@
 
 /// Header file
 #include <Element/object.h>
-/// ::opgs16::element::_internal::CObjectImpl
-#include <Element/Impl/object_impl.h>
+
+#include <Phitos/Dbg/assert.h>
 
 /// ::opgs16::component::CScriptFrame
 #include <Component/script_frame.h>
-/// import logger in debug mode.
+#include <Element/Internal/physics_enums.h>
+#include <Element/Impl/object_impl.h>
 #include <Headers/import_logger.h>
-
 #include <Manager/object_manager.h>
-#include <Phitos/Dbg/assert.h>
 
 namespace opgs16::element {
 
@@ -329,6 +328,22 @@ void CObject::Propagate() {
     ptr->PropagateActivation(flag);
     ptr->CalculateActivation();
     ptr->Propagate();
+  }
+}
+
+void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
+                                   bool is_collision_function,
+                                   component::CProtoRigidbodyCollider2D* collider) {
+  switch (call_state) {
+  case _internal::EColliderCollisionState::Idle:  // Exit
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    break;
+  case _internal::EColliderCollisionState::Enter: // Enter
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    break;
+  case _internal::EColliderCollisionState::Stay:  // Stay
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    break;
   }
 }
 

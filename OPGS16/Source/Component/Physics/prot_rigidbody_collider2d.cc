@@ -124,6 +124,12 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
     pSetCollisionState(EColliderStateColor::Activated);
     m_is_collided_flag_setup = false;
   }
+  else {
+    if (m_collision_state != EColliderCollisionState::Idle) {
+      // @todo temporary
+      pCallBindObjectCallback(nullptr);
+    }
+  }
 
   // Debug
   const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
@@ -171,6 +177,27 @@ void CProtoRigidbodyCollider2D::TemporalSetStatic() {
   m_collider_type = EColliderActualType::Staic;
 }
 
+void CProtoRigidbodyCollider2D::SetTriggered(bool is_triggered) {
+  if (is_triggered) {
+    if (m_rigidbody->getCollisionFlags() &
+        btCollisionObject::CF_NO_CONTACT_RESPONSE) {
+      return;
+    }
+
+    m_rigidbody->setCollisionFlags(m_rigidbody->getCollisionFlags() |
+        btCollisionObject::CF_NO_CONTACT_RESPONSE);
+  }
+  else if (m_rigidbody->getCollisionFlags() &
+           btCollisionObject::CF_NO_CONTACT_RESPONSE) {
+    m_rigidbody->setCollisionFlags(
+        m_rigidbody->getCollisionFlags() ^
+        btCollisionObject::CF_NO_CONTACT_RESPONSE
+    );
+  }
+
+  m_is_collision_triggered = is_triggered;
+}
+
 void CProtoRigidbodyCollider2D::SetColliderSize(const DVector2& size) {
   if (m_collision_shape)
     delete m_collision_shape;
@@ -196,8 +223,12 @@ CProtoRigidbodyCollider2D::GetColliderActualType() const noexcept {
   return m_collider_type;
 }
 
-float CProtoRigidbodyCollider2D::IsKinematic() const noexcept {
+bool CProtoRigidbodyCollider2D::IsKinematic() const noexcept {
   return m_collider_type == EColliderActualType::Kinetic;
+}
+
+bool CProtoRigidbodyCollider2D::IsTriggered() const noexcept {
+  return m_is_collision_triggered;
 }
 
 void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
@@ -211,6 +242,13 @@ void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
   }
 }
 
+void CProtoRigidbodyCollider2D::pSetCollisionActualType(EColliderActualType type) {
+  PHITOS_ASSERT(type != EColliderActualType::None,
+                "Type must not be EColliderActualType::None.");
+
+  m_collider_type = type;
+}
+
 void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
   PHITOS_ASSERT(state != EColliderStateColor::None,
                 "Collision state must not be None.");
@@ -222,11 +260,29 @@ void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
   m_state = state;
 }
 
-void CProtoRigidbodyCollider2D::pSetCollisionActualType(EColliderActualType type) {
-  PHITOS_ASSERT(type != EColliderActualType::None,
-                "Type must not be EColliderActualType::None.");
+void CProtoRigidbodyCollider2D::pCallBindObjectCallback(CProtoRigidbodyCollider2D* other_collider) {
+  const bool is_collision_function = !IsTriggered() && !other_collider->IsTriggered();
 
-  m_collider_type = type;
+  switch (m_collision_state) {
+  case EColliderCollisionState::Idle:
+    m_collision_state = EColliderCollisionState::Enter;
+    break;
+  case EColliderCollisionState::Enter:
+    if (m_is_collision_triggered)
+      m_collision_state = EColliderCollisionState::Stay;
+    else
+      m_collision_state = EColliderCollisionState::Idle;
+    break;
+  case EColliderCollisionState::Stay:
+    if (!m_is_collision_triggered)
+      m_collision_state = EColliderCollisionState::Idle;
+    break;
+  }
+
+  auto& obj = GetBindObject();
+  obj.pCallPhysicsCallback(m_collision_state,
+                           is_collision_function,
+                           other_collider);
 }
 
 } /// ::opgs16::component namespace

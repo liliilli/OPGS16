@@ -67,8 +67,26 @@
 #include <Helper/Type/vector3.h>
 #include "Phitos/Enums/activated.h"
 #include <Phitos/Dbg/assert.h>
+#include "Component/Physics/prot_rigidbody_collider2d.h"
+
+//!
+//! Forward declaration
+//!
+
+namespace opgs16::component {
+class CProtoRigidbodyCollider2D;
+}
+
+namespace opgs16::element::_internal {
+enum class EColliderCollisionState;
+}
+
+//!
+//! Implementation
+//!
 
 namespace opgs16::element {
+
 ///
 /// @class CObject
 /// @brief The class for every object to update and draw.
@@ -562,6 +580,10 @@ protected:
   virtual void Render() {};
 
 private:
+  void pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
+                            bool is_collision_function,
+                            component::CProtoRigidbodyCollider2D* collider);
+
   /// Object name counter to avoid duplicated object name
   TNameCounterMap m_name_counter;
 
@@ -571,6 +593,8 @@ private:
   mutable int32_t m_hash_value = 0;
   /// Flag
   mutable bool m_hash_initialized = false;
+
+  friend opgs16::component::CProtoRigidbodyCollider2D;
 };
 
 } /// ::opgs16::element namespace

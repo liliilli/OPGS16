@@ -41,6 +41,12 @@ enum class EColliderActualType {
   None
 };
 
+enum class EColliderCollisionState {
+  Idle, /// Exit not needed.
+  Enter,
+  Stay,
+};
+
 } /// ::opgs16::element::_internal namespace
 
 #endif /// OPGS16_ELEMENT_INTERNAL_PHYSICS_ENUMS_H

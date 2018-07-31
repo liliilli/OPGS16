@@ -48,6 +48,7 @@ class CProtoRigidbodyCollider2D final : public _internal::CComponent {
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CProtoRigidbodyCollider2D)
   using EColliderActualType = element::_internal::EColliderActualType;
   using EColliderStateColor = element::_internal::EColliderStateColor;
+  using EColliderCollisionState = element::_internal::EColliderCollisionState;
   using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
 
 public:
@@ -66,6 +67,8 @@ public:
 
   void TemporalSetStatic();
 
+  void SetTriggered(bool is_triggered);
+
   ///
   /// @update
   /// Frequent call will cause performance decrease.
@@ -78,7 +81,9 @@ public:
 
   EColliderActualType GetColliderActualType() const noexcept;
 
-  float IsKinematic() const noexcept;
+  bool IsKinematic() const noexcept;
+
+  bool IsTriggered() const noexcept;
 
 private:
   void Update(float delta_time) override final;
@@ -92,6 +97,11 @@ private:
 
   void pSetCollisionActualType(EColliderActualType type);
 
+  ///
+  /// @brief
+  ///
+  void pCallBindObjectCallback(CProtoRigidbodyCollider2D* other_collider);
+
   btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
   TAabbRendererSmtPtr m_aabb_renderer = nullptr;
@@ -99,10 +109,15 @@ private:
   element::_internal::DPrivateColliderBindInfo m_bind_info;
   EColliderStateColor m_state         = EColliderStateColor::None;
   EColliderActualType m_collider_type = EColliderActualType::None;
+  EColliderCollisionState m_collision_state = EColliderCollisionState::Idle;
+
   int32_t m_collision_tag_index = -1;
 
   bool m_is_position_initialized = false;
   bool m_is_collided_flag_setup  = false;
+  bool m_is_collision_triggered  = false;
+
+
 
   friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 };
