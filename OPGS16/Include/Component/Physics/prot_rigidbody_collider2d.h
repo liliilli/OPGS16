@@ -102,6 +102,8 @@ private:
   ///
   void pCallBindObjectCallback(CProtoRigidbodyCollider2D* other_collider);
 
+  bool pIsCallbackFunctionCalledOnThisFrame() const noexcept;
+
   btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
   TAabbRendererSmtPtr m_aabb_renderer = nullptr;

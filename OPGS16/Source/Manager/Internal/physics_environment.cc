@@ -175,16 +175,22 @@ void CPhysicsEnvironment::pCallCollidedObjectCallbacks() const noexcept {
         auto* a_collider = a_bind_ptr->bind_collider;
         auto* b_collider = b_bind_ptr->bind_collider;
 
+#ifdef false
         PUSH_LOG_CRITICAL_EXT("Object Collided. A : {}, B : {}",
             a_bind_ptr->bind_object->GetGameObjectName(),
             b_bind_ptr->bind_object->GetGameObjectName());
+#endif
 
         using opgs16::element::_internal::EColliderBehaviorState;
-        a_collider->pSetCollisionState(EColliderBehaviorState::Collided);
-        b_collider->pSetCollisionState(EColliderBehaviorState::Collided);
+        if (!a_collider->pIsCallbackFunctionCalledOnThisFrame()) {
+          a_collider->pSetCollisionState(EColliderBehaviorState::Collided);
+          a_collider->pCallBindObjectCallback(b_bind_ptr->bind_collider);
+        }
 
-        a_collider->pCallBindObjectCallback(b_bind_ptr->bind_collider);
-        b_collider->pCallBindObjectCallback(a_bind_ptr->bind_collider);
+        if (!b_collider->pIsCallbackFunctionCalledOnThisFrame()) {
+          b_collider->pSetCollisionState(EColliderBehaviorState::Collided);
+          b_collider->pCallBindObjectCallback(a_bind_ptr->bind_collider);
+        }
       }
     }
   }

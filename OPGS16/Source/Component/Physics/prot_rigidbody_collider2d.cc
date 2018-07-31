@@ -136,7 +136,7 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
     }
   }
 
-  if (m_rigidbody->isActive() == false &&
+  if (!m_rigidbody->isActive() &&
       m_collider_type != EColliderActualType::Staic) {
     pSetCollisionState(EColliderBehaviorState::Sleep);
   }
@@ -296,6 +296,10 @@ void CProtoRigidbodyCollider2D::pCallBindObjectCallback(CProtoRigidbodyCollider2
   obj.pCallPhysicsCallback(m_collision_state,
                            is_collision_function,
                            other_collider);
+}
+
+bool CProtoRigidbodyCollider2D::pIsCallbackFunctionCalledOnThisFrame() const noexcept {
+  return m_is_collided_flag_setup;
 }
 
 } /// ::opgs16::component namespace
