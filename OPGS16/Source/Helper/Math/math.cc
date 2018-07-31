@@ -22,6 +22,16 @@
 #include <Helper/Type/vectori2.h>
 #include <Helper/Type/vectori3.h>
 
+namespace {
+
+template <typename TType>
+constexpr TType rad_to_deg_offset = 180 / opgs16::math::pi<TType>;
+
+template <typename TType>
+constexpr TType deg_to_rad_offset = opgs16::math::pi<TType> / 180;
+
+} /// unnamed namespace
+
 namespace opgs16::math {
 
 bool IsAllZero(const opgs16::DVector2& vector) noexcept {
@@ -136,7 +146,42 @@ TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept {
 
 float GetRotationAngle(float angle_value) noexcept {
   const float angle = std::fmod(angle_value, 360.f);
-  return (angle > 180.f) ?  angle - 360.f :
-             ((angle <= -180.f) ?  angle + 360.f : angle);
+  return (angle > 180.f) ? angle - 360.f :
+             ((angle <= -180.f) ? angle + 360.f : angle);
 }
+
+double GetRotationAngle(double angle_value) noexcept {
+  const double angle = std::fmod(angle_value, 360.0);
+  return (angle > 180.0) ? angle - 360.0 :
+             ((angle <= -180.0) ? angle + 360.0 : angle);
+}
+
+float GetRotationAngleRadian(float angle_value) noexcept {
+  const float angle = std::fmod(angle_value, math::pi<float> * 2);
+  return (angle > pi<float>) ? angle - (pi<float> * 2) :
+             ((angle <= -pi<float>) ? angle + (pi<float> * 2) : angle);
+}
+
+double GetRotationAngleRadian(double angle_value) noexcept {
+  const float angle = std::fmod(angle_value, math::pi<double> * 2);
+  return (angle > pi<double>) ? angle - (pi<double> * 2) :
+             ((angle <= -pi<double>) ? angle + (pi<double> * 2) : angle);
+}
+
+float RadToDeg(float radian) noexcept {
+  return GetRotationAngle(radian * rad_to_deg_offset<float>);
+}
+
+double RadToDeg(double radian) noexcept {
+  return GetRotationAngle(radian * rad_to_deg_offset<double>);
+}
+
+float DegToRad(float degree) noexcept {
+  return GetRotationAngleRadian(degree * deg_to_rad_offset<float>);
+}
+
+double DegToRad(double degree) noexcept {
+  return GetRotationAngleRadian(degree * deg_to_rad_offset<double>);
+}
+
 } /// ::opgs16::math namespace

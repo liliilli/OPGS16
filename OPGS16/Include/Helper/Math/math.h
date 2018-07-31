@@ -29,11 +29,29 @@ struct DVectorInt2;
 namespace opgs16::math {
 
 template <typename TType>
+constexpr TType pi = TType(3.1415926535897932385L);
+
+template <typename TType>
+constexpr TType e = TType(2.71828182845904523536L);
+
+//!
+//! Functions
+//!
+
+///
+/// @brief aef
+/// efef
+///
+template <typename TType>
 constexpr TType Clamp(const TType& value,
                       const TType& from, const TType& inclusive_to) noexcept {
   return (value > from ? (value < inclusive_to ? value : inclusive_to) : from);
 }
 
+///
+/// @brief aef
+/// efef
+///
 template <typename TType>
 constexpr TType Clamp(const TType& value,
                       const DRangeData<TType>& range) noexcept {
@@ -231,9 +249,44 @@ TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt2& vector) noexcept;
 TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept;
 
 ///
-/// @brief
+/// @brief Get degree rotation angle from -180 to 180' automatically.
 ///
 float GetRotationAngle(float angle_value) noexcept;
+
+///
+/// @brief Get degree rotation angle from -180 to 180' automatically.
+///
+double GetRotationAngle(double angle_value) noexcept;
+
+///
+/// @brief Get degree rotation angle from -180 to 180' automatically.
+///
+float GetRotationAngleRadian(float angle_value) noexcept;
+
+///
+/// @brief Get degree rotation angle from -180 to 180' automatically.
+///
+double GetRotationAngleRadian(double angle_value) noexcept;
+
+///
+/// @brief Convert radian to degree, return -180 to 180'.
+///
+float RadToDeg(float radian) noexcept;
+
+///
+/// @brief Convert radian to degree, return -180 to 180'.
+///
+double RadToDeg(double radian) noexcept;
+
+///
+/// @brief Convert degree to radian, return -pi to pi.
+///
+float DegToRad(float degree) noexcept;
+
+///
+/// @brief Convert degree to radian, return -pi to pi.
+///
+double DegToRad(double degree) noexcept;
 
 } /// ::opgs16::math namespace
 
