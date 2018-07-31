@@ -293,6 +293,7 @@
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
+    <ClInclude Include="Include\Element\Internal\physics_enums.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />
     <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
     <ClInclude Include="Include\Element\Internal\mesh_object.h" />

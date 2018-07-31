@@ -22,6 +22,7 @@
 #include <Component/Internal/component.h>
 #include <Element/Internal/physics_collider_bind_info.h>
 #include <Helper/Type/vector2.h>
+#include "Element/Internal/physics_enums.h"
 
 //!
 //! Forward declaration
@@ -45,6 +46,10 @@ namespace opgs16::component {
 
 class CProtoRigidbodyCollider2D final : public _internal::CComponent {
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CProtoRigidbodyCollider2D)
+  using EColliderActualType = element::_internal::EColliderActualType;
+  using EColliderStateColor = element::_internal::EColliderStateColor;
+  using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
+
 public:
   CProtoRigidbodyCollider2D(
       element::CObject& bind_object,
@@ -67,23 +72,35 @@ public:
   ///
   void SetColliderSize(const DVector2& size);
 
-  float GetMass() noexcept;
+  float GetMass() const noexcept;
 
-  float IsKinematic() noexcept;
+  EColliderStateColor GetColliderState() const noexcept;
+
+  EColliderActualType GetColliderActualType() const noexcept;
+
+  float IsKinematic() const noexcept;
 
 private:
   void Update(float delta_time) override final;
+
   void pCreateRigidbody(const DVector2& collider_size,
                         const float mass_sum,
                         btRigidBody** rigidbody_ptr);
   void pUpdateAabbToRenderer(const DVector3& min, const DVector3& max);
 
+  void pSetCollisionState(EColliderStateColor state);
+
+  void pSetCollisionActualType(EColliderActualType type);
+
   btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
-  std::unique_ptr<_internal::CPrivateAabbRenderer2D> m_aabb_renderer = nullptr;
+  TAabbRendererSmtPtr m_aabb_renderer = nullptr;
 
   element::_internal::DPrivateColliderBindInfo m_bind_info;
+  EColliderStateColor m_state         = EColliderStateColor::None;
+  EColliderActualType m_collider_type = EColliderActualType::None;
   int32_t m_collision_tag_index = -1;
+
   bool m_is_position_initialized = false;
 
   friend opgs16::manager::physics::_internal::CPhysicsEnvironment;

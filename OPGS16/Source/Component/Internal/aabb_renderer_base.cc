@@ -15,31 +15,9 @@
 
 /// Header file
 #include <Component/Internal/aabb_renderer_base.h>
+
+#include <Component/Physics/prot_rigidbody_collider2d.h>
 #include <Manager/object_manager.h>
-
-namespace {
-
-glm::mat3 GetRotationMatrix(const opgs16::DVector3& rotation_angle) {
-  float min = rotation_angle.x;
-  float max = rotation_angle.x;
-  if (rotation_angle.y < min) { min = rotation_angle.y; }
-  if (rotation_angle.y > max) { max = rotation_angle.y; }
-  if (rotation_angle.z < min) { min = rotation_angle.z; }
-  if (rotation_angle.z > max) { max = rotation_angle.z; }
-
-  if (std::abs(min) > max) {
-    max = min;
-  }
-
-  return glm::rotate(
-      glm::mat4{}, glm::radians(max),
-      glm::vec3{ rotation_angle.x / max,
-                 rotation_angle.y / max,
-                 rotation_angle.z / max}
-  );
-}
-
-} /// ::unnamed namespace
 
 namespace opgs16::component::_internal {
 
@@ -67,11 +45,11 @@ const DVector3& CPrivateAabbRendererBase::GetCollisionRenderPosition() const noe
   return m_render_position;
 }
 
-EAabbColliderStyle CPrivateAabbRendererBase::GetColliderType() const noexcept {
+EAabbColliderDmStyle CPrivateAabbRendererBase::GetColliderType() const noexcept {
   return m_type;
 }
 
-const glm::mat4& CPrivateAabbRendererBase::PGetModelMatrix() noexcept {
+const glm::mat4& CPrivateAabbRendererBase::pGetModelMatrix() noexcept {
   if (m_is_model_matrix_dirty) {
     pUpdateModelMatrix();
     m_is_model_matrix_dirty = false;
@@ -93,6 +71,41 @@ void CPrivateAabbRendererBase::pUpdateModelMatrix() {
     m_model_matrix[3][1] = m_render_position.y;
     m_model_matrix[3][2] = m_render_position.z;
     m_is_render_position_dirty = false;
+  }
+}
+
+void CPrivateAabbRendererBase::pSetAabbRenderingColor() {
+  using opgs16::element::_internal::EColliderStateColor;
+  if (!m_parent) {
+    PHITOS_UNEXPECTED_BRANCH();
+  }
+
+  const auto state = m_parent->GetColliderState();
+  PHITOS_ASSERT(state != EColliderStateColor::None, "Collision state must not be None.");
+
+  switch (state) {
+  default: PHITOS_UNEXPECTED_BRANCH(); break;
+  case EColliderStateColor::Activated: {
+    const auto type = m_parent->GetColliderActualType();
+    switch (type) {
+    default: PHITOS_UNEXPECTED_BRANCH(); break;
+    case element::_internal::EColliderActualType::Kinetic:
+      m_state_color = opgs16::DColor::Aqua;
+      break;
+    case element::_internal::EColliderActualType::Dynamic:
+      m_state_color = opgs16::DColor::Green;
+      break;
+    case element::_internal::EColliderActualType::Staic:
+      m_state_color = opgs16::DColor::Orange;
+      break;
+    }
+  } break;
+  case EColliderStateColor::Collided:
+    m_state_color = opgs16::DColor::Yellow;
+    break;
+  case EColliderStateColor::Sleep:
+    m_state_color = opgs16::DColor::Gray;
+    break;
   }
 }
 

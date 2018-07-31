@@ -265,6 +265,7 @@
     <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
     <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
+    <ClInclude Include="Include\Element\Internal\physics_enums.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

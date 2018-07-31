@@ -24,8 +24,10 @@
 
 namespace opgs16::component::_internal {
 
-CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(element::CObject& bind_object) :
-    CPrivateAabbRendererBase(bind_object) {
+CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(
+    element::CObject& bind_object,
+    component::CProtoRigidbodyCollider2D* parent) :
+    CPrivateAabbRendererBase{bind_object, parent} {
   using phitos::enums::EFound;
   using builtin::model::BModel2DQuadLine;
   using manager::shader::GetShader;
@@ -41,7 +43,7 @@ CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(element::CObject& bind_object) :
 
   m_wrapper.SetShader(GetShader("opQuad2dLineLoop"));
   m_wrapper.SetAttribute(m_weak_vao_ref);
-  m_type = EAabbColliderStyle::D2;
+  m_type = EAabbColliderDmStyle::D2;
 }
 
 CPrivateAabbRenderer2D::~CPrivateAabbRenderer2D() {
@@ -52,9 +54,13 @@ void CPrivateAabbRenderer2D::Render() {
   using opgs16::manager::scene::GetPresentMainCamProjMatrix;
   using opgs16::manager::scene::GetPresentMainCamViewMatrix;
 
-  m_wrapper.SetUniformMat4(builtin::s_uniform_model, PGetModelMatrix());
+  m_wrapper.SetUniformMat4(builtin::s_uniform_model, pGetModelMatrix());
   m_wrapper.SetUniformMat4(builtin::s_uniform_proj, GetPresentMainCamProjMatrix());
   m_wrapper.SetUniformMat4(builtin::s_uniform_view, GetPresentMainCamViewMatrix());
+
+  pSetAabbRenderingColor();
+  m_wrapper.SetUniformVec3("uColor", m_state_color);
+
   m_wrapper.UseShader();
 
   const auto& vao_list = m_weak_vao_ref->GetVaoList();

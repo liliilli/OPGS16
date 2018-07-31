@@ -16,12 +16,24 @@
 ///
 
 #include <Component/Internal/renderer_base.h>
-
+#include <Helper/Type/color.h>
 #include <Helper/Type/vector3.h>
+
+//!
+//! Forward declaration
+//!
+
+namespace opgs16::component {
+class CProtoRigidbodyCollider2D;
+}
+
+//!
+//! Implementation
+//!
 
 namespace opgs16::component::_internal {
 
-enum class EAabbColliderStyle {
+enum class EAabbColliderDmStyle {
   None,
   D2,
   D3,
@@ -29,8 +41,10 @@ enum class EAabbColliderStyle {
 
 class CPrivateAabbRendererBase : public CRendererBase {
 public:
-  CPrivateAabbRendererBase(element::CObject& bind_object) :
-      CRendererBase(bind_object)
+  CPrivateAabbRendererBase(
+      element::CObject& bind_object,
+      component::CProtoRigidbodyCollider2D* parent) :
+      CRendererBase(bind_object), m_parent { parent }
   {};
 
   bool SetCollisionSize(const DVector3& collider_size);
@@ -38,16 +52,19 @@ public:
 
   const DVector3& GetCollisionSize() const noexcept;
   const DVector3& GetCollisionRenderPosition() const noexcept;
+  EAabbColliderDmStyle GetColliderType() const noexcept;
 
   void Update(float delta_time) override final;
   virtual void Render() = 0;
 
-  EAabbColliderStyle GetColliderType() const noexcept;
-
 protected:
-  const glm::mat4& PGetModelMatrix() noexcept;
+  const glm::mat4& pGetModelMatrix() noexcept;
+  void pSetAabbRenderingColor();
 
-  mutable EAabbColliderStyle m_type = EAabbColliderStyle::None;
+  CProtoRigidbodyCollider2D* m_parent = nullptr;
+
+  mutable EAabbColliderDmStyle m_type = EAabbColliderDmStyle::None;
+  opgs16::DColor m_state_color  = opgs16::DColor::Black;
 
 private:
   void pUpdateModelMatrix();

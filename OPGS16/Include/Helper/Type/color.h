@@ -97,6 +97,10 @@ struct DColor final {
     return DVector3{r, g, b};
   }
 
+  operator glm::vec3() const noexcept {
+    return glm::vec3{r, g, b};
+  }
+
   //!
   //! Statics
   //!

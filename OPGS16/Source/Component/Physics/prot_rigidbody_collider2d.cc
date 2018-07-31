@@ -36,6 +36,8 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
   m_bind_info.bind_object   = &obj;
   m_bind_info.bind_collider = this;
   pCreateRigidbody(collider_size, mass_sum, &m_rigidbody);
+  pSetCollisionActualType(EColliderActualType::Dynamic);
+  pSetCollisionState(EColliderStateColor::Activated);
 
   // Set Kinematic or Dynamic.
   if (is_kinematic) {
@@ -49,7 +51,7 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
   opgs16::manager::physics::AddRigidbody(m_rigidbody);
 
   // Create CPrivateAabbRenderer2D and set information.
-  m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj);
+  m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj, this);
   m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(collider_size));
   m_aabb_renderer->SetCollisionRenderPosition(obj.GetFinalPosition());
 }
@@ -63,7 +65,7 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
 
   // Create collision shape
   const DVector2 half_size = collider_size * 0.5f;
-  m_collision_shape = new btBoxShape{{half_size.x, half_size.y, 1.f}};
+  m_collision_shape = new btBox2dShape{{half_size.x, half_size.y, 0.f}};
   m_collision_shape->setMargin(1.f);
 
   // Create motion state
@@ -75,34 +77,23 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
       new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
 
   btVector3 local_inertia;
-  m_collision_shape->calculateLocalInertia(mass_sum, local_inertia);
+  //m_collision_shape->calculateLocalInertia(mass_sum, local_inertia);
 
   // Create rigidbody info
   btRigidBody::btRigidBodyConstructionInfo body_construction_info =
       btRigidBody::btRigidBodyConstructionInfo{
-          mass_sum,
+          (mass_sum <= 0.f) ? 0.001f : mass_sum,
           motionState,
           m_collision_shape,
           local_inertia};
-  body_construction_info.m_restitution = 0.0f;
-  body_construction_info.m_friction = 1.0f;
+  body_construction_info.m_restitution = 1.0f;
+  body_construction_info.m_friction = 0.5f;
 
   *rigidbody_ptr = new btRigidBody{body_construction_info};
   (*rigidbody_ptr)->setUserPointer(static_cast<void*>(&m_bind_info));
 
   // Restrict physical influence to (x, y) axis only.
   (*rigidbody_ptr)->setLinearFactor({1, 1, 0});
-}
-
-void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
-    const DVector3& min,
-    const DVector3& max) {
-  if (m_aabb_renderer) {
-    m_aabb_renderer->SetCollisionSize(max - min);
-    m_aabb_renderer->SetCollisionRenderPosition((max + min) / 2);
-    m_aabb_renderer->Update(0);
-    opgs16::manager::object::InsertAABBInformation(*m_aabb_renderer);
-  }
 }
 
 CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
@@ -159,17 +150,20 @@ void CProtoRigidbodyCollider2D::SetKinematic(bool is_kinematic) {
         m_rigidbody->getCollisionFlags() |
         btCollisionObject::CF_KINEMATIC_OBJECT
     );
+    m_collider_type = EColliderActualType::Kinetic;
   }
   else {
     m_rigidbody->setCollisionFlags(
         m_rigidbody->getCollisionFlags() |
         btCollisionObject::CF_CHARACTER_OBJECT
     );
+    m_collider_type = EColliderActualType::Dynamic;
   }
 }
 
 void CProtoRigidbodyCollider2D::TemporalSetStatic() {
   m_rigidbody->setMassProps(0, {});
+  m_collider_type = EColliderActualType::Staic;
 }
 
 void CProtoRigidbodyCollider2D::SetColliderSize(const DVector2& size) {
@@ -183,12 +177,47 @@ void CProtoRigidbodyCollider2D::SetColliderSize(const DVector2& size) {
   m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(size));
 }
 
-float CProtoRigidbodyCollider2D::GetMass() noexcept {
+float CProtoRigidbodyCollider2D::GetMass() const noexcept {
   return m_rigidbody->getInvMass();
 }
 
-float CProtoRigidbodyCollider2D::IsKinematic() noexcept {
-  return m_rigidbody->isKinematicObject();
+CProtoRigidbodyCollider2D::EColliderStateColor
+CProtoRigidbodyCollider2D::GetColliderState() const noexcept {
+  return m_state;
+}
+
+CProtoRigidbodyCollider2D::EColliderActualType
+CProtoRigidbodyCollider2D::GetColliderActualType() const noexcept {
+  return m_collider_type;
+}
+
+float CProtoRigidbodyCollider2D::IsKinematic() const noexcept {
+  return m_collider_type == EColliderActualType::Kinetic;
+}
+
+void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
+    const DVector3& min,
+    const DVector3& max) {
+  if (m_aabb_renderer) {
+    m_aabb_renderer->SetCollisionSize(max - min);
+    m_aabb_renderer->SetCollisionRenderPosition((max + min) / 2);
+    m_aabb_renderer->Update(0);
+    opgs16::manager::object::InsertAABBInformation(*m_aabb_renderer);
+  }
+}
+
+void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
+  PHITOS_ASSERT(state != EColliderStateColor::None,
+                "Collision state must not be None.");
+
+  m_state = state;
+}
+
+void CProtoRigidbodyCollider2D::pSetCollisionActualType(EColliderActualType type) {
+  PHITOS_ASSERT(type != EColliderActualType::None,
+                "Type must not be EColliderActualType::None.");
+
+  m_collider_type = type;
 }
 
 } /// ::opgs16::component namespace

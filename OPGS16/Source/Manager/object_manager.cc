@@ -311,10 +311,10 @@ void InsertRenderingObject(element::CObject* const object,
 void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
   switch (aabb_component.GetColliderType()) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
-  case component::_internal::EAabbColliderStyle::D2:
+  case component::_internal::EAabbColliderDmStyle::D2:
     m_aabb_2d_list.push_back(&aabb_component);
     break;
-  case component::_internal::EAabbColliderStyle::D3:
+  case component::_internal::EAabbColliderDmStyle::D3:
     m_aabb_3d_list.push_back(&aabb_component);
     break;
   }

@@ -19,10 +19,10 @@
 
 namespace opgs16::component::_internal {
 
-class CPrivateAabbRenderer2D final :
-      public opgs16::component::_internal::CPrivateAabbRendererBase {
+class CPrivateAabbRenderer2D final : public CPrivateAabbRendererBase {
 public:
-  CPrivateAabbRenderer2D(element::CObject& bind_object);
+  CPrivateAabbRenderer2D(element::CObject& bind_object,
+                         component::CProtoRigidbodyCollider2D* parent);
   ~CPrivateAabbRenderer2D();
 
   CPrivateAabbRenderer2D(const CPrivateAabbRenderer2D&) = default;
