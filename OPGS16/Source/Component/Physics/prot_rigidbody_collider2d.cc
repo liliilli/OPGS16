@@ -120,6 +120,11 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
     m_is_position_initialized = true;
   }
 
+  if (m_is_collided_flag_setup) {
+    pSetCollisionState(EColliderStateColor::Activated);
+    m_is_collided_flag_setup = false;
+  }
+
   // Debug
   const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
   btVector3 min;
@@ -209,6 +214,10 @@ void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
 void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
   PHITOS_ASSERT(state != EColliderStateColor::None,
                 "Collision state must not be None.");
+
+  if (state == EColliderStateColor::Collided) {
+    m_is_collided_flag_setup = true;
+  }
 
   m_state = state;
 }

@@ -102,6 +102,7 @@ private:
   int32_t m_collision_tag_index = -1;
 
   bool m_is_position_initialized = false;
+  bool m_is_collided_flag_setup  = false;
 
   friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 };

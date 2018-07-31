@@ -170,6 +170,10 @@ void CPhysicsEnvironment::pCallCollidedObjectCallbacks() const noexcept {
         PUSH_LOG_CRITICAL_EXT("Object Collided. A : {}, B : {}",
             a_bind_ptr->bind_object->GetGameObjectName(),
             b_bind_ptr->bind_object->GetGameObjectName());
+
+        using opgs16::element::_internal::EColliderStateColor;
+        a_bind_ptr->bind_collider->pSetCollisionState(EColliderStateColor::Collided);
+        b_bind_ptr->bind_collider->pSetCollisionState(EColliderStateColor::Collided);
       }
     }
   }
