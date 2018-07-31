@@ -82,9 +82,9 @@ const glm::mat4& CPrivateAabbRendererBase::PGetModelMatrix() noexcept {
 
 void CPrivateAabbRendererBase::pUpdateModelMatrix() {
   if (m_is_collider_size_dirty) {
-    m_model_matrix[0] *= m_collider_size.x / 2;
-    m_model_matrix[1] *= m_collider_size.y / 2;
-    m_model_matrix[2] *= m_collider_size.z / 2;
+    m_model_matrix[0][0] = m_collider_size.x / 2;
+    m_model_matrix[1][1] = m_collider_size.y / 2;
+    m_model_matrix[2][2] = m_collider_size.z / 2;
     m_is_collider_size_dirty = false;
   }
 

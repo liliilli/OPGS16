@@ -62,7 +62,7 @@ struct DVector3 {
   //! Constructor and assign operator for dependencies.
   //!
 
-  explicit DVector3(const aiVector3D& value) noexcept :
+  DVector3(const aiVector3D& value) noexcept :
       x{value.x}, y{value.y}, z{value.z} {}
 
   DVector3& operator=(const aiVector3D& value) noexcept {
@@ -72,7 +72,7 @@ struct DVector3 {
     return *this;
   }
 
-  explicit DVector3(const glm::vec3& value) noexcept :
+  DVector3(const glm::vec3& value) noexcept :
       x{value.x}, y{value.y}, z{value.z} {};
 
   DVector3& operator=(const glm::vec3& value) noexcept {
@@ -82,7 +82,7 @@ struct DVector3 {
     return *this;
   }
 
-  explicit DVector3(const btVector3& value) noexcept :
+  DVector3(const btVector3& value) noexcept :
       x{value.getX()}, y{value.getY()}, z{value.getZ()} {};
 
   DVector3& operator=(const btVector3& value) noexcept {

@@ -182,6 +182,10 @@
     <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
+    <ClCompile Include="Source\Helper\Type\vector2.cc" />
+    <ClCompile Include="Source\Helper\Type\vector3.cc" />
+    <ClCompile Include="Source\Helper\Type\vectorint2.cc" />
+    <ClCompile Include="Source\Helper\Type\vectorint3.cc" />
     <ClCompile Include="Source\precompiled.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -288,6 +292,7 @@
     <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
+    <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />
     <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
     <ClInclude Include="Include\Element\Internal\mesh_object.h" />

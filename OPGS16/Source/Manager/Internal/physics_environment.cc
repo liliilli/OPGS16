@@ -19,13 +19,15 @@
 /// Header file
 #include <Manager/Physics/physics_environment.h>
 
-/// ::phitos:: enhanced assertion.
-#include <Phitos/Dbg/assert.h>
-
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-#include "Element/object.h"
+
+/// ::phitos:: enhanced assertion.
+#include <Phitos/Dbg/assert.h>
+#include <Component/Physics/prot_rigidbody_collider2d.h>
+#include <Element/object.h>
+#include <Element/Internal/physics_collider_bind_info.h>
 
 namespace opgs16::manager::physics::_internal {
 
@@ -108,6 +110,9 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
 
 void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   using opgs16::element::CObject;
+  using opgs16::element::_internal::DPrivateColliderBindInfo;
+  using opgs16::component::CProtoRigidbodyCollider2D;
+
   DebugCheckWorldInitiated();
 
   m_dynamics_world->stepSimulation(delta_time, 10);
@@ -120,8 +125,18 @@ void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
       btTransform trans;
       rigidbody_obj->getMotionState()->getWorldTransform(trans);
 
-      auto obj_ptr = static_cast<CObject*>(rigidbody_obj->getUserPointer());
-      obj_ptr->SetWorldPosWithFinalPos(static_cast<DVector3>(trans.getOrigin()));
+      auto obj_ptr = static_cast<DPrivateColliderBindInfo*>(
+          rigidbody_obj->getUserPointer()
+      );
+
+      // Update position and aabb information.
+      obj_ptr->bind_object->SetWorldPosWithFinalPos(
+          static_cast<DVector3>(trans.getOrigin())
+      );
+
+      btVector3 min, max;
+      rigidbody_obj->getAabb(min, max);
+      obj_ptr->bind_collider->pUpdateAabbToRenderer(min, max);
     }
   }
 }

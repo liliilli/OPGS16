@@ -15,17 +15,31 @@
 /// Create file.
 ///
 
-#include <Component/Internal/component.h>
-
 #include <string>
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 
+#include <Component/Internal/component.h>
+#include <Element/Internal/physics_collider_bind_info.h>
 #include <Helper/Type/vector2.h>
 
+//!
+//! Forward declaration
+//!
+
+namespace opgs16 {
+struct DVector3;
+}
+namespace opgs16::manager::physics::_internal {
+class CPhysicsEnvironment;
+}
 namespace opgs16::component::_internal {
 class CPrivateAabbRenderer2D;
 }
+
+//!
+//! Implementation
+//!
 
 namespace opgs16::component {
 
@@ -62,14 +76,17 @@ private:
   void pCreateRigidbody(const DVector2& collider_size,
                         const float mass_sum,
                         btRigidBody** rigidbody_ptr);
+  void pUpdateAabbToRenderer(const DVector3& min, const DVector3& max);
 
   btRigidBody*      m_rigidbody       = nullptr;
   btCollisionShape* m_collision_shape = nullptr;
   std::unique_ptr<_internal::CPrivateAabbRenderer2D> m_aabb_renderer = nullptr;
 
+  element::_internal::DPrivateColliderBindInfo m_bind_info;
   int32_t m_collision_tag_index = -1;
-
   bool m_is_position_initialized = false;
+
+  friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 };
 
 } /// ::opgs16::component namespace

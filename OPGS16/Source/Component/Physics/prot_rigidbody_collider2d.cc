@@ -32,7 +32,11 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
     const DVector2& collider_size,
     const std::string& collision_tag) :
     CComponent{ bind_object } {
+  auto& obj = GetBindObject();
+  m_bind_info.bind_object   = &obj;
+  m_bind_info.bind_collider = this;
   pCreateRigidbody(collider_size, mass_sum, &m_rigidbody);
+
   // Set Kinematic or Dynamic.
   if (is_kinematic) {
     m_rigidbody->setCollisionFlags(
@@ -45,7 +49,6 @@ CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
   opgs16::manager::physics::AddRigidbody(m_rigidbody);
 
   // Create CPrivateAabbRenderer2D and set information.
-  auto& obj = GetBindObject();
   m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj);
   m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(collider_size));
   m_aabb_renderer->SetCollisionRenderPosition(obj.GetFinalPosition());
@@ -85,10 +88,21 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
   body_construction_info.m_friction = 1.0f;
 
   *rigidbody_ptr = new btRigidBody{body_construction_info};
-  (*rigidbody_ptr)->setUserPointer(static_cast<void*>(&obj));
+  (*rigidbody_ptr)->setUserPointer(static_cast<void*>(&m_bind_info));
 
   // Restrict physical influence to (x, y) axis only.
   (*rigidbody_ptr)->setLinearFactor({1, 1, 0});
+}
+
+void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
+    const DVector3& min,
+    const DVector3& max) {
+  if (m_aabb_renderer) {
+    m_aabb_renderer->SetCollisionSize(max - min);
+    m_aabb_renderer->SetCollisionRenderPosition((max + min) / 2);
+    m_aabb_renderer->Update(0);
+    opgs16::manager::object::InsertAABBInformation(*m_aabb_renderer);
+  }
 }
 
 CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
@@ -127,13 +141,6 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
       min.x(), min.y(), min.z(),
       max.x(), max.y(), max.z());
   // Debug end
-
-  if (m_aabb_renderer) {
-    m_aabb_renderer->SetCollisionRenderPosition(position);
-    m_aabb_renderer->Update(delta_time);
-
-    opgs16::manager::object::InsertAABBInformation(*m_aabb_renderer);
-  }
 }
 
 void CProtoRigidbodyCollider2D::SetMass(float mass_value) {

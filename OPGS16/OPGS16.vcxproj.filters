@@ -96,6 +96,10 @@
     <ClCompile Include="Source\Component\Internal\aabb_renderer_3d.cc" />
     <ClCompile Include="Source\Component\Internal\aabb_renderer_base.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
+    <ClCompile Include="Source\Helper\Type\vector2.cc" />
+    <ClCompile Include="Source\Helper\Type\vector3.cc" />
+    <ClCompile Include="Source\Helper\Type\vectorint2.cc" />
+    <ClCompile Include="Source\Helper\Type\vectorint3.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -260,6 +264,7 @@
     <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
+    <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
