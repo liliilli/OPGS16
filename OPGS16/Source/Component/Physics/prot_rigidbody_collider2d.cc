@@ -23,6 +23,10 @@
 #include <Element/object.h>
 #include <Manager/physics_manager.h>
 
+#define OP16_SAFE_DELETE(__MAInstance__) \
+  delete __MAInstance__; \
+  __MAInstance__ = nullptr
+
 namespace opgs16::component {
 
 CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
@@ -102,10 +106,10 @@ CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
 
   if (m_rigidbody) {
     delete m_rigidbody->getMotionState();
-    delete m_rigidbody;
+    OP16_SAFE_DELETE(m_rigidbody);
   }
 
-  delete m_collision_shape;
+  OP16_SAFE_DELETE(m_collision_shape);
 }
 
 void CProtoRigidbodyCollider2D::Update(float delta_time) {
@@ -132,6 +136,12 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
       pCallBindObjectCallback(nullptr);
     }
   }
+
+#ifdef false
+  if (!m_rigidbody->isActive()) {
+    pSetCollisionState(EColliderStateColor::Sleep);
+  }
+#endif
 
   // Debug
   const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
