@@ -30,7 +30,7 @@
 #include <Phitos/Dbg/assert.h>
 
 #include <Component/Internal/aabb_renderer_base.h>
-#include <Component/Internal/aabb_renderer_2d.h>
+#include <Core/core_setting.h>
 /// ::opgs16::element::CObject
 #include <Element/object.h>
 /// Import logger
@@ -47,10 +47,6 @@
 #include <Manager/Internal/error_message.h>
 /// ::opgs16::manager::_internal boolean enum flags
 #include <Manager/Internal/flag.h>
-///
-#include <Shader/shader_wrapper.h>
-/// ::opgs16::builtin::SAABB2DShader
-#include <Shader/Default/aabb_2d_line.h>
 
 using TObjectSmtPtr = std::unique_ptr<opgs16::element::CObject>;
 
@@ -226,7 +222,6 @@ void Initiate() {
                 debug::err_object_duplicated_init);
   m_initiated = EInitiated::Initiated;
   m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
-  //m_aabb_2d_wrapper.SetShader(shader::GetShader(builtin::shader::SAABB2DShader::s_shader_name));
 }
 
 void Update() {
@@ -242,7 +237,9 @@ void Render() {
     list.clear();
   }
 
-  RenderAABB();
+  if (opgs16::setting::IsEnableRenderingAabb()) {
+    RenderAABB();
+  }
 }
 
 void RenderAABB() {
@@ -309,14 +306,18 @@ void InsertRenderingObject(element::CObject* const object,
 }
 
 void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
-  switch (aabb_component.GetColliderType()) {
-  default: PHITOS_UNEXPECTED_BRANCH(); break;
-  case component::_internal::EAabbColliderDmStyle::D2:
-    m_aabb_2d_list.push_back(&aabb_component);
-    break;
-  case component::_internal::EAabbColliderDmStyle::D3:
-    m_aabb_3d_list.push_back(&aabb_component);
-    break;
+  if (opgs16::setting::IsEnableRenderingAabb()) {
+
+    switch (aabb_component.GetColliderType()) {
+    default: PHITOS_UNEXPECTED_BRANCH(); break;
+    case component::_internal::EAabbColliderDmStyle::D2:
+      m_aabb_2d_list.push_back(&aabb_component);
+      break;
+    case component::_internal::EAabbColliderDmStyle::D3:
+      m_aabb_3d_list.push_back(&aabb_component);
+      break;
+    }
+
   }
 }
 

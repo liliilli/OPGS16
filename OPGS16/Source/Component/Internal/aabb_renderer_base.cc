@@ -15,7 +15,6 @@
 
 /// Header file
 #include <Component/Internal/aabb_renderer_base.h>
-
 #include <Component/Physics/prot_rigidbody_collider2d.h>
 #include <Manager/object_manager.h>
 

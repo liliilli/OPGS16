@@ -25,7 +25,9 @@
 
 /// ::phitos:: enhanced assertion.
 #include <Phitos/Dbg/assert.h>
+
 #include <Component/Physics/prot_rigidbody_collider2d.h>
+#include <Core/core_setting.h>
 #include <Element/object.h>
 #include <Element/Internal/physics_collider_bind_info.h>
 
@@ -139,7 +141,11 @@ void CPhysicsEnvironment::pUpdatePostProcessRigidbodyInformation() {
 
       btVector3 min, max;
       rigidbody_obj->getAabb(min, max);
-      obj_ptr->bind_collider->pUpdateAabbToRenderer(min, max);
+
+      if (opgs16::setting::IsEnableRenderingAabb()) {
+        obj_ptr->bind_collider->pUpdateAabbToRenderer(min, max);
+      }
+
     }
   }
 }

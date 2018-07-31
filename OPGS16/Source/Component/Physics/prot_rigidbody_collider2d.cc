@@ -102,7 +102,7 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
 
 CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
   using opgs16::manager::physics::RemoveRigidbody;
-  opgs16::manager::physics::RemoveRigidbody(m_rigidbody);
+  RemoveRigidbody(m_rigidbody);
 
   if (m_rigidbody) {
     delete m_rigidbody->getMotionState();
@@ -141,20 +141,6 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
       m_collider_type != EColliderActualType::Staic) {
     pSetCollisionState(EColliderBehaviorState::Sleep);
   }
-
-#ifdef false
-  // Debug
-  const DVector3 center { m_rigidbody->getCenterOfMassPosition() };
-  btVector3 min;
-  btVector3 max;
-  m_rigidbody->getAabb(min, max);
-  PUSH_LOG_DEBUG_EXT(
-      "{} center is ({}, {}, {}) / AABB ({}, {}, {}) ~ ({}, {}, {})",
-      obj.GetGameObjectName(),
-      center.x, center.y, center.z,
-      min.x(), min.y(), min.z(),
-      max.x(), max.y(), max.z());
-#endif
 }
 
 void CProtoRigidbodyCollider2D::SetMass(float mass_value) {
@@ -243,9 +229,8 @@ bool CProtoRigidbodyCollider2D::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
-void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
-    const DVector3& min,
-    const DVector3& max) {
+void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(const DVector3& min,
+                                                      const DVector3& max) {
   if (m_aabb_renderer) {
     m_aabb_renderer->SetCollisionSize(max - min);
     m_aabb_renderer->SetCollisionRenderPosition((max + min) / 2);
