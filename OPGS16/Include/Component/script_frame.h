@@ -28,9 +28,21 @@
 /// ::opgs16::component::_internal enum flag classes
 #include <Component\Internal\script_frame_flag.h>
 
+//!
+//! Forward declaration
+//!
+
 namespace opgs16::element {
-  class CObject;
+class CObject;
 }
+
+namespace opgs16::component {
+class CProtoRigidbodyCollider2D;
+}
+
+//!
+//! Implementation
+//!
 
 namespace opgs16::component {
 
@@ -49,6 +61,8 @@ namespace opgs16::component {
 ///
 class CScriptFrame : public _internal::CComponent {
 public:
+  using CProtoRigidbodyCollider2D = opgs16::component::CProtoRigidbodyCollider2D;
+
   friend class element::CObject;
 
 public:
@@ -101,14 +115,39 @@ public:
   ///
   virtual void OnDisabled() {};
 
+  ///
+  /// @brief Callback function of collider enter but both are collidable.
+  ///
+  virtual void OnCollisionEnter(CProtoRigidbodyCollider2D* collider) {};
+
+  ///
+  /// @brief Callback function of collider stay but both are collidable.
+  ///
+  virtual void OnCollisionStay(CProtoRigidbodyCollider2D* collider) {};
+
+  ///
+  /// @brief Callback function of collider exit but both are collidable.
+  ///
+  virtual void OnCollisionExit(CProtoRigidbodyCollider2D* collider) {};
+
+  ///
+  /// @brief Callback function of trigger enter.
+  ///
+  virtual void OnTriggerEnter(CProtoRigidbodyCollider2D* collider) {};
+
+  ///
+  /// @brief Callback function of trigger stay.
+  ///
+  virtual void OnTriggerStay(CProtoRigidbodyCollider2D* collider) {};
+
+  ///
+  /// @brief Callback function of trigger exit.
+  ///
+  virtual void OnTriggerExit(CProtoRigidbodyCollider2D* collider) {};
+
 private:
   /// internal flag for Initiate() funciton.
-#if defined(false)
-  mutable _internal::EScriptInitiated m_initiated =
-      _internal::EScriptInitiated::NotInitiated;
-#endif
-  mutable _internal::EScriptStarted m_started =
-      _internal::EScriptStarted::NotStarted;
+  mutable _internal::EScriptStarted m_started = _internal::EScriptStarted::NotStarted;
 
   /// Name must be same as ScriptFrame derived.
   const std::string m_script_name;

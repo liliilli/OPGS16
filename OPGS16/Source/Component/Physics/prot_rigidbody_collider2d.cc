@@ -86,7 +86,7 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
           motionState,
           m_collision_shape,
           local_inertia};
-  body_construction_info.m_restitution = 0.5f;
+  body_construction_info.m_restitution = 0.75f;
   body_construction_info.m_friction = 1.0f;
 
   *rigidbody_ptr = new btRigidBody{body_construction_info};
@@ -112,10 +112,12 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
   auto& obj = GetBindObject();
   const auto& position = obj.GetFinalPosition();
 
-  if (m_is_position_initialized) {
+  if (!m_is_position_initialized) {
     btTransform transform;
     m_rigidbody->getMotionState()->getWorldTransform(transform);
     transform.setOrigin(position);
+
+    m_rigidbody->setWorldTransform(transform);
     m_rigidbody->getMotionState()->setWorldTransform(transform);
     m_is_position_initialized = true;
   }
@@ -231,6 +233,10 @@ bool CProtoRigidbodyCollider2D::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
+void CProtoRigidbodyCollider2D::SetGravityEffected(bool is_gravitied) {
+  m_rigidbody->setGravity({0, -9.8f * 5, 0});
+}
+
 void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(
     const DVector3& min,
     const DVector3& max) {
@@ -261,25 +267,42 @@ void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderStateColor state) {
 }
 
 void CProtoRigidbodyCollider2D::pCallBindObjectCallback(CProtoRigidbodyCollider2D* other_collider) {
-  const bool is_collision_function = !IsTriggered() && !other_collider->IsTriggered();
+  const bool is_collision_function =
+      !IsTriggered() &&
+      other_collider ? !other_collider->IsTriggered() : true;
 
   switch (m_collision_state) {
   case EColliderCollisionState::Idle:
     m_collision_state = EColliderCollisionState::Enter;
     break;
   case EColliderCollisionState::Enter:
-    if (m_is_collision_triggered)
+    if (m_is_collided_flag_setup)
       m_collision_state = EColliderCollisionState::Stay;
     else
       m_collision_state = EColliderCollisionState::Idle;
     break;
   case EColliderCollisionState::Stay:
-    if (!m_is_collision_triggered)
+    if (!m_is_collided_flag_setup)
       m_collision_state = EColliderCollisionState::Idle;
     break;
   }
 
   auto& obj = GetBindObject();
+
+  std::string state_name;
+  switch (m_collision_state) {
+  case EColliderCollisionState::Idle:
+    state_name = "Idle";
+    break;
+  case EColliderCollisionState::Enter:
+    state_name = "Enter";
+    break;
+  case EColliderCollisionState::Stay:
+    state_name = "Stay";
+    break;
+  }
+  PUSH_LOG_WARN_EXT("{} state transits into {}.", obj.GetGameObjectName(), state_name);
+
   obj.pCallPhysicsCallback(m_collision_state,
                            is_collision_function,
                            other_collider);

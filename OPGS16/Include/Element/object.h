@@ -120,12 +120,6 @@ public:
 
   void Draw() { Render(); }
 
-  /// This method will be called when Collision.
-  virtual void OnCollisionEnter(component::CRigidbody2D& collider) {};
-
-  /// This method will be called when Trigger entered.
-  virtual void OnTriggerEnter(component::CRigidbody2D& collider) {};
-
   ///
   /// @brief Return local position.
   /// @return Object's local position.
@@ -527,7 +521,7 @@ public:
 
 protected:
 	TPimplSmtPtr   m_data{ nullptr }; /*! Pointer implementation heap instance. */
-	TGameObjectMap  m_children;        /*! The container stores child object. */
+	TGameObjectMap m_children;        /*! The container stores child object. */
   TComponentList m_components{}; /*! CComponent list of thie object. */
 
 private:

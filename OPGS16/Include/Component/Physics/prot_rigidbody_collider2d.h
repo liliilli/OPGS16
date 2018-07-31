@@ -85,6 +85,8 @@ public:
 
   bool IsTriggered() const noexcept;
 
+  void SetGravityEffected(bool is_gravitied);
+
 private:
   void Update(float delta_time) override final;
 
@@ -116,8 +118,6 @@ private:
   bool m_is_position_initialized = false;
   bool m_is_collided_flag_setup  = false;
   bool m_is_collision_triggered  = false;
-
-
 
   friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 };

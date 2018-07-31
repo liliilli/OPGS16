@@ -1,4 +1,4 @@
-#include <precompiled.h>
+﻿#include <precompiled.h>
 ///
 /// @license BSD 2-Clause License
 ///
@@ -334,15 +334,35 @@ void CObject::Propagate() {
 void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                                    bool is_collision_function,
                                    component::CProtoRigidbodyCollider2D* collider) {
+  using opgs16::component::_internal::EComponentType;
+  using opgs16::component::CScriptFrame;
+  std::vector<CScriptFrame*> m_script_frame;
+
+  // @todo 外に抜いて一々作らないようにすること。
+  for (auto& [component_smtptr, component_type] : m_components) {
+    if (component_smtptr && component_type == EComponentType::Script) {
+      m_script_frame.push_back(static_cast<CScriptFrame*>(component_smtptr.get()));
+    }
+  }
+
   switch (call_state) {
   case _internal::EColliderCollisionState::Idle:  // Exit
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    for (auto& script : m_script_frame) {
+      if (is_collision_function) script->OnCollisionExit(collider);
+      else script->OnTriggerExit(collider);
+    }
     break;
   case _internal::EColliderCollisionState::Enter: // Enter
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    for (auto& script : m_script_frame) {
+      if (is_collision_function) script->OnCollisionEnter(collider);
+      else script->OnTriggerEnter(collider);
+    }
     break;
   case _internal::EColliderCollisionState::Stay:  // Stay
-    PHITOS_NOT_IMPLEMENTED_ASSERT();
+    for (auto& script : m_script_frame) {
+      if (is_collision_function) script->OnCollisionStay(collider);
+      else script->OnTriggerStay(collider);
+    }
     break;
   }
 }
