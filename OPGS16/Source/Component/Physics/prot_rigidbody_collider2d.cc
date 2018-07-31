@@ -86,8 +86,8 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
           motionState,
           m_collision_shape,
           local_inertia};
-  body_construction_info.m_restitution = 1.0f;
-  body_construction_info.m_friction = 0.5f;
+  body_construction_info.m_restitution = 0.5f;
+  body_construction_info.m_friction = 1.0f;
 
   *rigidbody_ptr = new btRigidBody{body_construction_info};
   (*rigidbody_ptr)->setUserPointer(static_cast<void*>(&m_bind_info));

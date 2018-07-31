@@ -147,6 +147,9 @@ private:
   ///
   void DebugCheckWorldInitiated() const noexcept;
 
+  void pUpdatePostProcessRigidbodyInformation();
+  void pCallCollidedObjectCallbacks() const noexcept;
+
   using EInitiated = phitos::enums::EInitiated;
 
   btCollisionConfiguration* m_collision_configuration = nullptr;

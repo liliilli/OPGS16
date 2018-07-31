@@ -108,14 +108,22 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
   m_dynamics_world->removeRigidBody(rigidbody_rawptr);
 }
 
+#define OP_CAST(__MAType__, __MAObject__) static_cast<__MAType__>(__MAObject__)
+
 void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   using opgs16::element::CObject;
-  using opgs16::element::_internal::DPrivateColliderBindInfo;
   using opgs16::component::CProtoRigidbodyCollider2D;
 
   DebugCheckWorldInitiated();
 
   m_dynamics_world->stepSimulation(delta_time, 10);
+
+  pUpdatePostProcessRigidbodyInformation();
+  pCallCollidedObjectCallbacks();
+}
+
+void CPhysicsEnvironment::pUpdatePostProcessRigidbodyInformation() {
+  using opgs16::element::_internal::DPrivateColliderBindInfo;
 
   for (auto j = m_dynamics_world->getNumCollisionObjects() - 1; j >= 0; --j) {
     const auto collision_obj = m_dynamics_world->getCollisionObjectArray()[j];
@@ -125,18 +133,44 @@ void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
       btTransform trans;
       rigidbody_obj->getMotionState()->getWorldTransform(trans);
 
-      auto obj_ptr = static_cast<DPrivateColliderBindInfo*>(
-          rigidbody_obj->getUserPointer()
-      );
-
       // Update position and aabb information.
-      obj_ptr->bind_object->SetWorldPosWithFinalPos(
-          static_cast<DVector3>(trans.getOrigin())
-      );
+      auto obj_ptr =
+          static_cast<DPrivateColliderBindInfo*>(rigidbody_obj->getUserPointer());
+      obj_ptr->bind_object->SetWorldPosWithFinalPos(trans.getOrigin());
 
       btVector3 min, max;
       rigidbody_obj->getAabb(min, max);
       obj_ptr->bind_collider->pUpdateAabbToRenderer(min, max);
+    }
+  }
+}
+
+void CPhysicsEnvironment::pCallCollidedObjectCallbacks() const noexcept {
+  using opgs16::element::_internal::DPrivateColliderBindInfo;
+
+  auto* dispatcher = m_dynamics_world->getDispatcher();
+  const int32_t num_manifolds = dispatcher->getNumManifolds();
+  for (int32_t i = 0; i < num_manifolds; ++i) {
+    auto* contact_manifold = dispatcher->getManifoldByIndexInternal(i);
+    const auto* obj_a = contact_manifold->getBody0();
+    const auto* obj_b = contact_manifold->getBody1();
+
+    const int32_t num_contacts = contact_manifold->getNumContacts();
+    for (int32_t j = 0; j < num_contacts; ++j) {
+      auto& pt = contact_manifold->getContactPoint(j);
+      if (pt.getDistance() < 0.f) {
+        const auto a_bind_ptr = OP_CAST(DPrivateColliderBindInfo*, obj_a->getUserPointer());
+        const auto b_bind_ptr = OP_CAST(DPrivateColliderBindInfo*, obj_b->getUserPointer());
+
+        if (!a_bind_ptr || !b_bind_ptr) {
+          PUSH_LOG_CRITICAL("Data which binded to collider must be DPrivateColliderBindInfo.");
+          PHITOS_UNEXPECTED_BRANCH();
+        }
+
+        PUSH_LOG_CRITICAL_EXT("Object Collided. A : {}, B : {}",
+            a_bind_ptr->bind_object->GetGameObjectName(),
+            b_bind_ptr->bind_object->GetGameObjectName());
+      }
     }
   }
 }
