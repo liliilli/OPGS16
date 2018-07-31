@@ -134,4 +134,9 @@ TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept {
   return {min, max};
 }
 
+float GetRotationAngle(float angle_value) noexcept {
+  const float angle = std::fmod(angle_value, 360.f);
+  return (angle > 180.f) ?  angle - 360.f :
+             ((angle <= -180.f) ?  angle + 360.f : angle);
+}
 } /// ::opgs16::math namespace

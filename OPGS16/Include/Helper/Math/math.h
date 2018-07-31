@@ -230,6 +230,11 @@ TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt2& vector) noexcept;
 ///
 TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept;
 
+///
+/// @brief
+///
+float GetRotationAngle(float angle_value) noexcept;
+
 } /// ::opgs16::math namespace
 
 #endif /// OPGS16_HELPER_MATH_MATH_H

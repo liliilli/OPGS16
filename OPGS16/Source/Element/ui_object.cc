@@ -23,7 +23,7 @@ namespace opgs16::element {
 
 void UiObject::LocalUpdate() {
   using phitos::enums::EActivated;
-  for (auto& child : m_children) {
+  for (auto& child : m_children_objects) {
     if (child.second &&
         child.second->IsObjectActive() == EActivated::Activated) {
       auto child_temp = static_cast<UiObject*>(child.second.get());

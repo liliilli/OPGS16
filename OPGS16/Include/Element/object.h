@@ -35,6 +35,7 @@
 /// 2018-05-25 Add object cycle for Start() calling.
 /// 2018-07-02 Refactoring glm::vec3 to DVector3
 /// 2018-07-15 Refactoring, and rename Instantiate to CreateGameObject
+/// 2018-07-31 Add AddOffset... series function.
 ///
 
 #include <algorithm>
@@ -45,29 +46,29 @@
 
 #include <glm/glm.hpp>
 
+/// ::opgs16::element::CScriptFrame
+#include <Component/script_frame.h>
 /// ::opgs16::component::_internal::CComponent
 #include <Component/Internal/component.h>
 /// ::opgs16::component::_internal Component type
 #include <Component/Internal/type.h>
+
+#include <Component/Physics/prot_rigidbody_collider2d.h>
 /// ::opgs16::element::_internal::EDirection
 #include <Element/Internal/direction_type.h>
-/// ::opgs16::element::CScriptFrame
-#include <Component/script_frame.h>
-
 /// import logger debug mode
 #include <Headers/import_logger.h>
 /// Type checking template
 #include <Helper/template.h>
+#include <Helper/Type/axis.h>
+#include <Helper/Type/vector3.h>
+
 /// Enforced assert macroes.
 #include <Phitos/Dbg/assert.h>
-
+#include <Phitos/Enums/activated.h>
 /// Forward declaration
 #include <opgs16fwd.h>
-/// ::opgs16::DVector3
-#include <Helper/Type/vector3.h>
-#include "Phitos/Enums/activated.h"
-#include <Phitos/Dbg/assert.h>
-#include "Component/Physics/prot_rigidbody_collider2d.h"
+
 
 //!
 //! Forward declaration
@@ -126,6 +127,12 @@ public:
   ///
   const DVector3& GetLocalPosition() const noexcept;
 
+	///
+	/// @brief Return world position.
+	/// @return Object's world position from parent object's position.
+	///
+	const DVector3& GetWorldPosition() const noexcept;
+
   ///
   /// @brief Sets local position.
   /// @param[in] position local position Position to set on.
@@ -133,16 +140,20 @@ public:
   void SetLocalPosition(const DVector3& position) noexcept;
 
 	///
-	/// @brief Return world position.
-	/// @return Object's world position from parent object's position.
-	///
-	const DVector3& GetWorldPosition() const noexcept;
-
-	///
 	/// @brief Set world position.
 	/// @param[in] world_position Winal position in Screen space and from parent' object.
 	///
 	void SetWorldPosition(const DVector3& world_position);
+
+  ///
+  /// @brief Add offset value with axis as local position.
+  ///
+  void AddOffsetLocalPosition(EAxis3D axis, float value) noexcept;
+
+  ///
+  /// @brief Add offset value with axis as world position.
+  ///
+  void AddOffsetWorldPosition(EAxis3D axis, float value) noexcept;
 
 	///
 	/// @brief The method refresh parent position.
@@ -165,13 +176,13 @@ public:
   /// @brief The method gets rotation angle value
   /// @return Object's rotation angle value.
   ///
-  const float GetRotationLocalAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationLocalAngle(_internal::EDirection direction) const noexcept;
 
-  const float GetRotationFromParentAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationFromParentAngle(_internal::EDirection direction) const noexcept;
 
-  const float GetRotationWorldAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationWorldAngle(_internal::EDirection direction) const noexcept;
 
-  const float GetRotationWpAngle(_internal::EDirection direction) const noexcept;
+  float GetRotationWpAngle(_internal::EDirection direction) const noexcept;
 
   ///
   /// @brief The method sets rotation angle values.
@@ -181,9 +192,19 @@ public:
   ///
   void SetRotationLocalAngle(_internal::EDirection direction, float angle_value) noexcept;
 
+  void SetRotationWorldAngle(_internal::EDirection direction, float angle_value) noexcept;
+
   void SetRotationParentAngle(_internal::EDirection direction, float angle_value) noexcept;
 
-  void SetRotationWorldAngle(_internal::EDirection direction, float angle_value) noexcept;
+  ///
+  /// @brief Add offset value with axis as local rotation angle.
+  ///
+  void AddOffsetLocalAngle(EAxis3D axis, float value) noexcept;
+
+  ///
+  /// @brief Add offset value with axis as world rotation angle.
+  ///
+  void AddOffsetWorldAngle(EAxis3D axis, float value) noexcept;
 
   ///
   /// @brief The method gets scaling values
@@ -258,7 +279,7 @@ public:
                             std::unique_ptr<TCObjectType>& object_smtptr) {
     const auto object_final_name = CreateChildTag(object_name);
 
-    auto [result_pair, result] = m_children.try_emplace(
+    auto [result_pair, result] = m_children_objects.try_emplace(
         object_final_name,
         nullptr);
     if (!result) {
@@ -294,7 +315,7 @@ public:
                             TConstructionArgs&&... args) {
       const auto object_final_name = CreateChildTag(object_name);
 
-    auto [result_pair, result] = m_children.try_emplace(
+    auto [result_pair, result] = m_children_objects.try_emplace(
         object_final_name,
         nullptr);
     if (!result) {
@@ -520,9 +541,12 @@ public:
   const DVector3& GetParentPosition() const noexcept;
 
 protected:
-	TPimplSmtPtr   m_data{ nullptr }; /*! Pointer implementation heap instance. */
-	TGameObjectMap m_children;        /*! The container stores child object. */
-  TComponentList m_components{}; /*! CComponent list of thie object. */
+  /// Pointer implementation heap instance.
+	TPimplSmtPtr   m_data = nullptr;
+  /// The container stores child object.
+	TGameObjectMap m_children_objects;
+  /// CComponent list of thie object.
+  TComponentList m_components;
 
 private:
   ///

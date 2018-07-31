@@ -22,9 +22,9 @@
 /// 2018-04-14 Change CObjectImpl::SetRotationLocalAngle angle reflection mechanism, restrict bound as (-180.f, 180.f].
 /// 2018-04-18 Change function and mechanism of rotation.
 /// 2018-07-02 Refactoring.
+/// 2018-07-31 Add AddOffset... series function.
 ///
 
-#include <cmath>
 #include <string>
 
 #include <glm/glm.hpp>
@@ -32,7 +32,8 @@
 
 /// ::opgs16::element::_internal::EDirection
 #include <Element/Internal/direction_type.h>
-/// ::opgs16::DVector3
+#include <Helper/Math/math.h>
+#include <Helper/Type/axis.h>
 #include <Helper/Type/vector3.h>
 
 namespace opgs16::element::_internal {
@@ -72,13 +73,13 @@ public:
     return m_final_position;
   }
 
-  inline void SetLocalPosition(const DVector3& position) {
+  inline void SetLocalPosition(const DVector3& position) noexcept {
     m_local_position = position;
     m_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
-  inline void SetWorldPosition(const DVector3& position) {
+  inline void SetWorldPosition(const DVector3& position) noexcept {
     m_world_position = position;
     m_parent_to_position = m_parent_from_position + m_world_position;
 
@@ -86,17 +87,41 @@ public:
     m_final_pos_deprecated = true;
   }
 
-  ///
-  ///
-  ///
-  inline void SetWorldPosWithFinalPos(const DVector3& final_position) {
+  inline void SetWorldPosWithFinalPos(const DVector3& final_position) noexcept {
     SetWorldPosition(final_position - m_parent_from_position);
   }
 
-  inline void SetParentPosition(const DVector3& parent_position) {
+  inline void SetParentPosition(const DVector3& parent_position) noexcept {
     m_parent_from_position = parent_position;
     m_parent_to_position = parent_position + m_world_position;
 
+    m_local_model_matrix_deprecated = true;
+    m_final_pos_deprecated = true;
+  }
+
+  ///
+  /// @brief Add offset value with axis as local position.
+  ///
+  void AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
+    switch (axis) {
+    case EAxis3D::X: m_local_position.x += value; break;
+    case EAxis3D::Y: m_local_position.y += value; break;
+    case EAxis3D::Z: m_local_position.z += value; break;
+    }
+    m_local_model_matrix_deprecated = true;
+    m_final_pos_deprecated = true;
+  }
+
+  ///
+  /// @brief Add offset value with axis as world position.
+  ///
+  void AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
+    switch (axis) {
+    case EAxis3D::X: m_world_position.x += value; break;
+    case EAxis3D::Y: m_world_position.y += value; break;
+    case EAxis3D::Z: m_world_position.z += value; break;
+    }
+    m_parent_to_position = m_parent_from_position + m_world_position;
     m_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
@@ -162,8 +187,7 @@ public:
   }
 
   void SetRotationLocalAngle(const EDirection direction, const float angle_value) noexcept {
-    float angle = std::fmod(angle_value, 360.f);
-    angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
+    const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
     case EDirection::X: m_rotation_local_angle_n[0] = angle; break;
@@ -176,9 +200,23 @@ public:
     m_local_rotation_deprecated = true;
   }
 
+  void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
+    const auto angle = math::GetRotationAngle(angle_value);
+
+    switch (direction) {
+    case EDirection::X: m_rotation_world_angle_n[0] = angle; break;
+    case EDirection::Y: m_rotation_world_angle_n[1] = angle; break;
+    case EDirection::Z: m_rotation_world_angle_n[2] = angle; break;
+    default: break;
+    }
+
+    RefreshRotationWorldParentAngle(direction);
+    m_offset_model_matrix_deprecated = true;
+    m_local_model_matrix_deprecated = true;
+  }
+
   void SetRotationParentAngle(const EDirection direction, const float angle_value) noexcept {
-    float angle = std::fmod(angle_value, 360.f);
-    angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
+    const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
     case EDirection::X: m_rotation_parent_angle_n[0] = angle; break;
@@ -193,18 +231,38 @@ public:
     m_final_pos_deprecated = true;
   }
 
-  void SetRotationWorldAngle(const EDirection direction, const float angle_value) noexcept {
-    float angle = std::fmod(angle_value, 360.f);
-    angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
-
-    switch (direction) {
-    case EDirection::X: m_rotation_world_angle_n[0] = angle; break;
-    case EDirection::Y: m_rotation_world_angle_n[1] = angle; break;
-    case EDirection::Z: m_rotation_world_angle_n[2] = angle; break;
+  void AddOffsetLocalAngle(EAxis3D axis, float value) noexcept {
+    switch (axis) {
+    case EAxis3D::X:
+      m_rotation_local_angle_n[0] = math::GetRotationAngle(m_rotation_local_angle_n[0] + value);
+      break;
+    case EAxis3D::Y:
+      m_rotation_local_angle_n[1] = math::GetRotationAngle(m_rotation_local_angle_n[1] + value);
+      break;
+    case EAxis3D::Z:
+      m_rotation_local_angle_n[2] = math::GetRotationAngle(m_rotation_local_angle_n[2] + value);
+      break;
     default: break;
     }
 
-    RefreshRotationWorldParentAngle(direction);
+    m_local_model_matrix_deprecated = true;
+    m_local_rotation_deprecated = true;
+  }
+
+  void AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
+    switch (axis) {
+    case EAxis3D::X:
+      m_rotation_world_angle_n[0] = math::GetRotationAngle(m_rotation_world_angle_n[0] + value);
+      break;
+    case EAxis3D::Y:
+      m_rotation_world_angle_n[1] = math::GetRotationAngle(m_rotation_world_angle_n[1] + value);
+      break;
+    case EAxis3D::Z:
+      m_rotation_world_angle_n[2] = math::GetRotationAngle(m_rotation_world_angle_n[2] + value);
+      break;
+    default: break;
+    }
+
     m_offset_model_matrix_deprecated = true;
     m_local_model_matrix_deprecated = true;
   }

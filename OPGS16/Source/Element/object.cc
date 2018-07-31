@@ -17,6 +17,7 @@
 /// 2018-05-25
 /// Move inline function Update() to .cc file.
 /// Implement Script file Start().
+/// 2018-07-31 Add AddOffset... series function.
 ///
 
 /// Header file
@@ -94,7 +95,7 @@ void CObject::Update(float delta_time) {
     } break;
     }
 
-    for (auto& child : m_children) {
+    for (auto& child : m_children_objects) {
       if (child.second)
         child.second->Update(delta_time);
     }
@@ -128,6 +129,16 @@ void CObject::SetWorldPosition(const DVector3& world_position) {
   PropagateParentPosition();
 }
 
+void CObject::AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
+  m_data->AddOffsetLocalPosition(axis, value);
+  PropagateParentPosition();
+}
+
+void CObject::AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
+  m_data->AddOffsetWorldPosition(axis, value);
+  PropagateParentPosition();
+}
+
 void CObject::SetParentPosition(const DVector3& parent_position) {
   m_data->SetParentPosition(parent_position);
   PropagateParentPosition();
@@ -139,7 +150,7 @@ void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
 }
 
 void CObject::PropagateParentPosition() {
-  for (auto& child : m_children) {
+  for (auto& child : m_children_objects) {
     auto& child_ptr = child.second;
     /// If object is not empty and activated and permits succeeding positioning.
     if (child_ptr && child_ptr->GetSucceedingPositionFlag())
@@ -149,20 +160,20 @@ void CObject::PropagateParentPosition() {
 
 // Rotation functions.
 
-const float CObject::GetRotationLocalAngle(_internal::EDirection direction) const noexcept {
-    return m_data->GetRotationLocalAngle(direction);
+float CObject::GetRotationLocalAngle(_internal::EDirection direction) const noexcept {
+  return m_data->GetRotationLocalAngle(direction);
 }
 
-const float CObject::GetRotationFromParentAngle(_internal::EDirection direction) const noexcept {
-    return m_data->GetRotationFromParentAngle(direction);
+float CObject::GetRotationFromParentAngle(_internal::EDirection direction) const noexcept {
+  return m_data->GetRotationFromParentAngle(direction);
 }
 
-const float CObject::GetRotationWorldAngle(_internal::EDirection direction) const noexcept {
-    return m_data->GetRotationWorldAngle(direction);
+float CObject::GetRotationWorldAngle(_internal::EDirection direction) const noexcept {
+  return m_data->GetRotationWorldAngle(direction);
 }
 
-const float CObject::GetRotationWpAngle(_internal::EDirection direction) const noexcept {
-    return m_data->GetRotationWpAngle(direction);
+float CObject::GetRotationWpAngle(_internal::EDirection direction) const noexcept {
+  return m_data->GetRotationWpAngle(direction);
 }
 
 void CObject::SetRotationLocalAngle(_internal::EDirection direction, const float angle_value) noexcept {
@@ -170,18 +181,27 @@ void CObject::SetRotationLocalAngle(_internal::EDirection direction, const float
 }
 
 void CObject::SetRotationParentAngle(_internal::EDirection direction, const float angle_value) noexcept {
-    m_data->SetRotationParentAngle(direction, angle_value);
-    PropagateParentRotation();
+  m_data->SetRotationParentAngle(direction, angle_value);
+  PropagateParentRotation();
+}
+
+void CObject::AddOffsetLocalAngle(EAxis3D axis, float value) noexcept {
+  m_data->AddOffsetLocalAngle(axis, value);
+}
+
+void CObject::AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
+  m_data->AddOffsetWorldAngle(axis, value);
+  PropagateParentRotation();
 }
 
 void CObject::SetRotationWorldAngle(_internal::EDirection direction, const float angle_value) noexcept {
-    m_data->SetRotationWorldAngle(direction, angle_value);
-    PropagateParentRotation();
+  m_data->SetRotationWorldAngle(direction, angle_value);
+  PropagateParentRotation();
 }
 
 
 void CObject::PropagateParentRotation() {
-  for (auto& child : m_children) {
+  for (auto& child : m_children_objects) {
     auto& child_ptr = child.second;
     /// If object is not empty and activated and permits succeeding positioning.
     using phitos::enums::EActivated;
@@ -242,9 +262,9 @@ bool CObject::GetSucceedingScalingFlag() const noexcept {
 
 std::vector<std::string> CObject::GetGameObjectNameList() const {
 	std::vector<std::string> list;
-	list.reserve(m_children.size());
+	list.reserve(m_children_objects.size());
 
-	for (const auto& object_pair : m_children) {
+	for (const auto& object_pair : m_children_objects) {
     list.emplace_back(object_pair.first);
 	}
 
@@ -252,14 +272,14 @@ std::vector<std::string> CObject::GetGameObjectNameList() const {
 }
 
 CObject::TGameObjectMap& CObject::GetGameObjectList() {
-	 return m_children;
+	 return m_children_objects;
 }
 
 CObject* CObject::GetGameObject(const std::string& object_name,
                                 bool is_recursive) {
   if (!is_recursive) {
-    if (const auto it = m_children.find(object_name);
-        it != m_children.end()) {
+    if (const auto it = m_children_objects.find(object_name);
+        it != m_children_objects.end()) {
       return it->second.get();
     }
     return nullptr;
@@ -270,7 +290,7 @@ CObject* CObject::GetGameObject(const std::string& object_name,
 }
 
 CObject* CObject::GetGameObjectResursively(const std::string& object_name) noexcept {
-  for (auto& element : m_children) {
+  for (auto& element : m_children_objects) {
     const auto& object = element.second;
     // If object is empty, pass it.
     if (object) continue;
@@ -289,7 +309,7 @@ CObject* CObject::GetGameObjectResursively(const std::string& object_name) noexc
 
 
 bool CObject::DestroyGameObject(const std::string& child_name) {
-  if (const auto it = m_children.find(child_name); it == m_children.end()) {
+  if (const auto it = m_children_objects.find(child_name); it == m_children_objects.end()) {
     PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]",
                        child_name);
     return false;
@@ -401,7 +421,7 @@ std::string CObject::GetTagNameOf() const {
 
 CObject::~CObject() {
   m_data.release();
-  m_children.clear();
+  m_children_objects.clear();
 
   for (auto& [element, type] : m_components) {
     using component::_internal::EComponentType;
