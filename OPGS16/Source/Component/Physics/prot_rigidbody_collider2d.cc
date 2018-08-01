@@ -158,28 +158,6 @@ void CColliderBox2D::TemporalSetStatic() {
   //m_collider_type = EColliderActualType::Staic;
 }
 
-void CColliderBox2D::SetTriggered(bool is_triggered) {
-  auto rigidbody = *GetLocalRigidbody();
-  if (!rigidbody) {
-    PUSH_LOG_ERROR_EXT("{}'s btRigidbody is not set up.", GetUniqueIndexValue());
-    return;
-  }
-
-  if (is_triggered) {
-    rigidbody->setCollisionFlags(
-        rigidbody->getCollisionFlags() |
-        btCollisionObject::CF_NO_CONTACT_RESPONSE);
-  }
-  else if (rigidbody->getCollisionFlags() & btCollisionObject::CF_NO_CONTACT_RESPONSE) {
-    rigidbody->setCollisionFlags(
-        rigidbody->getCollisionFlags() &
-        ~btCollisionObject::CF_NO_CONTACT_RESPONSE
-    );
-  }
-
-  m_is_collision_triggered = is_triggered;
-}
-
 void CColliderBox2D::SetColliderSize(const DVector2& size) {
   auto shape = GetCollisionShape();
   auto rigidbody = GetLocalRigidbody();
@@ -197,10 +175,6 @@ void CColliderBox2D::SetColliderSize(const DVector2& size) {
 CColliderBox2D::EColliderBehaviorState
 CColliderBox2D::GetColliderState() const noexcept {
   return m_state;
-}
-
-bool CColliderBox2D::IsTriggered() const noexcept {
-  return m_is_collision_triggered;
 }
 
 void CColliderBox2D::pUpdateAabbToRenderer(const DVector3& min,

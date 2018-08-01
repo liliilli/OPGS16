@@ -54,13 +54,6 @@ public:
   void TemporalSetStatic();
 
   ///
-  /// @brief Set trigger or collision flag.
-  ///
-  void SetTriggered(bool is_triggered);
-
-  bool IsTriggered() const noexcept;
-
-  ///
   /// @update
   /// Frequent call will cause performance decrease.
   ///
@@ -111,7 +104,6 @@ private:
 
   bool m_is_position_initialized = false;
   bool m_is_collided_flag_setup  = false;
-  bool m_is_collision_triggered  = false;
 
   friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 

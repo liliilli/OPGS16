@@ -102,6 +102,33 @@ btCollisionShape** CColliderBase::GetCollisionShape() const noexcept {
   return &m_collision_shape;
 }
 
+void CColliderBase::SetTriggered(bool is_triggered) {
+  auto rigidbody = *GetLocalRigidbody();
+  if (!rigidbody) {
+    PUSH_LOG_ERROR_EXT("{}'s btRigidbody is not set up.", GetUniqueIndexValue());
+    return;
+  }
+
+  if (is_triggered) {
+    rigidbody->setCollisionFlags(
+        rigidbody->getCollisionFlags() |
+        btCollisionObject::CF_NO_CONTACT_RESPONSE);
+  }
+  else if (rigidbody->getCollisionFlags() & btCollisionObject::CF_NO_CONTACT_RESPONSE) {
+    rigidbody->setCollisionFlags(
+        rigidbody->getCollisionFlags() &
+        ~btCollisionObject::CF_NO_CONTACT_RESPONSE
+    );
+  }
+
+  m_is_collision_triggered = is_triggered;
+}
+
+bool CColliderBase::IsTriggered() const noexcept {
+  return m_is_collision_triggered;
+}
+
+
 float CColliderBase::pGetMass() const noexcept {
   return m_mass;
 }

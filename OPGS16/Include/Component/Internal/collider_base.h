@@ -55,6 +55,13 @@ public:
 
   const DLinearLimitFactor& GetLinearFactor() const noexcept;
 
+  ///
+  /// @brief Set trigger or collision flag.
+  ///
+  void SetTriggered(bool is_triggered);
+
+  bool IsTriggered() const noexcept;
+
 protected:
   btRigidBody**      GetLocalRigidbody() const noexcept;
   btCollisionShape** GetCollisionShape() const noexcept;
@@ -82,7 +89,9 @@ private:
   DLinearLimitFactor m_linear_factor = {true, true, true};
   float m_mass = 0.001f;
   float m_actual_mass = m_mass;
+
   bool  m_is_use_gravity = true;
+  bool  m_is_collision_triggered  = false;
 
   uint32_t m_collider_index = 0;
 
