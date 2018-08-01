@@ -21,7 +21,6 @@ namespace opgs16::component::_internal {
 
 class CRigidbodyDynamicBase : public CRigidbodyBase {
   using EColliderActualType = element::_internal::EColliderActualType;
-
 public:
   CRigidbodyDynamicBase(element::CObject& bind_object) : CRigidbodyBase { bind_object } {};
 

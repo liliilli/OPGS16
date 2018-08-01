@@ -38,55 +38,34 @@ void CRigidbodyDynamicBase::SetMass(float mass_sum) noexcept {
 
   m_mass_sum = mass_sum;
 
-  // Propagate all collider.
+  auto& colliders = pGetColliderContainer();
+  for (auto& [uid, collider] : colliders) {
+    collider->pSetMass(m_mass_sum);
+  }
 }
 
 void CRigidbodyDynamicBase::SetKinematic(bool is_kinematic) noexcept {
   auto& colliders = pGetColliderContainer();
-
   if (is_kinematic) {
     for (auto& [uid, collider] : colliders) {
       if (!collider) continue;
-
-      auto rigidbody = *collider->GetLocalRigidbody();
-      if (!rigidbody) continue;
-
-      rigidbody->setCollisionFlags(
-          rigidbody->getCollisionFlags() |
-          btCollisionObject::CF_KINEMATIC_OBJECT
-      );
-
+      collider->pSetColliderType(EColliderActualType::Kinetic);
       m_collider_type = EColliderActualType::Kinetic;
     }
   }
   else {
     for (auto& [uid, collider] : colliders) {
       if (!collider) continue;
-
-      auto rigidbody = *collider->GetLocalRigidbody();
-      if (!rigidbody) continue;
-
-      rigidbody->setCollisionFlags(
-          rigidbody->getCollisionFlags() &
-          ~btCollisionObject::CF_KINEMATIC_OBJECT
-      );
-
+      collider->pSetColliderType(EColliderActualType::Dynamic);
       m_collider_type = EColliderActualType::Dynamic;
     }
   }
 }
 
 void CRigidbodyDynamicBase::SetUseGravity(bool using_gravity) noexcept {
-  using opgs16::manager::physics::GetManagement;
-
-  if (using_gravity) {
-    const auto gravity = GetManagement()->GetGlobalGravity();
-
-    // Propagate all colllider.
-  }
-  else {
-
-    // Propagate all collider.
+  auto& colliders = pGetColliderContainer();
+  for (auto& [uid, collider] : colliders) {
+    collider->pSetUsingGravity(using_gravity);
   }
 }
 
@@ -95,13 +74,19 @@ void CRigidbodyDynamicBase::SetLinearLimitFactor(bool x, bool y, bool z) noexcep
   m_limit_factor.y = x;
   m_limit_factor.z = x;
 
-  // Propagate all collider.
+  auto& colliders = pGetColliderContainer();
+  for (auto& [uid, collider] : colliders) {
+    collider->pSetLinearFactor(m_limit_factor);
+  }
 }
 
 void CRigidbodyDynamicBase::SetLinearLimitFactor(const DLinearLimitFactor& factor) noexcept {
   m_limit_factor = factor;
 
-  // Propagate all collider.
+  auto& colliders = pGetColliderContainer();
+  for (auto& [uid, collider] : colliders) {
+    collider->pSetLinearFactor(m_limit_factor);
+  }
 }
 
 const DLinearLimitFactor& CRigidbodyDynamicBase::GetLinearLimitFactor() const noexcept {
