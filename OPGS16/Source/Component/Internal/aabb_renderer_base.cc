@@ -15,7 +15,7 @@
 
 /// Header file
 #include <Component/Internal/aabb_renderer_base.h>
-#include <Component/Physics/prot_rigidbody_collider2d.h>
+#include <Component/Physics/collider2d_box.h>
 #include <Manager/object_manager.h>
 
 namespace opgs16::component::_internal {
@@ -78,7 +78,7 @@ void CPrivateAabbRendererBase::pSetAabbRenderingColor() {
   using opgs16::element::_internal::EColliderActualType;
   if (!m_parent) PHITOS_UNEXPECTED_BRANCH();
 
-  const auto state = m_parent->GetColliderState();
+  const auto state = m_parent->GetBehaviorState();
   PHITOS_ASSERT(state != EColliderBehaviorState::None,
                 "Collision state must not be None.");
 

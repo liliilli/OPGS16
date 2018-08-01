@@ -16,7 +16,7 @@
 ///
 
 #include <Component/Internal/rigidbody_dynamic_base.h>
-#include "Component/Internal/collider2d_base.h"
+#include <Component/Internal/collider2d_base.h>
 
 namespace opgs16::component {
 
@@ -24,10 +24,16 @@ class CRigidbody2D final : public _internal::CRigidbodyDynamicBase {
 public:
   CRigidbody2D(element::CObject& bind_object) : CRigidbodyDynamicBase{ bind_object } { }
 
-private:
-  void pEnrollColliderOnObject(_internal::CColliderBase* collider) override final;
+  ///
+  /// @brief Manually initiate colliders to rigidbody.
+  /// If you want to manipulate properties stimutaneously, use this.
+  ///
+  void InitiateColliders();
 
+private:
   void Update(float delta_time) override final;
+
+  void pEnrollColliderOnObject(_internal::CColliderBase* collider) override final;
 
   std::vector<_internal::CCollider2DBase*> m_candidates;
   bool m_is_dirty = false;

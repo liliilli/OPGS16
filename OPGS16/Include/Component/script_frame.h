@@ -7,7 +7,7 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-/// @file Components\script_frame.h
+/// @file Component/script_frame.h
 ///
 /// @brief Base script frame file.
 ///
@@ -21,12 +21,9 @@
 
 #include <string>
 
-/// ::opgs16::component::_internal::CComponent
-#include <Component\Internal\component.h>
-/// Component macroes
-#include <Component\Internal\component_macro.h>
-/// ::opgs16::component::_internal enum flag classes
-#include <Component\Internal\script_frame_flag.h>
+#include <Component/Internal/component.h>
+#include <Component/Internal/component_macro.h>
+#include <Component/Internal/script_frame_flag.h>
 
 //!
 //! Forward declaration
@@ -36,8 +33,8 @@ namespace opgs16::element {
 class CObject;
 }
 
-namespace opgs16::component {
-class CColliderBox2D;
+namespace opgs16::component::_internal {
+class CColliderBase;
 }
 
 //!
@@ -61,7 +58,7 @@ namespace opgs16::component {
 ///
 class CScriptFrame : public _internal::CComponent {
 public:
-  using CProtoRigidbodyCollider2D = opgs16::component::CColliderBox2D;
+  using CCollider = opgs16::component::_internal::CColliderBase;
 
   friend class element::CObject;
 
@@ -118,32 +115,32 @@ public:
   ///
   /// @brief Callback function of collider enter but both are collidable.
   ///
-  virtual void OnCollisionEnter(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnCollisionEnter(CCollider* collider) {};
 
   ///
   /// @brief Callback function of collider stay but both are collidable.
   ///
-  virtual void OnCollisionStay(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnCollisionStay(CCollider* collider) {};
 
   ///
   /// @brief Callback function of collider exit but both are collidable.
   ///
-  virtual void OnCollisionExit(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnCollisionExit(CCollider* collider) {};
 
   ///
   /// @brief Callback function of trigger enter.
   ///
-  virtual void OnTriggerEnter(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnTriggerEnter(CCollider* collider) {};
 
   ///
   /// @brief Callback function of trigger stay.
   ///
-  virtual void OnTriggerStay(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnTriggerStay(CCollider* collider) {};
 
   ///
   /// @brief Callback function of trigger exit.
   ///
-  virtual void OnTriggerExit(CProtoRigidbodyCollider2D* collider) {};
+  virtual void OnTriggerExit(CCollider* collider) {};
 
 private:
   /// internal flag for Initiate() funciton.

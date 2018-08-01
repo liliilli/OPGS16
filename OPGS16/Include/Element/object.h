@@ -70,8 +70,8 @@
 //! Forward declaration
 //!
 
-namespace opgs16::component {
-class CColliderBox2D;
+namespace opgs16::component::_internal {
+class CColliderBase;
 }
 
 namespace opgs16::element::_internal {
@@ -592,7 +592,7 @@ protected:
 private:
   void pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                             bool is_collision_function,
-                            component::CColliderBox2D* collider);
+                            component::_internal::CColliderBase* collider);
 
   /// Object name counter to avoid duplicated object name
   TNameCounterMap m_name_counter;
@@ -604,7 +604,7 @@ private:
   /// Flag
   mutable bool m_hash_initialized = false;
 
-  friend opgs16::component::CColliderBox2D;
+  friend opgs16::component::_internal::CColliderBase;
 };
 
 } /// ::opgs16::element namespace

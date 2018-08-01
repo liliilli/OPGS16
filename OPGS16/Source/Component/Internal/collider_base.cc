@@ -128,9 +128,26 @@ bool CColliderBase::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
+CColliderBase::EColliderBehaviorState
+CColliderBase::GetBehaviorState() const noexcept {
+  return m_behavior_state;
+}
 
 float CColliderBase::pGetMass() const noexcept {
   return m_mass;
+}
+
+void CColliderBase::Update(float delta_time) {
+  if (m_is_collided_on_this_frame) {
+    pfSetBehaviorState(EColliderBehaviorState::Activated);
+    m_is_collided_on_this_frame = false;
+  }
+  else {
+    if (m_collision_state != EColliderCollisionState::Idle) {
+      // @todo temporary
+      pfCallBindObjectCallback(nullptr);
+    }
+  }
 }
 
 void CColliderBase::pSetMass(float mass_value) noexcept {
@@ -182,6 +199,68 @@ void CColliderBase::pSetUsingGravity(bool use_gravity) noexcept {
   }
 }
 
+void CColliderBase::pfUpdateAabbToRenderer(const DVector3& min, const DVector3& max) {
+  if (m_aabb_renderer) {
+    m_aabb_renderer->SetCollisionSize(max - min);
+    m_aabb_renderer->SetCollisionRenderPosition((max + min) / 2);
+    m_aabb_renderer->Update(0);
+    opgs16::manager::object::InsertAABBInformation(*m_aabb_renderer);
+  }
+}
+
+void CColliderBase::pfCallBindObjectCallback(CColliderBase* other_collider) {
+  const bool is_collision_function =
+      !IsTriggered() &&
+      other_collider ? !other_collider->IsTriggered() : true;
+
+  // State machine
+  switch (m_collision_state) {
+  case EColliderCollisionState::Idle:
+    m_collision_state = EColliderCollisionState::Enter;
+    break;
+  case EColliderCollisionState::Enter:
+    if (m_is_collided_on_this_frame)
+      m_collision_state = EColliderCollisionState::Stay;
+    else
+      m_collision_state = EColliderCollisionState::Idle;
+    break;
+  case EColliderCollisionState::Stay:
+    if (!m_is_collided_on_this_frame)
+      m_collision_state = EColliderCollisionState::Idle;
+    break;
+  }
+
+  std::string state_name;
+  switch (m_collision_state) {
+  case EColliderCollisionState::Idle:
+    state_name = "Idle";
+    break;
+  case EColliderCollisionState::Enter:
+    state_name = "Enter";
+    break;
+  case EColliderCollisionState::Stay:
+    state_name = "Stay";
+    break;
+  }
+  auto& obj = GetBindObject();
+  PUSH_LOG_WARN_EXT("{} state transits into {}.", obj.GetGameObjectName(), state_name);
+  obj.pCallPhysicsCallback(m_collision_state, is_collision_function, other_collider);
+}
+
+bool CColliderBase::pfIsCallbackFunctionCalledOnThisFrame() const noexcept {
+  return m_is_collided_on_this_frame;
+}
+
+void CColliderBase::pfSetBehaviorState(EColliderBehaviorState state) noexcept {
+  PHITOS_ASSERT(state != EColliderBehaviorState::None, "Collision state must not be None.");
+
+  if (state == EColliderBehaviorState::Collided) {
+    m_is_collided_on_this_frame = true;
+  }
+
+  m_behavior_state = state;
+}
+
 void CColliderBase::__pUpdateFlags() noexcept {
   switch (m_collider_type) {
   case EColliderActualType::Kinetic:
@@ -199,6 +278,24 @@ void CColliderBase::__pUpdateFlags() noexcept {
     break;
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
+}
+
+bool CColliderBase::pInitiateAabbRenderer(bool is_2d) {
+  if (m_aabb_renderer) {
+    PUSH_LOG_WARN("Aabb Renderer is already created.");
+    return false;
+  }
+
+  if (is_2d) {
+    auto& obj = GetBindObject();
+    m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj, this);
+    m_aabb_renderer->SetCollisionRenderPosition(obj.GetFinalPosition());
+    //m_aabb_renderer->SetCollisionSize();
+  }
+  else {
+    PHITOS_NOT_IMPLEMENTED_ASSERT();
+  }
+  return true;
 }
 
 } /// ::opgs16::component::_internal namesapce

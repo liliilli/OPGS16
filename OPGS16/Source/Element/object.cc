@@ -354,7 +354,7 @@ void CObject::Propagate() {
 
 void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                                    bool is_collision_function,
-                                   component::CColliderBox2D* collider) {
+                                   component::_internal::CColliderBase* collider) {
   using opgs16::component::_internal::EComponentType;
   using opgs16::component::CScriptFrame;
   std::vector<CScriptFrame*> m_script_frame;

@@ -46,20 +46,15 @@ namespace opgs16::component {
 class CColliderBox2D final : public _internal::CCollider2DBase {
   using EColliderBehaviorState = element::_internal::EColliderBehaviorState;
   using EColliderCollisionState = element::_internal::EColliderCollisionState;
-  using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
 
 public:
   CColliderBox2D(element::CObject& bind_object, const DVector2& collider_size);
-
-  void TemporalSetStatic();
 
   ///
   /// @update
   /// Frequent call will cause performance decrease.
   ///
   void SetColliderSize(const DVector2& size);
-
-  EColliderBehaviorState GetColliderState() const noexcept;
 
 private:
   void Update(float delta_time) override final;
@@ -74,38 +69,12 @@ private:
   ///
   void pCreatebtRigidbody(const float mass_sum, btRigidBody** rigidbody_ptr);
 
-  ///
-  /// @brief
-  ///
-  void pUpdateAabbToRenderer(const DVector3& min, const DVector3& max);
-
-  ///
-  /// @brief
-  ///
-  void pSetCollisionState(EColliderBehaviorState state);
-
-  ///
-  /// @brief
-  ///
-  void pCallBindObjectCallback(CColliderBox2D* other_collider);
-
-  ///
-  /// @brief
-  ///
-  bool pIsCallbackFunctionCalledOnThisFrame() const noexcept;
-
-  TAabbRendererSmtPtr m_aabb_renderer = nullptr;
-
   element::_internal::DPrivateColliderBindInfo m_bind_info;
-  EColliderBehaviorState  m_state = EColliderBehaviorState::None;
-  EColliderCollisionState m_collision_state = EColliderCollisionState::Idle;
 
   opgs16::DVector2 m_collider_size;
 
   bool m_is_position_initialized = false;
   bool m_is_collided_flag_setup  = false;
-
-  friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CCollider2DBase, CColliderBox2D)
 };

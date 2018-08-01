@@ -82,7 +82,7 @@ public:
   /// @brief
   /// Get global gravity of environment as x, y, z DVector3.
   ///
-  const DVector3& GetGlobalGravity() const noexcept;
+  DVector3 GetGlobalGravity() const noexcept;
 
   ///
   /// @brief

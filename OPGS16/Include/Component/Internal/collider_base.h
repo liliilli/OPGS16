@@ -15,15 +15,22 @@
 /// 2018-08-01 Create file.
 ///
 
+#include <Component/Internal/aabb_renderer_2d.h>
 #include <Component/Internal/component.h>
 #include <Element/Internal/physics_enums.h>
 #include <Element/Internal/physics_structs.h>
+#include <Helper/Type/vector3.h>
 
 //!
 //! Forward declaration
 //!
 
+namespace opgs16::manager::physics::_internal {
+class CPhysicsEnvironment;
+}
+
 namespace opgs16::component {
+class CRigidbodyStatic2D;
 class CRigidbody2D;
 }
 
@@ -41,6 +48,9 @@ namespace opgs16::component::_internal {
 
 class CColliderBase : public CComponent {
   using EColliderActualType = element::_internal::EColliderActualType;
+  using EColliderBehaviorState = element::_internal::EColliderBehaviorState;
+  using EColliderCollisionState = element::_internal::EColliderCollisionState;
+  using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
 
 public:
   CColliderBase(element::CObject& bind_object);
@@ -62,13 +72,24 @@ public:
 
   bool IsTriggered() const noexcept;
 
+  EColliderBehaviorState GetBehaviorState() const noexcept;
+
 protected:
   btRigidBody**      GetLocalRigidbody() const noexcept;
   btCollisionShape** GetCollisionShape() const noexcept;
 
+  void Update(float delta_time) override;
+
   float pGetMass() const noexcept;
 
   void __pUpdateFlags() noexcept;
+
+  bool pInitiateAabbRenderer(bool is_2d);
+
+  ///
+  /// @brief
+  ///
+  void pfSetBehaviorState(EColliderBehaviorState state) noexcept;
 
 private:
   virtual void pInitializeCollider() = 0;
@@ -81,24 +102,48 @@ private:
 
   void pSetUsingGravity(bool use_gravity) noexcept;
 
+  ///
+  /// @brief Update aabb information
+  /// This function must be called in CPhysicsEnvironment.
+  ///
+  void pfUpdateAabbToRenderer(const DVector3& min, const DVector3& max);
+
+  ///
+  /// @brief Call bind object's collision or trigger callback function.
+  ///
+  void pfCallBindObjectCallback(CColliderBase* other_collider);
+
+  ///
+  /// @brief Check if callback function is already called on this frame.
+  ///
+  bool pfIsCallbackFunctionCalledOnThisFrame() const noexcept;
+
+  TAabbRendererSmtPtr m_aabb_renderer = nullptr;
+
   mutable btRigidBody*      m_local_rigidbody = nullptr;
   mutable btCollisionShape* m_collision_shape = nullptr;
   _internal::CRigidbodyBase* m_bind_rigidbody = nullptr;
 
-  EColliderActualType m_collider_type = EColliderActualType::None;
-  DLinearLimitFactor m_linear_factor = {true, true, true};
-  float m_mass = 0.001f;
+  EColliderActualType    m_collider_type  = EColliderActualType::None;
+  EColliderBehaviorState m_behavior_state = EColliderBehaviorState::None;
+  EColliderCollisionState m_collision_state = EColliderCollisionState::Idle;
+  DLinearLimitFactor     m_linear_factor  = {true, true, true};
+
+  float m_mass        = 0.001f;
   float m_actual_mass = m_mass;
 
   bool  m_is_use_gravity = true;
-  bool  m_is_collision_triggered  = false;
+  bool  m_is_collision_triggered = false;
+  bool  m_is_collided_on_this_frame = false;
 
   uint32_t m_collider_index = 0;
 
   friend opgs16::component::CRigidbody2D;
+  friend opgs16::component::CRigidbodyStatic2D;
   friend opgs16::component::_internal::CRigidbodyBase;
   friend opgs16::component::_internal::CRigidbodyDynamicBase;
   friend opgs16::component::_internal::CRigidbodyStaticBase;
+  friend opgs16::manager::physics::_internal::CPhysicsEnvironment;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CColliderBase)
 };

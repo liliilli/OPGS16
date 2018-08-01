@@ -15,9 +15,8 @@
 
 /// Header file
 #include <Component/Physics/rigidbody2d.h>
-
 #include <Component/Internal/collider2d_base.h>
-#include <Element/object.h>
+#include <Headers/import_logger.h>
 
 namespace opgs16::component {
 
@@ -34,8 +33,13 @@ void CRigidbody2D::pEnrollColliderOnObject(_internal::CColliderBase* collider_in
   m_is_dirty = true;
 }
 
+void CRigidbody2D::InitiateColliders() {
+  Update(0);
+}
+
 void CRigidbody2D::Update(float delta_time) {
   if (m_is_dirty) {
+    using opgs16::element::_internal::EColliderBehaviorState;
 
     // Instantiate collider object resources and destroy m_candidate.
     for (auto& collider : m_candidates) {

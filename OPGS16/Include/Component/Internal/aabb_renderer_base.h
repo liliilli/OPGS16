@@ -23,8 +23,8 @@
 //! Forward declaration
 //!
 
-namespace opgs16::component {
-class CColliderBox2D;
+namespace opgs16::component::_internal {
+class CColliderBase;
 }
 
 //!
@@ -43,7 +43,7 @@ class CPrivateAabbRendererBase : public CRendererBase {
 public:
   CPrivateAabbRendererBase(
       element::CObject& bind_object,
-      component::CColliderBox2D* parent) :
+      CColliderBase* parent) :
       CRendererBase(bind_object), m_parent { parent }
   {};
 
@@ -61,7 +61,7 @@ protected:
   const glm::mat4& pGetModelMatrix() noexcept;
   void pSetAabbRenderingColor();
 
-  CColliderBox2D* m_parent = nullptr;
+  CColliderBase* m_parent = nullptr;
 
   mutable EAabbColliderDmStyle m_type = EAabbColliderDmStyle::None;
   opgs16::DColor m_state_color  = opgs16::DColor::Black;
