@@ -26,7 +26,7 @@ namespace opgs16::component::_internal {
 
 CPrivateAabbRenderer2D::CPrivateAabbRenderer2D(
     element::CObject& bind_object,
-    component::CProtoRigidbodyCollider2D* parent) :
+    component::CColliderBox2D* parent) :
     CPrivateAabbRendererBase{bind_object, parent} {
   using phitos::enums::EFound;
   using builtin::model::BModel2DQuadLine;

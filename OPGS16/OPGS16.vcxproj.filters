@@ -100,6 +100,10 @@
     <ClCompile Include="Source\Helper\Type\vector3.cc" />
     <ClCompile Include="Source\Helper\Type\vectorint2.cc" />
     <ClCompile Include="Source\Helper\Type\vectorint3.cc" />
+    <ClCompile Include="Source\Component\Internal\collider_base.cc" />
+    <ClCompile Include="Source\Component\Internal\rigidbody_base.cc" />
+    <ClCompile Include="Source\Component\Physics\rigidbody2d.cc" />
+    <ClCompile Include="Source\Component\Internal\rigidbody_dynamic_base.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -265,6 +269,14 @@
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
     <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
     <ClInclude Include="Include\Element\Internal\physics_enums.h" />
+    <ClInclude Include="Include\Component\Internal\collider_base.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_base.h" />
+    <ClInclude Include="Include\Component\Physics\rigidbody2d.h" />
+    <ClInclude Include="Include\Component\Internal\collider2d_base.h" />
+    <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_static_base.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_dynamic_base.h" />
+    <ClInclude Include="Include\Element\Internal\physics_structs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

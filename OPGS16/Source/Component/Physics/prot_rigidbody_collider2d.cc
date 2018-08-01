@@ -23,53 +23,47 @@
 #include <Element/object.h>
 #include <Manager/physics_manager.h>
 
-#define OP16_SAFE_DELETE(__MAInstance__) \
-  delete __MAInstance__; \
-  __MAInstance__ = nullptr
-
 namespace opgs16::component {
 
-CProtoRigidbodyCollider2D::CProtoRigidbodyCollider2D(
+CColliderBox2D::CColliderBox2D(
     element::CObject& bind_object,
-    const float mass_sum,
-    const float is_kinematic,
-    const DVector2& collider_size,
-    const std::string& collision_tag) :
-    CComponent{ bind_object } {
+    const DVector2& collider_size) : CCollider2DBase{ bind_object } {
+  m_collider_size = collider_size;
+}
+
+void CColliderBox2D::pInitializeCollider() {
   auto& obj = GetBindObject();
   m_bind_info.bind_object   = &obj;
   m_bind_info.bind_collider = this;
-  pCreateRigidbody(collider_size, mass_sum, &m_rigidbody);
-  pSetCollisionActualType(EColliderActualType::Dynamic);
+
+  auto rigidbody = GetLocalRigidbody();
+  pCreatebtRigidbody(pGetMass(), rigidbody);
+  __pUpdateFlags();
+  //if (is_kinematic) {
+    //(*rigidbody)->setActivationState(DISABLE_DEACTIVATION);
+  //}
+
+  opgs16::manager::physics::AddRigidbody(*rigidbody);
+
+  //pSetCollisionActualType(EColliderActualType::Dynamic);
   pSetCollisionState(EColliderBehaviorState::Activated);
-
-  // Set Kinematic or Dynamic.
-  if (is_kinematic) {
-    m_rigidbody->setCollisionFlags(
-        m_rigidbody->getCollisionFlags() |
-        btCollisionObject::CF_KINEMATIC_OBJECT
-    );
-    m_rigidbody->setActivationState(DISABLE_DEACTIVATION);
-  }
-
-  opgs16::manager::physics::AddRigidbody(m_rigidbody);
 
   // Create CPrivateAabbRenderer2D and set information.
   m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj, this);
-  m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(collider_size));
+  m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(m_collider_size));
   m_aabb_renderer->SetCollisionRenderPosition(obj.GetFinalPosition());
 }
 
-void CProtoRigidbodyCollider2D::pCreateRigidbody(
-    const DVector2& collider_size,
+void CColliderBox2D::pCreatebtRigidbody(
     const float mass_sum,
     btRigidBody** rigidbody_ptr) {
   auto& obj = GetBindObject();
 
   // Create collision shape
-  const DVector2 half_size = collider_size * 0.5f;
-  m_collision_shape = new btBox2dShape{{half_size.x, half_size.y, 0.f}};
-  m_collision_shape->setMargin(1.f);
+  const DVector2 half_size = m_collider_size * 0.5f;
+  auto shape = GetCollisionShape();
+  (*shape) = new btBox2dShape{{half_size.x, half_size.y, 0.f}};
+  (*shape)->setMargin(1.f);
 
   // Create motion state
   btQuaternion rotation;
@@ -79,17 +73,16 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
   btDefaultMotionState* motionState =
       new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
 
-  btVector3 local_inertia;
-  //m_collision_shape->calculateLocalInertia(mass_sum, local_inertia);
 
   // Create rigidbody info
-  btRigidBody::btRigidBodyConstructionInfo body_construction_info =
-      btRigidBody::btRigidBodyConstructionInfo{
-          (mass_sum <= 0.f) ? 0.001f : mass_sum,
-          motionState,
-          m_collision_shape,
-          local_inertia};
-  body_construction_info.m_restitution = 0.75f;
+  btVector3 local_inertia;
+  //m_collision_shape->calculateLocalInertia(mass_sum, local_inertia);
+  auto body_construction_info = btRigidBody::btRigidBodyConstructionInfo{
+      (mass_sum <= 0.f) ? 0.001f : mass_sum,
+      motionState,
+      *shape,
+      local_inertia};
+  body_construction_info.m_restitution = 0.0f;
   body_construction_info.m_friction = 1.0f;
 
   *rigidbody_ptr = new btRigidBody{body_construction_info};
@@ -99,29 +92,18 @@ void CProtoRigidbodyCollider2D::pCreateRigidbody(
   (*rigidbody_ptr)->setLinearFactor({1, 1, 0});
 }
 
-CProtoRigidbodyCollider2D::~CProtoRigidbodyCollider2D() {
-  using opgs16::manager::physics::RemoveRigidbody;
-  RemoveRigidbody(m_rigidbody);
-
-  if (m_rigidbody) {
-    delete m_rigidbody->getMotionState();
-    OP16_SAFE_DELETE(m_rigidbody);
-  }
-
-  OP16_SAFE_DELETE(m_collision_shape);
-}
-
-void CProtoRigidbodyCollider2D::Update(float delta_time) {
+void CColliderBox2D::Update(float delta_time) {
   auto& obj = GetBindObject();
   const auto& position = obj.GetFinalPosition();
+  auto rigidbody = *GetLocalRigidbody();
 
   if (!m_is_position_initialized) {
     btTransform transform;
-    m_rigidbody->getMotionState()->getWorldTransform(transform);
+    rigidbody->getMotionState()->getWorldTransform(transform);
     transform.setOrigin(position);
 
-    m_rigidbody->setWorldTransform(transform);
-    m_rigidbody->getMotionState()->setWorldTransform(transform);
+    rigidbody->setWorldTransform(transform);
+    rigidbody->getMotionState()->setWorldTransform(transform);
     m_is_position_initialized = true;
   }
 
@@ -136,99 +118,92 @@ void CProtoRigidbodyCollider2D::Update(float delta_time) {
     }
   }
 
-  if (!m_rigidbody->isActive() &&
-      m_collider_type != EColliderActualType::Staic) {
+  if (!rigidbody->isActive() && GetColliderType() != EColliderActualType::Staic) {
     pSetCollisionState(EColliderBehaviorState::Sleep);
   }
 }
 
-void CProtoRigidbodyCollider2D::SetMass(float mass_value) {
+#ifdef false
+void CColliderBox2D::SetMass(float mass_value) {
   if (mass_value <= 0) {
     mass_value = 0.001f;
   }
 
-  btVector3 local_inertia;
-  m_collision_shape->calculateLocalInertia(mass_value, local_inertia);
-  m_rigidbody->setMassProps(mass_value, local_inertia);
+  //btVector3 local_inertia;
+  //m_collision_shape->calculateLocalInertia(mass_value, local_inertia);
+  auto rigidbody = GetLocalRigidbody();
+  (*rigidbody)->setMassProps(mass_value, {0, 0, 0});
 }
 
-void CProtoRigidbodyCollider2D::SetKinematic(bool is_kinematic) {
+void ccolliderbox2d::setkinematic(bool is_kinematic) {
+  auto rigidbody = getlocalrigidbody();
+
   if (is_kinematic) {
-    m_rigidbody->setCollisionFlags(
-        m_rigidbody->getCollisionFlags() |
-        btCollisionObject::CF_KINEMATIC_OBJECT
-    );
-    m_collider_type = EColliderActualType::Kinetic;
+    (*rigidbody)->setcollisionflags(
+        (*rigidbody)->getcollisionflags() | btcollisionobject::cf_kinematic_object);
+    m_collider_type = ecollideractualtype::kinetic;
   }
   else {
-    m_rigidbody->setCollisionFlags(
-        m_rigidbody->getCollisionFlags() |
-        btCollisionObject::CF_CHARACTER_OBJECT
-    );
-    m_collider_type = EColliderActualType::Dynamic;
+    (*rigidbody)->setcollisionflags(
+        (*rigidbody)->getcollisionflags() | btcollisionobject::cf_character_object);
+    m_collider_type = ecollideractualtype::dynamic;
   }
 }
+#endif
 
-void CProtoRigidbodyCollider2D::TemporalSetStatic() {
-  m_rigidbody->setMassProps(0, {});
-  m_collider_type = EColliderActualType::Staic;
+void CColliderBox2D::TemporalSetStatic() {
+  auto rigidbody = GetLocalRigidbody();
+
+  //(*rigidbody)->setMassProps(0, {});
+  //m_collider_type = EColliderActualType::Staic;
 }
 
-void CProtoRigidbodyCollider2D::SetTriggered(bool is_triggered) {
-  if (is_triggered) {
-    if (m_rigidbody->getCollisionFlags() &
-        btCollisionObject::CF_NO_CONTACT_RESPONSE) {
-      return;
-    }
+void CColliderBox2D::SetTriggered(bool is_triggered) {
+  auto rigidbody = *GetLocalRigidbody();
+  if (!rigidbody) {
+    PUSH_LOG_ERROR_EXT("{}'s btRigidbody is not set up.", GetUniqueIndexValue());
+    return;
+  }
 
-    m_rigidbody->setCollisionFlags(m_rigidbody->getCollisionFlags() |
+  if (is_triggered) {
+    rigidbody->setCollisionFlags(
+        rigidbody->getCollisionFlags() |
         btCollisionObject::CF_NO_CONTACT_RESPONSE);
   }
-  else if (m_rigidbody->getCollisionFlags() &
-           btCollisionObject::CF_NO_CONTACT_RESPONSE) {
-    m_rigidbody->setCollisionFlags(
-        m_rigidbody->getCollisionFlags() ^
-        btCollisionObject::CF_NO_CONTACT_RESPONSE
+  else if (rigidbody->getCollisionFlags() & btCollisionObject::CF_NO_CONTACT_RESPONSE) {
+    rigidbody->setCollisionFlags(
+        rigidbody->getCollisionFlags() &
+        ~btCollisionObject::CF_NO_CONTACT_RESPONSE
     );
   }
 
   m_is_collision_triggered = is_triggered;
 }
 
-void CProtoRigidbodyCollider2D::SetColliderSize(const DVector2& size) {
-  if (m_collision_shape)
-    delete m_collision_shape;
+void CColliderBox2D::SetColliderSize(const DVector2& size) {
+  auto shape = GetCollisionShape();
+  auto rigidbody = GetLocalRigidbody();
 
-  m_collision_shape = new btBox2dShape{
+  if (*shape)
+    delete *shape;
+
+  (*shape) = new btBox2dShape{
       static_cast<btVector3>(size * 0.5f)
   };
-  m_rigidbody->setCollisionShape(m_collision_shape);
+  (*rigidbody)->setCollisionShape((*shape));
   m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(size));
 }
 
-float CProtoRigidbodyCollider2D::GetMass() const noexcept {
-  return m_rigidbody->getInvMass();
-}
-
-CProtoRigidbodyCollider2D::EColliderBehaviorState
-CProtoRigidbodyCollider2D::GetColliderState() const noexcept {
+CColliderBox2D::EColliderBehaviorState
+CColliderBox2D::GetColliderState() const noexcept {
   return m_state;
 }
 
-CProtoRigidbodyCollider2D::EColliderActualType
-CProtoRigidbodyCollider2D::GetColliderActualType() const noexcept {
-  return m_collider_type;
-}
-
-bool CProtoRigidbodyCollider2D::IsKinematic() const noexcept {
-  return m_collider_type == EColliderActualType::Kinetic;
-}
-
-bool CProtoRigidbodyCollider2D::IsTriggered() const noexcept {
+bool CColliderBox2D::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
-void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(const DVector3& min,
+void CColliderBox2D::pUpdateAabbToRenderer(const DVector3& min,
                                                       const DVector3& max) {
   if (m_aabb_renderer) {
     m_aabb_renderer->SetCollisionSize(max - min);
@@ -238,14 +213,7 @@ void CProtoRigidbodyCollider2D::pUpdateAabbToRenderer(const DVector3& min,
   }
 }
 
-void CProtoRigidbodyCollider2D::pSetCollisionActualType(EColliderActualType type) {
-  PHITOS_ASSERT(type != EColliderActualType::None,
-                "Type must not be EColliderActualType::None.");
-
-  m_collider_type = type;
-}
-
-void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderBehaviorState state) {
+void CColliderBox2D::pSetCollisionState(EColliderBehaviorState state) {
   PHITOS_ASSERT(state != EColliderBehaviorState::None,
                 "Collision state must not be None.");
 
@@ -256,7 +224,7 @@ void CProtoRigidbodyCollider2D::pSetCollisionState(EColliderBehaviorState state)
   m_state = state;
 }
 
-void CProtoRigidbodyCollider2D::pCallBindObjectCallback(CProtoRigidbodyCollider2D* other_collider) {
+void CColliderBox2D::pCallBindObjectCallback(CColliderBox2D* other_collider) {
   const bool is_collision_function =
       !IsTriggered() &&
       other_collider ? !other_collider->IsTriggered() : true;
@@ -298,7 +266,7 @@ void CProtoRigidbodyCollider2D::pCallBindObjectCallback(CProtoRigidbodyCollider2
                            other_collider);
 }
 
-bool CProtoRigidbodyCollider2D::pIsCallbackFunctionCalledOnThisFrame() const noexcept {
+bool CColliderBox2D::pIsCallbackFunctionCalledOnThisFrame() const noexcept {
   return m_is_collided_flag_setup;
 }
 

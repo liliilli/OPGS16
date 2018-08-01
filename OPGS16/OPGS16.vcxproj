@@ -179,7 +179,11 @@
     <ClCompile Include="Source\Component\Internal\aabb_renderer_2d.cc" />
     <ClCompile Include="Source\Component\Internal\aabb_renderer_3d.cc" />
     <ClCompile Include="Source\Component\Internal\aabb_renderer_base.cc" />
+    <ClCompile Include="Source\Component\Internal\collider_base.cc" />
+    <ClCompile Include="Source\Component\Internal\rigidbody_dynamic_base.cc" />
+    <ClCompile Include="Source\Component\Internal\rigidbody_base.cc" />
     <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
+    <ClCompile Include="Source\Component\Physics\rigidbody2d.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\Helper\Type\vector2.cc" />
@@ -280,9 +284,16 @@
     <ClInclude Include="Include\Component\Internal\aabb_renderer_2d.h" />
     <ClInclude Include="Include\Component\Internal\aabb_renderer_3d.h" />
     <ClInclude Include="Include\Component\Internal\aabb_renderer_base.h" />
+    <ClInclude Include="Include\Component\Internal\collider2d_base.h" />
+    <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
+    <ClInclude Include="Include\Component\Internal\collider_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_base.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_dynamic_base.h" />
+    <ClInclude Include="Include\Component\Internal\rigidbody_static_base.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
+    <ClInclude Include="Include\Component\Physics\rigidbody2d.h" />
     <ClInclude Include="Include\Component\procedural2d_renderer.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
@@ -294,6 +305,7 @@
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
     <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
     <ClInclude Include="Include\Element\Internal\physics_enums.h" />
+    <ClInclude Include="Include\Element\Internal\physics_structs.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />
     <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
     <ClInclude Include="Include\Element\Internal\mesh_object.h" />

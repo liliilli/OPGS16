@@ -52,8 +52,6 @@
 #include <Component/Internal/component.h>
 /// ::opgs16::component::_internal Component type
 #include <Component/Internal/type.h>
-
-#include <Component/Physics/prot_rigidbody_collider2d.h>
 /// import logger debug mode
 #include <Headers/import_logger.h>
 /// Type checking template
@@ -73,7 +71,7 @@
 //!
 
 namespace opgs16::component {
-class CProtoRigidbodyCollider2D;
+class CColliderBox2D;
 }
 
 namespace opgs16::element::_internal {
@@ -208,7 +206,7 @@ public:
   /// @brief The method gets scaling values
   /// @return Object's scaling value.
   ///
-  const float GetScaleValue() const noexcept;
+  float GetScaleValue() const noexcept;
 
   ///
   /// @brief The method gets (x, y, z) DVector3 scaling axis factor.
@@ -422,11 +420,7 @@ public:
   ///
   /// @brief
   ///
-  ///
-  /// @param[in] TType
-  ///
   /// @return
-  ///
   ///
   template <
     class TType,
@@ -448,7 +442,7 @@ public:
 
   ///
   /// @brief Remove component.
-  /// @param[in] _Ty Component type argument.
+  /// @tparam _Ty Component type argument.
   /// @return If found, return true but otherwise false.
   ///
   template <
@@ -598,7 +592,7 @@ protected:
 private:
   void pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                             bool is_collision_function,
-                            component::CProtoRigidbodyCollider2D* collider);
+                            component::CColliderBox2D* collider);
 
   /// Object name counter to avoid duplicated object name
   TNameCounterMap m_name_counter;
@@ -610,7 +604,7 @@ private:
   /// Flag
   mutable bool m_hash_initialized = false;
 
-  friend opgs16::component::CProtoRigidbodyCollider2D;
+  friend opgs16::component::CColliderBox2D;
 };
 
 } /// ::opgs16::element namespace

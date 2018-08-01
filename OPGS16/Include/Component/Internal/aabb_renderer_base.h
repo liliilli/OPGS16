@@ -24,7 +24,7 @@
 //!
 
 namespace opgs16::component {
-class CProtoRigidbodyCollider2D;
+class CColliderBox2D;
 }
 
 //!
@@ -43,7 +43,7 @@ class CPrivateAabbRendererBase : public CRendererBase {
 public:
   CPrivateAabbRendererBase(
       element::CObject& bind_object,
-      component::CProtoRigidbodyCollider2D* parent) :
+      component::CColliderBox2D* parent) :
       CRendererBase(bind_object), m_parent { parent }
   {};
 
@@ -61,7 +61,7 @@ protected:
   const glm::mat4& pGetModelMatrix() noexcept;
   void pSetAabbRenderingColor();
 
-  CProtoRigidbodyCollider2D* m_parent = nullptr;
+  CColliderBox2D* m_parent = nullptr;
 
   mutable EAabbColliderDmStyle m_type = EAabbColliderDmStyle::None;
   opgs16::DColor m_state_color  = opgs16::DColor::Black;
@@ -76,6 +76,8 @@ private:
   bool m_is_model_matrix_dirty = true;
   bool m_is_render_position_dirty = true;
   bool m_is_collider_size_dirty = true;
+
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CPrivateAabbRendererBase)
 };
 
 } /// ::opgs16::component::_internal namespace

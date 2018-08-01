@@ -22,7 +22,7 @@ namespace opgs16::component::_internal {
 class CPrivateAabbRenderer2D final : public CPrivateAabbRendererBase {
 public:
   CPrivateAabbRenderer2D(element::CObject& bind_object,
-                         component::CProtoRigidbodyCollider2D* parent);
+                         component::CColliderBox2D* parent);
   ~CPrivateAabbRenderer2D();
 
   CPrivateAabbRenderer2D(const CPrivateAabbRenderer2D&) = default;
@@ -35,6 +35,8 @@ private:
   element::CShaderWrapper m_wrapper;
   /// Quad VAO to render sprite on screen.
   element::CVaoContainer* m_weak_vao_ref = nullptr;
+
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CPrivateAabbRendererBase, CPrivateAabbRenderer2D)
 };
 
 } /// ::opgs16::component::_internal namespace

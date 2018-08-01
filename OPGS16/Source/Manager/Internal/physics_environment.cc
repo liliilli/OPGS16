@@ -70,6 +70,10 @@ CPhysicsEnvironment::~CPhysicsEnvironment() {
   delete m_collision_configuration;
 }
 
+const DVector3& CPhysicsEnvironment::GetGlobalGravity() const noexcept {
+  return m_dynamics_world->getGravity();
+}
+
 void CPhysicsEnvironment::SetGlobalGravity(float x, float y, float z) noexcept {
   DebugCheckWorldInitiated();
   m_dynamics_world->setGravity({x, y, z});
@@ -114,7 +118,7 @@ void CPhysicsEnvironment::RemoveRigidbody(btRigidBody* rigidbody_rawptr) noexcep
 
 void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   using opgs16::element::CObject;
-  using opgs16::component::CProtoRigidbodyCollider2D;
+  using opgs16::component::CColliderBox2D;
 
   DebugCheckWorldInitiated();
 

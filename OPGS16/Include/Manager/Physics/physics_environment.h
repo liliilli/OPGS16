@@ -29,6 +29,7 @@
 #include <Phitos/Enums/initiated.h>
 /// ::opgs16::EAxis3D
 #include <Helper/Type/axis.h>
+#include "Helper/Type/vector3.h"
 
 namespace opgs16::manager::physics::_internal {
 
@@ -76,6 +77,12 @@ public:
   //!
   //! Function declarations.
   //!
+
+  ///
+  /// @brief
+  /// Get global gravity of environment as x, y, z DVector3.
+  ///
+  const DVector3& GetGlobalGravity() const noexcept;
 
   ///
   /// @brief

@@ -217,7 +217,7 @@ void CObject::PropagateParentRotation() {
 
 // Scaling functions
 
-const float CObject::GetScaleValue() const noexcept {
+float CObject::GetScaleValue() const noexcept {
     return m_data->GetScaleLocalValue();
 }
 
@@ -354,7 +354,7 @@ void CObject::Propagate() {
 
 void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                                    bool is_collision_function,
-                                   component::CProtoRigidbodyCollider2D* collider) {
+                                   component::CColliderBox2D* collider) {
   using opgs16::component::_internal::EComponentType;
   using opgs16::component::CScriptFrame;
   std::vector<CScriptFrame*> m_script_frame;

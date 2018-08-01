@@ -19,29 +19,13 @@
 /// Header file
 #include <Manager/physics_manager.h>
 
-#include <cmath>
-
-#include <algorithm>
-#include <memory>
-#include <vector>
-
 /// phitos::debug Expanded assertion.
 #include <Phitos/Dbg/assert.h>
 
-/// opgs16::component::CRigidbody2D
-#include <Component/Physics/rigidbody_2d.h>
-/// collision::CRectangleCollider2D
-#include <Component/Physics/rectangle.h>
-/// ::opgs16::element::CObject
-#include <Element/object.h>
-/// ::opgs16::manager::MSettingManager
-#include <Manager/setting_manager.h>
 /// ::opgs16::manager::physics::_internal::CCollisionShapeList
 #include <Manager/Physics/physics_collision_shape_list.h>
 /// ::opgs16::manager::physics Strong enum flags.
 #include <Manager/Physics/physics_flag.h>
-/// ::opgs16::manager::_internal::Item
-#include <Manager/Physics/physics_internal.h>
 /// ::opgs16::manager::physics::_internal::CPhysicsEnvironment
 #include <Manager/Physics/physics_environment.h>
 

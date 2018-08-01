@@ -85,7 +85,7 @@ void CPrivateAabbRendererBase::pSetAabbRenderingColor() {
   switch (state) {
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   case EColliderBehaviorState::Activated: {
-    switch (m_parent->GetColliderActualType()) {
+    switch (m_parent->GetColliderType()) {
     default: PHITOS_UNEXPECTED_BRANCH(); break;
     case EColliderActualType::Kinetic: m_state_color = DColor::Aqua; break;
     case EColliderActualType::Dynamic: m_state_color = DColor::Green; break;

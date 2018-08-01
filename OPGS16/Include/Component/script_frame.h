@@ -37,7 +37,7 @@ class CObject;
 }
 
 namespace opgs16::component {
-class CProtoRigidbodyCollider2D;
+class CColliderBox2D;
 }
 
 //!
@@ -61,7 +61,7 @@ namespace opgs16::component {
 ///
 class CScriptFrame : public _internal::CComponent {
 public:
-  using CProtoRigidbodyCollider2D = opgs16::component::CProtoRigidbodyCollider2D;
+  using CProtoRigidbodyCollider2D = opgs16::component::CColliderBox2D;
 
   friend class element::CObject;
 
