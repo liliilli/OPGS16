@@ -85,7 +85,6 @@
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
-    <ClCompile Include="Source\Component\Physics\prot_rigidbody_collider2d.cc" />
     <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
@@ -104,6 +103,9 @@
     <ClCompile Include="Source\Component\Internal\rigidbody_base.cc" />
     <ClCompile Include="Source\Component\Physics\rigidbody2d.cc" />
     <ClCompile Include="Source\Component\Internal\rigidbody_dynamic_base.cc" />
+    <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
+    <ClCompile Include="Source\Component\Internal\rigidbody_static_base.cc" />
+    <ClCompile Include="Source\Component\Physics\rigidbody2d_static.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -254,7 +256,6 @@
     <ClInclude Include="Include\Manager\Physics\physics_environment.h" />
     <ClInclude Include="Include\Manager\Physics\physics_internal.h" />
     <ClInclude Include="Include\Helper\include_vector.h" />
-    <ClInclude Include="Include\Component\Physics\prot_rigidbody_collider2d.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_player.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_floor.h" />
@@ -277,6 +278,8 @@
     <ClInclude Include="Include\Component\Internal\rigidbody_static_base.h" />
     <ClInclude Include="Include\Component\Internal\rigidbody_dynamic_base.h" />
     <ClInclude Include="Include\Element\Internal\physics_structs.h" />
+    <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
+    <ClInclude Include="Include\Component\Physics\rigidbody2d_static.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

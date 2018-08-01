@@ -15,28 +15,26 @@
 /// 2018-08-01 Create file.
 ///
 
-#include <unordered_map>
-
-#include <Component/Internal/collider_base.h>
-#include <Component/Internal/component.h>
+#include <Component/Internal/rigidbody_base.h>
 
 namespace opgs16::component::_internal {
 
-class CRigidbodyStaticBase : public CComponent {
-  using TColliderContainer = std::unordered_map<uint32_t, CColliderBase*>;
-
+class CRigidbodyStaticBase : public CRigidbodyBase {
+  using EColliderActualType = element::_internal::EColliderActualType;
 public:
-  CRigidbodyStaticBase(element::CObject& bind_object) : CComponent { bind_object } {};
+  CRigidbodyStaticBase(element::CObject& bind_object) : CRigidbodyBase { bind_object } {};
 
-protected:
-  CColliderBase* pFindColliderInContainer(CColliderBase* collider);
+  void SetLinearLimitFactor(bool x, bool y, bool z) noexcept;
 
-  CColliderBase* pSetColliderInContainer(CColliderBase* collider);
+  void SetLinearLimitFactor(const DLinearLimitFactor& factor) noexcept;
+
+  const DLinearLimitFactor& GetLinearLimitFactor() const noexcept;
 
 private:
-  TColliderContainer  m_collider_container;
+  DLinearLimitFactor m_limit_factor   = {true, true, true};
+  EColliderActualType m_collider_type = EColliderActualType::Staic;
 
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CRigidbodyStaticBase)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRigidbodyBase, CRigidbodyStaticBase)
 };
 
 }
