@@ -24,8 +24,8 @@
 namespace opgs16::element {
 class CObject;
 }
-namespace opgs16::component {
-class CColliderBox2D;
+namespace opgs16::component::_internal {
+class CColliderBase;
 }
 
 //!
@@ -36,7 +36,7 @@ namespace opgs16::element::_internal {
 
 struct DPrivateColliderBindInfo {
   opgs16::element::CObject* bind_object;
-  opgs16::component::CColliderBox2D* bind_collider;
+  opgs16::component::_internal::CColliderBase* bind_collider;
 };
 
 } /// ::opgs16::element::_internal namespace
