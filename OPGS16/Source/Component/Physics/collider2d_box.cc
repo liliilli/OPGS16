@@ -18,26 +18,21 @@
 
 #include <BulletCollision/CollisionShapes/btBox2dShape.h>
 
-#include <Core/core_setting.h>
 #include <Element/object.h>
 #include <Manager/physics_manager.h>
 
 namespace opgs16::component {
 
-CColliderBox2D::CColliderBox2D(
-    element::CObject& bind_object,
-    const DVector2& collider_size) : CCollider2DBase{ bind_object } {
+CColliderBox2D::CColliderBox2D(element::CObject& bind_object,
+                               const DVector2& collider_size) :
+                               CCollider2DBase{ bind_object } {
   m_collider_size = collider_size;
 }
 
 void CColliderBox2D::pInitializeCollider() {
-  auto& obj = GetBindObject();
-  m_bind_info.bind_object   = &obj;
-  m_bind_info.bind_collider = this;
-
   auto rigidbody = GetLocalRigidbody();
   pCreatebtRigidbody(pGetMass(), rigidbody);
-  __pUpdateFlags();
+  pUpdateColliderTypeFlag();
 #ifdef false
   if (is_kinematic) {
     (*rigidbody)->setActivationState(DISABLE_DEACTIVATION);
@@ -48,11 +43,7 @@ void CColliderBox2D::pInitializeCollider() {
   pfSetBehaviorState(EColliderBehaviorState::Activated);
 }
 
-void CColliderBox2D::pCreatebtRigidbody(
-    const float mass_sum,
-    btRigidBody** rigidbody_ptr) {
-  auto& obj = GetBindObject();
-
+void CColliderBox2D::pCreatebtRigidbody(float mass_sum, btRigidBody** rigidbody_ptr) {
   // Create collision shape
   const DVector2 half_size = m_collider_size * 0.5f;
   auto shape = GetCollisionShape();
@@ -60,12 +51,12 @@ void CColliderBox2D::pCreatebtRigidbody(
   (*shape)->setMargin(1.f);
 
   // Create motion state
+  auto& obj = GetBindObject();
   btQuaternion rotation;
   rotation.setEulerZYX(obj.GetRotationWpAngle(EAxis3D::Z),
                        obj.GetRotationWpAngle(EAxis3D::Y),
                        obj.GetRotationWpAngle(EAxis3D::X));
-  btDefaultMotionState* motionState =
-      new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
+  auto* motionState = new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
 
 #ifdef false
   btVector3 local_inertia;
@@ -80,47 +71,44 @@ void CColliderBox2D::pCreatebtRigidbody(
 
   // Restrict physical influence to (x, y) axis only.
   *rigidbody_ptr = new btRigidBody{body_construction_info};
-  (*rigidbody_ptr)->setUserPointer(static_cast<void*>(&m_bind_info));
   (*rigidbody_ptr)->setLinearFactor({1, 1, 0});
-
+  pSetColliderUserPointerAndBind();
   pInitiateAabbRenderer(true);
 }
 
 void CColliderBox2D::Update(float delta_time) {
-  auto& obj = GetBindObject();
-  const auto& position = obj.GetFinalPosition();
   auto rigidbody = *GetLocalRigidbody();
+  if (!rigidbody) return;
+  CColliderBase::Update(0);
 
+  // First contact, Reset collider position to CObject's final position.
   if (!m_is_position_initialized) {
+    auto motion_state = rigidbody->getMotionState();
     btTransform transform;
-    rigidbody->getMotionState()->getWorldTransform(transform);
-    transform.setOrigin(position);
+    motion_state->getWorldTransform(transform);
+    transform.setOrigin(GetBindObject().GetFinalPosition());
 
     rigidbody->setWorldTransform(transform);
-    rigidbody->getMotionState()->setWorldTransform(transform);
+    motion_state->setWorldTransform(transform);
     m_is_position_initialized = true;
   }
 
-  CColliderBase::Update(0);
-
-  if (!rigidbody->isActive() &&
-      GetColliderType() != EColliderActualType::Staic) {
+  if (!rigidbody->isActive() && GetColliderType() != EColliderActualType::Static) {
     pfSetBehaviorState(EColliderBehaviorState::Sleep);
   }
 }
 
 void CColliderBox2D::SetColliderSize(const DVector2& size) {
-  auto shape = GetCollisionShape();
-  auto rigidbody = GetLocalRigidbody();
+  m_collider_size = size;
 
-  if (*shape)
-    delete *shape;
+  if (GetBehaviorState() != EColliderBehaviorState::None) {
+    auto shape = GetCollisionShape();
+    auto rigidbody = GetLocalRigidbody();
 
-  (*shape) = new btBox2dShape{
-      static_cast<btVector3>(size * 0.5f)
-  };
-  (*rigidbody)->setCollisionShape((*shape));
-  //m_aabb_renderer->SetCollisionSize(static_cast<DVector3>(size));
+    if (*shape) delete *shape;
+    (*shape) = new btBox2dShape{ static_cast<btVector3>(size * 0.5f) };
+    (*rigidbody)->setCollisionShape((*shape));
+  }
 }
 
 } /// ::opgs16::component namespace

@@ -20,13 +20,10 @@
 
 #include <Component/Internal/rigidbody_base.h>
 #include <Element/object.h>
+#include <Helper/macroes.h>
 #include <Manager/physics_manager.h>
 #include <Manager/Physics/physics_environment.h>
 #include <Phitos/Dbg/assert.h>
-
-#define OP16_SAFE_DELETE(__MAInstance__) \
-  delete __MAInstance__; \
-  __MAInstance__ = nullptr
 
 namespace {
 
@@ -49,10 +46,8 @@ CColliderBase::CColliderBase(element::CObject& bind_object) :
     CComponent{bind_object} {
   m_collider_index = GetColliderUniqueIndexValue();
 
-  auto& obj = GetBindObject();
-
   // Enroll to unique rigidbody on CObject.
-  auto rigidbody_man = obj.GetComponent<_internal::CRigidbodyBase>();
+  auto rigidbody_man = GetBindObject().GetComponent<_internal::CRigidbodyBase>();
   if (!rigidbody_man) {
     PHITOS_ASSERT(rigidbody_man, "Rigidbody must be created prior to CCollider.");
   }
@@ -61,6 +56,8 @@ CColliderBase::CColliderBase(element::CObject& bind_object) :
 }
 
 CColliderBase::~CColliderBase() {
+  using opgs16::manager::physics::RemoveRigidbody;
+
   // Unbind from binded rigidbody.
   if (m_bind_rigidbody) {
     const auto result = m_bind_rigidbody->pUnbindColliderInContainer(this);
@@ -70,7 +67,6 @@ CColliderBase::~CColliderBase() {
   }
 
   // Release resources
-  using opgs16::manager::physics::RemoveRigidbody;
   RemoveRigidbody(m_local_rigidbody);
 
   if (m_local_rigidbody) {
@@ -81,17 +77,17 @@ CColliderBase::~CColliderBase() {
   OP16_SAFE_DELETE(m_collision_shape);
 }
 
-uint32_t CColliderBase::GetUniqueIndexValue() const noexcept {
-  return m_collider_index;
-}
-
-CColliderBase::EColliderActualType
-CColliderBase::GetColliderType() const noexcept {
-  return m_collider_type;
-}
-
-const DLinearLimitFactor& CColliderBase::GetLinearFactor() const noexcept {
-  return m_linear_factor;
+void CColliderBase::Update(float delta_time) {
+  if (m_is_collided_on_this_frame) {
+    pfSetBehaviorState(EColliderBehaviorState::Activated);
+    m_is_collided_on_this_frame = false;
+  }
+  else {
+    if (m_collision_state != EColliderCollisionState::Idle) {
+      // @todo temporary
+      pfCallBindObjectCallback(nullptr);
+    }
+  }
 }
 
 btRigidBody** CColliderBase::GetLocalRigidbody() const noexcept {
@@ -100,6 +96,18 @@ btRigidBody** CColliderBase::GetLocalRigidbody() const noexcept {
 
 btCollisionShape** CColliderBase::GetCollisionShape() const noexcept {
   return &m_collision_shape;
+}
+
+uint32_t CColliderBase::GetUniqueIndexValue() const noexcept {
+  return m_collider_index;
+}
+
+CColliderBase::EColliderActualType CColliderBase::GetColliderType() const noexcept {
+  return m_collider_type;
+}
+
+const DLinearLimitFactor& CColliderBase::GetLinearFactor() const noexcept {
+  return m_linear_factor;
 }
 
 void CColliderBase::SetTriggered(bool is_triggered) {
@@ -128,26 +136,12 @@ bool CColliderBase::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
-CColliderBase::EColliderBehaviorState
-CColliderBase::GetBehaviorState() const noexcept {
+CColliderBase::EColliderBehaviorState CColliderBase::GetBehaviorState() const noexcept {
   return m_behavior_state;
 }
 
 float CColliderBase::pGetMass() const noexcept {
   return m_mass;
-}
-
-void CColliderBase::Update(float delta_time) {
-  if (m_is_collided_on_this_frame) {
-    pfSetBehaviorState(EColliderBehaviorState::Activated);
-    m_is_collided_on_this_frame = false;
-  }
-  else {
-    if (m_collision_state != EColliderCollisionState::Idle) {
-      // @todo temporary
-      pfCallBindObjectCallback(nullptr);
-    }
-  }
 }
 
 void CColliderBase::pSetMass(float mass_value) noexcept {
@@ -172,7 +166,7 @@ void CColliderBase::pSetColliderType(EColliderActualType collider_type) noexcept
   m_collider_type = collider_type;
 
   if (!m_local_rigidbody) return;
-  __pUpdateFlags();
+  pUpdateColliderTypeFlag();
 }
 
 void CColliderBase::pSetLinearFactor(const DLinearLimitFactor& linear_factor) noexcept {
@@ -211,7 +205,7 @@ void CColliderBase::pfUpdateAabbToRenderer(const DVector3& min, const DVector3& 
 void CColliderBase::pfCallBindObjectCallback(CColliderBase* other_collider) {
   const bool is_collision_function =
       !IsTriggered() &&
-      other_collider ? !other_collider->IsTriggered() : true;
+      (other_collider ? !other_collider->IsTriggered() : true);
 
   // State machine
   switch (m_collision_state) {
@@ -225,26 +219,14 @@ void CColliderBase::pfCallBindObjectCallback(CColliderBase* other_collider) {
       m_collision_state = EColliderCollisionState::Idle;
     break;
   case EColliderCollisionState::Stay:
-    if (!m_is_collided_on_this_frame)
+    if (m_is_collided_on_this_frame == false)
       m_collision_state = EColliderCollisionState::Idle;
     break;
   }
 
-  std::string state_name;
-  switch (m_collision_state) {
-  case EColliderCollisionState::Idle:
-    state_name = "Idle";
-    break;
-  case EColliderCollisionState::Enter:
-    state_name = "Enter";
-    break;
-  case EColliderCollisionState::Stay:
-    state_name = "Stay";
-    break;
-  }
-  auto& obj = GetBindObject();
-  PUSH_LOG_WARN_EXT("{} state transits into {}.", obj.GetGameObjectName(), state_name);
-  obj.pCallPhysicsCallback(m_collision_state, is_collision_function, other_collider);
+  GetBindObject().pCallPhysicsCallback(
+      m_collision_state,
+      is_collision_function, other_collider);
 }
 
 bool CColliderBase::pfIsCallbackFunctionCalledOnThisFrame() const noexcept {
@@ -261,7 +243,7 @@ void CColliderBase::pfSetBehaviorState(EColliderBehaviorState state) noexcept {
   m_behavior_state = state;
 }
 
-void CColliderBase::__pUpdateFlags() noexcept {
+void CColliderBase::pUpdateColliderTypeFlag() noexcept {
   switch (m_collider_type) {
   case EColliderActualType::Kinetic:
     pSetMass(m_mass);
@@ -273,7 +255,7 @@ void CColliderBase::__pUpdateFlags() noexcept {
     m_local_rigidbody->setCollisionFlags(m_local_rigidbody->getCollisionFlags() &
                                          ~btCollisionObject::CF_KINEMATIC_OBJECT);
     break;
-  case EColliderActualType::Staic:
+  case EColliderActualType::Static:
     pSetMass(m_mass);
     break;
   default: PHITOS_UNEXPECTED_BRANCH(); break;
@@ -290,12 +272,24 @@ bool CColliderBase::pInitiateAabbRenderer(bool is_2d) {
     auto& obj = GetBindObject();
     m_aabb_renderer = std::make_unique<_internal::CPrivateAabbRenderer2D>(obj, this);
     m_aabb_renderer->SetCollisionRenderPosition(obj.GetFinalPosition());
-    //m_aabb_renderer->SetCollisionSize();
   }
   else {
     PHITOS_NOT_IMPLEMENTED_ASSERT();
   }
   return true;
+}
+
+void CColliderBase::pSetColliderUserPointerAndBind() {
+  auto& obj = GetBindObject();
+  m_bind_info.bind_object   = &obj;
+  m_bind_info.bind_collider = this;
+
+  if (!m_local_rigidbody) {
+    PHITOS_ASSERT(m_local_rigidbody, "Local btRigidbody must be binded prior to this function.");
+  }
+  else {
+    m_local_rigidbody->setUserPointer(static_cast<void*>(&m_bind_info));
+  }
 }
 
 } /// ::opgs16::component::_internal namesapce

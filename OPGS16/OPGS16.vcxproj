@@ -318,6 +318,7 @@
     <ClInclude Include="Include\Element\Internal\physics_collision_shape_wrapper.h" />
     <ClInclude Include="Include\Element\Internal\vao_container.h" />
     <ClInclude Include="Include\Headers\import_logger.h" />
+    <ClInclude Include="Include\Helper\macroes.h" />
     <ClInclude Include="Include\Helper\Type\axis.h" />
     <ClInclude Include="Include\Helper\float.h" />
     <ClInclude Include="Include\Helper\hash_crc32.h" />

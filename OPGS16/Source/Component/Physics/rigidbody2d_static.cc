@@ -31,7 +31,7 @@ void CRigidbodyStatic2D::Update(float delta_time) {
     for (auto& collider : m_candidates) {
       auto result_collider = pSetColliderInContainer(collider);
       if (result_collider) {
-        result_collider->pSetColliderType(EColliderActualType::Staic);
+        result_collider->pSetColliderType(EColliderActualType::Static);
         result_collider->pSetMass(0);
         result_collider->pSetLinearFactor(GetLinearLimitFactor());
         result_collider->pInitializeCollider();
@@ -41,6 +41,7 @@ void CRigidbodyStatic2D::Update(float delta_time) {
     m_candidates.clear();
     m_is_dirty = false;
   }
+  SetComponentActive(false);
 }
 
 void CRigidbodyStatic2D::pEnrollColliderOnObject(_internal::CColliderBase* collider) {
@@ -55,6 +56,7 @@ void CRigidbodyStatic2D::pEnrollColliderOnObject(_internal::CColliderBase* colli
 
   m_candidates.push_back(instance);
   m_is_dirty = true;
+  SetComponentActive(true);
 }
 
 } /// ::opgs16::component namespace

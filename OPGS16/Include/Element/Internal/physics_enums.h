@@ -35,7 +35,7 @@ enum class EColliderActualType {
   /// Both CCollider and CRigidbody activated and not kinetic, has mass. (Green)
   Dynamic,
   /// CCollider activated but CRigidbody (not btRigidbody!) deactivated. (Orange)
-  Staic,
+  Static,
 
   /// None. Not initiated.
   None

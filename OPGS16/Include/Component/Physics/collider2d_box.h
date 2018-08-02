@@ -43,8 +43,12 @@ class CPrivateAabbRenderer2D;
 
 namespace opgs16::component {
 
+///
+/// @class CColliderBox2D
+/// @brief Collision 2d box type which should be attached to any 2d rigidbody.
+///
 class CColliderBox2D final : public _internal::CCollider2DBase {
-  using EColliderBehaviorState = element::_internal::EColliderBehaviorState;
+  using EColliderBehaviorState  = element::_internal::EColliderBehaviorState;
   using EColliderCollisionState = element::_internal::EColliderCollisionState;
 
 public:
@@ -52,7 +56,7 @@ public:
 
   ///
   /// @update
-  /// Frequent call will cause performance decrease.
+  /// Frequent call after initiation will cause performance decrease.
   ///
   void SetColliderSize(const DVector2& size);
 
@@ -60,21 +64,15 @@ private:
   void Update(float delta_time) override final;
 
   ///
-  /// @brief
+  /// @brief Initialize collider.
+  /// This function should be called from bound rigidbody.
   ///
   void pInitializeCollider() override final;
 
-  ///
-  /// @brief
-  ///
-  void pCreatebtRigidbody(const float mass_sum, btRigidBody** rigidbody_ptr);
+  void pCreatebtRigidbody(float mass_sum, btRigidBody** rigidbody_ptr);
 
-  element::_internal::DPrivateColliderBindInfo m_bind_info;
-
-  opgs16::DVector2 m_collider_size;
-
+  DVector2 m_collider_size;
   bool m_is_position_initialized = false;
-  bool m_is_collided_flag_setup  = false;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CCollider2DBase, CColliderBox2D)
 };

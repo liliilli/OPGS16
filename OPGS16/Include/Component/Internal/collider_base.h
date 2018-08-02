@@ -20,6 +20,7 @@
 #include <Element/Internal/physics_enums.h>
 #include <Element/Internal/physics_structs.h>
 #include <Helper/Type/vector3.h>
+#include <Element/Internal/physics_collider_bind_info.h>
 
 //!
 //! Forward declaration
@@ -53,8 +54,21 @@ class CColliderBase : public CComponent {
   using TAabbRendererSmtPtr = std::unique_ptr<_internal::CPrivateAabbRenderer2D>;
 
 public:
+  ///
+  /// Bind collider instance to unique rigidbody of CObject.
+  /// and, Assign unique ID number for collider identification.
+  ///
   CColliderBase(element::CObject& bind_object);
+
+  ///
+  /// When release instance, unbind from rigidbody and release from physics world.
+  ///
   ~CColliderBase();
+
+  CColliderBase(const CColliderBase&) = default;
+  CColliderBase(CColliderBase&&)      = default;
+  CColliderBase& operator=(const CColliderBase&)  = default;
+  CColliderBase& operator=(CColliderBase&&)       = default;
 
   ///
   /// @brief Get this collider instance's unique index value.
@@ -63,33 +77,46 @@ public:
 
   EColliderActualType GetColliderType() const noexcept;
 
+  EColliderBehaviorState GetBehaviorState() const noexcept;
+
   const DLinearLimitFactor& GetLinearFactor() const noexcept;
 
   ///
-  /// @brief Set trigger or collision flag.
+  /// @brief Set trigger / collision function calling flag.
   ///
   void SetTriggered(bool is_triggered);
 
   bool IsTriggered() const noexcept;
 
-  EColliderBehaviorState GetBehaviorState() const noexcept;
-
 protected:
   btRigidBody**      GetLocalRigidbody() const noexcept;
   btCollisionShape** GetCollisionShape() const noexcept;
 
-  void Update(float delta_time) override;
+  void pfSetBehaviorState(EColliderBehaviorState state) noexcept;
 
   float pGetMass() const noexcept;
 
-  void __pUpdateFlags() noexcept;
+  ///
+  /// Check any collision on previous frame has been caused or not,
+  /// so to do proceed specific procedure.
+  ///
+  void Update(float delta_time) override;
 
+  ///
+  /// Update collider flags when rigidbody types becomes
+  /// Kinetic / Dynamic and Static.
+  ///
+  void pUpdateColliderTypeFlag() noexcept;
+
+  ///
+  /// Create Aabb renderer 2d or 3d.
+  ///
   bool pInitiateAabbRenderer(bool is_2d);
 
   ///
-  /// @brief
+  /// 
   ///
-  void pfSetBehaviorState(EColliderBehaviorState state) noexcept;
+  void pSetColliderUserPointerAndBind();
 
 private:
   virtual void pInitializeCollider() = 0;
@@ -128,6 +155,8 @@ private:
   EColliderBehaviorState m_behavior_state = EColliderBehaviorState::None;
   EColliderCollisionState m_collision_state = EColliderCollisionState::Idle;
   DLinearLimitFactor     m_linear_factor  = {true, true, true};
+
+  element::_internal::DPrivateColliderBindInfo m_bind_info;
 
   float m_mass        = 0.001f;
   float m_actual_mass = m_mass;

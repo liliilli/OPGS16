@@ -31,6 +31,7 @@ void CRigidbody2D::pEnrollColliderOnObject(_internal::CColliderBase* collider_in
 
   m_candidates.push_back(collider);
   m_is_dirty = true;
+  SetComponentActive(true);
 }
 
 void CRigidbody2D::InitiateColliders() {
@@ -58,6 +59,7 @@ void CRigidbody2D::Update(float delta_time) {
     m_candidates.clear();
     m_is_dirty = false;
   }
+  SetComponentActive(false);
 }
 
 } /// ::opgs16::component namespace

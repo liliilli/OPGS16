@@ -19,20 +19,28 @@
 
 namespace opgs16::component::_internal {
 
+///
+/// @class CRigidbodyStaticBase
+/// @brief Base type of all static rigidbody types.
+///
 class CRigidbodyStaticBase : public CRigidbodyBase {
   using EColliderActualType = element::_internal::EColliderActualType;
+
 public:
   CRigidbodyStaticBase(element::CObject& bind_object) : CRigidbodyBase { bind_object } {};
 
+  const DLinearLimitFactor& GetLinearLimitFactor() const noexcept;
+
+  ///
+  /// @brief Set linear limit factors and propagtes it all binded colliders.
+  ///
   void SetLinearLimitFactor(bool x, bool y, bool z) noexcept;
 
   void SetLinearLimitFactor(const DLinearLimitFactor& factor) noexcept;
 
-  const DLinearLimitFactor& GetLinearLimitFactor() const noexcept;
-
 private:
   DLinearLimitFactor m_limit_factor   = {true, true, true};
-  EColliderActualType m_collider_type = EColliderActualType::Staic;
+  EColliderActualType m_collider_type = EColliderActualType::Static;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRigidbodyBase, CRigidbodyStaticBase)
 };

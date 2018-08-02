@@ -280,6 +280,7 @@
     <ClInclude Include="Include\Element\Internal\physics_structs.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\Physics\rigidbody2d_static.h" />
+    <ClInclude Include="Include\Helper\macroes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

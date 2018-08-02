@@ -19,6 +19,10 @@
 
 namespace opgs16::component::_internal {
 
+///
+/// @class CCollider2DBase
+/// @brief Base class for all 2d collider types.
+///
 class CCollider2DBase : public _internal::CColliderBase {
 public:
   CCollider2DBase(element::CObject& bind_object) : CColliderBase{ bind_object } {};

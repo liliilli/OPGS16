@@ -19,8 +19,13 @@
 
 namespace opgs16::component::_internal {
 
+///
+/// @class CRigidbodyDynamicBase
+/// @brief Base type of all dynamic / kinematical rigidbody types.
+///
 class CRigidbodyDynamicBase : public CRigidbodyBase {
   using EColliderActualType = element::_internal::EColliderActualType;
+
 public:
   CRigidbodyDynamicBase(element::CObject& bind_object) : CRigidbodyBase { bind_object } {};
 
@@ -30,17 +35,29 @@ public:
 
   bool IsKinematic() const noexcept;
 
+  const DLinearLimitFactor& GetLinearLimitFactor() const noexcept;
+
+  ///
+  /// @brief Set mass and propagates properties along with kinematic properties.
+  ///
   void SetMass(float mass_sum) noexcept;
 
+  ///
+  /// @brief Set kinematic / dynamic setting and propagates it colliders.
+  ///
   void SetKinematic(bool is_kinematic) noexcept;
 
+  ///
+  /// @brief Set using gravity and propagates it all binded colliders.
+  ///
   void SetUseGravity(bool using_gravity) noexcept;
 
+  ///
+  /// @brief Set linear limit factors and propagtes it all binded colliders.
+  ///
   void SetLinearLimitFactor(bool x, bool y, bool z) noexcept;
 
   void SetLinearLimitFactor(const DLinearLimitFactor& factor) noexcept;
-
-  const DLinearLimitFactor& GetLinearLimitFactor() const noexcept;
 
 private:
   float m_mass_sum = 0.001f;

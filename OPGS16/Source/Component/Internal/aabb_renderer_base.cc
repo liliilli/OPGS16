@@ -89,7 +89,7 @@ void CPrivateAabbRendererBase::pSetAabbRenderingColor() {
     default: PHITOS_UNEXPECTED_BRANCH(); break;
     case EColliderActualType::Kinetic: m_state_color = DColor::Aqua; break;
     case EColliderActualType::Dynamic: m_state_color = DColor::Green; break;
-    case EColliderActualType::Staic:   m_state_color = DColor::Orange; break;
+    case EColliderActualType::Static:   m_state_color = DColor::Orange; break;
     }
   } break;
   case EColliderBehaviorState::Collided: m_state_color = DColor::Yellow; break;

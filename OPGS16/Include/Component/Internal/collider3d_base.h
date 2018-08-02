@@ -19,10 +19,13 @@
 
 namespace opgs16::component::_internal {
 
+///
+/// @class CCollider3DBase
+/// @brief Base class for all 2d collider types.
+///
 class CCollider3DBase : public CColliderBase {
 public:
-  CCollider3DBase(opgs16::element::CObject& bind_object) :
-      CColliderBase{ bind_object } {};
+  CCollider3DBase(element::CObject& bind_object) : CColliderBase{ bind_object } {};
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CColliderBase, CCollider3DBase)
 };

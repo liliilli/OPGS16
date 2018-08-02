@@ -35,8 +35,8 @@ class CColliderBase;
 namespace opgs16::element::_internal {
 
 struct DPrivateColliderBindInfo {
-  opgs16::element::CObject* bind_object;
-  opgs16::component::_internal::CColliderBase* bind_collider;
+  element::CObject* bind_object = nullptr;
+  component::_internal::CColliderBase* bind_collider = nullptr;
 };
 
 } /// ::opgs16::element::_internal namespace

@@ -15,7 +15,6 @@
 
 /// Header file
 #include <Component/Internal/rigidbody_base.h>
-#include <Element/object.h>
 
 namespace opgs16::component::_internal {
 
@@ -37,32 +36,26 @@ CColliderBase* CRigidbodyBase::pFindColliderInContainer(CColliderBase* collider)
 
 CColliderBase* CRigidbodyBase::pSetColliderInContainer(CColliderBase* collider) {
   const auto uid  = collider->GetUniqueIndexValue();
-  CColliderBase* result_ptr = nullptr;
 
   auto [it, result] = m_collider_container.try_emplace(uid, collider);
   if (result) {
-    result_ptr = it->second;
+    return it->second;
   }
   else {
     m_collider_container.erase(it);
+    return nullptr;
   }
-
-  return result_ptr;
-}
-
-CRigidbodyBase::TColliderContainer&
-CRigidbodyBase::pGetColliderContainer() noexcept {
-  return m_collider_container;
 }
 
 bool CRigidbodyBase::pUnbindColliderInContainer(CColliderBase* collider) {
   const auto uid = collider->GetUniqueIndexValue();
 
   const auto removed_size = m_collider_container.erase(uid);
-  if (removed_size > 0)
-    return true;
-  else
-    return false;
+  return removed_size > 0;
+}
+
+CRigidbodyBase::TColliderContainer& CRigidbodyBase::pGetColliderContainer() noexcept {
+  return m_collider_container;
 }
 
 } /// ::opgs16::component::_internal namespace

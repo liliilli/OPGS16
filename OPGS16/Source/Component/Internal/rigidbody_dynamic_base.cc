@@ -29,7 +29,7 @@ bool CRigidbodyDynamicBase::IsUseGravity() const noexcept {
 }
 
 bool CRigidbodyDynamicBase::IsKinematic() const noexcept {
-  return m_collider_type == EColliderActualType::Staic;
+  return m_collider_type == EColliderActualType::Static;
 }
 
 void CRigidbodyDynamicBase::SetMass(float mass_sum) noexcept {

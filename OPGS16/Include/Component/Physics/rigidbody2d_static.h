@@ -17,13 +17,28 @@
 
 /// Header file
 #include <Component/Internal/rigidbody_static_base.h>
-#include <Component/Internal/collider2d_base.h>
+
+//!
+//! Forward declaration
+//!
+
+namespace opgs16::component::_internal {
+class CCollider2DBase;
+}
+
+//!
+//! Implementation
+//!
 
 namespace opgs16::component {
 
+///
+/// @class CRigidbodyStatic2D
+/// @brief Only static 2d only rigidbody type.
+///
 class CRigidbodyStatic2D final : public _internal::CRigidbodyStaticBase {
 public:
- CRigidbodyStatic2D(element::CObject& bind_object) : CRigidbodyStaticBase{ bind_object } {};
+  CRigidbodyStatic2D(element::CObject& bind_object) : CRigidbodyStaticBase{ bind_object } {};
 
   ///
   /// @brief Manually initiate colliders to rigidbody.
@@ -32,10 +47,14 @@ public:
   void InitiateColliders();
 
 private:
+  ///
+  /// Just initiate not yet born colliders.
+  ///
   void Update(float delta_time) override final;
 
   void pEnrollColliderOnObject(_internal::CColliderBase* collider) override final;
 
+  /// Disposable not yet born collider candidates.
   std::vector<_internal::CCollider2DBase*> m_candidates;
   bool m_is_dirty = false;
 
