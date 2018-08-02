@@ -106,6 +106,7 @@
     <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
     <ClCompile Include="Source\Component\Internal\rigidbody_static_base.cc" />
     <ClCompile Include="Source\Component\Physics\rigidbody2d_static.cc" />
+    <ClCompile Include="Source\Component\Physics\collider2d_circle.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\Physics\rigidbody2d_static.h" />
     <ClInclude Include="Include\Helper\macroes.h" />
+    <ClInclude Include="Include\Component\Physics\collider2d_circle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
