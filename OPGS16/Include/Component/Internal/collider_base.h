@@ -88,6 +88,10 @@ public:
 
   bool IsTriggered() const noexcept;
 
+  void UpdateLocation() noexcept;
+
+  void ApplyImpulse(const DVector3& vector);
+
 protected:
   btRigidBody**      GetLocalRigidbody() const noexcept;
   btCollisionShape** GetCollisionShape() const noexcept;
@@ -114,7 +118,7 @@ protected:
   bool pInitiateAabbRenderer(bool is_2d);
 
   ///
-  /// 
+  ///
   ///
   void pSetColliderUserPointerAndBind();
 

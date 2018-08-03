@@ -35,7 +35,7 @@ namespace opgs16::manifest {
 ///
 
 #define OP16_SETTING_APPLICATION_WINDOW_NAME \
-"OPGS16 0.2.0 2018-07-24"
+"OPGS16 0.2.0 2018-08-03"
 
 ///
 /// Set Project first scene (entry scene) path from this manifest file.

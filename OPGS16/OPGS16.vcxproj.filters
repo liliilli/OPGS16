@@ -108,6 +108,8 @@
     <ClCompile Include="Source\Component\Physics\rigidbody2d_static.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_circle.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_convex.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\Physics\script_controller.cc" />
+    <ClCompile Include="_Project\Test020\Source\Physics\TestBlock\object_block.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -288,6 +290,8 @@
     <ClInclude Include="Include\Component\Physics\collider3d_box.h" />
     <ClInclude Include="Include\Component\Physics\collider3d_sphere.h" />
     <ClInclude Include="Include\Manager\Internal\input_keystring.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\Physics\script_controller.h" />
+    <ClInclude Include="_Project\Test020\Include\Physics\TestBlock\object_block.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

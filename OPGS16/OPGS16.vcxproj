@@ -274,9 +274,11 @@
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
+    <ClCompile Include="_Project\Test020\Source\Physics\TestBlock\object_block.cc" />
     <ClCompile Include="_Project\Test020\Source\Scene\hello_world.cc" />
     <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_adjust_camera_pos.cc" />
+    <ClCompile Include="_Project\Test020\Source\Script\Physics\script_controller.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
@@ -449,9 +451,11 @@
     <ClInclude Include="_Project\Test020\Include\Object\objectSound.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_floor.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Physics\object_player.h" />
+    <ClInclude Include="_Project\Test020\Include\Physics\TestBlock\object_block.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\hello_world.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_adjust_camera_pos.h" />
+    <ClInclude Include="_Project\Test020\Include\Script\Physics\script_controller.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />

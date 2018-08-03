@@ -136,7 +136,28 @@ bool CColliderBase::IsTriggered() const noexcept {
   return m_is_collision_triggered;
 }
 
-CColliderBase::EColliderBehaviorState CColliderBase::GetBehaviorState() const noexcept {
+void CColliderBase::UpdateLocation() noexcept {
+  if (m_local_rigidbody) {
+    if (!m_local_rigidbody->isActive())
+      m_local_rigidbody->activate();
+
+    btTransform transform = m_local_rigidbody->getCenterOfMassTransform();
+    transform.setOrigin(GetBindObject().GetFinalPosition());
+
+    m_local_rigidbody->setWorldTransform(transform);
+  }
+}
+
+void CColliderBase::ApplyImpulse(const DVector3& vector) {
+  if (m_local_rigidbody) {
+    if (!m_local_rigidbody->isActive())
+      m_local_rigidbody->activate();
+
+    m_local_rigidbody->applyCentralImpulse(vector);
+  }
+}
+
+  CColliderBase::EColliderBehaviorState CColliderBase::GetBehaviorState() const noexcept {
   return m_behavior_state;
 }
 

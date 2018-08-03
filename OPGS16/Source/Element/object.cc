@@ -122,21 +122,25 @@ const DVector3& CObject::GetFinalPosition() const noexcept {
 void CObject::SetLocalPosition(const DVector3& position) noexcept {
   // ReSharper restore CppMemberFunctionMayBeConst
   m_data->SetLocalPosition(position);
+  m_data->GetFinalPosition();
 }
 
 void CObject::SetWorldPosition(const DVector3& world_position) {
   m_data->SetWorldPosition(world_position);
   PropagateParentPosition();
+  m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetLocalPosition(axis, value);
-  PropagateParentPosition();
+  //PropagateParentPosition();
+  m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetWorldPosition(axis, value);
   PropagateParentPosition();
+  m_data->GetFinalPosition();
 }
 
 void CObject::SetParentPosition(const DVector3& parent_position) {

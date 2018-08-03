@@ -118,7 +118,7 @@ void CPhysicsEnvironment::PhysicsUpdate(float delta_time) {
   using opgs16::element::CObject;
 
   DebugCheckWorldInitiated();
-  m_dynamics_world->stepSimulation(delta_time, 5);
+  m_dynamics_world->stepSimulation(delta_time, 10);
   pUpdatePostProcessRigidbodyInformation();
   pCallCollidedObjectCallbacks();
 }
@@ -128,14 +128,13 @@ void CPhysicsEnvironment::pUpdatePostProcessRigidbodyInformation() {
 
   for (auto j = m_dynamics_world->getNumCollisionObjects() - 1; j >= 0; --j) {
     const auto collision_obj = m_dynamics_world->getCollisionObjectArray()[j];
-    auto rigidbody_obj = btRigidBody::upcast(collision_obj);
+    const auto rigidbody_obj = btRigidBody::upcast(collision_obj);
 
-    if (rigidbody_obj && rigidbody_obj->getMotionState()) {
+    if (rigidbody_obj) {
       auto obj_ptr = static_cast<DPrivateColliderBindInfo*>(rigidbody_obj->getUserPointer());
       // Update position.
       {
-        btTransform trans;
-        rigidbody_obj->getMotionState()->getWorldTransform(trans);
+        const btTransform& trans = rigidbody_obj->getCenterOfMassTransform();
         obj_ptr->bind_object->SetWorldPosWithFinalPos(trans.getOrigin());
       }
 
