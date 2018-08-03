@@ -16,7 +16,7 @@ using opgs16::setting::TActualScreenSize;
 bool m_anti_aliasing_feature    = false;
 bool m_is_debug_mode            = false;
 bool m_post_processing_feature  = false;
-bool m_render_collision_aabb    = true;
+bool m_render_collision_aabb    = false;
 
 EScaleType m_scale_value = EScaleType::X1;
 

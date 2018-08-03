@@ -274,9 +274,9 @@
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
-    <ClCompile Include="_Project\Test020\Source\Physics\TestBlock\object_block.cc" />
-    <ClCompile Include="_Project\Test020\Source\Scene\hello_world.cc" />
-    <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
+    <ClCompile Include="_Project\Test020\Include\Physics\TestBlock\object_block.cc" />
+    <ClCompile Include="_Project\Test020\Include\Scene\hello_world.cc" />
+    <ClCompile Include="_Project\Test020\Include\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_adjust_camera_pos.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_controller.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />

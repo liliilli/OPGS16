@@ -79,13 +79,11 @@
     <ClCompile Include="Source\Component\sprite2d_renderer.cc" />
     <ClCompile Include="Source\Element\ui_default_object.cc" />
     <ClCompile Include="Source\precompiled.cc" />
-    <ClCompile Include="_Project\Test020\Source\Scene\hello_world.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundController.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\scriptSoundUi.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
-    <ClCompile Include="_Project\Test020\Source\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_player.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_outputpos.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
@@ -109,7 +107,9 @@
     <ClCompile Include="Source\Component\Physics\collider2d_circle.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_convex.cc" />
     <ClCompile Include="_Project\Test020\Source\Script\Physics\script_controller.cc" />
-    <ClCompile Include="_Project\Test020\Source\Physics\TestBlock\object_block.cc" />
+    <ClCompile Include="_Project\Test020\Include\Physics\TestBlock\object_block.cc" />
+    <ClCompile Include="_Project\Test020\Include\Scene\hello_world.cc" />
+    <ClCompile Include="_Project\Test020\Include\Scene\scene_bullet_hello.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
