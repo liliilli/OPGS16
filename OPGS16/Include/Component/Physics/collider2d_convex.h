@@ -1,5 +1,5 @@
-#ifndef OPGS16_COMPONENT_PHYSICS_PROT_RIGIDBODY_COLLIDER2D_CIRCLE_H
-#define OPGS16_COMPONENT_PHYSICS_PROT_RIGIDBODY_COLLIDER2D_CIRCLE_H
+#ifndef OPGS16_COMPONENT_PHYSICS_COLLIDER2D_CONVEX_H
+#define OPGS16_COMPONENT_PHYSICS_COLLIDER2D_CONVEX_H
 
 ///
 /// @license BSD 2-Clause License
@@ -7,7 +7,7 @@
 /// Copyright (c) 2018, Jongmin Yun(Neu.), All rights reserved.
 /// If you want to read full statements, read LICENSE file.
 ///
-/// @file Component/Physics/collider2d_circle.h
+/// @file Component/Physics/collider2d_convex.h
 ///
 /// @author Jongmin Yun
 ///
@@ -34,22 +34,13 @@ class CPrivateAabbRenderer2D;
 
 namespace opgs16::component {
 
-///
-/// @class CColliderCircle2D
-/// @brief Collision 2d circle type which should be attached to any 2d rigidbody.
-///
-class CColliderCircle2D final : public _internal::CCollider2DBase {
+class CColliderConvex2D final : public _internal::CCollider2DBase {
   using EColliderBehaviorState  = element::_internal::EColliderBehaviorState;
   using EColliderCollisionState = element::_internal::EColliderCollisionState;
 
 public:
-  CColliderCircle2D(element::CObject& bind_object, float radius);
-
-  ///
-  /// @update
-  /// Frequent call after initiation will cause performance decrease.
-  ///
-  void SetColliderSize(float radius);
+  CColliderConvex2D(element::CObject& bind_object) :
+      CCollider2DBase{bind_object} {};
 
 private:
   void Update(float delta_time) override final;
@@ -60,16 +51,9 @@ private:
   ///
   void pInitializeCollider() override final;
 
-  void pCreatebtRigidbody(float mass_sum, btRigidBody** rigidbody_ptr);
-
-  void pCreateCollisionShape();
-
-  float m_collider_radius;
-  bool m_is_position_initialized = false;
-
-SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CCollider2DBase, CColliderCircle2D)
+SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CCollider2DBase, CColliderConvex2D)
 };
 
 } /// ::opgs16::component namespace
 
-#endif /// OPGS16_COMPONENT_PHYSICS_PROT_RIGIDBODY_COLLIDER2D_CIRCLE_H
+#endif /// OPGS16_COMPONENT_PHYSICS_COLLIDER2D_CONVEX_H

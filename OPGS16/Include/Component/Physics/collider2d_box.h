@@ -15,13 +15,8 @@
 /// Create file.
 ///
 
-#include <string>
-
 #include <Component/Internal/collider2d_base.h>
-#include <Element/Internal/physics_collider_bind_info.h>
-#include <Element/Internal/physics_enums.h>
 #include <Helper/Type/vector2.h>
-#include <Component/Internal/aabb_renderer_2d.h>
 
 //!
 //! Forward declaration

@@ -185,6 +185,7 @@
     <ClCompile Include="Source\Component\Internal\rigidbody_static_base.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_box.cc" />
     <ClCompile Include="Source\Component\Physics\collider2d_circle.cc" />
+    <ClCompile Include="Source\Component\Physics\collider2d_convex.cc" />
     <ClCompile Include="Source\Component\Physics\rigidbody2d.cc" />
     <ClCompile Include="Source\Component\Physics\rigidbody2d_static.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
@@ -297,6 +298,9 @@
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_circle.h" />
+    <ClInclude Include="Include\Component\Physics\collider2d_convex.h" />
+    <ClInclude Include="Include\Component\Physics\collider3d_box.h" />
+    <ClInclude Include="Include\Component\Physics\collider3d_sphere.h" />
     <ClInclude Include="Include\Component\Physics\rigidbody2d.h" />
     <ClInclude Include="Include\Component\Physics\rigidbody2d_static.h" />
     <ClInclude Include="Include\Component\procedural2d_renderer.h" />

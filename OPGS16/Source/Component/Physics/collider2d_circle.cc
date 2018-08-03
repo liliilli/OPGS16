@@ -19,7 +19,6 @@
 #include <BulletCollision/CollisionShapes/btConvexHullShape.h>
 
 #include <Element/object.h>
-#include <Helper/Math/math.h>
 #include <Manager/physics_manager.h>
 
 namespace {
