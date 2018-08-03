@@ -21,7 +21,7 @@ namespace opgs16::manager::input {
 
 using TInputKeyPair = std::pair<const char*, int32_t>;
 
-constexpr std::array<TInputKeyPair, 42> s_key_string = {
+constexpr std::array<TInputKeyPair, 77> s_key_string = {
   TInputKeyPair\
   {"KB_RIGHT", 262},
   {"KB_LEFT", 263},
@@ -67,7 +67,48 @@ constexpr std::array<TInputKeyPair, 42> s_key_string = {
   {"KB_9", 57},
 
   {"KB_ESCAPE", 256},
-  {"KB_ENTER", 257}
+  {"KB_ENTER", 257},
+
+  {"KB_LSHIFT", 340},
+  {"KB_LCTRL", 341},
+  {"KB_LALT", 342},
+
+  {"KB_INSERT", 260},
+  {"KB_DELETE", 261},
+  {"KB_PAGEUP", 266},
+  {"KB_PAGEDOWN", 267},
+  {"KB_HOME", 268},
+  {"KB_END", 269},
+
+  {"KB_MINUS", 45},
+  {"KB_EQUAL", 61},
+  {"KB_LBRACKET", 91},
+  {"KB_RBRACKET", 93},
+
+  {"KB_SEMICOLON", 59},
+  {"KB_APOSTROPHE", 39},
+  {"KB_COMMA", 44},
+  {"KB_PERIOD", 46},
+  {"KB_SLASH", 47},
+
+  {"KB_F1", 290},
+  {"KB_F2", 291},
+  {"KB_F3", 292},
+  {"KB_F4", 293},
+  {"KB_F5", 294},
+  {"KB_F6", 295},
+  {"KB_F7", 296},
+  {"KB_F8", 297},
+  {"KB_F9", 298},
+  {"KB_F10", 299},
+  {"KB_F11", 300},
+  {"KB_F12", 301},
+
+  {"KB_CAPSLOCK", 280},
+  {"KB_TAB", 258},
+  {"KB_BACKSPACE", 259},
+  {"KB_BACLSLASH", 92},
+  {"KB_GBACCENT", 96}
 };
 
 inline std::optional<int32_t> GetKeyUidValue(const std::string& key_string) {
