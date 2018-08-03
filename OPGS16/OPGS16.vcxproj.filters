@@ -287,6 +287,7 @@
     <ClInclude Include="Include\Component\Physics\collider2d_convex.h" />
     <ClInclude Include="Include\Component\Physics\collider3d_box.h" />
     <ClInclude Include="Include\Component\Physics\collider3d_sphere.h" />
+    <ClInclude Include="Include\Manager\Internal\input_keystring.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

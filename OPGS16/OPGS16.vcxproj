@@ -346,6 +346,7 @@
     <ClInclude Include="Include\Helper\include_vector.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
+    <ClInclude Include="Include\Manager\Internal\input_keystring.h" />
     <ClInclude Include="Include\Manager\Internal\shader_builtin_keywords.h" />
     <ClInclude Include="Include\Manager\mesh_manager.h" />
     <ClInclude Include="Include\Manager\Physics\physics_collision_shape_list.h" />

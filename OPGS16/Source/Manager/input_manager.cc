@@ -55,6 +55,7 @@
 #include <Manager/Internal/flag.h>
 /// ::opgs16::manager::_internal::BindingKeyInfo
 #include <Manager/Internal/input_internal.h>
+#include <Manager/Internal/input_keystring.h>
 
 /// ::manifest
 #include <../manifest.h>
@@ -67,10 +68,6 @@ enum class EKeyExist : bool {
   NotExist = false,
   Exist = true
 };
-
-//!
-//! Forward declaration
-//!
 
 ///
 /// @brief
@@ -604,6 +601,7 @@ phitos::enums::ESucceed BindKeyboardKeyInformation(const nlohmann::json& atlas_j
 
 phitos::enums::ESucceed KeyboardBindKey(const nlohmann::basic_json<>::const_iterator& it) {
   using phitos::enums::ESucceed;
+  using opgs16::manager::input::GetKeyUidValue;
 
   const auto key    = it.key();
   const auto& value = it.value();
@@ -612,21 +610,39 @@ phitos::enums::ESucceed KeyboardBindKey(const nlohmann::basic_json<>::const_iter
   if (auto pos_it = value.find("+"); pos_it != value.end()) {
     const auto& pos_it_value = pos_it.value();
 
-    if (!pos_it_value.is_number_unsigned()) {
+    if (!pos_it_value.is_string()) {
       PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "positive");
+      PHITOS_ASSERT(!pos_it_value.is_string(), "Key binding failed.");
       return ESucceed::Failed;
     }
-    key_information.pos = pos_it_value.get<unsigned>();
+    const auto key_string = pos_it_value.get<std::string>();
+    auto uid = GetKeyUidValue(key_string);
+    if (!uid.has_value()) {
+      PUSH_LOG_ERROR_EXT("Keyboard key {} might be not supported on this version.", key_string);
+      PHITOS_ASSERT(uid.has_value(), "Failed to bind spcified key value. Might be not supported key string.");
+    }
+
+    PUSH_LOG_DEBUG_EXT("Key axis bind : {} Positive : {}", key, key_string);
+    key_information.pos = uid.value();
   }
 
   if (auto neg_it = value.find("-"); neg_it != value.end()) {
     const auto& neg_it_value = neg_it.value();
 
-    if (!neg_it_value.is_number_unsigned()) {
+    if (!neg_it_value.is_string()) {
       PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "negative");
+      PHITOS_ASSERT(!neg_it_value.is_string(), "Key binding failed.");
       return ESucceed::Failed;
     }
-    key_information.neg= neg_it_value.get<unsigned>();
+    const auto key_string = neg_it_value.get<std::string>();
+    auto uid = GetKeyUidValue(key_string);
+    if (!uid.has_value()) {
+      PUSH_LOG_ERROR_EXT("Keyboard key {} might be not supported on this version.", key_string);
+      PHITOS_ASSERT(uid.has_value(), "Failed to bind spcified key value. Might be not supported key string.");
+    }
+
+    PUSH_LOG_DEBUG_EXT("Key axis bind : {} Negative : {}", key, key_string);
+    key_information.neg = uid.value();
   }
 
   const auto& gravity_it_value = value.find("gravity");
@@ -634,8 +650,7 @@ phitos::enums::ESucceed KeyboardBindKey(const nlohmann::basic_json<>::const_iter
     PUSH_LOG_ERROR_EXT("Keyboard key {} {} value is not number.", key, "gravity");
     return ESucceed::Failed;
   }
-  key_information.neutral_gravity =
-      static_cast<float>(gravity_it_value->get<unsigned>());
+  key_information.neutral_gravity = static_cast<float>(gravity_it_value->get<unsigned>());
 
   const auto& stick_it_value = value.find("stick");
   if (stick_it_value->is_boolean()) {
