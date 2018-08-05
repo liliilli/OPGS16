@@ -92,6 +92,10 @@ struct DVector2 {
     return btVector3{x, y, 0.f};
   }
 
+  operator glm::vec2() const noexcept {
+    return glm::vec2{x, y};
+  }
+
   //!
   //! Methods
   //!
