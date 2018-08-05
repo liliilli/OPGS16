@@ -14,18 +14,31 @@
 ///
 
 /// Header file
-#include <Component/particle_renderer.h>
+#include <Component/particle_spawner.h>
 #include <Headers/import_logger.h>
 #include <Element/object.h>
 
+namespace {
+
+
+
+} /// unnamed namespace
+
 namespace opgs16::component {
 
-CParticleRenderer::~CParticleRenderer() {
+CParticleSpawner::~CParticleSpawner() {
+  if (!m_is_removed_from_original_object) {
+
+  }
+  else {
+
+  }
+
   PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
-_internal::CParticleEmitter* CParticleRenderer::CreateParticleEmitter(const std::string& emitter_name) {
-  using opgs16::component::_internal::CParticleEmitter;
+CParticleEmitter* CParticleSpawner::CreateParticleEmitter(const std::string& emitter_name) {
+  using opgs16::component::CParticleEmitter;
 
   if (GetParticleEmitter(emitter_name)) {
     PUSH_LOG_ERROR_EXT("Could not create particle emitter, {}.", emitter_name);
@@ -44,7 +57,7 @@ _internal::CParticleEmitter* CParticleRenderer::CreateParticleEmitter(const std:
   return it->second.get();
 }
 
-_internal::CParticleEmitter* CParticleRenderer::GetParticleEmitter(const std::string& emitter_name) {
+CParticleEmitter* CParticleSpawner::GetParticleEmitter(const std::string& emitter_name) {
   if (const auto it = m_emitter.find(emitter_name); it == m_emitter.end()) {
     return nullptr;
   }
@@ -53,11 +66,12 @@ _internal::CParticleEmitter* CParticleRenderer::GetParticleEmitter(const std::st
   }
 }
 
-bool CParticleRenderer::DestroyParticleEmitter(const std::string& emitter_name) {
+bool CParticleSpawner::DestroyParticleEmitter(const std::string& emitter_name) {
   PHITOS_NOT_IMPLEMENTED_ASSERT();
+  return false;
 }
 
-bool CParticleRenderer::IsSleep() noexcept {
+bool CParticleSpawner::IsSleep() noexcept {
   for (auto& [emitter_name, emitter_element] : m_emitter) {
     if (!emitter_element->IsSleep())
       return false;
@@ -66,16 +80,26 @@ bool CParticleRenderer::IsSleep() noexcept {
   return true;
 }
 
-void CParticleRenderer::Update(float delta_time) {
+void CParticleSpawner::StartAll() noexcept {
+  for (auto& [emitter_name, emitter] : m_emitter) {
+    emitter->SetComponentActive(true);
+  }
+}
+
+void CParticleSpawner::Update(float delta_time) {
   if (m_is_removed_from_original_object)
     return;
 
   // Update final position as basis location.
   auto& obj = GetBindObject();
   for (auto& [emitter_name, emitter_element] : m_emitter) {
-    emitter_element->pfUpdateSpawnLocationBasis(obj.GetFinalPosition());
+    if (emitter_element->IsComponentActive()) {
+      emitter_element->pfUpdateSpawnLocationBasis(obj.GetFinalPosition());
+      emitter_element->Update(delta_time);
+    }
   }
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
+
+  //PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
 } /// ::opgs16::component namesapce

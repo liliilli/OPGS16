@@ -23,7 +23,6 @@
 #include <Manager/shader_manager.h>
 #include <Headers/import_logger.h>
 
-#include <Manager/scene_manager.h>
 #include <Manager/Internal/shader_builtin_keywords.h>
 #include <Manager/Internal/vao_management.h>
 
@@ -101,14 +100,6 @@ void CInternalParticleRenderer::pResetTextureFragmentProperties() {
 }
 
 void CInternalParticleRenderer::Render() {
-  using opgs16::manager::scene::GetPresentMainCamProjMatrix;
-  using opgs16::manager::scene::GetPresentMainCamViewMatrix;
-
-  m_wrapper.SetUniformMat4(builtin::s_uniform_proj, GetPresentMainCamProjMatrix());
-  m_wrapper.SetUniformMat4(builtin::s_uniform_view, GetPresentMainCamViewMatrix());
-  m_wrapper.SetUniformFloat(s_shader_ptcSize, 32.f);
-  m_wrapper.SetUniformVec3(s_shader_uColor,     {1, 1, 0});
-  m_wrapper.SetUniformVec3(s_shader_inPosition, {0, 0, 0});
   m_wrapper.UseShader();
 
   const auto& vao_list = m_weak_vao_ref->GetVaoList();
@@ -121,6 +112,10 @@ void CInternalParticleRenderer::Render() {
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
   glUseProgram(0);
+}
+
+element::CShaderWrapper& CInternalParticleRenderer::GetShaderWrapper() noexcept {
+  return m_wrapper;
 }
 
 } /// ::opgs16::component::_internal namespace

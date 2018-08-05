@@ -40,7 +40,15 @@ public:
   ///
   void Render();
 
+  ///
+  /// @brief
+  ///
+  element::CShaderWrapper& GetShaderWrapper() noexcept;
+
 private:
+  ///
+  ///
+  ///
   void pResetTextureFragmentProperties();
 
   texture::CTexture2D*    m_sprite       = nullptr;
