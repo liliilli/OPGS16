@@ -180,6 +180,9 @@
     <ClCompile Include="Source\Component\Internal\aabb_renderer_3d.cc" />
     <ClCompile Include="Source\Component\Internal\aabb_renderer_base.cc" />
     <ClCompile Include="Source\Component\Internal\collider_base.cc" />
+    <ClCompile Include="Source\Component\Internal\particle_emitter.cc" />
+    <ClCompile Include="Source\Component\Internal\particle_renderer.cc" />
+    <ClCompile Include="Source\Component\particle_renderer.cc" />
     <ClCompile Include="Source\Component\Internal\rigidbody_dynamic_base.cc" />
     <ClCompile Include="Source\Component\Internal\rigidbody_base.cc" />
     <ClCompile Include="Source\Component\Internal\rigidbody_static_base.cc" />
@@ -189,6 +192,7 @@
     <ClCompile Include="Source\Component\Physics\rigidbody2d.cc" />
     <ClCompile Include="Source\Component\Physics\rigidbody2d_static.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_point.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\Helper\Type\vector2.cc" />
     <ClCompile Include="Source\Helper\Type\vector3.cc" />
@@ -270,6 +274,8 @@
     <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
+    <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
+    <ClCompile Include="_Project\Test020\Object\particle_test.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Common\simple_log.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
@@ -294,10 +300,13 @@
     <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
     <ClInclude Include="Include\Component\Internal\collider_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
+    <ClInclude Include="Include\Component\Internal\particle_emitter.h" />
+    <ClInclude Include="Include\Component\Internal\particle_renderer.h" />
     <ClInclude Include="Include\Component\Internal\rigidbody_base.h" />
     <ClInclude Include="Include\Component\Internal\rigidbody_dynamic_base.h" />
     <ClInclude Include="Include\Component\Internal\rigidbody_static_base.h" />
     <ClInclude Include="Include\Component\Internal\script_frame_flag.h" />
+    <ClInclude Include="Include\Component\particle_renderer.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_box.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_circle.h" />
     <ClInclude Include="Include\Component\Physics\collider2d_convex.h" />
@@ -311,6 +320,7 @@
     <ClInclude Include="Include\Component\Internal\type.h" />
     <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
     <ClInclude Include="Include\Element\Default\model_2dquad.h" />
@@ -454,12 +464,14 @@
     <ClInclude Include="_Project\Test020\Include\Physics\TestBlock\object_block.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_bullet_hello.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\hello_world.h" />
+    <ClInclude Include="_Project\Test020\Include\Scene\scene_test.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_adjust_camera_pos.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_controller.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_outputpos.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
+    <ClInclude Include="_Project\Test020\Object\particle_test.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />
