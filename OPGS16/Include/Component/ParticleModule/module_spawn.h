@@ -19,8 +19,13 @@
 
 namespace opgs16::component {
 
+///
+/// @enum EParticleSpawnStyle
+///
 enum class EParticleSpawnStyle {
+  /// All particle objects will be batched and created at one time.
   Batch,
+  /// Particles are created following emitter spawn module time sequence.
   Sequence,
 };
 
@@ -29,42 +34,46 @@ public:
   CParticleModuleSpawn(CParticleEmitter& emitter);
 
   ///
-  /// @brief
+  /// @brief Enable or Disable spawn looping.
+  /// This function must be called prior to calling emitter->StartAll().
   ///
   void SetLoop(bool is_loop) noexcept;
 
   ///
-  /// @brief
+  /// @brief Set period of each spawn loop.
+  /// This function must be called prior to calling emitter->StartAll().
   ///
   void SetPeriod(int32_t period_millisecond) noexcept;
 
   ///
-  /// @brief
+  /// @brief Set total spawning numbers of particles in each loop.
+  /// This function must be called prior to calling emitter->StartAll().
   ///
   void SetSpawnNumber(int32_t spawn_number) noexcept;
 
   ///
-  ///
+  /// @brief Set spawn style (Batch, Sequence)
+  /// This function must be called prior to calling emitter->StartAll().
   ///
   void SetSpawnStyle(EParticleSpawnStyle style) noexcept;
 
   ///
-  ///
+  /// @brief Check if bind emitter looped.
   ///
   bool IsLoop() const noexcept;
 
   ///
-  ///
+  /// @brief Get loop period time.
   ///
   int32_t GetPeriodTime() const noexcept;
 
   ///
-  ///
+  /// @brief Get maximum spawn number of particle objects.
   ///
   int32_t GetMaximumSpawnNumber() const noexcept;
 
   ///
-  ///
+  /// @brief Get spawn style of this emitter.
   ///
   EParticleSpawnStyle GetSpawnStyle() const noexcept;
 

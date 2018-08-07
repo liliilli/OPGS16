@@ -28,16 +28,16 @@ CParticleModuleSpawn::CParticleModuleSpawn(CParticleEmitter& emitter) :
 void CParticleModuleSpawn::Update(float delta_time) {
   // If first time, create one.
   if (!m_is_initiated) {
-    m_is_initiated = true;
-
     switch (m_spawn_style) {
     case EParticleSpawnStyle::Batch:
-
+     pGetEmitterRef().pfCreateObjects(m_spawn_number);
       break;
     case EParticleSpawnStyle::Sequence:
      pGetEmitterRef().pfCreateObjects(1);
       break;
     }
+
+    m_is_initiated = true;
     return;
   }
 
@@ -51,16 +51,21 @@ void CParticleModuleSpawn::Update(float delta_time) {
       SetModuleActivation(false);
       return;
     }
+    if (m_spawn_style == EParticleSpawnStyle::Batch) {
+      m_is_initiated = false;
+    }
   }
 
-  // Activate some particle objects along with dt.
-  m_from_creation += milli_time;
-  if (const auto spawn_num = m_from_creation / m_spawn_interval; spawn_num > 0) {
-    // @todo Emitter 에게 몇몇개의 액티베이션을 요청할 것.
-    auto& emitter = pGetEmitterRef();
-    emitter.pfCreateObjects(spawn_num);
+  if (m_spawn_style == EParticleSpawnStyle::Sequence) {
+    // Activate some particle objects along with dt.
+    m_from_creation += milli_time;
+    if (const auto spawn_num = m_from_creation / m_spawn_interval; spawn_num > 0) {
+      // @todo Emitter 에게 몇몇개의 액티베이션을 요청할 것.
+      auto& emitter = pGetEmitterRef();
+      emitter.pfCreateObjects(spawn_num);
 
-    m_from_creation -= spawn_num * m_spawn_interval;
+      m_from_creation -= spawn_num * m_spawn_interval;
+    }
   }
 }
 
