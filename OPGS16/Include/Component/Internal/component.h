@@ -19,7 +19,7 @@
 
 #include <Phitos/Enums/activated.h>
 
-#include <Component/Internal/component_macro.h>
+#include <Helper/macroes.h>
 #include <opgs16fwd.h>                      /// Forward declaration
 
 namespace opgs16 {
@@ -50,7 +50,7 @@ public:
   inline virtual bool DoesTypeMatch(
       const uint32_t type_value,
       const char* str) const noexcept {
-    return type == type_value && strcmp(str, __string_literal) == 0;
+    return __hash_val == type_value && strcmp(str, __string_literal) == 0;
   }
 
   ///
@@ -78,7 +78,7 @@ private:
   element::CObject* m_object = nullptr;
   phitos::enums::EActivated m_activated = phitos::enums::EActivated::Activated;
 
-  SET_UP_HASH_VALUE(CComponent)
+  OP16_SETUP_HASH(CComponent)
 };
 
 } /*! opgs16::component::_internal */

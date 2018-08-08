@@ -9,7 +9,6 @@
  */
 
 #include <opgs16fwd.h>  /// Forward declaration
-#include <Component\Internal\component_macro.h> /// 
-#include <Component\script_frame.h> /// Base script frame.
+#include <Component/script_frame.h> /// Base script frame.
 
 #endif // !OPGS16_HEADERS_SCRIPT_COMMON_H

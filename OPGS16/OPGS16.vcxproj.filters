@@ -152,7 +152,6 @@
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Component\Internal\animator_internal.h" />
     <ClInclude Include="Include\Component\Internal\component.h" />
-    <ClInclude Include="Include\Component\Internal\component_macro.h" />
     <ClInclude Include="Include\Component\Internal\renderer_base.h" />
     <ClInclude Include="Include\Component\animator.h" />
     <ClInclude Include="Include\Component\camera.h" />

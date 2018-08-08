@@ -22,7 +22,6 @@
 #include <string>
 
 #include <Component/Internal/component.h>
-#include <Component/Internal/component_macro.h>
 #include <Component/Internal/script_frame_flag.h>
 
 //!

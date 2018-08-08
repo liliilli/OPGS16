@@ -20,8 +20,6 @@
 /// 2018-07-02 Remove glm::vec3.
 ///
 
-/// Component macroes
-#include <Component/Internal/component_macro.h>
 /// ::opgs16::component::_internal::CRendererBase
 #include <Component/Internal/renderer_base.h>
 /// ::opgs16::component::_internal enum flags.

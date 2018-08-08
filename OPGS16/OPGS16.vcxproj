@@ -452,7 +452,6 @@
     <ClInclude Include="Include\Shader\PostProcessing\pp_scaling.h" />
     <ClInclude Include="Include\Component\camera.h" />
     <ClInclude Include="Include\Component\Internal\component.h" />
-    <ClInclude Include="Include\Component\Internal\component_macro.h" />
     <ClInclude Include="Include\Component\script_frame.h" />
     <ClInclude Include="Include\Core\logger.h" />
     <ClInclude Include="Include\Manager\font_manager.h" />

@@ -26,7 +26,6 @@
 
 /// ::opgs16::component::_internal::CComponent
 #include <Component/Internal/component.h>
-#include <Component/Internal/component_macro.h> /// Component macroes
 /// ::opgs16::component::_internal::CRendererBase
 #include <Component/Internal/renderer_base.h>
 #include <Helper/Type/vectori2.h>

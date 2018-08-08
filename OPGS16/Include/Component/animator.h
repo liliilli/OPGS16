@@ -21,7 +21,6 @@
 #include <Component/Internal/animator_internal.h>
 /// ::opgs16::component::_internal::CComponent
 #include <Component/Internal/component.h>
-#include <Component/Internal/component_macro.h> /// Component Macroes
 #include <Helper/switch.h>      /// ::opgs16::CSwitch
 #include <opgs16fwd.h>  /// Forward declaration
 

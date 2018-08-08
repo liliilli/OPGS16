@@ -16,7 +16,6 @@
 ///
 
 #include <Component/Internal/renderer_base.h>
-#include <Component/Internal/component_macro.h>
 
 #include <Helper/Type/vectori2.h>
 #include <Helper/Type/color32.h>

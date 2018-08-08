@@ -19,7 +19,6 @@
 
 /// ::opgs16::component::_internal::CComponent
 #include <Component/Internal/renderer_base.h>
-#include <Component/Internal/component_macro.h>
 
 namespace opgs16::component {
 

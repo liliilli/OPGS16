@@ -24,8 +24,6 @@
 
 /// ::opgs16::component::CComponent
 #include <Component/Internal/component.h>
-/// Component macroes
-#include <Component/Internal/component_macro.h>
 /// Forward declaration
 #include <opgs16fwd.h>
 

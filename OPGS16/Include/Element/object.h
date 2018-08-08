@@ -407,7 +407,7 @@ public:
     // Component matching process is using recursion of each component
     // from last derived component class to highest base component class.
     for (auto& [component, type] : m_components) {
-      if (component->DoesTypeMatch(TTy::type, TTy::__string_literal))
+      if (component->DoesTypeMatch(TTy::__hash_val, TTy::__string_literal))
         return static_cast<TTy*>(component.get());
     }
 
@@ -430,7 +430,7 @@ public:
     std::vector<TType*> result_component_list{};
 
     for (auto& [component, item] : m_components) {
-      if (component->DoesTypeMatch(TType::type, TType::__string_literal))
+      if (component->DoesTypeMatch(TType::__hash_val, TType::__string_literal))
         result_component_list.push_back(static_cast<TType*>(component.get()));
     }
 
@@ -452,7 +452,7 @@ public:
         m_components.cbegin(),
         m_components.cend(),
         [](const auto& item) {
-          return item.first->DoesTypeMatch(_Ty::type, _Ty::__string_literal);
+          return item.first->DoesTypeMatch(_Ty::__hash_val, _Ty::__string_literal);
         }
     );
 

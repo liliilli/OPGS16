@@ -20,11 +20,8 @@
 
 /// opgs16::component::_internal::CComponent
 #include <Component/Internal/component.h>
-#include <Component/Internal/component_macro.h>
 
-/// ::opgs16::manager::MObjectManager
 #include <Manager/object_manager.h>
-/// ::opgs16::manager::MPrerenderingManager
 #include <Manager/prerendering_manager.h>
 
 namespace opgs16::component::_internal {
