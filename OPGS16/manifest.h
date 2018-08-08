@@ -42,14 +42,14 @@ namespace opgs16::manifest {
 ///
 
 #define OP16_SETTING_FIRST_SCENE_INCLUDE_RELATIVE_PATH \
-<../_Project/Test020/Include/Scene/scene_bullet_hello.h>
+<../_Project/Test020/Include/Scene/scene_test.h>
 
 ///
 /// set first scene full name of your project.
 ///
 
 #define OP16_SETTING_FIRST_SCENE_FULL_NAME \
-::test020::scene::SceneBulletHello
+::test020::scene::TestScene
 
 ///
 /// Fixed function resolution feature

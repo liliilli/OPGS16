@@ -17,9 +17,7 @@
 /// Header file
 #include <Manager/texture_manager.h>
 
-/// ::opgs16::texture::CTexture2D
-#include <Frame/texture.h>
-/// ::opgs16::manager::MResourceManager
+#include <Element/Internal/texture2d_sprite.h>
 #include <Manager/resource_manager.h>
 
 namespace {
@@ -32,24 +30,26 @@ TTextureMap m_container;
 namespace opgs16::manager::texture {
 
 TTextureRaw GetTexture(const std::string& texture_name) {
-  using opgs16::texture::CTexture2D;
-
-  if (IsTextureExist(texture_name)) {
+  using opgs16::texture::CTexture2DSprite;
+  if (IsTextureExist(texture_name))
     return m_container[texture_name].get();
+
+  const auto container = resource::GetTexture2D(texture_name);
+  if (!container) {
+    PUSH_LOG_ERROR_EXT("Failed to find texture container, [Name : {}]", texture_name);
+    return nullptr;
   }
 
-  const auto container = manager::resource::GetTexture2D(texture_name);
-
-  auto [it, good] = m_container.emplace(
-      texture_name,
-      std::make_unique<CTexture2D>(*container)
-  );
-
-  if (good) {
-    return it->second.get();
+  auto [result_it, result] = m_container.try_emplace(texture_name, nullptr);
+  if (!result) {
+    PUSH_LOG_ERROR_EXT("Failed to create texture resource, [Name : {}]", texture_name);
+    return nullptr;
   }
 
-  return nullptr;
+  auto texture_obj = std::make_unique<CTexture2DSprite>();
+  texture_obj->Initialize(*container);
+  result_it->second.swap(texture_obj);
+  return result_it->second.get();
 }
 
 void Release(const std::string& texture_name) {

@@ -13,13 +13,23 @@
 ///
 /// @log
 /// 2018-08-02 Create file
+/// 2018-08-07 Add something.
 ///
 
 namespace opgs16 {
 
+#define OP16_TOSTRING(__MAString__) \
+  #__MAString__
+
 #define OP16_SAFE_DELETE(__MAInstance__) \
   delete __MAInstance__; \
   __MAInstance__ = nullptr
+
+#define OP16_CLASS_LITERAL_NAME(__MAInstance__) \
+  inline static constexpr const char* s_class_name = OP16_TOSTRING(__MAInstance__)
+
+#define OP16_GET_LITERAL_NAME(__MAInstance__) \
+  __MAInstance__::s_class_name
 
 } /// ::opgs16 namespace
 

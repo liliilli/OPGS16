@@ -55,9 +55,7 @@ bool CTexture2DPlain::Initialize(GLint internal_format,
   // Make Texture for entire screen size.
   glGenTextures(1, &m_texture_id);
   glBindTexture(GL_TEXTURE_2D, m_texture_id);
-  glTexImage2D(GL_TEXTURE_2D, 0,
-               internal_format, width, height,
-               0, format, type, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr);
   SetDefaultParameterSetting(*this);
   return true;
 }

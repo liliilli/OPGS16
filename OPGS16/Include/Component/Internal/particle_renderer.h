@@ -51,7 +51,7 @@ private:
   ///
   void pResetTextureFragmentProperties();
 
-  texture::CTexture2D*    m_sprite       = nullptr;
+  texture::CTexture2DSprite*    m_sprite       = nullptr;
   element::CVaoContainer* m_weak_vao_ref = nullptr;
 
   element::CShaderWrapper m_wrapper;

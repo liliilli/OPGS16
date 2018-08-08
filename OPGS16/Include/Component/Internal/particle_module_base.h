@@ -15,6 +15,9 @@
 /// 2018-08-06 Create file.
 ///
 
+#include <Element/Interface/i_hash_crtp.h>
+#include <Helper/macroes.h>
+
 //!
 //! Forward declaration
 //!
@@ -34,15 +37,20 @@ public:
   CInternalParticleModuleBase(CParticleEmitter& emitter);
   virtual ~CInternalParticleModuleBase() = default;
 
+  CInternalParticleModuleBase(const CInternalParticleModuleBase&) = default;
+  CInternalParticleModuleBase(CInternalParticleModuleBase&&)      = default;
+  CInternalParticleModuleBase& operator=(const CInternalParticleModuleBase&)  = default;
+  CInternalParticleModuleBase& operator=(CInternalParticleModuleBase&&)       = default;
+
   virtual void Update(float delta_time) = 0;
 
   ///
-  ///
+  /// @brief Set particle modules' activation flag.
   ///
   void SetModuleActivation(bool is_activate) noexcept;
 
   ///
-  ///
+  /// @brief Check if this module is activated or not.
   ///
   bool IsModuleActive() const noexcept;
 
@@ -51,7 +59,6 @@ protected:
 
 private:
   CParticleEmitter& m_emitter_ref;
-
   bool m_is_active = false;
 };
 

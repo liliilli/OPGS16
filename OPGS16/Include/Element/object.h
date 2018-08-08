@@ -384,9 +384,7 @@ public:
     if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>)
       type = EComponentType::Script;
 
-    m_components.push_back(std::make_pair(
-        std::make_unique<_Ty>(std::forward<_Params>(params)...), type)
-    );
+    m_components.push_back(std::make_pair(std::make_unique<_Ty>(std::forward<_Params>(params)...), type));
 
     if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>) {
       static_cast<component::CScriptFrame*>(m_components.rbegin()->first.get())

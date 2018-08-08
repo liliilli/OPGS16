@@ -143,7 +143,7 @@ enum class EResourceType;
 } /*! opgs16::resource */
 
 namespace texture {
-class   CTexture2D;
+class   CTexture2DSprite;
 } /*! opgs16::texture */
 } /*! opgs16 */
 

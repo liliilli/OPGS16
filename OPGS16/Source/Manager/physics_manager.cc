@@ -83,16 +83,16 @@ ECollided DetectCollisionAabbExt(
     const opgs16::physics::CRectangleCollider2D* d_collider,
     const MovementOffset offset = {}) {
   using PositionType = opgs16::physics::CRectangleCollider2D::PositionType;
-  auto s_m = s_collider->GetTipPosition(PositionType::LEFT_DOWN);
+  auto s_m = s_collider->GetTipPosition(PositionType::LeftDown);
   s_m.x += offset.x;
   s_m.y += offset.y;
 
-  auto s_M = s_collider->GetTipPosition(PositionType::RIGHT_UP);
+  auto s_M = s_collider->GetTipPosition(PositionType::RightUp);
   s_M.x += offset.x;
   s_M.y += offset.y;
 
-  const auto d_m = d_collider->GetTipPosition(PositionType::LEFT_DOWN);
-  const auto d_M = d_collider->GetTipPosition(PositionType::RIGHT_UP);
+  const auto d_m = d_collider->GetTipPosition(PositionType::LeftDown);
+  const auto d_M = d_collider->GetTipPosition(PositionType::RightUp);
 
   if (s_M.x >= d_m.x && d_M.x >= s_m.x && s_M.y >= d_m.y && d_M.y >= s_m.y)
     return ECollided::Collided;

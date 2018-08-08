@@ -14,7 +14,6 @@
 /// 2018-03-07 Correction.
 ///
 
-//#include <Helper/hash_function.h>   /// HASH(), HASH_STR()
 #include <Helper/hash_crc32.h>
 
 #define TO_STRING(__TYPE__) #__TYPE__   /*! Convert arguement to string literal */

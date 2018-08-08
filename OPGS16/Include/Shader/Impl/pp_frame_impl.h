@@ -11,8 +11,8 @@
 #include <unordered_map>/*! std::unordered_map */
 #include <GL\glew.h>    /*! GLuint */
 
-/// ::opgs16::texture::CTexture2D
-#include <Frame\texture.h>
+/// ::opgs16::texture::CTexture2DSprite
+#include <Element/Internal/texture2d_sprite.h>
 /// Forward declaration
 #include <opgs16fwd.h>
 
@@ -23,7 +23,7 @@ public:
 
 private:
     std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
-    using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2D>;
+    using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2DSprite>;
 	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 	std::vector<opgs16::element::CShaderNew*> m_shaders;

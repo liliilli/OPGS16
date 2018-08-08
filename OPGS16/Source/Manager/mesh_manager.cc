@@ -32,6 +32,7 @@
 
 #include <Element/Default/model_2dquad.h>
 #include <Element/Builtin/Model/model_2dquadline.h>
+#include <Element/Builtin/Model/model_point.h>
 
 //!
 //! Data and flags
@@ -65,9 +66,12 @@ void InitiateBuiltinModelMeshes() {
 
   using opgs16::builtin::model::BModel2DQuad;
   using opgs16::builtin::model::BModel2DQuadLine;
+  using opgs16::builtin::model::BModelPoint;
+
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad, BModel2DQuad{});
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad_dynamic, BModel2DQuad{});
   m_model_map.try_emplace(BModel2DQuadLine::s_model_name, BModel2DQuadLine{});
+  m_model_map.try_emplace(BModelPoint::s_model_name, BModelPoint{});
 
   b_builtin_initiated = EInitiated::Initiated;
 }

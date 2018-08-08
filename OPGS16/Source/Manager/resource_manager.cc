@@ -46,6 +46,7 @@
 /// ::opgs16::builtin
 #include <Manager/Internal/shader_builtin_keywords.h>
 #include <Manager/ResourceType/sound.h>
+#include <Manager/ResourceType/texture.h>
 
 /// @todo remove this
 #include <../manifest.h>
@@ -787,7 +788,7 @@ void MakeTexelInformation(opgs16::resource::STexture2DAtlas& container) {
   const auto texture_width = container.width;
   const auto texture_height = container.height;
 
-  for (auto i = 0u, size = container.fragment_number; i < size; ++i) {
+  for (int32_t i = 0, size = container.fragment_number; i < size; ++i) {
     opgs16::resource::STexture2DTexelInformation texel;
     const auto& info = container.fragment[i];
 

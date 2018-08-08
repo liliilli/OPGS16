@@ -30,22 +30,15 @@
 #include <Phitos/Dbg/assert.h>
 
 #include <Component/Internal/aabb_renderer_base.h>
+#include <Component/particle_emitter.h>
+
 #include <Core/core_setting.h>
-/// ::opgs16::element::CObject
 #include <Element/object.h>
-/// Import logger
 #include <Headers/import_logger.h>
-/// Expanded assertion
-#include <Phitos/Dbg/assert.h>
-/// ::opgs16::manager::MSceneManager
+
 #include <Manager/scene_manager.h>
-/// ::opgs16::manager::setting
 #include <Manager/setting_manager.h>
-/// ::opgs16::manager::shader namespace
-#include <Manager/shader_manager.h>
-/// ::opgs16::debug error messages.
 #include <Manager/Internal/error_message.h>
-/// ::opgs16::manager::_internal boolean enum flags
 #include <Manager/Internal/flag.h>
 
 using TObjectSmtPtr = std::unique_ptr<opgs16::element::CObject>;
@@ -80,6 +73,7 @@ void AddDestroyObject(TObjectSmtPtr& ptr);
 namespace {
 using opgs16::debug::EInitiated;
 using opgs16::component::_internal::CPrivateAabbRendererBase;
+using opgs16::component::CParticleEmitter;
 using TRenderedObjectSubList = std::list<opgs16::element::CObject*>;
 
 EInitiated m_initiated = EInitiated::NotInitiated;
@@ -95,6 +89,7 @@ std::vector<TRenderedObjectSubList> m_rendering_list;
 ///
 std::list<CPrivateAabbRendererBase*> m_aabb_2d_list;
 std::list<CPrivateAabbRendererBase*> m_aabb_3d_list;
+std::list<CParticleEmitter*>         m_emitter_list;
 
 ///
 /// @brief Private function for destruction object with recursive traverse.
@@ -240,6 +235,14 @@ void Render() {
   if (opgs16::setting::IsEnableRenderingAabb()) {
     RenderAABB();
   }
+
+  // Render particles without considering rendering layer.
+  glEnable(GL_PROGRAM_POINT_SIZE);
+  for (auto& emitter : m_emitter_list) {
+    emitter->Render();
+  }
+  m_emitter_list.clear();
+  glDisable(GL_PROGRAM_POINT_SIZE);
 }
 
 void RenderAABB() {
@@ -319,6 +322,10 @@ void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
     }
 
   }
+}
+
+void InsertParticleEmitter(component::CParticleEmitter& emitter_component) {
+  m_emitter_list.push_back(&emitter_component);
 }
 
 } /// ::opgs16::manager::object

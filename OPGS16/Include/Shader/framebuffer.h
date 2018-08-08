@@ -23,12 +23,10 @@
 #include <array>
 #include <memory>
 
-/// ::opgs16::texture::CTexture2D
-#include <Frame/texture.h>
-/// ::opgs16::element::CShaderWrapper
+#include <Element/Internal/texture2d_sprite.h>
 #include <Shader/shader_wrapper.h>
-/// Forward declaration
 #include <opgs16fwd.h>
+#include "Element/Internal/texture2d_plain.h"
 
 namespace opgs16::element {
 
@@ -109,10 +107,10 @@ public:
 	/**
 	 * @brief Get reference of binded texture.
 	 * @param[in] id Index to verify.
-	 * @return The reference of std::unique_ptr<helper::CTexture2D>.
+	 * @return The reference of std::unique_ptr<helper::CTexture2DPlain>.
 	 */
-	using texture_ptr = std::unique_ptr<opgs16::texture::CTexture2D>;
-	texture_ptr& GetTexture(const int32_t id) {
+	using TTextureSmtPtr = std::unique_ptr<texture::CTexture2DPlain>;
+	TTextureSmtPtr& GetTexture(const int32_t id) {
 	  return m_color_buffers[id];
 	}
 
@@ -188,7 +186,7 @@ public:
 
 private:
 	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
-	std::array<texture_ptr, 4> m_color_buffers{};	/** Color buffer container */
+	std::array<TTextureSmtPtr, 4> m_color_buffers{};	/** Color buffer container */
 	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
 
     CShaderWrapper m_shader_wrapper;
@@ -208,7 +206,7 @@ private:
 	 * @param[in] id Index to verify.
 	 * @param[in] buffer Container to be verified by id.
 	 * @return Success or failure flag. Return true if buffer in index is already generated.
-	 * (except for helper::CTexture2D. helper::CTexture2D version is below.)
+	 * (except for helper::CTexture2DSprite. helper::CTexture2DSprite version is below.)
 	 */
 	template <int32_t TAmnt>
 	bool IsAlreadyGenerated(const int32_t id,

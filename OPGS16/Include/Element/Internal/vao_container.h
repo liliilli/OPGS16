@@ -34,6 +34,7 @@ class CSprite2DRenderer;
 class CProcedural2DRenderer;
 namespace _internal {
 class CPrivateAabbRenderer2D;
+class CInternalParticleRenderer;
 }
 }
 
@@ -146,6 +147,7 @@ private:
   friend class component::CSprite2DRenderer;
   friend class component::CProcedural2DRenderer;
   friend class component::_internal::CPrivateAabbRenderer2D;
+  friend class component::_internal::CInternalParticleRenderer;
 };
 
 } /// ::opgs16::element namespace

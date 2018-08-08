@@ -22,9 +22,21 @@
 /// Forward declaration
 #include <opgs16fwd.h>
 
+//!
+//! Forward declaration
+//!
+
+namespace opgs16::component {
+class CParticleEmitter;
+}
+
 namespace opgs16::component::_internal {
 class CPrivateAabbRendererBase;
 }
+
+//!
+//! Implementation
+//!
 
 ///
 /// @namespace opgs16::manager::object
@@ -118,6 +130,13 @@ void InsertRenderingObject(element::CObject* const object, unsigned layer_index)
 /// @param[in] aabb_component
 ///
 void InsertAABBInformation(component::_internal::CPrivateAabbRendererBase& aabb_component);
+
+///
+/// @brief
+///
+/// @param[in] emitter_component
+///
+void InsertParticleEmitter(component::CParticleEmitter& emitter_component);
 
 } /// ::opgs16::manager::object
 

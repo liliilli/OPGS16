@@ -96,7 +96,7 @@ int32_t RandomIntegerRange(const int32_t from, const int32_t inclusive_to) {
 }
 
 float RandomFloatRange(const float from, const float prior_to) {
-  PHITOS_ASSERT(from < prior_to, "");
+  PHITOS_ASSERT(from <= prior_to, "");
 
   const std::uniform_real_distribution<float> rng{from, prior_to};
   return rng(rng_device);

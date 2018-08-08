@@ -23,8 +23,7 @@
 #include <string>
 #include <unordered_map>
 
-/// ::opgs16::texture::CTexture2D
-#include <Frame/texture.h>
+#include <Element/Internal/texture2d_sprite.h>
 
 ///
 /// @namespace texture
@@ -33,9 +32,8 @@
 /// such as sprite_renderer, etc.
 ///
 namespace opgs16::manager::texture {
-/// Raw pointer of m_texture::CTexture2D
-using TTextureRaw    = opgs16::texture::CTexture2D*;
-using TTextureSmtPtr = std::unique_ptr<opgs16::texture::CTexture2D>;
+using TTextureRaw    = opgs16::texture::CTexture2DSprite*;
+using TTextureSmtPtr = std::unique_ptr<opgs16::texture::CTexture2DSprite>;
 using TTextureMap    = std::unordered_map<std::string, TTextureSmtPtr>;
 
 ///

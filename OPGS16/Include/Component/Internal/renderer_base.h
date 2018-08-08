@@ -53,12 +53,6 @@ public:
   ///
   void SetRenderingLayer(int32_t layer_index);
 
-  int32_t GetRenderingLayerIndexOf() const noexcept {
-    return m_render_layer_index;
-  }
-
-  const std::string& GetRenderingLayerNameOf() const noexcept;
-
   ///
   /// @brief Set frame buffer to be rendered in.
   /// If frame_buffer_name is empty, the object which binds this component will be rendered onto default frame buffer;
@@ -69,20 +63,17 @@ public:
   ///
   void SetRenderFrameBuffer(const char* frame_buffer_name = "");
 
+  int32_t GetRenderingLayerIndexOf() const noexcept {
+    return m_render_layer_index;
+  }
+
+  const std::string& GetRenderingLayerNameOf() const noexcept;
+
   const std::string& GetRenderFrameBufferName() const noexcept {
     return m_render_frame_buffer_name;
   }
 
-  void Update(float delta_time) override {
-    // If render frame buffer name is empty, regard it as default buffer and bind.
-    if (m_render_frame_buffer_name.empty()) {
-      manager::object::InsertRenderingObject(&GetBindObject(), m_render_layer_index);
-    }
-    else {
-      auto buffer = manager::prerendering::GetFrameBuffer(m_render_frame_buffer_name.c_str());
-      buffer->RegisterDisposableObject(GetBindObject());
-    }
-  };
+  void Update(float delta_time) override;
 
 private:
   int32_t m_render_layer_index = 0;

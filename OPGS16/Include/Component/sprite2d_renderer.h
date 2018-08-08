@@ -73,7 +73,9 @@ public:
 
   int32_t GetTextureFragmentIndex() const noexcept;
 
-	/*! Get ShaderWrapper instance. */
+	///
+  /// @brief Get ShaderWrapper instance.
+  ///
 	element::CShaderWrapper& GetWrapper() noexcept;
 
   ///
@@ -101,6 +103,8 @@ public:
   ~CSprite2DRenderer();
 
 private:
+  void pResetTextureFragmentProperties();
+
   EPrimitiveType m_primitive_type = EPrimitiveType::Triangle;
   GLenum  m_primitive_enum = GL_TRIANGLES;
 
@@ -111,7 +115,7 @@ private:
   DVectorInt2 m_sprite_fragment_size;
 
   /// Sprite 2d texture stores image information.
-	texture::CTexture2D* m_sprite = nullptr;
+  texture::CTexture2DSprite* m_sprite = nullptr;
   /// Shader is in ShaderManager, render sprite.
   element::CShaderWrapper m_wrapper;
   /// Quad VAO to render sprite on screen.

@@ -31,6 +31,7 @@
 #include <Headers/import_logger.h>
 /// ::opgs16::manager::ShaderManager
 #include <Manager/shader_manager.h>
+#include "Element/Internal/texture2d_plain.h"
 
 namespace opgs16::element {
 
@@ -55,7 +56,7 @@ void CFrameBuferFrame::GenerateColorBuffer(const unsigned id,
     GLint width, GLint height) {
   PHITOS_ASSERT(width > 0, "Width must not be less than 0.");
   PHITOS_ASSERT(height > 0, "Height must not be less than 0.");
-  using opgs16::texture::CTexture2D;
+  using opgs16::texture::CTexture2DSprite;
 
   // Error checking
   if (IsAlreadyGenerated(id, m_color_buffers)) {
@@ -64,16 +65,16 @@ void CFrameBuferFrame::GenerateColorBuffer(const unsigned id,
   }
 
   // Insert.
-  m_color_buffers[id] = std::make_unique<CTexture2D>(
-      internal_format, format, type, width, height);
+  auto texture = std::make_unique<texture::CTexture2DPlain>();
+  texture->Initialize(internal_format, format, type, width, height);
+  m_color_buffers[id] = std::move(texture);
 }
 
 void CFrameBuferFrame::GenerateDefaultColorBuffer() {
   using opgs16::setting::GetScreenWidth;
   using opgs16::setting::GetScreenHeight;
 
-  GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT,
-                      GetScreenWidth(), GetScreenHeight());
+  GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, GetScreenWidth(), GetScreenHeight());
 }
 
 void CFrameBuferFrame::SetShader(const char* name) {
@@ -100,7 +101,7 @@ void CFrameBuferFrame::BindTextureToFrameBuffer(
 	/*! Check if both texture and framebuffer are exist. */
 	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_id]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, target, m_color_buffers[texture_id]->Id(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, target, m_color_buffers[texture_id]->GetTextureId(), 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	else {
@@ -124,7 +125,7 @@ void CFrameBuferFrame::RenderEffect() {
 		glBindVertexArray(empty_vao);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_color_buffers[0]->Id());
+		glBindTexture(GL_TEXTURE_2D, m_color_buffers[0]->GetTextureId());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glBindTexture(GL_TEXTURE_2D, 0);

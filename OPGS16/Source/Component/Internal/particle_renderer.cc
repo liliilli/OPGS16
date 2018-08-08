@@ -30,10 +30,6 @@ namespace {
 
 constexpr const char* s_particle_shader_name = "opParticle";
 
-constexpr const char* s_shader_uColor = "uColor";
-constexpr const char* s_shader_inPosition = "inPosition";
-constexpr const char* s_shader_ptcSize = "ptcSize";
-
 } /// unnamed namespace
 
 namespace opgs16::component::_internal {
@@ -70,7 +66,7 @@ void CInternalParticleRenderer::SetTexture(const std::string& texture_name) {
 }
 
 void CInternalParticleRenderer::SetTextureFragmentIndex(int32_t index_value) {
-  using ETexelType = texture::CTexture2D::ETexelType;
+  using ETexelType = texture::CTexture2DSprite::ETexelType;
   PHITOS_ASSERT(index_value >= 0, "Texture fragment index must be bigger than 0 or equal.");
 
   if (!m_sprite->DoesHasAtlas()) {
@@ -80,8 +76,8 @@ void CInternalParticleRenderer::SetTextureFragmentIndex(int32_t index_value) {
   }
 
   m_texture_fragment_index = index_value;
-  const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LEFT_DOWN, index_value);
-  const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RIGHT_UP, index_value);
+  const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LeftDown, index_value);
+  const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RightUp, index_value);
 
   if (texel_ptr_ld && texel_ptr_ru) {
     m_wrapper.SetUniformVec2(builtin::s_uniform_texelld, texel_ptr_ld.value());
@@ -105,7 +101,7 @@ void CInternalParticleRenderer::Render() {
   const auto& vao_list = m_weak_vao_ref->GetVaoList();
   glBindVertexArray(vao_list[0].GetVaoId());
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
+  glBindTexture(GL_TEXTURE_2D, m_sprite->GetTextureId());
 
   glDrawArrays(GL_POINTS, 0, 1);
 

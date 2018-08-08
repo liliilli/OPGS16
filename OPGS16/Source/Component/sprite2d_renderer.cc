@@ -23,20 +23,21 @@
 /// Header file
 #include <Component/sprite2d_renderer.h>
 
-/// ::opgs16::element::CObject
 #include <Element/object.h>
-/// ::opgs16::manager::TextureManager
 #include <Manager/texture_manager.h>
-/// ::opgs16::manager::ShaderManager
 #include <Manager/shader_manager.h>
-/// logger
 #include <Headers/import_logger.h>
 
 /// ::opgs16::element::builtin::BModel2DQuad
 #include <Element/Default/model_2dquad.h>
 #include <Manager/Internal/shader_builtin_keywords.h>
-/// ::opgs16::manager::_internal::vao namespace
 #include <Manager/Internal/vao_management.h>
+
+namespace {
+
+
+
+} /// unnamed namespace
 
 namespace opgs16::component {
 
@@ -74,8 +75,9 @@ void CSprite2DRenderer::SetTexture(const std::string& texture_name) {
     PUSH_LOG_ERROR_EXT("Failed to find texture {}.", texture_name);
     m_sprite = manager::texture::GetTexture("opSystem");
   }
-
-  m_sprite = texture;
+  else {
+    m_sprite = texture;
+  }
   SetTextureFragmentIndex(0);
 }
 
@@ -92,57 +94,39 @@ int32_t CSprite2DRenderer::GetTextureFragmentIndex() const noexcept {
 }
 
 void CSprite2DRenderer::SetTextureFragmentIndex(int32_t index_value) {
-  PHITOS_ASSERT(index_value >= 0,
-                "Texture fragment index must be bigger than 0 or equal.");
+  using ETexelType = texture::CTexture2DSprite::ETexelType;
+  PHITOS_ASSERT(index_value >= 0, "Texture fragment index must be bigger than 0 or equal.");
 
   if (!m_sprite->DoesHasAtlas()) {
-    PUSH_LOG_WARN(
-        "Bound texture does not have atlas information.\n"
-        "so failed to assign new_index.");
-    m_texture_fragment_index = 0;
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelld, glm::vec2{ 0.f, 0.f });
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelru, glm::vec2{ 1.f, 1.f });
+    PUSH_LOG_WARN("Bound texture does not have atlas information. Failed to assign new_index.");
+    pResetTextureFragmentProperties();
     return;
   }
 
   m_texture_fragment_index = index_value;
-
-  using ETexelType = texture::CTexture2D::ETexelType;
-  const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LEFT_DOWN, index_value);
-  const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RIGHT_UP, index_value);
+  const auto texel_ptr_ld = m_sprite->GetTexelPtr(ETexelType::LeftDown, index_value);
+  const auto texel_ptr_ru = m_sprite->GetTexelPtr(ETexelType::RightUp, index_value);
 
   if (texel_ptr_ld && texel_ptr_ru) {
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelld,
-                              glm::vec2{ texel_ptr_ld[0], texel_ptr_ld[1] });
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelru,
-                              glm::vec2{ texel_ptr_ru[0], texel_ptr_ru[1] });
+    m_wrapper.SetUniformVec2(builtin::s_uniform_texelld, texel_ptr_ld.value());
+    m_wrapper.SetUniformVec2(builtin::s_uniform_texelru, texel_ptr_ru.value());
   }
   else {
-    PUSH_LOG_WARN(
-        "Any getting texel from resource has been failed.\n"
-        "Texel is assigned to overall region.");
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelld, glm::vec2{ 0.f, 0.f });
-    m_wrapper.SetUniformValue(builtin::s_uniform_texelru, glm::vec2{ 1.f, 1.f });
-  };
+    PUSH_LOG_WARN("Any getting texel from resource has been failed. Texel is assigned to overall region.");
+    pResetTextureFragmentProperties();
+  }
 }
 
 void CSprite2DRenderer::RenderSprite() {
-  if (m_weak_vao_ref == nullptr)
-    return;
+  if (m_weak_vao_ref == nullptr) return;
 
   m_wrapper.UseShader();
 
   for (const auto& vao : m_weak_vao_ref->GetVaoList()) {
     glBindVertexArray(vao.GetVaoId());
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_sprite->Id());
-
-    glDrawElementsInstanced(
-        m_primitive_enum,
-        6,
-        GL_UNSIGNED_INT,
-        nullptr,
-        m_instance_count);
+    glBindTexture(GL_TEXTURE_2D, m_sprite->GetTextureId());
+    glDrawElementsInstanced(m_primitive_enum, 6, GL_UNSIGNED_INT, nullptr, m_instance_count);
   }
 
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -191,6 +175,12 @@ CSprite2DRenderer::~CSprite2DRenderer() {
   if (m_weak_vao_ref != nullptr) {
     m_weak_vao_ref->DecreaseCount();
   }
+}
+
+void CSprite2DRenderer::pResetTextureFragmentProperties() {
+  m_texture_fragment_index = 0;
+  m_wrapper.SetUniformVec2(builtin::s_uniform_texelld, { 0.f, 0.f });
+  m_wrapper.SetUniformVec2(builtin::s_uniform_texelru, { 1.f, 1.f });
 }
 
 } /// ::opgs16::component namespace

@@ -90,4 +90,15 @@ void CRendererBase::SetRenderFrameBuffer(const char* frame_buffer_name) {
     }
 }
 
+void CRendererBase::Update(float delta_time) {
+  // If render frame buffer name is empty, regard it as default buffer and bind.
+  if (m_render_frame_buffer_name.empty()) {
+    manager::object::InsertRenderingObject(&GetBindObject(), m_render_layer_index);
+  }
+  else {
+    auto buffer = manager::prerendering::GetFrameBuffer(m_render_frame_buffer_name.c_str());
+    buffer->RegisterDisposableObject(GetBindObject());
+  }
+}
+
 } /// ::opgs16::component::_internal namespace
