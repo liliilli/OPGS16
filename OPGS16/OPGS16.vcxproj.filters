@@ -332,6 +332,7 @@
     <ClInclude Include="Include\Manager\ResourceType\texture.h" />
     <ClInclude Include="Include\Element\Internal\texture2d_plain.h" />
     <ClInclude Include="Include\Element\Internal\texture_cube.h" />
+    <ClInclude Include="Include\Element\Internal\particle_enum.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

@@ -147,14 +147,11 @@ void CParticleEmitter::Render() {
   auto& wrapper = m_renderer.GetShaderWrapper();
   pUpdateCommonUniformProperties(wrapper);
 
-  for (auto& element : m_object_list) {
-    if (!element.IsActivated())
+  for (auto& element : m_valid_objects) {
+    if (!element->IsActivated())
       continue;
 
-    // 3. object 마다 각기 다른 성질을 바인딩한다.
-    element.pUpdateLocalUniformProperties(m_renderer.GetShaderWrapper());
-    // 2. 쉐이더를 켠다.
-    // 4. object 하나씩 렌더링한다.
+    element->pUpdateLocalUniformProperties(m_renderer.GetShaderWrapper());
     m_renderer.Render();
   }
 }
