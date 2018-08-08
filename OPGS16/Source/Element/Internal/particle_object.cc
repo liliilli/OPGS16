@@ -21,6 +21,8 @@
 namespace opgs16::element::_internal {
 
 void CInternalParticleObject::SetActivate(bool is_activate) noexcept {
+  m_elapsed = 0;
+  m_local_position = DVector3{};
   m_is_activated = is_activate;
 }
 
@@ -29,16 +31,26 @@ bool CInternalParticleObject::IsActivated() const noexcept {
 }
 
 void CInternalParticleObject::Update(float delta_time) {
-  m_elapsed += delta_time;
+  m_elapsed += delta_time * 1000;
 
-  const auto x = m_radius * std::cosf(m_elapsed);
-  const auto y = m_radius * std::sinf(m_elapsed);
-  m_local_position.x = x;
-  m_local_position.y = y;
+  if (m_is_enabled_accelation) {
+    m_initial_velocity += m_initial_accelation * delta_time;
+  }
+  if (m_is_enabled_velocity) {
+    m_local_position += m_initial_velocity * delta_time;
+  }
+
+  if (m_is_enabled_lifetime && m_elapsed >= m_lifetime) {
+    SetActivate(false);
+  }
 }
 
 void CInternalParticleObject::pUpdateLocalUniformProperties(CShaderWrapper& shader_wrapper) const {
   shader_wrapper.SetUniformVec3("ptcLocalPosition", m_local_position);
+  shader_wrapper.SetUniformVec3("ptcBasePosition", m_initial_position);
+  shader_wrapper.SetUniformVec3("ptcTintColor", m_initial_color);
+  shader_wrapper.SetUniformFloat("ptcAlpha", m_initial_alpha);
+  shader_wrapper.SetUniformFloat("ptcSize", static_cast<float>(m_initial_size));
 }
 
 } /// ::opgs16::element::_internal namespace

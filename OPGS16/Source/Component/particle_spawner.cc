@@ -37,7 +37,7 @@ CParticleSpawner::~CParticleSpawner() {
   PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
-CParticleEmitter* CParticleSpawner::CreateParticleEmitter(const std::string& emitter_name) {
+CParticleEmitter* CParticleSpawner::CreateEmptyParticleEmitter(const std::string& emitter_name) {
   using opgs16::component::CParticleEmitter;
 
   if (GetParticleEmitter(emitter_name)) {
@@ -83,6 +83,7 @@ bool CParticleSpawner::IsSleep() noexcept {
 void CParticleSpawner::StartAll() noexcept {
   for (auto& [emitter_name, emitter] : m_emitter) {
     emitter->SetComponentActive(true);
+    emitter->pfSetModulesActive(true);
   }
 }
 

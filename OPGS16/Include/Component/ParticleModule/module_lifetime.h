@@ -65,11 +65,11 @@ private:
   ///
   /// @brief Just update min max lifetime of lifetime.
   ///
-  void pUpdateLifeTimeMinMax() noexcept;
+  void pUpdateLifeTimeMinMax() const noexcept;
 
   int32_t m_base_lifetime = 1'000;
   int32_t m_lifetime_offset = 0;
-  DTimeVariance m_lifetime_minmax;
+  mutable DTimeVariance m_lifetime_minmax;
 
   bool m_is_lifetime_variable = false;
 

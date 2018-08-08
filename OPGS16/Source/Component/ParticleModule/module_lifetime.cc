@@ -40,11 +40,11 @@ int32_t CParticleModuleLifetime::GetLifeTimeVariationOffset() const noexcept {
 
 const CParticleModuleLifetime::DTimeVariance&
 CParticleModuleLifetime::GetLifeTimeMinMax() const noexcept {
-  if (m_is_lifetime_variable) {
-    return m_lifetime_minmax;
+  if (!m_is_lifetime_variable) {
+    pUpdateLifeTimeMinMax();
   }
 
-  return {m_base_lifetime, m_base_lifetime};
+  return m_lifetime_minmax;
 }
 
 void CParticleModuleLifetime::SetLifeTime(int32_t milliseconds) noexcept {
@@ -69,7 +69,7 @@ void CParticleModuleLifetime::SetLifeTimeVariationOffset(int32_t milliseconds) n
   }
 }
 
-void CParticleModuleLifetime::pUpdateLifeTimeMinMax() noexcept {
+void CParticleModuleLifetime::pUpdateLifeTimeMinMax() const noexcept {
   auto new_min = m_base_lifetime - m_lifetime_offset;
   auto new_max = m_base_lifetime + m_lifetime_offset;
 

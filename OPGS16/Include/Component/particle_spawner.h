@@ -36,7 +36,7 @@ public:
   ///
   /// @brief
   ///
-  CParticleEmitter* CreateParticleEmitter(const std::string& emitter_name);
+  CParticleEmitter* CreateEmptyParticleEmitter(const std::string& emitter_name);
 
   ///
   /// @brief

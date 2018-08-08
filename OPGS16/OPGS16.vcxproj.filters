@@ -4,7 +4,6 @@
     <ClCompile Include="__ThirdParty\stb\library_impl.cc" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Element\Impl\object_impl.cc" />
-    <ClCompile Include="Include\Frame\constant.h" />
     <ClCompile Include="Source\Component\animator.cc" />
     <ClCompile Include="Source\Component\camera.cc" />
     <ClCompile Include="Source\Component\empty_renderer.cc" />
@@ -65,7 +64,6 @@
     <ClCompile Include="Source\Element\Internal\model_object.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_vector.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_object.cc" />
-    <ClCompile Include="Include\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="Source\Element\Default\model_2dquad.cc" />
     <ClCompile Include="Source\Element\Internal\vao_container.cc" />
     <ClCompile Include="Source\Manager\time_manager.cc" />
@@ -110,12 +108,24 @@
     <ClCompile Include="_Project\Test020\Include\Physics\TestBlock\object_block.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\hello_world.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_bullet_hello.cc" />
-    <ClCompile Include="Source\Component\particle_renderer.cc" />
-    <ClCompile Include="Source\Component\Internal\particle_emitter.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
     <ClCompile Include="_Project\Test020\Object\particle_test.cc" />
     <ClCompile Include="Source\Component\Internal\particle_renderer.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_point.cc" />
+    <ClCompile Include="Source\Element\Internal\particle_object.cc" />
+    <ClCompile Include="Source\Component\particle_spawner.cc" />
+    <ClCompile Include="Source\Component\particle_emitter.cc" />
+    <ClCompile Include="Source\Component\Internal\particle_module_base.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_spawn.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_lifetime.cc" />
+    <ClCompile Include="Source\Element\Internal\mesh_texture_meta.cpp" />
+    <ClCompile Include="Source\Component\ParticleModule\module_sizebylife.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_initial_size.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_initial_color.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_initial_alpha.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_initial_velocity.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_initial_accelation.cc" />
+    <ClCompile Include="_Project\Test020\Object\script_particle_move.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -298,12 +308,24 @@
     <ClInclude Include="Include\Manager\Internal\input_keystring.h" />
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_controller.h" />
     <ClInclude Include="_Project\Test020\Include\Physics\TestBlock\object_block.h" />
-    <ClInclude Include="Include\Component\particle_renderer.h" />
-    <ClInclude Include="Include\Component\Internal\particle_emitter.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_test.h" />
     <ClInclude Include="_Project\Test020\Object\particle_test.h" />
     <ClInclude Include="Include\Component\Internal\particle_renderer.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
+    <ClInclude Include="Include\Element\Internal\particle_object.h" />
+    <ClInclude Include="Include\Component\particle_spawner.h" />
+    <ClInclude Include="Include\Component\particle_emitter.h" />
+    <ClInclude Include="Include\Component\Internal\particle_module_base.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_spawn.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_lifetime.h" />
+    <ClInclude Include="Include\Element\Interface\i_hash_crtp.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_sizebylife.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_initial_size.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_initial_color.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_initial_alpha.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_initial_velocity.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_initial_accelation.h" />
+    <ClInclude Include="_Project\Test020\Object\script_particle_move.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

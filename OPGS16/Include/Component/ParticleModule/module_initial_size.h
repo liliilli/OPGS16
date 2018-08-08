@@ -19,6 +19,10 @@
 
 namespace opgs16::component {
 
+///
+/// @class CParticleModuleInitialSize
+/// @brief Particle initial size setting module. (v0.1.0)
+///
 class CParticleModuleInitialSize final : public _internal::CInternalParticleModuleBase {
   struct DSizeVariance {
     int32_t min = 0;

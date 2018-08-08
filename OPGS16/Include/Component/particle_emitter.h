@@ -15,9 +15,10 @@
 /// 2018-08-03 Create file.
 ///
 
-#include <Component/Internal/renderer_base.h>
 #include <Component/sprite2d_renderer.h>
+#include <Component/Internal/renderer_base.h>
 #include <Component/Internal/particle_renderer.h>
+#include <Component/ParticleModule/module_spawn.h>
 #include <Element/Internal/particle_object.h>
 #include <Helper/Type/vector3.h>
 
@@ -27,6 +28,7 @@
 
 namespace opgs16::component {
 class CParticleSpawner;
+class CParticleModuleSpawn;
 }
 
 //!
@@ -36,7 +38,9 @@ class CParticleSpawner;
 namespace opgs16::component {
 
 class CParticleEmitter final : public _internal::CRendererBase {
-  using CParticleObject = element::_internal::CInternalParticleObject;
+  using CParticleObject       = element::_internal::CInternalParticleObject;
+  using TParticleModuleSmtPtr = std::unique_ptr<_internal::CInternalParticleModuleBase>;
+  using TParitcleModuleContainer = std::unordered_map<uint32_t, TParticleModuleSmtPtr>;
 
 public:
   CParticleEmitter(element::CObject& bind_object);
@@ -65,7 +69,49 @@ public:
   ///
   /// @brief
   ///
+  CParticleModuleSpawn& GetSpawnModuleRef();
+
+  ///
+  /// @brief
+  ///
   void Render();
+
+  ///
+  /// @brief
+  /// @tparam TModuleType
+  /// @return
+  ///
+  template<
+    class TModuleType,
+    typename = std::enable_if_t<std::is_base_of_v<_internal::CInternalParticleModuleBase, TModuleType>>
+  >
+  TModuleType* AddModule() {
+    auto [result_pair, result] = m_modules.try_emplace(TModuleType::hash_val, nullptr);
+    if (!result) {
+      PHITOS_ASSERT(result, "Module did not be made properly.");
+      return nullptr;
+    }
+
+    result_pair->second = std::make_unique<TModuleType>(*this);
+    return static_cast<TModuleType*>(result_pair->second.get());
+  }
+
+  ///
+  /// @brief
+  /// @tparam TModuleType
+  /// @return
+  ///
+  template <
+    class TModuleType,
+    typename = std::enable_if_t<std::is_base_of_v<_internal::CInternalParticleModuleBase, TModuleType>>
+  >
+  TModuleType* GetModule() {
+    auto it = m_modules.find(TModuleType::hash_val);
+    if (it == m_modules.end())
+      return nullptr;
+
+    return static_cast<TModuleType*>(it->second.get());
+  }
 
 private:
   ///
@@ -83,13 +129,34 @@ private:
   ///
   void pUpdateCommonUniformProperties(element::CShaderWrapper& wrapper);
 
-  std::vector<CParticleObject>  m_object_list;
-  _internal::CInternalParticleRenderer m_renderer;
+  ///
+  /// @brief
+  ///
+  void pfCreateObjects(int32_t numbers);
+
+  ///
+  /// @brief
+  ///
+  void pfSetModulesActive(bool is_activate);
+
+  ///
+  /// @brief
+  ///
+  void pActivateObject(CParticleObject& object);
+
+  std::vector<CParticleObject> m_object_list;
+  std::forward_list<CParticleObject*> m_valid_objects;
+  int32_t m_pool_last = 0;
+
+  _internal::CInternalParticleRenderer  m_renderer;
+  CParticleModuleSpawn     m_module_spawn;
+  TParitcleModuleContainer m_modules;
 
   DVector3 m_location_basis = {};
   bool m_is_looped = false;
 
   friend opgs16::component::CParticleSpawner;
+  friend opgs16::component::CParticleModuleSpawn;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CRendererBase, CRendererBase)
 };

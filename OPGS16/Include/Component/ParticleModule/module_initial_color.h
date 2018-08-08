@@ -21,7 +21,7 @@
 namespace opgs16::component {
 ///
 /// @class CParticleModuleInitialColor
-/// @brief
+/// @brief Particle initial RGB-only color setting module. (v0.1.0)
 ///
 class CParticleModuleInitialColor final : public _internal::CInternalParticleModuleBase {
   struct DColorVariance {
