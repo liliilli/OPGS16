@@ -30,7 +30,7 @@ class CParticleModuleInitialVelocity final : public _internal::CInternalParticle
     DVector3 min;
     DVector3 max;
   };
-
+  OP16_SETUP_HASH(CParticleModuleInitialVelocity);
 public:
   CParticleModuleInitialVelocity(CParticleEmitter& emitter);
 
@@ -63,8 +63,6 @@ private:
   mutable DVelocityVariance m_velocity_variance;
 
   bool m_is_velocity_variant = false;
-
-  static constexpr uint32_t hash_val = 0x1230;
 };
 
 } /// ::opgs16::component namespace

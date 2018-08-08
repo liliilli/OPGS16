@@ -30,6 +30,7 @@ enum class EParticleSpawnStyle {
 };
 
 class CParticleModuleSpawn final : public _internal::CInternalParticleModuleBase {
+  OP16_SETUP_HASH(CParticleModuleSpawn);
 public:
   CParticleModuleSpawn(CParticleEmitter& emitter);
 

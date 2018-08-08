@@ -21,6 +21,10 @@
 
 namespace opgs16 {
 
+#define __OP16_HASHVAL_NAME __hash_val
+#define __OP16_STRINGLITVAL_NAME __string_literal
+#define __OP16_CRC32_RTTYPE uint32_t
+
 ///
 /// @brief Convert arguement to string literal
 ///
@@ -38,14 +42,28 @@ namespace opgs16 {
   static constexpr const char* s_class_name = OP16_TOSTRING(__MAInstance__)
 
 ///
+/// @macro
+/// @brief
+///
+#define OP16_GET_HASH(__MAType__) \
+__MAType__::__OP16_HASHVAL_NAME
+
+///
+/// @macro
+/// @brief
+///
+#define OP16_GET_STRINGLIT(__MAType__) \
+__MAType__::__OP16_STRINGLITVAL_NAME
+
+///
 /// @macro OP16_SETUP_HASH
 /// @brief Declare type member variable, which is used for storing hashed type value.
 /// and value it in compile time.
 ///
 #define OP16_SETUP_HASH(__TYPE__) \
 public: \
-static constexpr const char* __string_literal = OP16_TOSTRING(__TYPE__); \
-static constexpr uint32_t __hash_val = opgs16::__hash::ToCrc32(__string_literal);
+static constexpr const char* __OP16_STRINGLITVAL_NAME = OP16_TOSTRING(__TYPE__); \
+static constexpr __OP16_CRC32_RTTYPE __OP16_HASHVAL_NAME = opgs16::__hash::ToCrc32(__string_literal);
 
 ///
 /// @macro OVERRIDE_TYPEMATCH
@@ -59,10 +77,11 @@ static constexpr uint32_t __hash_val = opgs16::__hash::ToCrc32(__string_literal)
 #define OVERRIDE_TYPEMATCH(__BASE__, __DERIVED__) \
 public: \
 inline virtual bool DoesTypeMatch( \
-    const uint32_t type_val, \
-    const char* str) const noexcept override { \
-  if (__DERIVED__::__hash_val == type_val && \
-      strcmp(str, __DERIVED__::__string_literal) == 0) \
+    const __OP16_CRC32_RTTYPE type_val, \
+    const char* str) \
+    const noexcept override { \
+  if (OP16_GET_HASH(__DERIVED__) == type_val && \
+      strcmp(str, OP16_GET_STRINGLIT(__DERIVED__)) == 0) \
     return true; \
   else return __BASE__::DoesTypeMatch(type_val, str); \
 }

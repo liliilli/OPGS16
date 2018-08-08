@@ -86,7 +86,7 @@ public:
     typename = std::enable_if_t<std::is_base_of_v<_internal::CInternalParticleModuleBase, TModuleType>>
   >
   TModuleType* AddModule() {
-    auto [result_pair, result] = m_modules.try_emplace(TModuleType::hash_val, nullptr);
+    auto [result_pair, result] = m_modules.try_emplace(OP16_GET_HASH(TModuleType), nullptr);
     if (!result) {
       PHITOS_ASSERT(result, "Module did not be made properly.");
       return nullptr;
@@ -106,7 +106,7 @@ public:
     typename = std::enable_if_t<std::is_base_of_v<_internal::CInternalParticleModuleBase, TModuleType>>
   >
   TModuleType* GetModule() {
-    auto it = m_modules.find(TModuleType::hash_val);
+    auto it = m_modules.find(OP16_GET_HASH(TModuleType));
     if (it == m_modules.end())
       return nullptr;
 

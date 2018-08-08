@@ -15,7 +15,6 @@
 /// 2018-08-06 Create file.
 ///
 
-#include <Element/Interface/i_hash_crtp.h>
 #include <Helper/macroes.h>
 
 //!

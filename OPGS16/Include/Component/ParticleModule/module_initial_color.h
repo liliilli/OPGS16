@@ -28,7 +28,7 @@ class CParticleModuleInitialColor final : public _internal::CInternalParticleMod
     DColor min = DColor::Black;
     DColor max = DColor::White;
   };
-
+  OP16_SETUP_HASH(CParticleModuleInitialColor);
 public:
   CParticleModuleInitialColor(CParticleEmitter& emitter);
 
@@ -69,8 +69,6 @@ private:
   mutable DColorVariance m_color_minmax;
 
   bool m_is_color_variable = false;
-
-  static constexpr uint32_t hash_val = 0xADFF;
 };
 
 } /// ::opgs16::component namespace

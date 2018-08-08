@@ -73,7 +73,7 @@ private:
 
   bool m_is_lifetime_variable = false;
 
-  static constexpr uint32_t hash_val = 0xFF;
+  OP16_SETUP_HASH(CParticleModuleLifetime);
 };
 
 } /// ::opgs16::component namespace

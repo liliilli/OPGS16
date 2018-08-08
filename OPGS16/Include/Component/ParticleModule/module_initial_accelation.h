@@ -26,7 +26,7 @@ class CParticleModuleInitialAccelation final : public _internal::CInternalPartic
     DVector3 min;
     DVector3 max;
   };
-
+  OP16_SETUP_HASH(CParticleModuleInitialAccelation);
 public:
   CParticleModuleInitialAccelation(CParticleEmitter& emitter);
 
@@ -59,8 +59,6 @@ private:
   mutable DAccelationVariance m_accelation_variance;
 
   bool m_is_accelation_variant = false;
-
-  static constexpr uint32_t hash_val = 0x987A;
 };
 
 } /// ::opgs16::component namespace

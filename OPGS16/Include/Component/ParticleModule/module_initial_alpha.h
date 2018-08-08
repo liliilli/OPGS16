@@ -28,7 +28,7 @@ class CParticleModuleInitialAlpha final : public _internal::CInternalParticleMod
     float min = 0.0f;
     float max = 1.0f;
   };
-
+  OP16_SETUP_HASH(CParticleModuleInitialAlpha);
 public:
   CParticleModuleInitialAlpha(CParticleEmitter& emitter);
 
@@ -72,8 +72,6 @@ private:
   mutable DAlphaVariance m_alpha_minmax;
 
   bool m_is_alpha_variable = false;
-
-  static constexpr uint32_t hash_val = 0xFC21;
 };
 
 } /// ::opgs16::component namespace

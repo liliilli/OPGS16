@@ -28,7 +28,7 @@ class CParticleModuleInitialSize final : public _internal::CInternalParticleModu
     int32_t min = 0;
     int32_t max = std::numeric_limits<decltype(max)>::max();
   };
-
+  OP16_SETUP_HASH(CParticleModuleInitialSize);
 public:
   CParticleModuleInitialSize(CParticleEmitter& emitter);
 
@@ -72,8 +72,6 @@ private:
   mutable DSizeVariance m_size_minmax;
 
   bool m_is_size_variable = false;
-
-  static constexpr uint32_t hash_val = 0xAAA;
 };
 
 } /// ::opgs16::component namespace
