@@ -203,6 +203,9 @@
     <ClCompile Include="Source\Element\Builtin\Model\model_2dquadline.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_point.cc" />
     <ClCompile Include="Source\Element\Internal\particle_object.cc" />
+    <ClCompile Include="Source\Element\Internal\texture2d_plain.cc" />
+    <ClCompile Include="Source\Element\Internal\texture_base.cc" />
+    <ClCompile Include="Source\Element\Internal\texture_cube.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
     <ClCompile Include="Source\Helper\Type\vector2.cc" />
     <ClCompile Include="Source\Helper\Type\vector3.cc" />
@@ -280,7 +283,7 @@
     <ClCompile Include="Source\Shader\shader.cc" />
     <ClCompile Include="Source\Core\entry.cc" />
     <ClCompile Include="Source\Manager\shader_manager.cc" />
-    <ClCompile Include="Source\Frame\texture.cc" />
+    <ClCompile Include="Source\Element\Internal\texture2d_sprite.cc" />
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
@@ -348,6 +351,9 @@
     <ClInclude Include="Include\Element\Internal\physics_collider_bind_info.h" />
     <ClInclude Include="Include\Element\Internal\physics_enums.h" />
     <ClInclude Include="Include\Element\Internal\physics_structs.h" />
+    <ClInclude Include="Include\Element\Internal\texture2d_plain.h" />
+    <ClInclude Include="Include\Element\Internal\texture_base.h" />
+    <ClInclude Include="Include\Element\Internal\texture_cube.h" />
     <ClInclude Include="Include\Element\ui_default_object.h" />
     <ClInclude Include="Include\Element\Internal\internal_vertex_array_object.h" />
     <ClInclude Include="Include\Element\Internal\mesh_object.h" />
@@ -388,6 +394,7 @@
     <ClInclude Include="Include\Manager\Internal\vao_management.h" />
     <ClInclude Include="Include\Manager\ResourceType\shader.h" />
     <ClInclude Include="Include\Manager\ResourceType\sound.h" />
+    <ClInclude Include="Include\Manager\ResourceType\texture.h" />
     <ClInclude Include="Include\Shader\Default\aabb_2d_line.h" />
     <ClInclude Include="Include\precompiled.h" />
     <ClInclude Include="resource.h" />
@@ -473,7 +480,7 @@
     <ClInclude Include="Include\Manager\postprocessing_manager.h" />
     <ClInclude Include="Include\Shader\shader.h" />
     <ClInclude Include="Include\Manager\shader_manager.h" />
-    <ClInclude Include="Include\Frame\texture.h" />
+    <ClInclude Include="Include\Element\Internal\texture2d_sprite.h" />
     <ClInclude Include="Include\Shader\shader_wrapper.h" />
     <ClInclude Include="Include\Manager\sound_manager.h" />
     <ClInclude Include="_Project\Test020\Include\Object\Common\empty_canvas.h" />

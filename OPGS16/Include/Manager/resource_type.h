@@ -46,29 +46,6 @@
 
 namespace opgs16::resource {
 
-struct STexture2DFragment {
-  std::string name;
-  unsigned offset_x, offset_y;
-  unsigned width, height;
-};
-
-struct STexture2DTexelInformation {
-  float left_down[2]{ 0.f, 0.f };
-  float right_up[2]{ 1.f, 1.f };
-};
-
-/*! Information structure of Texture2D with atlas information (if not, fill it with default) */
-struct STexture2DAtlas {
-  bool has_atlas{ false };
-
-  unsigned width, height;
-  unsigned fragment_number;
-  std::vector<STexture2DFragment> fragment;
-  std::vector<STexture2DTexelInformation> texels;
-  std::string path;
-  std::string name;
-};
-
 /*! Information structure of Font file */
 class SFont {
   std::string     m_path;

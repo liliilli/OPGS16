@@ -39,7 +39,6 @@
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
     <ClCompile Include="Include\Element\camera_object.cc" />
-    <ClCompile Include="Source\Frame\texture.cc" />
     <ClCompile Include="Source\Frame\timer_handle.cc" />
     <ClCompile Include="Source\Shader\Default\shader_font.cc" />
     <ClCompile Include="Source\Shader\Default\shader_postprocessing_plain_quad.cc" />
@@ -126,6 +125,10 @@
     <ClCompile Include="Source\Component\ParticleModule\module_initial_velocity.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_accelation.cc" />
     <ClCompile Include="_Project\Test020\Object\script_particle_move.cc" />
+    <ClCompile Include="Source\Element\Internal\texture2d_sprite.cc" />
+    <ClCompile Include="Source\Element\Internal\texture_base.cc" />
+    <ClCompile Include="Source\Element\Internal\texture2d_plain.cc" />
+    <ClCompile Include="Source\Element\Internal\texture_cube.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -134,7 +137,6 @@
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
     <ClInclude Include="Include\Element\Internal\constant.h" />
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />
-    <ClInclude Include="Include\Frame\texture.h" />
     <ClInclude Include="Include\Frame\timer_handle.h" />
     <ClInclude Include="Include\Manager\Internal\font_internal.h" />
     <ClInclude Include="Include\Manager\Internal\input_internal.h" />
@@ -326,6 +328,11 @@
     <ClInclude Include="Include\Component\ParticleModule\module_initial_velocity.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_accelation.h" />
     <ClInclude Include="_Project\Test020\Object\script_particle_move.h" />
+    <ClInclude Include="Include\Element\Internal\texture2d_sprite.h" />
+    <ClInclude Include="Include\Element\Internal\texture_base.h" />
+    <ClInclude Include="Include\Manager\ResourceType\texture.h" />
+    <ClInclude Include="Include\Element\Internal\texture2d_plain.h" />
+    <ClInclude Include="Include\Element\Internal\texture_cube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
