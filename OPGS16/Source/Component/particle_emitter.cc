@@ -21,6 +21,8 @@
 #include <Component/ParticleModule/module_initial_size.h>
 #include <Component/ParticleModule/module_initial_velocity.h>
 #include <Component/ParticleModule/module_initial_accelation.h>
+#include <Component/ParticleModule/module_bylife_scale.h>
+#include <Component/ParticleModule/module_bylife_alpha.h>
 #include <Manager/scene_manager.h>
 #include <Manager/Internal/shader_builtin_keywords.h>
 
@@ -107,14 +109,42 @@ void CParticleEmitter::pActivateObject(CParticleObject& object) {
   const auto initial_velocity = GetModule<CParticleModuleInitialVelocity>();
   const auto initial_initacc  = GetModule<CParticleModuleInitialAccelation>();
 
-  if (initial_size) { object.pfSetInitialSize(initial_size->GetInitialSize()); }
-  if (lifetime) { object.pfEnableLifetime(lifetime->GetLifeTime()); }
-  if (initial_color) { object.pfSetInitialColor(initial_color->GetInitialColor()); };
-  if (initial_alpha) { object.pfSetInitialAlpha(initial_alpha->GetInitialAlpha()); };
-  if (initial_velocity) { object.pfSetInitialVelocity(initial_velocity->GetInitialVelocity()); }
-  if (initial_initacc) { object.pfSetInitialAccelation(initial_initacc->GetInitialAccelation());}
+  DParticleInitialData data;
+  data.m_initial_postion = GetBindObject().GetFinalPosition();
 
-  object.pfSetInitialPosition(GetBindObject().GetFinalPosition());
+  if (initial_size) {
+    data.m_initial_size    = initial_size->GetInitialSize();
+    data.m_is_initial_size = true;
+  }
+  if (lifetime) {
+    data.m_lifetime    = lifetime->GetLifeTime();
+    data.m_is_lifetime = true;
+  }
+  if (initial_color) {
+    data.m_initial_color    = initial_color->GetInitialColor();
+    data.m_is_initial_color = true;
+  }
+  if (initial_alpha) {
+    data.m_initial_alpha    = initial_alpha->GetInitialAlpha();
+    data.m_is_initial_alpha = true;
+  }
+  if (initial_velocity) {
+    data.m_initial_velocity     = initial_velocity->GetInitialVelocity();
+    data.m_is_initial_velocity  = true;
+  }
+  if (initial_initacc) {
+    data.m_initial_accelation   = initial_initacc->GetInitialAccelation();
+    data.m_is_initial_accelation= true;
+  }
+  if (GetModule<CParticleModuleScaleByLife>()) {
+    data.m_is_bylife_size = true;
+  }
+  if (GetModule<CParticleModuleAlphaByLife>()) {
+    data.m_is_bylife_alpha = true;
+  }
+
+  object.pfSetInitialData(data);
+  object.SetEmitterRawReference(this);
   object.SetActivate(true);
   m_valid_objects.push_front(&object);
 }

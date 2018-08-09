@@ -37,11 +37,37 @@ class CParticleModuleSpawn;
 
 namespace opgs16::component {
 
+///
+/// @struct DParticleInitialData
+/// @brief
+///
+struct DParticleInitialData {
+  int32_t m_lifetime      = 0;
+  int32_t m_initial_size  = 0;
+  DColor  m_initial_color = DColor::White;
+  float   m_initial_alpha = 1.f;
+  DVector3 m_initial_velocity;
+  DVector3 m_initial_accelation;
+  DVector3 m_initial_postion;
+
+  bool m_is_lifetime = false;
+  bool m_is_initial_size = false;
+  bool m_is_initial_color = false;
+  bool m_is_initial_alpha = false;
+  bool m_is_initial_velocity = false;
+  bool m_is_initial_accelation = false;
+
+  bool m_is_bylife_size = false;
+  bool m_is_bylife_alpha = false;
+};
+
+///
+/// @class CParticleEmitter
+///
 class CParticleEmitter final : public _internal::CRendererBase {
   using CParticleObject       = element::_internal::CInternalParticleObject;
   using TParticleModuleSmtPtr = std::unique_ptr<_internal::CInternalParticleModuleBase>;
   using TParitcleModuleContainer = std::unordered_map<uint32_t, TParticleModuleSmtPtr>;
-
 public:
   CParticleEmitter(element::CObject& bind_object);
 
