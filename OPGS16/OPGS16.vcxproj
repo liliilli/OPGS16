@@ -240,7 +240,7 @@
     <ClCompile Include="Source\Element\prerendering_container.cc" />
     <ClCompile Include="Source\Element\prerendering_frame.cc" />
     <ClCompile Include="Source\Element\ui_default_object.cc" />
-    <ClCompile Include="Source\Frame\timer_handle.cc" />
+    <ClCompile Include="Source\Element\timer_handle.cc" />
     <ClCompile Include="Source\Helper\Json\json_header.cc" />
     <ClCompile Include="Source\Helper\Math\random.cc" />
     <ClCompile Include="Source\Helper\string_helper.cc" />
@@ -437,7 +437,7 @@
     <ClInclude Include="Include\Element\postprocessing_frame.h" />
     <ClInclude Include="Include\Element\prerendering_container.h" />
     <ClInclude Include="Include\Element\prerendering_frame.h" />
-    <ClInclude Include="Include\Frame\timer_handle.h" />
+    <ClInclude Include="Include\Element\timer_handle.h" />
     <ClInclude Include="Include\Helper\access_ptr.h" />
     <ClInclude Include="Include\Helper\fixed_stack.h" />
     <ClInclude Include="Include\Helper\hash_function.h" />

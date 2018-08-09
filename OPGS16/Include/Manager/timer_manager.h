@@ -24,7 +24,7 @@
 /// ::opgs16::manager::_internal::
 #include <Manager/Internal/timer_internal.h>
 /// ::opgs16::element::CTimerHandle
-#include <Frame/timer_handle.h>
+#include <Element/timer_handle.h>
 
 //!
 //! Forward declaration

@@ -39,7 +39,6 @@
     <ClCompile Include="Include\Core\Boot\__boot.cc" />
     <ClCompile Include="Include\Core\Boot\__b_scr.cc" />
     <ClCompile Include="Include\Element\camera_object.cc" />
-    <ClCompile Include="Source\Frame\timer_handle.cc" />
     <ClCompile Include="Source\Shader\Default\shader_font.cc" />
     <ClCompile Include="Source\Shader\Default\shader_postprocessing_plain_quad.cc" />
     <ClCompile Include="Source\Shader\Default\shader_quad2d.cc" />
@@ -131,6 +130,7 @@
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_scale.cc" />
     <ClCompile Include="_Project\Test020\Object\emitter_fire.cc" />
+    <ClCompile Include="Source\Element\timer_handle.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -139,7 +139,6 @@
     <ClInclude Include="Include\Element\Impl\object_impl.h" />
     <ClInclude Include="Include\Element\Internal\constant.h" />
     <ClInclude Include="Include\Element\Internal\texture_internal.h" />
-    <ClInclude Include="Include\Frame\timer_handle.h" />
     <ClInclude Include="Include\Manager\Internal\font_internal.h" />
     <ClInclude Include="Include\Manager\Internal\input_internal.h" />
     <ClInclude Include="Include\Manager\Internal\resource_internal.h" />
@@ -337,6 +336,7 @@
     <ClInclude Include="Include\Component\ParticleModule\module_bylife_scale.h" />
     <ClInclude Include="_Project\Test020\Object\emitter_fire.h" />
     <ClInclude Include="Include\Component\Internal\component_type.h" />
+    <ClInclude Include="Include\Element\timer_handle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
