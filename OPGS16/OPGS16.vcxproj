@@ -342,7 +342,7 @@
     <ClInclude Include="Include\Component\procedural2d_renderer.h" />
     <ClInclude Include="Include\Core\Internal\application_flag.h" />
     <ClInclude Include="Include\Core\Internal\application_status.h" />
-    <ClInclude Include="Include\Component\Internal\type.h" />
+    <ClInclude Include="Include\Component\Internal\component_type.h" />
     <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
