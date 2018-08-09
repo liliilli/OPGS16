@@ -13,6 +13,7 @@
 ///
 /// @log
 /// 2018-08-03 Create file.
+/// 2018-08-09 Add functionality.
 ///
 
 #include <Component/Internal/component.h>
@@ -34,9 +35,34 @@ public:
   CParticleSpawner& operator=(CParticleSpawner&&) = default;
 
   ///
-  /// @brief
+  /// @brief Create empty emitter with name called emitter_name, and bind it spawner.
+  /// @param[in] emitter_name Emitter name.
   ///
   CParticleEmitter* CreateEmptyParticleEmitter(const std::string& emitter_name);
+
+  ///
+  /// @brief Create and bind derived emitter to spawner to be executed.
+  /// @tparam TEmitterType Derived emitter user class type.
+  ///
+  template <
+    typename TEmitterType,
+    typename = std::enable_if_t<std::is_base_of_v<CParticleEmitter, TEmitterType>>
+  >
+  CParticleEmitter* CreateParticleEmitter() {
+    const char* name = OP16_GET_LITERAL_NAME(TEmitterType);
+    if (GetParticleEmitter(name)) {
+      PUSH_LOG_ERROR_EXT("Could not create particle emitter, {}.", name);
+      return nullptr;
+    }
+
+    auto [it, result] = m_emitter.try_emplace(name, std::make_unique<TEmitterType>(GetBindObject()));
+    if (!result) {
+      PUSH_LOG_ERROR_EXT("Could not create particle emitter, {}. Unexpected Error.", name);
+      PHITOS_ASSERT(result, "Could not create particle emitter. Halt program.");
+      return nullptr;
+    }
+    return it->second.get();
+  }
 
   ///
   /// @brief

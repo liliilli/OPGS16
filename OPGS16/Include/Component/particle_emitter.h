@@ -64,7 +64,7 @@ struct DParticleInitialData {
 ///
 /// @class CParticleEmitter
 ///
-class CParticleEmitter final : public _internal::CRendererBase {
+class CParticleEmitter : public _internal::CRendererBase {
   using CParticleObject       = element::_internal::CInternalParticleObject;
   using TParticleModuleSmtPtr = std::unique_ptr<_internal::CInternalParticleModuleBase>;
   using TParitcleModuleContainer = std::unordered_map<uint32_t, TParticleModuleSmtPtr>;
