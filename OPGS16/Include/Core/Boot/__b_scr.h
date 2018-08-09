@@ -16,7 +16,7 @@
 /// 2018-04-14 Move __B_SCR into ::opgs16::builtin::sample namespace.
 ///
 
-#include <Frame\timer_handle.h>     /// ::opgs16::element::CTimerHandle
+#include <Element/timer_handle.h>     /// ::opgs16::element::CTimerHandle
 #include <Headers\script_common.h>
 #include <opgs16fwd.h>              /// Forward declaration
 
