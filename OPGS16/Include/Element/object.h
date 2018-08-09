@@ -1,4 +1,4 @@
-#ifndef OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H
+﻿#ifndef OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H
 #define OPGS16_SYSTEM_ELEMENT_PUBLIC_OBJECT_H
 
 ///
@@ -48,10 +48,9 @@
 
 /// ::opgs16::element::CScriptFrame
 #include <Component/script_frame.h>
-/// ::opgs16::component::_internal::CComponent
+#include <Component/particle_spawner.h>
 #include <Component/Internal/component.h>
-/// ::opgs16::component::_internal Component type
-#include <Component/Internal/type.h>
+#include <Component/Internal/component_type.h>
 /// import logger debug mode
 #include <Headers/import_logger.h>
 /// Type checking template
@@ -381,8 +380,12 @@ public:
     using EComponentType = component::_internal::EComponentType;
 
     auto type = EComponentType::Normal;
-    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>)
+    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>) {
       type = EComponentType::Script;
+    }
+    else if constexpr (std::is_base_of_v<component::CParticleSpawner, _Ty>) {
+      type = EComponentType::Particle;
+    }
 
     m_components.push_back(std::make_pair(std::make_unique<_Ty>(std::forward<_Params>(params)...), type));
 
@@ -439,6 +442,45 @@ public:
   }
 
   ///
+  /// @brief Get non-owning components list from component list of object.
+  /// All components's bound object reference are undefined, so you should control
+  /// these components well not touching object reference like a GetBindObject().
+  ///
+  template <
+    class TType,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TType>>
+  >
+  std::vector<std::unique_ptr<TType>> pPopComponents() {
+    using opgs16::component::_internal::EComponentType;
+    std::vector<std::unique_ptr<TType>> result_list;
+
+    // m_componentsからTTypeであるコンポネントに対して他のところに移す。
+    auto it = --m_components.end();
+    int32_t remove_back_count = 0;
+    for (auto& [component, item] : m_components) {
+      if (!component) continue;
+      if (component->DoesTypeMatch(OP16_GET_HASH(TType), TType::__string_literal)) {
+        result_list.push_back(std::unique_ptr<TType>(static_cast<TType*>(component.release())));
+        ++remove_back_count;
+
+        while (it->second == EComponentType::Particle && &(it->first) != &component) {
+          --it;
+        }
+        if (&(it->first) == &component) continue;
+        component.swap(it->first);
+        item = it->second;
+        --it;
+      }
+    }
+    // 移動した分だけ真後ろから削除する。
+    while (remove_back_count > 0) {
+      m_components.pop_back();
+      --remove_back_count;
+    }
+    return std::move(result_list);
+  }
+
+  ///
   /// @brief Remove component.
   /// @tparam _Ty Component type argument.
   /// @return If found, return true but otherwise false.
@@ -448,9 +490,7 @@ public:
     typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
   >
   bool RemoveComponent() {
-    auto it = std::find_if(
-        m_components.cbegin(),
-        m_components.cend(),
+    auto it = std::find_if(m_components.begin(), m_components.end(),
         [](const auto& item) {
           return item.first->DoesTypeMatch(_Ty::__hash_val, _Ty::__string_literal);
         }
@@ -458,13 +498,22 @@ public:
 
     if (it != m_components.cend()) {
       using EComponentType = component::_internal::EComponentType;
-      if (it->second == EComponentType::Script) {
-        static_cast<component::CScriptFrame*>(it->first.get())->Destroy();
-        m_components.erase(it);    /*! Too much execution time */
+      if (it->second == EComponentType::Particle) {
+        using manager::object::pMoveParticleSpawner;
+        using component::CParticleSpawner;
+
+        auto ptr = std::unique_ptr<CParticleSpawner>(static_cast<CParticleSpawner*>(it->first.release()));
+        pMoveParticleSpawner(ptr);
       }
+      else if (it->second == EComponentType::Script) {
+        static_cast<component::CScriptFrame*>(it->first.get())->Destroy();
+      }
+
+      /// Too much execution time
+      m_components.erase(it);
       return true;
     }
-    else return false;
+    return false;
   }
 
   ///

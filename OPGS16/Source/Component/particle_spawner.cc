@@ -26,17 +26,6 @@ namespace {
 
 namespace opgs16::component {
 
-CParticleSpawner::~CParticleSpawner() {
-  if (!m_is_removed_from_original_object) {
-
-  }
-  else {
-
-  }
-
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
-}
-
 CParticleEmitter* CParticleSpawner::CreateEmptyParticleEmitter(const std::string& emitter_name) {
   using opgs16::component::CParticleEmitter;
 
@@ -66,12 +55,14 @@ CParticleEmitter* CParticleSpawner::GetParticleEmitter(const std::string& emitte
   }
 }
 
-CParticleSpawner::TEmitterContainer&
-CParticleSpawner::GetParticleEmitterList() noexcept {
-  return m_emitter;
-}
-
 void CParticleSpawner::SetParticleSpawnSetting(bool is_spawn) {
+  if (is_spawn) {
+    m_is_particle_not_binded = false;
+  }
+  else {
+    m_is_particle_not_binded = true;
+  }
+
   for (auto& [uid, particle] : m_emitter) {
     particle->pfSetParticleSpawnSetting(is_spawn);
   }
@@ -99,19 +90,23 @@ void CParticleSpawner::StartAll() noexcept {
 }
 
 void CParticleSpawner::Update(float delta_time) {
-  if (m_is_removed_from_original_object)
-    return;
-
   // Update final position as basis location.
-  auto& obj = GetBindObject();
-  for (auto& [emitter_name, emitter_element] : m_emitter) {
-    if (emitter_element->IsComponentActive()) {
-      emitter_element->pfUpdateSpawnLocationBasis(obj.GetFinalPosition());
-      emitter_element->Update(delta_time);
+  if (!m_is_particle_not_binded) {
+    auto& obj = GetBindObject();
+    for (auto& [emitter_name, emitter_element] : m_emitter) {
+      if (emitter_element->IsComponentActive()) {
+        emitter_element->pfUpdateSpawnLocationBasis(obj.GetFinalPosition());
+        emitter_element->Update(delta_time);
+      }
     }
   }
-
-  //PHITOS_NOT_IMPLEMENTED_ASSERT();
+  else {
+    for (auto& [emitter_name, emitter_element] : m_emitter) {
+      if (emitter_element->IsComponentActive()) {
+        emitter_element->Update(delta_time);
+      }
+    }
+  }
 }
 
 } /// ::opgs16::component namesapce

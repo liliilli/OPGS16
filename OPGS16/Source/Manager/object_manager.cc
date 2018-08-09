@@ -229,12 +229,10 @@ void Update(float delta_time) {
   }
 
   // Check spawner
+  m_spawner_list.remove_if([](auto& spawner) { return spawner->IsSleep(); });
   for (auto& spawner : m_spawner_list) {
     spawner->Update(delta_time);
   }
-  m_spawner_list.remove_if([](auto& spawner) {
-    return spawner->IsSleep();
-  });
 }
 
 void Render() {
@@ -249,18 +247,13 @@ void Render() {
 
   // Render particles without considering rendering layer.
   glEnable(GL_PROGRAM_POINT_SIZE);
+  glDisable(GL_DEPTH_TEST);
   for (auto& emitter : m_emitter_list) {
     emitter->Render();
   }
   m_emitter_list.clear();
-
-  for (auto& spawner : m_spawner_list) {
-    auto& emitters = spawner->GetParticleEmitterList();
-    for (auto& [uid, emitter] : emitters) {
-      emitter->Render();
-    }
-  }
   glDisable(GL_PROGRAM_POINT_SIZE);
+  glEnable(GL_DEPTH_TEST);
 }
 
 void RenderAABB() {
@@ -274,9 +267,7 @@ void RenderAABB() {
   glEnable(GL_DEPTH_TEST);
 }
 
-bool DestroyGameObject(const element::CObject& object,
-                       element::CObject* root,
-                       bool is_recursive) {
+bool DestroyGameObject(const element::CObject& object, element::CObject* root, bool is_recursive) {
   using TObjectMap = std::unordered_map<std::string, TObjectSmtPtr>;
   using TObjectItType = TObjectMap::iterator;
 
@@ -341,7 +332,7 @@ void InsertParticleEmitter(component::CParticleEmitter& emitter_component) {
 
 void pMoveParticleSpawner(std::unique_ptr<CParticleSpawner>& particle_spawner) {
   particle_spawner->SetParticleSpawnSetting(false);
-  m_spawner_list.push_front(std::move(particle_spawner));
+  m_spawner_list.emplace_front(std::move(particle_spawner));
 }
 
 } /// ::opgs16::manager::object
@@ -351,6 +342,13 @@ void pMoveParticleSpawner(std::unique_ptr<CParticleSpawner>& particle_spawner) {
 /// ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
 
 void AddDestroyObject(TObjectSmtPtr& ptr) {
+  using opgs16::component::CParticleSpawner;
+  using opgs16::manager::object::pMoveParticleSpawner;
+
+  auto spawner_list = ptr->pPopComponents<CParticleSpawner>();
+  for (auto& spawner : spawner_list) {
+    pMoveParticleSpawner(spawner);
+  }
   m_destroy_candidates.emplace_back(std::move(ptr));
 }
 

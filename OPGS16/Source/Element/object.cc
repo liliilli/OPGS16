@@ -27,6 +27,7 @@
 
 /// ::opgs16::component::CScriptFrame
 #include <Component/script_frame.h>
+#include <Component/particle_spawner.h>
 #include <Element/Internal/physics_enums.h>
 #include <Element/Impl/object_impl.h>
 #include <Headers/import_logger.h>
@@ -425,6 +426,9 @@ std::string CObject::GetTagNameOf() const {
 }
 
 CObject::~CObject() {
+  using opgs16::component::CParticleSpawner;
+  using opgs16::manager::object::pMoveParticleSpawner;
+
   m_data.release();
   m_children_objects.clear();
 
@@ -433,6 +437,11 @@ CObject::~CObject() {
     if (type == EComponentType::Script) {
       static_cast<component::CScriptFrame*>(element.get())->Destroy();
     }
+  }
+
+  auto spawner_list = pPopComponents<component::CParticleSpawner>();
+  for (auto& spawner : spawner_list) {
+    pMoveParticleSpawner(spawner);
   }
 }
 

@@ -27,7 +27,8 @@ namespace opgs16::component::_internal {
 ///
 enum class EComponentType {
   Normal,
-  Script
+  Script,
+  Particle
 };
 
 } /// ::opgs16::component::_internal

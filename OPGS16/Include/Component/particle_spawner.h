@@ -27,7 +27,7 @@ class CParticleSpawner final : public opgs16::component::_internal::CComponent {
 
 public:
   CParticleSpawner(element::CObject& bind_object) : CComponent{bind_object} {};
-  ~CParticleSpawner();
+  ~CParticleSpawner() = default;
 
   CParticleSpawner(const CParticleSpawner&) = default;
   CParticleSpawner(CParticleSpawner&&) = default;
@@ -72,11 +72,6 @@ public:
   ///
   /// @brief
   ///
-  TEmitterContainer& GetParticleEmitterList() noexcept;
-
-  ///
-  /// @brief
-  ///
   void SetParticleSpawnSetting(bool is_spawn);
 
   ///
@@ -98,7 +93,7 @@ public:
 
 private:
   TEmitterContainer m_emitter;
-  bool m_is_removed_from_original_object = false;
+  bool m_is_particle_not_binded = false;
 
 SET_UP_TYPE_MEMBER(::opgs16::component::_internal::CComponent, CParticleSpawner)
 };
