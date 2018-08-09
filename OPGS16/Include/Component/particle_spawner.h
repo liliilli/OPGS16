@@ -72,6 +72,16 @@ public:
   ///
   /// @brief
   ///
+  TEmitterContainer& GetParticleEmitterList() noexcept;
+
+  ///
+  /// @brief
+  ///
+  void SetParticleSpawnSetting(bool is_spawn);
+
+  ///
+  /// @brief
+  ///
   bool DestroyParticleEmitter(const std::string& emitter_name);
 
   ///
@@ -84,9 +94,9 @@ public:
   ///
   void StartAll() noexcept;
 
-private:
   void Update(float delta_time) override final;
 
+private:
   TEmitterContainer m_emitter;
   bool m_is_removed_from_original_object = false;
 

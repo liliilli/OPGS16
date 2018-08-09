@@ -31,6 +31,7 @@
 
 #include <Component/Internal/aabb_renderer_base.h>
 #include <Component/particle_emitter.h>
+#include <Component/particle_spawner.h>
 
 #include <Core/core_setting.h>
 #include <Element/object.h>
@@ -74,6 +75,7 @@ namespace {
 using opgs16::debug::EInitiated;
 using opgs16::component::_internal::CPrivateAabbRendererBase;
 using opgs16::component::CParticleEmitter;
+using opgs16::component::CParticleSpawner;
 using TRenderedObjectSubList = std::list<opgs16::element::CObject*>;
 
 EInitiated m_initiated = EInitiated::NotInitiated;
@@ -90,6 +92,8 @@ std::vector<TRenderedObjectSubList> m_rendering_list;
 std::list<CPrivateAabbRendererBase*> m_aabb_2d_list;
 std::list<CPrivateAabbRendererBase*> m_aabb_3d_list;
 std::list<CParticleEmitter*>         m_emitter_list;
+/// A neutered particle spawner list. (Could not spawn particle any more)
+std::forward_list<std::unique_ptr<CParticleSpawner>> m_spawner_list;
 
 ///
 /// @brief Private function for destruction object with recursive traverse.
@@ -219,9 +223,18 @@ void Initiate() {
   m_rendering_list.resize(setting::GetRenderingLayerNameListSize());
 }
 
-void Update() {
-  if (!m_destroy_candidates.empty())
+void Update(float delta_time) {
+  if (!m_destroy_candidates.empty()) {
     DestroyObjects();
+  }
+
+  // Check spawner
+  for (auto& spawner : m_spawner_list) {
+    spawner->Update(delta_time);
+  }
+  m_spawner_list.remove_if([](auto& spawner) {
+    return spawner->IsSleep();
+  });
 }
 
 void Render() {
@@ -232,9 +245,7 @@ void Render() {
     list.clear();
   }
 
-  if (opgs16::setting::IsEnableRenderingAabb()) {
-    RenderAABB();
-  }
+  if (opgs16::setting::IsEnableRenderingAabb()) { RenderAABB(); }
 
   // Render particles without considering rendering layer.
   glEnable(GL_PROGRAM_POINT_SIZE);
@@ -242,24 +253,24 @@ void Render() {
     emitter->Render();
   }
   m_emitter_list.clear();
+
+  for (auto& spawner : m_spawner_list) {
+    auto& emitters = spawner->GetParticleEmitterList();
+    for (auto& [uid, emitter] : emitters) {
+      emitter->Render();
+    }
+  }
   glDisable(GL_PROGRAM_POINT_SIZE);
 }
 
 void RenderAABB() {
   glDisable(GL_DEPTH_TEST);
-
-  for (auto& aabb_element : m_aabb_2d_list) {
-    aabb_element->Render();
-  }
+  for (auto& aabb_element : m_aabb_2d_list) aabb_element->Render();
   m_aabb_2d_list.clear();
-
 #ifdef false
-  for (auto& aabb_element : m_aabb_3d_list) {
-    aabb_element->Render();
-  }
+  for (auto& aabb_element : m_aabb_3d_list) aabb_element->Render();
   m_aabb_3d_list.clear();
 #endif
-
   glEnable(GL_DEPTH_TEST);
 }
 
@@ -326,6 +337,11 @@ void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
 
 void InsertParticleEmitter(component::CParticleEmitter& emitter_component) {
   m_emitter_list.push_back(&emitter_component);
+}
+
+void pMoveParticleSpawner(std::unique_ptr<CParticleSpawner>& particle_spawner) {
+  particle_spawner->SetParticleSpawnSetting(false);
+  m_spawner_list.push_front(std::move(particle_spawner));
 }
 
 } /// ::opgs16::manager::object

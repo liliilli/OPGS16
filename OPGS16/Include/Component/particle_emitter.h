@@ -163,7 +163,7 @@ private:
   ///
   /// @brief
   ///
-  void pfSetModulesActive(bool is_activate);
+  void pfSetParticleSpawnSetting(bool is_spawn);
 
   ///
   /// @brief

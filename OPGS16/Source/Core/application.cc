@@ -456,7 +456,7 @@ void Update(float delta_time) {
 #endif
     if (!manager::scene::IsSceneEmpty()) {
       /// pre-work such as Delete object, Replace object etc.
-      manager::object::Update();
+      manager::object::Update(delta_time);
       /// Update
       manager::scene::GetPresentScene()->Update(delta_time);
       manager::physics::Update(delta_time);

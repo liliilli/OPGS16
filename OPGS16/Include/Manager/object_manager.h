@@ -28,6 +28,7 @@
 
 namespace opgs16::component {
 class CParticleEmitter;
+class CParticleSpawner;
 }
 
 namespace opgs16::component::_internal {
@@ -58,7 +59,7 @@ void Initiate();
 /// @brief
 /// Destroy candidate objects in destroy list.
 ///
-void Update();
+void Update(float delta_time);
 
 ///
 /// @brief
@@ -137,6 +138,11 @@ void InsertAABBInformation(component::_internal::CPrivateAabbRendererBase& aabb_
 /// @param[in] emitter_component
 ///
 void InsertParticleEmitter(component::CParticleEmitter& emitter_component);
+
+///
+/// @brief
+///
+void pMoveParticleSpawner(std::unique_ptr<component::CParticleSpawner>& particle_spawner);
 
 } /// ::opgs16::manager::object
 

@@ -171,12 +171,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Component\ParticleModule\module_bylife_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_accelation.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_color.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_size.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_velocity.cc" />
-    <ClCompile Include="Source\Component\ParticleModule\module_sizebylife.cc" />
+    <ClCompile Include="Source\Component\ParticleModule\module_bylife_scale.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
@@ -287,6 +288,7 @@
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
+    <ClCompile Include="_Project\Test020\Object\emitter_fire.cc" />
     <ClCompile Include="_Project\Test020\Object\particle_test.cc" />
     <ClCompile Include="_Project\Test020\Object\script_particle_move.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Common\simple_log.cc" />
@@ -313,13 +315,14 @@
     <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
     <ClInclude Include="Include\Component\Internal\collider_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_bylife_alpha.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_accelation.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_alpha.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_color.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_size.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_velocity.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_lifetime.h" />
-    <ClInclude Include="Include\Component\ParticleModule\module_sizebylife.h" />
+    <ClInclude Include="Include\Component\ParticleModule\module_bylife_scale.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_spawn.h" />
     <ClInclude Include="Include\Component\particle_emitter.h" />
     <ClInclude Include="Include\Component\Internal\particle_renderer.h" />
@@ -499,6 +502,7 @@
     <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
+    <ClInclude Include="_Project\Test020\Object\emitter_fire.h" />
     <ClInclude Include="_Project\Test020\Object\particle_test.h" />
     <ClInclude Include="_Project\Test020\Object\script_particle_move.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />

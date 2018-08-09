@@ -66,6 +66,17 @@ CParticleEmitter* CParticleSpawner::GetParticleEmitter(const std::string& emitte
   }
 }
 
+CParticleSpawner::TEmitterContainer&
+CParticleSpawner::GetParticleEmitterList() noexcept {
+  return m_emitter;
+}
+
+void CParticleSpawner::SetParticleSpawnSetting(bool is_spawn) {
+  for (auto& [uid, particle] : m_emitter) {
+    particle->pfSetParticleSpawnSetting(is_spawn);
+  }
+}
+
 bool CParticleSpawner::DestroyParticleEmitter(const std::string& emitter_name) {
   PHITOS_NOT_IMPLEMENTED_ASSERT();
   return false;
@@ -83,7 +94,7 @@ bool CParticleSpawner::IsSleep() noexcept {
 void CParticleSpawner::StartAll() noexcept {
   for (auto& [emitter_name, emitter] : m_emitter) {
     emitter->SetComponentActive(true);
-    emitter->pfSetModulesActive(true);
+    emitter->pfSetParticleSpawnSetting(true);
   }
 }
 

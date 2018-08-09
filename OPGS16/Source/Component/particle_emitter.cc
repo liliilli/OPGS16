@@ -97,8 +97,8 @@ void CParticleEmitter::pfCreateObjects(int32_t numbers) {
   m_pool_last += numbers;
 }
 
-void CParticleEmitter::pfSetModulesActive(bool is_activate) {
-  m_module_spawn.SetModuleActivation(is_activate);
+void CParticleEmitter::pfSetParticleSpawnSetting(bool is_spawn) {
+  m_module_spawn.SetModuleActivation(is_spawn);
 }
 
 void CParticleEmitter::pActivateObject(CParticleObject& object) {
