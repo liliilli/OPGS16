@@ -443,7 +443,9 @@ bool ExistKey(const std::map<std::string, _Ty>& container,
 ///
 std::optional<nlohmann::json> LoadJsonFile(const std::string& file_path) {
   std::ifstream file_stream{ file_path, std::ios_base::in };
+#ifdef false
   file_stream.imbue(std::locale(""));
+#endif
    if (!file_stream.good()) {
     PUSH_LOG_CRITICAL_EXT(
         "Failed to find project resource metafile. [{} : {}]", "Path", file_path);

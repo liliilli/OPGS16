@@ -40,6 +40,7 @@
   이를 0 과 1 이 아닌, `Start` 와 `End` 의 별도 함수를 만들어서 제공할까? 음...
   그렇게 되면 위의 디폴트 포인트는 별 필요가 없어진다. 어차피 `Start` 와 `End` 가 있으니까.
   * 그리고 더미포인트는 0 과 1 의 값을 그대로 따른다. 그래야 곡선이 이상하게 흘러가지 않을 것이다.
+* `EParticleProcessType` 타입을 이용해서 `Linear` 인 경우에는 정렬된 점 테이블을 찾아, 양 사이드에 있는 ㅋ컨트롤 포인트을 보간해서 최종 스케일 값을 반환한다. `Curve` 인 경우에는 `catmull-rom` 스플라인을 사용해 더미를 생성하고, `glm` 라이브러리의 `catmull` 함수를 사용해 반환한다.
 
 ## 결과
 
@@ -67,3 +68,14 @@ enum class EParticleProcessType {
 
 `Linear` 라면, 찍혀진 컨트롤 포인트 사이 사이에는 선형 보간으로 값을 계산한다. 만약 `Curve` 라면 `Catmull-rom spline` 이라는, 컨트롤 포인트를 지나는 곡선 알고리즘을 사용해서 값을 계산해서 가져온다.
 
+#### 2018-08-09 PM 02:12
+
+``` powershell
+PS D:\Development\OPGS16> git commit -m "feat: Add particle moudule SizeByLife"
+[feat_particle_system 973056e] feat: Add particle moudule SizeByLife
+ 2 files changed, 212 insertions(+)
+ create mode 100644 OPGS16/Include/Component/ParticleModule/module_sizebylife.h
+ create mode 100644 OPGS16/Source/Component/ParticleModule/module_sizebylife.cc
+```
+
+구현 완료. 
