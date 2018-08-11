@@ -14,9 +14,15 @@ namespace {
 using opgs16::setting::TActualScreenSize;
 
 bool m_anti_aliasing_feature    = false;
-bool m_is_debug_mode            = false;
 bool m_post_processing_feature  = false;
 bool m_render_collision_aabb    = false;
+
+bool m_is_debug_mode =
+#if defined(OP16_SETTING_DEBUG_MODE)
+  true;
+#else
+  false;
+#endif
 
 EScaleType m_scale_value = EScaleType::X1;
 
@@ -25,6 +31,34 @@ bool m_scaling_feature =
   false;
 #else
   true;
+#endif
+
+constexpr bool m_logging_feature =
+#if defined(OP16_SETTING_ENABLE_LOGGING)
+  true;
+#else
+  false;
+#endif
+
+constexpr bool m_logging_enable_console =
+#if defined(OP16_SETTING_ENABLE_LOGGING_TO_CONSOLE)
+  true;
+#else
+  false;
+#endif
+
+constexpr bool m_logging_enable_file =
+#if defined(OP16_SETTING_ENABLE_LOGGING_TO_FILE)
+  true;
+#else
+  false;
+#endif
+
+constexpr std::string_view m_logging_file_path =
+#if defined(OP16_SETTING_LOGGING_FILE_PATH)
+  OP16_SETTING_LOGGING_FILE_PATH;
+#else
+  "log.txt";
 #endif
 
 // Screen size
@@ -102,6 +136,22 @@ bool IsEnableScaling() noexcept {
 
 bool IsEnableRenderingAabb() noexcept {
   return m_render_collision_aabb;
+}
+
+bool IsEnableLoggingFeature() noexcept {
+  return m_logging_feature;
+}
+
+bool IsEnableLoggingConsole() noexcept {
+  return m_logging_enable_console;
+}
+
+bool IsEnableLoggingToFile() noexcept {
+  return m_logging_enable_file;
+}
+
+const std::string_view& GetLoggingFileRelativePath() noexcept {
+  return m_logging_file_path;
 }
 
 EScaleType GetScaleValue() noexcept {

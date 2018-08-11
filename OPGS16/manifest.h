@@ -11,10 +11,6 @@
 
 namespace opgs16::manifest {
 
-/// If you want to turn on DEBUG MODE to display console log and special debug display,
-/// Remove "//" Commend specifier.
-//#define _OPGS16_DEBUG_OPTION
-
 ///
 /// Set Application project name.
 ///
@@ -35,7 +31,7 @@ namespace opgs16::manifest {
 ///
 
 #define OP16_SETTING_APPLICATION_WINDOW_NAME \
-"OPGS16 0.2.0 2018-08-03"
+"OPGS16 0.2.0 2018-08-11"
 
 ///
 /// Set Project first scene (entry scene) path from this manifest file.
@@ -61,8 +57,8 @@ namespace opgs16::manifest {
 ///
 
 //#define OP16_SETTING_RESOLUTION_256224
-#define OP16_SETTING_RESOLUTION_320240
-//#define OP16_SETTING_RESOLUTION_400240
+//#define OP16_SETTING_RESOLUTION_320240
+#define OP16_SETTING_RESOLUTION_400240
 //#define OP16_SETTING_RESOLUTION_640480
 
 ///
@@ -92,6 +88,41 @@ namespace opgs16::manifest {
 ///
 
 //#define OP16_SETTING_BOOTSCREEN_SHOW
+
+/// If you want to turn on DEBUG MODE to display console log and special debug display,
+/// Remove "//" Commend specifier.
+//#define _OPGS16_DEBUG_OPTION
+//#define OP16_SETTING_DEBUG_MODE
+
+///
+/// Enable logging uncommenting this.
+/// If you are in OP16_SETTING_ENABLE_DEBUG, logging feature will be activated automatically.
+///
+
+#define OP16_SETTING_ENABLE_LOGGING
+
+///
+/// Enable this to be enable logging to console.
+/// To disable this, just wrap macro with comment //.
+///
+
+#define OP16_SETTING_ENABLE_LOGGING_TO_CONSOLE
+
+///
+/// Enable this to be enable logging to file.
+/// To disable this, just wrap macro with commment //.
+///
+
+#define OP16_SETTING_ENABLE_LOGGING_TO_FILE
+
+///
+/// If you enabled OP16_SETTING_ENABLE_LOGGING_TO_FILE,
+/// recommend specify logging file path which file created to.
+/// or not, OPGS16 make just "log.txt" file to your root folder.
+///
+
+#define OP16_SETTING_LOGGING_FILE_PATH \
+".log/opgs16_log.txt"
 
 } /// opgs16::manifest
 

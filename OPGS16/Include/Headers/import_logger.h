@@ -24,65 +24,46 @@
 
 #if defined(_DEBUG)
 
-#include <Core\logger.h>
+#include <Core/logger.h>
 
 #define PUSH_LOG_INFO(__MAString__) \
-  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Info, \
-                             __MAString__)
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Info, __MAString__)
 
 #define PUSH_LOG_DEBUG(__MAString__) \
-  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Debug, \
-                             __MAString__)
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Debug, __MAString__)
 
 #define PUSH_LOG_WARN(__MAString__) \
-  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Warning, \
-                             __MAString__)
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Warning, __MAString__)
 
 #define PUSH_LOG_CRITICAL(__MAString__) \
-  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Critical, \
-                             __MAString__)
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Critical, __MAString__)
 
 #define PUSH_LOG_ERRO(__MAString__) \
-  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Error, \
-                             __MAString__)
+  ::opgs16::debug::log::Push(opgs16::debug::_internal::ELogMessageType::Error, __MAString__)
 
 #define PUSH_LOG_INFO_EXT(__MAString__, ...) \
-  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->info(__MAString__, __VA_ARGS__); \
-  } else { \
-    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
+  if (auto spt = ::opgs16::debug::log::____::Get(); !spt.expired()) { \
+    spt.lock()->info(__MAString__, __VA_ARGS__); \
   }
 
-///
-/// @todo Change info to debug.
-///
-
 #define PUSH_LOG_DEBUG_EXT(__MAString__, ...) \
-  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->info(__MAString__, __VA_ARGS__); \
-  } else { \
-    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
+  if (auto spt = ::opgs16::debug::log::____::Get(); !spt.expired()) { \
+    spt.lock()->debug(__MAString__, __VA_ARGS__); \
   }
 
 #define PUSH_LOG_WARN_EXT(__MAString__, ...) \
-  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->warn(__MAString__, __VA_ARGS__); \
-  } else { \
-    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
+  if (auto spt = ::opgs16::debug::log::____::Get(); !spt.expired()) { \
+    spt.lock()->warn(__MAString__, __VA_ARGS__); \
   }
 
 #define PUSH_LOG_CRITICAL_EXT(__MAString__, ...) \
-  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->critical(__MAString__, __VA_ARGS__); \
-  } else { \
-    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
+  if (auto spt = ::opgs16::debug::log::____::Get(); !spt.expired()) { \
+    spt.lock()->critical(__MAString__, __VA_ARGS__); \
   }
 
 #define PUSH_LOG_ERROR_EXT(__MAString__, ...) \
-  if (auto spt = ::opgs16::debug::log::____::Get().lock()) { \
-    spt->error(__MAString__, __VA_ARGS__); \
-  } else { \
-    PHITOS_NOT_IMPLEMENTED_ASSERT(); \
+  if (auto spt = ::opgs16::debug::log::____::Get(); !spt.expired()) { \
+    spt.lock()->error(__MAString__, __VA_ARGS__); \
   }
 
 #else

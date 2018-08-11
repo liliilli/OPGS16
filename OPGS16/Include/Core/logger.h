@@ -9,7 +9,7 @@
 ///
 /// @file Core\logger.h
 ///
-/// @brief 
+/// @brief
 /// CLogger class declaration file.
 ///
 /// @author Jongmin Yun
@@ -31,7 +31,7 @@
 ///
 /// @namespace opgs16::debug::log
 ///
-/// @brief 
+/// @brief
 /// This namespace implements logger components.
 ///
 namespace opgs16::debug::log {
@@ -40,7 +40,7 @@ namespace opgs16::debug::log {
 /// @brief
 /// Push message into logger
 ///
-/// @param[in] msg_type Message type for logging. 
+/// @param[in] msg_type Message type for logging.
 /// @param[in] log_message Log message to output on console or log file.
 ///
 void Push(_internal::ELogMessageType msg_type, const char* log_message);
@@ -54,6 +54,11 @@ void Push(_internal::ELogMessageType msg_type, const char* log_message);
 /// Private namespace of opgs16::debug::log namespace.
 ///
 namespace opgs16::debug::log::____ {
+
+///
+/// @brief Initiate logger.
+///
+void InitiateLogger();
 
 ///
 /// @brief

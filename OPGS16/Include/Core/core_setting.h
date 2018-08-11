@@ -47,6 +47,14 @@ bool IsEnableScaling() noexcept;
 
 bool IsEnableRenderingAabb() noexcept;
 
+bool IsEnableLoggingFeature() noexcept;
+
+bool IsEnableLoggingConsole() noexcept;
+
+bool IsEnableLoggingToFile() noexcept;
+
+const std::string_view& GetLoggingFileRelativePath() noexcept;
+
 void SetAntiAliasing(Switch value) noexcept;
 
 void SetDebugMode(Switch value) noexcept;
