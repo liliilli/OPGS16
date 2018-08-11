@@ -116,7 +116,7 @@ SGlobalFont2D::SGlobalFont2D() {
 #endif
     }
 
-  LinkShaderProgram();
+  pLinkShaderProgram();
 }
 
 } /*! opgs16::builtin::shader */

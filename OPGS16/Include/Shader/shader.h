@@ -213,7 +213,7 @@ protected:
   /// @brief
   /// @param[in] type
   ///
-  inline bool IsCompiled(opgs16::resource::EShaderType type) const {
+  bool pIsShaderCompiled(opgs16::resource::EShaderType type) const noexcept {
     return m_shaders.find(type) != m_shaders.end();
   }
 
@@ -223,29 +223,14 @@ protected:
   ///
   std::string ReadShaderCodeFrom(const std::string& path);
 
-  ///
-  /// @brief
-  /// @param[in] shader
-  /// @param[in] info_log
-  ///
-  void ShaderErrorPrint(GLuint shader, char* info_log);
-
-  ///
-  /// @brief
-  /// @param[in] shader
-  /// @param[in] info_log
-  ///
-  void LinkingErrorPrint(GLuint shader, char* info_log);
-
   void InitializeUniformVariables(const resource::SShader::TVariableList& uniforms);
 
-  void SetShader(resource::EShaderType shader_type, const std::string& path);
+  void pSetShader(resource::EShaderType shader_type, const std::string& path);
 
-  void LinkShaderProgram();
+  void pLinkShaderProgram();
 
   /// Unique id of shader program.
   mutable GLuint m_program_id = 0;
-
   /// Boolean Flag. This value must be true when call Shader.
   bool m_linked = false;
 

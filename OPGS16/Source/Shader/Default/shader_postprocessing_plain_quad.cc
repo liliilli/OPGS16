@@ -116,7 +116,7 @@ SGlobalPostProcessingQuad::SGlobalPostProcessingQuad() {
 #endif
     }
 
-  LinkShaderProgram();
+  pLinkShaderProgram();
 }
 
 } /*! opgs16::builtin::shader */

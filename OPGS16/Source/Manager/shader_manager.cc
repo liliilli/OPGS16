@@ -24,10 +24,6 @@
 #include <Manager/resource_manager.h>
 /// ::opgs16::builtin::shader::SAABB2DShader
 #include <Shader/Default/aabb_2d_line.h>
-/// opgs16::builtin::shader::SGlobalQuad2D
-#include <Shader/Default/shader_quad2d.h>
-/// opgs16::builtin::shader::SGlobalFont
-#include <Shader/Default/shader_font.h>
 /// opgs16::builtin::shader::SPostProcessPlainQuad
 #include <Shader/Default/shader_postprocess_plain_quad.h>
 /// import logger
@@ -65,10 +61,8 @@ inline bool IsShaderExist(const std::string& shader_name) noexcept {
 /// @return created shader raw-pointer.
 ///
 opgs16::element::CShaderNew*
-CreateShader(const std::string& shader_name,
-             const opgs16::resource::SShader* container) {
-	if (IsShaderExist(shader_name))
-    return opgs16::manager::shader::GetShader(shader_name);
+CreateShader(const std::string& shader_name, const opgs16::resource::SShader* container) {
+	if (IsShaderExist(shader_name)) return opgs16::manager::shader::GetShader(shader_name);
 
 	auto shader = std::make_unique<opgs16::element::CShaderNew>();
   shader->SetShader(*container);
