@@ -24,6 +24,7 @@
 
 #include <Helper/Math/math.h>
 #include <Manager/setting_manager.h>
+#include <glm/gtx/euler_angles.hpp>
 
 namespace {
 constexpr float k_2pi{ 2 * glm::pi<float>() };
@@ -43,13 +44,7 @@ bool IsAllAngleValueZero(const float(&angle_array)[3]) {
 }
 
 glm::mat4 GetRotationMatrix(const float (&angle)[3]) {
-  const auto [min, max] = std::minmax_element(std::begin(angle), std::end(angle));
-  float max_deg = *max;
-  if (std::abs(*min) > max_deg)
-    max_deg = *min;
-
-  return glm::rotate(glm::mat4{}, glm::radians(max_deg),
-           glm::vec3{ angle[0] / max_deg, angle[1] / max_deg, angle[2] / max_deg });
+  return glm::orientate4(glm::vec3{ glm::radians(angle[0]), glm::radians(angle[1]), glm::radians(angle[2]) });
 }
 
 } /// unnamed namespace
@@ -91,26 +86,25 @@ void CObjectImpl::RefreshWpRotationMatrix() const {
 }
 
 void CObjectImpl::RefreshRotationWorldParentAngle(const EAxis3D direction) {
-    float* wp_target_angle{ nullptr };
-    switch (direction) {
-    case EAxis3D::X:
-        wp_target_angle = &m_rotation_wp_angle_n[0];
-        *wp_target_angle = m_rotation_parent_angle_n[0] + m_rotation_world_angle_n[0];
-        break;
-    case EAxis3D::Y:
-        wp_target_angle = &m_rotation_wp_angle_n[1];
-        *wp_target_angle = m_rotation_parent_angle_n[1] + m_rotation_world_angle_n[1];
-        break;
-    case EAxis3D::Z: wp_target_angle = &m_rotation_wp_angle_n[2];
-        *wp_target_angle = m_rotation_parent_angle_n[2] + m_rotation_world_angle_n[2];
-        break;
-    default: break;
-    }
+  float* wp_target_angle{ nullptr };
+  switch (direction) {
+  case EAxis3D::X:
+    wp_target_angle = &m_rotation_wp_angle_n[0];
+    *wp_target_angle = m_rotation_parent_angle_n[0] + m_rotation_world_angle_n[0];
+    break;
+  case EAxis3D::Y:
+    wp_target_angle = &m_rotation_wp_angle_n[1];
+    *wp_target_angle = m_rotation_parent_angle_n[1] + m_rotation_world_angle_n[1];
+    break;
+  case EAxis3D::Z: wp_target_angle = &m_rotation_wp_angle_n[2];
+    *wp_target_angle = m_rotation_parent_angle_n[2] + m_rotation_world_angle_n[2];
+    break;
+  default: break;
+  }
 
-    if (wp_target_angle) {
-        const float angle = std::fmodf(*wp_target_angle, 360.f);
-        *wp_target_angle = (angle > 180.f) ? angle - 360.f : ((angle <= -180.f) ? angle + 360.f : angle);
-    }
+  if (wp_target_angle) {
+    *wp_target_angle = math::GetRotationAngle(*wp_target_angle);
+  }
 }
 
 void CObjectImpl::RefreshScaleVector() const {
@@ -143,7 +137,7 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
     m_local_model_matrix_deprecated = false;
   }
 
-  m_final_model = m_wp_rotate_matrix * m_local_rotate_matrix;
+  m_final_model     = m_wp_rotate_matrix * m_local_rotate_matrix;
   m_final_model[0] *= m_scale_final_vector.x;
   m_final_model[1] *= m_scale_final_vector.y;
   m_final_model[2] *= m_scale_final_vector.z;

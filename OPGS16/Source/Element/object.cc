@@ -281,11 +281,9 @@ CObject::TGameObjectMap& CObject::GetGameObjectList() {
 	 return m_children_objects;
 }
 
-CObject* CObject::GetGameObject(const std::string& object_name,
-                                bool is_recursive) {
+CObject* CObject::GetGameObject(const std::string& object_name, bool is_recursive) {
   if (!is_recursive) {
-    if (const auto it = m_children_objects.find(object_name);
-        it != m_children_objects.end()) {
+    if (const auto it = m_children_objects.find(object_name); it != m_children_objects.end()) {
       return it->second.get();
     }
     return nullptr;
@@ -295,7 +293,7 @@ CObject* CObject::GetGameObject(const std::string& object_name,
   return nullptr;
 }
 
-CObject* CObject::GetGameObjectResursively(const std::string& object_name) noexcept {
+CObject* CObject::pGetGameObjectResursively(const std::string& object_name) noexcept {
   for (auto& element : m_children_objects) {
     const auto& object = element.second;
     // If object is empty, pass it.
@@ -409,20 +407,20 @@ void CObject::CalculateActivation() {
   m_data->CalculateActivation();
 }
 
-void CObject::SetTag(const std::string& tag_name) {
+void CObject::SetObjectTag(const std::string& tag_name) {
   m_data->SetTag(tag_name);
 }
 
-void CObject::SetTag(const unsigned tag_index) {
+void CObject::SetObjectTag(const unsigned tag_index) {
   m_data->SetTag(tag_index);
 }
 
-unsigned CObject::GetTagIndexOf() const {
-    return m_data->GetTagIndexOf();
+unsigned CObject::GetObjectTagIndexOf() const {
+  return m_data->GetTagIndexOf();
 }
 
-std::string CObject::GetTagNameOf() const {
-    return m_data->GetTagNameOf();
+std::string CObject::GetObjectTagNameOf() const {
+  return m_data->GetTagNameOf();
 }
 
 CObject::~CObject() {
@@ -443,6 +441,21 @@ CObject::~CObject() {
   for (auto& spawner : spawner_list) {
     pMoveParticleSpawner(spawner);
   }
+}
+
+uint32_t CObject::pGetHash() const {
+  return m_hash_value;
+}
+
+std::string CObject::pCreateChildTag(const std::string& name) noexcept {
+  if (m_name_counter.find(name) != m_name_counter.end()) {
+    auto& count = m_name_counter[name];
+    count += 1;
+    return fmt::format("{}_{}", name, count);
+  }
+
+  m_name_counter[name] = 0;
+  return name;
 }
 
 } /// ::opgs16::element namespace

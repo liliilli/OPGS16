@@ -94,8 +94,7 @@ namespace opgs16::element {
 ///
 class CObject {
   using TComponentSmtPtr  = std::unique_ptr<component::_internal::CComponent>;
-  using TComponentPair    = std::pair<TComponentSmtPtr,
-                                      component::_internal::EComponentType>;
+  using TComponentPair    = std::pair<TComponentSmtPtr, component::_internal::EComponentType>;
   using TComponentList    = std::vector<TComponentPair>;
   using TNameCounterMap   = std::unordered_map<std::string, int32_t>;
 	using TGameObjectSmtPtr = std::unique_ptr<CObject>;
@@ -105,6 +104,11 @@ class CObject {
 public:
 	CObject();
 	virtual ~CObject();
+
+  CObject(const CObject&) = delete;
+  CObject& operator=(const CObject&) = delete;
+  CObject(CObject&&) = default;
+  CObject& operator=(CObject&&) = default;
 
   ///
   /// @brief
@@ -263,6 +267,84 @@ public:
   phitos::enums::EActivated IsObjectActive() const;
 
   ///
+  /// @brief Set tag with tag name. This method will check whether or not exist matched tag name
+  /// in SettingManager. If not exist, do nothing and chagne error flag.
+  /// @param[in] tag_name Tag name
+  ///
+  void SetObjectTag(const std::string& tag_name);
+
+  ///
+  /// @brief Overloaded version of SetObjectTag(tag_name)
+  ///
+  void SetObjectTag(const unsigned tag_index);
+
+  ///
+  /// @brief Get tag index of this object.
+  /// @return Tag index value.
+  ///
+  unsigned GetObjectTagIndexOf() const;
+
+  ///
+  /// @brief Get Tag Name of this object. (different with name of object)
+  /// This methods return tag name by referencing SettingManager in body.
+  /// @return Tag name string.
+  ///
+  std::string GetObjectTagNameOf() const;
+
+  ///
+  /// @brief Return object name
+  ///
+  inline const std::string& GetGameObjectName() const noexcept {
+    return m_object_name;
+  }
+
+  //!
+  //! Object creation.
+  //!
+
+  ///
+  /// @brief Return object final position not included local position.
+  ///
+  const DVector3& GetParentPosition() const noexcept;
+
+	///
+	/// @brief Destroy child object has unique tag key but not recursively.
+	/// @param[in] name Object name.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroied, return ture.
+	///
+	bool DestroyGameObject(const std::string& name);
+
+  ///
+  /// @brief Destory child object with address.
+  /// @param[in] child_object Object reference.
+  /// @param[in] is_recursive Flag for destruction of specified object recursively.
+	/// @return Success/Failed tag.
+  /// If arbitary m_object_list has been destroyed, return ture.
+  ///
+  bool DestroyGameObject(const CObject& child_object, bool is_recursive = false);
+
+	///
+	/// @brief Get children tag list.
+	/// @return Children's tags container of object.
+	///
+	std::vector<std::string> GetGameObjectNameList() const;
+
+	///
+	/// @brief Get children reference.
+	/// @return Children m_object_list component list.
+	///
+	TGameObjectMap& GetGameObjectList();
+
+	///
+	/// @brief Get arbitary child object.
+	/// @param[in] object_name The name of object to find.
+  /// @param[in] is_resursive
+	/// @return Object's raw-pointer instance. this cannot removeable.
+	///
+	CObject* GetGameObject(const std::string& object_name, bool is_resursive = false);
+
+  ///
   /// @brief
   /// Overloaded function of Instantiate(Varadic...)
   ///
@@ -271,12 +353,10 @@ public:
     class = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
   TCObjectType* CreateGameObject(const std::string& object_name,
-                            std::unique_ptr<TCObjectType>& object_smtptr) {
-    const auto object_final_name = CreateChildTag(object_name);
+                                 std::unique_ptr<TCObjectType>& object_smtptr) {
+    const auto object_final_name = pCreateChildTag(object_name);
 
-    auto [result_pair, result] = m_children_objects.try_emplace(
-        object_final_name,
-        nullptr);
+    auto [result_pair, result] = m_children_objects.try_emplace(object_final_name, nullptr);
     if (!result) {
       PHITOS_ASSERT(result, "Object did not be made properly.");
       return nullptr;
@@ -284,8 +364,9 @@ public:
 
     result_pair->second = std::move(object_smtptr);
     TGameObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->SetHash(object_final_name);
+    object_ref->pSetHash(object_final_name);
     object_ref->SetParentPosition(GetParentPosition());
+
     return static_cast<TCObjectType*>(object_ref.get());
   }
 
@@ -308,7 +389,7 @@ public:
   >
   TCObjectType* CreateGameObject(const std::string object_name,
                             TConstructionArgs&&... args) {
-      const auto object_final_name = CreateChildTag(object_name);
+      const auto object_final_name = pCreateChildTag(object_name);
 
     auto [result_pair, result] = m_children_objects.try_emplace(
         object_final_name,
@@ -321,97 +402,63 @@ public:
     result_pair->second = std::make_unique<TCObjectType>(
         std::forward<TConstructionArgs>(args)...);
     TGameObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->SetHash(object_final_name);
+    object_ref->pSetHash(object_final_name);
     return static_cast<TCObjectType*>(object_ref.get());
   }
 
-	///
-	/// @brief Destroy child object has unique tag key but not recursively.
-	/// @param[in] name Object name.
-	/// @return Success/Failed tag.
-  /// If arbitary m_object_list has been destroied, return ture.
-	///
-	bool DestroyGameObject(const std::string& name);
-
-  ///
-  /// @brief Destory child object with address.
-  /// @param[in] child_object Object reference.
-  /// @param[in] is_recursive Flag for destruction of specified object recursively.
-	/// @return Success/Failed tag.
-  /// If arbitary m_object_list has been destroyed, return ture.
-  ///
-  bool DestroyGameObject(const element::CObject& child_object,
-                         bool is_recursive = false);
-
-	///
-	/// @brief Get children tag list.
-	/// @return Children's tags container of object.
-	///
-	std::vector<std::string> GetGameObjectNameList() const;
-
-	///
-	/// @brief Get children reference.
-	/// @return Children m_object_list component list.
-	///
-	TGameObjectMap& GetGameObjectList();
-
-	///
-	/// @brief Get arbitary child object.
-	/// @param[in] object_name The name of object to find.
-	/// @return Object's raw-pointer instance. this cannot removeable.
-	///
-	CObject* GetGameObject(const std::string& object_name,
-                         bool is_resursive = false);
+  //!
+  //! Component creation.
+  //!
 
   ///
   /// @brief
   /// Add component and bind to this object instance.
   ///
-  /// @param[in] _Ty Component type class argument.
+  /// @param[in] TComponent Component type class argument.
   /// @param[in] _Params&& Universal reference. Used to be arguments of Component constructor.
   ///
   using _Component = component::_internal::CComponent;
   template<
-    class _Ty,
+    class TComponent,
     typename... _Params,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TComponent>>
   >
-  _Ty* AddComponent(_Params&&... params) {
+  TComponent* AddComponent(_Params&&... params) {
     using EComponentType = component::_internal::EComponentType;
 
     auto type = EComponentType::Normal;
-    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>) {
+    if constexpr (std::is_base_of_v<component::CScriptFrame, TComponent>) {
       type = EComponentType::Script;
     }
-    else if constexpr (std::is_base_of_v<component::CParticleSpawner, _Ty>) {
+    else if constexpr (std::is_base_of_v<component::CParticleSpawner, TComponent>) {
       type = EComponentType::Particle;
     }
 
-    m_components.push_back(std::make_pair(std::make_unique<_Ty>(std::forward<_Params>(params)...), type));
+    m_components.push_back(std::make_pair(std::make_unique<TComponent>(std::forward<_Params>(params)...), type));
 
-    if constexpr (std::is_base_of_v<component::CScriptFrame, _Ty>) {
+    if constexpr (std::is_base_of_v<component::CScriptFrame, TComponent>) {
       static_cast<component::CScriptFrame*>(m_components.rbegin()->first.get())
           ->Initiate();
     }
 
-    return GetComponent<_Ty>();
+    return GetComponent<TComponent>();
   }
 
   ///
   /// @brief Return component raw-pointer.
-  /// @tparam TTy Component type argument.
-  /// @return If found, return _Ty* but not found, return nullptr.
+  /// @tparam TComponent Component type argument.
+  /// @return If found, return TComponent* but not found, return nullptr.
   ///
   template<
-    class TTy,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, TTy>>
+    class TComponent,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TComponent>>
   >
-  TTy* GetComponent() {
+  TComponent* GetComponent() {
     // Component matching process is using recursion of each component
     // from last derived component class to highest base component class.
     for (auto& [component, type] : m_components) {
-      if (component->DoesTypeMatch(TTy::__hash_val, TTy::__string_literal))
-        return static_cast<TTy*>(component.get());
+      if (component->DoesTypeMatch(TComponent::__hash_val, TComponent::__string_literal))
+        return static_cast<TComponent*>(component.get());
     }
 
     // If there is no component to find.
@@ -419,22 +466,22 @@ public:
   }
 
   ///
-  /// @brief
-  ///
-  /// @return
+  /// @brief Return component raw-pointer list.
+  /// @tparam TComponent Component type argument.
+  /// @return If found, return TComponent* list but not found, return nullptr.
   ///
   template <
-    class TType,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, TType>>
+    class TComponent,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TComponent>>
   >
-  std::vector<TType*> GetComponents() {
+  std::vector<TComponent*> GetComponents() {
     // Component matching process is using recursion of each component
     // from last derived component class to highest base component class.
-    std::vector<TType*> result_component_list{};
+    std::vector<TComponent*> result_component_list{};
 
     for (auto& [component, item] : m_components) {
-      if (component->DoesTypeMatch(TType::__hash_val, TType::__string_literal))
-        result_component_list.push_back(static_cast<TType*>(component.get()));
+      if (component->DoesTypeMatch(TComponent::__hash_val, TComponent::__string_literal))
+        result_component_list.push_back(static_cast<TComponent*>(component.get()));
     }
 
     // If there is no component to find.
@@ -447,20 +494,22 @@ public:
   /// these components well not touching object reference like a GetBindObject().
   ///
   template <
-    class TType,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, TType>>
+    class TComponent,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TComponent>>
   >
-  std::vector<std::unique_ptr<TType>> pPopComponents() {
+  std::vector<std::unique_ptr<TComponent>> pPopComponents() {
     using opgs16::component::_internal::EComponentType;
-    std::vector<std::unique_ptr<TType>> result_list;
+    if (m_components.empty()) return decltype(pPopComponents<TComponent>()){};
+
+    std::vector<std::unique_ptr<TComponent>> result_list;
 
     // m_componentsからTTypeであるコンポネントに対して他のところに移す。
     auto it = --m_components.end();
     int32_t remove_back_count = 0;
     for (auto& [component, item] : m_components) {
       if (!component) continue;
-      if (component->DoesTypeMatch(OP16_GET_HASH(TType), TType::__string_literal)) {
-        result_list.push_back(std::unique_ptr<TType>(static_cast<TType*>(component.release())));
+      if (component->DoesTypeMatch(OP16_GET_HASH(TComponent), TComponent::__string_literal)) {
+        result_list.push_back(std::unique_ptr<TComponent>(static_cast<TComponent*>(component.release())));
         ++remove_back_count;
 
         while (it->second == EComponentType::Particle && &(it->first) != &component) {
@@ -482,26 +531,26 @@ public:
 
   ///
   /// @brief Remove component.
-  /// @tparam _Ty Component type argument.
+  /// @tparam TComponent Component type argument.
   /// @return If found, return true but otherwise false.
   ///
   template <
-    class _Ty,
-    typename = std::enable_if_t<std::is_base_of_v<_Component, _Ty>>
+    class TComponent,
+    typename = std::enable_if_t<std::is_base_of_v<_Component, TComponent>>
   >
   bool RemoveComponent() {
+    using component::CParticleSpawner;
+    using component::_internal::EComponentType;
+    using manager::object::pMoveParticleSpawner;
+
     auto it = std::find_if(m_components.begin(), m_components.end(),
         [](const auto& item) {
-          return item.first->DoesTypeMatch(_Ty::__hash_val, _Ty::__string_literal);
+          return item.first->DoesTypeMatch(OP16_GET_HASH(TComponent), TComponent::__string_literal);
         }
     );
 
     if (it != m_components.cend()) {
-      using EComponentType = component::_internal::EComponentType;
       if (it->second == EComponentType::Particle) {
-        using manager::object::pMoveParticleSpawner;
-        using component::CParticleSpawner;
-
         auto ptr = std::unique_ptr<CParticleSpawner>(static_cast<CParticleSpawner*>(it->first.release()));
         pMoveParticleSpawner(ptr);
       }
@@ -516,69 +565,6 @@ public:
     return false;
   }
 
-  ///
-  /// @brief Set tag with tag name. This method will check whether or not exist matched tag name
-  /// in SettingManager. If not exist, do nothing and chagne error flag.
-  /// @param[in] tag_name Tag name
-  ///
-  void SetTag(const std::string& tag_name);
-
-  ///
-  /// @brief Overloaded version of SetTag(tag_name)
-  ///
-  void SetTag(const unsigned tag_index);
-
-  ///
-  /// @brief Get tag index of this object.
-  /// @return Tag index value.
-  ///
-  unsigned GetTagIndexOf() const;
-
-  ///
-  /// @brief Get Tag Name of this object. (different with name of object)
-  /// This methods return tag name by referencing SettingManager in body.
-  /// @return Tag name string.
-  ///
-  std::string GetTagNameOf() const;
-
-  ///
-  /// @brief Return hash value of this object.
-  ///
-  inline unsigned GetHash() const {
-    return m_hash_value;
-  }
-
-  ///
-  /// @brief Set hash value
-  ///
-  inline void SetHash(const std::string& name) const {
-    PHITOS_ASSERT(m_hash_initialized == false,
-      "Hash value of object is already defined.");
-
-    if (!m_hash_initialized) {
-      m_object_name = name;
-      m_hash_value = static_cast<int32_t>(std::hash<std::string>{}(name));
-      m_hash_initialized = true;
-
-      PUSH_LOG_INFO_EXT(
-        "Create hash value for object, [Name : {0}] [Hash : {1:x}]",
-        name,
-        m_hash_value);
-    }
-  }
-
-  ///
-  /// @brief Return object name
-  ///
-  inline const std::string& GetGameObjectName() const {
-    return m_object_name;
-  }
-
-  ///
-  /// @brief Return object final position not included local position.
-  ///
-  const DVector3& GetParentPosition() const noexcept;
-
 protected:
   /// Pointer implementation heap instance.
 	TPimplSmtPtr   m_data = nullptr;
@@ -589,24 +575,34 @@ protected:
 
 private:
   ///
+  /// @brief Return hash value of this object.
+  ///
+  uint32_t pGetHash() const;
+
+  ///
+  /// @brief Set hash value
+  ///
+  inline void pSetHash(const std::string& name) const {
+    PHITOS_ASSERT(m_hash_initialized == false, "Hash value of object is already defined.");
+
+    m_object_name = name;
+    m_hash_value = static_cast<uint32_t>(std::hash<std::string>{}(name));
+    m_hash_initialized = true;
+
+    PUSH_LOG_INFO_EXT(
+      "Create hash value for object, [Name : {0}] [Hash : {1:x}]",
+      name,
+      m_hash_value);
+  }
+
+  ///
   /// @brief Create child object name.
   /// @param[in] name
   /// @return
   ///
-  inline std::string CreateChildTag(const std::string& name) noexcept {
-    std::string item_tag = name;
+  std::string pCreateChildTag(const std::string& name) noexcept;
 
-    if (m_name_counter.find(name) != m_name_counter.end()) {
-      auto& count = m_name_counter[name];
-      count += 1;
-      item_tag.append('_' + std::to_string(count));
-    }
-    else { m_name_counter[name] = 0; }
-
-    return item_tag;
-  }
-
-  CObject* GetGameObjectResursively(const std::string& object_name) noexcept;
+  CObject* pGetGameObjectResursively(const std::string& object_name) noexcept;
 
   /// Propagate parent position recursively.
   void PropagateParentPosition();
@@ -643,14 +639,17 @@ private:
 
   /// Object name counter to avoid duplicated object name
   TNameCounterMap m_name_counter;
-
   /// this object name
   mutable std::string m_object_name;
   /// Hash value to verify object number
-  mutable int32_t m_hash_value = 0;
+  mutable uint32_t m_hash_value = 0;
   /// Flag
   mutable bool m_hash_initialized = false;
 
+  /// Parent object. if nullptr, this object has no parent and be on scene.
+  CObject* m_parent = nullptr;
+
+  friend opgs16::element::CScene;
   friend opgs16::component::_internal::CColliderBase;
 };
 

@@ -390,7 +390,7 @@ public:
   ///
   void SetTag(const std::string& tag_name);
 
-  /*! Overloading version of SetTag(tag_name) */
+  /*! Overloading version of SetObjectTag(tag_name) */
   void SetTag(const unsigned tag_index);
 
   /*! Return tag index value of this object. */

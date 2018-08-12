@@ -115,7 +115,7 @@ public:
 
     result_pair->second = std::move(object_smtptr);
     TGameObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->SetHash(object_final_name);
+    object_ref->pSetHash(object_final_name);
     return static_cast<TCObjectType*>(object_ref.get());
 	}
 
@@ -136,22 +136,19 @@ public:
     class... TConstructionArgs,
     typename = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  TCObjectType* CreateGameObject(const std::string& object_name,
-                            TConstructionArgs&&... args) {
+  TCObjectType* CreateGameObject(const std::string& object_name, TConstructionArgs&&... args) {
     const auto object_final_name = CreateChildTag(object_name);
 
-    auto [result_pair, result] = m_object_list.try_emplace(
-        object_final_name,
-        nullptr);
+    auto [result_pair, result] = m_object_list.try_emplace(object_final_name, nullptr);
     if (!result) {
       PHITOS_ASSERT(result, "Object did not be made properly.");
       return nullptr;
     }
 
-    result_pair->second = std::make_unique<TCObjectType>(
-        std::forward<TConstructionArgs>(args)...);
+    result_pair->second = std::make_unique<TCObjectType>(std::forward<TConstructionArgs>(args)...);
     TGameObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->SetHash(object_final_name);
+    object_ref->pSetHash(object_final_name);
+
     return static_cast<TCObjectType*>(object_ref.get());
 	}
 

@@ -24,7 +24,7 @@
 
 #define _OPGS16_VERSION_MAJOR 0
 #define _OPGS16_VERSION_MINOR 2
-#define _OPGS16_VERSION_FIXED 0
+#define _OPGS16_VERSION_FIXED 1
 #define _OPGS16_CODENAME Malroth
 
 enum class EScaleType : int32_t {
