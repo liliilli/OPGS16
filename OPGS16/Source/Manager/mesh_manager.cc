@@ -32,6 +32,8 @@
 
 #include <Element/Default/model_2dquad.h>
 #include <Element/Builtin/Model/model_2dquadline.h>
+#include <Element/Builtin/Model/model_3dbox.h>
+#include <Element/Builtin/Model/model_3dsphere.h>
 #include <Element/Builtin/Model/model_point.h>
 
 //!
@@ -40,6 +42,9 @@
 
 namespace {
 using phitos::enums::EInitiated;
+using opgs16::element::_internal::EVboBufferType;
+using opgs16::element::_internal::EEboBufferType;
+
 EInitiated b_initiated = EInitiated::NotInitiated;
 EInitiated b_builtin_initiated = EInitiated::NotInitiated;
 
@@ -67,11 +72,15 @@ void InitiateBuiltinModelMeshes() {
   using opgs16::builtin::model::BModel2DQuad;
   using opgs16::builtin::model::BModel2DQuadLine;
   using opgs16::builtin::model::BModelPoint;
+  using opgs16::builtin::model::BModel3DBox;
+  using opgs16::builtin::model::BModel3DSphere;
 
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad, BModel2DQuad{});
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad_dynamic, BModel2DQuad{});
   m_model_map.try_emplace(BModel2DQuadLine::s_model_name, BModel2DQuadLine{});
   m_model_map.try_emplace(BModelPoint::s_model_name, BModelPoint{});
+  m_model_map.try_emplace(BModel3DBox::s_model_name, BModel3DBox{});
+  m_model_map.try_emplace(BModel3DSphere::s_model_name, BModel3DSphere{});
 
   b_builtin_initiated = EInitiated::Initiated;
 }
@@ -123,10 +132,7 @@ GenerateVaoItemsFromModel(const std::string& model_name) {
 
 
 std::pair<std::unique_ptr<element::CVaoContainer>, phitos::enums::ESucceed>
-GenerateVaoItemsFromModelExt(
-    const std::string& model_name,
-    element::_internal::EVboBufferType vbo_type,
-    element::_internal::EEboBufferType ebo_type) {
+GenerateVaoItemsFromModelExt(const std::string& model_name, EVboBufferType vbo_type, EEboBufferType ebo_type) {
   using phitos::enums::EActivated;
   using element::_internal::CInternalVertexArrayObject;
   using element::_internal::EVboBufferType;
@@ -136,31 +142,33 @@ GenerateVaoItemsFromModelExt(
 
   const auto& meshes = m_model_map[model_name].GetMeshes();
 
+  // Create vao resource lists.
   std::vector<CInternalVertexArrayObject> vao_list;
   vao_list.reserve(meshes.size());
 
   for (const auto& mesh : meshes) {
-    if (mesh.IsVerticeActivated() == EActivated::Disabled)
-      continue;
+    if (mesh.IsVerticeActivated() == EActivated::Disabled) continue;
 
-    const auto vbo_size = PtTByte{mesh.GetByteSizeOfVertices()};
+    // Check this mesh have vertices.
+    const auto vbo_byte_length = PtTByte{mesh.GetByteSizeOfVertices()};
 
+    // Check this mesh have indices.
     const auto is_indice_activated = mesh.IsIndiceActivated();
-    const auto ebo_size = PtTByte{mesh.GetByteSizeOfIndices()};
+    const auto ebo_byte_length = PtTByte{mesh.GetByteSizeOfIndices()};
+
     if (is_indice_activated == EActivated::Activated) {
-      vao_list.emplace_back(vbo_type, PtTByte{vbo_size}, ebo_type, PtTByte{ebo_size});
+      vao_list.emplace_back(vbo_type, PtTByte{vbo_byte_length}, mesh.GetVerticesSize(),
+                            ebo_type, PtTByte{ebo_byte_length}, mesh.GetIndicesSize());
     }
     else {
-      vao_list.emplace_back(vbo_type, PtTByte{vbo_size});
+      vao_list.emplace_back(vbo_type, PtTByte{vbo_byte_length}, mesh.GetVerticesSize());
     }
 
     auto last_vao_item = vao_list.rbegin();
-    last_vao_item->Map(EBufferTarget::VertexBuffer,
-                       0_pByte, vbo_size, mesh.GetVerticesData());
+    last_vao_item->Map(EBufferTarget::VertexBuffer, 0_pByte, vbo_byte_length, mesh.GetVerticesData());
 
     if (is_indice_activated == EActivated::Activated) {
-      last_vao_item->Map(EBufferTarget::ElementBuffer,
-                         0_pByte, ebo_size, mesh.GetIndiceData());
+      last_vao_item->Map(EBufferTarget::ElementBuffer, 0_pByte, ebo_byte_length, mesh.GetIndiceData());
     }
   }
 

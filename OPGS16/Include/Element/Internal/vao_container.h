@@ -30,12 +30,14 @@
 //!
 
 namespace opgs16::component {
+class CMeshImporter;
 class CSprite2DRenderer;
 class CProcedural2DRenderer;
-namespace _internal {
+}
+
+namespace opgs16::component::_internal {
 class CPrivateAabbRenderer2D;
 class CInternalParticleRenderer;
-}
 }
 
 //!
@@ -144,6 +146,7 @@ private:
   phitos::enums::EDirty m_dirty = phitos::enums::EDirty::Clean;
   EGcGeneration m_generation = EGcGeneration::Zero;
 
+  friend class component::CMeshImporter;
   friend class component::CSprite2DRenderer;
   friend class component::CProcedural2DRenderer;
   friend class component::_internal::CPrivateAabbRenderer2D;

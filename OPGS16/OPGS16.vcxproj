@@ -171,6 +171,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Component\mesh_importer.cc" />
+    <ClCompile Include="Source\Component\mesh_renderer.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_accelation.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_alpha.cc" />
@@ -178,6 +180,9 @@
     <ClCompile Include="Source\Component\ParticleModule\module_initial_size.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_velocity.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_scale.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dbox.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dcylinder.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dsphere.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
@@ -258,6 +263,7 @@
     <ClCompile Include="Source\Shader\Default\shader_quad2d.cc" />
     <ClCompile Include="Include\Shader\Default\shader_postprocess_plain_quad.h" />
     <ClCompile Include="Include\Shader\Default\shader_quad2d.h" />
+    <ClCompile Include="Source\Shader\PostProcessing\pp_gray.cc" />
     <ClCompile Include="Source\Shader\PostProcessing\pp_scaling.cc" />
     <ClCompile Include="Source\Component\camera.cc" />
     <ClCompile Include="Source\Core\logger.cc" />
@@ -288,9 +294,12 @@
     <ClCompile Include="Source\Shader\shader_wrapper.cc" />
     <ClCompile Include="Source\Manager\sound_manager.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
-    <ClCompile Include="_Project\Test020\Object\emitter_fire.cc" />
-    <ClCompile Include="_Project\Test020\Object\particle_test.cc" />
-    <ClCompile Include="_Project\Test020\Object\script_particle_move.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\mesh_test.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\mesh_test_child.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\script_mesh_transform.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\emitter_fire.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\particle_test.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\script_particle_move.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Common\simple_log.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\objectSound.cc" />
     <ClCompile Include="_Project\Test020\Source\Object\Physics\object_floor.cc" />
@@ -315,6 +324,8 @@
     <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
     <ClInclude Include="Include\Component\Internal\collider_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
+    <ClInclude Include="Include\Component\mesh_importer.h" />
+    <ClInclude Include="Include\Component\mesh_renderer.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_bylife_alpha.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_accelation.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_alpha.h" />
@@ -345,6 +356,9 @@
     <ClInclude Include="Include\Component\Internal\component_type.h" />
     <ClInclude Include="Include\Element\Builtin\empty_canvas.h" />
     <ClInclude Include="Include\Element\Builtin\empty_object.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dbox.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dcylinder.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dsphere.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />
@@ -502,9 +516,12 @@
     <ClInclude Include="_Project\Test020\Include\Script\scriptSound.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundController.h" />
     <ClInclude Include="_Project\Test020\Include\Script\scriptSoundUi.h" />
-    <ClInclude Include="_Project\Test020\Object\emitter_fire.h" />
-    <ClInclude Include="_Project\Test020\Object\particle_test.h" />
-    <ClInclude Include="_Project\Test020\Object\script_particle_move.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\mesh_test.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\mesh_test_child.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\script_mesh_transform.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\emitter_fire.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\particle_test.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\script_particle_move.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\activated.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\dirty.h" />
     <ClInclude Include="__ThirdParty\phitos\Phitos\Enums\found.h" />

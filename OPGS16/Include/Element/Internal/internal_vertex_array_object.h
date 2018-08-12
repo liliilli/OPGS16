@@ -65,12 +65,10 @@ enum class EBufferTarget : uint8_t {
 class CInternalVertexArrayObject final {
   using PtTByte = phitos::type::PtTByte;
 public:
-  CInternalVertexArrayObject(
-      EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size);
+  CInternalVertexArrayObject(EVboBufferType vbo_buffer_type, PtTByte vbo_buffer_size, int32_t vbo_buffer_length);
 
-  CInternalVertexArrayObject(
-      EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size,
-      EEboBufferType ebo_buffer_type, phitos::type::PtTByte ebo_buffer_size);
+  CInternalVertexArrayObject(EVboBufferType vbo_buffer_type, PtTByte vbo_buffer_size, int32_t vbo_buffer_length,
+                             EEboBufferType ebo_buffer_type, PtTByte ebo_buffer_size, int32_t ebo_buffer_length);
 
   /// We need customized copy constructor for avoiding duplicated resource
   /// release of VRAM resource.
@@ -92,8 +90,7 @@ public:
   /// @param[in] byte_length Buffer length byte to copy from buffer chunk.
   /// @param[in] start_pointer Start pointer of arbitary buffer chunk.
   ///
-  void Map(EBufferTarget buffer_target,
-           PtTByte byte_offset, PtTByte byte_length, void* start_pointer);
+  void Map(EBufferTarget buffer_target, PtTByte byte_offset, PtTByte byte_length, void* start_pointer);
 
   ///
   /// @brief Get vertex array object id. if not initiated, just return 0.
@@ -118,6 +115,16 @@ public:
   uint32_t GetEboId() const noexcept {
     return m_object.ebo_id;
   }
+
+  ///
+  /// @brief Get indices count of this vertex array object.
+  ///
+  int32_t GetIndiceCount() const noexcept;
+
+  ///
+  /// @brief Get vertices count of this vertex array object.
+  ///
+  int32_t GetVertexCount() const noexcept;
 
 private:
   ///
@@ -149,6 +156,9 @@ private:
   };
 
   DBindingObject  m_object;
+  int32_t m_vertices_count  = 0;
+  int32_t m_indices_count   = 0;
+
   mutable bool    m_is_resource_moved = false;
 };
 

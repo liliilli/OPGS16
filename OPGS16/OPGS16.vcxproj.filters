@@ -107,7 +107,6 @@
     <ClCompile Include="_Project\Test020\Include\Scene\hello_world.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_bullet_hello.cc" />
     <ClCompile Include="_Project\Test020\Include\Scene\scene_test.cc" />
-    <ClCompile Include="_Project\Test020\Object\particle_test.cc" />
     <ClCompile Include="Source\Component\Internal\particle_renderer.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_point.cc" />
     <ClCompile Include="Source\Element\Internal\particle_object.cc" />
@@ -122,15 +121,25 @@
     <ClCompile Include="Source\Component\ParticleModule\module_initial_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_velocity.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_initial_accelation.cc" />
-    <ClCompile Include="_Project\Test020\Object\script_particle_move.cc" />
     <ClCompile Include="Source\Element\Internal\texture2d_sprite.cc" />
     <ClCompile Include="Source\Element\Internal\texture_base.cc" />
     <ClCompile Include="Source\Element\Internal\texture2d_plain.cc" />
     <ClCompile Include="Source\Element\Internal\texture_cube.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_alpha.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_scale.cc" />
-    <ClCompile Include="_Project\Test020\Object\emitter_fire.cc" />
     <ClCompile Include="Source\Element\timer_handle.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\emitter_fire.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\particle_test.cc" />
+    <ClCompile Include="_Project\Test020\TestParticle\script_particle_move.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\mesh_test.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dbox.cc" />
+    <ClCompile Include="Source\Component\mesh_importer.cc" />
+    <ClCompile Include="Source\Component\mesh_renderer.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\script_mesh_transform.cc" />
+    <ClCompile Include="Source\Shader\PostProcessing\pp_gray.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dsphere.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_3dcylinder.cc" />
+    <ClCompile Include="_Project\Test020\TestMesh\mesh_test_child.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -310,7 +319,6 @@
     <ClInclude Include="_Project\Test020\Include\Script\Physics\script_controller.h" />
     <ClInclude Include="_Project\Test020\Include\Physics\TestBlock\object_block.h" />
     <ClInclude Include="_Project\Test020\Include\Scene\scene_test.h" />
-    <ClInclude Include="_Project\Test020\Object\particle_test.h" />
     <ClInclude Include="Include\Component\Internal\particle_renderer.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
     <ClInclude Include="Include\Element\Internal\particle_object.h" />
@@ -325,7 +333,6 @@
     <ClInclude Include="Include\Component\ParticleModule\module_initial_alpha.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_velocity.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_initial_accelation.h" />
-    <ClInclude Include="_Project\Test020\Object\script_particle_move.h" />
     <ClInclude Include="Include\Element\Internal\texture2d_sprite.h" />
     <ClInclude Include="Include\Element\Internal\texture_base.h" />
     <ClInclude Include="Include\Manager\ResourceType\texture.h" />
@@ -334,9 +341,19 @@
     <ClInclude Include="Include\Element\Internal\particle_enum.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_bylife_alpha.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_bylife_scale.h" />
-    <ClInclude Include="_Project\Test020\Object\emitter_fire.h" />
     <ClInclude Include="Include\Component\Internal\component_type.h" />
     <ClInclude Include="Include\Element\timer_handle.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\emitter_fire.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\particle_test.h" />
+    <ClInclude Include="_Project\Test020\TestParticle\script_particle_move.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\mesh_test.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dbox.h" />
+    <ClInclude Include="Include\Component\mesh_importer.h" />
+    <ClInclude Include="Include\Component\mesh_renderer.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\script_mesh_transform.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dsphere.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_3dcylinder.h" />
+    <ClInclude Include="_Project\Test020\TestMesh\mesh_test_child.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

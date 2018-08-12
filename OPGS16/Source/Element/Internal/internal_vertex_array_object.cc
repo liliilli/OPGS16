@@ -18,15 +18,35 @@
 /// Header file
 #include <Element/Internal/internal_vertex_array_object.h>
 
-#include <string.h>
 #include <GL/glew.h>
 /// ::phitos enhanced assertion.
 #include <Phitos/Dbg/assert.h>
 
+//!
+//! Forward declaration
+//!
+
+namespace {
+using phitos::type::PtTByte;
+} /// unnamed namespace
+
+//!
+//! Implementation
+//!
+
 namespace opgs16::element::_internal {
 
+int32_t CInternalVertexArrayObject::GetIndiceCount() const noexcept {
+  return m_indices_count;
+}
+
+int32_t CInternalVertexArrayObject::GetVertexCount() const noexcept {
+  return m_vertices_count;
+}
+
 CInternalVertexArrayObject::CInternalVertexArrayObject(
-    EVboBufferType vbo_buffer_type, phitos::type::PtTByte vbo_buffer_size) {
+    EVboBufferType vbo_buffer_type, PtTByte vbo_buffer_size, int32_t vbo_buffer_length) :
+    m_vertices_count(vbo_buffer_length) {
   glGenVertexArrays(1, &m_object.vao_id);
   glBindVertexArray(m_object.vao_id);
 
@@ -35,59 +55,46 @@ CInternalVertexArrayObject::CInternalVertexArrayObject(
 
   GLenum buffer_data_type = 0;
   switch (vbo_buffer_type) {
-  case EVboBufferType::StaticDraw:
-    buffer_data_type = GL_STATIC_DRAW;
-    break;
-  case EVboBufferType::DynamicDraw:
-    buffer_data_type = GL_DYNAMIC_DRAW;
-    break;
-  default: PHITOS_UNEXPECTED_BRANCH(); break;
+  case EVboBufferType::StaticDraw:  buffer_data_type = GL_STATIC_DRAW; break;
+  case EVboBufferType::DynamicDraw: buffer_data_type = GL_DYNAMIC_DRAW; break;
   }
 
-  glBufferData(GL_ARRAY_BUFFER,
-               static_cast<uint32_t>(vbo_buffer_size),
-               nullptr,
-               buffer_data_type);
+  glBufferData(GL_ARRAY_BUFFER, uint32_t(vbo_buffer_size), nullptr, buffer_data_type);
   glBindVertexArray(0);
 }
 
 CInternalVertexArrayObject::CInternalVertexArrayObject(
-    EVboBufferType vbo_buffer_type,
-    phitos::type::PtTByte vbo_buffer_size,
-    EEboBufferType ebo_buffer_type,
-    phitos::type::PtTByte ebo_buffer_size) :
-    CInternalVertexArrayObject{vbo_buffer_type, vbo_buffer_size} {
+    EVboBufferType vbo_buffer_type, PtTByte vbo_buffer_size, int32_t vbo_buffer_length,
+    EEboBufferType ebo_buffer_type, PtTByte ebo_buffer_size, int32_t ebo_buffer_length) :
+    CInternalVertexArrayObject{vbo_buffer_type, vbo_buffer_size, vbo_buffer_length} {
+  m_indices_count = ebo_buffer_length;
   glBindVertexArray(m_object.vao_id);
   glGenBuffers(1, &m_object.ebo_id);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_object.ebo_id);
 
   GLenum buffer_data_type = 0;
   switch (ebo_buffer_type) {
-  case EEboBufferType::StaticDraw:
-    buffer_data_type = GL_STATIC_DRAW;
-    break;
-  case EEboBufferType::DynamicDraw:
-    buffer_data_type = GL_DYNAMIC_DRAW;
-    break;
-  default: PHITOS_UNEXPECTED_BRANCH(); break;
+  case EEboBufferType::StaticDraw:  buffer_data_type = GL_STATIC_DRAW; break;
+  case EEboBufferType::DynamicDraw: buffer_data_type = GL_DYNAMIC_DRAW; break;
   }
 
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               static_cast<uint32_t>(ebo_buffer_size),
-               nullptr,
-               buffer_data_type);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, uint32_t(ebo_buffer_size), nullptr, buffer_data_type);
   glBindVertexArray(0);
 }
 
 CInternalVertexArrayObject::CInternalVertexArrayObject(
     const CInternalVertexArrayObject& rhs) : m_object(rhs.m_object) {
   rhs.m_is_resource_moved = true;
+  m_indices_count   = rhs.GetIndiceCount();
+  m_vertices_count  = rhs.GetVertexCount();
 }
 
 CInternalVertexArrayObject& CInternalVertexArrayObject::operator=(
     const CInternalVertexArrayObject& rhs) {
   this->m_object = rhs.m_object;
   rhs.m_is_resource_moved = true;
+  m_indices_count   = rhs.GetIndiceCount();
+  m_vertices_count  = rhs.GetVertexCount();
 
   return *this;
 }

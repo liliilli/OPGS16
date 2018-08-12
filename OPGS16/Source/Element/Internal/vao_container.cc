@@ -21,8 +21,7 @@
 
 namespace opgs16::element {
 
-CVaoContainer::CVaoContainer(const std::string& model_name,
-                             const TVaoList& vao_list) :
+CVaoContainer::CVaoContainer(const std::string& model_name, const TVaoList& vao_list) :
     m_vao_list(vao_list), m_container_name(model_name) {}
 
 } /// ::opgs16::element namespace

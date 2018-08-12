@@ -25,12 +25,12 @@ namespace opgs16::element {
 
 void CPreRenderingContainer::Initialize() {
   // Make final output texture.
-  std::unique_ptr<CFrameBuferFrame> final_frame_buffer = std::make_unique<CFrameBuferFrame>();
+  std::unique_ptr<CFrameBufferFrame> final_frame_buffer = std::make_unique<CFrameBufferFrame>();
   final_frame_buffer->GenerateFrameBuffer(0);
   final_frame_buffer->GenerateDefaultColorBuffer();
   final_frame_buffer->BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
-  final_frame_buffer->InitializeDefaultDepthBuffer();
+  final_frame_buffer->InitializeDefaultDepthBufferToFrameBuffer(0);
   final_frame_buffer->SetShader("opQuad2d");
   final_frame_buffer->Initialize();
   m_frame_buffer.emplace_back(std::move(final_frame_buffer));

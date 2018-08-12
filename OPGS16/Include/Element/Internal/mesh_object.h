@@ -190,6 +190,20 @@ public:
     return (void*)m_element_indices.data();
   }
 
+  ///
+  /// @brief Get vertices size.
+  ///
+  int32_t GetVerticesSize() const noexcept {
+    return static_cast<int32_t>(m_vertices.size());
+  }
+
+  ///
+  /// @brief Get indices size.
+  ///
+  int32_t GetIndicesSize() const noexcept {
+    return static_cast<int32_t>(m_element_indices.size());
+  }
+
 private:
   std::vector<DMeshVector>    m_vertices;
   std::vector<uint32_t>       m_element_indices;
