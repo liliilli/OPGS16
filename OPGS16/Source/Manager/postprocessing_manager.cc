@@ -63,10 +63,8 @@ namespace {
 /// @param[in] sequence_name Sequence name to find.
 /// @return Exist flag.
 ///
-phitos::enums::EFound IsEffectSequenceExist(const std::string& sequence_name) {
-  return m_effect_sequences.find(sequence_name) != m_effect_sequences.end() ?
-      EFound::Found :
-      EFound::NotFound;
+EFound IsEffectSequenceExist(const std::string& sequence_name) {
+  return m_effect_sequences.find(sequence_name) != m_effect_sequences.end() ? EFound::Found : EFound::NotFound;
 }
 
 } /// unnamed namespace
@@ -186,6 +184,7 @@ phitos::enums::ESucceed BindSequence(const std::string& sequence_name) {
   m_present_sequence = &m_effect_sequences[sequence_name];
   // Bind first effect
   (*m_effect_sequences[sequence_name].begin())->Bind();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   return ESucceed::Succeed;
 }
 
@@ -204,6 +203,7 @@ void Render() {
     // If this is not end of sequence, bind next.
     if (it_effect != it_rbegin) {
       (*std::next(it_effect))->Bind();
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     else {
       // Bind to default frame buffer.

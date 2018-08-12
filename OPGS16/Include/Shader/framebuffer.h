@@ -13,7 +13,7 @@
 ///
 /// @author Jongmin Yun
 /// @log
-/// 2018-04-20 Add boilerplate codes. Add virtual desctuctor to CFrameBuferFrame.
+/// 2018-04-20 Add boilerplate codes. Add virtual desctuctor to CFrameBufferFrame.
 /// 2018-04-20 Change name of Initiate... functions to Generate... and SetShader().
 /// 2018-04-20 Remove error flags and add log output.
 /// 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
@@ -24,14 +24,14 @@
 #include <memory>
 
 #include <Element/Internal/texture2d_sprite.h>
+#include <Element/Internal/texture2d_plain.h>
 #include <Shader/shader_wrapper.h>
 #include <opgs16fwd.h>
-#include "Element/Internal/texture2d_plain.h"
 
 namespace opgs16::element {
 
 ///
-/// @class CFrameBuferFrame
+/// @class CFrameBufferFrame
 /// @brief The frame manages things to render on post-processing time.
 ///
 /// This class's m_object_list has frame buffer, texture, and render buffer to be able to bind
@@ -46,9 +46,9 @@ namespace opgs16::element {
 /// 2018-04-20 Moved namespace to ::opgs16::element and remove ::shading unknown malicious namespace.
 /// 2018-04-21 Rename CPostProcessingFrame to CFrameBufferFrame.
 ///
-class CFrameBuferFrame {
+class CFrameBufferFrame {
 public:
-  virtual ~CFrameBuferFrame() = default;
+  virtual ~CFrameBufferFrame() = default;
 
   /**
 	 * @brief This functions must be called in initiating PostProcessingFrame instance.
@@ -102,7 +102,7 @@ public:
   ///
   /// Initialize default depth buffer to [0] position of m_common_buffers.
 	///
-	void InitializeDefaultDepthBuffer();
+	void InitializeDefaultDepthBufferToFrameBuffer(int32_t framebuffer_index);
 
 	/**
 	 * @brief Get reference of binded texture.
@@ -133,11 +133,9 @@ public:
 	/**
 	 * @brief Create and Initialize shader to be used only in this post-processing frame.
 	 * If there is already existed shader, this methods does nothing.
-	 *
-	 * @param[in] name The name of shader to create.
-	 * @param[in] pixel_shader The path of pixel shader.
+	 * @param[in] shader_name The name of shader to bind.
 	 */
-	void SetShader(const char* name);
+	void SetShader(const std::string& shader_name);
 
 	/**
 	 * @brief Bind frame buffer. This must be called to render m_object_list to frame buffer.
@@ -156,16 +154,16 @@ public:
 	 * @brief Render texture and components.
 	 * This must be called after arbitary frame buffer bound.
 	 * This methods could be overriden by derived class.
-     *
-     * Caller calls this method, Shader would be used and refresh uniform parameters automatically.
-     * and texture binds, render.
+   *
+   * Caller calls this method, Shader would be used and refresh uniform parameters automatically.
+   * and texture binds, render.
 	 */
 	virtual void RenderEffect();
 
 	/**
 	 * @brief Insert uniform variable value to be used by shader.
+	 * @tparam _Ty Type parameter to compare with supported uniform container's type.
 	 * @param[in] tag The tag to insert value.
-	 * @param[in] _Ty Type parameter to compare with supported uniform container's type.
 	 * @param[in] value The value insert.
 	 */
 	template <typename _Ty>
@@ -175,8 +173,8 @@ public:
 
 	/**
 	 * @brief Replace uniform variable's value with new value.
+	 * @tparam _Ty Type parameter to compare with supported uniform container's type.
 	 * @param[in] tag The tag to insert value.
-	 * @param[in] _Ty Type parameter to compare with supported uniform container's type.
 	 * @param[in] value The value insert.
 	 */
 	template <typename _Ty>
@@ -185,45 +183,40 @@ public:
 	}
 
 private:
-	std::array<GLuint, 4> m_frame_buffers{};		/** Frame buffer container */
-	std::array<TTextureSmtPtr, 4> m_color_buffers{};	/** Color buffer container */
-	std::array<GLuint, 8> m_common_buffers{};		/** Universal buffer container */
+  /// Frame buffer container.
+	std::array<GLuint, 4> m_frame_buffers{};
+  /// Color buffer container.
+	std::array<TTextureSmtPtr, 4> m_color_buffers{};
+  /// Universal buffer container.
+	std::array<GLuint, 8> m_common_buffers{};
 
-    CShaderWrapper m_shader_wrapper;
-
-	GLuint empty_vao;
-	bool m_is_useable{ false };		/** Must be true to use post-processing instance */
+  CShaderWrapper m_shader_wrapper;
+  /// Must be true to use post-processing instance.
+	bool m_is_useable = false;
+	GLuint empty_vao = 0;
 
 private:
-	/**
-	 * @brief This method gets quad vertex attribute object.
-	 * @return Lvalue reference of quad BindingObject shared with all pp frame instance.
-	 */
-    CVertexArrayObject& GetCommonQuadVao();
-
-	/**
-	 * @brief This method checks wherther it already has a value on spot you want.
-	 * @param[in] id Index to verify.
-	 * @param[in] buffer Container to be verified by id.
-	 * @return Success or failure flag. Return true if buffer in index is already generated.
-	 * (except for helper::CTexture2DSprite. helper::CTexture2DSprite version is below.)
-	 */
+	///
+	/// @brief This method checks wherther it already has a value on spot you want.
+	/// @param[in] id Index to verify.
+	/// @param[in] buffer Container to be verified by id.
+	///  @return Success or failure flag. Return true if buffer in index is already generated.
+	/// (except for helper::CTexture2DSprite. helper::CTexture2DSprite version is below.)
+	///
 	template <int32_t TAmnt>
-	bool IsAlreadyGenerated(const int32_t id,
-                          const std::array<GLuint, TAmnt>& buffer) const {
+	bool IsAlreadyGenerated(int32_t id, const std::array<GLuint, TAmnt>& buffer) const {
 		if (id < TAmnt && buffer[id] == 0)
       return false;
-
-	  return true;
+    else
+      return true;
 	}
 
 	/// Overriden method of IsAlreadyGenerated<size_t>(const size, const std::array). */
-	bool IsAlreadyGenerated(const int32_t id,
-                          const decltype(m_color_buffers)& buffer) const {
-		if (id < buffer.size() && buffer[id] == nullptr)
+	bool IsAlreadyGenerated(int32_t id, const decltype(m_color_buffers)& buffer) const {
+		if (id < static_cast<int32_t>(buffer.size()) && buffer[id] == nullptr)
       return false;
-
-	  return true;
+    else
+      return true;
 	}
 };
 

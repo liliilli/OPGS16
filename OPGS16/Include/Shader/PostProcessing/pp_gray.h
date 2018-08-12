@@ -19,21 +19,12 @@
  *----*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*/
 
 /// ::opgs16:element::CPostProcessingFrame
-#include <Element\postprocessing_frame.h>
+#include <Element/postprocessing_frame.h>
 
 namespace opgs16::builtin::postprocessing {
 
 class PpEffectGray final : public element::CPostProcessingFrame {
-	void Initialize() override final {
-		GenerateFrameBuffer(0);
-    GenerateDefaultColorBuffer();
-		BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-		InitializeDefaultDepthBuffer();
-		InsertUniformValue("uIntensity", 1.0f);
-		SetShader("ppGray");
-
-		CFrameBuferFrame::Initialize();
-	}
+	void Initialize() override final;
 };
 
 } /*! ::opgs16::builtin::postprocessing */

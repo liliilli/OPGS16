@@ -29,12 +29,12 @@ void PpEffectConvex::Initialize() {
 	texture_0->SetBorderColor({ 0, 0, 0, 1 });
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 	/** The rest */
-	InitializeDefaultDepthBuffer();
+	InitializeDefaultDepthBufferToFrameBuffer(0);
 	InsertUniformValue("uIntensity", 0.05f);
 	SetShader("ppConvex");
 
 	/** Last */
-	CFrameBuferFrame::Initialize();
+	CFrameBufferFrame::Initialize();
 }
 
 } /*! ::opgs16::builtin::postprocessing */

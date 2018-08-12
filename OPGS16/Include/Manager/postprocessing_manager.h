@@ -17,7 +17,7 @@
 /// @log
 /// 2018-02-18 Create file.
 /// 2018-03-04 Refactoring. Move class to /Manager class.
-/// 2018-04-20 Refactoring. CFrameBuferFrame to ::opgs16::element::CFrameBuferFrame.
+/// 2018-04-20 Refactoring. CFrameBufferFrame to ::opgs16::element::CFrameBufferFrame.
 /// 2018-06-15 Create file.
 ///
 

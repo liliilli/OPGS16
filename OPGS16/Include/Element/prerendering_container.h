@@ -43,7 +43,7 @@ public:
         m_binding_objects.emplace_back(&object);
     }
 
-    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBuferFrame, _Ty>>>
+    template <class _Ty, typename = std::enable_if_t<std::is_base_of_v<element::CFrameBufferFrame, _Ty>>>
     void InsertFrameBuferFrame() {
         m_frame_buffer.push_back(std::make_unique<_Ty>());
         (*m_frame_buffer.rbegin())->Initialize();
@@ -63,7 +63,7 @@ private:
     bool m_initialized{ false };
 
     std::vector<CObject*> m_binding_objects{};
-    std::vector<std::unique_ptr<element::CFrameBuferFrame>> m_frame_buffer;
+    std::vector<std::unique_ptr<element::CFrameBufferFrame>> m_frame_buffer;
 };
 
 } /*! ::opgs16::element */

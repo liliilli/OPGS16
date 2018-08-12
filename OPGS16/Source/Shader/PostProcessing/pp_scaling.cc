@@ -23,10 +23,10 @@ void PpEffectScaling::Initialize() {
 	GenerateFrameBuffer(0);
   GenerateDefaultColorBuffer();
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
-	InitializeDefaultDepthBuffer();
+	InitializeDefaultDepthBufferToFrameBuffer(0);
 	SetShader("ppQuad");
 
-	CFrameBuferFrame::Initialize();
+	CFrameBufferFrame::Initialize();
 }
 
 void PpEffectScaling::RenderEffect() {
@@ -41,7 +41,7 @@ void PpEffectScaling::RenderEffect() {
       GetScreenHeight() * scale_val
   );
 
-  CFrameBuferFrame::RenderEffect();
+  CFrameBufferFrame::RenderEffect();
 }
 
 } /*! opgs16::builtin::postprocessing */

@@ -25,14 +25,14 @@ void PpEffectSinewave::Initialize() {
 	BindTextureToFrameBuffer(0, 0, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 
 	// The rest
-	InitializeDefaultDepthBuffer();
+	InitializeDefaultDepthBufferToFrameBuffer(0);
 	InsertUniformValue("uIntensity", 2.f);
 	InsertUniformValue("uInterval", 0.05f);
 	InsertUniformValue("uMove", 0.f);
 	SetShader("ppSineWave");
 
 	/** Last */
-	CFrameBuferFrame::Initialize();
+	CFrameBufferFrame::Initialize();
 }
 
 void PpEffectSinewave::Update() {

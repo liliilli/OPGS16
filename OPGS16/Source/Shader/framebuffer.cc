@@ -35,13 +35,13 @@
 
 namespace opgs16::element {
 
-void CFrameBuferFrame::Initialize() {
+void CFrameBufferFrame::Initialize() {
 	/** Make empty vao for default_screen rendering */
 	glGenVertexArrays(1, &empty_vao);
 	m_is_useable = true;
 }
 
-void CFrameBuferFrame::GenerateFrameBuffer(const unsigned id) {
+void CFrameBufferFrame::GenerateFrameBuffer(const unsigned id) {
   if (IsAlreadyGenerated(id, m_frame_buffers)) {
     PUSH_LOG_WARN("Already generated frame buffer.");
     return;
@@ -51,7 +51,7 @@ void CFrameBuferFrame::GenerateFrameBuffer(const unsigned id) {
   glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[id]);
 }
 
-void CFrameBuferFrame::GenerateColorBuffer(const unsigned id,
+void CFrameBufferFrame::GenerateColorBuffer(const unsigned id,
     GLint internal_format, GLenum format, GLenum type,
     GLint width, GLint height) {
   PHITOS_ASSERT(width > 0, "Width must not be less than 0.");
@@ -70,34 +70,39 @@ void CFrameBuferFrame::GenerateColorBuffer(const unsigned id,
   m_color_buffers[id] = std::move(texture);
 }
 
-void CFrameBuferFrame::GenerateDefaultColorBuffer() {
+void CFrameBufferFrame::GenerateDefaultColorBuffer() {
   using opgs16::setting::GetScreenWidth;
   using opgs16::setting::GetScreenHeight;
 
   GenerateColorBuffer(0, GL_RGB16F, GL_RGB, GL_FLOAT, GetScreenWidth(), GetScreenHeight());
 }
 
-void CFrameBuferFrame::SetShader(const char* name) {
+void CFrameBufferFrame::SetShader(const std::string& name) {
   m_shader_wrapper.SetShader(manager::shader::GetShader(name));
 }
 
-void CFrameBuferFrame::InitializeDefaultDepthBuffer() {
+void CFrameBufferFrame::InitializeDefaultDepthBufferToFrameBuffer(int32_t framebuffer_index) {
+  PHITOS_ASSERT(framebuffer_index >= 0, "Framebuffer index value must be positive or 0 integer.");
   using opgs16::setting::GetScreenWidth;
   using opgs16::setting::GetScreenHeight;
 
-	GLuint& depth_buffer = m_common_buffers[0];
+  if (m_frame_buffers[framebuffer_index] == 0) {
+    PHITOS_ASSERT(m_frame_buffers[framebuffer_index] != 0, "Framebuffer must be initialized prior to subsequent function call.");
+    return;
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_index]);
 
+	GLuint& depth_buffer = m_common_buffers[0];
 	glGenRenderbuffers(1, &depth_buffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                        GetScreenWidth(), GetScreenHeight());
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                            GL_RENDERBUFFER, depth_buffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, GetScreenWidth(), GetScreenHeight());
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void CFrameBuferFrame::BindTextureToFrameBuffer(
-    int32_t texture_id, int32_t framebuffer_id,
-    const GLenum attachment, const GLenum target) {
+void CFrameBufferFrame::BindTextureToFrameBuffer(int32_t texture_id, int32_t framebuffer_id,
+                                                 const GLenum attachment, const GLenum target) {
 	/*! Check if both texture and framebuffer are exist. */
 	if (IsAlreadyGenerated(framebuffer_id, m_frame_buffers) && IsAlreadyGenerated(texture_id, m_color_buffers)) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[framebuffer_id]);
@@ -105,21 +110,21 @@ void CFrameBuferFrame::BindTextureToFrameBuffer(
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	else {
-        PUSH_LOG_ERRO("Failed to bind texture to frame buffer.");
+    PUSH_LOG_ERRO("Failed to bind texture to frame buffer.");
 	}
 }
 
-void CFrameBuferFrame::Bind() {
+void CFrameBufferFrame::Bind() {
 	if (m_is_useable) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frame_buffers[0]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	else {
-        PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
+    PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
 	}
 }
 
-void CFrameBuferFrame::RenderEffect() {
+void CFrameBufferFrame::RenderEffect() {
 	if (m_is_useable) {
 		m_shader_wrapper.UseShader();
 		glBindVertexArray(empty_vao);
@@ -132,13 +137,8 @@ void CFrameBuferFrame::RenderEffect() {
 		glBindVertexArray(0);
 	}
 	else {
-        PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
+    PUSH_LOG_ERRO("Failed to bind framebuffer, It's not initialized yet.");
 	}
-}
-
-CVertexArrayObject& CFrameBuferFrame::GetCommonQuadVao() {
-    static CVertexArrayObject quad_vao{ _internal::quad_info, 8, { {0, 3, 0}, {1, 3, 3}, {2, 2, 6} }, _internal::quad_indices };
-	return quad_vao;
 }
 
 } /*! opgs16::element */

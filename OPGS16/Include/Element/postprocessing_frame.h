@@ -32,7 +32,7 @@ namespace opgs16::element {
 ///
 /// @log
 /// 2018-04-21 Create file.
-class CPostProcessingFrame : public CFrameBuferFrame {
+class CPostProcessingFrame : public CFrameBufferFrame {
 public:
     /** Check this effect is on effect-sequences. */
     bool IsActive() const noexcept {

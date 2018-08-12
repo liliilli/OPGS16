@@ -78,7 +78,7 @@ class   CScene;
 class   CTimerHandle;   /*! sub-type of timermanager */
 class   CVertexArrayObject;
 class   CShaderWrapper;
-class   CFrameBuferFrame;
+class   CFrameBufferFrame;
 class   CPostProcessingFrame;
 class   CPreRenderingFrame;
 class   CPreRenderingContainer;
