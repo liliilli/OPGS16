@@ -42,7 +42,12 @@ public:
   ///
   /// @brief Get rotation matrix (4x4) from quaternion.
   ///
-  glm::mat4 GetRotationMatrix() const noexcept;
+  glm::mat4 GetRotationMatrix4() const noexcept;
+
+  ///
+  /// @brief Get rotation matrix (3x3) from quaternion.
+  ///
+  glm::mat3 GetRotationMatrix3() const noexcept;
 
   ///
   /// @brief Return euler rotation angle (degrees) (x, y, z).

@@ -29,8 +29,12 @@ DQuaternion::DQuaternion(const opgs16::DVector3& euler_angle) :
                             math::DegToRad(euler_angle.y),
                             math::DegToRad(euler_angle.z)} } {}
 
-glm::mat4 DQuaternion::GetRotationMatrix() const noexcept {
+glm::mat4 DQuaternion::GetRotationMatrix4() const noexcept {
   return glm::mat4_cast(m_quaternion);
+}
+
+glm::mat3 DQuaternion::GetRotationMatrix3() const noexcept {
+  return glm::mat3_cast(m_quaternion);
 }
 
 DVector3 DQuaternion::GetEulerRotationDegreeAngleVector() const noexcept {
