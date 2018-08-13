@@ -63,6 +63,7 @@
 #include <Phitos/Enums/activated.h>
 /// Forward declaration
 #include <opgs16fwd.h>
+#include "Component/Internal/xyz_axis_renderer.h"
 
 
 //!
@@ -71,6 +72,7 @@
 
 namespace opgs16::component::_internal {
 class CColliderBase;
+class CPrivateXyzAxisRenderer;
 }
 
 namespace opgs16::element::_internal {
@@ -133,6 +135,11 @@ public:
 	const DVector3& GetWorldPosition() const noexcept;
 
   ///
+  /// @brief Get Object's final position.
+  ///
+  const DVector3& GetFinalPosition() const noexcept;
+
+  ///
   /// @brief Sets local position.
   /// @param[in] position local position Position to set on.
   ///
@@ -154,12 +161,6 @@ public:
   ///
   void AddOffsetWorldPosition(EAxis3D axis, float value) noexcept;
 
-	///
-	/// @brief The method refresh parent position.
-	/// @param[in] parent_position Position to apply for.
-	///
-	void SetParentPosition(const DVector3& parent_position);
-
   ///
   /// @brief The method set final position but keeping parent position
   /// but adjusting CObject's world position.
@@ -167,20 +168,16 @@ public:
   void SetWorldPosWithFinalPos(const DVector3& final_position);
 
   ///
-  /// @brief Get Object's final position.
-  ///
-  const DVector3& GetFinalPosition() const noexcept;
-
-  ///
   /// @brief The method gets rotation angle value
   /// @return Object's rotation angle value.
   ///
   float GetRotationLocalAngle(EAxis3D direction) const noexcept;
 
-  float GetRotationFromParentAngle(EAxis3D direction) const noexcept;
-
   float GetRotationWorldAngle(EAxis3D direction) const noexcept;
 
+  ///
+  /// @brief
+  ///
   float GetRotationWpAngle(EAxis3D direction) const noexcept;
 
   ///
@@ -193,8 +190,6 @@ public:
 
   void SetRotationWorldAngle(EAxis3D direction, float angle_value) noexcept;
 
-  void SetRotationParentAngle(EAxis3D direction, float angle_value) noexcept;
-
   ///
   /// @brief Add offset value with axis as local rotation angle.
   ///
@@ -206,28 +201,25 @@ public:
   void AddOffsetWorldAngle(EAxis3D axis, float value) noexcept;
 
   ///
-  /// @brief The method gets scaling values
-  /// @return Object's scaling value.
-  ///
-  float GetScaleValue() const noexcept;
-
-  ///
   /// @brief The method gets (x, y, z) DVector3 scaling axis factor.
   /// @return Object's scaling vector which has (x, y, z) axis factors.
   ///
-  const DVector3& GetScaleFactor() const noexcept;
+  const DVector3& GetLocalScale() const noexcept;
 
   ///
-  /// @brief The method sets scaling angle values.
-  /// @param[in] scale_value Scaling value to set on.
+  /// @brief Returns world scale which able to affect child object's transform.
   ///
-  void SetScaleValue(const float scale_value);
+  const DVector3& GetWorldScale() const noexcept;
 
   ///
   /// @brief The method sets scaling vector have (x, y, z) scaling factors.
-  /// @param[in] factor Scaling factor
   ///
-  void SetScaleFactor(const DVector3& factor);
+  void SetLocalScale(const DVector3& factor);
+
+  ///
+  /// @brief Sets local scaling vector value which have (x, y, z).
+  ///
+  void SetWorldScale(const DVector3& xyz_value);
 
   ///
   /// @brief The method returns Model matrix, M = TRS
@@ -238,18 +230,6 @@ public:
   /// @return Model matrix (M = TRS)
   ///
   const glm::mat4& GetModelMatrix() const;
-
-  void SetSucceedingPositionFlag(bool value) noexcept;
-
-  void SetSucceedingRotationFlag(bool value) noexcept;
-
-  void SetSucceedingScalingFlag(bool value) noexcept;
-
-  bool GetSucceedingPositionFlag() const noexcept;
-
-  bool GetSucceedingRotationFlag() const noexcept;
-
-  bool GetSucceedingScalingFlag() const noexcept;
 
   ///
   /// @brief Set active option of object.
@@ -294,7 +274,7 @@ public:
   ///
   /// @brief Return object name
   ///
-  inline const std::string& GetGameObjectName() const noexcept {
+  const std::string& GetGameObjectName() const noexcept {
     return m_object_name;
   }
 
@@ -309,11 +289,11 @@ public:
 
 	///
 	/// @brief Destroy child object has unique tag key but not recursively.
-	/// @param[in] name Object name.
+	/// @param[in] child_object_name Object name.
 	/// @return Success/Failed tag.
   /// If arbitary m_object_list has been destroied, return ture.
 	///
-	bool DestroyGameObject(const std::string& name);
+	bool DestroyGameObject(const std::string& child_object_name);
 
   ///
   /// @brief Destory child object with address.
@@ -344,32 +324,6 @@ public:
 	///
 	CObject* GetGameObject(const std::string& object_name, bool is_resursive = false);
 
-  ///
-  /// @brief
-  /// Overloaded function of Instantiate(Varadic...)
-  ///
-  template <
-    class TCObjectType,
-    class = std::enable_if_t<IsCObjectBase<TCObjectType>>
-  >
-  TCObjectType* CreateGameObject(const std::string& object_name,
-                                 std::unique_ptr<TCObjectType>& object_smtptr) {
-    const auto object_final_name = pCreateChildTag(object_name);
-
-    auto [result_pair, result] = m_children_objects.try_emplace(object_final_name, nullptr);
-    if (!result) {
-      PHITOS_ASSERT(result, "Object did not be made properly.");
-      return nullptr;
-    }
-
-    result_pair->second = std::move(object_smtptr);
-    TGameObjectSmtPtr& object_ref = result_pair->second;
-    object_ref->pSetHash(object_final_name);
-    object_ref->SetParentPosition(GetParentPosition());
-
-    return static_cast<TCObjectType*>(object_ref.get());
-  }
-
 	///
 	/// @brief This initiate object as a child of base object.
 	///
@@ -387,22 +341,21 @@ public:
     class... TConstructionArgs,
     class = std::enable_if_t<IsCObjectBase<TCObjectType>>
   >
-  TCObjectType* CreateGameObject(const std::string object_name,
-                            TConstructionArgs&&... args) {
+  TCObjectType* CreateGameObject(const std::string object_name, TConstructionArgs&&... args) {
       const auto object_final_name = pCreateChildTag(object_name);
 
-    auto [result_pair, result] = m_children_objects.try_emplace(
-        object_final_name,
-        nullptr);
+    auto [result_pair, result] = m_children_objects.try_emplace(object_final_name, nullptr);
     if (!result) {
       PHITOS_ASSERT(result, "Object did not be made properly.");
       return nullptr;
     }
 
-    result_pair->second = std::make_unique<TCObjectType>(
-        std::forward<TConstructionArgs>(args)...);
+    // Set hash value and parent as this.
+    result_pair->second = std::make_unique<TCObjectType>(std::forward<TConstructionArgs>(args)...);
     TGameObjectSmtPtr& object_ref = result_pair->second;
     object_ref->pSetHash(object_final_name);
+    object_ref->m_parent = this;
+
     return static_cast<TCObjectType*>(object_ref.get());
   }
 
@@ -566,6 +519,17 @@ public:
   }
 
 protected:
+	///
+	/// @brief The method refresh parent position.
+	/// @param[in] parent_position Position to apply for.
+	///
+	void SetParentPosition(const DVector3& parent_position);
+
+  ///
+  /// @brief
+  ///
+  void SetRotationParentAngle(EAxis3D direction, float angle_value) noexcept;
+
   /// Pointer implementation heap instance.
 	TPimplSmtPtr   m_data = nullptr;
   /// The container stores child object.
@@ -582,7 +546,7 @@ private:
   ///
   /// @brief Set hash value
   ///
-  inline void pSetHash(const std::string& name) const {
+  void pSetHash(const std::string& name) const {
     PHITOS_ASSERT(m_hash_initialized == false, "Hash value of object is already defined.");
 
     m_object_name = name;
@@ -604,16 +568,44 @@ private:
 
   CObject* pGetGameObjectResursively(const std::string& object_name) noexcept;
 
-  /// Propagate parent position recursively.
+  //!
+  //! Propagation
+  //!
+
+  ///
+  /// @brief Get parent world's normal axis value (x, y, z) which been affected by world rotation.
+  ///
+  const std::array<DVector3, 3>& pGetParentWorldPropagateAxisValue() const noexcept;
+
+  ///
+  /// @brief Get all parent's summed world rotation euler angle values (x, y, z).
+  ///
+  const DVector3& pGetParentSummedWorldRotationAngle() const noexcept;
+
+  ///
+  /// @brief Get all parent's producted world scale values (x, y, z);
+  ///
+  const DVector3& pGetParentProductedWorldScaleValue() const noexcept;
+
+  ///
+  /// @brief Propagate parent position recursively.
+  ///
   void PropagateParentPosition();
 
-  /// Propagate parent rotation recursively.
+  ///
+  /// @brief Propagate parent rotation recursively.
+  ///
   void PropagateParentRotation();
 
   ///
   /// @brief
   ///
   void PropagateActivation(phitos::enums::EActivated value) noexcept;
+
+  ///
+  /// @brief Get rotation vector of total world angle from object tree root.
+  ///
+  const DVector3& pfGetRotationTotalWorldAngle();
 
   ///
   /// @brief Calculate and set up new final activation flag.
@@ -623,7 +615,7 @@ private:
   ///
   /// @brief
   ///
-  void Propagate() ;
+  void Propagate();
 
 protected:
   /// Local update method for derived object.
@@ -645,12 +637,14 @@ private:
   mutable uint32_t m_hash_value = 0;
   /// Flag
   mutable bool m_hash_initialized = false;
+  mutable bool m_is_transform_initiated = false;
 
   /// Parent object. if nullptr, this object has no parent and be on scene.
   CObject* m_parent = nullptr;
 
   friend opgs16::element::CScene;
   friend opgs16::component::_internal::CColliderBase;
+  friend opgs16::component::_internal::CPrivateXyzAxisRenderer;
 };
 
 } /// ::opgs16::element namespace

@@ -19,7 +19,7 @@
 /// 2018-02-23 Add succeeding flag of translation, rotation, scaling from parent.
 /// 2018-03-05 Add rendering layer member functions.
 /// 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
-/// 2018-04-14 Change CObjectImpl::SetRotationLocalAngle angle reflection mechanism, restrict bound as (-180.f, 180.f].
+/// 2018-04-14 Change CObjectImpl::SetLocalRotationAngle angle reflection mechanism, restrict bound as (-180.f, 180.f].
 /// 2018-04-18 Change function and mechanism of rotation.
 /// 2018-07-02 Refactoring.
 /// 2018-07-31 Add AddOffset... series function.
@@ -74,7 +74,7 @@ public:
 
   inline void SetLocalPosition(const DVector3& position) noexcept {
     m_local_position = position;
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
@@ -82,7 +82,7 @@ public:
     m_world_position = position;
     m_parent_to_position = m_parent_from_position + m_world_position;
 
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
@@ -94,7 +94,7 @@ public:
     m_parent_from_position = parent_position;
     m_parent_to_position = parent_position + m_world_position;
 
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
@@ -107,7 +107,7 @@ public:
     case EAxis3D::Y: m_local_position.y += value; break;
     case EAxis3D::Z: m_local_position.z += value; break;
     }
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
@@ -121,179 +121,165 @@ public:
     case EAxis3D::Z: m_world_position.z += value; break;
     }
     m_parent_to_position = m_parent_from_position + m_world_position;
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
   }
 
   //!
-  //! Angle
+  //! Rotation
   //!
 
-  float GetRotationLocalAngle(const EAxis3D direction) const noexcept {
+  const std::array<DVector3, 3>& GetChildObjectWorldAxisBasisValue() noexcept {
+    if (m_is_world_propagation_axis_dirty) {
+      pUpdatePropagationAxisBasis();
+      m_is_world_propagation_axis_dirty = false;
+    }
+    return m_object_propagate_axis;
+  }
+
+  const std::array<DVector3, 3>& GetObjectWorldAxisBasisValue() const noexcept {
+    return m_object_space_axis;
+  }
+
+  void SetObjectWorldAxisBasisValue(const std::array<DVector3, 3>& propagated_axis) noexcept {
+    m_object_space_axis = propagated_axis;
+  }
+
+  void SetObjectWorldRotationBasisValue(const DVector3& propagated_world_rotation_angle) noexcept {
+    m_propagated_world_rotation_euler_angle = propagated_world_rotation_angle;
+
+    pUpdateObjectSpaceAxisBasis();
+
+    m_offset_model_matrix_deprecated = true;
+    m_final_pos_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
+    m_is_world_propagation_axis_dirty = true;
+  }
+
+  const DVector3& GetLocalRotationEulerAngle() const noexcept {
+    return m_local_rotation_euler_angle;
+  }
+
+  const DVector3& GetWorldRotationEulerAngle() const noexcept {
+    return m_world_rotation_euler_angle;
+  }
+
+  float GetLocalRotationAngle(const EAxis3D direction) const noexcept {
     switch (direction) {
-    case EAxis3D::X: return m_rotation_local_angle_n[0];
-    case EAxis3D::Y: return m_rotation_local_angle_n[1];
-    case EAxis3D::Z: return m_rotation_local_angle_n[2];
-    default:
-#ifdef _DEBUG
-      return std::numeric_limits<float>::signaling_NaN();
-#else
-      return std::numeric_limits<float>::quiet_NaN();
-#endif
+    case EAxis3D::X: return m_local_rotation_euler_angle.x;
+    case EAxis3D::Y: return m_local_rotation_euler_angle.y;
+    case EAxis3D::Z: return m_local_rotation_euler_angle.z;
     }
   }
 
-  float GetRotationFromParentAngle(const EAxis3D direction) const noexcept {
+  float GetWorldRotationAngle(const EAxis3D direction) const noexcept {
     switch (direction) {
-    case EAxis3D::X: return m_rotation_parent_angle_n[0];
-    case EAxis3D::Y: return m_rotation_parent_angle_n[1];
-    case EAxis3D::Z: return m_rotation_parent_angle_n[2];
-    default:
-#ifdef _DEBUG
-      return std::numeric_limits<float>::signaling_NaN();
-#else
-      return std::numeric_limits<float>::quiet_NaN();
-#endif
-    }
-  }
-
-  float GetRotationWorldAngle(const EAxis3D direction) const noexcept {
-    switch (direction) {
-    case EAxis3D::X: return m_rotation_world_angle_n[0];
-    case EAxis3D::Y: return m_rotation_world_angle_n[1];
-    case EAxis3D::Z: return m_rotation_world_angle_n[2];
-    default:
-#ifdef _DEBUG
-      return std::numeric_limits<float>::signaling_NaN();
-#else
-      return std::numeric_limits<float>::quiet_NaN();
-#endif
+    case EAxis3D::X: return m_world_rotation_euler_angle.x;
+    case EAxis3D::Y: return m_world_rotation_euler_angle.y;
+    case EAxis3D::Z: return m_world_rotation_euler_angle.z;
     }
   }
 
   float GetRotationWpAngle(const EAxis3D direction) const {
     switch (direction) {
-    case EAxis3D::X: return m_rotation_wp_angle_n[0];
-    case EAxis3D::Y: return m_rotation_wp_angle_n[1];
-    case EAxis3D::Z: return m_rotation_wp_angle_n[2];
-    default:
-#ifdef _DEBUG
-      return std::numeric_limits<float>::signaling_NaN();
-#else
-      return std::numeric_limits<float>::quiet_NaN();
-#endif
+    case EAxis3D::X: return m_object_final_rotation_euler_angle.x;
+    case EAxis3D::Y: return m_object_final_rotation_euler_angle.y;
+    case EAxis3D::Z: return m_object_final_rotation_euler_angle.z;
     }
   }
 
-  void SetRotationLocalAngle(const EAxis3D direction, const float angle_value) noexcept {
+  const DVector3& GetWorldSummedRotationAngle() const noexcept {
+    return m_summed_world_rotation_euler_angle;
+  }
+
+  void SetLocalRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EAxis3D::X: m_rotation_local_angle_n[0] = angle; break;
-    case EAxis3D::Y: m_rotation_local_angle_n[1] = angle; break;
-    case EAxis3D::Z: m_rotation_local_angle_n[2] = angle; break;
+    case EAxis3D::X: m_local_rotation_euler_angle.x = angle; break;
+    case EAxis3D::Y: m_local_rotation_euler_angle.y = angle; break;
+    case EAxis3D::Z: m_local_rotation_euler_angle.z = angle; break;
     default: break;
     }
 
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_local_rotation_deprecated = true;
   }
 
-  void SetRotationWorldAngle(const EAxis3D direction, const float angle_value) noexcept {
+  void SetWorldRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EAxis3D::X: m_rotation_world_angle_n[0] = angle; break;
-    case EAxis3D::Y: m_rotation_world_angle_n[1] = angle; break;
-    case EAxis3D::Z: m_rotation_world_angle_n[2] = angle; break;
+    case EAxis3D::X: m_world_rotation_euler_angle.x = angle; break;
+    case EAxis3D::Y: m_world_rotation_euler_angle.y = angle; break;
+    case EAxis3D::Z: m_world_rotation_euler_angle.z = angle; break;
     default: break;
     }
 
-    RefreshRotationWorldParentAngle(direction);
+    pUpdateSummedWorldRotationEulerAngle();
     m_offset_model_matrix_deprecated = true;
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
+    m_is_world_propagation_axis_dirty = true;
   }
 
   void SetRotationParentAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
-    case EAxis3D::X: m_rotation_parent_angle_n[0] = angle; break;
-    case EAxis3D::Y: m_rotation_parent_angle_n[1] = angle; break;
-    case EAxis3D::Z: m_rotation_parent_angle_n[2] = angle; break;
+    case EAxis3D::X: m_propagated_world_rotation_euler_angle.x = angle; break;
+    case EAxis3D::Y: m_propagated_world_rotation_euler_angle.y = angle; break;
+    case EAxis3D::Z: m_propagated_world_rotation_euler_angle.z = angle; break;
     default: break;
     }
 
-    RefreshRotationWorldParentAngle(direction);
+    pUpdateSummedWorldRotationEulerAngle();
+    pUpdateObjectSpaceAxisBasis();
+
     m_offset_model_matrix_deprecated = true;
-    m_local_model_matrix_deprecated = true;
     m_final_pos_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
+    m_is_world_propagation_axis_dirty = true;
   }
 
-  void AddOffsetLocalAngle(EAxis3D axis, float value) noexcept {
+  void AddOffsetLocalAngle(EAxis3D axis, const float angle_value) noexcept {
     switch (axis) {
-    case EAxis3D::X:
-      m_rotation_local_angle_n[0] = math::GetRotationAngle(m_rotation_local_angle_n[0] + value);
-      break;
-    case EAxis3D::Y:
-      m_rotation_local_angle_n[1] = math::GetRotationAngle(m_rotation_local_angle_n[1] + value);
-      break;
-    case EAxis3D::Z:
-      m_rotation_local_angle_n[2] = math::GetRotationAngle(m_rotation_local_angle_n[2] + value);
-      break;
+    case EAxis3D::X: m_local_rotation_euler_angle.x += angle_value; break;
+    case EAxis3D::Y: m_local_rotation_euler_angle.y += angle_value; break;
+    case EAxis3D::Z: m_local_rotation_euler_angle.z += angle_value; break;
     default: break;
     }
 
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
     m_local_rotation_deprecated = true;
   }
 
-  void AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
+  void AddOffsetWorldAngle(EAxis3D axis, const float angle_value) noexcept {
     switch (axis) {
-    case EAxis3D::X:
-      m_rotation_world_angle_n[0] = math::GetRotationAngle(m_rotation_world_angle_n[0] + value);
-      break;
-    case EAxis3D::Y:
-      m_rotation_world_angle_n[1] = math::GetRotationAngle(m_rotation_world_angle_n[1] + value);
-      break;
-    case EAxis3D::Z:
-      m_rotation_world_angle_n[2] = math::GetRotationAngle(m_rotation_world_angle_n[2] + value);
-      break;
+    case EAxis3D::X: m_world_rotation_euler_angle.x += angle_value; break;
+    case EAxis3D::Y: m_world_rotation_euler_angle.y += angle_value; break;
+    case EAxis3D::Z: m_world_rotation_euler_angle.z += angle_value; break;
     default: break;
     }
 
+    pUpdateSummedWorldRotationEulerAngle();
     m_offset_model_matrix_deprecated = true;
-    m_local_model_matrix_deprecated = true;
+    m_is_local_model_matrix_deprecated = true;
+    m_is_world_propagation_axis_dirty = true;
   }
 
   //!
   //! Scale
   //!
 
-  float GetScaleLocalValue() const noexcept {
-    return m_scale_local_value;
-  }
-
-  const DVector3& GetScaleLocalFactor() const noexcept {
+  const DVector3& GetLocalScale() const noexcept {
     return m_scale_local_factor;
   }
 
-  inline void SetScaleLocalValue(const float scale_value) noexcept {
-    m_scale_local_value = scale_value;
+  inline void SetLocalScale(const DVector3& local_scale) noexcept {
+    m_scale_local_factor = local_scale;
 
-    m_local_model_matrix_deprecated = true;
-    m_scale_deprecated = true;
-  }
-
-  inline void SetScaleLocalFactor(const DVector3& scale_factor) noexcept {
-    m_scale_local_factor = scale_factor;
-
-    m_local_model_matrix_deprecated = true;
-    m_scale_deprecated = true;
-  }
-
-  inline void SetScaleParentValue(const float scale_value) noexcept {
-    m_scale_parent_value = scale_value;
+    m_is_local_model_matrix_deprecated = true;
+    m_is_local_scale_dirty = true;
   }
 
   inline void SetScaleParentFactor(const DVector3& scale_factor) noexcept {
@@ -305,34 +291,6 @@ public:
   //!
 
   const glm::mat4& GetModelMatrix() const;
-
-  //!
-  //! Flag inline methods
-  //!
-
-  inline void SetSucceedingPositionFlag(bool value) noexcept {
-    m_position_succeedable = value;
-  }
-
-  inline void SetSucceedingRotationFlag(bool value) noexcept {
-    m_rotation_succeedable = value;
-  }
-
-  inline void SetSucceedingScalingFlag(bool value) noexcept {
-    m_scaling_succeedable = value;
-  }
-
-  inline bool GetSucceedingPositionFlag() const noexcept {
-    return m_position_succeedable;
-  }
-
-  inline bool GetSucceedingRotationFlag() const noexcept {
-    return m_rotation_succeedable;
-  }
-
-  inline bool GetSucceedingScalingFlag() const noexcept {
-    return m_scaling_succeedable;
-  }
 
   ///
   /// @brief Set active option of object.
@@ -390,10 +348,14 @@ public:
   ///
   void SetTag(const std::string& tag_name);
 
-  /*! Overloading version of SetObjectTag(tag_name) */
+  ///
+  /// @brief Overloaded version of SetObjectTag(tag_name)
+  ///
   void SetTag(const unsigned tag_index);
 
-  /*! Return tag index value of this object. */
+  ///
+  /// @brief Return tag index value of this object.
+  ///
   inline unsigned GetTagIndexOf() const noexcept {
     return m_tag_index;
   }
@@ -406,26 +368,55 @@ public:
   std::string GetTagNameOf() const;
 
 private:
+  ///
+  /// @brief Update propagation axis basis using m_summed_world_rotation_euler_angle.
+  ///
+  void pUpdatePropagationAxisBasis() noexcept;
+
+  ///
+  /// @brief Update propagation axis basis using m_propagated_world_rotation_euler_angle.
+  ///
+  void pUpdateObjectSpaceAxisBasis() noexcept;
+
+  ///
+  /// @brief Update summed world rotation euler angle using parent_summed_world + this_world.
+  ///
+  void pUpdateSummedWorldRotationEulerAngle() noexcept;
+
+  void RefreshFinalPosition() const;	/** Refresh Translation matrix */
+  void RefreshRotateMatrix() const;	/** Refresh Rotation matrix */
+  void RefreshScaleVector() const;	/** Refresh Scaling matrix */
+  void RefreshWpRotationMatrix() const;
+
   /// (x, y, z) local position.
-  DVector3 m_local_position{};
+  DVector3 m_local_position;
   /// (x, y, z) world position.
-  DVector3 m_world_position{};
+  DVector3 m_world_position;
   /// (x, y, z) final position of parent.
-  DVector3 m_parent_from_position{};
+  DVector3 m_parent_from_position;
   /// (x, y, z) parent position to bring child.
-  mutable DVector3 m_parent_to_position{};
+  mutable DVector3 m_parent_to_position;
   /// (x, y, z) final position in hierarchy.
-  mutable DVector3 m_final_position{};
+  mutable DVector3 m_final_position;
 
-  float       m_rotation_local_angle_n[3]{ 0.f, };
-  float       m_rotation_world_angle_n[3]{ 0.f, };
-  float       m_rotation_parent_angle_n[3]{ 0.f, };
-  float       m_rotation_wp_angle_n[3]{ 0.f, };
+  DVector3 m_local_rotation_euler_angle;
+  DVector3 m_world_rotation_euler_angle;
+  /// parent's propagated world rotation summed angle;
+  DVector3 m_propagated_world_rotation_euler_angle;
+  /// propagated_world_rotation_euler_angle + world
+  DVector3 m_summed_world_rotation_euler_angle;
+  /// local + summed_world
+  DVector3 m_object_final_rotation_euler_angle;
 
-  /// Scale value's default value is 1.0f
-  float       m_scale_local_value{ 1.f };
-  /// Scale value from parent
-  float       m_scale_parent_value{ 1.f };
+  //!
+  //! Axis variables.
+  //!
+
+  /// Used as this object coordinate space.
+  std::array<DVector3, 3> m_object_space_axis;
+  /// Used as child object's coordinate space.
+  std::array<DVector3, 3> m_object_propagate_axis;
+
   /// Scale local factor, default is (1, 1, 1)
   DVector3 m_scale_local_factor = DVector3{ 1.f };
   /// Scale factor from parent.
@@ -448,31 +439,18 @@ private:
   EActivated m_is_finally_activated     = EActivated::Activated;
   bool m_is_callback_called = false;
 
-  /// Flag for succeeding parent position.
-  bool m_position_succeedable{ true };
-  /// Flag for succeeding parent rotation information.
-  bool m_rotation_succeedable{ true };
-  /// Flag for succeeding parent scaling information.
-  bool m_scaling_succeedable{ true };
+  mutable bool m_is_world_propagation_axis_dirty = false;
 
-  /// The flag model needs to be updated.
-  mutable bool m_local_model_matrix_deprecated{ true };
-  /// The flag model needs to be updated.
+
+
+  mutable bool m_is_local_model_matrix_deprecated{ true };
   mutable bool m_offset_model_matrix_deprecated{ true };
 
-  mutable bool m_final_pos_deprecated{ true };        /*! The flag final pos needs to be updated. */
-  mutable bool m_local_rotation_deprecated{ true };   /*! The flag rotation needs to be updated. */
-  mutable bool m_scale_deprecated{ true };            /*! The flag scale vec needs to be updated. */
+  mutable bool m_final_pos_deprecated{ true };
+  mutable bool m_local_rotation_deprecated{ true };
+  mutable bool m_is_local_scale_dirty{ true };
 
-  unsigned m_tag_index{ 0 };                /*! Tag index */
-
-private:
-  void RefreshFinalPosition() const;	/** Refresh Translation matrix */
-  void RefreshRotateMatrix() const;	/** Refresh Rotation matrix */
-  void RefreshScaleVector() const;	/** Refresh Scaling matrix */
-  void RefreshWpRotationMatrix() const;
-
-  void RefreshRotationWorldParentAngle(const EAxis3D direction);
+  unsigned m_tag_index = 0;
 };
 
 } /// ::opgs16::element::_internal namespace

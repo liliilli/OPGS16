@@ -33,6 +33,8 @@
 #include <Headers/import_logger.h>
 #include <Manager/object_manager.h>
 
+#include <Core/core_setting.h>
+
 namespace opgs16::element {
 
 namespace {
@@ -40,7 +42,13 @@ using _internal::CObjectImpl;
 } /*! unnamed namespace */
 
 CObject::CObject() : m_data{ std::make_unique<CObjectImpl>() } {
+  using opgs16::setting::IsEnableDebugMode;
+  using opgs16::component::_internal::CPrivateXyzAxisRenderer;
   SetObjectActive(true);
+
+  if (IsEnableDebugMode()) {
+    AddComponent<CPrivateXyzAxisRenderer>(*this);
+  }
 }
 
 void CObject::Update(float delta_time) {
@@ -49,58 +57,86 @@ void CObject::Update(float delta_time) {
   using EComponentType = component::_internal::EComponentType;
   using EScriptStarted = component::_internal::EScriptStarted;
 
-  if (m_data) {
-    switch (IsObjectActive()) {
-    case EActivated::Disabled: {
-      if (m_data->IsCallbackNotCalled()) {
-        for (auto& [component, type] : m_components) {
-          if (!(component && component->IsComponentActive()))
-            continue;
+  if (!m_data) {
+    PHITOS_UNEXPECTED_BRANCH();
+    return;
+  }
 
-          if (type == EComponentType::Script) {
-            auto script = static_cast<CScriptFrame*>(component.get());
-            script->OnDisabled();
-          }
-        }
-
-        m_data->SetCallbackFlagToFalse();
-      }
-    } break;
-    case EActivated::Activated: {
+  switch (IsObjectActive()) {
+  case EActivated::Disabled: {
+    if (m_data->IsCallbackNotCalled()) {
       for (auto& [component, type] : m_components) {
         if (!(component && component->IsComponentActive()))
           continue;
 
-        // At first, check if component is script type (based on CScriptFrame)
-        // and cast component to base script type.
-        // If Start() function is not called, call and turn on the start flag
-        // not to be callled over twice.
         if (type == EComponentType::Script) {
           auto script = static_cast<CScriptFrame*>(component.get());
-
-          if (script->m_started == EScriptStarted::NotStarted) {
-            script->Start();
-            script->m_started = decltype(script->m_started)::Started;
-          }
-
-          if (m_data->IsCallbackNotCalled()) {
-            script->OnEnabled();
-          }
+          script->OnDisabled();
         }
-
-        component->Update(delta_time);
       }
 
-      LocalUpdate();
       m_data->SetCallbackFlagToFalse();
-    } break;
+    }
+  } break;
+  case EActivated::Activated: {
+    if (!m_is_transform_initiated) {
+      if (!m_parent) {
+        m_is_transform_initiated = true;
+      }
+      else {
+        PUSH_LOG_DEBUG_EXT("Aligned : {} from {}.", m_object_name, m_parent->GetGameObjectName());
+        m_is_transform_initiated = true;
+      }
+    }
+    if (m_parent) {
+      // Realign transform from parent.
+      m_data->SetObjectWorldAxisBasisValue(m_parent->pGetParentWorldPropagateAxisValue());
+      m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
+      //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
     }
 
+    for (auto& [component, type] : m_components) {
+      if (!(component && component->IsComponentActive())) continue;
+
+      // At first, check if component is script type (based on CScriptFrame) and cast component to base script type.
+      // If Start() function is not called, call and turn on the start flag not to be callled over twice.
+      if (type == EComponentType::Script) {
+        auto script = static_cast<CScriptFrame*>(component.get());
+        if (script->m_started == EScriptStarted::NotStarted) {
+          script->Start();
+          script->m_started = decltype(script->m_started)::Started;
+        }
+        if (m_data->IsCallbackNotCalled()) {
+          script->OnEnabled();
+        }
+      }
+
+      component->Update(delta_time);
+    }
+
+    LocalUpdate();
+    m_data->SetCallbackFlagToFalse();
+
+    // Update children objects.
     for (auto& child : m_children_objects) {
       if (child.second)
         child.second->Update(delta_time);
     }
+  } break;
   }
+}
+
+const std::array<DVector3, 3>& CObject::pGetParentWorldPropagateAxisValue() const noexcept {
+  return m_data->GetChildObjectWorldAxisBasisValue();
+}
+
+const DVector3& CObject::pGetParentSummedWorldRotationAngle() const noexcept {
+  return m_data->GetWorldSummedRotationAngle();
+}
+
+const DVector3& CObject::pGetParentProductedWorldScaleValue() const noexcept {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+  return m_data->GetLocalScale();
 }
 
 const DVector3& CObject::GetLocalPosition() const noexcept {
@@ -119,9 +155,7 @@ const DVector3& CObject::GetFinalPosition() const noexcept {
   return m_data->GetFinalPosition();
 }
 
-// ReSharper disable CppMemberFunctionMayBeConst
 void CObject::SetLocalPosition(const DVector3& position) noexcept {
-  // ReSharper restore CppMemberFunctionMayBeConst
   m_data->SetLocalPosition(position);
   m_data->GetFinalPosition();
 }
@@ -155,26 +189,20 @@ void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
 }
 
 void CObject::PropagateParentPosition() {
-  for (auto& child : m_children_objects) {
-    auto& child_ptr = child.second;
-    /// If object is not empty and activated and permits succeeding positioning.
-    if (child_ptr && child_ptr->GetSucceedingPositionFlag())
-      child_ptr->SetParentPosition(GetParentPosition());
+  for (auto& [object_name, object] : m_children_objects) {
+    if (!object) continue;
+    object->SetParentPosition(GetParentPosition());
   }
 }
 
 // Rotation functions.
 
 float CObject::GetRotationLocalAngle(EAxis3D direction) const noexcept {
-  return m_data->GetRotationLocalAngle(direction);
-}
-
-float CObject::GetRotationFromParentAngle(EAxis3D direction) const noexcept {
-  return m_data->GetRotationFromParentAngle(direction);
+  return m_data->GetLocalRotationAngle(direction);
 }
 
 float CObject::GetRotationWorldAngle(EAxis3D direction) const noexcept {
-  return m_data->GetRotationWorldAngle(direction);
+  return m_data->GetWorldRotationAngle(direction);
 }
 
 float CObject::GetRotationWpAngle(EAxis3D direction) const noexcept {
@@ -182,7 +210,7 @@ float CObject::GetRotationWpAngle(EAxis3D direction) const noexcept {
 }
 
 void CObject::SetRotationLocalAngle(EAxis3D direction, const float angle_value) noexcept {
-	m_data->SetRotationLocalAngle(direction, angle_value);
+	m_data->SetLocalRotationAngle(direction, angle_value);
 }
 
 void CObject::SetRotationParentAngle(EAxis3D direction, const float angle_value) noexcept {
@@ -200,7 +228,7 @@ void CObject::AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
 }
 
 void CObject::SetRotationWorldAngle(EAxis3D direction, const float angle_value) noexcept {
-  m_data->SetRotationWorldAngle(direction, angle_value);
+  m_data->SetWorldRotationAngle(direction, angle_value);
   PropagateParentRotation();
 }
 
@@ -211,8 +239,7 @@ void CObject::PropagateParentRotation() {
     /// If object is not empty and activated and permits succeeding positioning.
     using phitos::enums::EActivated;
     if (child_ptr &&
-      child_ptr->IsObjectActive() == EActivated::Activated &&
-      child_ptr->GetSucceedingRotationFlag()) {
+      child_ptr->IsObjectActive() == EActivated::Activated) {
       child_ptr->SetRotationParentAngle(EAxis3D::X, GetRotationWpAngle(EAxis3D::X));
       child_ptr->SetRotationParentAngle(EAxis3D::Y, GetRotationWpAngle(EAxis3D::Y));
       child_ptr->SetRotationParentAngle(EAxis3D::Z, GetRotationWpAngle(EAxis3D::Z));
@@ -222,48 +249,25 @@ void CObject::PropagateParentRotation() {
 
 // Scaling functions
 
-float CObject::GetScaleValue() const noexcept {
-    return m_data->GetScaleLocalValue();
+const DVector3& CObject::GetLocalScale() const noexcept {
+  return m_data->GetLocalScale();
 }
 
-const DVector3& CObject::GetScaleFactor() const noexcept {
-    return m_data->GetScaleLocalFactor();
+const DVector3& CObject::GetWorldScale() const noexcept {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
+  return {};
 }
 
-void CObject::SetScaleValue(const float scale_value) {
-	m_data->SetScaleLocalValue(scale_value);
+void CObject::SetLocalScale(const DVector3& factor) {
+	m_data->SetLocalScale(factor);
 }
 
-void CObject::SetScaleFactor(const DVector3& factor) {
-	m_data->SetScaleLocalFactor(factor);
+void CObject::SetWorldScale(const DVector3& xyz_value) {
+  PHITOS_NOT_IMPLEMENTED_ASSERT();
 }
 
 const glm::mat4& CObject::GetModelMatrix() const {
   return m_data->GetModelMatrix();
-}
-
-void CObject::SetSucceedingPositionFlag(bool value) noexcept {
-    m_data->SetSucceedingPositionFlag(value);
-}
-
-void CObject::SetSucceedingRotationFlag(bool value) noexcept {
-    m_data->SetSucceedingRotationFlag(value);
-}
-
-void CObject::SetSucceedingScalingFlag(bool value) noexcept {
-    m_data->SetSucceedingScalingFlag(value);
-}
-
-bool CObject::GetSucceedingPositionFlag() const noexcept {
-  return m_data->GetSucceedingPositionFlag();
-}
-
-bool CObject::GetSucceedingRotationFlag() const noexcept {
-  return m_data->GetSucceedingRotationFlag();
-}
-
-bool CObject::GetSucceedingScalingFlag() const noexcept {
-  return m_data->GetSucceedingScalingFlag();
 }
 
 std::vector<std::string> CObject::GetGameObjectNameList() const {
@@ -311,16 +315,13 @@ CObject* CObject::pGetGameObjectResursively(const std::string& object_name) noex
   return nullptr;
 }
 
-
 bool CObject::DestroyGameObject(const std::string& child_name) {
   if (const auto it = m_children_objects.find(child_name); it == m_children_objects.end()) {
-    PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]",
-                       child_name);
+    PUSH_LOG_ERROR_EXT("Could not destroy child object, {0}. [Name : {0}]", child_name);
     return false;
   }
   else {
-    const auto result = manager::object::DestroyGameObject(
-        *(it->second.get()), this, false);
+    const auto result = manager::object::DestroyGameObject(*(it->second.get()), this, false);
     return result;
   }
 }
@@ -401,6 +402,10 @@ phitos::enums::EActivated CObject::IsObjectActive() const {
 
 void CObject::PropagateActivation(phitos::enums::EActivated value) noexcept {
   m_data->PropagateActivation(value);
+}
+
+const DVector3& CObject::pfGetRotationTotalWorldAngle() {
+  return m_data->GetWorldSummedRotationAngle();
 }
 
 void CObject::CalculateActivation() {
