@@ -519,17 +519,6 @@ public:
   }
 
 protected:
-	///
-	/// @brief The method refresh parent position.
-	/// @param[in] parent_position Position to apply for.
-	///
-	void SetParentPosition(const DVector3& parent_position);
-
-  ///
-  /// @brief
-  ///
-  void SetRotationParentAngle(EAxis3D direction, float angle_value) noexcept;
-
   /// Pointer implementation heap instance.
 	TPimplSmtPtr   m_data = nullptr;
   /// The container stores child object.
@@ -578,6 +567,11 @@ private:
   const std::array<DVector3, 3>& pGetParentWorldPropagateAxisValue() const noexcept;
 
   ///
+  /// @brief
+  ///
+  const DVector3& pGetParentWorldSummedPositionValue() const noexcept;
+
+  ///
   /// @brief Get all parent's summed world rotation euler angle values (x, y, z).
   ///
   const DVector3& pGetParentSummedWorldRotationAngle() const noexcept;
@@ -588,24 +582,14 @@ private:
   const DVector3& pGetParentProductedWorldScaleValue() const noexcept;
 
   ///
-  /// @brief Propagate parent position recursively.
+  /// @brief Get rotation vector of total world angle from object tree root.
   ///
-  void PropagateParentPosition();
-
-  ///
-  /// @brief Propagate parent rotation recursively.
-  ///
-  void PropagateParentRotation();
+  const DVector3& pfGetRotationTotalWorldAngle();
 
   ///
   /// @brief
   ///
   void PropagateActivation(phitos::enums::EActivated value) noexcept;
-
-  ///
-  /// @brief Get rotation vector of total world angle from object tree root.
-  ///
-  const DVector3& pfGetRotationTotalWorldAngle();
 
   ///
   /// @brief Calculate and set up new final activation flag.
@@ -628,6 +612,8 @@ private:
   void pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                             bool is_collision_function,
                             component::_internal::CColliderBase* collider);
+
+  const std::array<DVector3, 3>& pfGetObjectWorldSpaceAxis() const noexcept;
 
   /// Object name counter to avoid duplicated object name
   TNameCounterMap m_name_counter;

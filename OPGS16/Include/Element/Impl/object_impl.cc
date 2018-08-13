@@ -45,7 +45,7 @@ bool IsAllAngleValueZero(const opgs16::DVector3& angle_array) {
 }
 
 glm::mat4 GetRotationMatrix(const opgs16::DVector3& angle) {
-  return glm::orientate4(glm::vec3{ glm::radians(angle.x), glm::radians(angle.z), glm::radians(angle.y) });
+  return glm::eulerAngleYXZ(glm::radians(angle.y), glm::radians(angle.x), glm::radians(angle.z));
 }
 
 opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector3& angle) {
@@ -54,12 +54,7 @@ opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector
   using glm::rotateZ;
 
   return
-  rotateZ(
-    rotateY(
-      rotateX(glm::vec3{1, 0, 0}, glm::radians(angle.x)),
-      glm::radians(angle.y)),
-    glm::radians(angle.z)
-  );
+  rotateX(rotateZ(rotateY(vector, glm::radians(angle.y)), glm::radians(angle.z)), glm::radians(angle.x));
 }
 
 } /// unnamed namespace
@@ -76,9 +71,12 @@ void CObjectImpl::pUpdateObjectSpaceAxisBasis() const noexcept {
   m_object_space_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_propagated_world_rotation_euler_angle);
 
   m_is_world_space_axis_dirty = false;
+  m_is_final_rotation_angle_dirty = true;
 }
 
 void CObjectImpl::pUpdatePropagationAxisBasis() noexcept {
+  if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
+
   m_object_propagate_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_summed_world_rotation_euler_angle);
   m_object_propagate_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_summed_world_rotation_euler_angle);
   m_object_propagate_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_summed_world_rotation_euler_angle);
@@ -86,7 +84,7 @@ void CObjectImpl::pUpdatePropagationAxisBasis() noexcept {
   m_is_world_propagation_axis_dirty = false;
 }
 
-void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() noexcept {
+void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() const noexcept {
   m_summed_world_rotation_euler_angle = m_propagated_world_rotation_euler_angle + m_world_rotation_euler_angle;
   m_summed_world_rotation_euler_angle.x = math::GetRotationAngle(m_summed_world_rotation_euler_angle.x);
   m_summed_world_rotation_euler_angle.y = math::GetRotationAngle(m_summed_world_rotation_euler_angle.y);
@@ -96,37 +94,32 @@ void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() noexcept {
   m_is_final_rotation_angle_dirty   = true;
 }
 
+void CObjectImpl::pUpdateFinalWorldRotationEulerAngle() const noexcept {
+  if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
+
+  m_object_final_rotation_euler_angle = m_summed_world_rotation_euler_angle + m_local_rotation_euler_angle;
+  m_is_final_rotation_angle_dirty = false;
+}
+
 void CObjectImpl::pUpdateAxisAlignedLocalPosition() const noexcept {
   if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
-  m_local_axis_arranged_position = DVector3{};
-  m_local_axis_arranged_position += m_object_space_axis[0] * m_independent_local_position.x;
-  m_local_axis_arranged_position += m_object_space_axis[1] * m_independent_local_position.y;
-  m_local_axis_arranged_position += m_object_space_axis[2] * m_independent_local_position.z;
-
+  m_local_axis_arranged_position = GetRotatedVector(m_independent_local_position, m_propagated_world_rotation_euler_angle);
   m_is_local_position_dirty = false;
 }
 
 void CObjectImpl::pUpdateAxisAlignedWorldPosition() const noexcept {
   if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
-  m_world_axis_arranged_position = DVector3{};
-  m_world_axis_arranged_position += m_object_space_axis[0] * m_independent_world_position.x;
-  m_world_axis_arranged_position += m_object_space_axis[1] * m_independent_world_position.y;
-  m_world_axis_arranged_position += m_object_space_axis[2] * m_independent_world_position.z;
-
-  m_is_local_position_dirty = false;
+  m_world_axis_arranged_position = GetRotatedVector(m_independent_world_position, m_propagated_world_rotation_euler_angle);
+  m_is_world_position_dirty = false;
 }
 
 void CObjectImpl::pUpdateAxisAlignedSummedWorldPosition() const noexcept {
+  if (m_is_world_position_dirty) pUpdateAxisAlignedWorldPosition();
+
   m_summed_world_position = m_propagated_world_basis_position + m_world_axis_arranged_position;
   m_is_summed_position_dirty = false;
-}
-
-void CObjectImpl::pUpdateFinalWorldRotationEulerAngle() const noexcept {
-  m_object_final_rotation_euler_angle = m_summed_world_rotation_euler_angle + m_local_rotation_euler_angle;
-
-  m_is_final_rotation_angle_dirty = false;
 }
 
 void CObjectImpl::pUpdateAxisAlignedFinalPosition() const {
@@ -136,14 +129,6 @@ void CObjectImpl::pUpdateAxisAlignedFinalPosition() const {
   if (m_is_summed_position_dirty) pUpdateAxisAlignedSummedWorldPosition();
 
   m_axis_aligned_final_position = m_summed_world_position + m_local_axis_arranged_position;
-#ifdef false
-  const auto object_space_position = m_independent_local_position + m_independent_world_position;
-
-  m_axis_aligned_final_position += m_object_space_axis[0] * object_space_position.x;
-  m_axis_aligned_final_position += m_object_space_axis[1] * object_space_position.y;
-  m_axis_aligned_final_position += m_object_space_axis[2] * object_space_position.z;
-#endif
-
   m_is_final_position_dirty = false;
 }
 
@@ -155,7 +140,7 @@ void CObjectImpl::RefreshRotationMatrix() const {
 }
 
 void CObjectImpl::RefreshScaleVector() const {
-  m_scale_final_vector = m_scale_local_factor;
+  m_scale_final_vector = m_local_scale;
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
@@ -167,10 +152,6 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
 
     if (m_is_final_position_dirty) {
       pUpdateAxisAlignedFinalPosition();
-    }
-
-    if (m_is_local_rotation_angle_dirty) {
-      m_is_local_rotation_angle_dirty = false;
     }
 
     if (m_is_local_scale_dirty) {

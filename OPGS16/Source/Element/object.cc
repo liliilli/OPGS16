@@ -90,6 +90,7 @@ void CObject::Update(float delta_time) {
     }
     if (m_parent) {
       // Realign transform from parent.
+      m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
       m_data->SetObjectWorldAxisBasisValue(m_parent->pGetParentWorldPropagateAxisValue());
       m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
       //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
@@ -130,6 +131,10 @@ const std::array<DVector3, 3>& CObject::pGetParentWorldPropagateAxisValue() cons
   return m_data->GetChildObjectWorldAxisBasisValue();
 }
 
+const DVector3& CObject::pGetParentWorldSummedPositionValue() const noexcept {
+  return m_data->GetAxisAlignedSummedWorldPosition();
+}
+
 const DVector3& CObject::pGetParentSummedWorldRotationAngle() const noexcept {
   return m_data->GetWorldSummedRotationAngle();
 }
@@ -157,42 +162,30 @@ const DVector3& CObject::GetFinalPosition() const noexcept {
 
 void CObject::SetLocalPosition(const DVector3& position) noexcept {
   m_data->SetLocalPosition(position);
-  m_data->GetFinalPosition();
+  //m_data->GetFinalPosition();
 }
 
 void CObject::SetWorldPosition(const DVector3& world_position) {
   m_data->SetWorldPosition(world_position);
-  PropagateParentPosition();
-  m_data->GetFinalPosition();
+  //PropagateParentPosition();
+  //m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetLocalPosition(axis, value);
   //PropagateParentPosition();
-  m_data->GetFinalPosition();
+  //m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetWorldPosition(axis, value);
-  PropagateParentPosition();
-  m_data->GetFinalPosition();
-}
-
-void CObject::SetParentPosition(const DVector3& parent_position) {
-  m_data->SetParentPosition(parent_position);
-  PropagateParentPosition();
+  //PropagateParentPosition();
+  //m_data->GetFinalPosition();
 }
 
 void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
   m_data->SetWorldPosWithFinalPos(final_position);
-  PropagateParentPosition();
-}
-
-void CObject::PropagateParentPosition() {
-  for (auto& [object_name, object] : m_children_objects) {
-    if (!object) continue;
-    object->SetParentPosition(GetParentPosition());
-  }
+  //PropagateParentPosition();
 }
 
 // Rotation functions.
@@ -213,38 +206,16 @@ void CObject::SetRotationLocalAngle(EAxis3D direction, const float angle_value) 
 	m_data->SetLocalRotationAngle(direction, angle_value);
 }
 
-void CObject::SetRotationParentAngle(EAxis3D direction, const float angle_value) noexcept {
-  m_data->SetWorldPropagatedRotationAngle(direction, angle_value);
-  PropagateParentRotation();
-}
-
 void CObject::AddOffsetLocalAngle(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetLocalAngle(axis, value);
 }
 
 void CObject::AddOffsetWorldAngle(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetWorldAngle(axis, value);
-  PropagateParentRotation();
 }
 
 void CObject::SetRotationWorldAngle(EAxis3D direction, const float angle_value) noexcept {
   m_data->SetWorldRotationAngle(direction, angle_value);
-  PropagateParentRotation();
-}
-
-
-void CObject::PropagateParentRotation() {
-  for (auto& child : m_children_objects) {
-    auto& child_ptr = child.second;
-    /// If object is not empty and activated and permits succeeding positioning.
-    using phitos::enums::EActivated;
-    if (child_ptr &&
-      child_ptr->IsObjectActive() == EActivated::Activated) {
-      child_ptr->SetRotationParentAngle(EAxis3D::X, GetFinalRotationAngle(EAxis3D::X));
-      child_ptr->SetRotationParentAngle(EAxis3D::Y, GetFinalRotationAngle(EAxis3D::Y));
-      child_ptr->SetRotationParentAngle(EAxis3D::Z, GetFinalRotationAngle(EAxis3D::Z));
-    }
-  }
 }
 
 // Scaling functions
@@ -390,6 +361,10 @@ void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state
     }
     break;
   }
+}
+
+const std::array<DVector3, 3>& CObject::pfGetObjectWorldSpaceAxis() const noexcept {
+  return m_data->GetObjectWorldAxisBasisValue();
 }
 
 phitos::enums::EActivated CObject::IsObjectInternallyActive() const {

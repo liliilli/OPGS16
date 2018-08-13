@@ -140,6 +140,8 @@
     <ClCompile Include="Source\Element\Builtin\Model\model_3dsphere.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_3dcylinder.cc" />
     <ClCompile Include="_Project\Test020\TestMesh\mesh_test_child.cc" />
+    <ClCompile Include="Source\Component\Internal\xyz_axis_renderer.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_empty.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -354,6 +356,8 @@
     <ClInclude Include="Include\Element\Builtin\Model\model_3dsphere.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_3dcylinder.h" />
     <ClInclude Include="_Project\Test020\TestMesh\mesh_test_child.h" />
+    <ClInclude Include="Include\Component\Internal\xyz_axis_renderer.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_empty.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

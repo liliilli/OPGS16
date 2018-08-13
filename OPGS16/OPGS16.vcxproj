@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Component\Internal\xyz_axis_renderer.cc" />
     <ClCompile Include="Source\Component\mesh_importer.cc" />
     <ClCompile Include="Source\Component\mesh_renderer.cc" />
     <ClCompile Include="Source\Component\ParticleModule\module_bylife_alpha.cc" />
@@ -183,6 +184,7 @@
     <ClCompile Include="Source\Element\Builtin\Model\model_3dbox.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_3dcylinder.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_3dsphere.cc" />
+    <ClCompile Include="Source\Element\Builtin\Model\model_empty.cc" />
     <ClCompile Include="Source\Element\Internal\mesh_texture_meta.cpp" />
     <ClCompile Include="manifest.h" />
     <ClCompile Include="Include\Core\Boot\__b_canv.cc" />
@@ -324,6 +326,7 @@
     <ClInclude Include="Include\Component\Internal\collider3d_base.h" />
     <ClInclude Include="Include\Component\Internal\collider_base.h" />
     <ClInclude Include="Include\Component\Internal\flag.h" />
+    <ClInclude Include="Include\Component\Internal\xyz_axis_renderer.h" />
     <ClInclude Include="Include\Component\mesh_importer.h" />
     <ClInclude Include="Include\Component\mesh_renderer.h" />
     <ClInclude Include="Include\Component\ParticleModule\module_bylife_alpha.h" />
@@ -359,6 +362,7 @@
     <ClInclude Include="Include\Element\Builtin\Model\model_3dbox.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_3dcylinder.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_3dsphere.h" />
+    <ClInclude Include="Include\Element\Builtin\Model\model_empty.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_point.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_2dquadline.h" />
     <ClInclude Include="Include\Element\Default\builtin_vao_name.h" />

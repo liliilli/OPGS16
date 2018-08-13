@@ -81,7 +81,6 @@ public:
 
   inline void SetWorldPosition(const DVector3& position) noexcept {
     m_independent_world_position     = position;
-    m_summed_world_position = m_propagated_world_basis_position + m_independent_world_position;
 
     m_is_model_matrix_dirty   = true;
     m_is_world_position_dirty = true;
@@ -93,7 +92,7 @@ public:
     SetWorldPosition(final_position - m_propagated_world_basis_position);
   }
 
-  inline void SetParentPosition(const DVector3& propagated_world_basis_position) noexcept {
+  inline void SetWorldPropagatedPosition(const DVector3& propagated_world_basis_position) noexcept {
     m_propagated_world_basis_position = propagated_world_basis_position;
     SetWorldPosition(m_independent_world_position);
   }
@@ -135,28 +134,33 @@ public:
   //!
 
   const std::array<DVector3, 3>& GetChildObjectWorldAxisBasisValue() noexcept {
-    if (m_is_world_propagation_axis_dirty) {
-      pUpdatePropagationAxisBasis();
-      m_is_world_propagation_axis_dirty = false;
-    }
+    if (m_is_world_propagation_axis_dirty) pUpdatePropagationAxisBasis();
     return m_object_propagate_axis;
   }
 
   const std::array<DVector3, 3>& GetObjectWorldAxisBasisValue() const noexcept {
+    if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
+
     return m_object_space_axis;
   }
 
   void SetObjectWorldAxisBasisValue(const std::array<DVector3, 3>& propagated_axis) noexcept {
     m_object_space_axis = propagated_axis;
+
+    m_is_model_matrix_dirty           = true;
+    m_is_final_position_dirty         = true;
+    m_is_summed_rotation_angle_dirty  = true;
+    m_is_final_rotation_angle_dirty   = true;
+    m_is_world_propagation_axis_dirty = true;
   }
 
   void SetObjectWorldRotationBasisValue(const DVector3& propagated_world_rotation_angle) noexcept {
     m_propagated_world_rotation_euler_angle = propagated_world_rotation_angle;
 
-    pUpdateObjectSpaceAxisBasis();
-
-    m_is_final_position_dirty = true;
-    m_is_model_matrix_dirty = true;
+    m_is_model_matrix_dirty           = true;
+    m_is_final_position_dirty         = true;
+    m_is_summed_rotation_angle_dirty  = true;
+    m_is_final_rotation_angle_dirty   = true;
     m_is_world_propagation_axis_dirty = true;
   }
 
@@ -193,6 +197,7 @@ public:
   }
 
   const DVector3& GetWorldSummedRotationAngle() const noexcept {
+    if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
     return m_summed_world_rotation_euler_angle;
   }
 
@@ -207,7 +212,6 @@ public:
     }
 
     m_is_model_matrix_dirty           = true;
-    m_is_local_rotation_angle_dirty   = true;
     m_is_final_rotation_angle_dirty   = true;
   }
 
@@ -223,6 +227,7 @@ public:
 
     m_is_model_matrix_dirty           = true;
     m_is_summed_rotation_angle_dirty  = true;
+    m_is_world_space_axis_dirty       = true;
     m_is_world_propagation_axis_dirty = true;
     m_is_final_rotation_angle_dirty   = true;
 
@@ -258,7 +263,6 @@ public:
     }
 
     m_is_model_matrix_dirty           = true;
-    m_is_local_rotation_angle_dirty   = true;
     m_is_final_rotation_angle_dirty   = true;
   }
 
@@ -272,10 +276,9 @@ public:
 
     m_is_model_matrix_dirty           = true;
     m_is_summed_rotation_angle_dirty  = true;
+    m_is_world_space_axis_dirty       = true;
     m_is_world_propagation_axis_dirty = true;
     m_is_final_rotation_angle_dirty   = true;
-
-    pUpdateSummedWorldRotationEulerAngle();
   }
 
   //!
@@ -283,18 +286,18 @@ public:
   //!
 
   const DVector3& GetLocalScale() const noexcept {
-    return m_scale_local_factor;
+    return m_local_scale;
   }
 
   inline void SetLocalScale(const DVector3& local_scale) noexcept {
-    m_scale_local_factor = local_scale;
+    m_local_scale = local_scale;
 
     m_is_model_matrix_dirty = true;
     m_is_local_scale_dirty = true;
   }
 
   inline void SetScaleParentFactor(const DVector3& scale_factor) noexcept {
-    m_scale_parent_factor = scale_factor;
+    m_propagated_producted_scale = scale_factor;
   }
 
   //!
@@ -392,7 +395,7 @@ private:
   ///
   /// @brief Update summed world rotation euler angle using parent_summed_world + this_world.
   ///
-  void pUpdateSummedWorldRotationEulerAngle() noexcept;
+  void pUpdateSummedWorldRotationEulerAngle() const noexcept;
 
   ///
   /// @brief
@@ -444,10 +447,29 @@ private:
   DVector3 m_world_rotation_euler_angle;
   /// parent's propagated world rotation summed angle;
   DVector3 m_propagated_world_rotation_euler_angle;
+  ///
+  mutable DVector3 m_axis_aligned_local_rotation_euler_angle;
+  ///
+  mutable DVector3 m_axis_aligned_world_rotation_euler_angle;
   /// propagated_world_rotation_euler_angle + world
-  DVector3 m_summed_world_rotation_euler_angle;
+  /// propagated_world_rotation_euler_angle + world
+  mutable DVector3 m_summed_world_rotation_euler_angle;
   /// local + summed_world
   mutable DVector3 m_object_final_rotation_euler_angle;
+
+  /// Scale local factor, default is (1, 1, 1)
+  DVector3 m_local_scale = DVector3{ 1.f };
+  /// Scale world factor. default is (1, 1, 1)
+  DVector3 m_world_scale = DVector3{ 1.f };
+  /// Scale factor from parent.
+  DVector3 m_propagated_producted_scale = DVector3{ 1.f };
+  /// m_world_scale * m_propagated_producted_scale
+  DVector3 m_summed_producted_scale = DVector3{ 1.f };
+  /// m_summed_producted_scale * m_local_scale
+  mutable DVector3 m_rendering_producted_scale = DVector3{ 1.f };
+  /// (x, y, z) scale vector to apply to matrix.
+  /// @todo deprecated
+  mutable DVector3 m_scale_final_vector{};
 
   //!
   //! Axis variables.
@@ -462,15 +484,6 @@ private:
     DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
   };
 
-  /// Scale local factor, default is (1, 1, 1)
-  DVector3 m_scale_local_factor = DVector3{ 1.f };
-  /// Scale factor from parent.
-  DVector3 m_scale_parent_factor = DVector3{ 1.f };
-  /// (x, y, z) scale vector to apply to matrix.
-  mutable DVector3 m_scale_final_vector{};
-
-  /// Local rotation matrix.
-  mutable glm::mat4 m_local_rotate_matrix{};
   /// World + Parent rotation matrix.
   mutable glm::mat4 m_rotation_matrix{};
   /// Final model matrix also reflected by parent's and world rot.
@@ -482,12 +495,16 @@ private:
   EActivated m_is_any_parent_activated  = EActivated::Activated;
   /// Any parent all update activation variable.
   EActivated m_is_finally_activated     = EActivated::Activated;
+
   bool m_is_callback_called = false;
+
+  //!
+  //! Flags
+  //!
 
   mutable bool m_is_world_propagation_axis_dirty= true;
   mutable bool m_is_world_space_axis_dirty      = true;
 
-  mutable bool m_is_local_rotation_angle_dirty  = true;
   mutable bool m_is_summed_rotation_angle_dirty = true;
   mutable bool m_is_final_rotation_angle_dirty  = true;
 
