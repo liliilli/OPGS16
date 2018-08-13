@@ -38,6 +38,7 @@ class CProcedural2DRenderer;
 namespace opgs16::component::_internal {
 class CPrivateAabbRenderer2D;
 class CInternalParticleRenderer;
+class CPrivateXyzAxisRenderer;
 }
 
 //!
@@ -151,6 +152,7 @@ private:
   friend class component::CProcedural2DRenderer;
   friend class component::_internal::CPrivateAabbRenderer2D;
   friend class component::_internal::CInternalParticleRenderer;
+  friend class component::_internal::CPrivateXyzAxisRenderer;
 };
 
 } /// ::opgs16::element namespace

@@ -79,6 +79,10 @@ namespace opgs16::element::_internal {
 enum class EColliderCollisionState;
 }
 
+namespace opgs16::element {
+class UiObject;
+}
+
 //!
 //! Implementation
 //!
@@ -589,6 +593,11 @@ private:
   ///
   /// @brief
   ///
+  void pSetWorldPropagatedPositionForcely(const DVector3& vector) noexcept;
+
+  ///
+  /// @brief
+  ///
   void PropagateActivation(phitos::enums::EActivated value) noexcept;
 
   ///
@@ -603,7 +612,7 @@ private:
 
 protected:
   /// Local update method for derived object.
-  virtual void LocalUpdate() {};
+  virtual void LocalUpdate();
 
   /// Render method for derived object.
   virtual void Render() {};
@@ -629,6 +638,7 @@ private:
   CObject* m_parent = nullptr;
 
   friend opgs16::element::CScene;
+  friend opgs16::element::UiObject;
   friend opgs16::component::_internal::CColliderBase;
   friend opgs16::component::_internal::CPrivateXyzAxisRenderer;
 };

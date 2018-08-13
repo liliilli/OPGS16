@@ -33,29 +33,20 @@ void UiObject::LocalUpdate() {
   }
 }
 
-void UiObject::SetUiParentPosition(
-    const float parent_x,
-    const float parent_y,
-    const float parent_width,
-    const float parent_height) {
+void UiObject::SetUiParentPosition(const float parent_x, const float parent_y,
+                                   const float parent_width, const float parent_height) {
   const auto origin	= static_cast<int>(GetOrigin()) - 1;
 	const int32_t x = origin % 3;
 	const int32_t y = origin / 3;
 
 	const auto source_x = static_cast<int32_t>(parent_x + (parent_width / 2) * x);
 	const auto source_y = static_cast<int32_t>(parent_y + (parent_height / 2) * y);
-
-  SetParentPosition( DVector3{
-      static_cast<float>(source_x),
-      static_cast<float>(source_y),
-      0.f }
-  );
+  pSetWorldPropagatedPositionForcely(DVector3{static_cast<float>(source_x), static_cast<float>(source_y), 0.f });
 
 	for (auto& child : GetGameObjectList()) {
 		/** TODO :: NEED PERFORMANCE CHECK */
 		auto child_temp = static_cast<UiObject*>(child.second.get());
-    child_temp->SetUiParentPosition(screen_origin.x, screen_origin.y,
-                                    screen_size.x, screen_size.y);
+    child_temp->SetUiParentPosition(screen_origin.x, screen_origin.y, screen_size.x, screen_size.y);
 	}
 }
 

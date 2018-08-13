@@ -62,18 +62,39 @@ public:
 	void Render() override final;
 
   ///
-  /// @brief Set text string to display.
-  ///
-  /// @param[in] new_text New text string.
-  ///
-	void SetText(const std::string& new_text);
-
-  ///
   /// @brief Get text string to display.
   ///
   /// @return Text string which this instance has.
   ///
-  const std::string& GetText() const;
+  const std::string& GetText() const noexcept;
+
+  ///
+  /// @brief Get font size which this instance has.
+  ///
+  /// @return unsigned font size value.
+  ///
+  int32_t GetFontSize() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  /// @return
+  ///
+  const std::string& GetFontName() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  /// @return
+  ///
+  const DColor& GetColor() const noexcept;
+
+  ///
+  /// @brief Set text string to display.
+  ///
+  /// @param[in] new_text New text string.
+  ///
+	void SetText(const std::string& new_text) noexcept;
 
 	///
 	/// @brief Set font size of string.
@@ -81,14 +102,7 @@ public:
   ///
 	/// @param[in] size
 	///
-	void SetFontSize(const uint32_t size);
-
-  ///
-  /// @brief Get font size which this instance has.
-  ///
-  /// @return unsigned font size value.
-  ///
-  const unsigned GetFontSize() const;
+	void SetFontSize(uint32_t size) noexcept;
 
 	///
 	/// @brief Set this object font to render with.
@@ -101,26 +115,12 @@ public:
 	bool SetFontName(const std::string& font_tag);
 
   ///
-  /// @brief
-  ///
-  /// @return
-  ///
-  const std::string& GetFontName();
-
-  ///
   /// @brief Set string color, single color with composited of {r, g, b}.
   ///
   /// @param[in] color New color value with consists of {r, g, b} glm::vec3 vector.
   /// each value must be in range of [0, 1], otherwise clamped to 0 or 1.
   ///
   void SetColor(const DColor& color);
-
-  ///
-  /// @brief
-  ///
-  /// @return
-  ///
-  const DColor& GetColor();
 
   ///
   /// @brief
@@ -133,20 +133,15 @@ public:
   void SetRenderingLayer(const std::string& layer_string);
 
 private:
+  void pUpdateFontScale();
 
-  //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-  //! Member data.
-  //! ---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*---*
-
-  /// Text to display on screen.
-  /// String must be following UTF-8 encoding.
+  /// Text to display on screen. String must be following UTF-8 encoding.
   std::string m_text{};
-  /// Font name to display what shapes has to be.
 	std::string m_font_name{};
-  /// Font color what color to be displayed.
-	DColor m_color{};
-  /// Font size how display size big is.
-  uint32_t m_font_size{};
+	DColor   m_color = opgs16::DColor::White;
+  uint32_t m_font_size = 8;
+
+  mutable float m_font_scale = 0.f;
 
   opgs16::component::CFont2DRenderer* m_component = nullptr;
 };

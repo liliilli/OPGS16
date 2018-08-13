@@ -29,6 +29,10 @@ _CrtDumpMemoryLeaks();
 
 /// ::opgs16::MApplication
 #include <Core/application.h>
+#include "Helper/Type/quaternion.h"
+#include "Headers/import_logger.h"
+#include <Helper/Type/vector3.h>
+#include "Helper/Type/axis.h"
 
 int main(int argc, char** argv) {
 #if defined(_WIN32)
@@ -38,8 +42,56 @@ int main(int argc, char** argv) {
   ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 #endif
-
   opgs16::entry::Initiate();
+
+  PUSH_LOG_CRITICAL("FFFF");
+  opgs16::DQuaternion test{{270, 32, -64}};
+  auto angle = test.GetEulerRotationDegreeAngleVector();
+  PUSH_LOG_DEBUG_EXT("Quaternion Degree {}, {}, {}", angle.x, angle.y, angle.z);
+  auto mat = test.GetRotationMatrix();
+  for (int i = 0; i < 4; ++i) {
+    PUSH_LOG_DEBUG_EXT("{}, {}, {}, {}", mat[i][0], mat[i][1], mat[i][2], mat[i][3]);
+  }
+
+  test.AddRotationAngle({-16, 45, 0});
+  angle = test.GetEulerRotationDegreeAngleVector();
+  PUSH_LOG_DEBUG_EXT("Quaternion Degree {}, {}, {}", angle.x, angle.y, angle.z);
+  mat = test.GetRotationMatrix();
+  for (int i = 0; i < 4; ++i) {
+    PUSH_LOG_DEBUG_EXT("{}, {}, {}, {}", mat[i][0], mat[i][1], mat[i][2], mat[i][3]);
+  }
+
+  test.AddRotationAngle({0, 45, 0});
+  angle = test.GetEulerRotationDegreeAngleVector();
+  PUSH_LOG_DEBUG_EXT("Quaternion Degree {}, {}, {}", angle.x, angle.y, angle.z);
+  mat = test.GetRotationMatrix();
+  for (int i = 0; i < 4; ++i) {
+    PUSH_LOG_DEBUG_EXT("{}, {}, {}, {}", mat[i][0], mat[i][1], mat[i][2], mat[i][3]);
+  }
+
+  test = opgs16::DQuaternion{{254, 32.f + 45.f + 45.f, -64}};
+  angle = test.GetEulerRotationDegreeAngleVector();
+  PUSH_LOG_DEBUG_EXT("Quaternion Degree {}, {}, {}", angle.x, angle.y, angle.z);
+  mat = test.GetRotationMatrix();
+  for (int i = 0; i < 4; ++i) {
+    PUSH_LOG_DEBUG_EXT("{}, {}, {}, {}", mat[i][0], mat[i][1], mat[i][2], mat[i][3]);
+  }
+
+  test = opgs16::DQuaternion{};
+  test.AddRotationAngle(opgs16::EAxis3D::X, 127.f);
+  test.AddRotationAngle(opgs16::EAxis3D::X, 127.f);
+  test.AddRotationAngle(opgs16::EAxis3D::Y, -12.f);
+  test.AddRotationAngle(opgs16::EAxis3D::Y, 124.f);
+  test.AddRotationAngle(opgs16::EAxis3D::Z, -64.f);
+  angle = test.GetEulerRotationDegreeAngleVector();
+  PUSH_LOG_DEBUG_EXT("Quaternion Degree {}, {}, {}", angle.x, angle.y, angle.z);
+  mat = test.GetRotationMatrix();
+  for (int i = 0; i < 4; ++i) {
+    PUSH_LOG_DEBUG_EXT("{}, {}, {}, {}", mat[i][0], mat[i][1], mat[i][2], mat[i][3]);
+  }
+
+  PUSH_LOG_CRITICAL("FFFF");
+
   opgs16::entry::Run();
   return 0;
 }

@@ -32,6 +32,7 @@
 #include <Element/Builtin/Model/model_3dbox.h>
 #include <Element/Builtin/Model/model_3dsphere.h>
 #include <Element/Builtin/Model/model_point.h>
+#include <Element/Builtin/Model/model_empty.h>
 /// logger for debug mode.
 #include <Headers/import_logger.h>
 /// ::opgs16::manager::mesh
@@ -118,6 +119,11 @@ void InitiateBuiltinVaoItems() {
   using EBufferTarget = opgs16::element::_internal::EBufferTarget;
   using CInternalVertexArrayObject = opgs16::element::_internal::CInternalVertexArrayObject;
 
+  // Empty vao
+  using opgs16::builtin::model::BModelEmpty;
+  GenerateVaoContainer(BModelEmpty::s_model_name,
+      EVboBufferType::StaticDraw, EEboBufferType::StaticDraw);
+
   // 2D Quad (x, y) with element object buffer
   using opgs16::builtin::model::BModel2DQuad;
   GenerateVaoContainer(BModel2DQuad::m_model_name.data(),
@@ -146,6 +152,7 @@ void InitiateBuiltinVaoItems() {
   using opgs16::builtin::model::BModel3DSphere;
   GenerateVaoContainer(BModel3DSphere::s_model_name,
       EVboBufferType::StaticDraw, EEboBufferType::StaticDraw);
+
 }
 
 } /// unnamed namespace

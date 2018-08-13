@@ -32,7 +32,8 @@ class CParticleSpawner;
 }
 
 namespace opgs16::component::_internal {
-class CPrivateAabbRendererBase;
+  class CPrivateXyzAxisRenderer;
+  class CPrivateAabbRendererBase;
 }
 
 //!
@@ -138,6 +139,11 @@ void InsertAABBInformation(component::_internal::CPrivateAabbRendererBase& aabb_
 /// @param[in] emitter_component
 ///
 void InsertParticleEmitter(component::CParticleEmitter& emitter_component);
+
+///
+/// @brief
+///
+void pBindRenderXyzAxisRenderer(component::_internal::CPrivateXyzAxisRenderer& component);
 
 ///
 /// @brief

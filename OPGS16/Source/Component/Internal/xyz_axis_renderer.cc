@@ -46,12 +46,14 @@ CPrivateXyzAxisRenderer::CPrivateXyzAxisRenderer(element::CObject& bind_object) 
 void CPrivateXyzAxisRenderer::Update(float delta_time) {
   auto& obj = GetBindObject();
 
-  const auto total_world_angle = obj.pfGetRotationTotalWorldAngle();
-  m_x_normalized = rotateZ(rotateY(rotateX(glm::vec3{1, 0, 0}, glm::radians(total_world_angle.x)), glm::radians(total_world_angle.y)), glm::radians(total_world_angle.z));
-  m_y_normalized = rotateZ(rotateY(rotateX(glm::vec3{0, 1, 0}, glm::radians(total_world_angle.x)), glm::radians(total_world_angle.y)), glm::radians(total_world_angle.z));
-  m_z_normalized = rotateZ(rotateY(rotateX(glm::vec3{0, 0, 1}, glm::radians(total_world_angle.x)), glm::radians(total_world_angle.y)), glm::radians(total_world_angle.z));
+  const auto& axis_list = obj.pfGetObjectWorldSpaceAxis();
+  m_x_normalized = axis_list[0];
+  m_y_normalized = axis_list[1];
+  m_z_normalized = axis_list[2];
 
   m_wrapper.SetUniformVec3("uPosition", obj.GetFinalPosition());
+
+  manager::object::pBindRenderXyzAxisRenderer(*this);
 }
 
 void CPrivateXyzAxisRenderer::Render() {
@@ -67,7 +69,7 @@ void CPrivateXyzAxisRenderer::Render() {
 
   const auto& vao_list = m_weak_vao_ref->GetVaoList();
   glBindVertexArray(vao_list[0].GetVaoId());
-  glDrawArrays(GL_LINE_STRIP, 0, 6);
+  glDrawArrays(GL_LINES, 0, 6);
 
   glBindVertexArray(0);
   glUseProgram(0);

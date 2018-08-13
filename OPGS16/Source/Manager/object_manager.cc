@@ -76,6 +76,7 @@ using opgs16::debug::EInitiated;
 using opgs16::component::_internal::CPrivateAabbRendererBase;
 using opgs16::component::CParticleEmitter;
 using opgs16::component::CParticleSpawner;
+using opgs16::component::_internal::CPrivateXyzAxisRenderer;
 using TRenderedObjectSubList = std::list<opgs16::element::CObject*>;
 
 EInitiated m_initiated = EInitiated::NotInitiated;
@@ -92,6 +93,8 @@ std::vector<TRenderedObjectSubList> m_rendering_list;
 std::list<CPrivateAabbRendererBase*> m_aabb_2d_list;
 std::list<CPrivateAabbRendererBase*> m_aabb_3d_list;
 std::list<CParticleEmitter*>         m_emitter_list;
+std::forward_list<CPrivateXyzAxisRenderer*> m_axis_list;
+
 /// A neutered particle spawner list. (Could not spawn particle any more)
 std::forward_list<std::unique_ptr<CParticleSpawner>> m_spawner_list;
 
@@ -243,16 +246,25 @@ void Render() {
     list.clear();
   }
 
-  if (opgs16::setting::IsEnableRenderingAabb()) { RenderAABB(); }
+  if (opgs16::setting::IsEnableRenderingAabb()) {
+    RenderAABB();
+  }
 
   // Render particles without considering rendering layer.
-  glEnable(GL_PROGRAM_POINT_SIZE);
   glDisable(GL_DEPTH_TEST);
+
+  glEnable(GL_PROGRAM_POINT_SIZE);
   for (auto& emitter : m_emitter_list) {
     emitter->Render();
   }
   m_emitter_list.clear();
   glDisable(GL_PROGRAM_POINT_SIZE);
+
+  for (auto& xyz_axis : m_axis_list) {
+    xyz_axis->Render();
+  }
+  m_axis_list.clear();
+
   glEnable(GL_DEPTH_TEST);
 }
 
@@ -328,6 +340,10 @@ void InsertAABBInformation(CPrivateAabbRendererBase& aabb_component) {
 
 void InsertParticleEmitter(component::CParticleEmitter& emitter_component) {
   m_emitter_list.push_back(&emitter_component);
+}
+
+void pBindRenderXyzAxisRenderer(component::_internal::CPrivateXyzAxisRenderer& component) {
+  m_axis_list.emplace_front(&component);
 }
 
 void pMoveParticleSpawner(std::unique_ptr<CParticleSpawner>& particle_spawner) {

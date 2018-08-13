@@ -22,7 +22,7 @@
 namespace opgs16::element {
 
 void CUiDefaultObject::LocalUpdate() {
-  const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
+  const auto wh = GetLocalScale() * 2.f;
 	const auto xy = GetFinalPosition() - (wh / 2.0f);
 
 	std::array<GLint, 4>&& xywh = {

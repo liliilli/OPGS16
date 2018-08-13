@@ -24,8 +24,8 @@
 
 #define _OPGS16_VERSION_MAJOR 0
 #define _OPGS16_VERSION_MINOR 2
-#define _OPGS16_VERSION_FIXED 1
-#define _OPGS16_CODENAME Malroth
+#define _OPGS16_VERSION_FIXED 5
+#define _OPGS16_CODENAME Zoma
 
 enum class EScaleType : int32_t {
   X1 = 1, /// Screen will be shown with screen size.
@@ -68,8 +68,6 @@ void SetScaleValue(EScaleType value) noexcept;
 void SetCollisionAABBBoxDisplay(Switch value) noexcept;
 
 void ToggleAntiAliasing() noexcept;
-
-void ToggleDebugMode() noexcept;
 
 void TogglePostProcessing();
 

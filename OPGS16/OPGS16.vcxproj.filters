@@ -142,6 +142,7 @@
     <ClCompile Include="_Project\Test020\TestMesh\mesh_test_child.cc" />
     <ClCompile Include="Source\Component\Internal\xyz_axis_renderer.cc" />
     <ClCompile Include="Source\Element\Builtin\Model\model_empty.cc" />
+    <ClCompile Include="Source\Helper\Type\quaternion.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__ThirdParty\stb\stb_image.h" />
@@ -358,6 +359,9 @@
     <ClInclude Include="_Project\Test020\TestMesh\mesh_test_child.h" />
     <ClInclude Include="Include\Component\Internal\xyz_axis_renderer.h" />
     <ClInclude Include="Include\Element\Builtin\Model\model_empty.h" />
+    <ClInclude Include="Include\Helper\Type\vector4.h" />
+    <ClInclude Include="Include\Helper\Type\vectori4.h" />
+    <ClInclude Include="Include\Helper\Type\quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />

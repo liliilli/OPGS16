@@ -91,8 +91,8 @@ namespace opgs16::manifest {
 
 /// If you want to turn on DEBUG MODE to display console log and special debug display,
 /// Remove "//" Commend specifier.
-//#define _OPGS16_DEBUG_OPTION
-//#define OP16_SETTING_DEBUG_MODE
+
+#define OP16_SETTING_DEBUG_MODE
 
 ///
 /// Enable logging uncommenting this.

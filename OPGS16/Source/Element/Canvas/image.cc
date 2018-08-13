@@ -33,8 +33,7 @@ namespace opgs16::element::canvas {
 CImage::CImage(const std::string& sprite_tag,
                const CCanvas* const ref_canvas) :
     m_ref_canvas{ const_cast<CCanvas*>(ref_canvas) } {
-  m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(
-      *this, sprite_tag, "opQuad2d");
+  m_renderer_ptr = AddComponent<component::CSprite2DRenderer>(*this, sprite_tag, "opQuad2d");
 
   auto& wrapper = m_renderer_ptr->GetWrapper();
 	wrapper.SetUniformValue(builtin::s_uniform_alpha, 1.0f);
@@ -46,8 +45,7 @@ CImage::CImage(const std::string& sprite_tag,
 }
 
 void CImage::SetImageSize(const float width, const float height) {
-	SetScaleValue(1.0f);
-	SetScaleFactor({ width / 2.0f, height / 2.0f, 0 });
+	SetLocalScale({ width / 2.0f, height / 2.0f, 0 });
 }
 
 void CImage::SetTextureFragmentIndex(const int32_t index) {
@@ -56,7 +54,7 @@ void CImage::SetTextureFragmentIndex(const int32_t index) {
 }
 
 void CImage::LocalUpdate() {
-	const auto wh = GetScaleFactor() * GetScaleValue() * 2.f;
+	const auto wh = GetLocalScale() * 2.f;
 	const auto xy = GetFinalPosition() - (wh / 2.0f);
 
 	std::array<GLint, 4>&& xywh = {

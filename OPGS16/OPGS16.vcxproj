@@ -215,6 +215,7 @@
     <ClCompile Include="Source\Element\Internal\texture_base.cc" />
     <ClCompile Include="Source\Element\Internal\texture_cube.cc" />
     <ClCompile Include="Source\Helper\Math\math.cc" />
+    <ClCompile Include="Source\Helper\Type\quaternion.cc" />
     <ClCompile Include="Source\Helper\Type\vector2.cc" />
     <ClCompile Include="Source\Helper\Type\vector3.cc" />
     <ClCompile Include="Source\Helper\Type\vectorint2.cc" />
@@ -398,13 +399,16 @@
     <ClInclude Include="Include\Helper\Type\clamp.h" />
     <ClInclude Include="Include\Helper\Type\color.h" />
     <ClInclude Include="Include\Helper\Type\color32.h" />
+    <ClInclude Include="Include\Helper\Type\quaternion.h" />
     <ClInclude Include="Include\Helper\Type\rangedata.h" />
     <ClInclude Include="Include\Helper\Type\stripedvector.h" />
     <ClInclude Include="Include\Helper\Type\vector2.h" />
     <ClInclude Include="Include\Helper\Type\vector3.h" />
+    <ClInclude Include="Include\Helper\Type\vector4.h" />
     <ClInclude Include="Include\Helper\Type\vectori2.h" />
     <ClInclude Include="Include\Helper\Type\vectori3.h" />
     <ClInclude Include="Include\Helper\include_vector.h" />
+    <ClInclude Include="Include\Helper\Type\vectori4.h" />
     <ClInclude Include="Include\Manager\Internal\error_message.h" />
     <ClInclude Include="Include\Manager\Internal\flag.h" />
     <ClInclude Include="Include\Manager\Internal\input_keystring.h" />

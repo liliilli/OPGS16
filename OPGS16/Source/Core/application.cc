@@ -123,7 +123,7 @@ std::stack<opgs16::entry::_internal::EGameStatus> m_game_status;
 // This callback will be called before update routine only once.
 std::function<void()> m_on_before_update_callback = nullptr;
 
-#if defined(_OPGS16_DEBUG_OPTION)
+#if defined(OP16_SETTING_DEBUG_MODE)
 // Debug UI components container
 std::unique_ptr<opgs16::element::CObject> m_debug_ui_canvas = nullptr;
 #endif
@@ -220,7 +220,7 @@ void ToggleFpsDisplay();
 void TogglePostProcessingEffect();
 void ToggleCollisionBoxDisplay();
 
-#if defined(_OPGS16_DEBUG_OPTION)
+#if defined(OP16_SETTING_DEBUG_MODE)
 ///
 /// @brief
 /// Initiate and Compose Debug Interface components.
@@ -237,11 +237,12 @@ void SetOnBeforeUpdateCallback(const std::function<void(void)> callback) {
 }
 
 void Initiate() {
+  debug::log::____::InitiateLogger();
   PHITOS_ASSERT(m_initiated == EInitiated::NotInitiated,
       "Duplicated function call of ::opgs16::entry::Initiate() is prohibited.");
   m_initiated = EInitiated::Initiated;
 
-#if defined(_OPGS16_DEBUG_OPTION)
+#if defined(OP16_SETTING_DEBUG_MODE)
   m_window = InitApplication("OPGS16 DEBUG MODE");
 #else
   #if !defined (OP16_SETTING_APPLICATION_NAME)
@@ -292,7 +293,7 @@ void Initiate() {
   ChangeScalingOption(EScaleType::X3);
 #endif
 
-#if defined(_OPGS16_DEBUG_OPTION)
+#if defined(OP16_SETTING_DEBUG_MODE)
   InitiateDebugUi();
 #endif
 
@@ -381,7 +382,7 @@ void PopStatus() {
   }
 }
 
-#if defined(_OPGS16_DEBUG_OPTION)
+#if defined(OP16_SETTING_DEBUG_MODE)
 void InitiateDebugUi() {
 	m_debug_ui_canvas = std::make_unique<CanvasDebug>();
 }
@@ -451,7 +452,7 @@ void Update(float delta_time) {
 
   switch (GetPresentStatus()) {
   case _internal::EGameStatus::PLAYING:
-#ifdef _OPGS16_DEBUG_OPTION
+#ifdef OP16_SETTING_DEBUG_MODE
     InputGlobal();
 #endif
     if (!manager::scene::IsSceneEmpty()) {
@@ -465,10 +466,9 @@ void Update(float delta_time) {
   default: break;
   }
 
-#if defined(_OPGS16_DEBUG_OPTION)
-  if (IsSwitchOn(m_setting->DebugMode()))
-    m_debug_ui_canvas->Update(delta_time);
-  if (IsSwitchOn(m_setting->CollisionAABBBoxDisplay()))
+#if defined(OP16_SETTING_DEBUG_MODE)
+  m_debug_ui_canvas->Update(delta_time);
+  if (setting::IsEnableRenderingAabb())
     manager::physics::RenderCollisionBox();
 #endif
 
@@ -480,26 +480,14 @@ void Update(float delta_time) {
 void InputGlobal() {
   using opgs16::manager::input::IsKeyPressed;
   using opgs16::setting::IsEnableScaling;
-
-	if (IsKeyPressed("GlobalCancel"))
-		PopStatus();
-
-  if (IsEnableScaling()) {
-    if (IsKeyPressed("GlobalF1"))
-      ChangeScalingOption(EScaleType::X1);
-    else if (IsKeyPressed("GlobalF2"))
-      ChangeScalingOption(EScaleType::X2);
-    else if (IsKeyPressed("GlobalF3"))
-      ChangeScalingOption(EScaleType::X3);
-  }
+#ifdef false
 
   if (IsKeyPressed("GlobalF7"))
     ToggleCollisionBoxDisplay();
   if (IsKeyPressed("GlobalF9"))
     ToggleFpsDisplay();
 
-  if (IsKeyPressed("GlobalF10"))
-    TogglePostProcessingEffect();
+#endif
 }
 
 void Draw() {
@@ -531,17 +519,12 @@ void Draw() {
     manager::postprocessing::Render();
   }
 
-#if defined(_OPGS16_DEBUG_OPTION)
-  if (IsSwitchOn(m_setting->DebugMode()))
-    m_debug_ui_canvas->Draw();
+#if defined(OP16_SETTING_DEBUG_MODE)
+  m_debug_ui_canvas->Draw();
 #endif
 
   glfwSwapBuffers(m_window);
   glfwPollEvents();
-}
-
-void ToggleFpsDisplay() {
-  setting::ToggleDebugMode();
 }
 
 void TogglePostProcessingEffect() {

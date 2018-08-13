@@ -184,9 +184,6 @@ void SetCollisionAABBBoxDisplay(Switch value) noexcept {
 void ToggleAntiAliasing() noexcept {
   SetAntiAliasing(ToggleSwitch(Switch{IsEnableAntiAliasing()}));
 }
-void ToggleDebugMode() noexcept {
-  SetDebugMode(ToggleSwitch(Switch{IsEnableDebugMode()}));
-}
 void TogglePostProcessing() {
   SetPostProcessing(ToggleSwitch(Switch{IsEnablePostProcessing()}));
 }

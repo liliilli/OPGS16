@@ -146,26 +146,22 @@ TMinMaxResult<int32_t> GetMinMax(const opgs16::DVectorInt3& vector) noexcept {
 
 float GetRotationAngle(float angle_value) noexcept {
   const float angle = std::fmod(angle_value, 360.f);
-  return (angle > 180.f) ? angle - 360.f :
-             ((angle <= -180.f) ? angle + 360.f : angle);
+  return (angle < 0.f) ? angle + 360.f : angle;
 }
 
 double GetRotationAngle(double angle_value) noexcept {
   const double angle = std::fmod(angle_value, 360.0);
-  return (angle > 180.0) ? angle - 360.0 :
-             ((angle <= -180.0) ? angle + 360.0 : angle);
+  return (angle <= 0.0) ? angle + 360.0 : angle;
 }
 
 float GetRotationAngleRadian(float angle_value) noexcept {
   const float angle = std::fmod(angle_value, math::pi<float> * 2);
-  return (angle > pi<float>) ? angle - (pi<float> * 2) :
-             ((angle <= -pi<float>) ? angle + (pi<float> * 2) : angle);
+  return (angle <= 0.f) ? angle + (pi<float> * 2) : angle;
 }
 
 double GetRotationAngleRadian(double angle_value) noexcept {
   const double angle = std::fmod(angle_value, math::pi<double> * 2);
-  return (angle > pi<double>) ? angle - (pi<double> * 2) :
-             ((angle <= -pi<double>) ? angle + (pi<double> * 2) : angle);
+  return (angle <= 0.0) ? angle + (pi<float> * 2) : angle;
 }
 
 float RadToDeg(float radian) noexcept {

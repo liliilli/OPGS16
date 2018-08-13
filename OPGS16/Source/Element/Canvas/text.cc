@@ -31,9 +31,7 @@ namespace opgs16::element::canvas {
 
 using CTextImpl = _internal::CTextImpl;
 
-CText::CText(const std::string& initial_text,
-             const DVector3& position,
-             const DColor& color) :
+CText::CText(const std::string& initial_text, const DVector3& position, const DColor& color) :
     m_text{initial_text}, m_color{color} {
   SetWorldPosition(position);
 
@@ -41,6 +39,8 @@ CText::CText(const std::string& initial_text,
   renderer->SetText(m_text);
   renderer->SetColor(color);
   m_component = renderer;
+
+  pUpdateFontScale();
 }
 
 void CText::Render() {
@@ -55,28 +55,23 @@ void CText::Render() {
   m_component->SetText(GetText());
   m_component->SetColor(GetColor());
   const auto& fp = GetFinalPosition();
-  m_component->RenderText(
-      GetOrigin(),
-      glm::vec2{ fp.x, fp.y },
-      GetAlignment(),
-      GetScaleValue());
+  m_component->RenderText(GetOrigin(), glm::vec2{ fp.x, fp.y }, GetAlignment(), m_font_scale);
 }
 
-void CText::SetText(const std::string& new_text) {
-  m_text = new_text;
-}
-
-const std::string& CText::GetText() const {
+const std::string& CText::GetText() const noexcept {
   return m_text;
 }
 
-void CText::SetFontSize(const uint32_t size) {
-  const unsigned def = manager::font::GetDefaultFontSize();
-  SetScaleValue(static_cast<float>(size) / static_cast<float>(def));
+int32_t CText::GetFontSize() const noexcept {
+  return m_font_size;
 }
 
-const unsigned CText::GetFontSize() const {
-  return m_font_size;
+const std::string& CText::GetFontName() const noexcept {
+  return m_font_name;
+}
+
+const DColor& CText::GetColor() const noexcept {
+  return m_color;
 }
 
 bool CText::SetFontName(const std::string& font_tag) {
@@ -93,16 +88,17 @@ bool CText::SetFontName(const std::string& font_tag) {
   return true;
 }
 
-const std::string& CText::GetFontName() {
-  return m_font_name;
+void CText::SetText(const std::string& new_text) noexcept {
+  m_text = new_text;
+}
+
+void CText::SetFontSize(uint32_t size) noexcept {
+  m_font_size = size;
+  pUpdateFontScale();
 }
 
 void CText::SetColor(const DColor& color) {
   m_color = color;
-}
-
-const DColor& CText::GetColor() {
-  return m_color;
 }
 
 void CText::SetRenderingLayer(int32_t layer_index) {
@@ -113,4 +109,8 @@ void CText::SetRenderingLayer(const std::string& layer_string) {
   m_component->SetRenderingLayer(layer_string);
 }
 
+void CText::pUpdateFontScale() {
+  const auto def = manager::font::GetDefaultFontSize();
+  m_font_scale = static_cast<float>(m_font_size) / static_cast<float>(def);
+}
 } /// ::opgs16::element::canvas

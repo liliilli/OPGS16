@@ -67,21 +67,22 @@ void DQuaternion::AddRotationAngle(const DQuaternion& quaternion_angle) {
 }
 
 void DQuaternion::AddRotationAngle(opgs16::EAxis3D axis, float degree_angle) {
-  const auto radians = degree_angle * math::deg_to_rad<float>;
-
+  const auto radians = glm::radians(degree_angle);
   switch (axis) {
-  case EAxis3D::X:
-    m_quaternion = rotate(m_quaternion, radians, static_cast<glm::vec3>(DVector3::RightX()));
-    break;
-  case EAxis3D::Y:
-    m_quaternion = rotate(m_quaternion, radians, static_cast<glm::vec3>(DVector3::UpY()));
-    break;
-  case EAxis3D::Z:
-    m_quaternion = rotate(m_quaternion, radians, static_cast<glm::vec3>(DVector3::FrontZ()));
-    break;
+  case EAxis3D::X: {
+      const auto temp = glm::angleAxis(radians, static_cast<glm::vec3>(DVector3::RightX()));
+      m_quaternion = temp * m_quaternion;
+    } break;
+  case EAxis3D::Y: {
+      const auto temp = glm::angleAxis(radians, static_cast<glm::vec3>(DVector3::UpY()));
+      m_quaternion = temp * m_quaternion;
+    } break;
+  case EAxis3D::Z: {
+      const auto temp = glm::angleAxis(radians, static_cast<glm::vec3>(DVector3::FrontZ()));
+      m_quaternion = temp * m_quaternion;
+    } break;
   default: PHITOS_UNEXPECTED_BRANCH(); break;
   }
-
 }
 
 void DQuaternion::SetRotationAngle(const opgs16::DVector3& euler_angle) {

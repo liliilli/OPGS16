@@ -34,6 +34,9 @@ constexpr TType pi = TType(3.1415926535897932385L);
 template <typename TType>
 constexpr TType e = TType(2.71828182845904523536L);
 
+template <typename TType>
+constexpr TType deg_to_rad = pi<TType> / TType(180.0);
+
 //!
 //! Functions
 //!

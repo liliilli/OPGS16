@@ -145,9 +145,9 @@ void CColliderCircle2D::pCreatebtRigidbody(float mass_sum, btRigidBody** rigidbo
   // Create motion state
   auto& obj = GetBindObject();
   btQuaternion rotation;
-  rotation.setEulerZYX(obj.GetRotationWpAngle(EAxis3D::Z),
-                       obj.GetRotationWpAngle(EAxis3D::Y),
-                       obj.GetRotationWpAngle(EAxis3D::X));
+  rotation.setEulerZYX(obj.GetFinalRotationAngle(EAxis3D::Z),
+                       obj.GetFinalRotationAngle(EAxis3D::Y),
+                       obj.GetFinalRotationAngle(EAxis3D::X));
   auto* motionState = new btDefaultMotionState(btTransform{rotation, obj.GetFinalPosition()});
 
 #ifdef false

@@ -88,13 +88,8 @@ void CObject::Update(float delta_time) {
         m_is_transform_initiated = true;
       }
     }
-    if (m_parent) {
-      // Realign transform from parent.
-      m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
-      m_data->SetObjectWorldAxisBasisValue(m_parent->pGetParentWorldPropagateAxisValue());
-      m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
-      //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
-    }
+
+    LocalUpdate();
 
     for (auto& [component, type] : m_components) {
       if (!(component && component->IsComponentActive())) continue;
@@ -115,7 +110,6 @@ void CObject::Update(float delta_time) {
       component->Update(delta_time);
     }
 
-    LocalUpdate();
     m_data->SetCallbackFlagToFalse();
 
     // Update children objects.
@@ -327,6 +321,16 @@ void CObject::Propagate() {
   }
 }
 
+void CObject::LocalUpdate() {
+  if (m_parent) {
+    // Realign transform from parent.
+    m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
+    m_data->SetObjectWorldAxisBasisValue(m_parent->pGetParentWorldPropagateAxisValue());
+    m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
+    //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
+  }
+}
+
 void CObject::pCallPhysicsCallback(_internal::EColliderCollisionState call_state,
                                    bool is_collision_function,
                                    component::_internal::CColliderBase* collider) {
@@ -381,6 +385,10 @@ void CObject::PropagateActivation(phitos::enums::EActivated value) noexcept {
 
 const DVector3& CObject::pfGetRotationTotalWorldAngle() {
   return m_data->GetWorldSummedRotationAngle();
+}
+
+void CObject::pSetWorldPropagatedPositionForcely(const DVector3& vector) noexcept {
+  m_data->SetWorldPropagatedPosition(vector);
 }
 
 void CObject::CalculateActivation() {

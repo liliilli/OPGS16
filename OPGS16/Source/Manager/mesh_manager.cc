@@ -35,6 +35,7 @@
 #include <Element/Builtin/Model/model_3dbox.h>
 #include <Element/Builtin/Model/model_3dsphere.h>
 #include <Element/Builtin/Model/model_point.h>
+#include "Element/Builtin/Model/model_empty.h"
 
 //!
 //! Data and flags
@@ -74,7 +75,9 @@ void InitiateBuiltinModelMeshes() {
   using opgs16::builtin::model::BModelPoint;
   using opgs16::builtin::model::BModel3DBox;
   using opgs16::builtin::model::BModel3DSphere;
+  using opgs16::builtin::model::BModelEmpty;
 
+  m_model_map.try_emplace(BModelEmpty::s_model_name, BModelEmpty{});
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad, BModel2DQuad{});
   m_model_map.try_emplace(opgs16::builtin::g_model_2d_quad_dynamic, BModel2DQuad{});
   m_model_map.try_emplace(BModel2DQuadLine::s_model_name, BModel2DQuadLine{});
