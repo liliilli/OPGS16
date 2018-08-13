@@ -66,6 +66,10 @@ opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector
 namespace opgs16::element::_internal {
 
 void CObjectImpl::pUpdateObjectSpaceAxisBasis() const noexcept {
+  m_propagated_rotation_quaternion = DQuaternion(m_propagated_world_rotation_euler_angle);
+  m_propagated_rotation_matrix = m_propagated_rotation_quaternion.GetRotationMatrix3();
+
+  // @todo renovate
   m_object_space_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_propagated_world_rotation_euler_angle);
   m_object_space_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_propagated_world_rotation_euler_angle);
   m_object_space_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_propagated_world_rotation_euler_angle);
@@ -74,7 +78,14 @@ void CObjectImpl::pUpdateObjectSpaceAxisBasis() const noexcept {
   m_is_final_rotation_angle_dirty = true;
 }
 
-void CObjectImpl::pUpdatePropagationAxisBasis() noexcept {
+void CObjectImpl::pUpdateLocalRotationQuaternion() const noexcept {
+  m_local_rotation_quaternion = DQuaternion(m_local_rotation_euler_angle);
+  m_local_rotation_matrix = m_local_rotation_quaternion.GetRotationMatrix3();
+
+  m_is_local_rotation_angle_dirty = false;
+}
+
+void CObjectImpl::pUpdateObjectSummedAxisBasis() noexcept {
   if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
 
   m_object_propagate_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_summed_world_rotation_euler_angle);
@@ -90,11 +101,15 @@ void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() const noexcept {
   m_summed_world_rotation_euler_angle.y = math::GetRotationAngle(m_summed_world_rotation_euler_angle.y);
   m_summed_world_rotation_euler_angle.z = math::GetRotationAngle(m_summed_world_rotation_euler_angle.z);
 
+  m_summed_rotation_quaternion = DQuaternion(m_summed_world_rotation_euler_angle);
+  m_summed_rotation_matrix = m_summed_rotation_quaternion.GetRotationMatrix3();
+
   m_is_summed_rotation_angle_dirty  = false;
   m_is_final_rotation_angle_dirty   = true;
 }
 
 void CObjectImpl::pUpdateFinalWorldRotationEulerAngle() const noexcept {
+  if (m_is_local_rotation_angle_dirty) pUpdateLocalRotationQuaternion();
   if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
 
   m_object_final_rotation_euler_angle = m_summed_world_rotation_euler_angle + m_local_rotation_euler_angle;
@@ -104,14 +119,18 @@ void CObjectImpl::pUpdateFinalWorldRotationEulerAngle() const noexcept {
 void CObjectImpl::pUpdateAxisAlignedLocalPosition() const noexcept {
   if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
-  m_local_axis_arranged_position = GetRotatedVector(m_independent_local_position, m_propagated_world_rotation_euler_angle);
+  const auto i = static_cast<glm::vec3>(m_independent_local_position);
+  m_local_axis_arranged_position = m_propagated_rotation_matrix * i;
+
   m_is_local_position_dirty = false;
 }
 
 void CObjectImpl::pUpdateAxisAlignedWorldPosition() const noexcept {
   if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
-  m_world_axis_arranged_position = GetRotatedVector(m_independent_world_position, m_propagated_world_rotation_euler_angle);
+  const auto i = static_cast<glm::vec3>(m_independent_world_position);
+  m_world_axis_arranged_position = m_propagated_rotation_matrix * i;
+
   m_is_world_position_dirty = false;
 }
 
@@ -132,13 +151,6 @@ void CObjectImpl::pUpdateAxisAlignedFinalPosition() const {
   m_is_final_position_dirty = false;
 }
 
-void CObjectImpl::RefreshRotationMatrix() const {
-  if (IsAllAngleValueZero(m_object_final_rotation_euler_angle))
-    m_rotation_matrix = k_rotation_init;
-  else
-    m_rotation_matrix = GetRotationMatrix(m_object_final_rotation_euler_angle);
-}
-
 void CObjectImpl::RefreshScaleVector() const {
   m_scale_final_vector = m_local_scale;
 }
@@ -147,7 +159,6 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
 	if (m_is_model_matrix_dirty) {
     if (m_is_final_rotation_angle_dirty) {
       pUpdateFinalWorldRotationEulerAngle();
-      RefreshRotationMatrix();
     }
 
     if (m_is_final_position_dirty) {
@@ -162,7 +173,7 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
     m_is_model_matrix_dirty = false;
   }
 
-  m_final_model     = m_rotation_matrix;
+  m_final_model     = m_summed_rotation_matrix * m_local_rotation_matrix;
   m_final_model[0] *= m_scale_final_vector.x;
   m_final_model[1] *= m_scale_final_vector.y;
   m_final_model[2] *= m_scale_final_vector.z;

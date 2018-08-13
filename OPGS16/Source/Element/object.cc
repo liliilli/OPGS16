@@ -151,35 +151,27 @@ const DVector3& CObject::GetParentPosition() const noexcept {
 }
 
 const DVector3& CObject::GetFinalPosition() const noexcept {
-  return m_data->GetFinalPosition();
+  return m_data->GetFinalRenderingPosition();
 }
 
 void CObject::SetLocalPosition(const DVector3& position) noexcept {
   m_data->SetLocalPosition(position);
-  //m_data->GetFinalPosition();
 }
 
 void CObject::SetWorldPosition(const DVector3& world_position) {
   m_data->SetWorldPosition(world_position);
-  //PropagateParentPosition();
-  //m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetLocalPosition(axis, value);
-  //PropagateParentPosition();
-  //m_data->GetFinalPosition();
 }
 
 void CObject::AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetWorldPosition(axis, value);
-  //PropagateParentPosition();
-  //m_data->GetFinalPosition();
 }
 
 void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
   m_data->SetWorldPosWithFinalPos(final_position);
-  //PropagateParentPosition();
 }
 
 // Rotation functions.
@@ -325,7 +317,6 @@ void CObject::LocalUpdate() {
   if (m_parent) {
     // Realign transform from parent.
     m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
-    m_data->SetObjectWorldAxisBasisValue(m_parent->pGetParentWorldPropagateAxisValue());
     m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
     //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
   }

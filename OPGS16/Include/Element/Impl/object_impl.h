@@ -34,6 +34,7 @@
 #include <Helper/Math/math.h>
 #include <Helper/Type/axis.h>
 #include <Helper/Type/vector3.h>
+#include "Helper/Type/quaternion.h"
 
 namespace opgs16::element::_internal {
 ///
@@ -59,10 +60,9 @@ public:
     return m_summed_world_position;
   }
 
-  inline const DVector3& GetFinalPosition() const {
+  inline const DVector3& GetFinalRenderingPosition() const {
     if (m_is_final_rotation_angle_dirty) {
       pUpdateFinalWorldRotationEulerAngle();
-      RefreshRotationMatrix();
     }
     if (m_is_final_position_dirty) {
       pUpdateAxisAlignedFinalPosition();
@@ -134,7 +134,7 @@ public:
   //!
 
   const std::array<DVector3, 3>& GetChildObjectWorldAxisBasisValue() noexcept {
-    if (m_is_world_propagation_axis_dirty) pUpdatePropagationAxisBasis();
+    if (m_is_world_propagation_axis_dirty) pUpdateObjectSummedAxisBasis();
     return m_object_propagate_axis;
   }
 
@@ -178,6 +178,7 @@ public:
     case EAxis3D::Y: return m_local_rotation_euler_angle.y;
     case EAxis3D::Z: return m_local_rotation_euler_angle.z;
     }
+    return 0;
   }
 
   float GetWorldRotationAngle(const EAxis3D direction) const noexcept {
@@ -186,6 +187,7 @@ public:
     case EAxis3D::Y: return m_world_rotation_euler_angle.y;
     case EAxis3D::Z: return m_world_rotation_euler_angle.z;
     }
+    return 0;
   }
 
   float GetFinalRotationAngle(const EAxis3D direction) const {
@@ -194,6 +196,7 @@ public:
     case EAxis3D::Y: return m_object_final_rotation_euler_angle.y;
     case EAxis3D::Z: return m_object_final_rotation_euler_angle.z;
     }
+    return 0;
   }
 
   const DVector3& GetWorldSummedRotationAngle() const noexcept {
@@ -212,7 +215,9 @@ public:
     }
 
     m_is_model_matrix_dirty           = true;
+    m_is_local_rotation_angle_dirty   = true;
     m_is_final_rotation_angle_dirty   = true;
+    m_local_rotation_quaternion = DQuaternion(m_local_rotation_euler_angle);
   }
 
   void SetWorldRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
@@ -231,27 +236,7 @@ public:
     m_is_world_propagation_axis_dirty = true;
     m_is_final_rotation_angle_dirty   = true;
 
-    pUpdateSummedWorldRotationEulerAngle();
-  }
-
-  void SetWorldPropagatedRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
-    const auto angle = math::GetRotationAngle(angle_value);
-
-    switch (direction) {
-    case EAxis3D::X: m_propagated_world_rotation_euler_angle.x = angle; break;
-    case EAxis3D::Y: m_propagated_world_rotation_euler_angle.y = angle; break;
-    case EAxis3D::Z: m_propagated_world_rotation_euler_angle.z = angle; break;
-    default: break;
-    }
-
-    m_is_model_matrix_dirty           = true;
-    m_is_final_position_dirty         = true;
-    m_is_summed_rotation_angle_dirty  = true;
-    m_is_world_propagation_axis_dirty = true;
-    m_is_final_rotation_angle_dirty   = true;
-
-    pUpdateSummedWorldRotationEulerAngle();
-    pUpdateObjectSpaceAxisBasis();
+    //pUpdateSummedWorldRotationEulerAngle();
   }
 
   void AddOffsetLocalAngle(EAxis3D axis, const float angle_value) noexcept {
@@ -263,6 +248,7 @@ public:
     }
 
     m_is_model_matrix_dirty           = true;
+    m_is_local_rotation_angle_dirty   = true;
     m_is_final_rotation_angle_dirty   = true;
   }
 
@@ -385,12 +371,17 @@ private:
   ///
   /// @brief Update propagation axis basis using m_summed_world_rotation_euler_angle.
   ///
-  void pUpdatePropagationAxisBasis() noexcept;
+  void pUpdateObjectSummedAxisBasis() noexcept;
 
   ///
   /// @brief Update propagation axis basis using m_propagated_world_rotation_euler_angle.
   ///
   void pUpdateObjectSpaceAxisBasis() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  void pUpdateLocalRotationQuaternion() const noexcept;
 
   ///
   /// @brief Update summed world rotation euler angle using parent_summed_world + this_world.
@@ -424,14 +415,13 @@ private:
 
   void RefreshScaleVector() const;	/** Refresh Scaling matrix */
 
-  void RefreshRotationMatrix() const;
-
   /// (x, y, z) local position.
   DVector3 m_independent_local_position;
   /// (x, y, z) world position.
   DVector3 m_independent_world_position;
   /// (x, y, z) final position of parent
   DVector3 m_propagated_world_basis_position;
+
   /// m_object_space_axis * local_position;
   mutable DVector3 m_local_axis_arranged_position;
   /// m_object_space_axis * world_position;
@@ -447,15 +437,19 @@ private:
   DVector3 m_world_rotation_euler_angle;
   /// parent's propagated world rotation summed angle;
   DVector3 m_propagated_world_rotation_euler_angle;
-  ///
-  mutable DVector3 m_axis_aligned_local_rotation_euler_angle;
-  ///
-  mutable DVector3 m_axis_aligned_world_rotation_euler_angle;
-  /// propagated_world_rotation_euler_angle + world
   /// propagated_world_rotation_euler_angle + world
   mutable DVector3 m_summed_world_rotation_euler_angle;
   /// local + summed_world
   mutable DVector3 m_object_final_rotation_euler_angle;
+
+  mutable DQuaternion m_local_rotation_quaternion;
+  mutable glm::mat3   m_local_rotation_matrix;
+
+  mutable DQuaternion m_propagated_rotation_quaternion;
+  mutable glm::mat3   m_propagated_rotation_matrix;
+
+  mutable DQuaternion m_summed_rotation_quaternion;
+  mutable DQuaternion m_final_rotation_quaternion;
 
   /// Scale local factor, default is (1, 1, 1)
   DVector3 m_local_scale = DVector3{ 1.f };
@@ -469,7 +463,12 @@ private:
   mutable DVector3 m_rendering_producted_scale = DVector3{ 1.f };
   /// (x, y, z) scale vector to apply to matrix.
   /// @todo deprecated
-  mutable DVector3 m_scale_final_vector{};
+  mutable DVector3 m_scale_final_vector;
+
+  /// World + Parent rotation matrix.
+  mutable glm::mat3 m_summed_rotation_matrix;
+  /// Final model matrix also reflected by parent's and world rot.
+  mutable glm::mat4 m_final_model;
 
   //!
   //! Axis variables.
@@ -483,11 +482,6 @@ private:
   mutable std::array<DVector3, 3> m_object_propagate_axis = {
     DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
   };
-
-  /// World + Parent rotation matrix.
-  mutable glm::mat4 m_rotation_matrix{};
-  /// Final model matrix also reflected by parent's and world rot.
-  mutable glm::mat4 m_final_model{};
 
   using EActivated = phitos::enums::EActivated;
   /// Object all update activation variable.
@@ -505,6 +499,7 @@ private:
   mutable bool m_is_world_propagation_axis_dirty= true;
   mutable bool m_is_world_space_axis_dirty      = true;
 
+  mutable bool m_is_local_rotation_angle_dirty  = true;
   mutable bool m_is_summed_rotation_angle_dirty = true;
   mutable bool m_is_final_rotation_angle_dirty  = true;
 

@@ -624,18 +624,17 @@ private:
 
   const std::array<DVector3, 3>& pfGetObjectWorldSpaceAxis() const noexcept;
 
-  /// Object name counter to avoid duplicated object name
-  TNameCounterMap m_name_counter;
   /// this object name
   mutable std::string m_object_name;
-  /// Hash value to verify object number
-  mutable uint32_t m_hash_value = 0;
-  /// Flag
-  mutable bool m_hash_initialized = false;
   mutable bool m_is_transform_initiated = false;
 
   /// Parent object. if nullptr, this object has no parent and be on scene.
   CObject* m_parent = nullptr;
+
+  /// Object name counter to avoid duplicated object name
+  TNameCounterMap   m_name_counter;
+  mutable uint32_t  m_hash_value = 0;
+  mutable bool      m_hash_initialized = false;
 
   friend opgs16::element::CScene;
   friend opgs16::element::UiObject;
