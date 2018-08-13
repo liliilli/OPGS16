@@ -171,14 +171,14 @@ public:
   /// @brief The method gets rotation angle value
   /// @return Object's rotation angle value.
   ///
-  float GetRotationLocalAngle(EAxis3D direction) const noexcept;
+  float GetLocalRotationAngle(EAxis3D direction) const noexcept;
 
-  float GetRotationWorldAngle(EAxis3D direction) const noexcept;
+  float GetWorldRotationAngle(EAxis3D direction) const noexcept;
 
   ///
   /// @brief
   ///
-  float GetRotationWpAngle(EAxis3D direction) const noexcept;
+  float GetFinalRotationAngle(EAxis3D direction) const noexcept;
 
   ///
   /// @brief The method sets rotation angle values.

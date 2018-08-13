@@ -140,15 +140,15 @@ const DVector3& CObject::pGetParentProductedWorldScaleValue() const noexcept {
 }
 
 const DVector3& CObject::GetLocalPosition() const noexcept {
-  return m_data->GetLocalPosition();
+  return m_data->GetIndependentLocalPosition();
 }
 
 const DVector3& CObject::GetWorldPosition() const noexcept {
-  return m_data->GetWorldPosition();
+  return m_data->GetIndependentWorldPosition();
 }
 
 const DVector3& CObject::GetParentPosition() const noexcept {
-  return m_data->GetParentPosition();
+  return m_data->GetAxisAlignedSummedWorldPosition();
 }
 
 const DVector3& CObject::GetFinalPosition() const noexcept {
@@ -197,16 +197,16 @@ void CObject::PropagateParentPosition() {
 
 // Rotation functions.
 
-float CObject::GetRotationLocalAngle(EAxis3D direction) const noexcept {
+float CObject::GetLocalRotationAngle(EAxis3D direction) const noexcept {
   return m_data->GetLocalRotationAngle(direction);
 }
 
-float CObject::GetRotationWorldAngle(EAxis3D direction) const noexcept {
+float CObject::GetWorldRotationAngle(EAxis3D direction) const noexcept {
   return m_data->GetWorldRotationAngle(direction);
 }
 
-float CObject::GetRotationWpAngle(EAxis3D direction) const noexcept {
-  return m_data->GetRotationWpAngle(direction);
+float CObject::GetFinalRotationAngle(EAxis3D direction) const noexcept {
+  return m_data->GetFinalRotationAngle(direction);
 }
 
 void CObject::SetRotationLocalAngle(EAxis3D direction, const float angle_value) noexcept {
@@ -214,7 +214,7 @@ void CObject::SetRotationLocalAngle(EAxis3D direction, const float angle_value) 
 }
 
 void CObject::SetRotationParentAngle(EAxis3D direction, const float angle_value) noexcept {
-  m_data->SetRotationParentAngle(direction, angle_value);
+  m_data->SetWorldPropagatedRotationAngle(direction, angle_value);
   PropagateParentRotation();
 }
 
@@ -240,9 +240,9 @@ void CObject::PropagateParentRotation() {
     using phitos::enums::EActivated;
     if (child_ptr &&
       child_ptr->IsObjectActive() == EActivated::Activated) {
-      child_ptr->SetRotationParentAngle(EAxis3D::X, GetRotationWpAngle(EAxis3D::X));
-      child_ptr->SetRotationParentAngle(EAxis3D::Y, GetRotationWpAngle(EAxis3D::Y));
-      child_ptr->SetRotationParentAngle(EAxis3D::Z, GetRotationWpAngle(EAxis3D::Z));
+      child_ptr->SetRotationParentAngle(EAxis3D::X, GetFinalRotationAngle(EAxis3D::X));
+      child_ptr->SetRotationParentAngle(EAxis3D::Y, GetFinalRotationAngle(EAxis3D::Y));
+      child_ptr->SetRotationParentAngle(EAxis3D::Z, GetFinalRotationAngle(EAxis3D::Z));
     }
   }
 }

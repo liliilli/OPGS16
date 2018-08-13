@@ -15,7 +15,7 @@
 ///
 /// @log
 /// 2018-02-19 Refactoring, Inlining, and Removed not-used variables. add class description.
-/// 2018-02-19 Add GetParentPosition() method, returns m_parent_to_position.
+/// 2018-02-19 Add GetParentPosition() method, returns m_summed_world_position.
 /// 2018-02-23 Add succeeding flag of translation, rotation, scaling from parent.
 /// 2018-03-05 Add rendering layer member functions.
 /// 2018-03-11 Moved implementation contents into ::opgs16::element::_internal.
@@ -46,56 +46,56 @@ public:
   //! Position
   //!
 
-  inline const DVector3& GetLocalPosition() const {
-    return m_local_position;
+  inline const DVector3& GetIndependentLocalPosition() const {
+    return m_independent_local_position;
   }
 
-  inline const DVector3& GetWorldPosition() const {
-    return m_world_position;
+  inline const DVector3& GetIndependentWorldPosition() const {
+    return m_independent_world_position;
   }
 
-  inline const DVector3& GetParentPosition() const {
-    return m_parent_to_position;
+  inline const DVector3& GetAxisAlignedSummedWorldPosition() const {
+    if (m_is_summed_position_dirty) pUpdateAxisAlignedSummedWorldPosition();
+    return m_summed_world_position;
   }
 
   inline const DVector3& GetFinalPosition() const {
-    if (m_offset_model_matrix_deprecated) {
-      RefreshWpRotationMatrix();
-      m_offset_model_matrix_deprecated = false;
+    if (m_is_final_rotation_angle_dirty) {
+      pUpdateFinalWorldRotationEulerAngle();
+      RefreshRotationMatrix();
+    }
+    if (m_is_final_position_dirty) {
+      pUpdateAxisAlignedFinalPosition();
     }
 
-    if (m_final_pos_deprecated) {
-      RefreshFinalPosition();
-      m_final_pos_deprecated = false;
-    }
-
-    return m_final_position;
+    return m_axis_aligned_final_position;
   }
 
   inline void SetLocalPosition(const DVector3& position) noexcept {
-    m_local_position = position;
-    m_is_local_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
+    m_independent_local_position = position;
+
+    m_is_model_matrix_dirty   = true;
+    m_is_local_position_dirty = true;
+    m_is_final_position_dirty = true;
   }
 
   inline void SetWorldPosition(const DVector3& position) noexcept {
-    m_world_position = position;
-    m_parent_to_position = m_parent_from_position + m_world_position;
+    m_independent_world_position     = position;
+    m_summed_world_position = m_propagated_world_basis_position + m_independent_world_position;
 
-    m_is_local_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
+    m_is_model_matrix_dirty   = true;
+    m_is_world_position_dirty = true;
+    m_is_final_position_dirty = true;
+    m_is_summed_position_dirty  = true;
   }
 
   inline void SetWorldPosWithFinalPos(const DVector3& final_position) noexcept {
-    SetWorldPosition(final_position - m_parent_from_position);
+    SetWorldPosition(final_position - m_propagated_world_basis_position);
   }
 
-  inline void SetParentPosition(const DVector3& parent_position) noexcept {
-    m_parent_from_position = parent_position;
-    m_parent_to_position = parent_position + m_world_position;
-
-    m_is_local_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
+  inline void SetParentPosition(const DVector3& propagated_world_basis_position) noexcept {
+    m_propagated_world_basis_position = propagated_world_basis_position;
+    SetWorldPosition(m_independent_world_position);
   }
 
   ///
@@ -103,12 +103,14 @@ public:
   ///
   void AddOffsetLocalPosition(EAxis3D axis, float value) noexcept {
     switch (axis) {
-    case EAxis3D::X: m_local_position.x += value; break;
-    case EAxis3D::Y: m_local_position.y += value; break;
-    case EAxis3D::Z: m_local_position.z += value; break;
+    case EAxis3D::X: m_independent_local_position.x += value; break;
+    case EAxis3D::Y: m_independent_local_position.y += value; break;
+    case EAxis3D::Z: m_independent_local_position.z += value; break;
     }
-    m_is_local_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
+
+    m_is_model_matrix_dirty   = true;
+    m_is_local_position_dirty = true;
+    m_is_final_position_dirty = true;
   }
 
   ///
@@ -116,13 +118,16 @@ public:
   ///
   void AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
     switch (axis) {
-    case EAxis3D::X: m_world_position.x += value; break;
-    case EAxis3D::Y: m_world_position.y += value; break;
-    case EAxis3D::Z: m_world_position.z += value; break;
+    case EAxis3D::X: m_independent_world_position.x += value; break;
+    case EAxis3D::Y: m_independent_world_position.y += value; break;
+    case EAxis3D::Z: m_independent_world_position.z += value; break;
     }
-    m_parent_to_position = m_parent_from_position + m_world_position;
-    m_is_local_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
+
+    m_summed_world_position   = m_propagated_world_basis_position + m_independent_world_position;
+    m_is_model_matrix_dirty   = true;
+    m_is_world_position_dirty = true;
+    m_is_final_position_dirty = true;
+    m_is_summed_position_dirty  = true;
   }
 
   //!
@@ -150,9 +155,8 @@ public:
 
     pUpdateObjectSpaceAxisBasis();
 
-    m_offset_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
-    m_is_local_model_matrix_deprecated = true;
+    m_is_final_position_dirty = true;
+    m_is_model_matrix_dirty = true;
     m_is_world_propagation_axis_dirty = true;
   }
 
@@ -180,7 +184,7 @@ public:
     }
   }
 
-  float GetRotationWpAngle(const EAxis3D direction) const {
+  float GetFinalRotationAngle(const EAxis3D direction) const {
     switch (direction) {
     case EAxis3D::X: return m_object_final_rotation_euler_angle.x;
     case EAxis3D::Y: return m_object_final_rotation_euler_angle.y;
@@ -202,8 +206,9 @@ public:
     default: break;
     }
 
-    m_is_local_model_matrix_deprecated = true;
-    m_local_rotation_deprecated = true;
+    m_is_model_matrix_dirty           = true;
+    m_is_local_rotation_angle_dirty   = true;
+    m_is_final_rotation_angle_dirty   = true;
   }
 
   void SetWorldRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
@@ -216,13 +221,15 @@ public:
     default: break;
     }
 
-    pUpdateSummedWorldRotationEulerAngle();
-    m_offset_model_matrix_deprecated = true;
-    m_is_local_model_matrix_deprecated = true;
+    m_is_model_matrix_dirty           = true;
+    m_is_summed_rotation_angle_dirty  = true;
     m_is_world_propagation_axis_dirty = true;
+    m_is_final_rotation_angle_dirty   = true;
+
+    pUpdateSummedWorldRotationEulerAngle();
   }
 
-  void SetRotationParentAngle(const EAxis3D direction, const float angle_value) noexcept {
+  void SetWorldPropagatedRotationAngle(const EAxis3D direction, const float angle_value) noexcept {
     const auto angle = math::GetRotationAngle(angle_value);
 
     switch (direction) {
@@ -232,13 +239,14 @@ public:
     default: break;
     }
 
+    m_is_model_matrix_dirty           = true;
+    m_is_final_position_dirty         = true;
+    m_is_summed_rotation_angle_dirty  = true;
+    m_is_world_propagation_axis_dirty = true;
+    m_is_final_rotation_angle_dirty   = true;
+
     pUpdateSummedWorldRotationEulerAngle();
     pUpdateObjectSpaceAxisBasis();
-
-    m_offset_model_matrix_deprecated = true;
-    m_final_pos_deprecated = true;
-    m_is_local_model_matrix_deprecated = true;
-    m_is_world_propagation_axis_dirty = true;
   }
 
   void AddOffsetLocalAngle(EAxis3D axis, const float angle_value) noexcept {
@@ -249,8 +257,9 @@ public:
     default: break;
     }
 
-    m_is_local_model_matrix_deprecated = true;
-    m_local_rotation_deprecated = true;
+    m_is_model_matrix_dirty           = true;
+    m_is_local_rotation_angle_dirty   = true;
+    m_is_final_rotation_angle_dirty   = true;
   }
 
   void AddOffsetWorldAngle(EAxis3D axis, const float angle_value) noexcept {
@@ -261,10 +270,12 @@ public:
     default: break;
     }
 
-    pUpdateSummedWorldRotationEulerAngle();
-    m_offset_model_matrix_deprecated = true;
-    m_is_local_model_matrix_deprecated = true;
+    m_is_model_matrix_dirty           = true;
+    m_is_summed_rotation_angle_dirty  = true;
     m_is_world_propagation_axis_dirty = true;
+    m_is_final_rotation_angle_dirty   = true;
+
+    pUpdateSummedWorldRotationEulerAngle();
   }
 
   //!
@@ -278,7 +289,7 @@ public:
   inline void SetLocalScale(const DVector3& local_scale) noexcept {
     m_scale_local_factor = local_scale;
 
-    m_is_local_model_matrix_deprecated = true;
+    m_is_model_matrix_dirty = true;
     m_is_local_scale_dirty = true;
   }
 
@@ -376,28 +387,58 @@ private:
   ///
   /// @brief Update propagation axis basis using m_propagated_world_rotation_euler_angle.
   ///
-  void pUpdateObjectSpaceAxisBasis() noexcept;
+  void pUpdateObjectSpaceAxisBasis() const noexcept;
 
   ///
   /// @brief Update summed world rotation euler angle using parent_summed_world + this_world.
   ///
   void pUpdateSummedWorldRotationEulerAngle() noexcept;
 
-  void RefreshFinalPosition() const;	/** Refresh Translation matrix */
-  void RefreshRotateMatrix() const;	/** Refresh Rotation matrix */
+  ///
+  /// @brief
+  ///
+  void pUpdateAxisAlignedLocalPosition() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  void pUpdateAxisAlignedWorldPosition() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  void pUpdateAxisAlignedSummedWorldPosition() const noexcept;
+
+  ///
+  /// @brief
+  ///
+  void pUpdateFinalWorldRotationEulerAngle() const noexcept;
+
+  ///
+  /// @brief Refresh Translation matrix.
+  ///
+  void pUpdateAxisAlignedFinalPosition() const;
+
   void RefreshScaleVector() const;	/** Refresh Scaling matrix */
-  void RefreshWpRotationMatrix() const;
+
+  void RefreshRotationMatrix() const;
 
   /// (x, y, z) local position.
-  DVector3 m_local_position;
+  DVector3 m_independent_local_position;
   /// (x, y, z) world position.
-  DVector3 m_world_position;
-  /// (x, y, z) final position of parent.
-  DVector3 m_parent_from_position;
+  DVector3 m_independent_world_position;
+  /// (x, y, z) final position of parent
+  DVector3 m_propagated_world_basis_position;
+  /// m_object_space_axis * local_position;
+  mutable DVector3 m_local_axis_arranged_position;
+  /// m_object_space_axis * world_position;
+  mutable DVector3 m_world_axis_arranged_position;
   /// (x, y, z) parent position to bring child.
-  mutable DVector3 m_parent_to_position;
+  /// m_propagated_world_basis_position + m_world_axis_arranged_position.
+  mutable DVector3 m_summed_world_position;
   /// (x, y, z) final position in hierarchy.
-  mutable DVector3 m_final_position;
+  /// m_summed_world_position + m_local_axis_arranged_position
+  mutable DVector3 m_axis_aligned_final_position;
 
   DVector3 m_local_rotation_euler_angle;
   DVector3 m_world_rotation_euler_angle;
@@ -406,16 +447,20 @@ private:
   /// propagated_world_rotation_euler_angle + world
   DVector3 m_summed_world_rotation_euler_angle;
   /// local + summed_world
-  DVector3 m_object_final_rotation_euler_angle;
+  mutable DVector3 m_object_final_rotation_euler_angle;
 
   //!
   //! Axis variables.
   //!
 
   /// Used as this object coordinate space.
-  std::array<DVector3, 3> m_object_space_axis;
+  mutable std::array<DVector3, 3> m_object_space_axis = {
+    DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
+  };
   /// Used as child object's coordinate space.
-  std::array<DVector3, 3> m_object_propagate_axis;
+  mutable std::array<DVector3, 3> m_object_propagate_axis = {
+    DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
+  };
 
   /// Scale local factor, default is (1, 1, 1)
   DVector3 m_scale_local_factor = DVector3{ 1.f };
@@ -427,7 +472,7 @@ private:
   /// Local rotation matrix.
   mutable glm::mat4 m_local_rotate_matrix{};
   /// World + Parent rotation matrix.
-  mutable glm::mat4 m_wp_rotate_matrix{};
+  mutable glm::mat4 m_rotation_matrix{};
   /// Final model matrix also reflected by parent's and world rot.
   mutable glm::mat4 m_final_model{};
 
@@ -439,16 +484,21 @@ private:
   EActivated m_is_finally_activated     = EActivated::Activated;
   bool m_is_callback_called = false;
 
-  mutable bool m_is_world_propagation_axis_dirty = false;
+  mutable bool m_is_world_propagation_axis_dirty= true;
+  mutable bool m_is_world_space_axis_dirty      = true;
 
+  mutable bool m_is_local_rotation_angle_dirty  = true;
+  mutable bool m_is_summed_rotation_angle_dirty = true;
+  mutable bool m_is_final_rotation_angle_dirty  = true;
 
+  mutable bool m_is_local_scale_dirty = true;
 
-  mutable bool m_is_local_model_matrix_deprecated{ true };
-  mutable bool m_offset_model_matrix_deprecated{ true };
+  mutable bool m_is_local_position_dirty = true;
+  mutable bool m_is_world_position_dirty = true;
+  mutable bool m_is_summed_position_dirty = true;
+  mutable bool m_is_final_position_dirty = true;
 
-  mutable bool m_final_pos_deprecated{ true };
-  mutable bool m_local_rotation_deprecated{ true };
-  mutable bool m_is_local_scale_dirty{ true };
+  mutable bool m_is_model_matrix_dirty = true;
 
   unsigned m_tag_index = 0;
 };

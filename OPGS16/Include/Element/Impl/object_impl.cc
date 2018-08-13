@@ -45,20 +45,21 @@ bool IsAllAngleValueZero(const opgs16::DVector3& angle_array) {
 }
 
 glm::mat4 GetRotationMatrix(const opgs16::DVector3& angle) {
-  return glm::orientate4(glm::vec3{ glm::radians(angle.x), glm::radians(angle.y), glm::radians(angle.z) });
+  return glm::orientate4(glm::vec3{ glm::radians(angle.x), glm::radians(angle.z), glm::radians(angle.y) });
 }
 
 opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector3& angle) {
   using glm::rotateX;
   using glm::rotateY;
   using glm::rotateZ;
+
   return
-    rotateZ(
-      rotateY(
-        rotateX(glm::vec3{1, 0, 0}, glm::radians(angle.x)),
-        glm::radians(angle.y)),
-      glm::radians(angle.z)
-    );
+  rotateZ(
+    rotateY(
+      rotateX(glm::vec3{1, 0, 0}, glm::radians(angle.x)),
+      glm::radians(angle.y)),
+    glm::radians(angle.z)
+  );
 }
 
 } /// unnamed namespace
@@ -69,16 +70,20 @@ opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector
 
 namespace opgs16::element::_internal {
 
-void CObjectImpl::pUpdateObjectSpaceAxisBasis() noexcept {
+void CObjectImpl::pUpdateObjectSpaceAxisBasis() const noexcept {
   m_object_space_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_propagated_world_rotation_euler_angle);
   m_object_space_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_propagated_world_rotation_euler_angle);
   m_object_space_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_propagated_world_rotation_euler_angle);
+
+  m_is_world_space_axis_dirty = false;
 }
 
 void CObjectImpl::pUpdatePropagationAxisBasis() noexcept {
   m_object_propagate_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_summed_world_rotation_euler_angle);
   m_object_propagate_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_summed_world_rotation_euler_angle);
   m_object_propagate_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_summed_world_rotation_euler_angle);
+
+  m_is_world_propagation_axis_dirty = false;
 }
 
 void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() noexcept {
@@ -86,36 +91,67 @@ void CObjectImpl::pUpdateSummedWorldRotationEulerAngle() noexcept {
   m_summed_world_rotation_euler_angle.x = math::GetRotationAngle(m_summed_world_rotation_euler_angle.x);
   m_summed_world_rotation_euler_angle.y = math::GetRotationAngle(m_summed_world_rotation_euler_angle.y);
   m_summed_world_rotation_euler_angle.z = math::GetRotationAngle(m_summed_world_rotation_euler_angle.z);
+
+  m_is_summed_rotation_angle_dirty  = false;
+  m_is_final_rotation_angle_dirty   = true;
 }
 
-  void CObjectImpl::RefreshFinalPosition() const {
-  m_final_position = m_local_position + m_parent_from_position;
+void CObjectImpl::pUpdateAxisAlignedLocalPosition() const noexcept {
+  if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
-  m_final_position.x += m_wp_rotate_matrix[0][0] * m_world_position.x;
-  m_final_position.x += m_wp_rotate_matrix[1][0] * m_world_position.y;
-  m_final_position.x += m_wp_rotate_matrix[2][0] * m_world_position.z;
+  m_local_axis_arranged_position = DVector3{};
+  m_local_axis_arranged_position += m_object_space_axis[0] * m_independent_local_position.x;
+  m_local_axis_arranged_position += m_object_space_axis[1] * m_independent_local_position.y;
+  m_local_axis_arranged_position += m_object_space_axis[2] * m_independent_local_position.z;
 
-  m_final_position.y += m_wp_rotate_matrix[0][1] * m_world_position.x;
-  m_final_position.y += m_wp_rotate_matrix[1][1] * m_world_position.y;
-  m_final_position.y += m_wp_rotate_matrix[2][1] * m_world_position.z;
-
-  m_final_position.z += m_wp_rotate_matrix[0][2] * m_world_position.x;
-  m_final_position.z += m_wp_rotate_matrix[1][2] * m_world_position.y;
-  m_final_position.z += m_wp_rotate_matrix[2][2] * m_world_position.z;
+  m_is_local_position_dirty = false;
 }
 
-void CObjectImpl::RefreshRotateMatrix() const {
-  if (IsAllAngleValueZero(m_local_rotation_euler_angle))
-    m_local_rotate_matrix = k_rotation_init;
-  else
-    m_local_rotate_matrix = GetRotationMatrix(m_local_rotation_euler_angle);
+void CObjectImpl::pUpdateAxisAlignedWorldPosition() const noexcept {
+  if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
+
+  m_world_axis_arranged_position = DVector3{};
+  m_world_axis_arranged_position += m_object_space_axis[0] * m_independent_world_position.x;
+  m_world_axis_arranged_position += m_object_space_axis[1] * m_independent_world_position.y;
+  m_world_axis_arranged_position += m_object_space_axis[2] * m_independent_world_position.z;
+
+  m_is_local_position_dirty = false;
 }
 
-void CObjectImpl::RefreshWpRotationMatrix() const {
+void CObjectImpl::pUpdateAxisAlignedSummedWorldPosition() const noexcept {
+  m_summed_world_position = m_propagated_world_basis_position + m_world_axis_arranged_position;
+  m_is_summed_position_dirty = false;
+}
+
+void CObjectImpl::pUpdateFinalWorldRotationEulerAngle() const noexcept {
+  m_object_final_rotation_euler_angle = m_summed_world_rotation_euler_angle + m_local_rotation_euler_angle;
+
+  m_is_final_rotation_angle_dirty = false;
+}
+
+void CObjectImpl::pUpdateAxisAlignedFinalPosition() const {
+  if (m_is_model_matrix_dirty) pUpdateObjectSpaceAxisBasis();
+  if (m_is_local_position_dirty) pUpdateAxisAlignedLocalPosition();
+  if (m_is_world_position_dirty) pUpdateAxisAlignedWorldPosition();
+  if (m_is_summed_position_dirty) pUpdateAxisAlignedSummedWorldPosition();
+
+  m_axis_aligned_final_position = m_summed_world_position + m_local_axis_arranged_position;
+#ifdef false
+  const auto object_space_position = m_independent_local_position + m_independent_world_position;
+
+  m_axis_aligned_final_position += m_object_space_axis[0] * object_space_position.x;
+  m_axis_aligned_final_position += m_object_space_axis[1] * object_space_position.y;
+  m_axis_aligned_final_position += m_object_space_axis[2] * object_space_position.z;
+#endif
+
+  m_is_final_position_dirty = false;
+}
+
+void CObjectImpl::RefreshRotationMatrix() const {
   if (IsAllAngleValueZero(m_object_final_rotation_euler_angle))
-    m_wp_rotate_matrix = k_rotation_init;
+    m_rotation_matrix = k_rotation_init;
   else
-    m_wp_rotate_matrix = GetRotationMatrix(m_object_final_rotation_euler_angle);
+    m_rotation_matrix = GetRotationMatrix(m_object_final_rotation_euler_angle);
 }
 
 void CObjectImpl::RefreshScaleVector() const {
@@ -123,21 +159,18 @@ void CObjectImpl::RefreshScaleVector() const {
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
-  if (m_offset_model_matrix_deprecated) {
-    RefreshWpRotationMatrix();
-    RefreshFinalPosition();
-    m_offset_model_matrix_deprecated = false;
-  }
-
-	if (m_is_local_model_matrix_deprecated) {
-    if (m_final_pos_deprecated) {
-      RefreshFinalPosition();
-      m_final_pos_deprecated = false;
+	if (m_is_model_matrix_dirty) {
+    if (m_is_final_rotation_angle_dirty) {
+      pUpdateFinalWorldRotationEulerAngle();
+      RefreshRotationMatrix();
     }
 
-    if (m_local_rotation_deprecated) {
-      RefreshRotateMatrix();
-      m_local_rotation_deprecated = false;
+    if (m_is_final_position_dirty) {
+      pUpdateAxisAlignedFinalPosition();
+    }
+
+    if (m_is_local_rotation_angle_dirty) {
+      m_is_local_rotation_angle_dirty = false;
     }
 
     if (m_is_local_scale_dirty) {
@@ -145,16 +178,16 @@ const glm::mat4& CObjectImpl::GetModelMatrix() const {
       m_is_local_scale_dirty = false;
     }
 
-    m_is_local_model_matrix_deprecated = false;
+    m_is_model_matrix_dirty = false;
   }
 
-  m_final_model     = m_wp_rotate_matrix * m_local_rotate_matrix;
+  m_final_model     = m_rotation_matrix;
   m_final_model[0] *= m_scale_final_vector.x;
   m_final_model[1] *= m_scale_final_vector.y;
   m_final_model[2] *= m_scale_final_vector.z;
-  m_final_model[3][0] = m_final_position.x;
-  m_final_model[3][1] = m_final_position.y;
-  m_final_model[3][2] = m_final_position.z;
+  m_final_model[3][0] = m_axis_aligned_final_position.x;
+  m_final_model[3][1] = m_axis_aligned_final_position.y;
+  m_final_model[3][2] = m_axis_aligned_final_position.z;
 
   return m_final_model;
 }
@@ -187,4 +220,6 @@ void CObjectImpl::SetTag(const unsigned tag_index) {
 }
 
 } /// ::opgs16::element::_internal namespace
+
+
 
