@@ -230,8 +230,6 @@ public:
     m_is_world_space_axis_dirty       = true;
     m_is_world_propagation_axis_dirty = true;
     m_is_final_rotation_angle_dirty   = true;
-
-    //pUpdateSummedWorldRotationEulerAngle();
   }
 
   void AddOffsetLocalAngle(EAxis3D axis, const float angle_value) noexcept {
@@ -295,16 +293,16 @@ public:
     m_world_scale = world_scale;
 
     m_is_summed_scale_dirty  = true;
-    m_is_final_scale_dirty      = true;
-    m_is_model_matrix_dirty     = true;
+    m_is_final_scale_dirty   = true;
+    m_is_model_matrix_dirty  = true;
   }
 
   inline void SetWorldPropagatedScale(const DVector3& scale_factor) noexcept {
     m_propagated_producted_scale = scale_factor;
 
     m_is_summed_scale_dirty  = true;
-    m_is_final_scale_dirty      = true;
-    m_is_model_matrix_dirty     = true;
+    m_is_final_scale_dirty   = true;
+    m_is_model_matrix_dirty  = true;
   }
 
   //!

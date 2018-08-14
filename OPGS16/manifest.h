@@ -31,21 +31,21 @@ namespace opgs16::manifest {
 ///
 
 #define OP16_SETTING_APPLICATION_WINDOW_NAME \
-"OPGS16 0.2.0 2018-08-11"
+"OPGS16 0.2.5 2018-08-14"
 
 ///
 /// Set Project first scene (entry scene) path from this manifest file.
 ///
 
 #define OP16_SETTING_FIRST_SCENE_INCLUDE_RELATIVE_PATH \
-<../_Project/Test020/Include/Scene/scene_test.h>
+<../_Project/Test020/Include/Scene/scene_bullet_hello.h>
 
 ///
 /// set first scene full name of your project.
 ///
 
 #define OP16_SETTING_FIRST_SCENE_FULL_NAME \
-::test020::scene::TestScene
+::test020::scene::SceneBulletHello
 
 ///
 /// Fixed function resolution feature
