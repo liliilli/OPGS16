@@ -156,6 +156,12 @@ public:
 	void SetWorldPosition(const DVector3& world_position);
 
   ///
+  /// @brief The method set final position but keeping parent position
+  /// but adjusting CObject's world position.
+  ///
+  void SetWorldPositionWithFinalPosition(const DVector3& final_position);
+
+  ///
   /// @brief Add offset value with axis as local position.
   ///
   void AddOffsetLocalPosition(EAxis3D axis, float value) noexcept;
@@ -166,32 +172,37 @@ public:
   void AddOffsetWorldPosition(EAxis3D axis, float value) noexcept;
 
   ///
-  /// @brief The method set final position but keeping parent position
-  /// but adjusting CObject's world position.
-  ///
-  void SetWorldPosWithFinalPos(const DVector3& final_position);
-
-  ///
-  /// @brief The method gets rotation angle value
+  /// @brief The method gets local rotation angle value. (euler degree value)
   /// @return Object's rotation angle value.
   ///
   float GetLocalRotationAngle(EAxis3D direction) const noexcept;
 
+  ///
+  /// @brief The method gets world rotation angle value. (euler degree value)
+  ///
   float GetWorldRotationAngle(EAxis3D direction) const noexcept;
 
   ///
-  /// @brief
+  /// @brief The method gets final rendering angle value. (euler degree value)
   ///
   float GetFinalRotationAngle(EAxis3D direction) const noexcept;
 
   ///
-  /// @brief The method sets rotation angle values.
-  /// When input value is positive and factor is [0, 1], axis rotates clockwise.
-  /// input value is negative and factor is [0, 1], axis rotates counter-clockwise.
-  /// @param[in] angle_value Angle value to set on.
+  /// @brief The method adds local rotation angle values.
+  /// When input value is positive, axis rotates clockwise.
+  /// input value is negative, axis rotates counter-clockwise.
+  /// @param[in] direction Direction axis.
+  /// @param[in] angle_value Euler angle value to set on.
   ///
   void SetRotationLocalAngle(EAxis3D direction, float angle_value) noexcept;
 
+  ///
+  /// @brief The method adds world rotation angle values.
+  /// When input value is positive, axis rotates clockwise.
+  /// input value is negative, axis rotates counter-clockwise.
+  /// @param[in] direction Direction axis.
+  /// @param[in] angle_value Euler angle value to set on.
+  ///
   void SetRotationWorldAngle(EAxis3D direction, float angle_value) noexcept;
 
   ///
@@ -218,12 +229,12 @@ public:
   ///
   /// @brief The method sets scaling vector have (x, y, z) scaling factors.
   ///
-  void SetLocalScale(const DVector3& factor);
+  void SetLocalScale(const DVector3& xyz_value) noexcept;
 
   ///
-  /// @brief Sets local scaling vector value which have (x, y, z).
+  /// @brief Sets world scaling vector value which have (x, y, z).
   ///
-  void SetWorldScale(const DVector3& xyz_value);
+  void SetWorldScale(const DVector3& xyz_value) noexcept;
 
   ///
   /// @brief The method returns Model matrix, M = TRS
@@ -474,7 +485,9 @@ public:
         }
         if (&(it->first) == &component) continue;
         component.swap(it->first);
+        // ReSharper disable CppAssignedValueIsNeverUsed
         item = it->second;
+        // ReSharper restore CppAssignedValueIsNeverUsed
         --it;
       }
     }
@@ -583,7 +596,7 @@ private:
   ///
   /// @brief Get all parent's producted world scale values (x, y, z);
   ///
-  const DVector3& pGetParentProductedWorldScaleValue() const noexcept;
+  const DVector3& pGetParentSummedProductedScaleValue() const noexcept;
 
   ///
   /// @brief Get rotation vector of total world angle from object tree root.

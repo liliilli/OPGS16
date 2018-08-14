@@ -135,7 +135,7 @@ void CPhysicsEnvironment::pUpdatePostProcessRigidbodyInformation() {
       // Update position.
       {
         const btTransform& trans = rigidbody_obj->getCenterOfMassTransform();
-        obj_ptr->bind_object->SetWorldPosWithFinalPos(trans.getOrigin());
+        obj_ptr->bind_object->SetWorldPositionWithFinalPosition(trans.getOrigin());
       }
 
       // ...and Aabb information to Aabb renderer.

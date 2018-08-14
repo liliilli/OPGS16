@@ -133,9 +133,8 @@ const DVector3& CObject::pGetParentSummedWorldRotationAngle() const noexcept {
   return m_data->GetWorldSummedRotationAngle();
 }
 
-const DVector3& CObject::pGetParentProductedWorldScaleValue() const noexcept {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
-  return m_data->GetLocalScale();
+const DVector3& CObject::pGetParentSummedProductedScaleValue() const noexcept {
+  return m_data->GetWorldSummedProductedScale();
 }
 
 const DVector3& CObject::GetLocalPosition() const noexcept {
@@ -170,8 +169,8 @@ void CObject::AddOffsetWorldPosition(EAxis3D axis, float value) noexcept {
   m_data->AddOffsetWorldPosition(axis, value);
 }
 
-void CObject::SetWorldPosWithFinalPos(const DVector3& final_position) {
-  m_data->SetWorldPosWithFinalPos(final_position);
+void CObject::SetWorldPositionWithFinalPosition(const DVector3& final_position) {
+  m_data->SetWorldPositionWithFinalPosition(final_position);
 }
 
 // Rotation functions.
@@ -211,16 +210,15 @@ const DVector3& CObject::GetLocalScale() const noexcept {
 }
 
 const DVector3& CObject::GetWorldScale() const noexcept {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
-  return {};
+  return m_data->GetWorldScale();
 }
 
-void CObject::SetLocalScale(const DVector3& factor) {
-	m_data->SetLocalScale(factor);
+void CObject::SetLocalScale(const DVector3& xyz_value) noexcept {
+	m_data->SetLocalScale(xyz_value);
 }
 
-void CObject::SetWorldScale(const DVector3& xyz_value) {
-  PHITOS_NOT_IMPLEMENTED_ASSERT();
+void CObject::SetWorldScale(const DVector3& xyz_value) noexcept {
+  m_data->SetWorldScale(xyz_value);
 }
 
 const glm::mat4& CObject::GetModelMatrix() const {
@@ -318,7 +316,7 @@ void CObject::LocalUpdate() {
     // Realign transform from parent.
     m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
     m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
-    //m_data->SetObjectWorldScaleBasisValue(m_parent->pGetParentProductedWorldScaleValue());
+    m_data->SetWorldPropagatedScale(m_parent->pGetParentSummedProductedScaleValue());
   }
 }
 

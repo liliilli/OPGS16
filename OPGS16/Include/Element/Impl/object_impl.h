@@ -88,7 +88,7 @@ public:
     m_is_summed_position_dirty  = true;
   }
 
-  inline void SetWorldPosWithFinalPos(const DVector3& final_position) noexcept {
+  inline void SetWorldPositionWithFinalPosition(const DVector3& final_position) noexcept {
     SetWorldPosition(final_position - m_propagated_world_basis_position);
   }
 
@@ -275,15 +275,41 @@ public:
     return m_local_scale;
   }
 
+  const DVector3& GetWorldScale() const noexcept {
+    return m_world_scale;
+  }
+
+  const DVector3& GetWorldSummedProductedScale() const noexcept {
+    if (m_is_summed_scale_dirty) pUpdateWorldSummedProductedScale();
+    return m_summed_producted_scale;
+  }
+
+  const DVector3& GetFinalScale() const noexcept {
+    if (m_is_final_scale_dirty) pUpdateFinalScale();
+    return m_final_producted_scale;
+  }
+
   inline void SetLocalScale(const DVector3& local_scale) noexcept {
     m_local_scale = local_scale;
 
+    m_is_final_scale_dirty  = true;
     m_is_model_matrix_dirty = true;
-    m_is_local_scale_dirty = true;
   }
 
-  inline void SetScaleParentFactor(const DVector3& scale_factor) noexcept {
+  inline void SetWorldScale(const DVector3& world_scale) noexcept {
+    m_world_scale = world_scale;
+
+    m_is_summed_scale_dirty  = true;
+    m_is_final_scale_dirty      = true;
+    m_is_model_matrix_dirty     = true;
+  }
+
+  inline void SetWorldPropagatedScale(const DVector3& scale_factor) noexcept {
     m_propagated_producted_scale = scale_factor;
+
+    m_is_summed_scale_dirty  = true;
+    m_is_final_scale_dirty      = true;
+    m_is_model_matrix_dirty     = true;
   }
 
   //!
@@ -413,7 +439,21 @@ private:
   ///
   void pUpdateAxisAlignedFinalPosition() const;
 
-  void RefreshScaleVector() const;	/** Refresh Scaling matrix */
+  ///
+  /// @brief Update world producted scale
+  /// with m_propagated_producted_scale * m_world_scale element multiply.
+  ///
+  void pUpdateWorldSummedProductedScale() const noexcept;
+
+  ///
+  /// @brief Update final producted scale
+  /// with m_summed_producted_scale * m_local_scale element multiply.
+  ///
+  void pUpdateFinalScale() const noexcept;
+
+  //!
+  //! Variables
+  //!
 
   /// (x, y, z) local position.
   DVector3 m_independent_local_position;
@@ -456,14 +496,11 @@ private:
   /// Scale world factor. default is (1, 1, 1)
   DVector3 m_world_scale = DVector3{ 1.f };
   /// Scale factor from parent.
-  DVector3 m_propagated_producted_scale = DVector3{ 1.f };
+  mutable DVector3 m_propagated_producted_scale = DVector3{ 1.f };
   /// m_world_scale * m_propagated_producted_scale
-  DVector3 m_summed_producted_scale = DVector3{ 1.f };
+  mutable DVector3 m_summed_producted_scale     = DVector3{ 1.f };
   /// m_summed_producted_scale * m_local_scale
-  mutable DVector3 m_rendering_producted_scale = DVector3{ 1.f };
-  /// (x, y, z) scale vector to apply to matrix.
-  /// @todo deprecated
-  mutable DVector3 m_scale_final_vector;
+  mutable DVector3 m_final_producted_scale      = DVector3{ 1.f };
 
   /// World + Parent rotation matrix.
   mutable glm::mat3 m_summed_rotation_matrix;
@@ -503,7 +540,8 @@ private:
   mutable bool m_is_summed_rotation_angle_dirty = true;
   mutable bool m_is_final_rotation_angle_dirty  = true;
 
-  mutable bool m_is_local_scale_dirty = true;
+  mutable bool m_is_summed_scale_dirty = true;
+  mutable bool m_is_final_scale_dirty = true;
 
   mutable bool m_is_local_position_dirty = true;
   mutable bool m_is_world_position_dirty = true;

@@ -151,32 +151,29 @@ void CObjectImpl::pUpdateAxisAlignedFinalPosition() const {
   m_is_final_position_dirty = false;
 }
 
-void CObjectImpl::RefreshScaleVector() const {
-  m_scale_final_vector = m_local_scale;
+void CObjectImpl::pUpdateWorldSummedProductedScale() const noexcept {
+  m_summed_producted_scale = m_propagated_producted_scale * m_world_scale;
+  m_is_summed_scale_dirty = false;
+}
+
+void CObjectImpl::pUpdateFinalScale() const noexcept {
+  if (m_is_summed_scale_dirty) pUpdateWorldSummedProductedScale();
+  m_final_producted_scale = m_summed_producted_scale * m_local_scale;
+  m_is_final_scale_dirty = false;
 }
 
 const glm::mat4& CObjectImpl::GetModelMatrix() const {
 	if (m_is_model_matrix_dirty) {
-    if (m_is_final_rotation_angle_dirty) {
-      pUpdateFinalWorldRotationEulerAngle();
-    }
-
-    if (m_is_final_position_dirty) {
-      pUpdateAxisAlignedFinalPosition();
-    }
-
-    if (m_is_local_scale_dirty) {
-      RefreshScaleVector();
-      m_is_local_scale_dirty = false;
-    }
-
+    if (m_is_final_rotation_angle_dirty) pUpdateFinalWorldRotationEulerAngle();
+    if (m_is_final_position_dirty) pUpdateAxisAlignedFinalPosition();
+    if (m_is_final_scale_dirty) pUpdateFinalScale();
     m_is_model_matrix_dirty = false;
   }
 
   m_final_model     = m_summed_rotation_matrix * m_local_rotation_matrix;
-  m_final_model[0] *= m_scale_final_vector.x;
-  m_final_model[1] *= m_scale_final_vector.y;
-  m_final_model[2] *= m_scale_final_vector.z;
+  m_final_model[0] *= m_final_producted_scale.x;
+  m_final_model[1] *= m_final_producted_scale.y;
+  m_final_model[2] *= m_final_producted_scale.z;
   m_final_model[3][0] = m_axis_aligned_final_position.x;
   m_final_model[3][1] = m_axis_aligned_final_position.y;
   m_final_model[3][2] = m_axis_aligned_final_position.z;
