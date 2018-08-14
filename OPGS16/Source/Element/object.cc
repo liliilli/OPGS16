@@ -121,10 +121,6 @@ void CObject::Update(float delta_time) {
   }
 }
 
-const std::array<DVector3, 3>& CObject::pGetParentWorldPropagateAxisValue() const noexcept {
-  return m_data->GetChildObjectWorldAxisBasisValue();
-}
-
 const DVector3& CObject::pGetParentWorldSummedPositionValue() const noexcept {
   return m_data->GetAxisAlignedSummedWorldPosition();
 }
@@ -315,7 +311,7 @@ void CObject::LocalUpdate() {
   if (m_parent) {
     // Realign transform from parent.
     m_data->SetWorldPropagatedPosition(m_parent->pGetParentWorldSummedPositionValue());
-    m_data->SetObjectWorldRotationBasisValue(m_parent->pGetParentSummedWorldRotationAngle());
+    m_data->SetPropagatedWorldRotationAngleValue(m_parent->pGetParentSummedWorldRotationAngle());
     m_data->SetWorldPropagatedScale(m_parent->pGetParentSummedProductedScaleValue());
   }
 }

@@ -34,7 +34,7 @@
 #include <Helper/Math/math.h>
 #include <Helper/Type/axis.h>
 #include <Helper/Type/vector3.h>
-#include "Helper/Type/quaternion.h"
+#include <Helper/Type/quaternion.h>
 
 namespace opgs16::element::_internal {
 ///
@@ -133,11 +133,6 @@ public:
   //! Rotation
   //!
 
-  const std::array<DVector3, 3>& GetChildObjectWorldAxisBasisValue() noexcept {
-    if (m_is_world_propagation_axis_dirty) pUpdateObjectSummedAxisBasis();
-    return m_object_propagate_axis;
-  }
-
   const std::array<DVector3, 3>& GetObjectWorldAxisBasisValue() const noexcept {
     if (m_is_world_space_axis_dirty) pUpdateObjectSpaceAxisBasis();
 
@@ -154,7 +149,7 @@ public:
     m_is_world_propagation_axis_dirty = true;
   }
 
-  void SetObjectWorldRotationBasisValue(const DVector3& propagated_world_rotation_angle) noexcept {
+  void SetPropagatedWorldRotationAngleValue(const DVector3& propagated_world_rotation_angle) noexcept {
     m_propagated_world_rotation_euler_angle = propagated_world_rotation_angle;
 
     m_is_model_matrix_dirty           = true;
@@ -397,7 +392,7 @@ private:
   ///
   /// @brief Update propagation axis basis using m_summed_world_rotation_euler_angle.
   ///
-  void pUpdateObjectSummedAxisBasis() noexcept;
+  void pUpdateObjectSummedAxisBasis() const noexcept;
 
   ///
   /// @brief Update propagation axis basis using m_propagated_world_rotation_euler_angle.
@@ -489,7 +484,6 @@ private:
   mutable glm::mat3   m_propagated_rotation_matrix;
 
   mutable DQuaternion m_summed_rotation_quaternion;
-  mutable DQuaternion m_final_rotation_quaternion;
 
   /// Scale local factor, default is (1, 1, 1)
   DVector3 m_local_scale = DVector3{ 1.f };
@@ -516,9 +510,11 @@ private:
     DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
   };
   /// Used as child object's coordinate space.
+#ifdef false
   mutable std::array<DVector3, 3> m_object_propagate_axis = {
     DVector3::RightX(), DVector3::UpY(), DVector3::FrontZ()
   };
+#endif
 
   using EActivated = phitos::enums::EActivated;
   /// Object all update activation variable.

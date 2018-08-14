@@ -28,11 +28,10 @@
 #include <glm/gtx/rotate_vector.inl>
 
 namespace {
+
+#ifdef false
 constexpr float k_2pi{ 2 * glm::pi<float>() };
-
 const static glm::vec3 k_vec3_1{ 1.f };
-const static glm::mat4 k_rotation_init{ glm::rotate(glm::mat4{}, k_2pi, k_vec3_1) };
-
 bool IsAllAngleValueZero(const opgs16::DVector3& angle_array) {
   using opgs16::math::IsNearlyEqual;
 
@@ -56,6 +55,7 @@ opgs16::DVector3 GetRotatedVector(const glm::vec3& vector, const opgs16::DVector
   return
   rotateX(rotateZ(rotateY(vector, glm::radians(angle.y)), glm::radians(angle.z)), glm::radians(angle.x));
 }
+#endif
 
 } /// unnamed namespace
 
@@ -69,10 +69,10 @@ void CObjectImpl::pUpdateObjectSpaceAxisBasis() const noexcept {
   m_propagated_rotation_quaternion = DQuaternion(m_propagated_world_rotation_euler_angle);
   m_propagated_rotation_matrix = m_propagated_rotation_quaternion.GetRotationMatrix3();
 
-  // @todo renovate
-  m_object_space_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_propagated_world_rotation_euler_angle);
-  m_object_space_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_propagated_world_rotation_euler_angle);
-  m_object_space_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_propagated_world_rotation_euler_angle);
+  auto& m = m_propagated_rotation_matrix;
+  m_object_space_axis[0] = DVector3{m[0][0], m[0][1], m[0][2]};
+  m_object_space_axis[1] = DVector3{m[1][0], m[1][1], m[1][2]};
+  m_object_space_axis[2] = DVector3{m[2][0], m[2][1], m[2][2]};
 
   m_is_world_space_axis_dirty = false;
   m_is_final_rotation_angle_dirty = true;
@@ -85,13 +85,8 @@ void CObjectImpl::pUpdateLocalRotationQuaternion() const noexcept {
   m_is_local_rotation_angle_dirty = false;
 }
 
-void CObjectImpl::pUpdateObjectSummedAxisBasis() noexcept {
+void CObjectImpl::pUpdateObjectSummedAxisBasis() const noexcept {
   if (m_is_summed_rotation_angle_dirty) pUpdateSummedWorldRotationEulerAngle();
-
-  m_object_propagate_axis[0] = GetRotatedVector(glm::vec3{1, 0, 0}, m_summed_world_rotation_euler_angle);
-  m_object_propagate_axis[1] = GetRotatedVector(glm::vec3{0, 1, 0}, m_summed_world_rotation_euler_angle);
-  m_object_propagate_axis[2] = GetRotatedVector(glm::vec3{0, 0, 1}, m_summed_world_rotation_euler_angle);
-
   m_is_world_propagation_axis_dirty = false;
 }
 
